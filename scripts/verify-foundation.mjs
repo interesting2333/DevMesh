@@ -35,7 +35,7 @@ const inputs = [
 ].map(path => ({ path: relative(root, path).replaceAll('\\', '/'), sha256: hash(readFileSync(path)) })).sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
 const pnpm = resolve(root, 'node_modules/pnpm/bin/pnpm.cjs');
 const steps = [
-  ...['toolchain:check', 'vendor:verify', 'build', 'typecheck', 'lint', 'test:smoke', 'test:contracts', 'contracts:check', 'project:check'].map(name => ({ name, args: [pnpm, 'run', name] })),
+  ...['toolchain:check', 'vendor:verify', 'build', 'typecheck', 'lint', 'test:smoke', 'test:contracts', 'test:storage', 'contracts:check', 'project:check'].map(name => ({ name, args: [pnpm, 'run', name] })),
   { name: 'openspec', args: ['project/openspec.mjs', 'validate', '--all', '--strict', '--no-interactive'] },
   { name: 'design-consistency', args: ['design/生成完整方案.mjs', '--check'] },
 ];

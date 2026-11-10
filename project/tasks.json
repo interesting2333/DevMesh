@@ -170,9 +170,9 @@
       "id": "P0-03",
       "phase": "P0",
       "title": "SQLite Worker 与正式迁移",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "responsibility": "平台",
-      "owner": null,
+      "owner": "Codex（本次实施）",
       "reviewer": null,
       "dependsOn": [
         "P0-02"
@@ -184,10 +184,12 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-sqlite-storage"
+      ],
       "blockedReason": null,
       "nextCheck": null,
-      "startedAt": null,
+      "startedAt": "2026-11-10T07:42:25.802Z",
       "completedAt": null,
       "codeReferences": [],
       "evidence": [],

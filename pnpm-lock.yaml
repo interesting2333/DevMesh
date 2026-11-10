@@ -92,6 +92,15 @@ importers:
         specifier: 0.1.9
         version: 0.1.9
 
+  packages/storage-sqlite:
+    dependencies:
+      '@devmesh/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+
   vendor/cordis:
     dependencies:
       '@deepseek-ai/cosmokit':

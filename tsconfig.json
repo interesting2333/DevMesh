@@ -13,7 +13,8 @@
     "types": ["node"],
     "paths": {
       "@devmesh/platform-core": ["./packages/platform-core/src/index.ts"],
-      "@devmesh/contracts": ["./packages/contracts/src/index.ts"]
+      "@devmesh/contracts": ["./packages/contracts/src/index.ts"],
+      "@devmesh/storage-sqlite": ["./packages/storage-sqlite/src/index.ts"]
     }
   },
   "include": ["apps/*/src/**/*.ts", "packages/*/src/**/*.ts", "tests/**/*.ts"]

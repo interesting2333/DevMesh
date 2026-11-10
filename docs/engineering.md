@@ -1,6 +1,6 @@
 # 工程使用与验证
 
-当前交付最小 Node HTTP／Express 5 服务、Cordis 插件生命周期及 [核心契约包](../packages/contracts/README.md)。数据库、A2A/MCP、模型、Runner 和 UI 按对应工作包实现；本工程的就绪接口只描述基础 HTTP 插件。
+当前交付最小 Node HTTP／Express 5 服务、Cordis 插件生命周期、[核心契约包](../packages/contracts/README.md) 及 [SQLite 存储基础](../packages/storage-sqlite/README.md)。存储库和维护 CLI 可独立使用，HTTP 组合与 A2A/MCP、模型、Runner 和 UI 按后续工作包接入；就绪接口只描述基础 HTTP 插件。
 
 本次实际结果和相同提交的两平台报告见 [P0-01 验证记录](../project/evidence/P0-01/验收记录.md)。
 
@@ -30,6 +30,7 @@ corepack pnpm@11.28.5 typecheck
 corepack pnpm@11.28.5 lint
 corepack pnpm@11.28.5 test:smoke
 corepack pnpm@11.28.5 test:contracts
+corepack pnpm@11.28.5 test:storage
 corepack pnpm@11.28.5 contracts:check
 corepack pnpm@11.28.5 start
 ```
@@ -60,7 +61,7 @@ corepack pnpm@11.28.5 verify:foundation --commit <完整40位提交SHA>
 
 该命令要求当前 Git checkout 干净且 HEAD 与参数一致；也可在通过 `git archive <SHA>` 创建的独立源快照中使用。验证记录实际 OS／arch／Node、提交、应用锁文件哈希、源码指纹、每项退出码和原始输出；失败返回非零。默认产物为 `.artifacts/foundation/report.json` 及各项 txt 日志。
 
-检查包括工具版本、vendor 来源、源码构建、类型、lint、真实 HTTP／CLI／关闭测试、契约反例、OpenAPI 生成一致性、项目台账、OpenSpec 严格校验和设计整合一致性。Windows 明确跳过 POSIX SIGTERM 测试，仍执行跨平台 IPC 停止和资源释放；Linux 另行验证 SIGTERM。契约变更先 build，再运行 `contracts:generate` 并提交生成文件。
+检查包括工具版本、vendor 来源、构建、类型、lint、真实 HTTP／CLI／关闭、契约反例、SQLite 迁移／约束／崩溃恢复、OpenAPI 一致性、台账、OpenSpec 和设计整合。Windows 跳过 POSIX SIGTERM，仍执行跨平台 IPC 停止和资源释放；Linux 另验 SIGTERM。契约变更先 build，再运行 `contracts:generate` 并提交生成文件。
 
 CI 配置在 [.github/workflows/foundation.yml](../.github/workflows/foundation.yml)，使用 Windows／Linux matrix 和固定 Action commit，保留报告。它是待托管平台执行的流水线配置，本地 Linux WSL 验证和 GitHub Actions 实际运行分别记录。
 
