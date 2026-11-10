@@ -170,10 +170,10 @@
       "id": "P0-03",
       "phase": "P0",
       "title": "SQLite Worker 与正式迁移",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "responsibility": "平台",
       "owner": "Codex（本次实施）",
-      "reviewer": null,
+      "reviewer": "Codex（同一 Agent 技术与证据复核）",
       "dependsOn": [
         "P0-02"
       ],
@@ -190,11 +190,21 @@
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": "2026-11-10T07:42:25.802Z",
-      "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
-      "reviewNote": null,
-      "notes": []
+      "completedAt": "2026-11-10T08:14:37.974Z",
+      "codeReferences": [
+        "git:bc5354c7db3ffca5ca6a1de3b20840ed3dee2077"
+      ],
+      "evidence": [
+        "project/evidence/P0-03/验收记录.md",
+        "project/evidence/P0-03/cross-platform-summary.json",
+        "project/evidence/P0-03/windows/report.json",
+        "project/evidence/P0-03/linux/report.json"
+      ],
+      "reviewNote": "复核正式迁移、32 表约束、Worker／锁／事务／幂等与未知副作用边界及实际崩溃测试；Windows/Linux 同提交各 12 项检查、28 项存储测试通过，107 个受测文件与 24 份检查日志哈希一致。关闭及输入缺漏问题已修复，无阻止本工作包完成的问题；不代表独立人工签认、完整 T07 或 G0 通过。",
+      "notes": [
+        "交付存储基础和真实迁移 CLI；HTTP 组合、内容文件发布、Registry 与预算完整准入、A2A 消费者按后续工作包接入。",
+        "Windows/Linux 同一干净提交各通过 12 项检查，存储测试各 28 通过；T07 基础完成，G0 尚未评审。"
+      ]
     },
     {
       "id": "P0-04",

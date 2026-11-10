@@ -11,7 +11,7 @@ DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的�
 | 产品目标和验收范围 | [PRD V10.0](./DevMesh_PRD_V10.0.md)、[89 条验收场景](./DevMesh_产品验收场景_V10.0.md) |
 | 完整技术方案与选型 | [技术设计 V1.1](./DevMesh_技术设计方案_V1.1.md) |
 | 36 个工作包、交付物、验收和阶段门槛 | [实施文档 V1.0](./DevMesh_实施文档_V1.0.md) |
-| OpenSpec 工程与契约变更 | [P0-01 工程基础](./openspec/changes/archive/2026-11-10-bootstrap-devmesh-workspace/proposal.md)、[P0-02 核心契约](./openspec/changes/archive/2026-11-10-establish-core-contracts/proposal.md) |
+| OpenSpec 已完成变更 | [P0-01 工程基础](./openspec/changes/archive/2026-11-10-bootstrap-devmesh-workspace/proposal.md)、[P0-02 核心契约](./openspec/changes/archive/2026-11-10-establish-core-contracts/proposal.md)、[P0-03 SQLite 存储](./openspec/changes/archive/2026-11-10-implement-sqlite-storage/proposal.md) |
 | 核心 schema、OpenAPI、样例和模块接口表 | [contracts 包说明](./packages/contracts/README.md) |
 | 数据库迁移、Worker、事务与崩溃恢复 | [SQLite 存储说明](./packages/storage-sqlite/README.md) |
 | 全部文档与原型 | [交付说明](./交付说明.md) |

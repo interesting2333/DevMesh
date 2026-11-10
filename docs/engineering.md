@@ -2,7 +2,7 @@
 
 当前交付最小 Node HTTP／Express 5 服务、Cordis 插件生命周期、[核心契约包](../packages/contracts/README.md) 及 [SQLite 存储基础](../packages/storage-sqlite/README.md)。存储库和维护 CLI 可独立使用，HTTP 组合与 A2A/MCP、模型、Runner 和 UI 按后续工作包接入；就绪接口只描述基础 HTTP 插件。
 
-本次实际结果和相同提交的两平台报告见 [P0-01 验证记录](../project/evidence/P0-01/验收记录.md)。
+各工作包实际结果和同提交两平台报告见 [P0-01 工程](../project/evidence/P0-01/验收记录.md)、[P0-02 契约](../project/evidence/P0-02/验收记录.md)、[P0-03 存储](../project/evidence/P0-03/验收记录.md)。
 
 ## 版本和目录
 

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-10T08:12:28.647Z",
+  "status": "PASSED",
+  "results": {
+    "windows": {
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.13.1",
+      "commit": "bc5354c7db3ffca5ca6a1de3b20840ed3dee2077",
+      "sourceFingerprint": "5ca482cbdc5736a43be39f3d29ebf3744c57bd2a41beb00c93e1ebe4218cab89",
+      "lockfileSha256": "35e12059de5e34214c65117290105b8bcaa51c645006e315d2549ed3f9b030e2",
+      "sourceFiles": 107,
+      "checks": 12,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 9,
+          "fail": 0,
+          "skipped": 1
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:storage",
+          "tests": 28,
+          "pass": 28,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-03/windows/report.json"
+    },
+    "linux": {
+      "platform": "linux",
+      "arch": "x64",
+      "node": "v24.13.1",
+      "commit": "bc5354c7db3ffca5ca6a1de3b20840ed3dee2077",
+      "sourceFingerprint": "5ca482cbdc5736a43be39f3d29ebf3744c57bd2a41beb00c93e1ebe4218cab89",
+      "lockfileSha256": "35e12059de5e34214c65117290105b8bcaa51c645006e315d2549ed3f9b030e2",
+      "sourceFiles": 107,
+      "checks": 12,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:storage",
+          "tests": 28,
+          "pass": 28,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-03/linux/report.json"
+    }
+  }
+}

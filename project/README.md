@@ -12,7 +12,7 @@
 | [tasks.json](./tasks.json) | 工作包状态、责任职能、实际负责人、依赖、阻塞、关联变更、代码和证据、阶段门槛 | **唯一的工作包状态源**，不得另建一份人工状态表 |
 | [任务台账.md](./任务台账.md) | 按状态源生成的进度与依赖视图 | 运行 `node project/manage.mjs render`，不直接修改 |
 | `openspec/changes/<name>/` | 当前变更的 proposal、design、细分 tasks 和必要的增量 specs | 变更名用英文 kebab-case；在 proposal 中写明父工作包 ID |
-| `openspec/specs/` | 已实施并通过验证、完成归档的能力规范 | 已有 core-contracts；设计目标不提前当成已实现能力 |
+| `openspec/specs/` | 已实施并通过验证、完成归档的能力规范 | 已有 core-contracts、sqlite-storage；设计目标不提前当成已实现能力 |
 | [evidence/](./evidence/README.md) | 可定位的执行记录、结果摘要与原始材料引用 | 写清版本、实际环境和失败项；大体积材料放制品存储并附摘要与校验值 |
 
 管理工具本身不提供服务端看板、自动排期或多人锁。多人协作通过分支、PR 和评审合并 JSON 变更；同一工作包约定一位实际负责人。以后接入 Issues／外部看板时使用相同工作包 ID，并明确唯一状态源的迁移方式。
