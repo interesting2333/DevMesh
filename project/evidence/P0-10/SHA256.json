@@ -1,54 +1,61 @@
-[
-  {
-    "path": "local-verification/a2a-http-recovery-v2.txt",
-    "sha256": "05bfd6e6669cc62b429c9037881db00aee84acf8715694262ec030e5700358c9"
-  },
-  {
-    "path": "local-verification/foundation-harness-v1.txt",
-    "sha256": "9ab248e9662f309e21fa03a51346e6c313f9649e573010fbfca7673ea65164b3"
-  },
-  {
-    "path": "local-verification/permit-build.txt",
-    "sha256": "b18c48454fbccd4a6f046a14700b0be8464724d2b2fc3006a2684c19de6eead6"
-  },
-  {
-    "path": "local-verification/permit-test-v1.txt",
-    "sha256": "8cea7f9ab29fccb62da22786ffd810ed49a27d411db1a4669cda5be85ae8cdbc"
-  },
-  {
-    "path": "local-verification/public-build-v4.txt",
-    "sha256": "aec3130fe451cfb19c5630008b0737d2fa149aee1e3e6a1280378d7b367b2d69"
-  },
-  {
-    "path": "local-verification/public-lint-v4.txt",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-    "path": "local-verification/public-tests-v1.txt",
-    "sha256": "3e5bd3c5fae8e23f544c9454aba15736206771daf06aabad48d7a6d2ad1808e0"
-  },
-  {
-    "path": "local-verification/public-tests-v2.txt",
-    "sha256": "4d4e5a5e19e8531cbb014388265677847c9e642b674cecb82b5c6cf2105aebdf"
-  },
-  {
-    "path": "local-verification/public-tests-v3.txt",
-    "sha256": "869fe865a30c0146c266e29da021f53eb45151cee74d6b3786bf6f7eaa16fa1e"
-  },
-  {
-    "path": "local-verification/public-tests-v4.txt",
-    "sha256": "a9221eec1683e71b9cd6e1b4c5574019c7f7b5b2978e6bbebf8cbb33e1fe1c95"
-  },
-  {
-    "path": "local-verification/public-typecheck-v2.txt",
-    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-    "path": "local-verification/recovery-harness-v1.txt",
-    "sha256": "393eb5ef0825fa3b3b55ad0adecd9c7628e5fd8caf76e482e6c9f66f831d5982"
-  },
-  {
-    "path": "local-verification/runner-harness-v1.txt",
-    "sha256": "bddd2d01c00072166a72928ee48f6063883ebc0f22baa8c6931b4666f8dee011"
-  }
-]
+{
+  "algorithm": "SHA-256",
+  "files": [
+    {
+      "path": "离线实施进展.md",
+      "sha256": "d340a168c690915eb3122973d3a57b9362f81331477c3c20992a03407961c051"
+    },
+    {
+      "path": "local-verification/a2a-http-recovery-v2.txt",
+      "sha256": "05bfd6e6669cc62b429c9037881db00aee84acf8715694262ec030e5700358c9"
+    },
+    {
+      "path": "local-verification/foundation-harness-v1.txt",
+      "sha256": "9ab248e9662f309e21fa03a51346e6c313f9649e573010fbfca7673ea65164b3"
+    },
+    {
+      "path": "local-verification/permit-build.txt",
+      "sha256": "b18c48454fbccd4a6f046a14700b0be8464724d2b2fc3006a2684c19de6eead6"
+    },
+    {
+      "path": "local-verification/permit-test-v1.txt",
+      "sha256": "8cea7f9ab29fccb62da22786ffd810ed49a27d411db1a4669cda5be85ae8cdbc"
+    },
+    {
+      "path": "local-verification/public-build-v4.txt",
+      "sha256": "aec3130fe451cfb19c5630008b0737d2fa149aee1e3e6a1280378d7b367b2d69"
+    },
+    {
+      "path": "local-verification/public-lint-v4.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "local-verification/public-tests-v1.txt",
+      "sha256": "3e5bd3c5fae8e23f544c9454aba15736206771daf06aabad48d7a6d2ad1808e0"
+    },
+    {
+      "path": "local-verification/public-tests-v2.txt",
+      "sha256": "4d4e5a5e19e8531cbb014388265677847c9e642b674cecb82b5c6cf2105aebdf"
+    },
+    {
+      "path": "local-verification/public-tests-v3.txt",
+      "sha256": "869fe865a30c0146c266e29da021f53eb45151cee74d6b3786bf6f7eaa16fa1e"
+    },
+    {
+      "path": "local-verification/public-tests-v4.txt",
+      "sha256": "a9221eec1683e71b9cd6e1b4c5574019c7f7b5b2978e6bbebf8cbb33e1fe1c95"
+    },
+    {
+      "path": "local-verification/public-typecheck-v2.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "local-verification/recovery-harness-v1.txt",
+      "sha256": "393eb5ef0825fa3b3b55ad0adecd9c7628e5fd8caf76e482e6c9f66f831d5982"
+    },
+    {
+      "path": "local-verification/runner-harness-v1.txt",
+      "sha256": "bddd2d01c00072166a72928ee48f6063883ebc0f22baa8c6931b4666f8dee011"
+    }
+  ]
+}

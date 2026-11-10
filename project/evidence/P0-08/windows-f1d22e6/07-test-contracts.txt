@@ -1,0 +1,119 @@
+TAP version 13
+# Subtest: checked-in positive and negative examples are executable contracts
+ok 1 - checked-in positive and negative examples are executable contracts
+  ---
+  duration_ms: 403.2871
+  type: 'test'
+  ...
+# Subtest: ID namespaces, safe revisions and version literals cannot be coerced
+ok 2 - ID namespaces, safe revisions and version literals cannot be coerced
+  ---
+  duration_ms: 18.2785
+  type: 'test'
+  ...
+# Subtest: schema errors retain field paths in a safe standard envelope
+ok 3 - schema errors retain field paths in a safe standard envelope
+  ---
+  duration_ms: 29.581
+  type: 'test'
+  ...
+# Subtest: input and display names count Unicode code points at exact boundaries
+ok 4 - input and display names count Unicode code points at exact boundaries
+  ---
+  duration_ms: 21.6432
+  type: 'test'
+  ...
+# Subtest: conditional requests require a current single strong safe ETag
+ok 5 - conditional requests require a current single strong safe ETag
+  ---
+  duration_ms: 15.9323
+  type: 'test'
+  ...
+# Subtest: a current resource ETag cannot validate old business content or another review
+ok 6 - a current resource ETag cannot validate old business content or another review
+  ---
+  duration_ms: 16.6876
+  type: 'test'
+  ...
+# Subtest: both execution owners work only within the authority scope
+ok 7 - both execution owners work only within the authority scope
+  ---
+  duration_ms: 16.4025
+  type: 'test'
+  ...
+# Subtest: host IDs, epochs, attempts, activation and grant are all current facts
+ok 8 - host IDs, epochs, attempts, activation and grant are all current facts
+  ---
+  duration_ms: 30.1034
+  type: 'test'
+  ...
+# Subtest: validity is half-open and cannot be widened by caller JSON
+ok 9 - validity is half-open and cannot be widened by caller JSON
+  ---
+  duration_ms: 16.3735
+  type: 'test'
+  ...
+# Subtest: forged scope and read-to-write escalation are denied
+ok 10 - forged scope and read-to-write escalation are denied
+  ---
+  duration_ms: 19.4333
+  type: 'test'
+  ...
+# Subtest: command target and payload are discriminated independently of client intent
+ok 11 - command target and payload are discriminated independently of client intent
+  ---
+  duration_ms: 21.924
+  type: 'test'
+  ...
+# Subtest: event time fallback, persisted versions and host fields cannot contradict payload
+ok 12 - event time fallback, persisted versions and host fields cannot contradict payload
+  ---
+  duration_ms: 28.9654
+  type: 'test'
+  ...
+# Subtest: token deltas do not become durable business events
+ok 13 - token deltas do not become durable business events
+  ---
+  duration_ms: 11.0562
+  type: 'test'
+  ...
+# Subtest: A2A completed, findings and business success have different representations
+ok 14 - A2A completed, findings and business success have different representations
+  ---
+  duration_ms: 14.4137
+  type: 'test'
+  ...
+# Subtest: reports must bind one exact commit, including optional preview
+ok 15 - reports must bind one exact commit, including optional preview
+  ---
+  duration_ms: 5.7634
+  type: 'test'
+  ...
+# Subtest: plan data has a scale limit and cannot embed a JavaScript completion checker
+ok 16 - plan data has a scale limit and cannot embed a JavaScript completion checker
+  ---
+  duration_ms: 45.0409
+  type: 'test'
+  ...
+# Subtest: OpenAPI body references and route parameters resolve to shared schemas
+ok 17 - OpenAPI body references and route parameters resolve to shared schemas
+  ---
+  duration_ms: 494.1942
+  type: 'test'
+  ...
+# Subtest: OpenAPI drift check returns a real process success for the generated artifact
+ok 18 - OpenAPI drift check returns a real process success for the generated artifact
+  ---
+  duration_ms: 3510.3059
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8586.0329
+$ node --test --test-reporter=tap tests/contracts.test.mjs

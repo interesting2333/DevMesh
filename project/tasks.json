@@ -389,15 +389,18 @@
       "codeReferences": [
         "bf50680966d9dfbbd876b68f6b1370a75616f2ea",
         "dd7f9725276a9523380c8f6e681deb2cab495832",
-        "f1d22e6"
+        "f1d22e6",
+        "f1d22e67a0e3870d849a2f37bb9ec2c92d14dc60"
       ],
       "evidence": [
         "project/evidence/P0-08/离线实施进展.md",
-        "project/evidence/P0-08/SHA256.json"
+        "project/evidence/P0-08/SHA256.json",
+        "project/evidence/P0-08/windows-f1d22e6/report.json"
       ],
       "reviewNote": null,
       "notes": [
-        "按用户持续实施指令，提前实现官方 MCP、repo 只读和 tests 作业协议；前置真实模型／Runner 验收未完成，正式状态保留 NOT_STARTED。"
+        "按用户持续实施指令，提前实现官方 MCP、repo 只读和 tests 作业协议；前置真实模型／Runner 验收未完成，正式状态保留 NOT_STARTED。",
+        "f1d22e6 固定源码 Windows 干净检出 17/17 检查通过：A2A 24/24、Runtime 18/18、MCP 9/9、存储 28/28、内容 20/20；Runner 13 通过／1 个 Linux 专项跳过，smoke 9 通过／1 个 POSIX 专项跳过，无失败或取消。真实模型／企业身份／runsc 未执行。"
       ]
     },
     {
@@ -444,10 +447,10 @@
       "id": "P0-10",
       "phase": "P0",
       "title": "公共 Card 与认证接入原型",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "responsibility": "Agent",
       "owner": "Codex（连续目标实施）",
-      "reviewer": null,
+      "reviewer": "Codex（同一 Agent 技术复核）",
       "dependsOn": [
         "P0-02",
         "P0-05"
@@ -465,18 +468,21 @@
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": "2026-11-10T13:45:56.094Z",
-      "completedAt": null,
+      "completedAt": "2026-11-10T14:12:31.931Z",
       "codeReferences": [
         "dd7f9725276a9523380c8f6e681deb2cab495832",
-        "f1d22e6"
+        "f1d22e6",
+        "f1d22e67a0e3870d849a2f37bb9ec2c92d14dc60"
       ],
       "evidence": [
         "project/evidence/P0-10/离线实施进展.md",
-        "project/evidence/P0-10/SHA256.json"
+        "project/evidence/P0-10/SHA256.json",
+        "project/evidence/P0-08/windows-f1d22e6/report.json"
       ],
-      "reviewNote": null,
+      "reviewNote": "已按原型工作包范围复核默认关闭、Card 隐私、主体 allowlist、官方 JSON-RPC/SSE 和实际示例进程，固定源码 17/17 基础检查通过；不是独立评审、企业 OAuth、公网或外部业务验收。",
       "notes": [
-        "默认关闭的 loopback 公共 A2A 协议原型已实现，官方 SDK 真实 HTTP／SSE 及示例进程 5/5 通过；固定修正快照完整回归进行中。仅即时探测，公网、企业 OAuth、正式 Exposure 与业务 Task 未验收。"
+        "默认关闭的 loopback 公共 A2A 协议原型已实现，官方 SDK 真实 HTTP／SSE 及示例进程 5/5 通过；固定修正快照完整回归进行中。仅即时探测，公网、企业 OAuth、正式 Exposure 与业务 Task 未验收。",
+        "f1d22e6 固定源码 Windows 干净检出 17/17 检查通过：A2A 24/24、Runtime 18/18、MCP 9/9、存储 28/28、内容 20/20；Runner 13 通过／1 个 Linux 专项跳过，smoke 9 通过／1 个 POSIX 专项跳过，无失败或取消。真实模型／企业身份／runsc 未执行。"
       ]
     },
     {
@@ -499,7 +505,9 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-project-input-api"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -507,7 +515,9 @@
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "按用户连续目标授权，在 G0 和真实模型前置未验收时推进独立输入 API 代码与离线验证；企业身份接入默认未配置，正式工作包状态和阶段前置保留。"
+      ]
     },
     {
       "id": "P1-02",
