@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.png binary
+
+# These baseline manifests hash the original document bytes.
+# Preserve those bytes identically on Windows and Linux checkouts.
+DevMesh_PRD_V10.0.md -text
+DevMesh_技术设计方案_V1.1.md -text
+DevMesh_产品验收场景_V10.0.md -text
+DevMesh_实施文档_V1.0.md -text
