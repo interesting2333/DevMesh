@@ -32,7 +32,7 @@
     "storage:init": "node scripts/storage.mjs init",
     "storage:verify": "node scripts/storage.mjs verify",
     "test:a2a": "node --test --test-reporter=tap tests/a2a*.test.mjs",
-    "test:runtime": "node --test --test-reporter=tap tests/runtime*.test.mjs"
+    "test:runtime": "node --test --test-concurrency=1 --test-reporter=tap tests/runtime*.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",
