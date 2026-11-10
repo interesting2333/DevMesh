@@ -80,7 +80,7 @@ test('pause during provider response closes the next tool admission',async t=>{
  const result=await f.runtime.execute(f.claim);assert.equal(result.code,'EXECUTION_PERMIT_INVALID');assert.equal(executions,0);assert.equal(f.db.prepare('SELECT count(*) n FROM runtime_results').get().n,0);
 });
 test('provider timeout leaves SENT and unknown cost, rather than automatically retrying',async t=>{
- const f=await setup(t,()=>{},undefined,{requestTimeoutMs:50});const result=await f.runtime.execute(f.claim);assert.equal(result.state,'reconcile');assert.equal(result.code,'MODEL_TIMEOUT');assert.equal(f.requests.length,1);assert.equal(f.db.prepare('SELECT state FROM model_steps').get().state,'SENT');assert.equal(f.db.prepare('SELECT unknown_usage FROM runtime_activations').get().unknown_usage,1);
+ const f=await setup(t,()=>{},undefined,{requestTimeoutMs:50});const result=await f.runtime.execute(f.claim);assert.equal(result.state,'reconcile');assert.equal(result.code,'MODEL_TIMEOUT');assert.ok(f.requests.length<=1,'a timeout never retries; it can precede server receipt');assert.equal(f.db.prepare('SELECT state FROM model_steps').get().state,'SENT');assert.equal(f.db.prepare('SELECT unknown_usage FROM runtime_activations').get().unknown_usage,1);
 });
 test('token reservation prevents a network call and missing provider has an explicit outcome',async t=>{
  const f=await setup(t,(_r,_q,res)=>res.end(JSON.stringify(answer())));const low=new AgentRuntime(f.storage,f.content,[f.provider],[],1);assert.equal((await low.execute(f.claim)).code,'MODEL_BUDGET_EXCEEDED');assert.equal(f.requests.length,0);
