@@ -1,6 +1,6 @@
 # 工程使用与验证
 
-当前交付最小 Node HTTP／Express 5 服务、Cordis 插件生命周期、[核心契约包](../packages/contracts/README.md) 及 [SQLite 存储基础](../packages/storage-sqlite/README.md)。存储库和维护 CLI 可独立使用，HTTP 组合与 A2A/MCP、模型、Runner 和 UI 按后续工作包接入；就绪接口只描述基础 HTTP 插件。
+当前交付最小 Node HTTP／Express 5、Cordis 生命周期、[核心契约](../packages/contracts/README.md)、[SQLite Worker](../packages/storage-sqlite/README.md) 和 [本地内容／会话](../packages/blob-store/README.md)。可选持久存储已组合进 HTTP 宿主，开启时 readiness 等待实际完整性核实；A2A/MCP、模型、Runner 和 UI 按后续工作包接入。
 
 各工作包实际结果和同提交两平台报告见 [P0-01 工程](../project/evidence/P0-01/验收记录.md)、[P0-02 契约](../project/evidence/P0-02/验收记录.md)、[P0-03 存储](../project/evidence/P0-03/验收记录.md)。
 
@@ -31,6 +31,7 @@ corepack pnpm@11.28.5 lint
 corepack pnpm@11.28.5 test:smoke
 corepack pnpm@11.28.5 test:contracts
 corepack pnpm@11.28.5 test:storage
+corepack pnpm@11.28.5 test:content
 corepack pnpm@11.28.5 contracts:check
 corepack pnpm@11.28.5 start
 ```
@@ -39,7 +40,7 @@ Corepack 只负责本次选定版本的启动，不需要修改全局 pnpm。安
 
 首次 `build` 完成后可运行 `corepack pnpm@11.28.5 dev` 使用 tsx；这是当前单个服务的启动入口。库包变化后重新 build，后续开发期多包 watch 可另行增加。
 
-默认地址 `http://127.0.0.1:3210`：`GET /healthz` 返回 HTTP 插件存活，`GET /readyz` 在插件成功加载后返回 ready。其他路径 404。这些响应不包含尚未实现能力的可用承诺。
+默认地址 `http://127.0.0.1:3210`：`GET /healthz` 返回 HTTP 插件存活，`GET /readyz` 在已配置插件成功加载后返回 ready。启用 storage 时先核实文件／DB，失败不开 readiness；其他路径 404。这些响应不包含尚未实现能力的可用承诺。
 
 ## 配置和停止
 
@@ -49,7 +50,7 @@ node apps/server/dist/main.mjs --config config/server.example.json
 
 配置优先级：明确 `--config` 路径优先于 `DEVMESH_CONFIG`；具体字段以环境变量覆盖 JSON 文件，最后使用默认值。可用环境变量为 `DEVMESH_HOST`、`DEVMESH_PORT`、`DEVMESH_SHUTDOWN_TIMEOUT_MS`。示例见 [JSON](../config/server.example.json) 和 [.env.example](../.env.example)；服务直接读 process.env，不自动加载 `.env`。
 
-host 当前仅允许 `127.0.0.1`／`::1`；port 为 0～65535，0 用于临时测试端口；shutdownTimeoutMs 为 100～30000，默认 5000。未知 JSON 字段、无效数值、无法读取文件、端口占用均导致非零退出，不输出 ready。
+host 当前仅允许 `127.0.0.1`／`::1`；port 为 0～65535，0 用于临时测试端口；shutdownTimeoutMs 为 100～30000，默认 5000。未知 JSON 字段、无效数值、无法读取文件、端口占用均导致非零退出，不输出 ready。可选 storage 字段及环境变量见内容存储说明，示例为 `config/server.storage.example.json`；首次先运行 storage:init，常规启动不新建空库。
 
 交互终端使用 Ctrl+C；POSIX 支持 SIGTERM。服务通过 Cordis fiber disposer 关闭监听器和连接，期限到达会关闭残留连接；只有资源释放完成才输出 stopped。Node 子进程支持 IPC `{ "type": "shutdown" }`，用于 Windows 自动验证；父进程断连也触发收尾。Windows 的强制进程终止不能当作执行了 graceful shutdown。
 

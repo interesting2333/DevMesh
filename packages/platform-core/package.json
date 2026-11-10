@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": { "types": "./dist/index.d.mts", "import": "./dist/index.mjs" }
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
   },
   "scripts": {
     "build": "tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean"
@@ -15,7 +18,8 @@
     "@deepseek-ai/cordis-plugin-include": "workspace:*",
     "@deepseek-ai/cordis-plugin-loader": "workspace:*",
     "@deepseek-ai/schemastery": "workspace:*",
-    "express": "5.2.1"
+    "express": "5.2.1",
+    "@devmesh/blob-store": "workspace:*"
   },
   "optionalDependencies": {
     "node-addon-require-builtin": "0.1.9"

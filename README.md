@@ -14,6 +14,7 @@ DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的�
 | OpenSpec 已完成变更 | [P0-01 工程基础](./openspec/changes/archive/2026-11-10-bootstrap-devmesh-workspace/proposal.md)、[P0-02 核心契约](./openspec/changes/archive/2026-11-10-establish-core-contracts/proposal.md)、[P0-03 SQLite 存储](./openspec/changes/archive/2026-11-10-implement-sqlite-storage/proposal.md) |
 | 核心 schema、OpenAPI、样例和模块接口表 | [contracts 包说明](./packages/contracts/README.md) |
 | 数据库迁移、Worker、事务与崩溃恢复 | [SQLite 存储说明](./packages/storage-sqlite/README.md) |
+| 本地正文、附件、会话与目录初始化 | [内容存储说明](./packages/blob-store/README.md) |
 | 全部文档与原型 | [交付说明](./交付说明.md) |
 | 运行、构建、配置、测试与 CI | [工程说明](./docs/engineering.md) |
 
@@ -38,7 +39,7 @@ corepack pnpm@11.28.5 build
 corepack pnpm@11.28.5 start
 ```
 
-服务默认监听 `127.0.0.1:3210`；`/healthz`、`/readyz` 只描述基础 HTTP 插件。配置、关闭和双平台验证见工程说明。
+服务默认监听 `127.0.0.1:3210`。默认只启用基础 HTTP；可按内容存储说明先显式初始化，再用 `config/server.storage.example.json` 启用持久存储，readiness 会等待内容与 DB 完整性检查。配置、关闭和双平台验证见工程说明。
 
 ## 提交前检查
 

@@ -3,6 +3,8 @@ import type { AddressInfo, Socket } from 'node:net';
 import express from 'express';
 import { Context } from '@deepseek-ai/cordis';
 import type { ServerConfig } from './config.js';
+import { LocalContentStore, SessionStore, openLocalStorage } from '@devmesh/blob-store';
+import type { LocalStorage } from '@devmesh/blob-store';
 
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
@@ -10,10 +12,26 @@ export type { ServerConfig } from './config.js';
 export interface FoundationServer {
   readonly address: Readonly<AddressInfo>;
   stop(): Promise<void>;
+  services?: { local:LocalStorage; content:LocalContentStore; sessions:SessionStore } | undefined;
 }
 
 export async function startPlatform(config: Readonly<ServerConfig>): Promise<FoundationServer> {
   const context = new Context();
+  let services: FoundationServer['services'];
+  const storageFiber=config.storage?context.plugin({name:'devmesh-local-storage',async apply(scope:Context){
+    await scope.effect(async()=>{
+      const local=await openLocalStorage(config.storage!);
+      try{
+        const content=new LocalContentStore(local.storage,local.dataRoot,local.minimumFreeBytes),sessions=new SessionStore(content);
+        await content.recoverPublished();
+        const integrity=await content.verifyAll();
+        if(integrity.failures.length)throw new Error(`Storage integrity blocked startup: ${integrity.failures.length} unavailable objects`);
+        services={local,content,sessions};
+        return ()=>local.close();
+      }catch(error){await local.close();throw error;}
+    },'devmesh.storage');
+  }}):undefined;
+  if(storageFiber)await storageFiber;
   const sockets = new Set<Socket>();
   let ready = false;
   let cleanupError: unknown;
@@ -73,6 +91,7 @@ export async function startPlatform(config: Readonly<ServerConfig>): Promise<Fou
     ready = true;
   } catch (error) {
     await fiber.dispose();
+    await storageFiber?.dispose();
     server.closeAllConnections();
     for (const socket of sockets) socket.destroy();
     throw error;
@@ -83,10 +102,11 @@ export async function startPlatform(config: Readonly<ServerConfig>): Promise<Fou
   let stopping: Promise<void> | undefined;
   return {
     address: Object.freeze({ ...address }),
+    ...(services?{services}:{}),
     stop() {
       ready = false;
       stopping ??= (async () => {
-        await fiber.dispose();
+        try{await fiber.dispose();}finally{await storageFiber?.dispose();}
         if (cleanupError) throw cleanupError;
         if (server.listening || sockets.size !== 0) throw new Error('HTTP resources remained active after Cordis disposal');
       })();

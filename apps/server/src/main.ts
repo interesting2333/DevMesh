@@ -51,6 +51,7 @@ async function main(): Promise<void> {
   process.on('disconnect', onDisconnect);
   try {
     const config = loadConfig(process.env, configArgument(process.argv.slice(2)));
+    if(config.storage)log('storage-config',{dataRoot:config.storage.dataRoot,backupRoot:config.storage.backupRoot,sources:config.storageSources});
     platform = await startPlatform(config);
     if (requested) {
       await shutdown(requested);

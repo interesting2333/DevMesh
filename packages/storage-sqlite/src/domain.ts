@@ -5,16 +5,17 @@ import { requests } from './protocol.js';
 import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
+import { canonical } from './json.js';
+import { createSessionDomain } from './session-domain.js';
+import { sessionRequests } from './session-protocol.js';
+import type { SessionMethod } from './session-protocol.js';
+export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
 const uid = (prefix: string) => `${prefix}_${randomUUID().replaceAll('-', '')}`;
 const now = () => new Date().toISOString();
-export function canonical(value: unknown): string {
-  if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
-  if (value && typeof value === 'object') return '{' + Object.entries(value).filter(([,v]) => v !== undefined).sort(([a],[b]) => a < b ? -1 : a > b ? 1 : 0).map(([key,v]) => JSON.stringify(key) + ':' + canonical(v)).join(',') + '}';
-  return JSON.stringify(value);
-}
 export function createDomain(db: DatabaseSync) {
+  const sessions = createSessionDomain(db);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
   const exec = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).run(...args);
@@ -256,8 +257,9 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if (Object.hasOwn(sessionRequests, method)) return sessions.execute(method as SessionMethod, input);
     if (method === 'inspect' || !Object.hasOwn(handlers, method)) throw new StorageError('METHOD_NOT_ALLOWED', 422, 'Unsupported storage command');
     const parsed = parseContract(requests[method], input);
-    return (handlers[method] as (input: unknown) => unknown)(parsed);
+    return (handlers[method as keyof typeof handlers] as (input: unknown) => unknown)(parsed);
   } };
 }

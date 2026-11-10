@@ -5,7 +5,8 @@
   "notes": [
     "工作包状态是实际进度的唯一来源，OpenSpec tasks.md 是变更内部步骤。",
     "前置任务 DONE 且上一阶段门槛 PASSED 后方可开始正式实施；同阶段依赖按 dependsOn 判断。",
-    "不预设实际人员、工期、证据或验收通过结论。"
+    "不预设实际人员、工期、证据或验收通过结论。",
+    "2026-11-10 用户要求持续完成全项目；随后明确模型、企业认证与 Docker/gVisor 暂无，先实现代码与离线验证。缺环境不阻止不依赖它的实现，真实联调与阶段验收保留未执行，不伪造通过。"
   ],
   "baselines": [
     {
@@ -210,9 +211,9 @@
       "id": "P0-04",
       "phase": "P0",
       "title": "本地会话与内容存储",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "responsibility": "平台",
-      "owner": null,
+      "owner": "Codex（连续目标实施）",
       "reviewer": null,
       "dependsOn": [
         "P0-03"
@@ -224,10 +225,12 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-local-content-sessions"
+      ],
       "blockedReason": null,
       "nextCheck": null,
-      "startedAt": null,
+      "startedAt": "2026-11-10T08:24:11.818Z",
       "completedAt": null,
       "codeReferences": [],
       "evidence": [],
