@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-10T09:34:17.947Z",
+  "status": "PASSED",
+  "results": {
+    "windows": {
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.13.1",
+      "commit": "0e6b1ea9215c6b03b6479bf2e3c004b653916d28",
+      "sourceFingerprint": "759e86877b3cd300f8779635c5399af2fb72c6f44ebaf9e1373f043ee2fa9d8c",
+      "lockfileSha256": "ae8d3f81a79fd40ddd8c7821f0cefba85f87ba8786d1b8d78054aa636750eeb8",
+      "sourceFiles": 143,
+      "checks": 14,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 9,
+          "fail": 0,
+          "skipped": 1
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:storage",
+          "tests": 28,
+          "pass": 28,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:content",
+          "tests": 20,
+          "pass": 20,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:a2a",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-05/windows/report.json"
+    },
+    "linux": {
+      "platform": "linux",
+      "arch": "x64",
+      "node": "v24.13.1",
+      "commit": "0e6b1ea9215c6b03b6479bf2e3c004b653916d28",
+      "sourceFingerprint": "759e86877b3cd300f8779635c5399af2fb72c6f44ebaf9e1373f043ee2fa9d8c",
+      "lockfileSha256": "ae8d3f81a79fd40ddd8c7821f0cefba85f87ba8786d1b8d78054aa636750eeb8",
+      "sourceFiles": 143,
+      "checks": 14,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:storage",
+          "tests": 28,
+          "pass": 28,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:content",
+          "tests": 20,
+          "pass": 20,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:a2a",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-05/linux/report.json"
+    }
+  }
+}
