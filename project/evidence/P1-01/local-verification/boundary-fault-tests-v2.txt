@@ -1,0 +1,68 @@
+TAP version 13
+# (node:27148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: input transport rejects ambiguous headers, wrong host and unsupported cookie identity
+ok 1 - input transport rejects ambiguous headers, wrong host and unsupported cookie identity
+  ---
+  duration_ms: 42835.0613
+  type: 'test'
+  ...
+# (node:27148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shutdown aborts pending trusted identity resolution and admits no late project write
+ok 2 - shutdown aborts pending trusted identity resolution and admits no late project write
+  ---
+  duration_ms: 33163.1467
+  type: 'test'
+  ...
+# (node:11904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a real staging path failure terminates the original intake instead of leaving it receiving
+not ok 3 - a real staging path failure terminates the original intake instead of leaving it receiving
+  ---
+  duration_ms: 13690.1026
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\input-upload-faults.test.mjs:8:1'
+  failureType: 'testCodeFailure'
+  error: "EISDIR: illegal operation on a directory, open 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-content-test-jZFGv2\\control\\staging\\uploads'"
+  code: 'EISDIR'
+  stack: |-
+    writeFileSync (node:fs:2412:20)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/input-upload-faults.test.mjs:10:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:11904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: malformed framing and excessive part headers are input errors with durable failed upload facts
+ok 4 - malformed framing and excessive part headers are input errors with durable failed upload facts
+  ---
+  duration_ms: 13707.9575
+  type: 'test'
+  ...
+# (node:11904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a failed final intake acknowledgement preserves published attachment facts for exact recovery
+ok 5 - a failed final intake acknowledgement preserves published attachment facts for exact recovery
+  ---
+  duration_ms: 23017.7856
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 157813.8462

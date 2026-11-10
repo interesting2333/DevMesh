@@ -109,10 +109,10 @@ export function createSessionDomain(db: DatabaseSync) {
     let row: Row;
     if (ref.kind === 'attachment') {
       row = required(get("SELECT content_hash,owner_id FROM attachments WHERE attachment_id=? AND state='READY'", ref.attachmentId));
-      if (row.owner_id !== principalId) reject('FORBIDDEN', 'Attachment belongs to another principal', 403);
+      if (row.owner_id !== principalId && !get('SELECT 1 FROM input_message_attachments a JOIN input_messages m ON m.message_id=a.message_id JOIN project_members p ON p.project_id=m.project_id WHERE a.attachment_id=? AND p.principal_id=?',ref.attachmentId,principalId)) reject('FORBIDDEN', 'Attachment belongs to another principal', 403);
     } else if (ref.kind === 'artifact') {
-      row = required(get("SELECT a.content_hash,p.owner_id FROM artifacts a JOIN projects p ON p.project_id=a.project_id WHERE artifact_id=? AND a.state='READY'", ref.artifactId));
-      if (row.owner_id !== principalId) reject('FORBIDDEN', 'Artifact belongs to another principal', 403);
+      row = required(get("SELECT a.content_hash,a.project_id,p.owner_id FROM artifacts a JOIN projects p ON p.project_id=a.project_id WHERE artifact_id=? AND a.state='READY'", ref.artifactId));
+      if (!get('SELECT 1 FROM project_members WHERE project_id=? AND principal_id=?',row.project_id!,principalId)) reject('FORBIDDEN', 'Artifact belongs to another principal', 403);
     } else if (ref.kind === 'message') {
       row = required(get('SELECT session_id,body_content_hash AS content_hash FROM session_messages WHERE message_id=?', ref.messageId));
       session(principalId, String(row.session_id));

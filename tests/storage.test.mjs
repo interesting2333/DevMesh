@@ -8,7 +8,7 @@ const rejects = (promise, code) => assert.rejects(promise, error=>error.code===c
 
 test('real Worker owns a migrated WAL/FULL/foreign-key connection',async t=>{
   const {storage}=await fixture(t), info=await storage.request('inspect',{});
-  assert.equal(info.version,6); assert.ok(info.workerThreadId>0); assert.equal(Object.keys(info.counts).length,55);
+  assert.equal(info.version,7); assert.ok(info.workerThreadId>0); assert.equal(Object.keys(info.counts).length,61);
   assert.deepEqual(info.pragmas,{journal_mode:'wal',foreign_keys:1,synchronous:2,busy_timeout:5000});
   assert.deepEqual(info.foreignKeyErrors,[]);
   await rejects(storage.request('exec',{sql:'DROP TABLE projects'}),'METHOD_NOT_ALLOWED');
@@ -186,6 +186,6 @@ test('formal foreign keys reject missing/cross-run input and immutable snapshots
   assert.throws(()=>db.prepare('UPDATE runs SET origin_run_id=? WHERE run_id=?').run(b.runId,a.runId),/FOREIGN KEY/);
   assert.throws(()=>db.prepare("UPDATE plan_revisions SET content_json='{}' WHERE run_id=?").run(a.runId),/IMMUTABLE/);
   assert.throws(()=>db.prepare('DELETE FROM requirement_revisions WHERE run_id=?').run(a.runId),/IMMUTABLE/);
-  assert.equal(JSON.parse(readFileSync(new URL('../packages/storage-sqlite/migrations/manifest.json',import.meta.url))).length,6);
+  assert.equal(JSON.parse(readFileSync(new URL('../packages/storage-sqlite/migrations/manifest.json',import.meta.url))).length,7);
   } finally { db.close(); }
 });

@@ -15,6 +15,9 @@ import type { RuntimeMethod } from './runtime-protocol.js';
 import { createSessionDomain } from './session-domain.js';
 import { sessionRequests } from './session-protocol.js';
 import type { SessionMethod } from './session-protocol.js';
+import { createInputDomain } from './input-domain.js';
+import { inputRequests } from './input-protocol.js';
+import type { InputMethod } from './input-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -38,8 +41,9 @@ export function createDomain(db: DatabaseSync) {
   const outboxView = (row: Row): OutboxView => ({ outboxId: String(row.outbox_id), operationId: String(row.operation_id), destination: String(row.destination), payload: JSON.parse(String(row.payload_json)), status: String(row.status), deliveryAttempt: Number(row.delivery_attempts), leaseOwner: row.lease_owner as string | null, leaseUntil: row.lease_until as string | null });
   const operationView = (row: Row) => ({ operationId: String(row.operation_id), status: String(row.status), result: row.result_json === null ? null : JSON.parse(String(row.result_json)) as Record<string, unknown> });
   const lookup = (meta: Meta) => get('SELECT * FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?', meta.principalId, meta.scopeId, meta.idempotencyKey);
-  function operation(meta: Meta, kind: string, payload: unknown, action: (operationId: string) => Record<string, unknown>) {
+  function operation(meta: Meta, kind: string, payload: unknown, action: (operationId: string) => Record<string, unknown>, authorize?:()=>void) {
     return transaction(db, () => {
+      authorize?.();
       const requestHash = digest(canonical({ kind, payload }));
       const previous = lookup(meta);
       if (previous) {
@@ -70,6 +74,23 @@ export function createDomain(db: DatabaseSync) {
     insert('outbox', { outbox_id: uid('outbox'), operation_id: operationId, message_no: Number(get('SELECT count(*) n FROM outbox WHERE operation_id=?', operationId)?.n ?? 0), destination, payload_json: canonical(payload), status: 'PENDING', delivery_attempts: 0, lease_owner: null, lease_until: null, next_attempt_at: now() });
   }
   function readyContent(hash: string) { return required(get("SELECT * FROM content_objects WHERE content_hash=? AND state='READY'", hash)); }
+  function createInputFacts(input:{principalId:string;projectId?:string|undefined;name:string;baseCommit:string;contentHash:string;kind:string;clientMessageId:string}, operationId:string, legacyUnderstanding:boolean) {
+    const content=readyContent(input.contentHash),time=now();
+    const projectId=input.projectId??uid('prj'), taskId=uid('task'),runId=uid('run'),artifactId=uid('artifact'),messageId=uid('message');
+    if(!input.projectId){
+      insert('projects',{project_id:projectId,owner_id:input.principalId,name:input.name,revision:1,accepted_release_id:null,created_at:time,updated_at:time});
+      insert('project_members',{project_id:projectId,principal_id:input.principalId,role:'owner',created_at:time});
+    }
+    insert('user_tasks',{task_id:taskId,project_id:projectId,kind:input.kind,base_commit:input.baseCommit,request_artifact_id:artifactId,created_at:time});
+    insert('runs',{run_id:runId,project_id:projectId,task_id:taskId,phase:'UNDERSTANDING',created_at:time});
+    insert('artifacts',{artifact_id:artifactId,project_id:projectId,run_id:runId,attempt_id:null,kind:'USER_INPUT',content_hash:input.contentHash,byte_size:Number(content.byte_size),storage_key:String(content.storage_key),state:'READY',created_at:time});
+    insert('input_messages',{message_id:messageId,project_id:projectId,run_id:runId,author:input.principalId,body_artifact_id:artifactId,client_message_id:input.clientMessageId,created_at:time});
+    event(runId,operationId,'InputSaved',{messageId});
+    if(legacyUnderstanding)outbox(operationId,'understanding',{schemaVersion:1,projectId,runId,messageId});
+    exec('UPDATE projects SET updated_at=? WHERE project_id=?',time,projectId);
+    return {projectId,taskId,runId,artifactId,messageId,revision:1};
+  }
+  const inputs=createInputDomain(db,{operation,createInputFacts,event,outbox,runView});
   function knownEffects(attemptId: string) {
     return !get("SELECT o.operation_id FROM tool_operations t JOIN operations o ON o.operation_id=t.operation_id WHERE t.attempt_id=? AND o.status NOT IN ('SUCCEEDED','FAILED')", attemptId)
       && !get("SELECT j.job_id FROM runner_jobs j JOIN tool_operations t ON t.operation_id=j.operation_id WHERE t.attempt_id=? AND j.state<>'EXITED'", attemptId);
@@ -91,19 +112,11 @@ export function createDomain(db: DatabaseSync) {
     createProjectWithRun(input: Parsed<'createProjectWithRun'>) {
       const { meta, ...payload } = input;
       return operation(meta, 'CreateProjectWithRun', payload, operationId => {
-        const content = readyContent(input.contentHash), time = now();
-        const projectId = input.projectId ?? uid('prj'), taskId = uid('task'), runId = uid('run'), artifactId = uid('artifact'), messageId = uid('message');
         if (input.projectId) {
-          const project = required(get('SELECT * FROM projects WHERE project_id=?', projectId));
+          const project = required(get('SELECT * FROM projects WHERE project_id=?', input.projectId));
           if (project.owner_id !== meta.principalId) throw new StorageError('FORBIDDEN', 403, 'Caller is not the project owner');
-        } else insert('projects', { project_id: projectId, owner_id: meta.principalId, name: input.name, revision: 1, accepted_release_id: null, created_at: time });
-        insert('user_tasks', { task_id: taskId, project_id: projectId, kind: input.kind, base_commit: input.baseCommit, request_artifact_id: artifactId, created_at: time });
-        insert('runs', { run_id: runId, project_id: projectId, task_id: taskId, phase: 'UNDERSTANDING', created_at: time });
-        insert('artifacts', { artifact_id: artifactId, project_id: projectId, run_id: runId, attempt_id: null, kind: 'USER_INPUT', content_hash: input.contentHash, byte_size: Number(content.byte_size), storage_key: String(content.storage_key), state: 'READY', created_at: time });
-        insert('input_messages', { message_id: messageId, project_id: projectId, run_id: runId, author: meta.principalId, body_artifact_id: artifactId, client_message_id: input.clientMessageId, created_at: time });
-        event(runId, operationId, 'InputSaved', { messageId });
-        outbox(operationId, 'understanding', { schemaVersion: 1, projectId, runId, messageId });
-        return { projectId, taskId, runId, artifactId, messageId, revision: 1 };
+        }
+        return createInputFacts({...input,principalId:meta.principalId},operationId,true);
       });
     },
     publishPlan(input: Parsed<'publishPlan'>) {
@@ -266,6 +279,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if (Object.hasOwn(inputRequests,method))return inputs.execute(method as InputMethod,input);
     if (Object.hasOwn(runtimeRequests, method)) return runtime.execute(method as RuntimeMethod, input);
     if (Object.hasOwn(registryRequests, method)) return registry.execute(method as RegistryMethod, input);
     if (Object.hasOwn(sessionRequests, method)) return sessions.execute(method as SessionMethod, input);

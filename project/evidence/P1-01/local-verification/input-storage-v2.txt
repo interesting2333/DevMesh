@@ -1,0 +1,40 @@
+TAP version 13
+# (node:29744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:29744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:29744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: migration 7 backfills existing ownership and preserves the original project and backup
+ok 1 - migration 7 backfills existing ownership and preserves the original project and backup
+  ---
+  duration_ms: 11807.4716
+  type: 'test'
+  ...
+# (node:29744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: T1 rolls back project, owner, message, processing and outbox together after a late SQL failure
+ok 2 - T1 rolls back project, owner, message, processing and outbox together after a late SQL failure
+  ---
+  duration_ms: 28224.3756
+  type: 'test'
+  ...
+# (node:29744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:29744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: upload restart recovery fences partial staging and recognizes only exact published attachments
+ok 3 - upload restart recovery fences partial staging and recognizes only exact published attachments
+  ---
+  duration_ms: 44046.6952
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 108791.0833

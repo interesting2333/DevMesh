@@ -10,16 +10,16 @@ import { fixture } from './fixtures/storage-data.mjs';
 const migrations=readMigrations();
 
 test('formal empty installation supports each previous version and preserves data through backups',async t=>{
-  for(const targetVersion of [1,2,3,4,5]) {
+  for(const targetVersion of [1,2,3,4,5,6]) {
     const f=await fixture(t,{targetVersion});
     const contentHash='a'.repeat(64);
     assert.equal((await f.storage.request('inspect',{})).version,targetVersion);
     await f.storage.close();
     const seed=new DatabaseSync(f.options.databasePath);seed.prepare("INSERT INTO content_objects(content_hash,byte_size,storage_key,mime_type,state,created_at) VALUES(?,1,?,'text/plain','READY',?)").run(contentHash,'sha256/aa/'+contentHash,new Date().toISOString());seed.close();
-    await assert.rejects(openStorage({...f.options,targetVersion:6}),e=>e.code==='UPGRADE_BACKUP_REQUIRED');
-    const current=await f.reopen({targetVersion:6,backupDirectory:join(f.root,'backup')});
+    await assert.rejects(openStorage({...f.options,targetVersion:7}),e=>e.code==='UPGRADE_BACKUP_REQUIRED');
+    const current=await f.reopen({targetVersion:7,backupDirectory:join(f.root,'backup')});
     const info=await current.request('inspect',{});
-    assert.equal(info.version,6);assert.equal(info.counts.content_objects,1);assert.ok(info.backupPath);
+    assert.equal(info.version,7);assert.equal(info.counts.content_objects,1);assert.ok(info.backupPath);
     const backup=new DatabaseSync(info.backupPath,{readOnly:true});
     try{ assert.equal(backup.prepare('PRAGMA user_version').get().user_version,targetVersion);assert.equal(backup.prepare('SELECT count(*) n FROM content_objects').get().n,1); }finally{backup.close();}
     assert.equal(readdirSync(join(f.root,'backup')).length,1);
@@ -35,7 +35,7 @@ test('a failed migration atomically rolls back DDL, row changes and version mark
     assert.equal(db.prepare("SELECT name FROM sqlite_master WHERE name='partial'").get(),undefined);
     assert.equal(db.prepare('PRAGMA user_version').get().user_version,2);
     assert.equal(db.prepare('SELECT count(*) n FROM schema_migrations').get().n,2);
-    assert.equal(applyMigrations(db,migrations,storeId),6);
+    assert.equal(applyMigrations(db,migrations,storeId),7);
   }finally{db.close();}
 });
 
@@ -48,9 +48,9 @@ test('unknown schema, future/gapped/tampered history and downgrade are rejected'
     db.exec("UPDATE schema_migrations SET sha256='tampered' WHERE version=2");
     assert.throws(()=>checkHistory(db,migrations),e=>e.code==='MIGRATION_HISTORY_MISMATCH');
     db.prepare('UPDATE schema_migrations SET sha256=? WHERE version=2').run(migrations[1].sha256);
-    db.exec("INSERT INTO schema_migrations VALUES(7,'0007-future.sql','unknown','time')");
+    db.exec("INSERT INTO schema_migrations VALUES(8,'0008-future.sql','unknown','time')");
     assert.throws(()=>checkHistory(db,migrations),e=>e.code==='MIGRATION_HISTORY_MISMATCH');
-    db.exec('DELETE FROM schema_migrations WHERE version IN(2,7)');
+    db.exec('DELETE FROM schema_migrations WHERE version IN(2,8)');
     assert.throws(()=>checkHistory(db,migrations),e=>e.code==='MIGRATION_HISTORY_MISMATCH');
   }finally{db.close();}
 });
@@ -74,7 +74,7 @@ test('modified deployment SQL is rejected before it can be applied',async t=>{
 test('unrecognized file and overlapping backup directory cannot be adopted automatically',async t=>{
   const f=await fixture(t,{targetVersion:2});await f.storage.close();
   mkdirSync(join(f.root,'db','backups'));
-  await assert.rejects(openStorage({...f.options,targetVersion:6,backupDirectory:join(f.root,'db','backups')}),e=>e.code==='BACKUP_PATH_OVERLAP');
+  await assert.rejects(openStorage({...f.options,targetVersion:7,backupDirectory:join(f.root,'db','backups')}),e=>e.code==='BACKUP_PATH_OVERLAP');
   const unknown=join(f.root,'db','unknown.sqlite'),db=new DatabaseSync(unknown);db.exec('CREATE TABLE stranger(id TEXT)');db.close();
   await assert.rejects(openStorage({...f.options,databasePath:unknown}),e=>e.code==='DATABASE_UNRECOGNIZED');
   const empty=join(f.root,'db','empty.sqlite');writeFileSync(empty,'');

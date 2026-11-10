@@ -1,0 +1,107 @@
+Scope: 5 of 16 workspace projects
+$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\contracts\package.json 
+ℹ entry: src/index.ts
+ℹ target: es2024
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ dist\index.js       37.90 kB │ gzip: 11.07 kB
+ℹ dist\index.js.map   63.63 kB │ gzip: 17.16 kB
+ℹ dist\index.d.ts    150.10 kB │ gzip: 14.01 kB
+ℹ 3 files, total: 251.62 kB
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (77%)
+  - rolldown-plugin-dts:fake-js (20%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 49189ms
+$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 28 files
+ℹ dist\index.mjs                             6.63 kB │ gzip:  2.39 kB
+ℹ dist\worker.mjs                            5.33 kB │ gzip:  2.17 kB
+ℹ dist\migrations.mjs                        0.26 kB │ gzip:  0.17 kB
+ℹ dist\domain.mjs                            0.16 kB │ gzip:  0.13 kB
+ℹ dist\domain-BdMT_IH_.mjs.map             218.11 kB │ gzip: 48.55 kB
+ℹ dist\domain-BdMT_IH_.mjs                 133.38 kB │ gzip: 28.08 kB
+ℹ dist\index.mjs.map                        12.56 kB │ gzip:  4.30 kB
+ℹ dist\migrations-BNr8Cyfx.mjs.map           8.84 kB │ gzip:  3.20 kB
+ℹ dist\registry-protocol-C7S989-w.mjs.map    8.49 kB │ gzip:  2.81 kB
+ℹ dist\worker.mjs.map                        8.45 kB │ gzip:  3.15 kB
+ℹ dist\migrations-BNr8Cyfx.mjs               5.35 kB │ gzip:  2.12 kB
+ℹ dist\registry-protocol-C7S989-w.mjs        4.27 kB │ gzip:  1.64 kB
+ℹ dist\errors-BXl8kUAO.mjs.map               1.99 kB │ gzip:  0.85 kB
+ℹ dist\errors-BXl8kUAO.mjs                   1.08 kB │ gzip:  0.54 kB
+ℹ dist\index.d.mts                           2.38 kB │ gzip:  0.97 kB
+ℹ dist\migrations.d.mts                      0.91 kB │ gzip:  0.42 kB
+ℹ dist\domain.d.mts                          0.33 kB │ gzip:  0.23 kB
+ℹ dist\worker.d.mts                          0.01 kB │ gzip:  0.03 kB
+ℹ dist\json-Cb20bWup.d.mts                  47.53 kB │ gzip:  7.10 kB
+ℹ 19 files, total: 466.06 kB
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - tsdown:deps (52%)
+  - rolldown-plugin-dts:generate (44%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 40625ms
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\blob-store\package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 4 files
+ℹ dist\index.mjs      26.23 kB │ gzip:  7.68 kB
+ℹ dist\index.mjs.map  46.43 kB │ gzip: 13.32 kB
+ℹ dist\index.d.mts     5.56 kB │ gzip:  1.64 kB
+ℹ 3 files, total: 78.21 kB
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 29623ms
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\input-api\package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ dist\index.mjs      22.95 kB │ gzip:  6.66 kB
+ℹ dist\index.mjs.map  38.40 kB │ gzip: 11.36 kB
+ℹ dist\index.d.mts     1.19 kB │ gzip:  0.56 kB
+ℹ 3 files, total: 62.54 kB
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (53%)
+  - tsdown:deps (47%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 24590ms
+$ tsdown src/index.ts src/config.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\platform-core\package.json 
+ℹ entry: src/index.ts, src/config.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 7 files
+ℹ dist\index.mjs        6.72 kB │ gzip: 2.23 kB
+ℹ dist\config.mjs       4.01 kB │ gzip: 1.56 kB
+ℹ dist\index.mjs.map   12.29 kB │ gzip: 3.96 kB
+ℹ dist\config.mjs.map   7.33 kB │ gzip: 2.65 kB
+ℹ dist\index.d.mts      1.18 kB │ gzip: 0.52 kB
+ℹ dist\config.d.mts     0.90 kB │ gzip: 0.45 kB
+ℹ 6 files, total: 32.43 kB
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - tsdown:deps (85%)
+  - rolldown-plugin-dts:generate (14%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 29300ms

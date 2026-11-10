@@ -134,7 +134,7 @@ test('plan data has a scale limit and cannot embed a JavaScript completion check
 test('OpenAPI body references and route parameters resolve to shared schemas', () => {
   const document = createOpenApiDocument();
   assert.equal(document.openapi, '3.1.0');
-  assert.equal(Object.keys(document.paths).length, 13);
+  assert.equal(Object.keys(document.paths).length, 21);
   const visit = value => {
     if (!value || typeof value !== 'object') return;
     if (value.$ref) {
@@ -145,10 +145,11 @@ test('OpenAPI body references and route parameters resolve to shared schemas', (
     for (const child of Object.values(value)) visit(child);
   };
   visit(document);
-  for (const [path, { post }] of Object.entries(document.paths)) {
-    assert.equal(post['x-implementation-status'], 'planned');
-    assert.deepEqual(new Set([...path.matchAll(/\{([^}]+)\}/g)].map(m => m[1])), new Set(post.parameters.filter(p => p.in === 'path').map(p => p.name)));
-    assert.ok(post.parameters.find(p => p.name === 'Idempotency-Key' && p.required));
+  for (const [path, methods] of Object.entries(document.paths)) for(const [method,operation] of Object.entries(methods)) {
+    const implemented=['CreateProject','SaveMessage','CreateTask','ListProjects','ReadWorkspace','ReadEvents','LookupInputOperation','ReadInputOperation','UploadAttachment','ReadAttachment','RemoveAttachment','ReadAttachmentContent'].includes(operation.operationId);
+    assert.equal(operation['x-implementation-status'], implemented?'implemented-offline':'planned');
+    assert.deepEqual(new Set([...path.matchAll(/\{([^}]+)\}/g)].map(m => m[1])), new Set(operation.parameters.filter(p => p.in === 'path').map(p => p.name)));
+    if(method==='post')assert.ok(operation.parameters.find(p => p.name === 'Idempotency-Key' && p.required));
   }
   assert.deepEqual(readJson('../packages/contracts/openapi.json'), document);
 });

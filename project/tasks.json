@@ -512,11 +512,19 @@
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "packages/input-api/src/index.ts",
+        "packages/storage-sqlite/migrations/0007-input.sql",
+        "tests/input-composition.test.mjs"
+      ],
+      "evidence": [
+        "project/evidence/P1-01/离线实施进展.md",
+        "project/evidence/P1-01/SHA256-local.json"
+      ],
       "reviewNote": null,
       "notes": [
-        "按用户连续目标授权，在 G0 和真实模型前置未验收时推进独立输入 API 代码与离线验证；企业身份接入默认未配置，正式工作包状态和阶段前置保留。"
+        "按用户连续目标授权，在 G0 和真实模型前置未验收时推进独立输入 API 代码与离线验证；企业身份接入默认未配置，正式工作包状态和阶段前置保留。",
+        "已实现默认关闭的可信身份扩展点、成员权限、流式附件与持久恢复、原子 T1、消息／原键查询／一致 workspace。实际 HTTP、Worker、SIGKILL 及组合检查已执行；开发日志保留失败和修正，固定提交完整回归另记。企业身份和真实模型未配置，正式前置与 G0 保留。"
       ]
     },
     {

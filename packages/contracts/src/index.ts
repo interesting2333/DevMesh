@@ -4,5 +4,6 @@ export * from './permits.js';
 export * from './versions.js';
 export * from './outputs.js';
 export * from './commands.js';
+export * from './input.js';
 export * from './events.js';
 export * from './openapi.js';

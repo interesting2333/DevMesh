@@ -9,6 +9,7 @@ export { canonical } from './json.js';
 export { agentManifest, endpointConfig } from './registry-protocol.js';
 export type { EndpointConfig, AgentManifest, EndpointView, RegistrySnapshot, A2ATaskRecord } from './registry-protocol.js';
 export type { ExecutionHostView,RuntimeActivationView,RuntimeToolView } from './runtime-protocol.js';
+export type { AttachmentView, UploadIntake, WorkspaceView } from './input-protocol.js';
 export { acquireWriterLock } from './lock.js';
 
 export interface StorageOptions {

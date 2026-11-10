@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { ids, revision, sha256, inputText, projectName, opaqueKey, operationStatus, nonemptyText } from './primitives.js';
+import { ids, revision, sha256, inputText, opaqueKey, operationStatus, nonemptyText } from './primitives.js';
+import { createProjectInput, saveMessageInput } from './input.js';
 
 export const idempotencyKey = z.uuid();
-const attachments = z.array(ids.attachment).max(3);
 export const commandBodies = {
-  CreateProject: z.strictObject({ initialRequest: z.strictObject({ text: inputText, attachmentIds: attachments }), clientDraftId: z.uuid(), name: projectName.optional() }),
-  SaveMessage: z.strictObject({ text: inputText, attachmentIds: attachments, clientMessageId: z.uuid(), intentHint: z.enum(['query', 'change', 'unsure']).optional() }),
+  CreateProject: createProjectInput,
+  SaveMessage: saveMessageInput,
   AnswerQuestions: z.strictObject({ answers: z.array(z.strictObject({ questionId: ids.question, questionRevision: revision, value: z.json() })).min(1) }),
   ConfirmPlan: z.strictObject({ requirementRevision: revision, reviewHash: sha256 }),
   PlanFeedback: z.strictObject({ text: inputText, workIds: z.array(ids.work).optional() }),
@@ -43,4 +43,5 @@ export const operationReceipt = z.strictObject({
   operationId: ids.operation, status: operationStatus,
   resource: z.strictObject({ projectId: ids.project, runId: ids.run, revision }),
   links: z.strictObject({ operation: z.string().regex(/^\/api\/v1\/operations\/op_[A-Za-z0-9_-]+$/) }),
+  result:z.record(z.string(),z.json()).optional(),
 });

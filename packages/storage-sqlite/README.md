@@ -10,8 +10,11 @@
 | 2 | 设计核心 24 表 | 项目／任务／Run、需求／计划／工作版本、operation、Attempt／槽位、event／Outbox、A2A／工具／Runner、成果／交付关系 |
 | 3 | 5 张前置表及加强约束 | input_messages、role_snapshots、plan_confirmations、execution_grants、content_write_operations |
 | 4 | 7 张内容与会话表 | object_write_operations、attachments、agent_sessions、session_messages、model_steps、context_snapshots、storage_pins；内容校验时间／错误字段及只追加约束 |
+| 5 | 12 张注册与 A2A 受理表 | 持久配置代际、定义／端点／导入／权限／健康、分发快照与 inbox／activation 事实 |
+| 6 | 4 张 Runtime 表 | 执行宿主、activation、模型步骤派生工具及副作用核实 |
+| 7 | 6 张输入表与增量字段 | project_members、input_message_attachments、input_processing、input_operation_resources、upload_intakes、auth_sessions；旧 owner 回填和原子 T1 |
 
-当前版本 5，共 51 张表。DB-A／DB-B 核心、P0-04 会话与 P0-05 注册／受理表已正式交付；其余 DB-C～DB-F 后续扩展。实际字节与根布局由 [blob-store](../blob-store/README.md) 组合，注册与协议见 [a2a-adapter](../a2a-adapter/README.md)，不把建表等同于完整授权、模型执行或动态发现。
+当前版本 7，共 61 张表。已有核心、内容／会话、注册／受理、Runtime 与输入基础；其余完整能力随后续工作包扩展。输入 API 每次从当前 project_members 核实权限，旧 owner 经迁移回填。auth_sessions 只是持久结构，企业登录尚未接入。实际字节与根布局由 [blob-store](../blob-store/README.md) 组合，注册与协议见 [a2a-adapter](../a2a-adapter/README.md)，不把建表等同于模型、隔离或动态发现验收。
 
 SQL 与 manifest 的 SHA-256 一同提交，已发布批次不得修改。启动核对文件、连续历史、名称、校验和、user_version 和 store/layout；拒绝未知库、未来／缺段／被改写历史与降级。每批 BEGIN IMMEDIATE，DDL、数据、历史和版本标记原子提交；失败只回滚当前批次，保留此前已提交批次。连接开启 WAL、外键、synchronous=FULL、5 秒 busy timeout；启动运行 quick_check／foreign_key_check。业务事务同步执行，禁止返回 Promise，不跨网络／文件／模型 await。
 

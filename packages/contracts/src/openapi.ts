@@ -6,6 +6,7 @@ import { executionPermit, executionOwner } from './permits.js';
 import { roleOutput, productOutput, architectOutput, developerOutput, testerOutput, workRevision, planDraft, workDelegation, invocationDelegation, inputManifest } from './outputs.js';
 import { errorEnvelope } from './errors.js';
 import { strongETag, contentBasis } from './versions.js';
+import { createTaskInput,uploadMetadata,attachmentView,inputOperation,workspaceView } from './input.js';
 
 export const schemas = {
   Command: command, DomainEvent: domainEvent, EphemeralTokenDelta: ephemeralTokenDelta,
@@ -16,6 +17,7 @@ export const schemas = {
   JobState: jobState, OperationStatus: operationStatus, A2ATaskState: a2aTaskState,
   OperationReceipt: operationReceipt, ErrorEnvelope: errorEnvelope, StrongETag: strongETag, ContentBasis: contentBasis,
   InputText: inputText, ProjectName: projectName, TaskTitle: taskTitle,
+  CreateTask:createTaskInput,UploadMetadata:uploadMetadata,Attachment:attachmentView,InputOperation:inputOperation,Workspace:workspaceView,
   ...commandBodies,
 };
 
@@ -54,7 +56,7 @@ const jsonSchema = (schema: z.ZodType, componentName?: string) => {
 const content = (name: string) => ({ 'application/json': { schema: { $ref: `#/components/schemas/${name}` } } });
 
 export function createOpenApiDocument() {
-  const paths = Object.fromEntries(commandRoutes.map(route => [route.path, { post: {
+  const paths:Record<string,Record<string,unknown>> = Object.fromEntries(commandRoutes.map(route => [route.path, { post: {
     operationId: route.name, 'x-implementation-status': 'planned',
     description: 'P0-02 契约。业务 handler 尚未实现。先认证、权限和原操作去重，再校验新操作版本；202 仅为持久受理。',
     security: [{ browserSession: [] }],
@@ -69,13 +71,35 @@ export function createOpenApiDocument() {
       ...['401', '403', '404', '409', '412', '422', '428', '429', '503'].filter(status => route.conditional || !['412', '428'].includes(status)).map(status => [status, { description: ({ '401': '未认证', '403': '权限不足', '404': '资源不存在或不可见', '409': '业务依据或原操作冲突', '412': '资源版本不匹配', '422': '非法 schema', '428': '缺失版本条件', '429': '限流', '503': '暂不可用，先查询原操作键' } as Record<string, string>)[status], content: content('ErrorEnvelope') }]),
     ]),
   } }]));
+  const errors=Object.fromEntries(['400','401','403','404','409','412','413','415','422','428','429','500','503'].map(code=>[code,{description:'公共错误；未知提交结果先按原操作键查询',content:content('ErrorEnvelope')}]));
+  const add=(path:string,method:string,operationId:string,responseSchema?:string,parameters:unknown[]=[],requestSchema?:string)=>{
+    paths[path]??={};paths[path]![method]={operationId,'x-implementation-status':'implemented-offline',security:[{trustedIdentity:[]}],parameters,
+      ...(requestSchema?{requestBody:{required:true,content:content(requestSchema)}}:{}),responses:{[method==='post'?'201':'200']:{description:'已提交的输入事实或当前权限下的读取',...(responseSchema?{content:content(responseSchema)}:{})},...errors}};
+  };
+  const parameter=(name:string,schema:z.ZodType,location='path',required=true)=>({name,in:location,required,schema:jsonSchema(schema)});
+  const key=parameter('Idempotency-Key',idempotencyKey,'header');
+  const page=[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:200,default:50}}];
+  add('/api/v1/projects','get','ListProjects',undefined,[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:20}},{name:'cursor',in:'query',schema:{type:'string',maxLength:1024}}]);
+  add('/api/v1/projects/{projectId}/tasks','post','CreateTask','OperationReceipt',[parameter('projectId',ids.project),key,parameter('If-Match',strongETag,'header')],'CreateTask');
+  add('/api/v1/projects/{projectId}/workspace','get','ReadWorkspace','Workspace',[parameter('projectId',ids.project),parameter('runId',ids.run,'query',false),{name:'afterMessageId',in:'query',schema:{type:'string',maxLength:256}},...page]);
+  add('/api/v1/projects/{projectId}/runs/{runId}/events','get','ReadEvents',undefined,[parameter('projectId',ids.project),parameter('runId',ids.run),{name:'afterSeq',in:'query',schema:{type:'integer',minimum:0,default:0}},...page]);
+  add('/api/v1/operations/lookup','get','LookupInputOperation','InputOperation',[{name:'scope',in:'query',required:true,schema:{type:'string',maxLength:128}},parameter('key',idempotencyKey,'query')]);
+  add('/api/v1/operations/{operationId}','get','ReadInputOperation','InputOperation',[parameter('operationId',ids.operation)]);
+  add('/api/v1/attachments','post','UploadAttachment',undefined,[key]);
+  (paths['/api/v1/attachments']!.post as Record<string,unknown>).requestBody={required:true,content:{'multipart/form-data':{schema:{type:'object',additionalProperties:false,required:['clientAttachmentId','file'],properties:{clientAttachmentId:{type:'string',format:'uuid'},file:{type:'string',format:'binary',description:'非空 UTF-8 .md/.markdown/.txt；每文件最多 2 MiB，单次只接收一个文件'}}}}}};
+  add('/api/v1/attachments/{attachmentId}','get','ReadAttachment','Attachment',[parameter('attachmentId',ids.attachment)]);
+  add('/api/v1/attachments/{attachmentId}','delete','RemoveAttachment','Attachment',[parameter('attachmentId',ids.attachment)]);
+  add('/api/v1/attachments/{attachmentId}/content','get','ReadAttachmentContent',undefined,[parameter('attachmentId',ids.attachment)]);
+  for(const path of ['/api/v1/projects','/api/v1/runs/{runId}/messages']){
+    const post=paths[path]!.post as Record<string,unknown>;post['x-implementation-status']='implemented-offline';post.security=[{trustedIdentity:[]}];post.description='已实现持久输入与当前成员授权；默认无身份接入点时拒绝请求。保存成功不表示真实模型处理完成。';
+  }
   return {
     openapi: '3.1.0', jsonSchemaDialect: 'https://json-schema.org/draft/2020-12/schema',
-    info: { title: 'DevMesh 核心契约初版', version: '0.1.0', description: 'P0-02 共享契约及首批 13 个业务命令；所有 paths 均 planned。结构通过不等于事实验证、授权或人工接受。其余 D3 API 随工作包增量补齐。' },
+    info: { title: 'DevMesh 核心契约', version: '0.2.0', description: '共享命令及 P1-01 输入 API。逐路由标记实现范围；离线代码与测试不代表企业身份、模型或产品全链路验收。其余 D3 API 随工作包增量补齐。' },
     'x-runtime-constraints': ['permit 有效期顺序、宿主当前代际及资源范围', '测试成果所有报告绑定相同 SHA', '事件 envelope 与 payload 版本和归属一致', 'ETag 安全整数范围', 'DAG 无环、来源存在、ACL、幂等及事务由后续服务负责'],
     paths,
     components: {
-      securitySchemes: { browserSession: { type: 'apiKey', in: 'cookie', name: 'devmesh_session', description: 'P1-01 待实现的浏览器 Session；不接收外部服务 token 作为内部 permit。CSRF 与 Origin 检查由 API 层负责。' } },
+      securitySchemes: { trustedIdentity:{type:'http',scheme:'bearer',description:'可信 IdentityResolver 接入点；默认未配置，不签发测试 token、匿名用户或企业登录。CLI 当前没有企业 resolver。'},browserSession: { type: 'apiKey', in: 'cookie', name: 'devmesh_session', description: '后续企业浏览器 Session；当前 Cookie 认证未接入，必须另行完成 Origin/CSRF。' } },
       schemas: Object.fromEntries(Object.entries(schemas).map(([name, schema]) => [name, jsonSchema(schema, name)])),
     },
   };

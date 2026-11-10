@@ -1,0 +1,156 @@
+TAP version 13
+# (node:18308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real T1 controller death before-commit preserves atomic facts and original-key recovery
+ok 1 - real T1 controller death before-commit preserves atomic facts and original-key recovery
+  ---
+  duration_ms: 34081.2113
+  type: 'test'
+  ...
+# (node:18308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real T1 controller death after-commit preserves atomic facts and original-key recovery
+ok 2 - real T1 controller death after-commit preserves atomic facts and original-key recovery
+  ---
+  duration_ms: 14911.4913
+  type: 'test'
+  ...
+# (node:31316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: input contracts preserve Unicode and original whitespace while enforcing nonempty material
+ok 3 - input contracts preserve Unicode and original whitespace while enforcing nonempty material
+  ---
+  duration_ms: 85.7161
+  type: 'test'
+  ...
+# (node:31316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: input HTTP rejects missing identity, forged user fields, Origin and oversized JSON without business facts
+ok 4 - input HTTP rejects missing identity, forged user fields, Origin and oversized JSON without business facts
+  ---
+  duration_ms: 14026.6136
+  type: 'test'
+  ...
+# (node:31316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTP project admission is atomic, duplicate clicks share one result, and queries enforce current membership
+ok 5 - real HTTP project admission is atomic, duplicate clicks share one result, and queries enforce current membership
+  ---
+  duration_ms: 7794.8989
+  type: 'test'
+  ...
+# (node:31316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: saved messages deduplicate before stale CAS, remain paused and emit consistent snapshot cursors
+ok 6 - saved messages deduplicate before stale CAS, remain paused and emit consistent snapshot cursors
+  ---
+  duration_ms: 9488.7749
+  type: 'test'
+  ...
+# (node:31316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: attachments are independent, bounded, owned, and become immutable material only after T1
+not ok 7 - attachments are independent, bounded, owned, and become immutable material only after T1
+  ---
+  duration_ms: 9359.951
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\input-http.test.mjs:55:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"error":{"code":"MULTIPART_INVALID","message":"Request could not be accepted","requestId":"req_41ce693e9f7e4f138e807ed3b6eaa6b0","retryable":false,"details":{}}}
+    
+    422 !== 201
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 201
+  actual: 422
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/input-http.test.mjs:57:94)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:31316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a destroyed creation response recovers the same committed project by original key
+ok 8 - a destroyed creation response recovers the same committed project by original key
+  ---
+  duration_ms: 9438.3707
+  type: 'test'
+  ...
+# (node:19752) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19752) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19752) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: migration 7 backfills existing ownership and preserves the original project and backup
+not ok 9 - migration 7 backfills existing ownership and preserves the original project and backup
+  ---
+  duration_ms: 9806.1875
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\input-storage.test.mjs:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    6 !== 7
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 7
+  actual: 6
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/input-storage.test.mjs:13:127)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:19752) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: T1 rolls back project, owner, message, processing and outbox together after a late SQL failure
+ok 10 - T1 rolls back project, owner, message, processing and outbox together after a late SQL failure
+  ---
+  duration_ms: 9939.2283
+  type: 'test'
+  ...
+# (node:19752) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19752) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: upload restart recovery fences partial staging and recognizes only exact published attachments
+not ok 11 - upload restart recovery fences partial staging and recognizes only exact published attachments
+  ---
+  duration_ms: 13858.5554
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\input-storage.test.mjs:29:1'
+  failureType: 'testCodeFailure'
+  error: 'Storage is closing or closed'
+  code: 'STORAGE_CLOSED'
+  name: 'StorageError'
+  stack: |-
+    #send (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:135:43)
+    SqliteStorage.request (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:132:20)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/input-storage.test.mjs:35:34)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 8
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 154351.0444

@@ -1,0 +1,2 @@
+packages/contracts/src/input.ts:6:52: warning eslint(no-control-regex): Unexpected control characters help: Avoid matching control characters in regular expressions. If intentional, disable this rule for the expression.
+packages/input-api/src/index.ts:177:35: warning unicorn(no-useless-spread): `Promise.allSettled` accepts an iterable, so it's unnecessary to convert the iterable to an array. help: Consider removing the spread operator.
