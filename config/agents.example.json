@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "devmesh.agent-manifest.v1",
+  "manifestRevision": "builtin.v1",
+  "endpoints": [
+    {
+      "endpointId": "builtin.product",
+      "revision": 1,
+      "role": "product",
+      "agentKey": "builtin.product",
+      "hosting": "local",
+      "implementationVersion": "1.0.0",
+      "address": "http://127.0.0.1:3210/internal/agents/product/a2a",
+      "cardUrl": "http://127.0.0.1:3210/internal/agents/product/agent-card.json",
+      "protocol": "1.0",
+      "sdkVersion": "1.3.0",
+      "supportedSkills": [
+        "devmesh.work.product"
+      ],
+      "streaming": true,
+      "credentialRef": "internal.service",
+      "allowedCallers": [
+        "orchestrator"
+      ],
+      "enabled": true,
+      "cardHash": "37890133e63720518162cf202679201bc0e096ba7f1d4c3bcf2c794981e49d72"
+    },
+    {
+      "endpointId": "builtin.architect",
+      "revision": 1,
+      "role": "architect",
+      "agentKey": "builtin.architect",
+      "hosting": "local",
+      "implementationVersion": "1.0.0",
+      "address": "http://127.0.0.1:3210/internal/agents/architect/a2a",
+      "cardUrl": "http://127.0.0.1:3210/internal/agents/architect/agent-card.json",
+      "protocol": "1.0",
+      "sdkVersion": "1.3.0",
+      "supportedSkills": [
+        "devmesh.work.architect"
+      ],
+      "streaming": true,
+      "credentialRef": "internal.service",
+      "allowedCallers": [
+        "orchestrator"
+      ],
+      "enabled": true,
+      "cardHash": "e83d60cf1e8ab544c9fb1013df1fa906fb1f9b03a29db6a06c6e887e7f8c080d"
+    },
+    {
+      "endpointId": "builtin.developer",
+      "revision": 1,
+      "role": "developer",
+      "agentKey": "builtin.developer",
+      "hosting": "local",
+      "implementationVersion": "1.0.0",
+      "address": "http://127.0.0.1:3210/internal/agents/developer/a2a",
+      "cardUrl": "http://127.0.0.1:3210/internal/agents/developer/agent-card.json",
+      "protocol": "1.0",
+      "sdkVersion": "1.3.0",
+      "supportedSkills": [
+        "devmesh.work.developer"
+      ],
+      "streaming": true,
+      "credentialRef": "internal.service",
+      "allowedCallers": [
+        "orchestrator"
+      ],
+      "enabled": true,
+      "cardHash": "796b8f5b38a01bb75cacd0c17f08bb3f892ad228d0be6b186b3847d3996c00bd"
+    },
+    {
+      "endpointId": "builtin.tester",
+      "revision": 1,
+      "role": "tester",
+      "agentKey": "builtin.tester",
+      "hosting": "local",
+      "implementationVersion": "1.0.0",
+      "address": "http://127.0.0.1:3210/internal/agents/tester/a2a",
+      "cardUrl": "http://127.0.0.1:3210/internal/agents/tester/agent-card.json",
+      "protocol": "1.0",
+      "sdkVersion": "1.3.0",
+      "supportedSkills": [
+        "devmesh.work.tester"
+      ],
+      "streaming": true,
+      "credentialRef": "internal.service",
+      "allowedCallers": [
+        "orchestrator"
+      ],
+      "enabled": true,
+      "cardHash": "548b52169abec39bbb8f24d060afe3b3a371579d5e1a8cefdba7a90e3807dfdd"
+    }
+  ]
+}

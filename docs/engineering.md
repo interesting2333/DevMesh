@@ -1,6 +1,6 @@
 # 工程使用与验证
 
-当前交付最小 Node HTTP／Express 5、Cordis 生命周期、[核心契约](../packages/contracts/README.md)、[SQLite Worker](../packages/storage-sqlite/README.md) 和 [本地内容／会话](../packages/blob-store/README.md)。可选持久存储已组合进 HTTP 宿主，开启时 readiness 等待实际完整性核实；A2A/MCP、模型、Runner 和 UI 按后续工作包接入。
+当前交付 Node HTTP／Express 5、Cordis 生命周期、[核心契约](../packages/contracts/README.md)、[SQLite Worker](../packages/storage-sqlite/README.md)、[本地内容／会话](../packages/blob-store/README.md) 和 [内部 A2A／Registry](../packages/a2a-adapter/README.md)。可选持久存储及 A2A 已组合进 HTTP 宿主，readiness 等待完整性核实、监听后 Card 自检与注册投影；MCP、模型、Runner 和 UI 继续按对应工作包接入。
 
 各工作包实际结果和同提交两平台报告见 [P0-01 工程](../project/evidence/P0-01/验收记录.md)、[P0-02 契约](../project/evidence/P0-02/验收记录.md)、[P0-03 存储](../project/evidence/P0-03/验收记录.md)。
 
@@ -32,6 +32,7 @@ corepack pnpm@11.28.5 test:smoke
 corepack pnpm@11.28.5 test:contracts
 corepack pnpm@11.28.5 test:storage
 corepack pnpm@11.28.5 test:content
+corepack pnpm@11.28.5 test:a2a
 corepack pnpm@11.28.5 contracts:check
 corepack pnpm@11.28.5 start
 ```

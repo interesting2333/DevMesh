@@ -5,6 +5,8 @@ import { Context } from '@deepseek-ai/cordis';
 import type { ServerConfig } from './config.js';
 import { LocalContentStore, SessionStore, openLocalStorage } from '@devmesh/blob-store';
 import type { LocalStorage } from '@devmesh/blob-store';
+import { mountInternalAgents,environmentCredentials } from '@devmesh/a2a-adapter';
+import type { CredentialResolver } from '@devmesh/a2a-adapter';
 
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
@@ -13,9 +15,11 @@ export interface FoundationServer {
   readonly address: Readonly<AddressInfo>;
   stop(): Promise<void>;
   services?: { local:LocalStorage; content:LocalContentStore; sessions:SessionStore } | undefined;
+  agents?:ReturnType<typeof mountInternalAgents>|undefined;
 }
 
-export async function startPlatform(config: Readonly<ServerConfig>): Promise<FoundationServer> {
+export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver}={}): Promise<FoundationServer> {
+  if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
   const context = new Context();
   let services: FoundationServer['services'];
   const storageFiber=config.storage?context.plugin({name:'devmesh-local-storage',async apply(scope:Context){
@@ -44,6 +48,9 @@ export async function startPlatform(config: Readonly<ServerConfig>): Promise<Fou
   app.get('/readyz', (_request, response) => {
     response.status(ready ? 200 : 503).json({ status: ready ? 'ready' : 'starting-or-stopping', scope: 'platform-foundation' });
   });
+  let agents: ReturnType<typeof mountInternalAgents>|undefined;
+  try{if(config.a2a&&services)agents=mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??environmentCredentials()});}
+  catch(error){await storageFiber?.dispose();throw error;}
   app.use((_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
   const server = createServer({ headersTimeout: 5000, requestTimeout: 10000 }, app);
   server.on('connection', socket => {
@@ -88,8 +95,10 @@ export async function startPlatform(config: Readonly<ServerConfig>): Promise<Fou
 
   try {
     await fiber;
+    if(agents)await agents.activate();
     ready = true;
   } catch (error) {
+    await agents?.stop();
     await fiber.dispose();
     await storageFiber?.dispose();
     server.closeAllConnections();
@@ -103,10 +112,11 @@ export async function startPlatform(config: Readonly<ServerConfig>): Promise<Fou
   return {
     address: Object.freeze({ ...address }),
     ...(services?{services}:{}),
+    ...(agents?{agents}:{}),
     stop() {
       ready = false;
       stopping ??= (async () => {
-        try{await fiber.dispose();}finally{await storageFiber?.dispose();}
+        try{await agents?.stop();await fiber.dispose();}finally{await storageFiber?.dispose();}
         if (cleanupError) throw cleanupError;
         if (server.listening || sockets.size !== 0) throw new Error('HTTP resources remained active after Cordis disposal');
       })();

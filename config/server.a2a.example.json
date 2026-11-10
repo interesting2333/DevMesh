@@ -1,0 +1,18 @@
+{
+  "host": "127.0.0.1",
+  "port": 3210,
+  "shutdownTimeoutMs": 5000,
+  "storage": {
+    "dataRoot": "../.devmesh-data/control",
+    "runnerDataRoot": "../.devmesh-runner",
+    "backupRoot": "../.devmesh-backups",
+    "initialize": false,
+    "mode": "local"
+  },
+  "a2a": {
+    "manifestPath": "agents.example.json",
+    "identities": [
+      { "principalId": "orchestrator", "credentialRef": "internal.service" }
+    ]
+  }
+}

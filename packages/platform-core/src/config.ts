@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { parseStorageConfig } from '@devmesh/blob-store';
 import type { StorageConfig } from '@devmesh/blob-store';
+import { loadInternalA2AConfig } from '@devmesh/a2a-adapter';
+import type { InternalA2AConfig } from '@devmesh/a2a-adapter';
 
 export interface ServerConfig {
   host: '127.0.0.1' | '::1';
@@ -8,6 +10,7 @@ export interface ServerConfig {
   shutdownTimeoutMs: number;
   storage?: Readonly<StorageConfig> | undefined;
   storageSources?: Readonly<Record<string,string>> | undefined;
+  a2a?:Readonly<InternalA2AConfig>|undefined;
 }
 
 export class ConfigError extends Error {
@@ -36,7 +39,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
       throw new ConfigError('Server configuration must be a JSON object');
     }
     for (const key of Object.keys(parsed)) {
-      if (!['host', 'port', 'shutdownTimeoutMs', 'storage'].includes(key)) throw new ConfigError(`Unknown server configuration field: ${key}`);
+      if (!['host', 'port', 'shutdownTimeoutMs', 'storage','a2a'].includes(key)) throw new ConfigError(`Unknown server configuration field: ${key}`);
     }
     file = parsed as Record<string, unknown>;
   }
@@ -54,5 +57,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
     port: integer(env.DEVMESH_PORT ?? file.port ?? 3210, 'port', 0, 65535),
     shutdownTimeoutMs: integer(env.DEVMESH_SHUTDOWN_TIMEOUT_MS ?? file.shutdownTimeoutMs ?? 5000, 'shutdownTimeoutMs', 100, 30000),
     ...(storage?{storage:Object.freeze(storage),storageSources:Object.freeze(storageSources!)}:{}),
+    ...(file.a2a!==undefined?{a2a:Object.freeze(loadInternalA2AConfig(file.a2a,path))}:{}),
   });
 }

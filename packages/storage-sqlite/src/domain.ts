@@ -6,6 +6,9 @@ import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView } from './p
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
+import { createRegistryDomain } from './registry-domain.js';
+import { registryRequests } from './registry-protocol.js';
+import type { RegistryMethod } from './registry-protocol.js';
 import { createSessionDomain } from './session-domain.js';
 import { sessionRequests } from './session-protocol.js';
 import type { SessionMethod } from './session-protocol.js';
@@ -15,6 +18,7 @@ type Row = Record<string, string | number | null>;
 const uid = (prefix: string) => `${prefix}_${randomUUID().replaceAll('-', '')}`;
 const now = () => new Date().toISOString();
 export function createDomain(db: DatabaseSync) {
+  const registry = createRegistryDomain(db);
   const sessions = createSessionDomain(db);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
@@ -172,7 +176,8 @@ export function createDomain(db: DatabaseSync) {
           const permit = parseContract(executionPermit, { schemaVersion: 'devmesh.permit.v1', ownerKind: 'workflowAttempt', runId: input.runId, runEpoch: input.runEpoch, workId: requested.workId, workEpoch: requested.workEpoch, attemptId, grantId, activationId, notBefore: time, expiresAt: new Date(Date.now()+15000).toISOString(), resources: requested.resources });
           insert('execution_grants', { grant_id: grantId, run_id: input.runId, attempt_id: attemptId, activation_id: activationId, permit_json: canonical(permit), status: 'ACTIVE', created_at: time, expires_at: permit.expiresAt });
           insert('role_slots', { run_id: input.runId, role: String(work.role), attempt_id: attemptId, activation_id: activationId });
-          outbox(dispatchId, requested.endpoint.endpointId, { schemaVersion: 'devmesh.dispatch-intent.v1', operationId: dispatchId, runId: input.runId, attemptId, workId: requested.workId, workRevision: requested.workRevision, endpoint: requested.endpoint, roleSnapshotId: snapshotId, permit, inputFingerprint: fingerprint });
+          const inputManifestId=registry.freezeDispatch(attemptId,String(work.role),requested.endpoint,fingerprint,snapshotId);
+          outbox(dispatchId, requested.endpoint.endpointId, { schemaVersion: 'devmesh.dispatch-intent.v1', operationId: dispatchId, runId: input.runId, attemptId, workId: requested.workId, workRevision: requested.workRevision, endpoint: requested.endpoint, roleSnapshotId: snapshotId, permit, inputFingerprint: fingerprint, ...(inputManifestId?{inputManifestId}:{}) });
           bump(input.runId);
           event(input.runId, operationId, 'WorkAdmitted', { workId: requested.workId, attemptId, activationId }, { workId: requested.workId, attemptId });
           attemptIds.push(attemptId);
@@ -257,6 +262,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if (Object.hasOwn(registryRequests, method)) return registry.execute(method as RegistryMethod, input);
     if (Object.hasOwn(sessionRequests, method)) return sessions.execute(method as SessionMethod, input);
     if (method === 'inspect' || !Object.hasOwn(handlers, method)) throw new StorageError('METHOD_NOT_ALLOWED', 422, 'Unsupported storage command');
     const parsed = parseContract(requests[method], input);

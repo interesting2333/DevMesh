@@ -1,0 +1,9 @@
+{
+  "name": "@devmesh/a2a-adapter",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": { "types": "./dist/index.d.mts", "import": "./dist/index.mjs" } },
+  "scripts": { "build": "tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean" },
+  "dependencies": { "@a2a-js/sdk": "1.3.0", "@devmesh/contracts": "workspace:*", "@devmesh/storage-sqlite": "workspace:*", "express": "5.2.1", "zod": "4.4.3" }
+}

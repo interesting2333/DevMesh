@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "pnpm --filter @devmesh/server dev",
     "start": "node apps/server/dist/main.mjs",
-    "build": "pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build",
+    "build": "pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/a2a-adapter --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build",
     "build:vendor": "node scripts/build-vendor.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --deny-warnings apps packages scripts project tests",
@@ -27,10 +27,11 @@
     "project:status": "node project/manage.mjs status",
     "project:check": "node project/manage.mjs check",
     "spec": "node project/openspec.mjs",
-    "check": "pnpm toolchain:check && pnpm vendor:verify && pnpm build && pnpm typecheck && pnpm lint && pnpm test:smoke && pnpm test:contracts && pnpm test:storage && pnpm test:content && pnpm contracts:check && pnpm project:check",
+    "check": "pnpm toolchain:check && pnpm vendor:verify && pnpm build && pnpm typecheck && pnpm lint && pnpm test:smoke && pnpm test:contracts && pnpm test:storage && pnpm test:content && pnpm test:a2a && pnpm contracts:check && pnpm project:check",
     "test:content": "node --test --test-reporter=tap tests/content*.test.mjs",
     "storage:init": "node scripts/storage.mjs init",
-    "storage:verify": "node scripts/storage.mjs verify"
+    "storage:verify": "node scripts/storage.mjs verify",
+    "test:a2a": "node --test --test-reporter=tap tests/a2a*.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",
