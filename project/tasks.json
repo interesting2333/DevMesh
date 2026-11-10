@@ -386,8 +386,15 @@
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "bf50680966d9dfbbd876b68f6b1370a75616f2ea",
+        "dd7f9725276a9523380c8f6e681deb2cab495832",
+        "f1d22e6"
+      ],
+      "evidence": [
+        "project/evidence/P0-08/离线实施进展.md",
+        "project/evidence/P0-08/SHA256.json"
+      ],
       "reviewNote": null,
       "notes": [
         "按用户持续实施指令，提前实现官方 MCP、repo 只读和 tests 作业协议；前置真实模型／Runner 验收未完成，正式状态保留 NOT_STARTED。"
@@ -412,23 +419,34 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-web-crud-template"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "876aea7",
+        "dd7f9725276a9523380c8f6e681deb2cab495832"
+      ],
+      "evidence": [
+        "project/evidence/P0-09/离线实施进展.md",
+        "project/evidence/P0-09/SHA256.json",
+        "project/evidence/P0-09/windows-dd7f972/report.json"
+      ],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "dd7f972 独立模板干净检出 6/6 检查通过，单元 19/19、Chromium 浏览器 2/2，无跳过；行覆盖率 92.74%。保留先前隐藏目录首页失败原始证据，真实镜像／runsc 仍未执行，正式前置不变。"
+      ]
     },
     {
       "id": "P0-10",
       "phase": "P0",
       "title": "公共 Card 与认证接入原型",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "responsibility": "Agent",
-      "owner": null,
+      "owner": "Codex（连续目标实施）",
       "reviewer": null,
       "dependsOn": [
         "P0-02",
@@ -441,15 +459,25 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-public-a2a-prototype"
+      ],
       "blockedReason": null,
       "nextCheck": null,
-      "startedAt": null,
+      "startedAt": "2026-11-10T13:45:56.094Z",
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "dd7f9725276a9523380c8f6e681deb2cab495832",
+        "f1d22e6"
+      ],
+      "evidence": [
+        "project/evidence/P0-10/离线实施进展.md",
+        "project/evidence/P0-10/SHA256.json"
+      ],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "默认关闭的 loopback 公共 A2A 协议原型已实现，官方 SDK 真实 HTTP／SSE 及示例进程 5/5 通过；固定修正快照完整回归进行中。仅即时探测，公网、企业 OAuth、正式 Exposure 与业务 Task 未验收。"
+      ]
     },
     {
       "id": "P1-01",

@@ -1,0 +1,25 @@
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\a2a-adapter\package.json 
+ℹ entry: src/index.ts, src/config.ts, src/public-prototype.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 11 files
+ℹ dist\index.mjs                 18.26 kB │ gzip: 5.45 kB
+ℹ dist\public-prototype.mjs      10.66 kB │ gzip: 3.48 kB
+ℹ dist\config.mjs                 1.12 kB │ gzip: 0.53 kB
+ℹ dist\index.mjs.map             31.23 kB │ gzip: 9.43 kB
+ℹ dist\public-prototype.mjs.map  18.81 kB │ gzip: 5.69 kB
+ℹ dist\config.mjs.map             1.96 kB │ gzip: 0.83 kB
+ℹ dist\index.d.mts                4.35 kB │ gzip: 1.33 kB
+ℹ dist\public-prototype.d.mts     1.95 kB │ gzip: 0.71 kB
+ℹ dist\config.d.mts               0.18 kB │ gzip: 0.13 kB
+ℹ dist\config-C3H_Bws-.d.mts      0.49 kB │ gzip: 0.29 kB
+ℹ 10 files, total: 89.02 kB
+✔ Build complete in 61854ms
+$ tsdown src/index.ts src/config.ts src/public-prototype.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - tsdown:deps (53%)
+  - rolldown-plugin-dts:generate (43%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+

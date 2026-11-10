@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-10T12:58:26.898Z",
+  "sourceCommit": "876aea7e6019e573c201a72695c05701305ad0ad",
+  "dirty": false,
+  "node": "v24.13.1",
+  "platform": "win32",
+  "sourceFingerprint": "66d4cb3175ce7909dfb6d176a5f3e4ae9516536d80b8264254f29acf0c5d93ed",
+  "sourceFiles": [
+    {
+      "path": ".gitignore",
+      "sha256": "3533f839725e5aed6114c3a935171b1306fa472c2caa6bbb5e1f91e1eee4dbbf"
+    },
+    {
+      "path": ".node-version",
+      "sha256": "abf6cea6017aff42b7303297002f9b8b545bfef087361299a4d0db872607fa87"
+    },
+    {
+      "path": "e2e/board.spec.ts",
+      "sha256": "e2207e7421bb3d6b4e893c11055de4ddb506b364ab64437f009aecd072ab0b51"
+    },
+    {
+      "path": "index.html",
+      "sha256": "037086e375d360666875a4991ea6345c987e32d2b39f2444c921c161e018167f"
+    },
+    {
+      "path": "package.json",
+      "sha256": "f91bfe4cd79fda119e2897bd15508a4bc3d9fb68a88c8dfdd47c04ca9a34a41c"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "7afd6153172eb883aac8b5ad665e5792f3d8f0ab9ca1d3856a13935fa433f571"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "95c52448605d2526e99e419fe50d218fb4d6a88d0b612e9f2c795586de77c354"
+    },
+    {
+      "path": "pnpm-workspace.yaml",
+      "sha256": "053aab535bb48c9393daa12b31c77538d1bb334b31c8d548d15a9386db659c49"
+    },
+    {
+      "path": "README.md",
+      "sha256": "9c6b6b88e9cbd00daa7de91526ebac2881fc091c7f46d78a3df52794ec0de65a"
+    },
+    {
+      "path": "scripts/e2e-server.mjs",
+      "sha256": "5b7da9e2eaa2346c6162f786b980291e248e1a7380819673e935a0fa0d93a1a1"
+    },
+    {
+      "path": "src/server/app.ts",
+      "sha256": "94e8ff61415fb9545e2fa11c2a2cd560cf6bb1b76b55177f369196547b4bf0a0"
+    },
+    {
+      "path": "src/server/database.ts",
+      "sha256": "59f26816a28faa7c7ac46d435c06b75d0acd818e3047c8eed078e6fbf835ebbe"
+    },
+    {
+      "path": "src/server/dataset.ts",
+      "sha256": "d2d94b0dde1eb56c149deddca59d44416150af17a9351c25aa815471eab60c5c"
+    },
+    {
+      "path": "src/server/db-worker.ts",
+      "sha256": "790634d6a5cb9764af149556f7f76a4b116075bb0b9e5afdb0ee5f0ae2e13dd3"
+    },
+    {
+      "path": "src/server/main.ts",
+      "sha256": "c2af112ae91bcf1d62a3448a18b50662b3b3e089d3e789e4e974433691e4306c"
+    },
+    {
+      "path": "src/server/service.ts",
+      "sha256": "f2b32deffad087d8124d21ad731fa30db9635a9e37e46a12c96d3cc2c8bd083d"
+    },
+    {
+      "path": "src/server/store.ts",
+      "sha256": "b9224b44399326726a9ef837ced4da1447ac125b8ffc16b20b8c9c66aa25b00c"
+    },
+    {
+      "path": "src/shared/task.ts",
+      "sha256": "360898b93832dda89d3b0a04c3826a05168d9f51ad05b0e702bbcd0e22de7c7a"
+    },
+    {
+      "path": "src/web/api.ts",
+      "sha256": "8a8e86ecd98d754bba59646cd45b08cd6c09e26f5dee6f6b76f84de59723d43b"
+    },
+    {
+      "path": "src/web/Board.tsx",
+      "sha256": "9fa610504ec1c5f8f419dccbb1665c133710ac4b6114b1d8ea28e487f42ace9f"
+    },
+    {
+      "path": "src/web/main.tsx",
+      "sha256": "15c80ea3d056b629bfaa5fa108789c7571414a7b40ab3896064ff59547cb07ed"
+    },
+    {
+      "path": "src/web/style.css",
+      "sha256": "f3437ac8ee248baa1318b847eee2b2c4a41c5c506602495f4443ac47a21b33ee"
+    },
+    {
+      "path": "src/web/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "template.json",
+      "sha256": "b1a98edfc8cfd9b3f6df82a1efd05af8202a16e14ecf78440d11488a30be3eb0"
+    },
+    {
+      "path": "tests/api.test.ts",
+      "sha256": "ae65bbe33077bfe9cc9fb14a19b207a2ba1bcb83e280226ce50cbb62844ec9bb"
+    },
+    {
+      "path": "tests/board.test.tsx",
+      "sha256": "277322042e27252b29243fd28f936ecd5d2da87d88375d30e3c84aa55784e687"
+    },
+    {
+      "path": "tests/cli.test.ts",
+      "sha256": "bca36954b03a995cfb9857df6656cec648ff0d012c9607a81a15e1c1628b951a"
+    },
+    {
+      "path": "tests/database.test.ts",
+      "sha256": "679c8054a5eea566b775fc4ffdcb7b31c2efed584c79a6723c4ac2edba0ed659"
+    },
+    {
+      "path": "tests/http.test.ts",
+      "sha256": "2be1a0ed7bdcf4f532d283522cf4bb5d47fbb130ecf4981931824b4dd1e4be99"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "90b8560ea4c8f007180603c8862d9a008339a2c8d6a49d1388c15322cbefafa1"
+    },
+    {
+      "path": "tsconfig.server.json",
+      "sha256": "fce09e4798bbacc54ac0f89cdcf0d27e96de9a9efc71f49e36827c39eb62bc79"
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "f0dfd15b1650f3afa2d48ab79db9ce412f786c2fa04e4b8ec4820b6dda9b3019"
+    },
+    {
+      "path": "vitest.config.ts",
+      "sha256": "2c65d7c3375085bd3fe579fda75565903c2bc38dcc2bb589bf25da1f223e3c4e"
+    }
+  ],
+  "lockfileSha256": "95c52448605d2526e99e419fe50d218fb4d6a88d0b612e9f2c795586de77c354",
+  "runnerValidation": "NOT_EXECUTED",
+  "enterpriseAuthentication": "NOT_CONFIGURED",
+  "browserChannel": "bundled-chromium",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "durationMs": 36768,
+      "output": "frozen-install.txt",
+      "sha256": "54b22580644ecbadff1beae57aceb284290e4f73b5952540ec41fc033cf9fcb9"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "durationMs": 80891,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "build-server",
+      "exitCode": 0,
+      "durationMs": 69547,
+      "output": "build-server.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "build-web",
+      "exitCode": 0,
+      "durationMs": 58075,
+      "output": "build-web.txt",
+      "sha256": "b0a8995a376c465f363538accb8eb22bc076ebdd27250c3349ecc779062e328d"
+    },
+    {
+      "name": "unit-coverage",
+      "exitCode": 1,
+      "durationMs": 527891,
+      "output": "unit-coverage.txt",
+      "sha256": "0b02a3928d58a367b4d63d9ad0ec9165b6c0ec62be0f4a82b1df3e07a399ed00"
+    }
+  ],
+  "status": "FAILED",
+  "finishedAt": "2026-11-10T13:11:20.272Z"
+}

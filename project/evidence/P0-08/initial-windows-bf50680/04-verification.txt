@@ -1,0 +1,90 @@
+[1/17] toolchain:check
+[2/17] vendor:verify
+[3/17] build
+[4/17] typecheck
+[5/17] lint
+[6/17] test:smoke
+FAILED: ..\windows-results-bf50680\report.json
+[ELIFECYCLE] Command failed with exit code 1.
+$ node scripts/verify-foundation.mjs --commit bf50680966d9dfbbd876b68f6b1370a75616f2ea --output 'D:\yms\AI\DevMesh\.cache\p0-08\windows-results-bf50680'
+TAP version 13
+# Subtest: configuration defaults, JSON file and environment precedence
+ok 1 - configuration defaults, JSON file and environment precedence
+  ---
+  duration_ms: 488.5178
+  type: 'test'
+  ...
+# Subtest: invalid ports, timeouts and public bind addresses are rejected
+ok 2 - invalid ports, timeouts and public bind addresses are rejected
+  ---
+  duration_ms: 6.7341
+  type: 'test'
+  ...
+# Subtest: real Cordis plugin serves health/readiness and disposes its listener
+ok 3 - real Cordis plugin serves health/readiness and disposes its listener
+  ---
+  duration_ms: 2551.6859
+  type: 'test'
+  ...
+# Subtest: shutdown closes an unfinished TCP connection within its configured deadline
+ok 4 - shutdown closes an unfinished TCP connection within its configured deadline
+  ---
+  duration_ms: 405.2768
+  type: 'test'
+  ...
+# Subtest: occupied port rejects startup without closing the existing listener
+ok 5 - occupied port rejects startup without closing the existing listener
+  ---
+  duration_ms: 192.4707
+  type: 'test'
+  ...
+# Subtest: built CLI reaches ready and exits after verified Cordis disposal over IPC
+not ok 6 - built CLI reaches ready and exits after verified Cordis disposal over IPC
+  ---
+  duration_ms: 15366.6466
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\foundation.test.mjs:113:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 15000ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: CLI startup failures have nonzero exit codes and never report ready
+not ok 7 - CLI startup failures have nonzero exit codes and never report ready
+  ---
+  duration_ms: 15193.402
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\foundation.test.mjs:125:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 15000ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: CLI propagates EADDRINUSE as a nonzero startup failure
+ok 8 - CLI propagates EADDRINUSE as a nonzero startup failure
+  ---
+  duration_ms: 13780.0907
+  type: 'test'
+  ...
+# Subtest: CLI shuts down on POSIX SIGTERM
+ok 9 - CLI shuts down on POSIX SIGTERM # SKIP
+  ---
+  duration_ms: 1.5815
+  type: 'test'
+  ...
+# Subtest: all five built vendor modules resolve inside this independent repository
+ok 10 - all five built vendor modules resolve inside this independent repository
+  ---
+  duration_ms: 2387.089
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 7
+# fail 0
+# cancelled 2
+# skipped 1
+# todo 0
+# duration_ms 93976.1064
+[ELIFECYCLE] Command failed with exit code 1.
+$ node --test --test-reporter=tap tests/foundation.test.mjs
+

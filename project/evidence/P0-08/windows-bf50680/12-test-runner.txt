@@ -1,0 +1,135 @@
+TAP version 13
+# Subtest: built Runner CLI starts with execution disabled and disposes HTTP/Worker without Docker
+not ok 1 - built Runner CLI starts with execution disabled and disposes HTTP/Worker without Docker
+  ---
+  duration_ms: 30464.5202
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\runner-cli.test.mjs:10:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 30000ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# (node:29296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: SIGKILL of real manager/SQLite Worker recovers original job without execution replay or output cleanup
+not ok 2 - SIGKILL of real manager/SQLite Worker recovers original job without execution replay or output cleanup
+  ---
+  duration_ms: 30510.7254
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\runner-crash.test.mjs:11:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 30000ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: job protocol rejects caller shell arguments, mixed owners, invalid images and unsafe outputs
+ok 3 - job protocol rejects caller shell arguments, mixed owners, invalid images and unsafe outputs
+  ---
+  duration_ms: 246.1051
+  type: 'test'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: workspace policy binds current owner, allowed digest, command and resource scope
+ok 4 - workspace policy binds current owner, allowed digest, command and resource scope
+  ---
+  duration_ms: 15026.0574
+  type: 'test'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent Worker atomically deduplicates operations, scopes queries and rolls back invalid exit
+ok 5 - independent Worker atomically deduplicates operations, scopes queries and rolls back invalid exit
+  ---
+  duration_ms: 13155.8959
+  type: 'test'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: capacity holds unknown jobs, limits one workspace and two jobs per run
+ok 6 - capacity holds unknown jobs, limits one workspace and two jobs per run
+  ---
+  duration_ms: 22153.5828
+  type: 'test'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTP bearer identities, idempotency, cancellation and retained outputs
+ok 7 - real HTTP bearer identities, idempotency, cancellation and retained outputs
+  ---
+  duration_ms: 26886.8314
+  type: 'test'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost start response queries original container and never starts it twice
+ok 8 - lost start response queries original container and never starts it twice
+  ---
+  duration_ms: 21600.853
+  type: 'test'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lease watchdog stops without controller requests; an unknown stop retains capacity
+not ok 9 - lease watchdog stops without controller requests; an unknown stop retains capacity
+  ---
+  duration_ms: 17442.2307
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\runner.test.mjs:45:1'
+  failureType: 'testCodeFailure'
+  error: 'condition not reached'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    until (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/runner.mjs:26:174)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/runner.test.mjs:46:221)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: renewals preserve owner, enforce sequence and current authority, and stop cannot be undone
+ok 10 - renewals preserve owner, enforce sequence and current authority, and stop cannot be undone
+  ---
+  duration_ms: 9549.9222
+  type: 'test'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: configured roots are separate, unknown data is not adopted and terminal facts cannot regress
+ok 11 - configured roots are separate, unknown data is not adopted and terminal facts cannot regress
+  ---
+  duration_ms: 11512.5977
+  type: 'test'
+  ...
+# (node:28548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: restart reads original job records without replaying create/start
+ok 12 - restart reads original job records without replaying create/start
+  ---
+  duration_ms: 9291.8321
+  type: 'test'
+  ...
+# Subtest: Docker provider stays disabled without quota/runtime and exposes only bounded arguments
+ok 13 - Docker provider stays disabled without quota/runtime and exposes only bounded arguments
+  ---
+  duration_ms: 11.6139
+  type: 'test'
+  ...
+# Subtest: Linux Docker adapter validates original labels and maps verified stop facts with a controlled CLI
+ok 14 - Linux Docker adapter validates original labels and maps verified stop facts with a controlled CLI # SKIP
+  ---
+  duration_ms: 0.9021
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 10
+# fail 1
+# cancelled 2
+# skipped 1
+# todo 0
+# duration_ms 261606.3014
+[ELIFECYCLE] Command failed with exit code 1.
+$ node --test --test-concurrency=1 --test-reporter=tap tests/runner*.test.mjs

@@ -1,0 +1,103 @@
+✓ Lockfile passes supply-chain policies (verified 55m ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +239
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 239, reused 0, downloaded 0, added 0
+Progress: resolved 239, reused 1, downloaded 0, added 0
+Progress: resolved 239, reused 2, downloaded 0, added 0
+Progress: resolved 239, reused 8, downloaded 0, added 0
+Progress: resolved 239, reused 11, downloaded 0, added 0
+Progress: resolved 239, reused 18, downloaded 0, added 0
+Progress: resolved 239, reused 21, downloaded 0, added 0
+Progress: resolved 239, reused 23, downloaded 0, added 0
+Progress: resolved 239, reused 24, downloaded 0, added 0
+Progress: resolved 239, reused 42, downloaded 0, added 0
+Progress: resolved 239, reused 51, downloaded 0, added 0
+Progress: resolved 239, reused 57, downloaded 0, added 0
+Progress: resolved 239, reused 67, downloaded 0, added 0
+Progress: resolved 239, reused 72, downloaded 0, added 0
+Progress: resolved 239, reused 84, downloaded 0, added 0
+Progress: resolved 239, reused 96, downloaded 0, added 0
+Progress: resolved 239, reused 108, downloaded 0, added 0
+Progress: resolved 239, reused 120, downloaded 0, added 0
+Progress: resolved 239, reused 132, downloaded 0, added 0
+Progress: resolved 239, reused 148, downloaded 0, added 0
+Progress: resolved 239, reused 166, downloaded 0, added 0
+Progress: resolved 239, reused 176, downloaded 0, added 0
+Progress: resolved 239, reused 195, downloaded 0, added 0
+Progress: resolved 239, reused 212, downloaded 0, added 0
+Packages are hard linked from the content-addressable store to the virtual store.
+  Content-addressable store is at: D:\.pnpm-store\v11
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 239, reused 238, downloaded 0, added 2
+Progress: resolved 239, reused 238, downloaded 0, added 7
+Progress: resolved 239, reused 238, downloaded 0, added 10
+Progress: resolved 239, reused 238, downloaded 0, added 12
+Progress: resolved 239, reused 238, downloaded 0, added 14
+Progress: resolved 239, reused 238, downloaded 0, added 16
+Progress: resolved 239, reused 239, downloaded 0, added 20
+Progress: resolved 239, reused 239, downloaded 0, added 24
+Progress: resolved 239, reused 239, downloaded 0, added 30
+Progress: resolved 239, reused 239, downloaded 0, added 36
+Progress: resolved 239, reused 239, downloaded 0, added 38
+Progress: resolved 239, reused 239, downloaded 0, added 41
+Progress: resolved 239, reused 239, downloaded 0, added 42
+Progress: resolved 239, reused 239, downloaded 0, added 44
+Progress: resolved 239, reused 239, downloaded 0, added 48
+Progress: resolved 239, reused 239, downloaded 0, added 55
+Progress: resolved 239, reused 239, downloaded 0, added 59
+Progress: resolved 239, reused 239, downloaded 0, added 71
+Progress: resolved 239, reused 239, downloaded 0, added 79
+Progress: resolved 239, reused 239, downloaded 0, added 84
+Progress: resolved 239, reused 239, downloaded 0, added 90
+Progress: resolved 239, reused 239, downloaded 0, added 93
+Progress: resolved 239, reused 239, downloaded 0, added 94
+Progress: resolved 239, reused 239, downloaded 0, added 96
+Progress: resolved 239, reused 239, downloaded 0, added 97
+Progress: resolved 239, reused 239, downloaded 0, added 102
+Progress: resolved 239, reused 239, downloaded 0, added 103
+Progress: resolved 239, reused 239, downloaded 0, added 104
+Progress: resolved 239, reused 239, downloaded 0, added 113
+Progress: resolved 239, reused 239, downloaded 0, added 121
+Progress: resolved 239, reused 239, downloaded 0, added 135
+Progress: resolved 239, reused 239, downloaded 0, added 140
+Progress: resolved 239, reused 239, downloaded 0, added 147
+Progress: resolved 239, reused 239, downloaded 0, added 160
+Progress: resolved 239, reused 239, downloaded 0, added 176
+Progress: resolved 239, reused 239, downloaded 0, added 188
+Progress: resolved 239, reused 239, downloaded 0, added 195
+Progress: resolved 239, reused 239, downloaded 0, added 200
+Progress: resolved 239, reused 239, downloaded 0, added 215
+Progress: resolved 239, reused 239, downloaded 0, added 229
+Progress: resolved 239, reused 239, downloaded 0, added 237
+Progress: resolved 239, reused 239, downloaded 0, added 238
+Progress: resolved 239, reused 239, downloaded 0, added 239
+Progress: resolved 239, reused 239, downloaded 0, added 239, done
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+dependencies:
++ express 5.2.1
++ react 18.3.1
++ react-dom 18.3.1
++ zod 4.4.3
+
+devDependencies:
++ @playwright/test 1.65.0
++ @testing-library/dom 10.4.1
++ @testing-library/react 16.3.3
++ @testing-library/user-event 14.6.9
++ @types/express 5.0.6
++ @types/node 24.13.1
++ @types/react 18.3.1
++ @types/react-dom 18.3.0
++ @vitejs/plugin-react 4.7.0
++ @vitest/coverage-v8 4.1.11
++ jsdom 26.1.0
++ pnpm 11.28.5
++ typescript 6.0.3
++ vite 6.4.3
++ vitest 4.1.11
+
+Done in 2m 46.5s using pnpm v11.28.5

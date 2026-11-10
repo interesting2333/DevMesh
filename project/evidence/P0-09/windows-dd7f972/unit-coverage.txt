@@ -1,0 +1,87 @@
+
+ RUN  v4.1.11 D:/yms/AI/DevMesh/.cache/p0-09/windows-clean-876aea7/templates/web-crud-v1
+      Coverage enabled with v8
+
+stdout | tests/cli.test.ts > starts the actual built CLI and stops it, releasing its Worker and dataset for restart
+DATASET_INITIALIZED
+
+ ✓ tests/cli.test.ts (2 tests) 15302ms
+   ✓ validates CLI configuration without accepting an implicit dataset  1044ms
+   ✓ starts the actual built CLI and stops it, releasing its Worker and dataset for restart  14236ms
+ ✓ tests/board.test.tsx (4 tests) 42380ms
+   ✓ creates, edits, moves and deletes through the DOM and real backend; refresh retains saved text  26791ms
+   ✓ validates empty titles, permits cancel, and starts new tasks in the selected column  5429ms
+   ✓ keeps an unknown save in the browser outbox and manually reuses its original key without duplication  5932ms
+   ✓ shows initial load failures and can refresh; read-only views disable writes  4200ms
+ ✓ tests/http.test.ts (5 tests) 39030ms
+   ✓ serves real HTTP through the SQLite Worker, persists on restart, and rejects stale and malformed writes  12597ms
+   ✓ denies foreign Origin, hostile Host and read-only mutations  6609ms
+   ✓ rejects unavailable Worker startup and a second listener without abandoning the dataset lock  18398ms
+   ✓ serves the built entry beneath a hidden ancestor while denying hidden web assets  1120ms
+ ✓ tests/database.test.ts (5 tests) 4110ms
+     ✓ persists creates, versioned state updates and receipt replay across restart  694ms
+     ✓ uses one writer, explicit init and identity validation instead of silently recreating data  690ms
+     ✓ denies read-only writes, invalid keys and bounded or unknown fields  538ms
+     ✓ refuses capacity overflow inside the transaction without retaining a failed receipt  2074ms
+ ✓ tests/api.test.ts (3 tests) 500ms
+
+ Test Files  5 passed (5)
+      Tests  19 passed (19)
+   Start at  21:28:38
+   Duration  204.70s (transform 6.07s, setup 0ms, import 36.43s, tests 101.32s, environment 31.36s)
+
+JSON report written to D:/yms/AI/DevMesh/.cache/p0-09/windows-clean-876aea7/templates/web-crud-v1/.artifacts/unit-results.json
+ % Coverage report from v8
+----------------|---------|----------|---------|---------|-------------------
+File            | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------|---------|----------|---------|---------|-------------------
+All files       |   89.67 |    86.03 |   89.69 |   92.74 |                   
+ server         |   87.57 |    79.65 |   84.61 |   90.78 |                   
+  app.ts        |     100 |    85.71 |     100 |     100 | 12,23,32-37       
+  dataset.ts    |   96.82 |     92.3 |     100 |     100 | 13,21,56          
+  db-worker.ts  |       0 |        0 |       0 |       0 | 4-15              
+  main.ts       |   42.85 |    58.33 |   14.28 |   42.85 | 12-24,27          
+  service.ts    |   94.11 |       70 |   85.71 |     100 | 11-14,22          
+  store.ts      |   93.33 |    89.47 |     100 |     100 | 18,30             
+ web            |   94.35 |    97.84 |      95 |   97.59 |                   
+  Board.tsx     |   92.95 |    98.11 |   92.85 |   97.61 | 64                
+  api.ts        |   98.07 |     97.5 |     100 |     100 | 34                
+  main.tsx      |       0 |      100 |     100 |       0 | 5                 
+----------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 89.67% ( 417/465 )
+Branches     : 86.03% ( 228/265 )
+Functions    : 89.69% ( 87/97 )
+Lines        : 92.74% ( 294/317 )
+================================================================================
+(node:30988) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:31944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
