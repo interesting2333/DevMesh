@@ -1,0 +1,10 @@
+{
+  "runnerId": "runner.local",
+  "dataRoot": "/srv/devmesh/runner",
+  "controlDataRoot": "/srv/devmesh/control",
+  "backupRoot": "/srv/devmesh/backups",
+  "host": "127.0.0.1",
+  "port": 3220,
+  "executionEnabled": false,
+  "identities": [{"controllerId": "controller.local", "credentialRef": "runner.controller"}]
+}

@@ -149,6 +149,24 @@ importers:
         specifier: 0.1.9
         version: 0.1.9
 
+  packages/runner:
+    dependencies:
+      '@devmesh/blob-store':
+        specifier: workspace:*
+        version: link:../blob-store
+      '@devmesh/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@devmesh/storage-sqlite':
+        specifier: workspace:*
+        version: link:../storage-sqlite
+      express:
+        specifier: 5.2.1
+        version: 5.2.1
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+
   packages/storage-sqlite:
     dependencies:
       '@devmesh/contracts':

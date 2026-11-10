@@ -31,6 +31,9 @@
       ],
       "@devmesh/agent-runtime": [
         "./packages/agent-runtime/src/index.ts"
+      ],
+      "@devmesh/runner": [
+        "./packages/runner/src/index.ts"
       ]
     }
   },
