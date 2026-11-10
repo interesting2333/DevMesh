@@ -4,12 +4,15 @@ import { sessionRequests } from './session-protocol.js';
 import type { SessionResults } from './session-protocol.js';
 import { registryRequests } from './registry-protocol.js';
 import type { RegistryResults } from './registry-protocol.js';
+import { runtimeRequests } from './runtime-protocol.js';
+import type { RuntimeResults } from './runtime-protocol.js';
 
 const meta = z.strictObject({ principalId: opaqueKey, scopeId: opaqueKey, idempotencyKey: z.uuid() });
 const conditional = { meta, runId: ids.run, ifMatch: z.string().optional() };
 const limit = z.number().int().min(1).max(200).default(50);
 const roleSnapshot = z.strictObject({ role, revision: opaqueKey, provider: opaqueKey, model: opaqueKey, promptArtifactId: ids.artifact, outputSchemaId: opaqueKey, allowedTools: z.array(opaqueKey), maxSteps: revision, contextLimitTokens: revision, outputReserveTokens: revision, requestTimeoutMs: revision, maxReadOnlyRetries: epoch });
 export const requests = {
+  ...runtimeRequests,
   ...registryRequests,
   ...sessionRequests,
   registerContent: z.strictObject({ contentHash: sha256, byteSize: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER), mimeType: z.string().min(1).max(128) }),
@@ -39,7 +42,7 @@ export type OperationResult = { operationId: string; status: string; result: Rec
 export type RunView = { runId: string; projectId: string; taskId: string; resourceRevision: number; runEpoch: number; controlRevision: number; phase: string; controlGate: string; terminalOutcome: string | null; currentPlanRevision: number | null; currentRequirementRevision: number | null; eventSeq: number };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
-export interface Results extends SessionResults, RegistryResults {
+export interface Results extends SessionResults, RegistryResults, RuntimeResults {
   registerContent: { contentHash: string; storageKey: string };
   createProjectWithRun: OperationResult;
   publishPlan: OperationResult;

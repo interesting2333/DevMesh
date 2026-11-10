@@ -27,7 +27,7 @@ test('HTTP composition verifies stored content before readiness and disposes its
     assert.ok(server.services);assert.equal(server.services.local.marker.storeId,f.local.marker.storeId);
     const response=await fetch(`http://127.0.0.1:${server.address.port}/readyz`);assert.equal(response.status,200);await response.json();
   }finally{await server.stop();}
-  await f.reopen();assert.equal((await f.storage.request('inspect',{})).version,5);
+  await f.reopen();assert.equal((await f.storage.request('inspect',{})).version,6);
 });
 
 test('maintenance CLI verifies an existing store, refuses implicit creation and releases resources before exit',async t=>{
@@ -41,5 +41,5 @@ test('maintenance CLI verifies an existing store, refuses implicit creation and 
   await f.reopen();await f.local.close();
   const fresh={...f.options,dataRoot:join(f.root,'cli-new')};
   const missing=await run('verify',fresh);assert.equal(missing.code,1);assert.equal(existsSync(fresh.dataRoot),false);
-  const created=await run('init',fresh);assert.equal(created.code,0,created.err);assert.equal(JSON.parse(created.out).database.version,5);
+  const created=await run('init',fresh);assert.equal(created.code,0,created.err);assert.equal(JSON.parse(created.out).database.version,6);
 });

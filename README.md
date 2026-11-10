@@ -16,6 +16,7 @@ DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的�
 | 数据库迁移、Worker、事务与崩溃恢复 | [SQLite 存储说明](./packages/storage-sqlite/README.md) |
 | 本地正文、附件、会话与目录初始化 | [内容存储说明](./packages/blob-store/README.md) |
 | 内部 A2A、清单、注册代际与持久受理 | [A2A 适配说明](./packages/a2a-adapter/README.md) |
+| 可选模型执行、四角色、工具操作与预算 | [Runtime 说明](./packages/agent-runtime/README.md) |
 | 全部文档与原型 | [交付说明](./交付说明.md) |
 | 运行、构建、配置、测试与 CI | [工程说明](./docs/engineering.md) |
 

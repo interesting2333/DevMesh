@@ -10,7 +10,7 @@ const rejects=(promise,code)=>assert.rejects(promise,e=>e.code===code,'Expected 
 
 test('layout is explicit, durable, identity checked and exclusively locked',async t=>{
   const f=await contentFixture(t),info=await f.storage.request('inspect',{});
-  assert.equal(info.storeId,f.local.marker.storeId);assert.equal(info.version,5);assert.equal(Object.keys(info.counts).length,51);
+  assert.equal(info.storeId,f.local.marker.storeId);assert.equal(info.version,6);assert.equal(Object.keys(info.counts).length,55);
   assert.ok(['supported','unsupported'].includes(f.local.directorySync));
   await rejects(openLocalStorage(f.options),'STORAGE_LOCKED');
   const id=f.local.marker.storeId;await f.local.close();

@@ -79,6 +79,24 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
 
+  packages/agent-runtime:
+    dependencies:
+      '@devmesh/a2a-adapter':
+        specifier: workspace:*
+        version: link:../a2a-adapter
+      '@devmesh/blob-store':
+        specifier: workspace:*
+        version: link:../blob-store
+      '@devmesh/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@devmesh/storage-sqlite':
+        specifier: workspace:*
+        version: link:../storage-sqlite
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+
   packages/blob-store:
     dependencies:
       '@devmesh/contracts':
@@ -117,6 +135,9 @@ importers:
       '@devmesh/a2a-adapter':
         specifier: workspace:*
         version: link:../a2a-adapter
+      '@devmesh/agent-runtime':
+        specifier: workspace:*
+        version: link:../agent-runtime
       '@devmesh/blob-store':
         specifier: workspace:*
         version: link:../blob-store

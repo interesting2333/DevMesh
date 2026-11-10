@@ -15,7 +15,7 @@ export function manifest(base='http://127.0.0.1:3210',revision='M1',endpointRevi
 })};}
 export async function checks(storage,m){const checks=[];for(const endpoint of m.endpoints){const p=await storage.request('issueEndpointProbe',{endpoint});const time=new Date().toISOString();checks.push({checkId:p.checkId,status:'HEALTHY',observedCardHash:endpoint.cardHash,checkedAt:time,expiresAt:new Date(Date.now()+120000).toISOString(),errorCode:null});}return checks;}
 export async function commit(storage,m){return storage.request('commitRegistry',{manifest:m,expectedProjectionRevision:(await storage.request('getRegistrySnapshot',{})).projectionRevision,checks:await checks(storage,m)});}
-export async function prepareDispatch(f,registry){
+export async function prepareDispatch(f,registry,roleConfig={}){
  const body=await f.content.putText(meta(),{kind:'content'},'实现任务看板');
  const receipt=await f.storage.request('createProjectWithRun',{meta:meta(),name:'A2A protocol tests',baseCommit:'b'.repeat(40),contentHash:body.expectedHash,clientMessageId:randomUUID()});
  const p=receipt.result,draft=plan(),req=requirements(),content=await f.content.putJson(meta(),{kind:'content'},draft);
@@ -23,9 +23,10 @@ export async function prepareDispatch(f,registry){
  await f.storage.request('confirmPlan',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r2"',requirementRevision:1,planRevision:1,reviewHash:publication.result.reviewHash});
  const input=await admission(f.storage,{...p,draft,requirements:req}),target=await registry.resolveRole('developer');
  input.works[0].endpoint={endpointId:target.config.endpointId,revision:target.config.revision,cardHash:target.config.cardHash,registryGenerationId:registry.version.generationId};
+ Object.assign(input.works[0].roleSnapshot,roleConfig);
  const admitted=await f.storage.request('admitWorks',input),attemptId=admitted.result.attemptIds[0];
  const outbox=(await f.storage.request('claimOutbox',{workerId:'test.sender',limit:50})).find(o=>o.payload.attemptId===attemptId),d=outbox.payload;
- const delegation={schemaVersion:'devmesh.work.v1',operationId:d.operationId,runId:d.runId,workId:d.workId,workRevision:d.workRevision,attemptId,endpointId:d.endpoint.endpointId,endpointRevision:d.endpoint.revision,grantId:d.permit.grantId,activationId:d.permit.activationId,runEpoch:d.permit.runEpoch,workEpoch:d.permit.workEpoch,requirementRevision:1,planRevision:1,inputManifestId:d.inputManifestId,roleSnapshotId:d.roleSnapshotId,originRole:'architect',targetRole:'developer',requestedOutputSchema:'devmesh.result.v1'};
+ const delegation={schemaVersion:'devmesh.work.v1',operationId:d.operationId,runId:d.runId,workId:d.workId,workRevision:d.workRevision,attemptId,endpointId:d.endpoint.endpointId,endpointRevision:d.endpoint.revision,grantId:d.permit.grantId,activationId:d.permit.activationId,runEpoch:d.permit.runEpoch,workEpoch:d.permit.workEpoch,requirementRevision:1,planRevision:1,inputManifestId:d.inputManifestId,roleSnapshotId:d.roleSnapshotId,originRole:'architect',targetRole:'developer',requestedOutputSchema:input.works[0].roleSnapshot.outputSchemaId};
  const message=Message.fromJSON({messageId:randomUUID(),role:'ROLE_USER',parts:[{data:delegation}]});
  return {...p,attemptId,delegation,message,params:SendMessageRequest.fromJSON({message:Message.toJSON(message)}),request:{callerId,endpointId:delegation.endpointId,endpointRevision:delegation.endpointRevision,delegation,message:Message.toJSON(message),...registry.version}};
 }

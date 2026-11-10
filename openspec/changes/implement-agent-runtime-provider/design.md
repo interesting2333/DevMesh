@@ -14,7 +14,7 @@ P0-04 已有有序会话／模型步骤／上下文，P0-05 已有持久受理�
 4. Runtime 消费 AcceptedWork，并以 ExecutionHost 隔离 Run／Attempt 归属。会话、角色快照、上下文与步骤均有真实来源；每步核对当前授权和控制门、步数、输入／输出／总 token 预算。保守 token 计数用 UTF-8 上界加结构开销，不能为塞入上下文丢弃必要要求；超过 200 条上下文显式要求压缩，后续压缩保存独立来源快照。
 5. 每次调用先持久保存脱敏 ModelRequest 与 SENT，再发网络请求；完整 Response 持久化成功后才解析／执行工具。SENT 未确认保持未知区间，不在重启时自动重复请求；恢复先核实已有响应或人工处理。模型取消只结束连接，不能视为工具／Runner 已停止。
 6. 工具必须来自冻结 allowlist 与 schema／副作用分类。参数完整解析后先登记 ToolOperation／唯一 step+callId，再调用适配器。独立只读可有限重试确定失败；写操作不隐式重试，未知结果调用适配器原 operation 查询。结果先持久正文与同 step 工具消息，再提交操作终态；若最后一次提交中断，可从唯一消息补交，不能再次执行工具。MCP 真实协议适配在 P0-08，接口夹具只验证 Runtime 顺序。
-7. 最终 JSON 通过冻结角色 schema 后产生候选成果并返回 A2A completed；业务成功仍由 ResultVerifier 判断，不提前将 Attempt 写 SUCCEEDED。已知参数／模型错误为 failed，未知副作用或进程重启为 RECONCILE，不释放旧宿主后重试。
+7. 最终 JSON 通过冻结角色 schema 后，以同一 SQLite 事务登记候选 artifact、Runtime FINISHED、A2A completed／有序事件以及 AcceptedWork FINISHED，避免候选保存后进程退出造成协议状态悬挂。业务成功仍由 ResultVerifier 判断，不提前将 Attempt 写 SUCCEEDED。已知参数／模型错误为 failed，未知副作用或进程重启为 RECONCILE，不释放旧宿主后重试。
 
 ## Risks / Trade-offs
 

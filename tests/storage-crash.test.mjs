@@ -63,8 +63,8 @@ test('real migration CLI creates no implicit DB and exits only after releasing i
   const script=fileURLToPath(new URL('../scripts/db-migrate.mjs',import.meta.url));
   const child=spawn(process.execPath,[script,'--db',f.options.databasePath,'--store-id',f.options.storeId],{stdio:['ignore','pipe','pipe']});
   let output='';child.stdout.on('data',data=>{output+=data;});
-  const [code]=await once(child,'exit');assert.equal(code,0);assert.equal(JSON.parse(output).version,5);
-  const reopened=await f.reopen();assert.equal((await reopened.request('inspect',{})).version,5);
+  const [code]=await once(child,'exit');assert.equal(code,0);assert.equal(JSON.parse(output).version,6);
+  const reopened=await f.reopen();assert.equal((await reopened.request('inspect',{})).version,6);
 });
 
 test('unknown attempt survives controller death and still blocks a second dispatch',async t=>{

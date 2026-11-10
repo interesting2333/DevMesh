@@ -7,6 +7,7 @@ import { LocalContentStore, SessionStore, openLocalStorage } from '@devmesh/blob
 import type { LocalStorage } from '@devmesh/blob-store';
 import { mountInternalAgents,environmentCredentials } from '@devmesh/a2a-adapter';
 import type { CredentialResolver } from '@devmesh/a2a-adapter';
+import { AgentRuntime,DeepSeekProvider,RuntimeConsumer,parseRuntimeConfig } from '@devmesh/agent-runtime';
 
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
@@ -16,10 +17,13 @@ export interface FoundationServer {
   stop(): Promise<void>;
   services?: { local:LocalStorage; content:LocalContentStore; sessions:SessionStore } | undefined;
   agents?:ReturnType<typeof mountInternalAgents>|undefined;
+  consumer?:RuntimeConsumer|undefined;
 }
 
 export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver}={}): Promise<FoundationServer> {
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
+  if(config.runtime&&(!config.storage||!config.a2a))throw new Error('Runtime requires durable storage and hosted A2A endpoints');
+  const runtimeConfig=config.runtime?parseRuntimeConfig(config.runtime):undefined;
   const context = new Context();
   let services: FoundationServer['services'];
   const storageFiber=config.storage?context.plugin({name:'devmesh-local-storage',async apply(scope:Context){
@@ -49,6 +53,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     response.status(ready ? 200 : 503).json({ status: ready ? 'ready' : 'starting-or-stopping', scope: 'platform-foundation' });
   });
   let agents: ReturnType<typeof mountInternalAgents>|undefined;
+  let consumer:RuntimeConsumer|undefined;
   try{if(config.a2a&&services)agents=mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??environmentCredentials()});}
   catch(error){await storageFiber?.dispose();throw error;}
   app.use((_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
@@ -96,8 +101,16 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   try {
     await fiber;
     if(agents)await agents.activate();
+    if(runtimeConfig&&services){
+      const credentials=options.resolveCredential??environmentCredentials();
+      const providers=runtimeConfig.providers.map(p=>new DeepSeekProvider(p,credentials));
+      const runtime=new AgentRuntime(services.local.storage,services.content,providers,[],runtimeConfig.tokenLimit);
+      consumer=new RuntimeConsumer(services.local.storage,runtime,config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled).map(e=>e.endpointId),'runtime.local');
+      await consumer.start();
+    }
     ready = true;
   } catch (error) {
+    await consumer?.stop();
     await agents?.stop();
     await fiber.dispose();
     await storageFiber?.dispose();
@@ -113,10 +126,11 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     address: Object.freeze({ ...address }),
     ...(services?{services}:{}),
     ...(agents?{agents}:{}),
+    ...(consumer?{consumer}:{}),
     stop() {
       ready = false;
       stopping ??= (async () => {
-        try{await agents?.stop();await fiber.dispose();}finally{await storageFiber?.dispose();}
+        try{await consumer?.stop();await agents?.stop();await fiber.dispose();}finally{await storageFiber?.dispose();}
         if (cleanupError) throw cleanupError;
         if (server.listening || sockets.size !== 0) throw new Error('HTTP resources remained active after Cordis disposal');
       })();

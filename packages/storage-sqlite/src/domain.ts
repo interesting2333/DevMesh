@@ -9,6 +9,9 @@ import { canonical } from './json.js';
 import { createRegistryDomain } from './registry-domain.js';
 import { registryRequests } from './registry-protocol.js';
 import type { RegistryMethod } from './registry-protocol.js';
+import { createRuntimeDomain } from './runtime-domain.js';
+import { runtimeRequests } from './runtime-protocol.js';
+import type { RuntimeMethod } from './runtime-protocol.js';
 import { createSessionDomain } from './session-domain.js';
 import { sessionRequests } from './session-protocol.js';
 import type { SessionMethod } from './session-protocol.js';
@@ -19,6 +22,7 @@ const uid = (prefix: string) => `${prefix}_${randomUUID().replaceAll('-', '')}`;
 const now = () => new Date().toISOString();
 export function createDomain(db: DatabaseSync) {
   const registry = createRegistryDomain(db);
+  const runtime = createRuntimeDomain(db);
   const sessions = createSessionDomain(db);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
@@ -262,6 +266,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if (Object.hasOwn(runtimeRequests, method)) return runtime.execute(method as RuntimeMethod, input);
     if (Object.hasOwn(registryRequests, method)) return registry.execute(method as RegistryMethod, input);
     if (Object.hasOwn(sessionRequests, method)) return sessions.execute(method as SessionMethod, input);
     if (method === 'inspect' || !Object.hasOwn(handlers, method)) throw new StorageError('METHOD_NOT_ALLOWED', 422, 'Unsupported storage command');

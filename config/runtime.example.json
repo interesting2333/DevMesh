@@ -1,0 +1,23 @@
+{
+  "providers": [
+    {
+      "providerId": "deepseek",
+      "endpoint": "https://api.deepseek.com",
+      "model": "configure-model-id",
+      "credentialRef": "models.deepseek",
+      "connectTimeoutMs": 10000,
+      "requestTimeoutMs": 120000,
+      "capabilities": {
+        "revision": "operator-declared.v1",
+        "contextTokens": 8192,
+        "maxOutputTokens": 2048,
+        "toolCalls": true,
+        "structuredOutput": "json-object",
+        "tokenCounting": "utf8-conservative-v1",
+        "reasoningMode": "disabled",
+        "verification": "DECLARED"
+      }
+    }
+  ],
+  "tokenLimit": 100000
+}
