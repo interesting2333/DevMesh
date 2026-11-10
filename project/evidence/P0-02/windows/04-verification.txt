@@ -1,0 +1,13 @@
+[1/11] toolchain:check
+[2/11] vendor:verify
+[3/11] build
+[4/11] typecheck
+[5/11] lint
+[6/11] test:smoke
+[7/11] test:contracts
+[8/11] contracts:check
+[9/11] project:check
+[10/11] openspec
+[11/11] design-consistency
+PASSED: ..\windows-results-ced28e7\report.json
+$ node scripts/verify-foundation.mjs --commit ced28e775eb7467744cad5fd7391d0804b15cd08 --output 'D:\yms\AI\DevMesh\.cache\p0-02\windows-results-ced28e7'

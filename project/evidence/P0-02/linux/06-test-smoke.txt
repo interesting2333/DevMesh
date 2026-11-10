@@ -1,0 +1,71 @@
+TAP version 13
+# Subtest: configuration defaults, JSON file and environment precedence
+ok 1 - configuration defaults, JSON file and environment precedence
+  ---
+  duration_ms: 10.421309
+  type: 'test'
+  ...
+# Subtest: invalid ports, timeouts and public bind addresses are rejected
+ok 2 - invalid ports, timeouts and public bind addresses are rejected
+  ---
+  duration_ms: 1.795002
+  type: 'test'
+  ...
+# Subtest: real Cordis plugin serves health/readiness and disposes its listener
+ok 3 - real Cordis plugin serves health/readiness and disposes its listener
+  ---
+  duration_ms: 102.548086
+  type: 'test'
+  ...
+# Subtest: shutdown closes an unfinished TCP connection within its configured deadline
+ok 4 - shutdown closes an unfinished TCP connection within its configured deadline
+  ---
+  duration_ms: 109.071891
+  type: 'test'
+  ...
+# Subtest: occupied port rejects startup without closing the existing listener
+ok 5 - occupied port rejects startup without closing the existing listener
+  ---
+  duration_ms: 4.304103
+  type: 'test'
+  ...
+# Subtest: built CLI reaches ready and exits after verified Cordis disposal over IPC
+ok 6 - built CLI reaches ready and exits after verified Cordis disposal over IPC
+  ---
+  duration_ms: 224.961188
+  type: 'test'
+  ...
+# Subtest: CLI startup failures have nonzero exit codes and never report ready
+ok 7 - CLI startup failures have nonzero exit codes and never report ready
+  ---
+  duration_ms: 565.153317
+  type: 'test'
+  ...
+# Subtest: CLI propagates EADDRINUSE as a nonzero startup failure
+ok 8 - CLI propagates EADDRINUSE as a nonzero startup failure
+  ---
+  duration_ms: 178.309469
+  type: 'test'
+  ...
+# Subtest: CLI shuts down on POSIX SIGTERM
+ok 9 - CLI shuts down on POSIX SIGTERM
+  ---
+  duration_ms: 182.306668
+  type: 'test'
+  ...
+# Subtest: all five built vendor modules resolve inside this independent repository
+ok 10 - all five built vendor modules resolve inside this independent repository
+  ---
+  duration_ms: 31.938395
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1738.897755
+$ node --test --test-reporter=tap tests/foundation.test.mjs

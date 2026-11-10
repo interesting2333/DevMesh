@@ -132,10 +132,10 @@
       "id": "P0-02",
       "phase": "P0",
       "title": "核心契约与接口基础",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "responsibility": "平台",
       "owner": "Codex（本次实施）",
-      "reviewer": null,
+      "reviewer": "Codex（同一 Agent 技术复核）",
       "dependsOn": [
         "P0-01"
       ],
@@ -152,11 +152,19 @@
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": "2026-11-10T07:13:46.023Z",
-      "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
-      "reviewNote": null,
-      "notes": []
+      "completedAt": "2026-11-10T07:30:52.971Z",
+      "codeReferences": [
+        "commit:ced28e775eb7467744cad5fd7391d0804b15cd08"
+      ],
+      "evidence": [
+        "project/evidence/P0-02/验收记录.md",
+        "project/evidence/P0-02/windows/report.json",
+        "project/evidence/P0-02/linux/report.json"
+      ],
+      "reviewNote": "契约、OpenAPI、正反样例及模块接口表齐全；两平台同提交／锁文件／87 个源码文件一致，22 份检查日志哈希匹配，11 项检查各自全通过，契约测试各18通过。为同一 Agent 技术复核，无独立人员或人工签认；T08/T12 仅基础，G0 未通过。",
+      "notes": [
+        "按 establish-core-contracts 完成；精确固定 Zod 4.4.3，业务路由仍标 planned；无生产数据迁移或基线变更。"
+      ]
     },
     {
       "id": "P0-03",

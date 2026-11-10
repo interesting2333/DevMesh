@@ -12,14 +12,14 @@
 | [tasks.json](./tasks.json) | 工作包状态、责任职能、实际负责人、依赖、阻塞、关联变更、代码和证据、阶段门槛 | **唯一的工作包状态源**，不得另建一份人工状态表 |
 | [任务台账.md](./任务台账.md) | 按状态源生成的进度与依赖视图 | 运行 `node project/manage.mjs render`，不直接修改 |
 | `openspec/changes/<name>/` | 当前变更的 proposal、design、细分 tasks 和必要的增量 specs | 变更名用英文 kebab-case；在 proposal 中写明父工作包 ID |
-| `openspec/specs/` | 已实施并通过验证、完成归档的能力规范 | 当前应用尚未实施，保持为空；设计目标不提前当成已实现能力 |
+| `openspec/specs/` | 已实施并通过验证、完成归档的能力规范 | 已有 core-contracts；设计目标不提前当成已实现能力 |
 | [evidence/](./evidence/README.md) | 可定位的执行记录、结果摘要与原始材料引用 | 写清版本、实际环境和失败项；大体积材料放制品存储并附摘要与校验值 |
 
 管理工具本身不提供服务端看板、自动排期或多人锁。多人协作通过分支、PR 和评审合并 JSON 变更；同一工作包约定一位实际负责人。以后接入 Issues／外部看板时使用相同工作包 ID，并明确唯一状态源的迁移方式。
 
 ## 初始化起点与实时进度
 
-管理初始化时，36 个开发工作包均为 `NOT_STARTED`，G0～G4 均为 `PENDING`，仅 P0-01 满足初始依赖。已建立 [bootstrap-devmesh-workspace](../openspec/changes/bootstrap-devmesh-workspace/proposal.md) 变更；后续实际进度、步骤和证据统一查台账与变更内的 tasks，不在此重复维护状态。
+管理初始化时，36 个开发工作包均为 `NOT_STARTED`，G0～G4 均为 `PENDING`，仅 P0-01 满足初始依赖。已建立 [bootstrap-devmesh-workspace](../openspec/changes/archive/2026-11-10-bootstrap-devmesh-workspace/proposal.md) 变更；后续实际进度、步骤和证据统一查台账与变更内的 tasks，不在此重复维护状态。
 
 本次建立 Git、台账和 OpenSpec 属于管理准备，不能视为 P0-01 整个应用 workspace、构建与跨平台验证完成。没有虚构负责人、工期、评审结论或测试通过记录。
 
@@ -50,8 +50,9 @@ node project/manage.mjs check
 
 # 查看变更与未完成的实施步骤
 node project/openspec.mjs list
-node project/openspec.mjs status --change bootstrap-devmesh-workspace
-node project/openspec.mjs instructions apply --change bootstrap-devmesh-workspace
+# 创建后将 <change-name> 换成实际进行中的名字；已归档记录从台账链接阅读
+# node project/openspec.mjs status --change <change-name>
+# node project/openspec.mjs instructions apply --change <change-name>
 node project/openspec.mjs validate --all --strict --no-interactive
 
 # 变更完成并复核后归档；不要用这条命令把未完成任务强行关单

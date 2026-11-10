@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-10T07:29:47.829Z",
+  "status": "PASSED",
+  "results": {
+    "windows": {
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.13.1",
+      "commit": "ced28e775eb7467744cad5fd7391d0804b15cd08",
+      "sourceFingerprint": "2453571d5dd0f4b238ca2102736310adc5ae1020c70dd21864bae62bef69f9ca",
+      "lockfileSha256": "19d34c4ed59e63f5bec370eac6357a5a1844e773fb1bb4eeb3002912422dcd08",
+      "sourceFiles": 87,
+      "checks": 11,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 9,
+          "fail": 0,
+          "skipped": 1
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-02/windows/report.json"
+    },
+    "linux": {
+      "platform": "linux",
+      "arch": "x64",
+      "node": "v24.13.1",
+      "commit": "ced28e775eb7467744cad5fd7391d0804b15cd08",
+      "sourceFingerprint": "2453571d5dd0f4b238ca2102736310adc5ae1020c70dd21864bae62bef69f9ca",
+      "lockfileSha256": "19d34c4ed59e63f5bec370eac6357a5a1844e773fb1bb4eeb3002912422dcd08",
+      "sourceFiles": 87,
+      "checks": 11,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-02/linux/report.json"
+    }
+  }
+}
