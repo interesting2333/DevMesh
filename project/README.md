@@ -17,9 +17,9 @@
 
 管理工具本身不提供服务端看板、自动排期或多人锁。多人协作通过分支、PR 和评审合并 JSON 变更；同一工作包约定一位实际负责人。以后接入 Issues／外部看板时使用相同工作包 ID，并明确唯一状态源的迁移方式。
 
-## 当前起点
+## 初始化起点与实时进度
 
-36 个开发工作包均为 `NOT_STARTED`，G0～G4 均为 `PENDING`。仅 P0-01 满足初始依赖。已建立 [bootstrap-devmesh-workspace](../openspec/changes/bootstrap-devmesh-workspace/proposal.md) 待实施草案，子步骤尚未执行。
+管理初始化时，36 个开发工作包均为 `NOT_STARTED`，G0～G4 均为 `PENDING`，仅 P0-01 满足初始依赖。已建立 [bootstrap-devmesh-workspace](../openspec/changes/bootstrap-devmesh-workspace/proposal.md) 变更；后续实际进度、步骤和证据统一查台账与变更内的 tasks，不在此重复维护状态。
 
 本次建立 Git、台账和 OpenSpec 属于管理准备，不能视为 P0-01 整个应用 workspace、构建与跨平台验证完成。没有虚构负责人、工期、评审结论或测试通过记录。
 

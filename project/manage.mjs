@@ -4,7 +4,6 @@ import { isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const ledgerFile = resolve(root, 'project/tasks.json');
 const boardFile = resolve(root, 'project/任务台账.md');
 const sourceFile = 'DevMesh_实施文档_V1.0.md';
 const statuses = ['NOT_STARTED', 'IN_PROGRESS', 'BLOCKED', 'IN_REVIEW', 'DONE'];
@@ -39,7 +38,7 @@ function validate(data) {
     require(Array.isArray(references) && references.length > 0, `${label} 需要验收记录引用`);
     for (const ref of references ?? []) {
       if (!nonempty(ref)) { errors.push(`${label} 的证据引用为空`); continue; }
-      if (/^https:\/\//.test(ref)) continue;
+      if (ref.startsWith('https://')) continue;
       const target = resolve(root, ref.split('#')[0]);
       const fromRoot = relative(root, target);
       require(!isAbsolute(fromRoot) && fromRoot !== '..' && !fromRoot.startsWith('..\\') && !fromRoot.startsWith('../') && existsSync(target), `${label} 引用必须为仓库内现有记录或 HTTPS 链接：${ref}`);
@@ -154,7 +153,7 @@ function render(data) {
   if (!blocked.length) lines.push('当前未登记显式阻塞。等待计划内的前置任务不自动标为 BLOCKED。');
   for (const task of blocked) lines.push(`- ${task.id}：${cell(task.blockedReason)}；负责人 ${cell(task.owner)}；下次核实：${cell(task.nextCheck)}。`);
   lines.push('', '## 阶段门槛', '', '| 门槛 | 状态 | 要求 | 证据 |', '| --- | --- | --- | --- |');
-  for (const gate of data.gates) lines.push(`| ${gate.id} | ${gate.status} | ${cell(gate.summary)} | ${gate.evidence.length ? gate.evidence.map(ref => /^https:\/\//.test(ref) ? `[记录](${ref})` : `[记录](../${ref})`).join('、') : '待执行／待评审'} |`);
+  for (const gate of data.gates) lines.push(`| ${gate.id} | ${gate.status} | ${cell(gate.summary)} | ${gate.evidence.length ? gate.evidence.map(ref => ref.startsWith('https://') ? `[记录](${ref})` : `[记录](../${ref})`).join('、') : '待执行／待评审'} |`);
   lines.push('', '任务全部 DONE 后仍须单独完成阶段评审；只有门槛 PASSED 才开放下一阶段正式任务。', '',
     '负责人、日期、证据和评审结论填写实际记录。详细工作范围、交付物、完成证据和设计基线见 [状态源](./tasks.json)；日常操作见 [管理说明](./README.md)。', '');
   return lines.join('\n');

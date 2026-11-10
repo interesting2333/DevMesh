@@ -1,0 +1,23 @@
+{
+  "name": "@devmesh/platform-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": { "types": "./dist/index.d.mts", "import": "./dist/index.mjs" }
+  },
+  "scripts": {
+    "build": "tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "workspace:*",
+    "@deepseek-ai/cosmokit": "workspace:*",
+    "@deepseek-ai/cordis-plugin-include": "workspace:*",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:*",
+    "express": "5.2.1"
+  },
+  "optionalDependencies": {
+    "node-addon-require-builtin": "0.1.9"
+  }
+}

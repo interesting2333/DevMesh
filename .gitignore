@@ -1,10 +1,13 @@
 # Dependencies and generated build output
 node_modules/
+.cache/
+.artifacts/
 dist/
 coverage/
 playwright-report/
 test-results/
 *.tsbuildinfo
+vendor/*/lib/
 
 # Local credentials and machine configuration
 .env

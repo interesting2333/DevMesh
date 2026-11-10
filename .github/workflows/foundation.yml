@@ -1,0 +1,38 @@
+name: Foundation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - name: Install pinned application dependencies
+        run: corepack pnpm@11.28.5 install --frozen-lockfile
+      - name: Install isolated management CLI
+        run: npm ci --prefix tools/openspec --ignore-scripts --no-audit --no-fund
+      - name: Verify source and write evidence
+        run: corepack pnpm@11.28.5 verify:foundation --commit ${{ github.sha }}
+      - name: Preserve verification output
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: foundation-${{ matrix.os }}-${{ github.sha }}
+          path: .artifacts/foundation/
+          include-hidden-files: true
+          if-no-files-found: warn

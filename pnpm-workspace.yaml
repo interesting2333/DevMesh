@@ -1,0 +1,20 @@
+packages:
+  - apps/*
+  - packages/*
+  - vendor/cordis
+  - vendor/cosmokit
+  - vendor/include
+  - vendor/loader
+  - vendor/schemastery
+
+strictPeerDependencies: true
+autoInstallPeers: false
+saveExact: true
+
+overrides:
+  '@standard-schema/spec': 1.1.0
+  js-yaml: 4.1.1
+  node-addon-require-builtin: 0.1.9
+
+allowBuilds:
+  esbuild: true

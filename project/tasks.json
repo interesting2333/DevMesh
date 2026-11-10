@@ -22,7 +22,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "d6163ee86ac67c03d59502a0f2c29b86e808964fcec2806fdc3484862e1063f5"
+      "sha256": "c18778d7ac68c0b8b3c41340099c95bcfa0ed9d6df3436e15090c7953fff00a8"
     }
   ],
   "gates": [
@@ -92,9 +92,9 @@
       "id": "P0-01",
       "phase": "P0",
       "title": "独立工程与技术版本锁",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "responsibility": "平台",
-      "owner": null,
+      "owner": "Codex（本次实施）",
       "reviewer": null,
       "dependsOn": [],
       "description": "创建独立 workspace 和组合根，固定 Node/pnpm/TS，整理 Cordis 闭包和来源，加入构建／静态检查",
@@ -109,13 +109,15 @@
       ],
       "blockedReason": null,
       "nextCheck": null,
-      "startedAt": null,
+      "startedAt": "2026-11-10T06:13:33.978Z",
       "completedAt": null,
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
       "notes": [
-        "已创建待实施的 OpenSpec 草案；管理工具已建立，应用 workspace 与跨平台构建验证尚未实施。"
+        "已创建待实施的 OpenSpec 草案；管理工具已建立，应用 workspace 与跨平台构建验证尚未实施。",
+        "开始按 bootstrap-devmesh-workspace 实施；按真实执行证据更新步骤和状态。",
+        "参考源码与同版本发布制品不同，采用 commit ce7073d 的受控源码并独立构建；workspace 显式纳入五个 vendor 包。实施文档仅更新当前脚本入口说明，36 项范围及依赖不变。"
       ]
     },
     {

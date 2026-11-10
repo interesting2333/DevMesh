@@ -1,0 +1,114 @@
+{
+  "checkedAt": "2026-11-10T06:22:34.439Z",
+  "node": "v24.13.1",
+  "packages": [
+    {
+      "url": "https://registry.npmjs.org/pnpm/11.28.5",
+      "version": "11.28.5",
+      "name": "pnpm",
+      "engines": {
+        "node": ">=22.13"
+      },
+      "peerDependencies": {},
+      "integrity": "sha512-SEVj0wtMKtJ8tIqpT/KzAtvOvI/2vyiBbCWJiG4UbOf3bzVPO8GkOOb16XaMMCqgpvet2CMpA81M+BQmy8FNng==",
+      "tarball": "https://registry.npmjs.org/pnpm/-/pnpm-11.28.5.tgz"
+    },
+    {
+      "url": "https://registry.npmjs.org/typescript/6.0.3",
+      "version": "6.0.3",
+      "name": "typescript",
+      "engines": {
+        "node": ">=14.17"
+      },
+      "peerDependencies": {},
+      "integrity": "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==",
+      "tarball": "https://registry.npmjs.org/typescript/-/typescript-6.0.3.tgz"
+    },
+    {
+      "url": "https://registry.npmjs.org/tsdown/0.22.2",
+      "version": "0.22.2",
+      "name": "tsdown",
+      "engines": {
+        "node": "^22.18.0 || >=24.0.0"
+      },
+      "peerDependencies": {
+        "tsx": "*",
+        "unrun": "*",
+        "publint": "^0.3.8",
+        "typescript": "^5.0.0 || ^6.0.0",
+        "@tsdown/css": "0.22.2",
+        "@tsdown/exe": "0.22.2",
+        "unplugin-unused": "^0.5.0",
+        "@vitejs/devtools": "*",
+        "@arethetypeswrong/core": "^0.18.1"
+      },
+      "integrity": "sha512-VX9gsyKXsTnBZjnIM4jsHl9aRv+GfgkE/k1hQslilaBfZMlaw3JuGR+6yhiU0QxWBtOCDnTjwOSoXzgB7Rr50g==",
+      "tarball": "https://registry.npmjs.org/tsdown/-/tsdown-0.22.2.tgz"
+    },
+    {
+      "url": "https://registry.npmjs.org/tsx/4.23.13",
+      "version": "4.23.13",
+      "name": "tsx",
+      "engines": {
+        "node": ">=18.0.0"
+      },
+      "peerDependencies": {},
+      "integrity": "sha512-BL5MGkRln6aDYhb0xbQlEAGw743BaZYWdbWtdJOBriYJboKgUUYCadFp2/FpBBZquBC/ezNBn7wMMPx7FDZUDw==",
+      "tarball": "https://registry.npmjs.org/tsx/-/tsx-4.23.13.tgz"
+    },
+    {
+      "url": "https://registry.npmjs.org/oxlint/1.81.0",
+      "version": "1.81.0",
+      "name": "oxlint",
+      "engines": {
+        "node": "^20.19.0 || >=22.12.0"
+      },
+      "peerDependencies": {
+        "vite-plus": "*",
+        "oxlint-tsgolint": ">=7.0.2001"
+      },
+      "integrity": "sha512-HyrJYqeoOCL0iqaLEzGewGT48ZX99P3hxYh8udAF9RGGIghSamkXE4ClUyBpEDNqasamThgmlPbuMOe7SAZmHg==",
+      "tarball": "https://registry.npmjs.org/oxlint/-/oxlint-1.81.0.tgz"
+    },
+    {
+      "url": "https://registry.npmjs.org/@types%2Fnode/24.13.1",
+      "version": "24.13.1",
+      "name": "@types/node",
+      "engines": null,
+      "peerDependencies": {},
+      "integrity": "sha512-RSpUJGmvsJ1ZeBehQZFhIdpsz+bIpES0nIQXko4Ybq+N+kX6XvOq3Jo+iJ82FWLdblFq85AsMikd3m35jgezYg==",
+      "tarball": "https://registry.npmjs.org/@types/node/-/node-24.13.1.tgz"
+    },
+    {
+      "url": "https://registry.npmjs.org/express/5.2.1",
+      "version": "5.2.1",
+      "name": "express",
+      "engines": {
+        "node": ">= 18"
+      },
+      "peerDependencies": {},
+      "integrity": "sha512-hIS4idWWai69NezIdRt2xFVofaF4j+6INOpJlVOLDO8zXGpUVEVzIYk12UUi2JzjEzWL3IOAxcTubgz9Po0yXw==",
+      "tarball": "https://registry.npmjs.org/express/-/express-5.2.1.tgz"
+    },
+    {
+      "url": "https://registry.npmjs.org/@types%2Fexpress/5.0.6",
+      "version": "5.0.6",
+      "name": "@types/express",
+      "engines": null,
+      "peerDependencies": {},
+      "integrity": "sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==",
+      "tarball": "https://registry.npmjs.org/@types/express/-/express-5.0.6.tgz"
+    },
+    {
+      "url": "https://registry.npmjs.org/node-addon-require-builtin/0.1.9",
+      "version": "0.1.9",
+      "name": "node-addon-require-builtin",
+      "engines": {
+        "node": ">=20"
+      },
+      "peerDependencies": {},
+      "integrity": "sha512-BCxXCMZDs/VLLh64SwKNw/me7Qx1I7Be4qxWwYVRRm8tJoOB8fL7qg6CmXhSXeUqsKt72t8RaKCX4EN+5nocVg==",
+      "tarball": "https://registry.npmjs.org/node-addon-require-builtin/-/node-addon-require-builtin-0.1.9.tgz"
+    }
+  ]
+}

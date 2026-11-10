@@ -1,0 +1,44 @@
+{
+  "name": "@devmesh/root",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@11.28.5",
+  "engines": { "node": ">=24.9.0 <25" },
+  "scripts": {
+    "dev": "pnpm --filter @devmesh/server dev",
+    "start": "node apps/server/dist/main.mjs",
+    "build": "pnpm build:vendor && pnpm --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build",
+    "build:vendor": "node scripts/build-vendor.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint --deny-warnings apps packages scripts project tests",
+    "test:smoke": "node --test --test-reporter=tap tests/foundation.test.mjs",
+    "verify:foundation": "node scripts/verify-foundation.mjs",
+    "toolchain:check": "node scripts/toolchain.mjs",
+    "vendor:verify": "node scripts/vendor.mjs",
+    "project:status": "node project/manage.mjs status",
+    "project:check": "node project/manage.mjs check",
+    "spec": "node project/openspec.mjs",
+    "check": "pnpm toolchain:check && pnpm vendor:verify && pnpm build && pnpm typecheck && pnpm lint && pnpm test:smoke && pnpm project:check"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "workspace:*",
+    "@deepseek-ai/cosmokit": "workspace:*",
+    "@deepseek-ai/cordis-plugin-include": "workspace:*",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6",
+    "@types/node": "24.13.1",
+    "oxlint": "1.81.0",
+    "pnpm": "11.28.5",
+    "tsdown": "0.22.2",
+    "tsx": "4.23.13",
+    "typescript": "6.0.3"
+  },
+  "optionalDependencies": {
+    "node-addon-require-builtin": "0.1.9"
+  }
+}

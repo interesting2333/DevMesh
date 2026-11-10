@@ -1,6 +1,6 @@
 # DevMesh
 
-DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的多 Agent 研发平台。本仓库当前处于设计转实施阶段，应用代码按 P0～P4 分阶段建设。
+DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的多 Agent 研发平台。本仓库已建立 P0-01 最小工程与 HTTP 宿主，业务能力按 P0～P4 分阶段建设，实际进度以任务台账为准。
 
 ## 从哪里开始
 
@@ -13,6 +13,7 @@ DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的�
 | 36 个工作包、交付物、验收和阶段门槛 | [实施文档 V1.0](./DevMesh_实施文档_V1.0.md) |
 | 第一个待实施的 OpenSpec 变更 | [P0-01 工程基础](./openspec/changes/bootstrap-devmesh-workspace/proposal.md) |
 | 全部文档与原型 | [交付说明](./交付说明.md) |
+| 运行、构建、配置、测试与 CI | [工程说明](./docs/engineering.md) |
 
 ## 本机使用
 
@@ -25,7 +26,17 @@ node project/manage.mjs next
 node project/openspec.mjs list
 ```
 
-当前第一个可开工工作包是 **P0-01**。可以直接向协作 Agent 下达：“开始 P0-01，按已有 OpenSpec 变更实施，并更新项目台账。”认领时填写真实负责人；完成后记录提交版本、验证环境和证据，再进入复核。
+P0-01 已进入实施，当前状态、提交和证据统一查任务台账。后续可以向协作 Agent 指定工作包及已有 OpenSpec 变更，认领时填写真实负责人；完成后记录提交版本、验证环境和证据，再进入复核。
+
+应用使用固定 Node 24.13.1。首次安装与启动：
+
+```powershell
+corepack pnpm@11.28.5 install --frozen-lockfile
+corepack pnpm@11.28.5 build
+corepack pnpm@11.28.5 start
+```
+
+服务默认监听 `127.0.0.1:3210`；`/healthz`、`/readyz` 只描述基础 HTTP 插件。配置、关闭和双平台验证见工程说明。
 
 ## 提交前检查
 

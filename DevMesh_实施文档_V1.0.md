@@ -100,7 +100,7 @@ Cordis 闭包至少核对 cordis、cosmokit、include、loader、schemastery 及
 | mcp-services／templates／artifacts | 五服务后端、首模板、报告和回放材料 | 有真实操作与版本依据；别名不重复算服务 |
 | apps/server／runner／web | 组合根、进程启动、管理 API、工作台 | Runner 不写接受指针；UI 不直连内部 A2A/MCP |
 
-下列脚本是 P0 起需逐步实现的工程契约；当前目录尚无对应 package.json，不能直接照表认定可运行。新增脚本与对应功能在同一提交落地，失败应返回非零退出码，并在报告中区分未执行、环境阻塞和失败。
+下列脚本是 P0 起需逐步实现的工程契约；当前可运行范围以根 package.json 和 [工程说明](./docs/engineering.md) 为准，不能把本表中的后续脚本直接认定为已实现。新增脚本与对应功能在同一提交落地，失败应返回非零退出码，并在报告中区分未执行、环境阻塞和失败。
 
 | 计划脚本 | 用途／完成阶段 |
 | --- | --- |

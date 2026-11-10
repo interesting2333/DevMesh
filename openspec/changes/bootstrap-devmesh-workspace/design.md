@@ -24,7 +24,7 @@
 
 ### 1. 应用 workspace 与管理工具分开
 
-根目录新增应用 `package.json`、`pnpm-workspace.yaml`、`pnpm-lock.yaml`、公共 tsconfig 与检查配置；workspace 只包含设计约定的 `apps/*`、`packages/*`，不扫描 `tools/openspec`。首批创建真实可启动的 `apps/server` 和承载 Cordis 插件生命周期的最小基础模块；`contracts`、存储、Runtime 等在各自工作包落地，不批量生成空业务模块。
+根目录新增应用 `package.json`、`pnpm-workspace.yaml`、`pnpm-lock.yaml`、公共 tsconfig 与检查配置；workspace 包含 `apps/*`、`packages/*`，并显式列入五个受控 vendor 包，不扫描 `tools/openspec`。首批创建真实可启动的 `apps/server` 和承载 Cordis 插件生命周期的最小基础模块；`contracts`、存储、Runtime 等在各自工作包落地，不批量生成空业务模块。
 
 保留 `project/`、`.agents/`、`openspec/`、`design/` 和原型资料。根工程可提供项目管理脚本别名，但底层 `node project/*.mjs` 仍直接可用，避免应用依赖安装失败导致管理记录不可读。
 
@@ -40,7 +40,9 @@ Node 24 最低 24.9.0，优先验证本机已有 24.13.1 作为候选补丁；pn
 
 ### 3. Cordis 作为受控依赖闭包
 
-参考工程仅用于核对 cordis、cosmokit、include、loader、schemastery 及 peers 的实际来源与使用方式。优先使用与参考工程匹配、可独立解析的发行包；需要参考工程修改时，按设计维护带来源、版本／commit、许可证和修改说明的受控副本，不保留指向 `D:\yms\AI\deepseek-harness` 的运行时路径或 workspace 链接。
+参考工程仅用于核对 cordis、cosmokit、include、loader、schemastery 及 peers 的实际来源与使用方式。实施核对发现相同版本的发布包与参考源码存在差异（见 vendor/manifest.json），因此选择以参考仓库 commit `ce7073d51254c26cd63b22a60835b8f948deb447` 的源码及其本地修订为基线，复制完整五包源码／许可证，并在 DevMesh 内重新生成 JS 和声明；不使用发布包的旧构建产物代替该源码。
+
+五包作为显式 vendor workspace 成员，通过 `workspace:*`／`workspace:~` 引用，保留原包命名和接口。DevMesh 仅调整私有标记、构建配置与脚本，记录逐文件 SHA-256 和继承修订日志；第三方运行依赖与原生 optional peer 由应用锁文件固定。源码构建顺序为 cosmokit、schemastery、cordis、loader、include，之后构建应用；不保留指向参考仓库的运行时路径或 workspace 链接。
 
 来源记录区分“仅构建需要的原生工具”和“用户运行时依赖”。无法独立安装的依赖作为本工作包缺项处理；不能复制现成 node_modules 冒充干净安装。
 
