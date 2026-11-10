@@ -1,0 +1,11 @@
+$ node scripts/verify-foundation.mjs --commit 28b6a0f2b83f30d7c9b8a818cf026bd94f50ed33 --output /tmp/devmesh-p0-01-linux-results-28b6a0f
+[1/9] toolchain:check
+[2/9] vendor:verify
+[3/9] build
+[4/9] typecheck
+[5/9] lint
+[6/9] test:smoke
+[7/9] project:check
+[8/9] openspec
+[9/9] design-consistency
+PASSED: ../devmesh-p0-01-linux-results-28b6a0f/report.json

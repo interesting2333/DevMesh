@@ -1,0 +1,80 @@
+ℹ config file: /tmp/devmesh-p0-01-linux-clean-28b6a0f/package.json 
+ℹ entry: vendor/cosmokit/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor/cosmokit/lib/index.js      17.31 kB │ gzip: 5.29 kB
+ℹ vendor/cosmokit/lib/index.js.map  31.20 kB │ gzip: 8.14 kB
+ℹ 2 files, total: 48.50 kB
+✔ Build complete in 31ms
+ℹ config file: /tmp/devmesh-p0-01-linux-clean-28b6a0f/package.json 
+ℹ entry: vendor/schemastery/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ [CJS] vendor/schemastery/lib/index.cjs      23.88 kB │ gzip:  5.88 kB
+ℹ [CJS] vendor/schemastery/lib/index.cjs.map  47.40 kB │ gzip: 10.55 kB
+ℹ [CJS] 2 files, total: 71.27 kB
+ℹ [ESM] vendor/schemastery/lib/index.mjs      23.04 kB │ gzip:  5.85 kB
+ℹ [ESM] vendor/schemastery/lib/index.mjs.map  46.85 kB │ gzip: 10.47 kB
+ℹ [ESM] 2 files, total: 69.89 kB
+✔ Build complete in 18ms
+✔ Build complete in 22ms
+ℹ config file: /tmp/devmesh-p0-01-linux-clean-28b6a0f/package.json 
+ℹ entry: vendor/cordis/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor/cordis/lib/index.js       64.27 kB │ gzip: 17.72 kB
+ℹ vendor/cordis/lib/index.js.map  122.02 kB │ gzip: 29.48 kB
+ℹ 2 files, total: 186.29 kB
+✔ Build complete in 30ms
+ℹ config file: /tmp/devmesh-p0-01-linux-clean-28b6a0f/package.json 
+ℹ entry: vendor/loader/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor/loader/lib/index.js      26.60 kB │ gzip:  8.42 kB
+ℹ vendor/loader/lib/index.js.map  54.04 kB │ gzip: 14.62 kB
+ℹ 2 files, total: 80.64 kB
+✔ Build complete in 19ms
+ℹ config file: /tmp/devmesh-p0-01-linux-clean-28b6a0f/package.json 
+ℹ entry: vendor/include/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor/include/lib/index.js       8.66 kB │ gzip: 3.28 kB
+ℹ vendor/include/lib/index.js.map  17.12 kB │ gzip: 5.57 kB
+ℹ 2 files, total: 25.78 kB
+✔ Build complete in 12ms
+Scope: 2 of 8 workspace projects
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: /tmp/devmesh-p0-01-linux-clean-28b6a0f/packages/platform-core/package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ../../tsconfig.json
+ℹ Build start
+ℹ dist/index.mjs      4.58 kB │ gzip: 1.81 kB
+ℹ dist/index.mjs.map  8.57 kB │ gzip: 3.05 kB
+ℹ dist/index.d.mts    0.71 kB │ gzip: 0.39 kB
+ℹ 3 files, total: 13.87 kB
+✔ Build complete in 1568ms
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: /tmp/devmesh-p0-01-linux-clean-28b6a0f/apps/server/package.json 
+ℹ entry: src/main.ts
+ℹ target: node24
+ℹ tsconfig: ../../tsconfig.json
+ℹ Build start
+ℹ dist/main.mjs      2.64 kB │ gzip: 1.01 kB
+ℹ dist/main.mjs.map  4.87 kB │ gzip: 1.71 kB
+ℹ 2 files, total: 7.51 kB
+✔ Build complete in 26ms
+$ pnpm build:vendor && pnpm --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build
+$ node scripts/build-vendor.mjs
+
+ WARN  We recommend using the ESM format instead of CommonJS.
+The ESM format is compatible with modern platforms and runtimes, and most new libraries are now distributed only in ESM format.
+Learn more at https://nodejs.org/en/learn/modules/publishing-a-package#how-did-we-get-here
+
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+$ tsdown src/main.ts --format esm --platform node --target node24 --sourcemap --clean

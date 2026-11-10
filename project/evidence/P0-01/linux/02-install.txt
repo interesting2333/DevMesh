@@ -1,0 +1,51 @@
+Scope: all 8 workspace projects
+[WARN] There are cyclic workspace dependencies: /tmp/devmesh-p0-01-linux-clean-28b6a0f/vendor/cordis, /tmp/devmesh-p0-01-linux-clean-28b6a0f/vendor/include
+? Verifying lockfile against supply-chain policies (205 entries)...
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +133
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Packages are hard linked from the content-addressable store to the virtual store.
+  Content-addressable store is at: /home/lipfeii/.local/share/pnpm/store/v11
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 133, reused 0, downloaded 6, added 6
+Progress: resolved 133, reused 0, downloaded 58, added 58
+Progress: resolved 133, reused 0, downloaded 80, added 80
+[WARN] Tarball download average speed 47 KiB/s (size 90 KiB) is below 50 KiB/s: https://registry.npmjs.org/qs/-/qs-6.17.1.tgz (GET)
+Progress: resolved 133, reused 0, downloaded 113, added 111
+[WARN] Tarball download average speed 22 KiB/s (size 30 KiB) is below 50 KiB/s: https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz (GET)
+[WARN] Tarball download average speed 8 KiB/s (size 9 KiB) is below 50 KiB/s: https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz (GET)
+Progress: resolved 133, reused 0, downloaded 126, added 126
+Progress: resolved 133, reused 0, downloaded 128, added 128
+Progress: resolved 133, reused 0, downloaded 129, added 128
+Progress: resolved 133, reused 0, downloaded 129, added 129
+Progress: resolved 133, reused 0, downloaded 130, added 129
+✓ Lockfile passes supply-chain policies (205 entries in 16.2s)
+Progress: resolved 133, reused 0, downloaded 130, added 130
+Progress: resolved 133, reused 0, downloaded 131, added 131
+Progress: resolved 133, reused 0, downloaded 132, added 132
+Progress: resolved 133, reused 0, downloaded 133, added 132
+Progress: resolved 133, reused 0, downloaded 133, added 133, done
+.../esbuild@0.28.2/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.28.2/node_modules/esbuild postinstall: Done
+
+dependencies:
++ @deepseek-ai/cordis 4.0.6-alpha.1 <- vendor/cordis
++ @deepseek-ai/cordis-plugin-include 1.0.11-alpha.1 <- vendor/include
++ @deepseek-ai/cordis-plugin-loader 1.0.7-alpha.1 <- vendor/loader
++ @deepseek-ai/cosmokit 1.8.7-alpha.1 <- vendor/cosmokit
++ @deepseek-ai/schemastery 3.18.6-alpha.1 <- vendor/schemastery
+
+optionalDependencies:
++ node-addon-require-builtin 0.1.9
+
+devDependencies:
++ @types/express 5.0.6
++ @types/node 24.13.1
++ oxlint 1.81.0
++ pnpm 11.28.5
++ tsdown 0.22.2
++ tsx 4.23.13
++ typescript 6.0.3
+
+Done in 28.3s using pnpm v11.28.5

@@ -1,0 +1,9 @@
+pnpm: 11.28.5
+typescript: 6.0.3
+tsdown: 0.22.2
+tsx: 4.23.13
+oxlint: 1.81.0
+@types/node: 24.13.1
+@types/express: 5.0.6
+toolchain OK: node 24.13.1, pnpm 11.28.5, win32/x64
+$ node scripts/toolchain.mjs
