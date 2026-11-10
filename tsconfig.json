@@ -12,8 +12,9 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
     "paths": {
-      "@devmesh/platform-core": ["./packages/platform-core/src/index.ts"]
+      "@devmesh/platform-core": ["./packages/platform-core/src/index.ts"],
+      "@devmesh/contracts": ["./packages/contracts/src/index.ts"]
     }
   },
-  "include": ["apps/*/src/**/*.ts", "packages/*/src/**/*.ts"]
+  "include": ["apps/*/src/**/*.ts", "packages/*/src/**/*.ts", "tests/**/*.ts"]
 }

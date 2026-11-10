@@ -1,6 +1,6 @@
-# P0-01 工程使用与验证
+# 工程使用与验证
 
-当前交付最小 Node HTTP／Express 5 服务和 Cordis 插件生命周期。后续领域契约、数据库、A2A/MCP、模型、Runner 和 UI 按对应工作包实现；本工程的就绪接口只描述基础 HTTP 插件。
+当前交付最小 Node HTTP／Express 5 服务、Cordis 插件生命周期及 [核心契约包](../packages/contracts/README.md)。数据库、A2A/MCP、模型、Runner 和 UI 按对应工作包实现；本工程的就绪接口只描述基础 HTTP 插件。
 
 本次实际结果和相同提交的两平台报告见 [P0-01 验证记录](../project/evidence/P0-01/验收记录.md)。
 
@@ -13,6 +13,7 @@
 | TypeScript／tsdown／tsx | 6.0.3／0.22.2／4.23.13 |
 | Oxlint | 1.81.0；真实应用、脚本、管理工具和测试均在 lint 范围 |
 | Express／类型 | 5.2.1／@types/express 5.0.6；@types/node 24.13.1 |
+| 共享契约 | Zod 4.4.3；schema 推导 TypeScript 类型并生成 OpenAPI 3.1.0 |
 | 框架闭包 | 五个 Cordis 受控源码包，详见 [来源说明](../vendor/README.md) |
 
 `apps/server` 是组合根；`packages/platform-core` 管理配置、HTTP 插件和启动／释放；`vendor/` 为显式受控源码 workspace；`tests/foundation.test.mjs` 验证实际构建产物；`tools/openspec` 保持独立 npm 工具包，未加入应用 workspace。
@@ -28,6 +29,8 @@ corepack pnpm@11.28.5 build
 corepack pnpm@11.28.5 typecheck
 corepack pnpm@11.28.5 lint
 corepack pnpm@11.28.5 test:smoke
+corepack pnpm@11.28.5 test:contracts
+corepack pnpm@11.28.5 contracts:check
 corepack pnpm@11.28.5 start
 ```
 
@@ -57,7 +60,7 @@ corepack pnpm@11.28.5 verify:foundation --commit <完整40位提交SHA>
 
 该命令要求当前 Git checkout 干净且 HEAD 与参数一致；也可在通过 `git archive <SHA>` 创建的独立源快照中使用。验证记录实际 OS／arch／Node、提交、应用锁文件哈希、源码指纹、每项退出码和原始输出；失败返回非零。默认产物为 `.artifacts/foundation/report.json` 及各项 txt 日志。
 
-检查包括工具版本、vendor 来源、源码构建、类型、lint、真实 HTTP／CLI／关闭测试、项目台账、OpenSpec 严格校验和设计整合一致性。Windows 明确跳过 POSIX SIGTERM 测试，仍执行跨平台 IPC 停止和资源释放；Linux 另行验证 SIGTERM。
+检查包括工具版本、vendor 来源、源码构建、类型、lint、真实 HTTP／CLI／关闭测试、契约反例、OpenAPI 生成一致性、项目台账、OpenSpec 严格校验和设计整合一致性。Windows 明确跳过 POSIX SIGTERM 测试，仍执行跨平台 IPC 停止和资源释放；Linux 另行验证 SIGTERM。契约变更先 build，再运行 `contracts:generate` 并提交生成文件。
 
 CI 配置在 [.github/workflows/foundation.yml](../.github/workflows/foundation.yml)，使用 Windows／Linux matrix 和固定 Action commit，保留报告。它是待托管平台执行的流水线配置，本地 Linux WSL 验证和 GitHub Actions 实际运行分别记录。
 

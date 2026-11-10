@@ -1,0 +1,268 @@
+[
+  {
+    "schema": "Command",
+    "input": {
+      "schemaVersion": 2,
+      "type": "ConfirmPlan",
+      "idempotencyKey": "9930fa54-99c6-4cc6-bd70-79e9c6f49b07",
+      "target": {
+        "kind": "plan",
+        "projectId": "prj_01",
+        "runId": "run_01",
+        "planRevision": 1
+      },
+      "payload": {
+        "requirementRevision": 1,
+        "reviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "reason": "未知命令版本"
+  },
+  {
+    "schema": "ConfirmPlan",
+    "input": {
+      "requirementRevision": "1",
+      "reviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "reason": "不能隐式转换版本"
+  },
+  {
+    "schema": "ConfirmPlan",
+    "input": {
+      "requirementRevision": 1,
+      "reviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "grantId": "grant_01"
+    },
+    "reason": "未知字段不能注入授权"
+  },
+  {
+    "schema": "ExecutionPermit",
+    "input": {
+      "schemaVersion": "devmesh.permit.v1",
+      "grantId": "grant_01",
+      "activationId": "activation_01",
+      "notBefore": "2026-11-10T08:00:00.000Z",
+      "expiresAt": "2026-11-10T08:00:15.000Z",
+      "ownerKind": "invocationAttempt",
+      "invocationId": "invocation_01",
+      "invocationEpoch": 2,
+      "invocationAttemptId": "iattempt_01",
+      "resources": [
+        {
+          "kind": "snapshot",
+          "resourceId": "snapshot_01",
+          "access": "read"
+        }
+      ],
+      "runId": "run_01"
+    },
+    "reason": "混用宿主字段"
+  },
+  {
+    "schema": "ExecutionPermit",
+    "input": {
+      "schemaVersion": "devmesh.permit.v1",
+      "grantId": "grant_01",
+      "activationId": "activation_01",
+      "notBefore": "2026-11-10T08:00:00.000Z",
+      "expiresAt": "2026-11-10T08:00:15.000Z",
+      "ownerKind": "workflowAttempt",
+      "runId": "run_01",
+      "runEpoch": 2,
+      "workId": "work_01",
+      "workEpoch": 3,
+      "attemptId": "iattempt_01",
+      "resources": [
+        {
+          "kind": "workspace",
+          "resourceId": "workspace_01",
+          "access": "write"
+        }
+      ]
+    },
+    "reason": "Invocation attempt 不能充当工作流 attempt"
+  },
+  {
+    "schema": "ExecutionPermit",
+    "input": {
+      "schemaVersion": "devmesh.permit.v1",
+      "grantId": "grant_01",
+      "activationId": "activation_01",
+      "notBefore": "2026-11-10T08:00:00.000Z",
+      "expiresAt": "2026-11-10T08:00:15.000Z",
+      "ownerKind": "invocationAttempt",
+      "invocationId": "invocation_01",
+      "invocationEpoch": 2,
+      "invocationAttemptId": "iattempt_01",
+      "resources": [
+        {
+          "kind": "projectRepository",
+          "resourceId": "repo_01",
+          "access": "write"
+        }
+      ]
+    },
+    "reason": "独立服务不得取得项目接受分支写权限"
+  },
+  {
+    "schema": "ExecutionPermit",
+    "input": {
+      "schemaVersion": "devmesh.permit.v1",
+      "grantId": "grant_01",
+      "activationId": "activation_01",
+      "notBefore": "2026-11-10T08:00:00.000Z",
+      "expiresAt": "2026-11-10T08:00:00.000Z",
+      "ownerKind": "workflowAttempt",
+      "runId": "run_01",
+      "runEpoch": 2,
+      "workId": "work_01",
+      "workEpoch": 3,
+      "attemptId": "attempt_01",
+      "resources": [
+        {
+          "kind": "workspace",
+          "resourceId": "workspace_01",
+          "access": "write"
+        }
+      ]
+    },
+    "reason": "有效期必须非空"
+  },
+  {
+    "schema": "DomainEvent",
+    "input": {
+      "schemaVersion": 1,
+      "eventId": "evt_01",
+      "projectId": "prj_01",
+      "runId": "run_01",
+      "seq": 1,
+      "type": "AttemptStateChanged",
+      "occurredAt": "2026-11-10T08:00:00.000Z",
+      "observedAt": "2026-11-10T08:00:00.120Z",
+      "timeSource": "producer",
+      "resourceRevision": 1,
+      "requirementRevision": 1,
+      "planRevision": 1,
+      "operationId": "op_01",
+      "workId": "work_01",
+      "attemptId": "attempt_01",
+      "payload": {
+        "attemptId": "attempt_01",
+        "state": "completed"
+      }
+    },
+    "reason": "A2A completed 不能当作 Attempt 成功状态"
+  },
+  {
+    "schema": "ProductOutput",
+    "input": {
+      "schemaVersion": "devmesh.requirements.v1",
+      "role": "product",
+      "requirements": [],
+      "assumptions": [],
+      "questions": []
+    },
+    "reason": "缺少有效需求"
+  },
+  {
+    "schema": "DeveloperOutput",
+    "input": {
+      "schemaVersion": "devmesh.development-result.v1",
+      "role": "developer",
+      "baseCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "resultCommit": "cccccccccccccccccccccccccccccccccccccccc",
+      "changedFiles": [
+        "../outside.ts"
+      ],
+      "checkRefs": [
+        {
+          "artifactId": "artifact_01",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "unverified": [],
+      "handoffProposal": {
+        "targetRole": "tester",
+        "goal": "验证字段及排序",
+        "artifactRefs": [
+          {
+            "artifactId": "artifact_01",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "reason": "开发成果已保存，待编排器准入"
+      }
+    },
+    "reason": "文件不能越出工作区"
+  },
+  {
+    "schema": "TesterOutput",
+    "input": {
+      "schemaVersion": "devmesh.test-result.v1",
+      "role": "tester",
+      "targetCommit": "dddddddddddddddddddddddddddddddddddddddd",
+      "caseResults": [
+        {
+          "checkId": "check_01",
+          "requirementIds": [
+            "requirement_01"
+          ],
+          "status": "FAILED",
+          "reportRef": {
+            "artifactId": "artifact_01",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "targetCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        }
+      ],
+      "coverageRef": {
+        "artifactId": "artifact_01",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "targetCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "defects": [
+        {
+          "id": "defect_01",
+          "severity": "HIGH",
+          "description": "排序反向",
+          "evidenceRefs": [
+            {
+              "artifactId": "artifact_01",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ]
+        }
+      ],
+      "buildRef": {
+        "artifactId": "artifact_01",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "targetCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    },
+    "reason": "报告不能属于另一个 SHA"
+  },
+  {
+    "schema": "InvocationDelegation",
+    "input": {
+      "schemaVersion": "devmesh.invocation.v1",
+      "operationId": "op_invoke_01",
+      "invocationId": "invocation_01",
+      "invocationAttemptId": "iattempt_01",
+      "invocationEpoch": 2,
+      "activationId": "activation_01",
+      "grantId": "grant_01",
+      "endpointId": "external.reviewer",
+      "endpointRevision": 1,
+      "inputManifestRef": {
+        "artifactId": "artifact_01",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "definitionSnapshotRef": {
+        "artifactId": "artifact_01",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "attemptId": "attempt_01"
+    },
+    "reason": "委托不得混入另一类宿主外键"
+  }
+]

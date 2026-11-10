@@ -35,7 +35,7 @@ const inputs = [
 ].map(path => ({ path: relative(root, path).replaceAll('\\', '/'), sha256: hash(readFileSync(path)) })).sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
 const pnpm = resolve(root, 'node_modules/pnpm/bin/pnpm.cjs');
 const steps = [
-  ...['toolchain:check', 'vendor:verify', 'build', 'typecheck', 'lint', 'test:smoke', 'project:check'].map(name => ({ name, args: [pnpm, 'run', name] })),
+  ...['toolchain:check', 'vendor:verify', 'build', 'typecheck', 'lint', 'test:smoke', 'test:contracts', 'contracts:check', 'project:check'].map(name => ({ name, args: [pnpm, 'run', name] })),
   { name: 'openspec', args: ['project/openspec.mjs', 'validate', '--all', '--strict', '--no-interactive'] },
   { name: 'design-consistency', args: ['design/生成完整方案.mjs', '--check'] },
 ];
@@ -53,7 +53,7 @@ for (const [index, step] of steps.entries()) {
   const filename = `${String(index + 1).padStart(2, '0')}-${step.name.replaceAll(':', '-')}.txt`;
   writeFileSync(resolve(output, filename), text);
   const check = { name: step.name, exitCode: result.status, signal: result.signal, durationMs: Date.now() - started, output: filename, sha256: hash(text) };
-  if (step.name === 'test:smoke') check.tests = Object.fromEntries(['tests', 'pass', 'fail', 'skipped'].map(key => [key, Number(result.stdout.match(new RegExp(`^# ${key} (\\d+)$`, 'm'))?.[1] ?? NaN)]));
+  if (step.name.startsWith('test:')) check.tests = Object.fromEntries(['tests', 'pass', 'fail', 'skipped'].map(key => [key, Number(result.stdout.match(new RegExp(`^# ${key} (\\d+)$`, 'm'))?.[1] ?? NaN)]));
   report.checks.push(check);
   if (result.status !== 0) { console.error(text); report.status = 'FAILED'; break; }
 }

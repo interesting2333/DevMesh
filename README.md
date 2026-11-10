@@ -1,6 +1,6 @@
 # DevMesh
 
-DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的多 Agent 研发平台。本仓库已建立 P0-01 最小工程与 HTTP 宿主，业务能力按 P0～P4 分阶段建设，实际进度以任务台账为准。
+DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的多 Agent 研发平台。本仓库已建立最小工程、HTTP 宿主和核心契约包，业务能力按 P0～P4 分阶段建设，实际进度以任务台账为准。
 
 ## 从哪里开始
 
@@ -11,7 +11,8 @@ DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的�
 | 产品目标和验收范围 | [PRD V10.0](./DevMesh_PRD_V10.0.md)、[89 条验收场景](./DevMesh_产品验收场景_V10.0.md) |
 | 完整技术方案与选型 | [技术设计 V1.1](./DevMesh_技术设计方案_V1.1.md) |
 | 36 个工作包、交付物、验收和阶段门槛 | [实施文档 V1.0](./DevMesh_实施文档_V1.0.md) |
-| 第一个待实施的 OpenSpec 变更 | [P0-01 工程基础](./openspec/changes/bootstrap-devmesh-workspace/proposal.md) |
+| OpenSpec 工程与契约变更 | [P0-01 工程基础](./openspec/changes/bootstrap-devmesh-workspace/proposal.md)、[P0-02 核心契约](./openspec/changes/establish-core-contracts/proposal.md) |
+| 核心 schema、OpenAPI、样例和模块接口表 | [contracts 包说明](./packages/contracts/README.md) |
 | 全部文档与原型 | [交付说明](./交付说明.md) |
 | 运行、构建、配置、测试与 CI | [工程说明](./docs/engineering.md) |
 
@@ -26,7 +27,7 @@ node project/manage.mjs next
 node project/openspec.mjs list
 ```
 
-P0-01 已进入实施，当前状态、提交和证据统一查任务台账。后续可以向协作 Agent 指定工作包及已有 OpenSpec 变更，认领时填写真实负责人；完成后记录提交版本、验证环境和证据，再进入复核。
+当前状态、提交和证据统一查任务台账。后续可以向协作 Agent 指定工作包及已有 OpenSpec 变更，认领时填写真实负责人；完成后记录提交版本、验证环境和证据，再进入复核。
 
 应用使用固定 Node 24.13.1。首次安装与启动：
 

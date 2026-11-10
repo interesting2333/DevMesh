@@ -1,0 +1,9 @@
+{
+  "name": "@devmesh/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": { "build": "tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean" },
+  "dependencies": { "zod": "4.4.3" }
+}
