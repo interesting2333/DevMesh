@@ -1,0 +1,45 @@
+schema: spec-driven
+
+context: |
+  Language: Chinese. Keep structural headings and SHALL/MUST keywords in English.
+  DevMesh 当前为设计转实施阶段，现有应用能力以实际代码和验证为准。
+  设计基线：DevMesh_PRD_V10.0.md、DevMesh_技术设计方案_V1.1.md、
+  DevMesh_产品验收场景_V10.0.md、DevMesh_实施文档_V1.0.md。
+  实施有 P0～P4 共 36 个工作包，89 条产品验收、T01～T24 技术专项。
+  工作包状态唯一来源为 project/tasks.json；视图使用 node project/manage.mjs render 生成。
+  每个变更关联父工作包，记录设计依据、验收范围、迁移和兼容影响。
+  技术方向：TypeScript/Node 24、pnpm workspace、Cordis 受控闭包、React、SQLite Worker；
+  使用官方 A2A JS SDK、MCP TS SDK，独立 AgentRuntime/DAG 和 Linux Runner。
+  精确版本、来源及兼容性按实施文档验证并冻结，不因最新版可用静默改栈。
+  D:\yms\AI\deepseek-harness 仅供技术参考，未经单独指令不修改该目录。
+  关键约束：一个项目最多一个活动 Run；暂停/等待也占用该 Run；每 Run 最多两个角色并行，
+  每角色最多一个未结束 Attempt；实施 DAG 最多 30 项，计划确认后才实施。
+  未知副作用先查原操作事实；A2A completed、验证通过、人工接受是不同事实。
+  config→DB 已提交版本→内存 Registry 投影；内部注册不等于公开发布或完整动态服务发现。
+  外部单 Agent 用独立 Invocation，组映射到 Run，保留人工确认和主体授权边界。
+  会话索引在 DB，正文在本地内容存储；JSONL 是可重建阅读投影。
+  控制面、Runner、备份根目录分开；归档 ACK 前不删除，GC 与引用建立互斥。
+  设计专题由 design/ 下六份文档维护，改后运行 node design/生成完整方案.mjs。
+  不将文档存在、mock 成功或格式校验当成真实模型、协议、Runner、产品验收通过。
+
+rules:
+  proposal:
+    - 写明父工作包 ID、当前观察、目标范围及验收依据；沿用现有编号。
+    - 区分已实现行为与设计目标。纯工具/文档变更用 skip_specs，不虚构能力规范。
+  design:
+    - 引用具体设计章节；说明依赖、数据/事务、错误恢复、权限、兼容与验证，按相关性取舍。
+    - 缺少真实环境或依赖时记录明确的待验证项，不编造通过结论。
+  specs:
+    - 增量规格使用标准结构和可验证场景；覆盖失败和兼容性边界。
+  tasks:
+    - 使用可验证的小步骤；完成时记录实际证据，并同步父工作包状态。
+    - 必须包含适用的验证、失败恢复、文档和台账更新步骤，不提前勾选。
+
+operations:
+  apply:
+    guidance:
+      - 遵循当前用户和会话中已授予的实施授权，不重复索要已给出的授权。
+      - 先检查父工作包前置和上一阶段门槛；按实际产物更新子步骤。
+  archive:
+    guidance:
+      - 仅归档真实完成且已有验证/复核依据的变更；检查任务台账关联并重新生成视图。

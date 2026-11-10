@@ -1,0 +1,1135 @@
+{
+  "schemaVersion": 1,
+  "created": "2026-11-10",
+  "source": "DevMesh_实施文档_V1.0.md",
+  "notes": [
+    "工作包状态是实际进度的唯一来源，OpenSpec tasks.md 是变更内部步骤。",
+    "前置任务 DONE 且上一阶段门槛 PASSED 后方可开始正式实施；同阶段依赖按 dependsOn 判断。",
+    "不预设实际人员、工期、证据或验收通过结论。"
+  ],
+  "baselines": [
+    {
+      "file": "DevMesh_PRD_V10.0.md",
+      "sha256": "4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5"
+    },
+    {
+      "file": "DevMesh_技术设计方案_V1.1.md",
+      "sha256": "3f06bcb75f695013af3d63a90ba51daf29abde6f13bdf65f16baa6716a943811"
+    },
+    {
+      "file": "DevMesh_产品验收场景_V10.0.md",
+      "sha256": "b651ed089b1583e983fdb3e75c44a5cf10eb239f0474b0d2c3db40976240a030"
+    },
+    {
+      "file": "DevMesh_实施文档_V1.0.md",
+      "sha256": "d6163ee86ac67c03d59502a0f2c29b86e808964fcec2806fdc3484862e1063f5"
+    }
+  ],
+  "gates": [
+    {
+      "id": "G0",
+      "phase": "P0",
+      "status": "PENDING",
+      "summary": "版本锁、干净安装、持久接收、内容恢复、真实工具停止、模板数据持久化与 Card 原型有证据",
+      "owner": null,
+      "reviewer": null,
+      "buildRef": null,
+      "evidence": [],
+      "decision": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "G1",
+      "phase": "P1",
+      "status": "PENDING",
+      "summary": "产品路径一真实完成；四角色和五类 MCP 可用；同版本交付材料与接受记录齐全",
+      "owner": null,
+      "reviewer": null,
+      "buildRef": null,
+      "evidence": [],
+      "decision": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "G2",
+      "phase": "P2",
+      "status": "PENDING",
+      "summary": "未知副作用不重复执行；旧依据不被覆盖；注册与存储同步故障可恢复；资源与归属隔离成立",
+      "owner": null,
+      "reviewer": null,
+      "buildRef": null,
+      "evidence": [],
+      "decision": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "G3",
+      "phase": "P3",
+      "status": "PENDING",
+      "summary": "路径二至五通过；T17～T21 对应能力验证完成；外部服务保留人工边界；资料和数据可追溯",
+      "owner": null,
+      "reviewer": null,
+      "buildRef": null,
+      "evidence": [],
+      "decision": null,
+      "reviewedAt": null
+    },
+    {
+      "id": "G4",
+      "phase": "P4",
+      "status": "PENDING",
+      "summary": "89 条产品场景和 T01～T24 各有真实结论；阻断项清零；部署与运维资料可执行",
+      "owner": null,
+      "reviewer": null,
+      "buildRef": null,
+      "evidence": [],
+      "decision": null,
+      "reviewedAt": null
+    }
+  ],
+  "tasks": [
+    {
+      "id": "P0-01",
+      "phase": "P0",
+      "title": "独立工程与技术版本锁",
+      "status": "NOT_STARTED",
+      "responsibility": "平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [],
+      "description": "创建独立 workspace 和组合根，固定 Node/pnpm/TS，整理 Cordis 闭包和来源，加入构建／静态检查",
+      "deliverables": "根清单、锁文件、tsconfig、CI 基础、依赖来源记录",
+      "acceptance": "Windows/Linux 干净安装和构建；T01",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [
+        "bootstrap-devmesh-workspace"
+      ],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": [
+        "已创建待实施的 OpenSpec 草案；管理工具已建立，应用 workspace 与跨平台构建验证尚未实施。"
+      ]
+    },
+    {
+      "id": "P0-02",
+      "phase": "P0",
+      "title": "核心契约与接口基础",
+      "status": "NOT_STARTED",
+      "responsibility": "平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-01"
+      ],
+      "description": "建立 ID、状态、命令／事件、schemaVersion、角色成果及 permit 契约，定义错误与版本校验",
+      "deliverables": "contracts 包、OpenAPI 初版、正反样例、模块接口表",
+      "acceptance": "非法 schema、混用宿主 permit、旧版本条件被拒绝；T08/T12 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P0-03",
+      "phase": "P0",
+      "title": "SQLite Worker 与正式迁移",
+      "status": "NOT_STARTED",
+      "responsibility": "平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-02"
+      ],
+      "description": "实现 SQLite Worker、事务入口和初始正式迁移，形成可用 Project/Run/Attempt 测试夹具、operations/Outbox",
+      "deliverables": "migration 管理器、领域事务接口、状态／并发约束测试",
+      "acceptance": "空库与升级路径；回滚、单活动 Run、未知 Attempt 不重跑；T07 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P0-04",
+      "phase": "P0",
+      "title": "本地会话与内容存储",
+      "status": "NOT_STARTED",
+      "responsibility": "平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-03"
+      ],
+      "description": "实现 BlobStore、会话索引、消息／步骤、上下文快照和授权引用，建立根目录校验",
+      "deliverables": "本地 Provider、SessionStore、写入操作、JSONL 投影生成入口",
+      "acceptance": "正文发布／索引提交切点；消息重启可读；附件可先于 Run 保存；T22 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P0-05",
+      "phase": "P0",
+      "title": "内部注册与持久 A2A 受理",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-03",
+        "P0-04"
+      ],
+      "description": "实现内部清单协调、端点版本、Registry 投影、官方 A2A handler 及持久 Inbox/TaskStore/AcceptedWork",
+      "deliverables": "注册服务、A2A 适配包、受理事务原型、标准客户端夹具",
+      "acceptance": "真实 HTTP、同键重发唯一 Task、HTTP 先监听再自检；T02/T03/T17 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P0-06",
+      "phase": "P0",
+      "title": "Agent Runtime 与 DeepSeek 接入",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-04",
+        "P0-05"
+      ],
+      "description": "接入 DeepSeek Provider、执行宿主、完整参数工具调用循环和四角色配置，冻结模型能力",
+      "deliverables": "Runtime、RoleRegistry、Provider、真实模型样本与用量记录",
+      "acceptance": "模型回复先落盘再工具执行；步数／上下文／超时有效；T02/T22 真实链路",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P0-07",
+      "phase": "P0",
+      "title": "Linux Runner 与停止核实",
+      "status": "NOT_STARTED",
+      "responsibility": "执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-02"
+      ],
+      "description": "实现 Linux Runner 登记、start/get/stop/by-operation、租约和资源限制，固定运行镜像",
+      "deliverables": "Runner 服务、镜像构建描述、API 与停止证据",
+      "acceptance": "真实子进程退出、响应丢失按原 operation 查询、容器不能访问控制密钥；T06/T12 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P0-08",
+      "phase": "P0",
+      "title": "真实 MCP 协议与首批工具",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-06",
+        "P0-07"
+      ],
+      "description": "接通官方 MCP Client/Server，先实现 repo 只读与 tests 长任务的真实后端",
+      "deliverables": "MCP transport 适配、独立服务身份、job 查询／停止契约",
+      "acceptance": "实际经 Client/Server 调用；断连不重放未知写操作；T04/T05 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P0-09",
+      "phase": "P0",
+      "title": "首个应用模板与运行验证",
+      "status": "NOT_STARTED",
+      "responsibility": "执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-07",
+        "P0-08"
+      ],
+      "description": "制作 web-crud-v1 模板，验证前后端构建、数据保存、Vitest/Playwright 和 runsc 行为",
+      "deliverables": "模板版本、能力声明、锁文件、检查配置、镜像 digest",
+      "acceptance": "任务看板基础行为与刷新／重启保留；真实安装、构建、停止记录",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P0-10",
+      "phase": "P0",
+      "title": "公共 Card 与认证接入原型",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-02",
+        "P0-05"
+      ],
+      "description": "完成公共 Card、对外路由与服务认证接入原型；验证官方客户端读取及发送",
+      "deliverables": "Card schema 样例、版本／绑定兼容表、测试身份配置和接入样例",
+      "acceptance": "T18 原型记录；明确测试环境与未开放能力，不宣称外部业务已完成",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P1-01",
+      "phase": "P1",
+      "title": "身份权限与项目输入 API",
+      "status": "NOT_STARTED",
+      "responsibility": "平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-03",
+        "P0-04",
+        "P0-06"
+      ],
+      "description": "接 OIDC/Session 和项目权限，完成附件／消息／创建项目事务、operation 查询与 workspace 快照",
+      "deliverables": "身份中间件、T1 事务、上传与创建 API、事件基础",
+      "acceptance": "输入限额、重复创建、提交丢响应和跨项目读取检查；U01～U04、T08/T22",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P1-02",
+      "phase": "P1",
+      "title": "需求理解与只读规划",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P1-01"
+      ],
+      "description": "实现理解、来源定位、必要问题、部分回答、解释重试和只读 bootstrap 规划",
+      "deliverables": "四角色输入／输出契约、需求版本、问题／答案和计划草稿服务",
+      "acceptance": "矛盾有来源；缺必答不实施；重试不复制答案；U05～U08、I04～I06",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P1-03",
+      "phase": "P1",
+      "title": "计划确认与 DAG 调度",
+      "status": "NOT_STARTED",
+      "responsibility": "平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P1-02"
+      ],
+      "description": "实现 DAG 完整性、无环／规模校验、计划版本确认、准入和公平调度",
+      "deliverables": "PlanService、Scheduler、T2 事务、槽位和预算持久记录",
+      "acceptance": "未确认不派实施；30 项／两槽／同角色一 Attempt；P01～P05、R05/R06",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P1-04",
+      "phase": "P1",
+      "title": "五类真实 MCP 服务",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P0-08",
+        "P1-01"
+      ],
+      "description": "完成 repo 写入、docs、issues、pipeline，并与 tests 分别登记身份与结果",
+      "deliverables": "五类真实 MCP 服务、工具策略、schema 快照和副作用分类",
+      "acceptance": "每类至少一项真实动作；pipeline 与 tests 不混作同服务；T04、R01/R02",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P1-05",
+      "phase": "P1",
+      "title": "代码工作区与串行集成",
+      "status": "NOT_STARTED",
+      "responsibility": "执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P1-03",
+        "P1-04",
+        "P0-09"
+      ],
+      "description": "从固定 SHA 建工作区，实现开发结果校验、串行集成、冲突材料保存和代码归档",
+      "deliverables": "Git Provider、工作区管理、集成 operation、源码成果清单",
+      "acceptance": "不直写接受分支；commit 入受控仓库后才可回收；T05/T23 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P1-06",
+      "phase": "P1",
+      "title": "固定版本验证与候选冻结",
+      "status": "NOT_STARTED",
+      "responsibility": "执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P1-05"
+      ],
+      "description": "实现精确 SHA 测试、报告解析、覆盖数量合并、缺陷／自动修复／复验和候选冻结",
+      "deliverables": "ResultVerifier、缺陷记录、必要检查集合、ReleaseCandidate",
+      "acceptance": "失败报告不等于通过；79/80、69/70 和缺报告边界；T10、R07/R12/R13/R19",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P1-07",
+      "phase": "P1",
+      "title": "预览与人工接受",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P1-06"
+      ],
+      "description": "实现首次 dataset、独立 origin 预览、逐项人工检查、T5 接受和发布 Outbox",
+      "deliverables": "预览网关、数据准备、人工审查／接受 API、完整交付 manifest",
+      "acceptance": "下载不等于接受；接受版本与报告一致；发布失败独立恢复；D01～D08",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P1-08",
+      "phase": "P1",
+      "title": "工作台首次完整产品路径",
+      "status": "NOT_STARTED",
+      "responsibility": "前端",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P1-01",
+        "P1-03",
+        "P1-07"
+      ],
+      "description": "完成三栏与五页签、计划/DAG/来源导航、IndexedDB 草稿、命令日记和事件补发",
+      "deliverables": "工作台完整首次路径、窄屏／键盘行为、只读上下文骨架",
+      "acceptance": "从空项目真实走完产品路径一；刷新不丢已提交内容，事件不抢焦点；T08 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P2-01",
+      "phase": "P2",
+      "title": "暂停恢复取消与资源收尾",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P1-05",
+        "P1-07"
+      ],
+      "description": "完整实现 pause/resume/cancel、两级 epoch、停止目标、材料保存、30 秒核实提示",
+      "deliverables": "控制状态机、逐目标收尾记录、恢复审查与 API/UI 事件",
+      "acceptance": "所有后代及 job 真实结束；保存失败只重试保存；T06、C01～C04",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P2-02",
+      "phase": "P2",
+      "title": "崩溃恢复与未知操作核实",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／Agent",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-01"
+      ],
+      "description": "覆盖 Outbox/Inbox/工具/Runner/接受的崩溃切点、租约接管和迟到结果",
+      "deliverables": "启动恢复扫描、核实服务、故障注入脚本和矩阵",
+      "acceptance": "原键查原事实；终态不回退；手动暂停不被重启解除；T02/T03/T05/T07",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P2-03",
+      "phase": "P2",
+      "title": "局部变更与冲突处理",
+      "status": "NOT_STARTED",
+      "responsibility": "平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-01"
+      ],
+      "description": "实现变更排队、影响图、局部冻结、冲突依据、决定／应用／复验和 T3",
+      "deliverables": "ChangeService、DecisionService、沿用／失效计算和完整交互",
+      "acceptance": "A/C 冻结而独立 B 可继续；旧依据不生效；T09、P06～P09、I13～I17",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P2-04",
+      "phase": "P2",
+      "title": "安全重试与准备重做",
+      "status": "NOT_STARTED",
+      "responsibility": "平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-01",
+        "P2-02",
+        "P2-03"
+      ],
+      "description": "实现安全重试、暂停准备重做、reviewHash、T4 原子重建与准备失败恢复",
+      "deliverables": "重试／重做 API、来源关联、独立预算桶",
+      "acceptance": "固定 UserTask.baseCommit；不复制旧未接受 diff；同操作唯一新 Run；R08～R11",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P2-05",
+      "phase": "P2",
+      "title": "配置调整与 Registry 同步",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／Agent",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-01",
+        "P0-05"
+      ],
+      "description": "实现配置调整暂停／分析／确认，完整 Registry 运行同步与停用／回退规则",
+      "deliverables": "配置快照、绑定 revision、projectionRevision、诊断视图",
+      "acceptance": "丢刷新通知、旧探测迟到、旧清单回切拒绝；应用后仍暂停；T16/T17",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P2-06",
+      "phase": "P2",
+      "title": "独立 Invocation 与公共任务内核",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent／平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-02",
+        "P0-10"
+      ],
+      "description": "实现 AgentInvocation 独立宿主、公共 Task/Inbox、T7、主体配额和授权映射",
+      "deliverables": "Invocation 表组、独立会话／工具／任务映射、公共接收事务",
+      "acceptance": "同键同目标；缺信息补齐只准入一次；取消核实；不放宽 Run 外键；T20/T21 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P2-07",
+      "phase": "P2",
+      "title": "日志归档、存储 pin 与 GC",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-02",
+        "P2-04"
+      ],
+      "description": "实现分块日志、归档 ACK、存储 pin、GC 互斥、容量限制与恢复引用保护",
+      "deliverables": "内容维护作业、日志块索引、清理策略、存储诊断",
+      "acceptance": "ACK 丢失不删文件；GC 与新引用不同时成功；磁盘满不报保存成功；T22/T23",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P2-08",
+      "phase": "P2",
+      "title": "完整控制交互与断线恢复",
+      "status": "NOT_STARTED",
+      "responsibility": "前端",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-03",
+        "P2-04",
+        "P2-05"
+      ],
+      "description": "补全控制进度、配置调整、冲突／变更队列、多页面竞争和断线恢复",
+      "deliverables": "全操作状态反馈、草稿保留、错误定位与 E2E",
+      "acceptance": "旧确认 409/412；暂停只保存答案；关闭面板不取消后台作业；T08、路径五",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P3-01",
+      "phase": "P3",
+      "title": "已接受版本迭代与数据迁移",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P1-07",
+        "P2-03",
+        "P2-04"
+      ],
+      "description": "完成接受后新目标／缺陷修复、数据隔离快照、迁移和两阶段接受竞态",
+      "deliverables": "迭代／修复流程、dataset 写门、迁移与发布恢复",
+      "acceptance": "旧版本仍写入时接受新版本不丢数据、不双写；T11、路径二／三／四",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P3-02",
+      "phase": "P3",
+      "title": "历史回放与导入导出",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／前端",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-07",
+        "P2-08"
+      ],
+      "description": "完成历史只读、回放、导入校验、截止快照导出和不完整资料提示",
+      "deliverables": "Replay Reader、导入／导出作业、JSONL 阅读入口、资料 manifest",
+      "acceptance": "回放真实执行调用为零；恶意包拒绝；截止范围一致；T13、D09/D10、R18",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P3-03",
+      "phase": "P3",
+      "title": "协作统计与配置导出",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／前端",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P3-02",
+        "P2-05"
+      ],
+      "description": "按真实事件计算活动区间、工作结果、人工介入与配置／Prompt 导出",
+      "deliverables": "统计投影、口径测试、协作／记录页完整内容",
+      "acceptance": "重复操作不重复计；未知区间不编造；重做分开统计；R14～R19",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P3-04",
+      "phase": "P3",
+      "title": "对外 Agent 发布与发现",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent／平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-06",
+        "P0-10"
+      ],
+      "description": "实现 Exposure 草稿／校验／发布／排空、T8、默认 Card、目录查询和服务 grant",
+      "deliverables": "发布管理 API、公共 Card／路由、目录 Outbox、权限审计",
+      "acceptance": "卡片与路由同版本；旧任务固定目标；下线拒新保留查询；T18/T20",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P3-05",
+      "phase": "P3",
+      "title": "外部单 Agent 与组真实接入",
+      "status": "NOT_STARTED",
+      "responsibility": "Agent／测试",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P3-04",
+        "P3-01"
+      ],
+      "description": "用独立标准客户端接入 tester 单技能和 dev-team 组，完成认证、流／查询、澄清和取消",
+      "deliverables": "外部接入文档、业务 schema、服务账号范围、真实请求／结果记录",
+      "acceptance": "单服务隔离；组映射唯一 Run；服务 token 不替人工确认；T18～T21",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P3-06",
+      "phase": "P3",
+      "title": "完整备份恢复与根目录迁移",
+      "status": "NOT_STARTED",
+      "responsibility": "运维／平台",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P2-07",
+        "P3-01",
+        "P3-02"
+      ],
+      "description": "实现备份清单、节点检查点、完整性、根目录迁移与隔离恢复",
+      "deliverables": "备份／恢复工具、storeId/layout 校验、演练初稿",
+      "acceptance": "缺 Runner 不能标完整；会话/Git/dataset 均恢复；旧控制实例不可写；T14/T24 基础",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P4-01",
+      "phase": "P4",
+      "title": "全量产品与技术验收",
+      "status": "NOT_STARTED",
+      "responsibility": "测试",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P3-05",
+        "P3-06"
+      ],
+      "description": "在同一候选构建上执行五条完整路径、89 场景和适用技术专项，复验修复",
+      "deliverables": "产品／技术验收记录、缺陷清单、版本与报告 manifest",
+      "acceptance": "逐项有结论和证据；未执行不计通过；功能与协议分别签认",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P4-02",
+      "phase": "P4",
+      "title": "安全容量与存储专项",
+      "status": "NOT_STARTED",
+      "responsibility": "测试／运维",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P3-05",
+        "P3-06"
+      ],
+      "description": "验证目标平台隔离、跨主体权限、代理 SSE、慢连接、容量、磁盘满和清理竞争",
+      "deliverables": "安全／容量／存储专项报告、实际配额与保留参数",
+      "acceptance": "T12/T15/T23；记录负载、P95、队列和资源，不虚构容量承诺",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P4-03",
+      "phase": "P4",
+      "title": "目标环境运维演练",
+      "status": "NOT_STARTED",
+      "responsibility": "运维／执行",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P4-02",
+        "P3-06"
+      ],
+      "description": "在目标拓扑演练备份恢复、目录迁移、配置错误、升级失败与发布恢复",
+      "deliverables": "可执行 runbook、恢复记录、部署清单、兼容性／回退说明",
+      "acceptance": "T14/T24；新目录验证前不破坏旧副本；未知 job 不重放",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    },
+    {
+      "id": "P4-04",
+      "phase": "P4",
+      "title": "发布交付与开放范围复核",
+      "status": "NOT_STARTED",
+      "responsibility": "平台／运维",
+      "owner": null,
+      "reviewer": null,
+      "dependsOn": [
+        "P4-01",
+        "P4-02",
+        "P4-03"
+      ],
+      "description": "汇总发布包、版本清单、运维交接和功能开放清单，复核阻断项",
+      "deliverables": "发布 manifest、制品校验值、账号／权限交接引用、发布检查记录",
+      "acceptance": "G4 满足；目标技能只有专项通过才发布，生产入口不因内部注册自动开放",
+      "designReferences": [
+        "DevMesh_实施文档_V1.0.md",
+        "DevMesh_技术设计方案_V1.1.md"
+      ],
+      "changes": [],
+      "blockedReason": null,
+      "nextCheck": null,
+      "startedAt": null,
+      "completedAt": null,
+      "codeReferences": [],
+      "evidence": [],
+      "reviewNote": null,
+      "notes": []
+    }
+  ]
+}

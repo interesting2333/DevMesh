@@ -1,0 +1,12 @@
+{
+  "name": "@devmesh/openspec-tooling",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Isolated, pinned OpenSpec CLI for DevMesh project management; not the application workspace.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "@fission-ai/openspec": "1.12.0"
+  }
+}
