@@ -1,0 +1,112 @@
+00-clone
+01-checkout
+02-install
+03-management-install
+04-verification
+file:///D:/yms/AI/DevMesh/.cache/p0-06/run-clean-windows.mjs:14
+  if (result.status !== 0) throw new Error(name + ' failed: ' + result.status + '\n' + (result.stdout ?? '') + (result.stderr ?? ''));
+                                 ^
+
+Error: 04-verification failed: 1
+[1/15] toolchain:check
+[2/15] vendor:verify
+[3/15] build
+[4/15] typecheck
+[5/15] lint
+[6/15] test:smoke
+FAILED: ..\windows-results-e4d89ef\report.json
+[ELIFECYCLE] Command failed with exit code 1.
+$ node scripts/verify-foundation.mjs --commit e4d89efe5e7e997fa3f29b8a9e1fc498f921257a --output 'D:\yms\AI\DevMesh\.cache\p0-06\windows-results-e4d89ef'
+TAP version 13
+# Subtest: configuration defaults, JSON file and environment precedence
+ok 1 - configuration defaults, JSON file and environment precedence
+  ---
+  duration_ms: 1378.7203
+  type: 'test'
+  ...
+# Subtest: invalid ports, timeouts and public bind addresses are rejected
+ok 2 - invalid ports, timeouts and public bind addresses are rejected
+  ---
+  duration_ms: 5.1112
+  type: 'test'
+  ...
+# Subtest: real Cordis plugin serves health/readiness and disposes its listener
+ok 3 - real Cordis plugin serves health/readiness and disposes its listener
+  ---
+  duration_ms: 4721.2396
+  type: 'test'
+  ...
+# Subtest: shutdown closes an unfinished TCP connection within its configured deadline
+ok 4 - shutdown closes an unfinished TCP connection within its configured deadline
+  ---
+  duration_ms: 508.3847
+  type: 'test'
+  ...
+# Subtest: occupied port rejects startup without closing the existing listener
+ok 5 - occupied port rejects startup without closing the existing listener
+  ---
+  duration_ms: 390.4424
+  type: 'test'
+  ...
+# Subtest: built CLI reaches ready and exits after verified Cordis disposal over IPC
+not ok 6 - built CLI reaches ready and exits after verified Cordis disposal over IPC
+  ---
+  duration_ms: 15349.873
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-06\\windows-clean-e4d89ef\\tests\\foundation.test.mjs:113:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 15000ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: CLI startup failures have nonzero exit codes and never report ready
+not ok 7 - CLI startup failures have nonzero exit codes and never report ready
+  ---
+  duration_ms: 15572.2484
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-06\\windows-clean-e4d89ef\\tests\\foundation.test.mjs:125:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 15000ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: CLI propagates EADDRINUSE as a nonzero startup failure
+not ok 8 - CLI propagates EADDRINUSE as a nonzero startup failure
+  ---
+  duration_ms: 17032.0363
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-06\\windows-clean-e4d89ef\\tests\\foundation.test.mjs:138:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 15000ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: CLI shuts down on POSIX SIGTERM
+ok 9 - CLI shuts down on POSIX SIGTERM # SKIP
+  ---
+  duration_ms: 3.6006
+  type: 'test'
+  ...
+# Subtest: all five built vendor modules resolve inside this independent repository
+ok 10 - all five built vendor modules resolve inside this independent repository
+  ---
+  duration_ms: 13680.7327
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 6
+# fail 0
+# cancelled 3
+# skipped 1
+# todo 0
+# duration_ms 92179.8137
+[ELIFECYCLE] Command failed with exit code 1.
+$ node --test --test-reporter=tap tests/foundation.test.mjs
+
+
+    at run (file:///D:/yms/AI/DevMesh/.cache/p0-06/run-clean-windows.mjs:14:34)
+    at file:///D:/yms/AI/DevMesh/.cache/p0-06/run-clean-windows.mjs:20:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.13.1

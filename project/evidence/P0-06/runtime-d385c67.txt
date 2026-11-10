@@ -1,0 +1,156 @@
+$ node --test --test-concurrency=1 --test-reporter=tap tests/runtime*.test.mjs
+TAP version 13
+# (node:876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real Runtime SIGKILL after model-sent preserves uncertainty and cannot replay
+ok 1 - real Runtime SIGKILL after model-sent preserves uncertainty and cannot replay
+  ---
+  duration_ms: 55226.2465
+  type: 'test'
+  ...
+# (node:876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real Runtime SIGKILL after tool-sent preserves uncertainty and cannot replay
+ok 2 - real Runtime SIGKILL after tool-sent preserves uncertainty and cannot replay
+  ---
+  duration_ms: 96378.6952
+  type: 'test'
+  ...
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTP loop persists request/response/tool result, freezes config and publishes only a role candidate
+ok 3 - real HTTP loop persists request/response/tool result, freezes config and publishes only a role candidate
+  ---
+  duration_ms: 39033.036
+  type: 'test'
+  ...
+# assertRuntimeActivation: Runtime cannot admit new actions
+# markRuntimeToolSent: Query the original operation instead of executing again
+# beginRuntimeActivation: A durable active consumer claim is required
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all complete tool arguments validate before any call can execute
+ok 4 - all complete tool arguments validate before any call can execute
+  ---
+  duration_ms: 24540.3401
+  type: 'test'
+  ...
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete response commit failure prevents tool admission and retains model uncertainty
+ok 5 - complete response commit failure prevents tool admission and retains model uncertainty
+  ---
+  duration_ms: 28521.9256
+  type: 'test'
+  ...
+# commitObjectWrite: disk-cut
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: result message survives final acknowledgement failure and repairs operation without query or execution
+ok 6 - result message survives final acknowledgement failure and repairs operation without query or execution
+  ---
+  duration_ms: 44551.3354
+  type: 'test'
+  ...
+# finishRuntimeTool: ack-cut
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unknown write only queries original operation and cannot be replayed on recovery
+ok 7 - unknown write only queries original operation and cannot be replayed on recovery
+  ---
+  duration_ms: 37534.9431
+  type: 'test'
+  ...
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pause during provider response closes the next tool admission
+ok 8 - pause during provider response closes the next tool admission
+  ---
+  duration_ms: 40380.9113
+  type: 'test'
+  ...
+# assertRuntimeActivation: Run control, epoch or grant changed
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: provider timeout leaves SENT and unknown cost, rather than automatically retrying
+ok 9 - provider timeout leaves SENT and unknown cost, rather than automatically retrying
+  ---
+  duration_ms: 60723.9283
+  type: 'test'
+  ...
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: token reservation prevents a network call and missing provider has an explicit outcome
+ok 10 - token reservation prevents a network call and missing provider has an explicit outcome
+  ---
+  duration_ms: 26286.5807
+  type: 'test'
+  ...
+# assertRuntimeActivation: Token budget exhausted or prior model cost is unknown
+# (node:31324) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: A2A HTTP acceptance reaches optional consumer and returns durable candidate without business success
+ok 11 - A2A HTTP acceptance reaches optional consumer and returns durable candidate without business success
+  ---
+  duration_ms: 26672.4029
+  type: 'test'
+  ...
+# Subtest: four roles resolve explicit frozen provider/model/schema and reject incompatible configuration
+ok 12 - four roles resolve explicit frozen provider/model/schema and reject incompatible configuration
+  ---
+  duration_ms: 1028.9038
+  type: 'test'
+  ...
+# Subtest: real HTTP completion sends explicit model and thinking mode, returns public projection and provider usage
+ok 13 - real HTTP completion sends explicit model and thinking mode, returns public projection and provider usage
+  ---
+  duration_ms: 1206.9352
+  type: 'test'
+  ...
+# Subtest: complete tool arguments survive transport and truncation remains explicitly incomplete
+ok 14 - complete tool arguments survive transport and truncation remains explicitly incomplete
+  ---
+  duration_ms: 399.1804
+  type: 'test'
+  ...
+# Subtest: missing credentials and declared context limits prevent any network request
+ok 15 - missing credentials and declared context limits prevent any network request
+  ---
+  duration_ms: 46.7936
+  type: 'test'
+  ...
+# Subtest: HTTP failures discard provider error bodies and do not automatically retry
+ok 16 - HTTP failures discard provider error bodies and do not automatically retry
+  ---
+  duration_ms: 267.5205
+  type: 'test'
+  ...
+# Subtest: timeout, abort and truncated JSON report unknown requests without replay
+ok 17 - timeout, abort and truncated JSON report unknown requests without replay
+  ---
+  duration_ms: 160.1728
+  type: 'test'
+  ...
+# Subtest: response schema, duplicate tool calls and size budgets fail before any consumer can execute tools
+ok 18 - response schema, duplicate tool calls and size budgets fail before any consumer can execute tools
+  ---
+  duration_ms: 577.968
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 523076.9639
