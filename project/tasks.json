@@ -311,13 +311,15 @@
         "d385c67e40ea7f30997b0ed77bee383fb051b5e6"
       ],
       "evidence": [
-        "project/evidence/P0-06/离线实施进展.md"
+        "project/evidence/P0-06/离线实施进展.md",
+        "project/evidence/P0-06/cross-platform-summary.json"
       ],
       "reviewNote": null,
       "notes": [
         "用户明确暂无模型、企业认证和 Docker/gVisor；先完成代码与离线验证，真实三组模型样本保留待联调，不凭本地夹具将工作包验收为 DONE。",
         "Runtime 代码已提交；本地开发回归发现两项测试／宿主时序问题，已修正并继续复验。固定版本与 Linux 验证尚未全部完成，真实模型三组样本仍待资源，见离线实施进展。",
-        "Windows 固定生产快照 e4d89ef：首次 CLI 启动超时失败原样保留，复跑 15/15 检查通过；d385c67 测试修正版本地 Runtime 串行 18/18 通过。Linux WSL 启动超时，真实 DeepSeek 样本未执行，不宣称跨平台或模型验收。"
+        "Windows 固定生产快照 e4d89ef：首次 CLI 启动超时失败原样保留，复跑 15/15 检查通过；d385c67 测试修正版本地 Runtime 串行 18/18 通过。Linux WSL 启动超时，真实 DeepSeek 样本未执行，不宣称跨平台或模型验收。",
+        "WSL 后续恢复可用：同一 e4d89ef 固定快照 Linux 15/15 检查通过，与 Windows 源指纹／锁文件一致；真实模型三组样本仍未执行，状态不变。"
       ]
     },
     {
@@ -345,11 +347,17 @@
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "91881b4f8692b9b1aa0c4a9aae700eec47c72bfe"
+      ],
+      "evidence": [
+        "project/evidence/P0-07/离线实施进展.md",
+        "project/evidence/P0-07/cross-platform-summary.json"
+      ],
       "reviewNote": null,
       "notes": [
-        "按用户持续实施及资源暂缺的指令，提前实现接口／登记与离线验证；正式状态保持 NOT_STARTED，不把 P0-06、真实 runsc 专项或 G0 视为已通过。"
+        "按用户持续实施及资源暂缺的指令，提前实现接口／登记与离线验证；正式状态保持 NOT_STARTED，不把 P0-06、真实 runsc 专项或 G0 视为已通过。",
+        "独立 Runner 代码提前实施：固定快照 Windows/Linux 均 16/16 检查通过，Runner 13/13；实际 authority 组合、硬配额、镜像和 runsc 隔离未验收。P0-06 尚未完成，正式状态保持 NOT_STARTED。"
       ]
     },
     {
@@ -371,7 +379,9 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-official-mcp-tools"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -379,7 +389,9 @@
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "按用户持续实施指令，提前实现官方 MCP、repo 只读和 tests 作业协议；前置真实模型／Runner 验收未完成，正式状态保留 NOT_STARTED。"
+      ]
     },
     {
       "id": "P0-09",

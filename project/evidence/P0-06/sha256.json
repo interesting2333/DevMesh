@@ -1,15 +1,159 @@
 [
   {
+    "path": "cross-platform-summary.json",
+    "sha256": "cbf932c9afa83899ed82f2e7857a2d5c507bf4bf99cd7657d84e2c6a5820fecc"
+  },
+  {
+    "path": "linux/00-clone.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "linux/01-checkout.txt",
+    "sha256": "b3f2ec4290f04a1de690c57e61c60b557f21f28d5920e4f816ac989f7fa04f2e"
+  },
+  {
+    "path": "linux/01-toolchain-check.txt",
+    "sha256": "4eb47e13bbf9924efdee8ec81ffaa5b161b2185a3dff8f564f06c145aeee169e"
+  },
+  {
+    "path": "linux/02-install.txt",
+    "sha256": "d6695c8608de48aaac24911e701646f48578f4631435a6485f59c46a4228079c"
+  },
+  {
+    "path": "linux/02-vendor-verify.txt",
+    "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+  },
+  {
+    "path": "linux/03-build.txt",
+    "sha256": "168ef06f3f37e6dbc28d14dcb1f1cee5f657cb3c91b05f5ab527679cd6cba7bd"
+  },
+  {
+    "path": "linux/03-management-install.txt",
+    "sha256": "451f63e70ce2ff8fbe4f2458064b4cb21fd548597e77252ee14ef252af3f77ed"
+  },
+  {
+    "path": "linux/04-typecheck.txt",
+    "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+  },
+  {
+    "path": "linux/04-verification.txt",
+    "sha256": "5c6e1659e8026bcad0f5e74f680cf59dabdf42b82dd0331c5aa2a11a024422ca"
+  },
+  {
+    "path": "linux/05-lint.txt",
+    "sha256": "bc6c050393ec317e9120168c59e862653731eb6a67f93b3f3d08594f21e60472"
+  },
+  {
+    "path": "linux/06-test-smoke.txt",
+    "sha256": "a3aedac00a048949a55a743837b5fb5de949dea9ed0963db6815da26efd5e36e"
+  },
+  {
+    "path": "linux/07-test-contracts.txt",
+    "sha256": "0873a5f31103016b5afbe6e605fcf0161e2be85ef84f254f51d8a16e9346d87c"
+  },
+  {
+    "path": "linux/08-test-storage.txt",
+    "sha256": "31f73630aa1a412a64d8e11cddf1fdc63671774fea0860c206d7c3c6153723b9"
+  },
+  {
+    "path": "linux/09-test-content.txt",
+    "sha256": "beaddc98db88c69b0ae5ac043284f7e72153a79505c5a0a4aced61f697448584"
+  },
+  {
+    "path": "linux/10-test-a2a.txt",
+    "sha256": "07ae3d249d5eb0fafba04cf51415de20c81cfd50c425e74dff61c05e68775354"
+  },
+  {
+    "path": "linux/11-test-runtime.txt",
+    "sha256": "40d7c2e00b92cc7b5121f5e822186db59e9d717535565020bfcabf1742c9cfda"
+  },
+  {
+    "path": "linux/12-contracts-check.txt",
+    "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+  },
+  {
+    "path": "linux/13-project-check.txt",
+    "sha256": "a091c1dd96ef39747dc66cd5658859dd8a6a8c5e29dcbe3847ab905266df03ab"
+  },
+  {
+    "path": "linux/14-openspec.txt",
+    "sha256": "6baef47fbc9f5fb1898899dd7c24d48c004dd868a30e5f14b9ac4479c8b85254"
+  },
+  {
+    "path": "linux/15-design-consistency.txt",
+    "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+  },
+  {
+    "path": "linux/report.json",
+    "sha256": "2b5af1ad72371bc81f06e989ec965a962b7d93640365717ee0d4172a9d6fe104"
+  },
+  {
     "path": "runtime-d385c67.txt",
     "sha256": "fbe1ff550c2ea2ce63987a59aa1ee1593b5ceb8689e47b9999f5a09007d9714c"
   },
   {
-    "path": "windows-first-failed.json",
-    "sha256": "24b6d1bb135cf81881b960c80322103e99049465540574173125c8cad6ea46ae"
+    "path": "windows/01-toolchain-check.txt",
+    "sha256": "71f250ad98445a5917760a85c86cdb030a60196d416e9ec070af97f46e6e44be"
   },
   {
-    "path": "windows-first-failed.txt",
-    "sha256": "a4ee05a04aa4df796ae7d6603cf9f8c96c531fbff573f7ff11b199f6398bfb14"
+    "path": "windows/02-vendor-verify.txt",
+    "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+  },
+  {
+    "path": "windows/03-build.txt",
+    "sha256": "6426622fc9f12526f63b26a67f1cc6a6f415212ff3f5720febb8fc38a222a627"
+  },
+  {
+    "path": "windows/04-typecheck.txt",
+    "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+  },
+  {
+    "path": "windows/05-lint.txt",
+    "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+  },
+  {
+    "path": "windows/06-test-smoke.txt",
+    "sha256": "364101dede6ca9f755ecbb662d96585e3113768102b3bb1eafc8ebd9773a90fa"
+  },
+  {
+    "path": "windows/07-test-contracts.txt",
+    "sha256": "484b2659625d9f2c03eb12c702cbbefb45a52b1a7da450e8b3e6d65023086a05"
+  },
+  {
+    "path": "windows/08-test-storage.txt",
+    "sha256": "e7d2dbd9776378fe051a22063359c3c6d8ed72b2875e164daac31b9c3b66f9c1"
+  },
+  {
+    "path": "windows/09-test-content.txt",
+    "sha256": "89cb9136397003866d7b75aa5583ebda8440d21ee80d5f62c83e7b6d48234c5c"
+  },
+  {
+    "path": "windows/10-test-a2a.txt",
+    "sha256": "a0c09de03e29c6a26246e2a8ace77b8e3f608609e9eb22d48397549491dcdfc3"
+  },
+  {
+    "path": "windows/11-test-runtime.txt",
+    "sha256": "d9d565fad67570f1535ae7074a1972753d07ba4df12c2b0c7ae8f522496d6d53"
+  },
+  {
+    "path": "windows/12-contracts-check.txt",
+    "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+  },
+  {
+    "path": "windows/13-project-check.txt",
+    "sha256": "a091c1dd96ef39747dc66cd5658859dd8a6a8c5e29dcbe3847ab905266df03ab"
+  },
+  {
+    "path": "windows/14-openspec.txt",
+    "sha256": "6baef47fbc9f5fb1898899dd7c24d48c004dd868a30e5f14b9ac4479c8b85254"
+  },
+  {
+    "path": "windows/15-design-consistency.txt",
+    "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+  },
+  {
+    "path": "windows/report.json",
+    "sha256": "aab5e60eb29789f1b1c63de12400cadc87c496d34d4b4ec40b0654de270805c0"
   },
   {
     "path": "windows-e4d89ef/01-toolchain-check.txt",
@@ -74,5 +218,17 @@
   {
     "path": "windows-e4d89ef/report.json",
     "sha256": "aab5e60eb29789f1b1c63de12400cadc87c496d34d4b4ec40b0654de270805c0"
+  },
+  {
+    "path": "windows-first-failed.json",
+    "sha256": "24b6d1bb135cf81881b960c80322103e99049465540574173125c8cad6ea46ae"
+  },
+  {
+    "path": "windows-first-failed.txt",
+    "sha256": "a4ee05a04aa4df796ae7d6603cf9f8c96c531fbff573f7ff11b199f6398bfb14"
+  },
+  {
+    "path": "离线实施进展.md",
+    "sha256": "2e6c2b874b4760b52dbb8fee5120e519ab4cb205eed1e1a9e13dd0ca6b7f35fe"
   }
 ]

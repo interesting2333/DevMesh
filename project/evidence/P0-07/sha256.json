@@ -1,0 +1,186 @@
+[
+  {
+    "path": "cross-platform-summary.json",
+    "sha256": "34e749255b39ab24e206054457ccc1c01153b7f1d412ba9d2f2c4449d7698336"
+  },
+  {
+    "path": "linux/00-clone.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "linux/01-checkout.txt",
+    "sha256": "87aac503022f5bbf66507d66c61305fc60e0c391bbf36e2db5ead65f02e42099"
+  },
+  {
+    "path": "linux/01-toolchain-check.txt",
+    "sha256": "4eb47e13bbf9924efdee8ec81ffaa5b161b2185a3dff8f564f06c145aeee169e"
+  },
+  {
+    "path": "linux/02-install.txt",
+    "sha256": "d70bac4ade3eacfa545cb38e7433f5a6f6b395f4f9737d4a25445f8a2cf2a68d"
+  },
+  {
+    "path": "linux/02-vendor-verify.txt",
+    "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+  },
+  {
+    "path": "linux/03-build.txt",
+    "sha256": "2e48302813dae7883ded84f89f76e16d54ffbc8a2b7f91d4e8cb0b6adf7c63e8"
+  },
+  {
+    "path": "linux/03-management-install.txt",
+    "sha256": "992eb49ce4c46ced196410e843343586a1b3f0fb1230ebfe70eb0c8c02007f62"
+  },
+  {
+    "path": "linux/04-typecheck.txt",
+    "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+  },
+  {
+    "path": "linux/04-verification.txt",
+    "sha256": "4548ca55b37256e599c998e19b2cae4df758adab55769d2e965aa5db83608e42"
+  },
+  {
+    "path": "linux/05-lint.txt",
+    "sha256": "e40c23fa23baac2592c043ba7fbf6c0fcf2f1de53e65f72c88a02f1616e8f5f4"
+  },
+  {
+    "path": "linux/06-test-smoke.txt",
+    "sha256": "6632aa53e380f0d19996db725e6e01535a1d0377e08acc54b32d010fefcff615"
+  },
+  {
+    "path": "linux/07-test-contracts.txt",
+    "sha256": "ceb68f812279b8f25fce779cf4b3a0bd54929ab086d5ae6f49b95ca0c4f6ba0b"
+  },
+  {
+    "path": "linux/08-test-storage.txt",
+    "sha256": "9e71f1d8fd00770d303a7ed7777f86f46d7e6fb67c1833dd10d53432287492e0"
+  },
+  {
+    "path": "linux/09-test-content.txt",
+    "sha256": "61761e29936a4de74f04ca9c4d49f1d14b03e6e68a44122f1b31fa00702c1ac8"
+  },
+  {
+    "path": "linux/10-test-a2a.txt",
+    "sha256": "986e78ccbcfb54663353d2f86f5d05963b5a34c6ba15b233b9d67ca261c2abd6"
+  },
+  {
+    "path": "linux/11-test-runtime.txt",
+    "sha256": "a83b58421dfe9c809dee5ed9ddee4d001f92a8d9ed693079b768c403c4dd9659"
+  },
+  {
+    "path": "linux/12-test-runner.txt",
+    "sha256": "4d4f0a3631f546f198fb9458e904987a6125e760710b7e0ce9278efaef0c8456"
+  },
+  {
+    "path": "linux/13-contracts-check.txt",
+    "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+  },
+  {
+    "path": "linux/14-project-check.txt",
+    "sha256": "a091c1dd96ef39747dc66cd5658859dd8a6a8c5e29dcbe3847ab905266df03ab"
+  },
+  {
+    "path": "linux/15-openspec.txt",
+    "sha256": "bfb5f96f9c1997f00046e2dd14e1a1cc95da4b3987b6a84772256e277d1f7752"
+  },
+  {
+    "path": "linux/16-design-consistency.txt",
+    "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+  },
+  {
+    "path": "linux/report.json",
+    "sha256": "df0b41e883aeb3ce39169f5d053ff392fa42f5e013dd6aefde8fc514061e3d52"
+  },
+  {
+    "path": "windows/00-clone.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "windows/01-checkout.txt",
+    "sha256": "87aac503022f5bbf66507d66c61305fc60e0c391bbf36e2db5ead65f02e42099"
+  },
+  {
+    "path": "windows/01-toolchain-check.txt",
+    "sha256": "71f250ad98445a5917760a85c86cdb030a60196d416e9ec070af97f46e6e44be"
+  },
+  {
+    "path": "windows/02-install.txt",
+    "sha256": "dfeba2b1e23567e1e980bdd39def25b38196be3ee1cf2099a9f5a4808285a117"
+  },
+  {
+    "path": "windows/02-vendor-verify.txt",
+    "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+  },
+  {
+    "path": "windows/03-build.txt",
+    "sha256": "aae6fd74fefc3c79316256a2ba08879b9ad7b78de5d5d90ded4ce7d4a37ea8ee"
+  },
+  {
+    "path": "windows/03-management-install.txt",
+    "sha256": "c67874ccf102bbba7f59cd51a6b39e19c2bc69be798c7bf2849d34e54adf07e9"
+  },
+  {
+    "path": "windows/04-typecheck.txt",
+    "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+  },
+  {
+    "path": "windows/04-verification.txt",
+    "sha256": "9bf9472b1c8cc81410fa740429558a1283baf7dd26458be7e61312f823375656"
+  },
+  {
+    "path": "windows/05-lint.txt",
+    "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+  },
+  {
+    "path": "windows/06-test-smoke.txt",
+    "sha256": "9bd920f1ab3fce27ded8637442aa86d5d616d53f362ad70ec2885578ca6db36c"
+  },
+  {
+    "path": "windows/07-test-contracts.txt",
+    "sha256": "8b0a4fdd8f6d0f3146aa5d01c71402c8e186516a1819d9e4b43a44d4609f4fbe"
+  },
+  {
+    "path": "windows/08-test-storage.txt",
+    "sha256": "1f59eec61eeec6b65ad89103bb9aae933022a6b17aea3876377f496b5177f4c3"
+  },
+  {
+    "path": "windows/09-test-content.txt",
+    "sha256": "0f42727ec662665007b71d6eb3e09cc26e5d4e3066c841e8a087a84d39b82313"
+  },
+  {
+    "path": "windows/10-test-a2a.txt",
+    "sha256": "960127ed9e34ecdd51fefc55271230c99c15d0ef6b4effd771bd80fce096e829"
+  },
+  {
+    "path": "windows/11-test-runtime.txt",
+    "sha256": "c362d26f1f5638b4fdb0e22d894f3f7e605618734661456d059e3e670c2bd705"
+  },
+  {
+    "path": "windows/12-test-runner.txt",
+    "sha256": "db4c398affe4ff07a91e120e5f3ddadba3f1c4f63dac8b276911910871f1adaf"
+  },
+  {
+    "path": "windows/13-contracts-check.txt",
+    "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+  },
+  {
+    "path": "windows/14-project-check.txt",
+    "sha256": "a091c1dd96ef39747dc66cd5658859dd8a6a8c5e29dcbe3847ab905266df03ab"
+  },
+  {
+    "path": "windows/15-openspec.txt",
+    "sha256": "bfb5f96f9c1997f00046e2dd14e1a1cc95da4b3987b6a84772256e277d1f7752"
+  },
+  {
+    "path": "windows/16-design-consistency.txt",
+    "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+  },
+  {
+    "path": "windows/report.json",
+    "sha256": "d8ec2a6402bebf93d9b7eb48227dd73cea30e3956e8c8ef6be51aad680b2882c"
+  },
+  {
+    "path": "离线实施进展.md",
+    "sha256": "d6aa87ca6867ee2ee8b874a1aa0a2a41a04b98274badf12d0f381371d2c9a6f2"
+  }
+]

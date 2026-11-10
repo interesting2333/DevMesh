@@ -1,0 +1,17 @@
+$ node scripts/verify-foundation.mjs --commit e4d89efe5e7e997fa3f29b8a9e1fc498f921257a --output /tmp/devmesh-p0-06-linux-results-e4d89ef
+[1/15] toolchain:check
+[2/15] vendor:verify
+[3/15] build
+[4/15] typecheck
+[5/15] lint
+[6/15] test:smoke
+[7/15] test:contracts
+[8/15] test:storage
+[9/15] test:content
+[10/15] test:a2a
+[11/15] test:runtime
+[12/15] contracts:check
+[13/15] project:check
+[14/15] openspec
+[15/15] design-consistency
+PASSED: ../devmesh-p0-06-linux-results-e4d89ef/report.json

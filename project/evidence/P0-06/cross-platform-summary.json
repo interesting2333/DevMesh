@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "Offline code checks only; no real model, runsc or human acceptance",
+  "reviewedAt": "2026-11-10T11:23:54.628Z",
+  "results": {
+    "windows": {
+      "commit": "e4d89efe5e7e997fa3f29b8a9e1fc498f921257a",
+      "platform": "win32",
+      "sourceFingerprint": "c492753c39de1477c240db642d6108c8c925a802bc9c9bc7b9eea1f480b99e23",
+      "lockfileSha256": "de644ece2718cb679526a0d1fef277ce4f08e29ca288019d65d2c1fb2c86360c",
+      "node": "v24.13.1",
+      "checks": 15,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 9,
+          "fail": 0,
+          "skipped": 1
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:storage",
+          "tests": 28,
+          "pass": 28,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:content",
+          "tests": 20,
+          "pass": 20,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:a2a",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:runtime",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-06/windows/report.json"
+    },
+    "linux": {
+      "commit": "e4d89efe5e7e997fa3f29b8a9e1fc498f921257a",
+      "platform": "linux",
+      "sourceFingerprint": "c492753c39de1477c240db642d6108c8c925a802bc9c9bc7b9eea1f480b99e23",
+      "lockfileSha256": "de644ece2718cb679526a0d1fef277ce4f08e29ca288019d65d2c1fb2c86360c",
+      "node": "v24.13.1",
+      "checks": 15,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:storage",
+          "tests": 28,
+          "pass": 28,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:content",
+          "tests": 20,
+          "pass": 20,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:a2a",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:runtime",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-06/linux/report.json"
+    }
+  }
+}
