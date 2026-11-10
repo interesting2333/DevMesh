@@ -23,6 +23,7 @@ export function estimateTokens(value:unknown):number{
 export function checkModelRequest(config:z.output<typeof providerConfigSchema>,r:ModelRequest){
  if(!Number.isSafeInteger(r.maxOutputTokens)||r.maxOutputTokens<1||r.maxOutputTokens>config.capabilities.maxOutputTokens)throw new ModelError('MODEL_OUTPUT_LIMIT',false,'not-sent');
  if(r.tools.length&&!config.capabilities.toolCalls)throw new ModelError('MODEL_TOOL_CAPABILITY_UNAVAILABLE',false,'not-sent');
+ if(r.tools.some(t=>!/^[A-Za-z0-9_-]{1,128}$/.test(t.name))||new Set(r.tools.map(t=>t.name)).size!==r.tools.length)throw new ModelError('MODEL_TOOL_NAME_INVALID',false,'not-sent');
  if(r.jsonOutput&&config.capabilities.structuredOutput!=='json-object')throw new ModelError('MODEL_JSON_CAPABILITY_UNAVAILABLE',false,'not-sent');
  if(estimateTokens({messages:r.messages,tools:r.tools})+r.maxOutputTokens>config.capabilities.contextTokens)throw new ModelError('CONTEXT_LIMIT',false,'not-sent');
  if(!r.messages.length||r.messages.some(m=>!['system','user','assistant','tool'].includes(m.role)||!(m.content===null||typeof m.content==='string')||(m.role==='tool'&&!m.toolCallId)))throw new ModelError('MODEL_REQUEST_INVALID',false,'not-sent');

@@ -15,8 +15,9 @@ export type ExecutionClaim={endpointId:string;taskId:string;workerId:string;clai
 export type ToolResult={state:'SUCCEEDED'|'FAILED';value:unknown}|{state:'OUTCOME_UNKNOWN'};
 export interface RuntimeTool {
  name:string;description:string;schema:z.ZodType;effectClass:'READ'|'IDEMPOTENT_WRITE'|'NONIDEMPOTENT_WRITE';
+ connection?:Record<string,unknown>;
  execute(operationId:string,args:unknown,host:Readonly<ExecutionHostView>,signal:AbortSignal):Promise<ToolResult>;
- query(operationId:string,host:Readonly<ExecutionHostView>):Promise<ToolResult>;
+ query(operationId:string,host:Readonly<ExecutionHostView>,originalArgs?:unknown):Promise<ToolResult>;
 }
 export type RuntimeOutcome={state:'completed';candidate:{artifactId:string;sha256:string;schemaId:string};sessionId:string}|{state:'failed'|'reconcile';code:string};
 export class AgentRuntime {
@@ -39,7 +40,7 @@ export class AgentRuntime {
    const session=await this.sessions.ensure(host.principalId,host.runId,host.attemptId);sessionId=session.sessionId;
    // An existing request may have reached the provider. Reconciliation owns resumption.
    if(session.lastStepNo)fail('RUNTIME_RESUME_REQUIRES_RECONCILIATION');
-   const frozen={provider:provider.config,role:host.roleSnapshot,promptHash:hash(prompt),toolSchemas:definitions.map(t=>({...t,effectClass:this.#tools.get(t.name)!.effectClass})),tokenLimit:this.tokenLimit};
+   const frozen={provider:provider.config,role:host.roleSnapshot,promptHash:hash(prompt),toolSchemas:definitions.map(t=>({...t,effectClass:this.#tools.get(t.name)!.effectClass,connection:this.#tools.get(t.name)!.connection??null})),tokenLimit:this.tokenLimit};
    const configHash=hash(frozen);
    await this.storage.request('beginRuntimeActivation',{...claim,activationId:host.activationId,principalId:host.principalId,sessionId,configHash,config:z.record(z.string(),z.json()).parse(frozen),maxSteps:role.maxSteps,tokenLimit:this.tokenLimit});started=true;
    const meta=():WriteMeta=>({principalId:host!.principalId,scopeId:host!.runId,idempotencyKey:randomUUID()});
@@ -87,7 +88,7 @@ export class AgentRuntime {
       let result:ToolResult;try{result=await tool.execute(operation.operationId,args,Object.freeze(structuredClone(host)),signal);}catch{result={state:'OUTCOME_UNKNOWN'};}
       if(result.state==='OUTCOME_UNKNOWN'){
        await this.storage.request('markRuntimeToolUnknown',{activationId:host.activationId,operationId:operation.operationId,errorCode:'TOOL_OUTCOME_UNKNOWN'});
-       try{result=await tool.query(operation.operationId,Object.freeze(structuredClone(host)));}catch{result={state:'OUTCOME_UNKNOWN'};}
+       try{result=await tool.query(operation.operationId,Object.freeze(structuredClone(host)),args);}catch{result={state:'OUTCOME_UNKNOWN'};}
       }
       if(result.state==='OUTCOME_UNKNOWN')fail('TOOL_OUTCOME_UNKNOWN');
       // On a disk failure after execute, retain SENT/UNKNOWN; never re-execute.
@@ -122,15 +123,17 @@ export class AgentRuntime {
   const op=await this.storage.request('getRuntimeTool',{activationId:host.activationId,stepNo,toolCallId});if(!op)fail('TOOL_OPERATION_NOT_FOUND');
   if(op.toolName!==toolName)fail('TOOL_OPERATION_MISMATCH');
   if(op.state==='SUCCEEDED'||op.state==='FAILED')return op;
-  let cursor=0;
+  let cursor=0,originalArgs:unknown;
   for(;;){const page=await this.storage.request('listSessionMessages',{principalId:host.principalId,sessionId:op.sessionId,afterSeq:cursor,limit:200});
+   const call=page.messages.find(m=>m.kind==='tool-call'&&m.stepNo===stepNo&&m.toolCallId===toolCallId);
+   if(call){const body=JSON.parse(await this.content.readText(host.principalId,{kind:'message',messageId:call.messageId})) as {name:string;operationId:string;arguments:unknown};if(body.name!==toolName||body.operationId!==op.operationId||hash(body.arguments)!==op.argsHash)fail('TOOL_OPERATION_MISMATCH');originalArgs=body.arguments;}
    const found=page.messages.find(m=>m.kind==='tool-result'&&m.stepNo===stepNo&&m.toolCallId===toolCallId);
    if(found){const result=JSON.parse(await this.content.readText(host.principalId,{kind:'message',messageId:found.messageId})) as Exclude<ToolResult,{state:'OUTCOME_UNKNOWN'}>;return this.storage.request('finishRuntimeTool',{activationId:host.activationId,operationId:op.operationId,resultMessageId:found.messageId,failed:result.state==='FAILED'});}
    if(page.messages.length<200)break;cursor=page.messages.at(-1)!.seq;
   }
   if(!['SENT','OUTCOME_UNKNOWN'].includes(op.state))fail('TOOL_NOT_SENT');
   const tool=this.#tools.get(toolName);if(!tool)fail('TOOL_NOT_CONFIGURED');
-  const result=await tool.query(op.operationId,Object.freeze(structuredClone(host)));if(result.state==='OUTCOME_UNKNOWN')return op;
+  const result=await tool.query(op.operationId,Object.freeze(structuredClone(host)),originalArgs);if(result.state==='OUTCOME_UNKNOWN')return op;
   return this.saveToolResult(host,op,result);
  }
 }

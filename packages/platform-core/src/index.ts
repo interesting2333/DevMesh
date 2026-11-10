@@ -8,6 +8,7 @@ import type { LocalStorage } from '@devmesh/blob-store';
 import { mountInternalAgents,environmentCredentials } from '@devmesh/a2a-adapter';
 import type { CredentialResolver } from '@devmesh/a2a-adapter';
 import { AgentRuntime,DeepSeekProvider,RuntimeConsumer,parseRuntimeConfig } from '@devmesh/agent-runtime';
+import type { RuntimeTool } from '@devmesh/agent-runtime';
 
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
@@ -20,7 +21,7 @@ export interface FoundationServer {
   consumer?:RuntimeConsumer|undefined;
 }
 
-export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver}={}): Promise<FoundationServer> {
+export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[]}={}): Promise<FoundationServer> {
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
   if(config.runtime&&(!config.storage||!config.a2a))throw new Error('Runtime requires durable storage and hosted A2A endpoints');
   const runtimeConfig=config.runtime?parseRuntimeConfig(config.runtime):undefined;
@@ -104,7 +105,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     if(runtimeConfig&&services){
       const credentials=options.resolveCredential??environmentCredentials();
       const providers=runtimeConfig.providers.map(p=>new DeepSeekProvider(p,credentials));
-      const runtime=new AgentRuntime(services.local.storage,services.content,providers,[],runtimeConfig.tokenLimit);
+      const runtime=new AgentRuntime(services.local.storage,services.content,providers,options.runtimeTools??[],runtimeConfig.tokenLimit);
       consumer=new RuntimeConsumer(services.local.storage,runtime,config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled).map(e=>e.endpointId),'runtime.local');
       await consumer.start();
     }

@@ -1,0 +1,8 @@
+{
+  "description": "Composition example; not automatically loaded by the server CLI",
+  "connections": [
+    {"endpointId": "repo.local", "endpoint": "http://127.0.0.1:3230/mcp", "credentialRef": "mcp.repo", "allowedTools": ["repo.list", "repo.read"]},
+    {"endpointId": "tests.local", "endpoint": "http://127.0.0.1:3231/mcp", "credentialRef": "mcp.tests", "allowedTools": ["tests.start", "tests.get", "tests.stop", "tests.by-operation"]}
+  ],
+  "executionEnabled": false
+}

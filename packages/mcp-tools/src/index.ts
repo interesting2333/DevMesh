@@ -1,0 +1,11 @@
+export { ToolError,toolEnvelope,toolResult } from './protocol.js';
+export type { ToolAction,ToolAuthority,ToolDefinition } from './protocol.js';
+export { serveMcp } from './server.js';
+export type { McpServiceOptions } from './server.js';
+export { McpToolClient } from './client.js';
+export type { McpClientOptions,ConnectionSnapshot } from './client.js';
+export { repoTools,repoListArgs,repoReadArgs } from './repo.js';
+export type { RepoSnapshot } from './repo.js';
+export { testTools,testsStartArgs,testsJobArgs,testsOperationArgs } from './tests.js';
+export type { CheckDefinition } from './tests.js';
+export { runtimeMcpTools } from './bridge.js';

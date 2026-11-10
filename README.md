@@ -17,6 +17,8 @@ DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的�
 | 本地正文、附件、会话与目录初始化 | [内容存储说明](./packages/blob-store/README.md) |
 | 内部 A2A、清单、注册代际与持久受理 | [A2A 适配说明](./packages/a2a-adapter/README.md) |
 | 可选模型执行、四角色、工具操作与预算 | [Runtime 说明](./packages/agent-runtime/README.md) |
+| 独立 Runner、作业受理、许可与停止事实 | [Runner 说明](./packages/runner/README.md) |
+| 官方 MCP、授权仓库读取与长任务桥接 | [MCP 说明](./packages/mcp-tools/README.md) |
 | 全部文档与原型 | [交付说明](./交付说明.md) |
 | 运行、构建、配置、测试与 CI | [工程说明](./docs/engineering.md) |
 
