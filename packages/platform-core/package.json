@@ -7,10 +7,11 @@
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
-    }
+    },
+    "./config": { "types": "./dist/config.d.mts", "import": "./dist/config.mjs" }
   },
   "scripts": {
-    "build": "tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean"
+    "build": "tsdown src/index.ts src/config.ts --format esm --platform node --target node24 --dts --sourcemap --clean"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

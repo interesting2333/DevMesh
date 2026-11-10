@@ -14,6 +14,9 @@
       "node"
     ],
     "paths": {
+      "@devmesh/platform-core/config": ["./packages/platform-core/src/config.ts"],
+      "@devmesh/a2a-adapter/config": ["./packages/a2a-adapter/src/config.ts"],
+      "@devmesh/agent-runtime/config": ["./packages/agent-runtime/src/config.ts"],
       "@devmesh/platform-core": [
         "./packages/platform-core/src/index.ts"
       ],

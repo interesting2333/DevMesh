@@ -3,12 +3,9 @@ import type { AddressInfo, Socket } from 'node:net';
 import express from 'express';
 import { Context } from '@deepseek-ai/cordis';
 import type { ServerConfig } from './config.js';
-import { LocalContentStore, SessionStore, openLocalStorage } from '@devmesh/blob-store';
-import type { LocalStorage } from '@devmesh/blob-store';
-import { mountInternalAgents,environmentCredentials } from '@devmesh/a2a-adapter';
-import type { CredentialResolver } from '@devmesh/a2a-adapter';
-import { AgentRuntime,DeepSeekProvider,RuntimeConsumer,parseRuntimeConfig } from '@devmesh/agent-runtime';
-import type { RuntimeTool } from '@devmesh/agent-runtime';
+import type { LocalStorage, LocalContentStore, SessionStore } from '@devmesh/blob-store';
+import type { mountInternalAgents, CredentialResolver } from '@devmesh/a2a-adapter';
+import type { RuntimeConsumer, RuntimeTool } from '@devmesh/agent-runtime';
 
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
@@ -24,11 +21,13 @@ export interface FoundationServer {
 export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[]}={}): Promise<FoundationServer> {
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
   if(config.runtime&&(!config.storage||!config.a2a))throw new Error('Runtime requires durable storage and hosted A2A endpoints');
-  const runtimeConfig=config.runtime?parseRuntimeConfig(config.runtime):undefined;
+  const runtimeModule=config.runtime?await import('@devmesh/agent-runtime'):undefined;
+  const runtimeConfig=runtimeModule?.parseRuntimeConfig(config.runtime);
   const context = new Context();
   let services: FoundationServer['services'];
   const storageFiber=config.storage?context.plugin({name:'devmesh-local-storage',async apply(scope:Context){
     await scope.effect(async()=>{
+      const { openLocalStorage, LocalContentStore, SessionStore } = await import('@devmesh/blob-store');
       const local=await openLocalStorage(config.storage!);
       try{
         const content=new LocalContentStore(local.storage,local.dataRoot,local.minimumFreeBytes),sessions=new SessionStore(content);
@@ -55,7 +54,8 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   });
   let agents: ReturnType<typeof mountInternalAgents>|undefined;
   let consumer:RuntimeConsumer|undefined;
-  try{if(config.a2a&&services)agents=mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??environmentCredentials()});}
+  let a2aModule:typeof import('@devmesh/a2a-adapter')|undefined;
+  try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
   catch(error){await storageFiber?.dispose();throw error;}
   app.use((_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
   const server = createServer({ headersTimeout: 5000, requestTimeout: 10000 }, app);
@@ -102,8 +102,9 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   try {
     await fiber;
     if(agents)await agents.activate();
-    if(runtimeConfig&&services){
-      const credentials=options.resolveCredential??environmentCredentials();
+    if(runtimeConfig&&services&&runtimeModule){
+      const { DeepSeekProvider, AgentRuntime, RuntimeConsumer } = runtimeModule;
+      const credentials=options.resolveCredential??a2aModule!.environmentCredentials();
       const providers=runtimeConfig.providers.map(p=>new DeepSeekProvider(p,credentials));
       const runtime=new AgentRuntime(services.local.storage,services.content,providers,options.runtimeTools??[],runtimeConfig.tokenLimit);
       consumer=new RuntimeConsumer(services.local.storage,runtime,config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled).map(e=>e.endpointId),'runtime.local');

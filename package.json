@@ -35,7 +35,8 @@
     "test:runtime": "node --test --test-concurrency=1 --test-reporter=tap tests/runtime*.test.mjs",
     "test:runner": "node --test --test-concurrency=1 --test-reporter=tap tests/runner*.test.mjs",
     "runner:start": "node packages/runner/dist/main.mjs",
-    "test:mcp": "node --test --test-concurrency=1 --test-reporter=tap tests/mcp*.test.mjs"
+    "test:mcp": "node --test --test-concurrency=1 --test-reporter=tap tests/mcp*.test.mjs",
+    "template:verify": "node scripts/verify-template.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

@@ -1,26 +1,16 @@
 import { timingSafeEqual } from 'node:crypto';
-import { readFileSync } from 'node:fs';
-import { resolve,dirname } from 'node:path';
-import { z } from 'zod';
 import type { Express, Request, RequestHandler } from 'express';
 import express from 'express';
 import { AgentCard } from '@a2a-js/sdk';
 import { agentCardHandler, jsonRpcHandler } from '@a2a-js/sdk/server/express';
 import type { SqliteStorage, AgentManifest, EndpointConfig } from '@devmesh/storage-sqlite';
-import { agentManifest } from '@devmesh/storage-sqlite';
-import { opaqueKey,parseContract } from '@devmesh/contracts';
 import { AgentRegistry, cardHash } from './registry.js';
 import type { CredentialResolver } from './registry.js';
 import { DurableRequestHandler } from './handler.js';
+import type { ServiceIdentity } from './config.js';
+export { loadInternalA2AConfig } from './config.js';
+export type { ServiceIdentity, InternalA2AConfig } from './config.js';
 
-export interface ServiceIdentity { principalId:string;credentialRef:string }
-export interface InternalA2AConfig {manifest:AgentManifest;identities:ServiceIdentity[]}
-export function loadInternalA2AConfig(value:unknown,configPath?:string):InternalA2AConfig{
- const c=parseContract(z.strictObject({manifestPath:z.string().min(1),identities:z.array(z.strictObject({principalId:opaqueKey,credentialRef:opaqueKey})).max(32)}),value);
- if(new Set(c.identities.map(i=>i.principalId)).size!==c.identities.length||new Set(c.identities.map(i=>i.credentialRef)).size!==c.identities.length)throw new Error('Service identities and credential references must be unique');
- const path=resolve(configPath?dirname(resolve(configPath)):process.cwd(),c.manifestPath);
- return {manifest:parseContract(agentManifest,JSON.parse(readFileSync(path,'utf8'))),identities:c.identities};
-}
 export interface InternalA2AOptions { manifest:AgentManifest;identities:ServiceIdentity[];resolveCredential:CredentialResolver;healthIntervalMs?:number;projectionIntervalMs?:number }
 export function createRoleCard(e:Pick<EndpointConfig,'agentKey'|'implementationVersion'|'address'|'streaming'|'supportedSkills'>):AgentCard{
  return AgentCard.fromJSON({name:e.agentKey,description:'DevMesh internal durable work endpoint',version:e.implementationVersion,supportedInterfaces:[{url:e.address,protocolBinding:'JSONRPC',protocolVersion:'1.0'}],capabilities:{streaming:e.streaming,pushNotifications:false},defaultInputModes:['application/json'],defaultOutputModes:['application/json'],skills:e.supportedSkills.map(id=>({id,name:id,description:'Accept authorized versioned work and expose its persisted Task',tags:['devmesh'],inputModes:['application/json'],outputModes:['application/json']})),securitySchemes:{serviceBearer:{httpAuthSecurityScheme:{scheme:'Bearer'}}},securityRequirements:[{schemes:{serviceBearer:{list:[]}}}]});

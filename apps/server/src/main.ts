@@ -1,4 +1,4 @@
-import { ConfigError, loadConfig, startPlatform } from '@devmesh/platform-core';
+import { ConfigError, loadConfig } from '@devmesh/platform-core/config';
 import type { FoundationServer } from '@devmesh/platform-core';
 
 function log(event: string, fields: Record<string, unknown> = {}): void {
@@ -51,6 +51,7 @@ async function main(): Promise<void> {
   process.on('disconnect', onDisconnect);
   try {
     const config = loadConfig(process.env, configArgument(process.argv.slice(2)));
+    const { startPlatform } = await import('@devmesh/platform-core');
     if(config.storage)log('storage-config',{dataRoot:config.storage.dataRoot,backupRoot:config.storage.backupRoot,sources:config.storageSources});
     platform = await startPlatform(config);
     if (requested) {

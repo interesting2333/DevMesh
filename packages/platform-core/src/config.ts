@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { parseStorageConfig } from '@devmesh/blob-store';
 import type { StorageConfig } from '@devmesh/blob-store';
-import { loadInternalA2AConfig } from '@devmesh/a2a-adapter';
+import { loadInternalA2AConfig } from '@devmesh/a2a-adapter/config';
 import type { InternalA2AConfig } from '@devmesh/a2a-adapter';
-import { parseRuntimeConfig } from '@devmesh/agent-runtime';
+import { parseRuntimeConfig } from '@devmesh/agent-runtime/config';
 import type { RuntimeConfig } from '@devmesh/agent-runtime';
 
 export interface ServerConfig {
