@@ -9,4 +9,7 @@ DevMesh_产品验收场景_V10.0.md -text
 DevMesh_实施文档_V1.0.md -text
 
 # Vendored release payloads are verified byte for byte.
-vendor/** -text
+vendor/** -text -whitespace
+
+# Raw evidence is hashed before commit; retain the original output bytes.
+project/evidence/**/*.txt -text -whitespace
