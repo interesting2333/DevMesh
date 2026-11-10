@@ -211,10 +211,10 @@
       "id": "P0-04",
       "phase": "P0",
       "title": "本地会话与内容存储",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "responsibility": "平台",
       "owner": "Codex（连续目标实施）",
-      "reviewer": null,
+      "reviewer": "Codex（同一 Agent 技术复核）",
       "dependsOn": [
         "P0-03"
       ],
@@ -231,19 +231,24 @@
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": "2026-11-10T08:24:11.818Z",
-      "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
-      "reviewNote": null,
+      "completedAt": "2026-11-10T08:57:25.915Z",
+      "codeReferences": [
+        "6b75d18e9c8a88b1a8d706b9fa178a4878856740"
+      ],
+      "evidence": [
+        "project/evidence/P0-04/验收记录.md",
+        "project/evidence/P0-04/cross-platform-summary.json"
+      ],
+      "reviewNote": "双平台同提交干净安装，13 项检查、内容 20／SQLite 28／契约 18 项测试通过；真实崩溃切点和原操作恢复复核。Windows 目录刷新与真实联调边界见证据。",
       "notes": []
     },
     {
       "id": "P0-05",
       "phase": "P0",
       "title": "内部注册与持久 A2A 受理",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "responsibility": "Agent",
-      "owner": null,
+      "owner": "Codex（连续目标实施）",
       "reviewer": null,
       "dependsOn": [
         "P0-03",
@@ -256,10 +261,12 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-durable-a2a-registry"
+      ],
       "blockedReason": null,
       "nextCheck": null,
-      "startedAt": null,
+      "startedAt": "2026-11-10T08:57:25.916Z",
       "completedAt": null,
       "codeReferences": [],
       "evidence": [],

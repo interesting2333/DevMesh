@@ -1,0 +1,148 @@
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/package.json 
+ℹ entry: vendor/cosmokit/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor/cosmokit/lib/index.js      17.31 kB │ gzip: 5.29 kB
+ℹ vendor/cosmokit/lib/index.js.map  31.20 kB │ gzip: 8.14 kB
+ℹ 2 files, total: 48.50 kB
+✔ Build complete in 80ms
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/package.json 
+ℹ entry: vendor/schemastery/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ [CJS] vendor/schemastery/lib/index.cjs      23.88 kB │ gzip:  5.88 kB
+ℹ [CJS] vendor/schemastery/lib/index.cjs.map  47.40 kB │ gzip: 10.55 kB
+ℹ [CJS] 2 files, total: 71.27 kB
+✔ Build complete in 31ms
+ℹ [ESM] vendor/schemastery/lib/index.mjs      23.04 kB │ gzip:  5.85 kB
+ℹ [ESM] vendor/schemastery/lib/index.mjs.map  46.85 kB │ gzip: 10.47 kB
+ℹ [ESM] 2 files, total: 69.89 kB
+✔ Build complete in 48ms
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/package.json 
+ℹ entry: vendor/cordis/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor/cordis/lib/index.js       64.27 kB │ gzip: 17.72 kB
+ℹ vendor/cordis/lib/index.js.map  122.02 kB │ gzip: 29.48 kB
+ℹ 2 files, total: 186.29 kB
+✔ Build complete in 36ms
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/package.json 
+ℹ entry: vendor/loader/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor/loader/lib/index.js      26.60 kB │ gzip:  8.42 kB
+ℹ vendor/loader/lib/index.js.map  54.04 kB │ gzip: 14.62 kB
+ℹ 2 files, total: 80.64 kB
+✔ Build complete in 104ms
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/package.json 
+ℹ entry: vendor/include/lib/types/index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor/include/lib/index.js       8.66 kB │ gzip: 3.28 kB
+ℹ vendor/include/lib/index.js.map  17.12 kB │ gzip: 5.57 kB
+ℹ 2 files, total: 25.78 kB
+✔ Build complete in 19ms
+Scope: 5 of 11 workspace projects
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/packages/contracts/package.json 
+ℹ entry: src/index.ts
+ℹ target: es2024
+ℹ tsconfig: ../../tsconfig.json
+ℹ Build start
+ℹ dist/index.js       29.81 kB │ gzip:  8.76 kB
+ℹ dist/index.js.map   51.13 kB │ gzip: 13.68 kB
+ℹ dist/index.d.ts    140.93 kB │ gzip: 12.13 kB
+ℹ 3 files, total: 221.88 kB
+✔ Build complete in 8916ms
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/packages/storage-sqlite/package.json 
+ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+ℹ target: node24
+ℹ tsconfig: ../../tsconfig.json
+ℹ Build start
+ℹ dist/index.mjs                     6.54 kB │ gzip:  2.34 kB
+ℹ dist/worker.mjs                    5.33 kB │ gzip:  2.17 kB
+ℹ dist/migrations.mjs                0.26 kB │ gzip:  0.17 kB
+ℹ dist/domain.mjs                    0.15 kB │ gzip:  0.12 kB
+ℹ dist/domain-DOiIIKr2.mjs.map      99.70 kB │ gzip: 22.35 kB
+ℹ dist/domain-DOiIIKr2.mjs          59.77 kB │ gzip: 13.43 kB
+ℹ dist/index.mjs.map                12.17 kB │ gzip:  4.17 kB
+ℹ dist/migrations-BNr8Cyfx.mjs.map   8.84 kB │ gzip:  3.20 kB
+ℹ dist/worker.mjs.map                8.45 kB │ gzip:  3.15 kB
+ℹ dist/migrations-BNr8Cyfx.mjs       5.35 kB │ gzip:  2.12 kB
+ℹ dist/errors-BXl8kUAO.mjs.map       1.99 kB │ gzip:  0.85 kB
+ℹ dist/errors-BXl8kUAO.mjs           1.08 kB │ gzip:  0.54 kB
+ℹ dist/json-C-MmVUlY.mjs.map         0.92 kB │ gzip:  0.49 kB
+ℹ dist/json-C-MmVUlY.mjs             0.48 kB │ gzip:  0.32 kB
+ℹ dist/index.d.mts                   1.83 kB │ gzip:  0.80 kB
+ℹ dist/migrations.d.mts              0.91 kB │ gzip:  0.42 kB
+ℹ dist/domain.d.mts                  0.33 kB │ gzip:  0.23 kB
+ℹ dist/worker.d.mts                  0.01 kB │ gzip:  0.03 kB
+ℹ dist/json-Su-NZ620.d.mts          25.67 kB │ gzip:  3.98 kB
+ℹ 19 files, total: 239.78 kB
+✔ Build complete in 3287ms
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/packages/blob-store/package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ../../tsconfig.json
+ℹ Build start
+ℹ dist/index.mjs      26.23 kB │ gzip:  7.68 kB
+ℹ dist/index.mjs.map  46.43 kB │ gzip: 13.32 kB
+ℹ dist/index.d.mts     5.56 kB │ gzip:  1.64 kB
+ℹ 3 files, total: 78.21 kB
+✔ Build complete in 3599ms
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/packages/platform-core/package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ../../tsconfig.json
+ℹ Build start
+ℹ dist/index.mjs       6.48 kB │ gzip: 2.38 kB
+ℹ dist/index.mjs.map  12.02 kB │ gzip: 4.16 kB
+ℹ dist/index.d.mts     1.04 kB │ gzip: 0.51 kB
+ℹ 3 files, total: 19.54 kB
+✔ Build complete in 5367ms
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: /tmp/devmesh-p0-04-linux-clean-6b75d18/apps/server/package.json 
+ℹ entry: src/main.ts
+ℹ target: node24
+ℹ tsconfig: ../../tsconfig.json
+ℹ Build start
+ℹ dist/main.mjs      2.83 kB │ gzip: 1.06 kB
+ℹ dist/main.mjs.map  5.13 kB │ gzip: 1.78 kB
+ℹ 2 files, total: 7.96 kB
+✔ Build complete in 93ms
+$ pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build
+$ node scripts/build-vendor.mjs
+
+ WARN  We recommend using the ESM format instead of CommonJS.
+The ESM format is compatible with modern platforms and runtimes, and most new libraries are now distributed only in ESM format.
+Learn more at https://nodejs.org/en/learn/modules/publishing-a-package#how-did-we-get-here
+
+$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - tsdown:deps (58%)
+  - rolldown-plugin-dts:generate (38%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - tsdown:deps (70%)
+  - rolldown-plugin-dts:generate (29%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/main.ts --format esm --platform node --target node24 --sourcemap --clean

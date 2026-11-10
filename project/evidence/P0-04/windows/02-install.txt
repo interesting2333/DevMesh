@@ -1,0 +1,35 @@
+Scope: all 11 workspace projects
+[WARN] There are cyclic workspace dependencies: D:\yms\AI\DevMesh\.cache\p0-04\windows-clean-6b75d18\vendor\cordis, D:\yms\AI\DevMesh\.cache\p0-04\windows-clean-6b75d18\vendor\include
+✓ Lockfile passes supply-chain policies (verified 16m ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +134
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Packages are hard linked from the content-addressable store to the virtual store.
+  Content-addressable store is at: D:\.pnpm-store\v11
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 134, reused 134, downloaded 0, added 32
+Progress: resolved 134, reused 134, downloaded 0, added 134, done
+.../esbuild@0.28.2/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.28.2/node_modules/esbuild postinstall: Done
+
+dependencies:
++ @deepseek-ai/cordis 4.0.6-alpha.1 <- vendor\cordis
++ @deepseek-ai/cordis-plugin-include 1.0.11-alpha.1 <- vendor\include
++ @deepseek-ai/cordis-plugin-loader 1.0.7-alpha.1 <- vendor\loader
++ @deepseek-ai/cosmokit 1.8.7-alpha.1 <- vendor\cosmokit
++ @deepseek-ai/schemastery 3.18.6-alpha.1 <- vendor\schemastery
+
+optionalDependencies:
++ node-addon-require-builtin 0.1.9
+
+devDependencies:
++ @types/express 5.0.6
++ @types/node 24.13.1
++ oxlint 1.81.0
++ pnpm 11.28.5
++ tsdown 0.22.2
++ tsx 4.23.13
++ typescript 6.0.3
+
+Done in 4.4s using pnpm v11.28.5

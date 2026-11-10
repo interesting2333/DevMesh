@@ -1,0 +1,15 @@
+[1/13] toolchain:check
+[2/13] vendor:verify
+[3/13] build
+[4/13] typecheck
+[5/13] lint
+[6/13] test:smoke
+[7/13] test:contracts
+[8/13] test:storage
+[9/13] test:content
+[10/13] contracts:check
+[11/13] project:check
+[12/13] openspec
+[13/13] design-consistency
+PASSED: ..\windows-results-6b75d18\report.json
+$ node scripts/verify-foundation.mjs --commit 6b75d18e9c8a88b1a8d706b9fa178a4878856740 --output 'D:\yms\AI\DevMesh\.cache\p0-04\windows-results-6b75d18'

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-10T08:56:40.383Z",
+  "status": "PASSED",
+  "results": {
+    "windows": {
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.13.1",
+      "commit": "6b75d18e9c8a88b1a8d706b9fa178a4878856740",
+      "sourceFingerprint": "7126bb6da7f2a3e2b6cd6eb360e2b8377f3f791c152e67bb3450ccddceffc8d6",
+      "lockfileSha256": "fcb9f8172a2fc9b4de86a1a2b8aa260b232e1313b7d665777bc1e96546f6be19",
+      "sourceFiles": 125,
+      "checks": 13,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 9,
+          "fail": 0,
+          "skipped": 1
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:storage",
+          "tests": 28,
+          "pass": 28,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:content",
+          "tests": 20,
+          "pass": 20,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-04/windows/report.json"
+    },
+    "linux": {
+      "platform": "linux",
+      "arch": "x64",
+      "node": "v24.13.1",
+      "commit": "6b75d18e9c8a88b1a8d706b9fa178a4878856740",
+      "sourceFingerprint": "7126bb6da7f2a3e2b6cd6eb360e2b8377f3f791c152e67bb3450ccddceffc8d6",
+      "lockfileSha256": "fcb9f8172a2fc9b4de86a1a2b8aa260b232e1313b7d665777bc1e96546f6be19",
+      "sourceFiles": 125,
+      "checks": 13,
+      "tests": [
+        {
+          "name": "test:smoke",
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:contracts",
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:storage",
+          "tests": 28,
+          "pass": 28,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "name": "test:content",
+          "tests": 20,
+          "pass": 20,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "report": "project/evidence/P0-04/linux/report.json"
+    }
+  }
+}
