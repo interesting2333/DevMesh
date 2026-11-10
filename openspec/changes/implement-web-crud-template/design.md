@@ -1,3 +1,7 @@
+## Independent checkout follow-up
+
+首次独立检出位于隐藏父目录 `.cache`，暴露了首页绝对路径被静态文件库默认 dotfile 规则拒绝的问题。首页改用明确 Web root 下的相对 `index.html`，继续拒绝 Web 根内隐藏资源；新增隐藏父目录下真实 HTTP 首页／隐藏资源检查。初次固定快照 17/18 结果和 500 失败原样保留；修正版本重新冻结并执行覆盖及浏览器检查，不能沿用旧版本通过结论。
+
 ## Context
 
 见 proposal.md。依据 design/04 §1–2、§6–8，模板数据库与平台存储分离；生成应用只能在独立 Runner 执行。已只读核对 deepseek-harness：Web 应用使用 React 18／TypeScript、Vite、Vitest、Playwright；其应用和根目录存在不同 Vite 版本。本变更选择兼容的精确版本并通过独立安装与构建验证，不拷贝整个 harness。

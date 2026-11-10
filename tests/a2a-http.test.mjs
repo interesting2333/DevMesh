@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
+import { DatabaseSync } from 'node:sqlite';
+import { join } from 'node:path';
 import { TaskState,Task,ListTasksRequest } from '../packages/a2a-adapter/node_modules/@a2a-js/sdk/dist/index.js';
 import { httpFixture,prepareDispatch,SendMessageRequest,Message,serviceToken } from './fixtures/a2a-data.mjs';
 
@@ -36,4 +38,14 @@ test('invalid service, forged authority and unsupported private protocol cannot 
  await assert.rejects(f.client.sendMessage(SendMessageRequest.fromJSON(wire)),/EXECUTION_PERMIT_INVALID/);
  const r=await fetch(f.base+'/internal/agents/developer/a2a',{method:'POST',headers:{'Content-Type':'application/json','A2A-Version':'1.0',Authorization:'Bearer '+serviceToken},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'PrivateExecute',params:{}})});assert.equal((await r.json()).error.code,-32601);
  assert.equal((await f.storage.request('inspect',{})).counts.a2a_tasks,0);
+});
+test('real fifteen-second grant issuance and expired authority cannot create accepted work',async t=>{
+ const f=await httpFixture(t),p=await prepareDispatch(f,f.registry),db=new DatabaseSync(join(f.local.dataRoot,'db/devmesh.sqlite'));
+ try{const grant=db.prepare('SELECT * FROM execution_grants WHERE attempt_id=?').get(p.attemptId),permit=JSON.parse(grant.permit_json);
+ assert.equal(Date.parse(permit.expiresAt)-Date.parse(permit.notBefore),15000);
+ permit.notBefore=new Date(Date.now()-2000).toISOString();permit.expiresAt=new Date(Date.now()-1000).toISOString();
+ db.prepare('UPDATE execution_grants SET expires_at=?,permit_json=? WHERE grant_id=?').run(permit.expiresAt,JSON.stringify(permit),grant.grant_id);
+ await assert.rejects(f.client.sendMessage(p.params),/EXECUTION_PERMIT_INVALID/);
+ assert.equal((await f.storage.request('inspect',{})).counts.accepted_work,0);
+ }finally{db.close();}
 });

@@ -5,13 +5,14 @@ import { once } from 'node:events';
 import { readFileSync,writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { registryFixture,prepareDispatch } from './fixtures/a2a-data.mjs';
+import { registryFixture,prepareDispatch,holdTestGrant } from './fixtures/a2a-data.mjs';
+import { waitForProcessMessage } from './fixtures/process.mjs';
 
 for(const mode of ['after-receipt','after-claim'])test('real receiver death '+mode+' preserves task and prevents duplicate activation',async t=>{
- const f=await registryFixture(t),p=await prepareDispatch(f,f.registry);await f.local.close();
+ const f=await registryFixture(t),p=await prepareDispatch(f,f.registry);holdTestGrant(f,p.attemptId);await f.local.close();
  const config=join(f.root,'a2a-crash.json');writeFileSync(config,JSON.stringify({options:f.options,mode,request:p.request}));
  const child=fork(fileURLToPath(new URL('./fixtures/a2a-crash-controller.mjs',import.meta.url)),[config],{stdio:['ignore','pipe','pipe','ipc'],execArgv:[]});let errors='',receipt;child.stderr.on('data',b=>{errors+=b;});
- try{receipt=await Promise.race([once(child,'message').then(([v])=>v),once(child,'exit').then(([code])=>{throw new Error('Controller exited '+code+': '+errors);}),new Promise((_,reject)=>{const timer=setTimeout(()=>reject(new Error('Receiver cutpoint timeout: '+errors)),10000);timer.unref();})]);assert.equal(receipt.stage,mode);}
+ try{receipt=await waitForProcessMessage(child,'A2A receiver',()=>errors);assert.equal(receipt.stage,mode);}
  finally{if(child.exitCode===null&&child.signalCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await exited;}}
  const lock=JSON.parse(readFileSync(f.options.dataRoot+'.node.writer.lock','utf8'));await f.reopen({recoveryToken:lock.token});
  const recovery=await f.storage.request('recoverAcceptedWork',{});assert.equal(recovery.reconcileCount,mode==='after-claim'?1:0);

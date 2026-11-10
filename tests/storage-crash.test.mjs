@@ -8,6 +8,7 @@ import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { fixture, content, meta, planned, admission } from './fixtures/storage-data.mjs';
 import { openStorage } from '../packages/storage-sqlite/dist/index.mjs';
+import { waitForProcessMessage } from './fixtures/process.mjs';
 
 async function crashed(t, mode) {
   const f=await fixture(t);
@@ -21,9 +22,10 @@ async function crashed(t, mode) {
   const child=fork(fileURLToPath(new URL('./fixtures/storage-crash-controller.mjs',import.meta.url)),[configPath],{stdio:['ignore','pipe','pipe','ipc'],execArgv:[]});
   let errors='';child.stderr.on('data',data=>{errors+=data;});
   t.after(()=>{if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');});
-  const cutpoint=await Promise.race([once(child,'message').then(([message])=>message),once(child,'exit').then(([code])=>{throw new Error('Crash controller exited '+code+': '+errors);}),new Promise((_,reject)=>{const timer=setTimeout(()=>reject(new Error('Crash cutpoint timed out: '+errors)),10000);timer.unref();})]);
-  assert.equal(cutpoint.stage,mode==='before-commit'?'before-commit':'after-commit');
-  const exited=once(child,'exit');assert.equal(child.kill('SIGKILL'),true);await exited;
+  try {
+    const cutpoint=await waitForProcessMessage(child,'Storage crash controller',()=>errors);
+    assert.equal(cutpoint.stage,mode==='before-commit'?'before-commit':'after-commit');
+  } finally { if(child.exitCode===null&&child.signalCode===null){const exited=once(child,'exit');assert.equal(child.kill('SIGKILL'),true);await exited;} }
   assert.ok(readFileSync(config.marker,'utf8'));
   return {...f,request,config};
 }

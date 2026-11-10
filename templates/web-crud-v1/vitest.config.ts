@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   test: {
-    include: ['tests/**/*.test.{ts,tsx}'], testTimeout: 30000, hookTimeout: 30000,
+    include: ['tests/**/*.test.{ts,tsx}'], testTimeout: 30000, hookTimeout: 30000, allowOnly: !process.env.CI,
     fileParallelism: false,
     reporters: ['default', ['json', { outputFile: '.artifacts/unit-results.json' }]],
     coverage: {

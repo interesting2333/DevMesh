@@ -7,7 +7,8 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {request} from './fixtures/runner.mjs';
-test('built Runner CLI starts with execution disabled and disposes HTTP/Worker without Docker',{timeout:30000},async t=>{
+import {processTestTimeoutMs} from './fixtures/process.mjs';
+test('built Runner CLI starts with execution disabled and disposes HTTP/Worker without Docker',{timeout:processTestTimeoutMs},async t=>{
  const root=await mkdtemp(join(tmpdir(),'devmesh-runner-cli-')),path=join(root,'config.json');await writeFile(path,JSON.stringify({runnerId:'runner.cli',dataRoot:join(root,'runner'),controlDataRoot:join(root,'control'),backupRoot:join(root,'backup'),port:0,executionEnabled:false,identities:[{controllerId:'controller.local',credentialRef:'runner.local'}]}));
  const secret='test-cli-runner-service-token',child=spawn(process.execPath,[fileURLToPath(new URL('../packages/runner/dist/main.mjs',import.meta.url)),'--config',path,'--initialize'],{stdio:['ignore','pipe','pipe','ipc'],env:{...process.env,DEVMESH_CREDENTIAL_RUNNER_LOCAL:secret}});let output='',diagnostic='';child.stderr.on('data',c=>diagnostic+=c);const ready=Promise.withResolvers();child.stdout.on('data',c=>{output+=c;for(const line of output.split('\n')){try{const event=JSON.parse(line);if(event.event==='runner.ready')ready.resolve(event);}catch{/* Incomplete line. */}}});const exited=once(child,'exit');void exited.then(()=>ready.reject(Error('Exited before ready: '+diagnostic)));
  t.after(async()=>{if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');await exited;await rm(root,{recursive:true,force:true});});

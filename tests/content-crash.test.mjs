@@ -6,6 +6,7 @@ import { readFileSync,writeFileSync,existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { contentFixture,createSession,messageTarget,meta,digest } from './fixtures/content-data.mjs';
+import { waitForProcessMessage } from './fixtures/process.mjs';
 
 for(const mode of ['after-stage','after-publish','after-commit'])test('real controller death '+mode+' preserves original bytes/reference semantics',async t=>{
   const f=await contentFixture(t),ctx=await createSession(f),bytes=Buffer.from('进程崩溃时的原始正文 😀');
@@ -15,7 +16,7 @@ for(const mode of ['after-stage','after-publish','after-commit'])test('real cont
   const child=fork(fileURLToPath(new URL('./fixtures/content-crash-controller.mjs',import.meta.url)),[configPath],{stdio:['ignore','pipe','pipe','ipc'],execArgv:[]});
   let errors='';child.stderr.on('data',b=>{errors+=b;});
   try{
-    const result=await Promise.race([once(child,'message').then(([v])=>v),once(child,'exit').then(([code])=>{throw new Error('Controller exited '+code+': '+errors);}),new Promise((_,reject)=>{const timer=setTimeout(()=>reject(new Error('Crash cutpoint timeout: '+errors)),10000);timer.unref();})]);
+    const result=await waitForProcessMessage(child,'Content crash controller',()=>errors);
     assert.equal(result.stage,mode);
   }finally{if(child.exitCode===null && child.signalCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await exited;}}
   assert.equal(readFileSync(marker,'utf8'),mode);

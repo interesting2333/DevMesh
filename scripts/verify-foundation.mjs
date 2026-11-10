@@ -53,7 +53,7 @@ for (const [index, step] of steps.entries()) {
   const filename = `${String(index + 1).padStart(2, '0')}-${step.name.replaceAll(':', '-')}.txt`;
   writeFileSync(resolve(output, filename), text);
   const check = { name: step.name, exitCode: result.status, signal: result.signal, durationMs: Date.now() - started, output: filename, sha256: hash(text) };
-  if (step.name.startsWith('test:')) check.tests = Object.fromEntries(['tests', 'pass', 'fail', 'skipped'].map(key => [key, Number(result.stdout.match(new RegExp(`^# ${key} (\\d+)$`, 'm'))?.[1] ?? NaN)]));
+  if (step.name.startsWith('test:')) check.tests = Object.fromEntries(['tests', 'pass', 'fail', 'cancelled', 'skipped'].map(key => [key, Number(result.stdout.match(new RegExp(`^# ${key} (\\d+)$`, 'm'))?.[1] ?? NaN)]));
   report.checks.push(check);
   if (result.status !== 0) { console.error(text); report.status = 'FAILED'; break; }
 }

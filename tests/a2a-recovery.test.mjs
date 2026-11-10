@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { join } from 'node:path';
-import { registryFixture,prepareDispatch } from './fixtures/a2a-data.mjs';
+import { registryFixture,prepareDispatch,holdTestGrant } from './fixtures/a2a-data.mjs';
 
 test('failed receipt transaction leaves no Task, Inbox or accepted work',async t=>{
  const f=await registryFixture(t),p=await prepareDispatch(f,f.registry),path=join(f.local.dataRoot,'db/devmesh.sqlite'),db=new DatabaseSync(path);
@@ -11,7 +11,7 @@ test('failed receipt transaction leaves no Task, Inbox or accepted work',async t
  db.exec('DROP TRIGGER test_reject_receipt');const receipt=await f.storage.request('acceptA2AWork',p.request);assert.equal(receipt.state,'submitted');}finally{db.close();}
 });
 test('lost receipt acknowledgement and process restart return original task without new acceptance',async t=>{
- const f=await registryFixture(t),p=await prepareDispatch(f,f.registry),original=await f.storage.request('acceptA2AWork',p.request);
+ const f=await registryFixture(t),p=await prepareDispatch(f,f.registry);holdTestGrant(f,p.attemptId);const original=await f.storage.request('acceptA2AWork',p.request);
  await f.local.close();await f.reopen();const recovered=await f.storage.request('acceptA2AWork',p.request);assert.equal(recovered.taskId,original.taskId);assert.equal(recovered.revision,1);
  const [claim]=await f.storage.request('claimAcceptedWork',{endpointId:'builtin.developer',workerId:'runtime.original'});assert.equal(claim.taskId,original.taskId);
  await f.local.close();await f.reopen();assert.equal((await f.storage.request('recoverAcceptedWork',{})).reconcileCount,1);

@@ -8,10 +8,11 @@ import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {openRunnerStorage,RunnerManager,RunnerPolicy,RunnerMaterials} from '../packages/runner/dist/index.mjs';
 import {ControlledBackend,image} from './fixtures/runner.mjs';
-test('SIGKILL of real manager/SQLite Worker recovers original job without execution replay or output cleanup',{timeout:30000},async t=>{
+import {processTestTimeoutMs,waitForProcessMessage} from './fixtures/process.mjs';
+test('SIGKILL of real manager/SQLite Worker recovers original job without execution replay or output cleanup',{timeout:processTestTimeoutMs},async t=>{
  const root=await mkdtemp(join(tmpdir(),'devmesh-runner-crash-'));let layout,manager;const child=spawn(process.execPath,[fileURLToPath(new URL('./fixtures/runner-crash-controller.mjs',import.meta.url)),root],{stdio:['ignore','ignore','pipe','ipc']});let diagnostic='';child.stderr.on('data',c=>diagnostic+=c);
- t.after(async()=>{if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');try{await manager?.close();}finally{await layout?.close();await rm(root,{recursive:true,force:true});}});
- const message=await Promise.race([once(child,'message').then(([v])=>v),once(child,'exit').then(()=>{throw Error('Child failed: '+diagnostic);})]);const exited=once(child,'exit');child.kill('SIGKILL');await exited;
+ t.after(async()=>{if(child.exitCode===null&&child.signalCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await exited;}try{await manager?.close();}finally{await layout?.close();await rm(root,{recursive:true,force:true});}});
+ const message=await waitForProcessMessage(child,'Runner crash controller',()=>diagnostic);const exited=once(child,'exit');child.kill('SIGKILL');await exited;
  const dataRoot=join(root,'runner');layout=await openRunnerStorage({dataRoot,controlDataRoot:join(root,'control'),backupRoot:join(root,'backup'),runnerId:'runner.crash',recoveryToken:message.databaseToken,layoutRecoveryToken:message.rootToken});
  assert.equal((await layout.store.request('get',{controllerId:'controller.local',jobId:message.jobId})).state,'RUNNING');
  const backend=new ControlledBackend(),policy=new RunnerPolicy({runnerId:'runner.crash',dataRoot,imageDigests:[image],commands:{build:['node','build.mjs']},maximumCpu:4,maximumMemoryMiB:1024,maximumTemporaryMiB:64,workspaces:{}});

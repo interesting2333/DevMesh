@@ -55,6 +55,17 @@ for (const [name, args] of steps) {
     report.coverageFiles = covered;
     const missing = business.filter(path => !covered.includes(path));
     if (missing.length) { report.status = 'FAILED'; report.missingCoverageFiles = missing; break; }
+    report.coverage = JSON.parse(readFileSync(resolve(template, 'coverage/coverage-summary.json'), 'utf8')).total;
+    const unit = JSON.parse(readFileSync(resolve(template, '.artifacts/unit-results.json'), 'utf8'));
+    report.unitTests = { total: unit.numTotalTests, passed: unit.numPassedTests, failed: unit.numFailedTests, pending: unit.numPendingTests };
+    if (!unit.numTotalTests || unit.numTotalTests !== unit.numPassedTests || unit.numFailedTests || unit.numPendingTests) { report.status = 'FAILED'; report.unitError = 'INCOMPLETE_TEST_EXECUTION'; break; }
+  }
+  if (name === 'browser') {
+    const browser = JSON.parse(readFileSync(resolve(template, 'test-results/browser-results.json'), 'utf8'));
+    report.browserTests = browser.stats;
+    const annotations = suite => [...(suite.specs ?? []).flatMap(spec => (spec.tests ?? []).flatMap(test => test.annotations ?? [])), ...(suite.suites ?? []).flatMap(annotations)];
+    report.browserAnnotations = (browser.suites ?? []).flatMap(annotations);
+    if (!browser.stats.expected || browser.stats.skipped || browser.stats.unexpected || browser.stats.flaky || browser.errors?.length) { report.status = 'FAILED'; report.browserError = 'INCOMPLETE_TEST_EXECUTION'; break; }
   }
 }
 const afterInputs = walk(template).map(path => ({ path: relative(template, path).replaceAll('\\', '/'), sha256: hash(readFileSync(path)) })).sort((a, b) => a.path.localeCompare(b.path, 'en'));

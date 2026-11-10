@@ -43,7 +43,11 @@ test('lost start response queries original container and never starts it twice',
  const backend=new ControlledBackend();backend.loseStart=true;const f=await fixture(t,{backend});await f.manager.start();const job=await f.manager.submit('controller.local',request());await f.manager.tick();await until(async()=>(await f.manager.get('controller.local',job.jobId)).state==='RUNNING');await f.manager.tick();assert.deepEqual(backend.starts,[job.jobId]);
 });
 test('lease watchdog stops without controller requests; an unknown stop retains capacity',async t=>{
- const backend=new ControlledBackend();backend.unknownStop=true;const f=await fixture(t,{backend});await f.manager.start();const job=await f.manager.submit('controller.local',request(1,{ttl:800}));await f.manager.tick();await until(async()=>(await f.manager.get('controller.local',job.jobId)).state==='RUNNING');const state=await until(async()=>{const j=await f.manager.get('controller.local',job.jobId);return j.stopRequested&&j.state==='OUTCOME_UNKNOWN'?j:null;});assert.equal(state.exitCode,null);assert.ok(backend.stops.length);assert.equal((await f.layout.store.request('active',{})).length,1);
+ const backend=new ControlledBackend();backend.unknownStop=true;const f=await fixture(t,{backend});await f.manager.start();const r=request(1,{timeoutMs:60000}),job=await f.manager.submit('controller.local',r);await f.manager.tick();await until(async()=>(await f.manager.get('controller.local',job.jobId)).state==='RUNNING');
+ // Start under the normal lease, then shorten the running job's lease. A slow
+ // cold fixture must not consume the watchdog interval before start happens.
+ const permit={...r.permit,notBefore:new Date(Date.now()-5).toISOString(),expiresAt:new Date(Date.now()+5000).toISOString()};f.current.set(permit.grantId,permit);await f.manager.renew('controller.local',job.jobId,{permit,sequence:1});
+ const state=await until(async()=>{const j=await f.manager.get('controller.local',job.jobId);return j.stopRequested&&j.state==='OUTCOME_UNKNOWN'?j:null;},30000);assert.equal(state.exitCode,null);assert.ok(backend.stops.length);assert.equal((await f.layout.store.request('active',{})).length,1);
 });
 test('renewals preserve owner, enforce sequence and current authority, and stop cannot be undone',async t=>{
  const f=await fixture(t);await f.manager.start();const r=request(),job=await f.manager.submit('controller.local',r);await f.manager.tick();await until(async()=>(await f.manager.get('controller.local',job.jobId)).state==='RUNNING');

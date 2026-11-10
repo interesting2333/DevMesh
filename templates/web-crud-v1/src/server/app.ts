@@ -1,7 +1,6 @@
 import express from 'express';
 import type { ErrorRequestHandler } from 'express';
 import { z } from 'zod';
-import { join } from 'node:path';
 import { AppError, TaskInput } from '../shared/task.js';
 import type { Mutation } from './database.js';
 import type { TaskStore } from './store.js';
@@ -41,7 +40,7 @@ export function application(store: TaskStore, webRoot?: string): express.Express
   app.use('/api', (_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
   if (webRoot) {
     app.use(express.static(webRoot, { index: false, dotfiles: 'deny', fallthrough: true }));
-    app.get('/', (_request, response) => { response.sendFile(join(webRoot, 'index.html')); });
+    app.get('/', (_request, response) => { response.sendFile('index.html', { root: webRoot, dotfiles: 'deny' }); });
   }
   const errors: ErrorRequestHandler = (error: unknown, _request, response, _next) => {
     const bodyError = error as { type?: string };

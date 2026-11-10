@@ -1,5 +1,7 @@
 import { createServer } from 'node:http';
 import { randomUUID } from 'node:crypto';
+import { DatabaseSync } from 'node:sqlite';
+import { join } from 'node:path';
 import express from '../../packages/platform-core/node_modules/express/index.js';
 import { AgentCard,Message,SendMessageRequest } from '../../packages/a2a-adapter/node_modules/@a2a-js/sdk/dist/index.js';
 import { ClientFactory,JsonRpcTransportFactory,DefaultAgentCardResolver } from '../../packages/a2a-adapter/node_modules/@a2a-js/sdk/dist/client/index.js';
@@ -10,6 +12,12 @@ import { plan,requirements,admission } from './storage-data.mjs';
 export const serviceToken='devmesh-test-service-token-not-a-production-secret';
 export const callerId='orchestrator';
 export const credential=async ref=>ref==='test.service'?serviceToken:undefined;
+// Only crash/restart fixtures: no heartbeat process is running in these tests.
+// Preserve the real production 15s issuance; extend only this test DB row.
+export function holdTestGrant(f,attemptId){
+ const db=new DatabaseSync(join(f.local.dataRoot,'db/devmesh.sqlite'));
+ try{const grant=db.prepare('SELECT * FROM execution_grants WHERE attempt_id=?').get(attemptId),permit=JSON.parse(grant.permit_json);permit.expiresAt=new Date(Date.now()+300000).toISOString();db.prepare('UPDATE execution_grants SET expires_at=?,permit_json=? WHERE grant_id=?').run(permit.expiresAt,JSON.stringify(permit),grant.grant_id);}finally{db.close();}
+}
 export function manifest(base='http://127.0.0.1:3210',revision='M1',endpointRevision=1){return {schemaVersion:'devmesh.agent-manifest.v1',manifestRevision:revision,endpoints:['product','architect','developer','tester'].map(role=>{
  const e={endpointId:'builtin.'+role,revision:endpointRevision,role,agentKey:'builtin.'+role,hosting:'local',implementationVersion:'1.0.0',address:base+'/internal/agents/'+role+'/a2a',cardUrl:base+'/internal/agents/'+role+'/agent-card.json',protocol:'1.0',sdkVersion:'1.3.0',supportedSkills:['devmesh.work.'+role],streaming:true,credentialRef:'test.service',allowedCallers:[callerId],enabled:true};return {...e,cardHash:cardHash(createRoleCard(e))};
 })};}

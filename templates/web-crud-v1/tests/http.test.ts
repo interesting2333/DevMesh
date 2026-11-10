@@ -1,5 +1,5 @@
 import { afterEach, expect, it } from 'vitest';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { randomUUID } from 'node:crypto';
@@ -77,5 +77,17 @@ it('returns public storage errors without exposing implementation paths', async 
   try {
     const response = await fetch(`http://127.0.0.1:${address.port}/api/tasks`);
     expect(response.status).toBe(500); expect(await response.json()).toEqual({ error: 'INTERNAL_ERROR' });
+  } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
+});
+it('serves the built entry beneath a hidden ancestor while denying hidden web assets', async () => {
+  const parent = mkdtempSync(join(tmpdir(), 'devmesh-template-web-')); parents.push(parent);
+  const web = join(parent, '.checkout', 'dist', 'web'); mkdirSync(web, { recursive: true });
+  writeFileSync(join(web, 'index.html'), '<!doctype html><title>任务看板</title>'); writeFileSync(join(web, '.env'), 'PRIVATE_TEST_ASSET');
+  const server = createServer(application({ list: async () => ({ tasks: [], readOnly: true }), mutate: async () => { throw new Error('not needed'); }, close: async () => {} }, web));
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  const url = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
+  try {
+    const entry = await fetch(url + '/'); expect(entry.status).toBe(200); expect(await entry.text()).toContain('任务看板');
+    const hidden = await fetch(url + '/.env'); expect(hidden.status).toBe(404); expect(await hidden.text()).not.toContain('PRIVATE_TEST_ASSET');
   } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
 });

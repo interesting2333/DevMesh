@@ -9,6 +9,7 @@ import { resolve, join, sep } from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadConfig, startPlatform } from '../packages/platform-core/dist/index.mjs';
+import { processTestTimeoutMs } from './fixtures/process.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const entry = resolve(root, 'apps/server/dist/main.mjs');
@@ -110,7 +111,7 @@ test('occupied port rejects startup without closing the existing listener', { ti
   assert.equal(existing.listening, true);
 });
 
-test('built CLI reaches ready and exits after verified Cordis disposal over IPC', { timeout: 15000 }, async t => {
+test('built CLI reaches ready and exits after verified Cordis disposal over IPC', { timeout: processTestTimeoutMs }, async t => {
   const running = launch(t, {}, ['--config', 'config/server.example.json']);
   const ready = await running.ready;
   assert.equal((await fetch(`http://127.0.0.1:${ready.port}/readyz`)).status, 200);
@@ -122,7 +123,7 @@ test('built CLI reaches ready and exits after verified Cordis disposal over IPC'
   await assert.rejects(fetch(`http://127.0.0.1:${ready.port}/healthz`));
 });
 
-test('CLI startup failures have nonzero exit codes and never report ready', { timeout: 15000 }, async t => {
+test('CLI startup failures have nonzero exit codes and never report ready', { timeout: processTestTimeoutMs }, async t => {
   for (const [env, args, expected] of [
     [{ DEVMESH_PORT: 'bad' }, [], 'CONFIG_INVALID'],
     [{}, ['--config', 'missing-configuration.json'], 'CONFIG_INVALID'],
@@ -135,7 +136,7 @@ test('CLI startup failures have nonzero exit codes and never report ready', { ti
   }
 });
 
-test('CLI propagates EADDRINUSE as a nonzero startup failure', { timeout: 15000 }, async t => {
+test('CLI propagates EADDRINUSE as a nonzero startup failure', { timeout: processTestTimeoutMs }, async t => {
   const existing = createServer(socket => socket.end());
   const port = await listen(existing);
   t.after(() => new Promise(resolve => existing.close(resolve)));
@@ -145,7 +146,7 @@ test('CLI propagates EADDRINUSE as a nonzero startup failure', { timeout: 15000 
   assert.equal(existing.listening, true);
 });
 
-test('CLI shuts down on POSIX SIGTERM', { timeout: 15000, skip: process.platform === 'win32' }, async t => {
+test('CLI shuts down on POSIX SIGTERM', { timeout: processTestTimeoutMs, skip: process.platform === 'win32' }, async t => {
   const running = launch(t);
   await running.ready;
   running.child.kill('SIGTERM');

@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "mode": "loopback-protocol-prototype",
+  "publicBaseUrl": "http://127.0.0.1:4320",
+  "defaultEndpoint": "development-team",
+  "endpoints": [
+    { "publicKey": "code-reviewer", "kind": "agent", "name": "Code reviewer protocol prototype", "applicationVersion": "0.1.0" },
+    { "publicKey": "development-team", "kind": "group", "name": "Development team protocol prototype", "applicationVersion": "0.1.0" }
+  ],
+  "identities": [
+    { "principalId": "local-probe-client", "credentialRef": "CLIENT_TOKEN", "targets": ["code-reviewer", "development-team"] }
+  ]
+}
