@@ -40,7 +40,7 @@
     "test:input": "node --test --test-concurrency=1 --test-reporter=tap tests/input*.test.mjs",
     "test:preparation": "node --test --test-concurrency=1 --test-reporter=tap tests/preparation*.test.mjs",
     "test:scheduler": "node --test --test-concurrency=1 --test-reporter=tap tests/scheduler*.test.mjs",
-    "test:workspaces": "node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs"
+    "test:workspaces": "node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs tests/candidate-basis.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

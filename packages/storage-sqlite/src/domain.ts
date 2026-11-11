@@ -20,6 +20,7 @@ import { inputRequests } from './input-protocol.js';
 import type { InputMethod } from './input-protocol.js';
 import { createPreparationDomain } from './preparation-domain.js';
 import { createPlanDomain } from './plan-domain.js';
+import {createCandidateBasis} from './candidate-basis.js';
 import { createSchedulerDomain } from './scheduler-domain.js';
 import { createDispatchDomain } from './dispatch-domain.js';
 import { preparationRequests } from './preparation-protocol.js';
@@ -65,6 +66,9 @@ export function createDomain(db: DatabaseSync) {
     bump(runId);event(runId,String(original),'PipelineChanged',payload,{attemptId});
   });
   const plans = createPlanDomain(db);
+  // Until durable integrated snapshots are implemented, a caller SHA cannot
+  // prove multi-source ancestry. Original source ACK chains remain usable.
+  const candidateBasis=createCandidateBasis(db,plans,()=>null);
   const scheduler = createSchedulerDomain(db,plans);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
@@ -227,6 +231,12 @@ export function createDomain(db: DatabaseSync) {
     return { runId: input.runId, attemptIds, revision: Number(run(input.runId).resource_revision) };
   }
   const handlers = {
+    getCandidateSourceBasis(input:Parsed<'getCandidateSourceBasis'>){return transaction(db,()=>candidateBasis.freeze(input));},
+    assertCandidateSourceBasis(input:Parsed<'assertCandidateSourceBasis'>){return transaction(db,()=>{
+      const current=candidateBasis.freeze(input);
+      if(current.sha256!==input.basisSha256)throw new StorageError('CANDIDATE_BASIS_CHANGED',409,'Candidate source basis changed');
+      return current;
+    });},
     registerContent(input: Parsed<'registerContent'>) {
       return transaction(db, () => {
         const storageKey = `sha256/${input.contentHash.slice(0,2)}/${input.contentHash}`;

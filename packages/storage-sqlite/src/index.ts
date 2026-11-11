@@ -16,6 +16,7 @@ export type {RepoFileOperation} from './repo-file-protocol.js';
 export {sourceManifest,gitDirectoryIdentity,managedSourcePath} from './workspace-protocol.js';
 export type {ManagedRepository,WorkspaceAllocation,SourceManifest,GitDirectoryIdentity} from './workspace-protocol.js';
 export type {SourceArchive} from './source-archive-protocol.js';
+export type {CandidateBasis,CandidateSource,CandidateWorkFact} from './candidate-basis.js';
 export { agentManifest, endpointConfig } from './registry-protocol.js';
 export type { EndpointConfig, AgentManifest, EndpointView, RegistrySnapshot, A2ATaskRecord } from './registry-protocol.js';
 export type { ExecutionHostView,RuntimeActivationView,RuntimeToolView } from './runtime-protocol.js';

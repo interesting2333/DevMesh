@@ -9,7 +9,7 @@ import {canonical,managedSourcePath,sourceManifest as sourceManifestContract} fr
 export class WorkspaceError extends Error {
   constructor(readonly code:string,readonly outcome:'not-sent'|'unknown'='not-sent'){super(code);this.name='WorkspaceError';}
 }
-const deny=(code:string):never=>{throw new WorkspaceError(code);};
+function deny(code:string):never{throw new WorkspaceError(code);}
 const sha=(v:string)=>/^[a-f0-9]{40}$/.test(v)?v:deny('GIT_OBJECT_INVALID');
 const decode=(v:Buffer)=>new TextDecoder('utf-8',{fatal:true}).decode(v);
 const nullFile=process.platform==='win32'?'NUL':devNull;
@@ -140,6 +140,57 @@ export class ControlledGit {
     const [head,target]=await Promise.all([this.call(['symbolic-ref','--quiet','HEAD'],signal,undefined,undefined,true),this.call(['rev-parse','--verify',branch],signal,undefined,undefined,true)]);
     if(head.code!==0||target.code!==0||decode(head.out).trim()!==branch||decode(target.out).trim()!==sha(commit))deny('GIT_ATTEMPT_BRANCH_CHANGED');
   }
+  async mergeBases(ours:string,theirs:string,signal?:AbortSignal){
+    sha(ours);sha(theirs);await this.validate(signal);
+    const inputs=await Promise.allSettled([...new Set([ours,theirs])].map(commit=>this.commit(commit,signal)));
+    for(const input of inputs)if(input.status==='rejected')throw input.reason;
+    const ancestors=await this.call(['merge-base','--all',ours,theirs],signal,undefined,8192,true);
+    if(ancestors.code!==0)deny('GIT_MERGE_BASE_CHANGED');
+    const bases=decode(ancestors.out).trim().split('\n').map(sha).sort();
+    if(!bases.length||bases.length>64||new Set(bases).size!==bases.length)deny('GIT_MERGE_BASE_CHANGED');
+    const facts=await Promise.allSettled(bases.map(commit=>this.commit(commit,signal)));
+    for(const fact of facts)if(fact.status==='rejected')throw fact.reason;
+    return bases;
+  }
+  /** Creates objects only; the caller must journal facts and fence project refs. */
+  async mergeTree(expectedBase:string|readonly string[],ours:string,theirs:string,signal?:AbortSignal){
+    const expected=(typeof expectedBase==='string'?[expectedBase]:[...expectedBase]).map(sha).sort();
+    if(!expected.length||expected.length>64||new Set(expected).size!==expected.length)deny('GIT_MERGE_BASE_CHANGED');
+    const bases=await this.mergeBases(ours,theirs,signal);
+    if(canonical(bases)!==canonical(expected))deny('GIT_MERGE_BASE_CHANGED');
+    const result=await this.call(['merge-tree','--write-tree','-z','--messages',ours,theirs],signal,undefined,1024*1024,true);
+    if(result.code!==0&&result.code!==1)throw new WorkspaceError('GIT_MERGE_UNKNOWN','unknown');
+    if(result.out.at(-1)!==0)deny('GIT_MERGE_OUTPUT_DENIED');
+    const values=decode(result.out).split('\0'),tree=sha(values.shift()??'');
+    const stages:{path:string;mode:'100644'|'100755';objectId:string;stage:1|2|3}[]=[];
+    while(values.length&&values[0]!==''){
+      const match=/^(100644|100755) ([a-f0-9]{40}) ([123])\t(.+)$/.exec(values.shift()!);
+      if(!match||!safePath(match[4]!)||stages.length>=6000)deny('GIT_MERGE_OUTPUT_DENIED');
+      stages.push({path:match[4]!,mode:match[1] as '100644'|'100755',objectId:match[2]!,stage:Number(match[3]) as 1|2|3});
+    }
+    if(values.shift()!=='')deny('GIT_MERGE_OUTPUT_DENIED');
+    if(new Set(stages.map(s=>s.path+'\0'+s.stage)).size!==stages.length)deny('GIT_MERGE_OUTPUT_DENIED');
+    const messages:{paths:string[];kind:string;message:string}[]=[];
+    while(values.length&&!(values.length===1&&values[0]==='')){
+      const countText=values.shift()!,count=Number(countText);
+      if(!/^[1-9][0-9]*$/.test(countText)||count>2000||count+2>values.length||messages.length>=2000)deny('GIT_MERGE_OUTPUT_DENIED');
+      const paths=values.splice(0,count),kind=values.shift()!,message=values.shift()!;
+      if(paths.some(p=>!safePath(p))||!kind||kind.length>256||message.length>65536)deny('GIT_MERGE_OUTPUT_DENIED');
+      messages.push({paths,kind,message});
+    }
+    if(result.code===0&&(stages.length||messages.some(m=>m.kind.startsWith('CONFLICT'))))deny('GIT_MERGE_OUTPUT_DENIED');
+    await this.treeManifest(tree,signal);
+    return {clean:result.code===0,tree,base:bases.length===1?bases[0]!:null,bases,ours,theirs,stages,messages};
+  }
+  async writeCommit(body:string,signal?:AbortSignal){
+    if(body.length>10000||body.includes('\0')||Buffer.from(body).toString('utf8')!==body)deny('GIT_COMMIT_INVALID');
+    await this.validate(signal);const expected=createHash('sha1').update(Buffer.from('commit '+Buffer.byteLength(body)+'\0')).update(body).digest('hex');
+    const commit=sha(decode((await this.call(['hash-object','-t','commit','-w','--stdin'],signal,Buffer.from(body),8192)).out).trim());
+    if(commit!==expected)throw new WorkspaceError('GIT_COMMIT_CHANGED','unknown');
+    if((await this.commit(commit,signal)).body!==body)throw new WorkspaceError('GIT_COMMIT_CHANGED','unknown');
+    return commit;
+  }
+
   async readRef(name:string,signal?:AbortSignal){ref(name);await this.validate(signal);const r=await this.call(['rev-parse','--verify',name],signal,undefined,undefined,true);return r.code===0?sha(decode(r.out).trim()):null;}
   async head(signal?:AbortSignal){await this.validate(signal);const r=await this.call(['rev-parse','--verify','HEAD'],signal,undefined,undefined,true);return r.code===0?sha(decode(r.out).trim()):null;}
   async updateRefs(updates:readonly GitRefUpdate[],signal?:AbortSignal){

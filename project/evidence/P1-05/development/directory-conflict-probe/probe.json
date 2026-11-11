@@ -1,0 +1,17 @@
+{
+  "scope": "Probe only: a legal disjoint write-scope directory rename conflict",
+  "root": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-directory-conflict-PZhFT3",
+  "base": "91fb53ee85ad3f8c76407abadb166634b2146f72",
+  "ours": "08346a555885f6aa815f3bc64ee26ad80ceb6ecb",
+  "theirs": "d4cc3f28a245218dd15142a71fecb35d1759497c",
+  "oursChanged": [
+    "new/a",
+    "old/a"
+  ],
+  "theirsChanged": [
+    "new/b",
+    "old/b"
+  ],
+  "exitCode": 1,
+  "output": "4f7a35b2dadcdf26c0afe1282673d781358745ce\u0000\u00002\u0000new/b\u0000old/b\u0000CONFLICT (file in way of directory rename)\u0000CONFLICT (implicit dir rename): Existing file/dir at new/b in the way of implicit directory rename(s) putting the following path(s) there: old/b.\n\u0000"
+}

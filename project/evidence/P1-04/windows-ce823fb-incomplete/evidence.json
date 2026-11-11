@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "commit": "ce823fb382c594ed2853d7b4acef67d66ebf4018",
+  "status": "FAILED",
+  "sourceFingerprint": "505c0fb499bf2106f8a3592b9682f79fe61d79fc15dbe99ad6e704a85c9b13ce",
+  "lockfileSha256": "34d80524e13896578e0eba0f92ef3a4539f397dd80bde2933860ac5020140340",
+  "finishedAt": "2026-11-11T20:13:37.384Z",
+  "passedChecks": 12,
+  "failedCheck": {
+    "name": "test:mcp",
+    "tests": {
+      "tests": 35,
+      "pass": 34,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "test": "MCP editing holds the actual Runner barrier, rejects queued jobs and reconciles a paused original edit with cleanup authority",
+    "code": "RUNNER_FORBIDDEN",
+    "location": "tests/mcp-repo-git.test.mjs:159"
+  },
+  "notExecuted": [
+    "test:workspaces",
+    "test:input",
+    "test:preparation",
+    "test:scheduler",
+    "contracts:check",
+    "project:check",
+    "openspec",
+    "design-consistency"
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/01-toolchain-check.txt",
+      "byteSize": 199,
+      "sha256": "71f250ad98445a5917760a85c86cdb030a60196d416e9ec070af97f46e6e44be"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/02-vendor-verify.txt",
+      "byteSize": 88,
+      "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/03-build.txt",
+      "byteSize": 22538,
+      "sha256": "8f3771750d584d9d7cbdb303a4f6aff3438587021617baa33e71ca2281facc9c"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/04-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/05-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/06-test-smoke.txt",
+      "byteSize": 2158,
+      "sha256": "e7af31358d1f41d0e6e327ba3ccdd6963329f0eb4ec7ee762a5173f5776a3179"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/07-test-contracts.txt",
+      "byteSize": 3860,
+      "sha256": "58e289266d4c53020c7ffcd368274b019a7623b7d2fb0bc62f8c6710a993acec"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/08-test-storage.txt",
+      "byteSize": 21001,
+      "sha256": "da24a88d52ccba5a0e46d3d5b8e4efa6dfc4358c5b18fe197f5e843b17068932"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/09-test-content.txt",
+      "byteSize": 10636,
+      "sha256": "171c4e50d5df24c6a2cdad2a3c78bdcf1a2ab4a4a4b11ebbd12d07ea0345b465"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/10-test-a2a.txt",
+      "byteSize": 11547,
+      "sha256": "1f94b9ae41757c56fbb2e82d418d32f9cb1cca0821a181a09de061fa05775538"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/11-test-runtime.txt",
+      "byteSize": 7557,
+      "sha256": "9bc3768eabc8a7a5e530ca22b9995d234fc695dd92525a6e26d1b4b11d9b6c93"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/12-test-runner.txt",
+      "byteSize": 6596,
+      "sha256": "c7be0701eb9558b068ce5705d986713caf68641a3a6eecbc2379732e9d99809c"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/13-test-mcp.txt",
+      "byteSize": 18525,
+      "sha256": "b7291f2c17aa03a0ceb89b49f610a146efbc4f6350eec252a61df0dfde1a459d"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/checkout.txt",
+      "byteSize": 199,
+      "sha256": "e5f7924eb5822a378d62ec956401b00f25abddd159754fa9d47d217688e65a25"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/clean-check.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/fetch.txt",
+      "byteSize": 99,
+      "sha256": "232bec70241d2367e31ae356214e9a8a13859d2efec54976bc0c31ed7d1ad272"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/frozen-install.txt",
+      "byteSize": 86,
+      "sha256": "9f5c08bdb0a1f62b16673dd245b521c63c10119f40731defbd171e3d6607c54e"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/report.json",
+      "byteSize": 46793,
+      "sha256": "39ce078f64811ba672b262784c54eea6e5416f1f423414f71cb7d98d6d8a3b3d"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-ce823fb-incomplete/source.txt",
+      "byteSize": 41,
+      "sha256": "f61e987ca6f211a31bce99ef7692e56db3c4f69caf2ec3cf64a436f8cd004df9"
+    }
+  ],
+  "limitations": [
+    "Fixed clean Windows checkout and frozen install are facts; all 21 checks did not pass.",
+    "MCP 34/35 passed, one actual Runner fencing integration failed; no product or Linux/runsc acceptance.",
+    "P1-05 step 2.1 is reopened; P1-04 evidence task 4.1 remains incomplete."
+  ]
+}

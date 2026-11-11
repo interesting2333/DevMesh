@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "status": "PROBE_CONFIRMED",
+  "scope": "Probe only: a legal disjoint write-scope directory rename conflict",
+  "recordedAt": "2026-11-11T20:42:32.144Z",
+  "baseCommit": "ce823fb382c594ed2853d7b4acef67d66ebf4018",
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/directory-conflict-probe/probe.json",
+      "sha256": "81b901fc8c7552d57fd0280c8696656a9d29b7ae3cd9bfc6198918b217e887bc",
+      "byteSize": 753
+    },
+    {
+      "path": "project/evidence/P1-05/development/directory-conflict-probe/probe.mjs.txt",
+      "sha256": "c3ca677ca1760f757cd76296363a0189ab0b07fe995cf0aed59c28cc4af27093",
+      "byteSize": 2250
+    }
+  ],
+  "notCovered": [
+    "Durable integration and conflict content publication",
+    "Current plan qualification for this standalone Git probe",
+    "Runner, Scheduler or product acceptance"
+  ]
+}

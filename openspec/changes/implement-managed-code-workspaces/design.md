@@ -38,6 +38,10 @@
 
 暂停或 Host 结束后的原文件操作核实，使用可选 `purpose=cleanup` 和单独的 `verifyWorkspaceCleanup` 回查原 operation、owner、资源与当前成员权限；它只能取得检查／收尾屏障，不能登记 Job、复活 Grant 或发送新编辑。未配置该权威回查时明确拒绝；缺省 purpose 仍按当前写准入，旧请求 JSON／哈希不补默认字段。`createLocalRepoAcquire` 绑定实际 Attempt repo 路径并按固定顺序组合两种锁；新动作使用 write，原操作核实使用 cleanup。
 
+固定检查点 `ce823fb` 的全量回归在真实 MCP／Runner 屏障用例返回 `RUNNER_FORBIDDEN`，2.1 重新打开核实。MCP 入口准入后的准备过程可能跨越一次 Host 续租；取得新读写屏障时应从原 Host／Grant／资源回查当前 permit，再交给 Runner，不能一直使用早先的请求快照。该回查不自行续租、不延长十五秒执行窗口、不改变 owner／代际／资源；原 cleanup 仍走独立当前成员与原操作权威，不用刷新写权限绕过暂停。修复需用入口通过后旧 permit 到期而同一 Host 当前租约仍有效的确定用例验证。
+
+该补丁已通过类型、lint、构建和完整 Repo Git／文件／Runner 联调 11/11，主动使请求捕获许可过期的真实 Runner 用例通过，2.1 依据开发验证恢复勾选。原始报告及源码指纹保存在 `project/evidence/P1-05/development/fence-refresh-v1/`；新的固定提交全量回归和 5.2 仍需单独完成。
+
 ### Source verification and transfer acknowledgement
 
 接收 resultCommit 时验证原 repo.commit 操作、父链、固定 base、Work 写范围、Git mode、文件／总大小和内容哈希。通过受信任传输适配器导入受控项目仓库，校验对象与树一致后原子建立保留 ref 和原归档操作 ref。Worker ACK 保存准确 commit、tree、源码清单哈希与传输身份。ACK 丢失只查询原 ref 和记录；临时 checkout 保留。
@@ -54,13 +58,27 @@ Git Provider 的固定参数强制 `core.fsync=all`、`core.fsyncMethod=fsync`�
 
 候选初始为 UserTask.baseCommit。持项目串行准入，读取前候选 SHA 与冻结源 manifest，校验本次输入仍属于当前依赖。使用受控仓库的三方 tree 合并产生候选 tree；禁止外部 merge driver、hooks、自动覆盖选择与可执行属性处理。优先使用本机实际支持的 `merge-tree --write-tree`，能力不足明确拒绝启动该后端。
 
+交叉合并历史可能存在多个最佳共同祖先。按 [Git 2.39 的递归祖先合并规则](https://git-scm.com/docs/git-merge-tree/2.39.0)，保留 `merge-base --all` 的完整排序集合并在合并前精确复核，不能任取一个祖先。只有单祖先时才记录单个 base SHA；多祖先由 Git 计算虚拟基点，冲突 stage 1 对象代表该文件的实际基点材料，另保留原祖先集合、ours／theirs 和完整冲突记录。该细节不改变原输入来源、写范围和接受指针权限。
+
 成功时先保存确定 commit 依据／父 SHA，再以多 ref 事务 CAS 更新候选及原 integration ref；之后提交 Worker 结果。开发分支不更新项目接受指针。并行分支依次整合，发生基础接口变化时重新验证依赖，不以调度时的独立性跳过。
 
 集成由受信任项目服务执行，不能拿已结束 Developer 的 permit 发送新的项目写入。Worker 从当前已确认计划、Run／Work epoch、Work revision、最新 Attempt、已核实输出及原源码 ACK 推导输入资格；调用方给出的 SHA 或 artifact 本身不足以授权。Git 动作发送后若发生暂停／换代，仍保存原动作的真实结果，但是否可供当前调度使用需另行复核，不能把历史成功直接当成当前准入。
 
 候选还需保存准确的依赖来源集合。给某个 Work 规划输入时，只能使用与其当前依赖闭包相符的已核实候选；全局最新候选可能包含无关或过期变更，不能静默代替输入。目前 Scheduler 对多个前驱 SHA 的 `CODE_BASIS_AMBIGUOUS` 拒绝，在可信集成快照及准入复核闭合前继续保留。
 
+实现上区分 `work-input` 与 `run-candidate` 两种受信任请求：前者只取指定 Work 的当前依赖闭包，后者在当前计划的开发结果均核实后取完整开发来源。它们分别保留固定源码快照；Work 输入快照不移动 Run 候选 ref，Run 候选也不移动人工接受指针。冻结依据包含计划及需求版本、当前 Run epoch、Work revision／epoch、最新已结束且核实的 Attempt、输入指纹、成果引用及原源码 ACK；按拓扑从 UserTask.baseCommit 串行构建，来源集合不匹配时不以全局最新值代替。
+
+已完成来源可跨一次单纯暂停保留，但不能直接继承旧执行权限。新的集成请求仍须当前成员和当前 Run epoch 准入，并重新核对该来源的 Work epoch、需求哈希、输入成果、计划决策及代码祖先集合；任何一项变化都拒绝资格。非空接口快照还需已批准接口的当前来源证明；该权威查询尚未接入时，资格实现明确拒绝，不把接口列表存在当成验证通过。
+
 冲突时保存 base／ours／theirs SHA、文件路径、各 stage blob／缺失标记、冲突详情和内容存储引用；原候选保留。冲突材料经 LocalContentStore 哈希验证并建立来源引用后回写 Worker，失败保留原操作待恢复。只有明确新工作／决策解决冲突后才重新准入，不暗中选择一方。
+
+实施时将原集成操作分为 BUILDING → PREPARED → CAS_SENT → ACKNOWLEDGED；每个源步骤也先落意图、再冻结三方结果与确定提交正文／SHA、标记发送、最后核实原保留 ref。项目同一时刻只能有一项未核实集成。每步从 UserTask.baseCommit 按冻结拓扑累计；步骤来源、顺序和原 ref 不接受调用方改写。原动作可能已发送时，恢复只查询冻结对象和原 ref，不重新合并、另建 operation 或选择某一方来绕过未知。Git 子进程退出与准确 fencing 恢复仍是后续动作的前提。
+
+最后的 CAS_SENT 与当前来源资格复核在同一个短 Worker 事务完成。PREPARED 表示尚未发送最终 ref 事务，当前依据变化可关闭为已知失败；BUILDING 仅在没有未核实步骤时可关闭，保留已经 ACK 的历史步骤。CAS_SENT 必须核实原最终 ref，不能用新的当前依据直接宣布成功或失败。最终多 ref 事务同时保留原 integration 和固定 snapshot ref，仅 `run-candidate` 更新 Run 候选。持久物理候选 head 和当前业务资格分别保存；未经本后端 ACK 的既有物理 ref 不自动接管或覆盖。
+
+冲突材料需要专用的内容 target／reference，`commitObjectWrite` 在登记内容的同一 Worker 事务写入带 `content_objects` 外键的业务引用，避免“先裸写 content、再单独建引用”期间 GC 获准删除。先冻结报告描述及哈希，再按有界页登记不可变材料元数据、稳定写入 UUID 和字节哈希；全部必要材料 READY 或明确 ABSENT 后才确认冲突 ACK。内容登记失败保留原操作和原材料，不能推进候选。批准主体与当前非 viewer 成员参与写入复核，读取仍按当前项目成员校验；历史 ACK 不授权新集成。
+
+真实 Git 探测已经证明，合法的互斥路径范围也会产生冲突：来源 A 将 `old/a` 移至 `new/a`，来源 B 新建 `old/b` 和 `new/b`，两者改动路径没有重叠；本机 `merge-tree` 返回 `CONFLICT (file in way of directory rename)`，包含 `new/b`／`old/b` 两个消息路径，却没有 stage 条目。因此材料收集必须遍历消息与 stage 路径的并集，另查每个原 base／ours／theirs tree 中的实际文件、目录或缺失，并保留虚拟基点的 stage 1 blob。不能把“无 stage”当成“无冲突”，也不能把缺失版本当成零字节文件。该探测仅证明夹具成立，后续持久集成和内容 ACK 验证尚未完成。
 
 ### Verification inputs and safe reclamation
 

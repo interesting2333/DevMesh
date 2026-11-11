@@ -1,0 +1,28 @@
+{
+  "scope": "Existing storage regression against the new candidate Worker command bundle",
+  "startedAt": "2026-11-11T20:25:00.169Z",
+  "sourceFingerprint": "f85dec21ced9c2bdee985f26f402d97e64b4c7e91e45877b03678b28f7ddc601",
+  "prerequisite": {
+    "path": ".cache/p105-integration-v1-report.json",
+    "sha256": "5024119d5f3b66a615edd1ec36859d2d4d1dcb4b81b766cda5d06d37053df18b"
+  },
+  "status": "PASSED",
+  "checks": [
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 475816,
+      "path": ".cache/p105-qualification-storage-storage.txt",
+      "sha256": "19a113659e73fe1973f36906e9d4a2102c5a0644e14ce23e9d96d13dde619c73",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "finishedAt": "2026-11-11T20:32:56.023Z"
+}

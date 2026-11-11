@@ -1,0 +1,14 @@
+import {mkdtemp,mkdir,writeFile,readFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+const root=await mkdtemp(join(tmpdir(),'devmesh-directory-conflict-'));
+const env=Object.fromEntries(Object.entries(process.env).filter(([key])=>!key.toUpperCase().startsWith('GIT_')));
+Object.assign(env,{GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:process.platform==='win32'?'NUL':'/dev/null',GIT_TERMINAL_PROMPT:'0',LC_ALL:'C'});
+function git(...args){return execFileSync('git',['--no-replace-objects','-c','core.hooksPath='+(process.platform==='win32'?'NUL':'/dev/null'),'-c','core.fsmonitor=false','-c','core.autocrlf=false',...args],{cwd:root,env,windowsHide:true,encoding:'utf8'}).trim();}
+git('init','--quiet');git('config','user.name','Fixture');git('config','user.email','fixture@localhost');
+await mkdir(join(root,'old'));await writeFile(join(root,'old/a'),Array.from({length:30},(_,i)=>'unique source line '+i).join('\n')+'\n');git('add','.');git('commit','--quiet','--no-gpg-sign','-m','Base');const base=git('rev-parse','HEAD');
+git('checkout','--quiet','-b','a');await mkdir(join(root,'new'));git('mv','old/a','new/a');git('commit','--quiet','--no-gpg-sign','-m','Move a');const ours=git('rev-parse','HEAD');
+git('checkout','--quiet','-b','b',base);await mkdir(join(root,'new'),{recursive:true});await writeFile(join(root,'old/b'),'old b content\n');await writeFile(join(root,'new/b'),'new b different content\n');git('add','.');git('commit','--quiet','--no-gpg-sign','-m','Add distinct b paths');const theirs=git('rev-parse','HEAD');
+let output,exitCode=0;try{output=git('merge-tree','--write-tree','-z','--messages',ours,theirs);}catch(error){exitCode=error.status;output=error.stdout;}
+const report={scope:'Probe only: a legal disjoint write-scope directory rename conflict',root,base,ours,theirs,oursChanged:git('diff-tree','--no-commit-id','--name-only','-r','--no-renames',base,ours).split('\n'),theirsChanged:git('diff-tree','--no-commit-id','--name-only','-r','--no-renames',base,theirs).split('\n'),exitCode,output};await writeFile('.cache/p105-directory-conflict-probe.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

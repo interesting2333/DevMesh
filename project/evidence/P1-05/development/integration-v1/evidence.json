@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceFingerprint": "f85dec21ced9c2bdee985f26f402d97e64b4c7e91e45877b03678b28f7ddc601",
+  "baseCommit": "ce823fb382c594ed2853d7b4acef67d66ebf4018",
+  "startedAt": "2026-11-11T20:01:51.104Z",
+  "finishedAt": "2026-11-11T20:32:56.023Z",
+  "scope": "Controlled Git merge primitives and candidate source qualification with existing storage regression; not durable integration or product acceptance",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "durationMs": 151101
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "durationMs": 18029
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "durationMs": 227548
+    },
+    {
+      "name": "qualification",
+      "tests": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "exitCode": 0,
+      "durationMs": 17585
+    },
+    {
+      "name": "integration",
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "exitCode": 0,
+      "durationMs": 663927
+    },
+    {
+      "name": "git",
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "exitCode": 0,
+      "durationMs": 292528
+    },
+    {
+      "name": "storage",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "exitCode": 0,
+      "durationMs": 475816
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-integration-v1-report.json",
+      "byteSize": 36224,
+      "sha256": "5024119d5f3b66a615edd1ec36859d2d4d1dcb4b81b766cda5d06d37053df18b"
+    },
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-qualification-storage-report.json",
+      "byteSize": 857,
+      "sha256": "cb51d6fb901f4e5b7f55926d6e7b724738d0a68f3dd67a9449b2eb643d88854b"
+    },
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-integration-v1-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-integration-v1-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-integration-v1-build.txt",
+      "byteSize": 3293,
+      "sha256": "8fb3f6791a351e8e3b59a3add7bfe8807b3503787d5800bba740f12ff05dbbd9"
+    },
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-integration-v1-qualification.txt",
+      "byteSize": 2016,
+      "sha256": "be66bafca281743aa57c7e39d873e795ca3e06b87cf2bb6c18c3a53ace932098"
+    },
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-integration-v1-integration.txt",
+      "byteSize": 1999,
+      "sha256": "e88cb6c3944afaf81b97498201a5bd4711bb65d35964ee4526868298a087cf88"
+    },
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-integration-v1-git.txt",
+      "byteSize": 1876,
+      "sha256": "3b7093c91123a675aaf935b5eb8e670f94a4830881fbfcf46e1f524630c11a58"
+    },
+    {
+      "path": "project/evidence/P1-05/development/integration-v1/p105-qualification-storage-storage.txt",
+      "byteSize": 20899,
+      "sha256": "19a113659e73fe1973f36906e9d4a2102c5a0644e14ce23e9d96d13dde619c73"
+    }
+  ],
+  "notCovered": [
+    "Durable serial candidate integration journal and original-operation reconciliation",
+    "Conflict content publication, durable business references and acknowledgement",
+    "Scheduler integration, full workspace archive and reclamation",
+    "Fixed final commit full regression",
+    "Real model, OIDC, Linux Docker/gVisor, remote Git identity and product acceptance"
+  ]
+}

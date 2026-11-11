@@ -154,8 +154,18 @@ test('matching current bytes cannot prove an unprepared original edit and the un
 });
 
 test('MCP editing holds the actual Runner barrier, rejects queued jobs and reconciles a paused original edit with cleanup authority',async t=>{
- const f=await fixture(t,{managed:true}),basis={workspaceRef:'workspace_01',baseCommit:f.baseCommit},path='src/board.ts',before=await readFile(join(f.root,path),'utf8');await f.close();let block=false,observed=false;
- const proxy={async request(method,input){if(method==='prepareRepoFileOperation'){const fence=await f.runner.client.activeWorkspaceFence('workspace_01');assert.equal(fence.state,'ACTIVE');observed=true;}if(method==='finishRepoFileOperation'&&block)throw Error('Lost edit acknowledgement with Runner barrier');return f.storage.request(method,input);}},service=await f.service(proxy);
+ const f=await fixture(t,{managed:true}),basis={workspaceRef:'workspace_01',baseCommit:f.baseCommit},path='src/board.ts',before=await readFile(join(f.root,path),'utf8');await f.close();let block=false,observed=false,expiredCapture;
+ const proxy={async request(method,input){
+  if(method==='prepareRepoFileOperation'){const fence=await f.runner.client.activeWorkspaceFence('workspace_01');assert.equal(fence.state,'ACTIVE');assert.ok(expiredCapture);assert.ok(Date.parse(fence.request.permit.expiresAt)>Date.parse(expiredCapture));observed=true;}
+  if(method==='finishRepoFileOperation'&&block)throw Error('Lost edit acknowledgement with Runner barrier');
+  const result=await f.storage.request(method,input);
+  if(method==='beginRepoFileOperation'&&!expiredCapture){
+   // Admission already succeeded. Expire only this captured request token;
+   // the actual Runtime Host continues renewing its stored grant normally.
+   expiredCapture=new Date(Date.parse(input.permit.notBefore)+1).toISOString();assert.ok(Date.parse(expiredCapture)<Date.now());input.permit.expiresAt=expiredCapture;
+  }
+  return result;
+ }},service=await f.service(proxy);
  const first=await service.call('repo.writeFile',op(),{...basis,path,expectedSha256:sha(before),text:'export const count = 7;\n'});assert.equal(first.state,'SUCCEEDED');assert.equal(observed,true);await assert.rejects(f.runner.client.activeWorkspaceFence('workspace_01'),{status:404});
  const start={schemaVersion:'devmesh.runner-job.v1',operationId:op(),permit:{...f.permit,notBefore:new Date(Math.max(Date.parse(f.permit.notBefore),Date.parse(f.permit.expiresAt)-15000)).toISOString()},imageDigest:image,workspaceRef:'workspace_01',commandSpec:{kind:'build'},resourceLimits:{cpu:1,memoryMiB:128,pids:32,temporaryMiB:32,timeoutMs:60000},networkPolicyRef:'none',outputSpec:[]},queued=await f.runner.client.start(start);
  await assert.rejects(service.call('repo.workspaceRead',op(),{...basis,path}),{code:'RUNNER_CONFLICT'});

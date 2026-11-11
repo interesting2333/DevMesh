@@ -35,6 +35,13 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
   const physicalBindings=new Map(bindings.map(b=>{const ready=Promise.all([realpath(b.root),realpath(b.gitDirectory),realpath(b.commonDirectory)]).then(async([root,gitDirectory,commonDirectory])=>({root,gitDirectory,commonDirectory,directories:await Promise.all([...new Set([root!,gitDirectory!,commonDirectory!])].map(async path=>{const stat=await lstat(path,{bigint:true});return {path,dev:stat.dev,ino:stat.ino};}))}));void ready.catch(()=>{});return [b.workspaceRef,ready] as const;}));
   const binding=(ref:string)=>bindings.find(b=>b.workspaceRef===ref)??(()=>{throw new ToolError('MCP_WORKSPACE_DENIED','not-sent');})();
   const publicBinding=(b:RepoWorkspaceBinding)=>repoBinding.parse(Object.fromEntries(Object.entries(b).filter(([k])=>!['root','gitDirectory','commonDirectory'].includes(k))));
+  async function acquire(b:RepoWorkspaceBinding,input:Pick<Parameters<ToolDefinition['execute']>[0],'operationId'|'permit'|'signal'>,toolName:string,purpose:RepoWorkspaceAccess['purpose']){
+    // Re-read the live grant after admission and before a new Runner barrier.
+    // This checks current authority; it never renews an expired Host grant.
+    // Original-operation cleanup has its own authority and may run after pause.
+    const permit=purpose==='reconcile'?input.permit:await options.storage.request('refreshMcpPermit',{permit:input.permit,toolName,action:purpose==='write'?'write':'read'});
+    return options.acquire(structuredClone(b),input.signal,{operationId:input.operationId,permit,purpose});
+  }
   function git(root:string,args:string[],signal:AbortSignal,index?:string,input?:string,allowFailure=false):Promise<{code:number;out:Buffer}>{
     if(signal.aborted)throw new ToolError('MCP_GIT_ABORTED','not-sent');
     const env=Object.fromEntries(Object.entries(process.env).filter(([k])=>!k.toUpperCase().startsWith('GIT_')));
@@ -103,7 +110,7 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
     const key=toolName==='repo.integrate'?'project:'+b.projectId:resolve(b.root).toLowerCase();if(locks.has(key)){await finish(operation,'FAILED',{code:'MCP_GIT_WORKSPACE_BUSY'});throw new ToolError('MCP_GIT_WORKSPACE_BUSY','not-sent');}
     locks.add(key);let lease:RepoWorkspaceLease|undefined;
     try{
-      try{lease=await options.acquire(structuredClone(b),input.signal,{operationId:input.operationId,permit:input.permit,purpose:'write'});}
+      try{lease=await acquire(b,input,toolName,'write');}
       catch(error){await finish(operation,'FAILED',{code:'MCP_GIT_FENCE_NOT_ACQUIRED'});operation={...operation,state:'FAILED'};throw error;}
       const root=await safeRoot(b,input.signal),base=args.baseCommit;
       if(toolName==='repo.commit'){
@@ -140,10 +147,10 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
     if(refs.length!==1)throw new ToolError('MCP_GIT_INTEGRATION_SOURCE_DENIED','not-sent');return opaqueKey.parse(refs[0]!.slice('refs/devmesh/operations/'.length));
   }
   const tools:ToolDefinition[]=[
-    ...repoFileTools({options,binding,safeRoot,git}),
+    ...repoFileTools({options,binding,safeRoot,git,acquire}),
     {name:'repo.diff',description:'Inspect bounded changes in an authorized fenced workspace against its frozen base',schema:z.strictObject({workspaceRef:opaqueKey,baseCommit:repoCommitArgs.shape.baseCommit}),action:'read',effectClass:'READ',async execute({args,permit,signal,operationId}){
       const b=binding(String(args.workspaceRef));if(permit.ownerKind!=='workflowAttempt'||permit.runId!==b.runId||permit.attemptId!==b.attemptId||args.baseCommit!==b.baseCommit||!permit.resources.some(r=>r.kind==='workspace'&&r.resourceId===b.resourceId))throw new ToolError('MCP_WORKSPACE_DENIED','not-sent');
-      const lease=await options.acquire(structuredClone(b),signal,{operationId,permit,purpose:'read'});try{await options.storage.request('assertRepoWorkspaceSettled',{permit,workspaceRef:b.workspaceRef});const root=await safeRoot(b,signal),changed=paths((await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--name-only','-z',b.baseCommit,'--'],signal)).out),untracked=paths((await git(root,['ls-files','--others','--exclude-standard','-z','--'],signal)).out),all=[...new Set([...changed,...untracked])];if(all.length>2000||all.some(denied))throw new ToolError('MCP_GIT_PATH_DENIED','not-sent');await physical(root,all);const diff=(await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--patch',b.baseCommit,'--'],signal)).out;if(diff.length>65536)throw new ToolError('MCP_GIT_DIFF_TOO_LARGE','not-sent');return {workspaceRef:b.workspaceRef,baseCommit:b.baseCommit,patch:text(diff),untracked};}finally{await lease.release();}
+      const lease=await acquire(b,{operationId,permit,signal},'repo.diff','read');try{await options.storage.request('assertRepoWorkspaceSettled',{permit,workspaceRef:b.workspaceRef});const root=await safeRoot(b,signal),changed=paths((await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--name-only','-z',b.baseCommit,'--'],signal)).out),untracked=paths((await git(root,['ls-files','--others','--exclude-standard','-z','--'],signal)).out),all=[...new Set([...changed,...untracked])];if(all.length>2000||all.some(denied))throw new ToolError('MCP_GIT_PATH_DENIED','not-sent');await physical(root,all);const diff=(await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--patch',b.baseCommit,'--'],signal)).out;if(diff.length>65536)throw new ToolError('MCP_GIT_DIFF_TOO_LARGE','not-sent');return {workspaceRef:b.workspaceRef,baseCommit:b.baseCommit,patch:text(diff),untracked};}finally{await lease.release();}
     }},
     {name:'repo.commit',description:'Commit only approved files from a fenced workspace at the frozen base',schema:repoCommitArgs,action:'write',effectClass:'IDEMPOTENT_WRITE',execute:input=>execute('repo.commit',input)},
     {name:'repo.integrate',description:'Integrate a proven commit into the Run candidate ref with a serialized base compare-and-swap',schema:repoIntegrateArgs,action:'write',effectClass:'IDEMPOTENT_WRITE',execute:input=>execute('repo.integrate',input)},

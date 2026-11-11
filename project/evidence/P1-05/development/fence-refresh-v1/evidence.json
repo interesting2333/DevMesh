@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "Current permit at new Repo MCP fencing, all existing Repo Git/file/Runner integration cases; full fixed-commit regression remains separate",
+  "baseCommit": "ce823fb382c594ed2853d7b4acef67d66ebf4018",
+  "sourceFingerprint": "38c17b537a76fb83cf13de6c2e7bdcaf407331e5c91c8a5eb6134e11d855178d",
+  "startedAt": "2026-11-11T20:34:51.197Z",
+  "finishedAt": "2026-11-11T20:48:50.661Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "durationMs": 202599
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "durationMs": 13579
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "durationMs": 73300
+    },
+    {
+      "name": "repo",
+      "tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "exitCode": 0,
+      "durationMs": 549848
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/fence-refresh-v1/p105-fence-refresh-v1-report.json",
+      "sha256": "ab9f7e219b157dd45d7d87639bad479c16e0efd109a3acf653660a0d149a6cd7",
+      "byteSize": 35421
+    },
+    {
+      "path": "project/evidence/P1-05/development/fence-refresh-v1/p105-fence-refresh-v1-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "byteSize": 32
+    },
+    {
+      "path": "project/evidence/P1-05/development/fence-refresh-v1/p105-fence-refresh-v1-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061",
+      "byteSize": 61
+    },
+    {
+      "path": "project/evidence/P1-05/development/fence-refresh-v1/p105-fence-refresh-v1-build.txt",
+      "sha256": "cc2612d2c9ce4aaa21f89d58224e9a3fe416d1223e87e42372522b52d5d8eee6",
+      "byteSize": 729
+    },
+    {
+      "path": "project/evidence/P1-05/development/fence-refresh-v1/p105-fence-refresh-v1-repo.txt",
+      "sha256": "a33157147dede5a948c962f86c6861dc625d1b57d00a63deb3db99df89526e42",
+      "byteSize": 5676
+    }
+  ],
+  "notCovered": [
+    "Fixed final commit clean-checkout full regression",
+    "Durable candidate integration, conflict material publication, Scheduler and reclamation",
+    "Real model, OIDC, Linux Docker/gVisor and product acceptance"
+  ]
+}

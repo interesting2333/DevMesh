@@ -15,3 +15,9 @@ repo MCP 已完成本地实际锁组合，源码对象归档已有开发验证�
 `LocalSourceArchives` 与迁移 15 实现源码接收：输入仅含原分配／提交操作，核实唯一父 base、范围、实际对象及目录身份，传输后保留原操作 ref 和固定源码 ref，再写 Worker ACK。恢复只查原事实，未知不重传；使用本地 fencer 的 cleanup，部署者须用 `getSourceArchive` 核实原归属与资源。源码 ACK 不包含未提交、未跟踪和文件恢复 sidecar，不能授权回收。v2 开发驱动归档 4/4、受控 Git 5/5、存储 28/28 和类型／lint／构建通过，原始证据见 `project/evidence/P1-05/development/source-v2/`。这组测试使用明确无 Job 的受控 fencer，不能替代 Runner 或固定提交验收。
 
 Provider 固定 `core.fsync=all` 和 `core.fsyncMethod=fsync`，使对象、pack 元数据和保留 ref 使用 Git 的持久化路径；按 [Git 2.39 配置](https://git-scm.com/docs/git-config/2.39.0#Documentation/git-config.txt-corefsync) 选择，不沿用仓库的弱 flush 配置。提交正文沿用原准备契约的 10000 个 UTF-16 字符上限，允许原提交工具接受的中文消息；实际 JSON／传输仍有各自字节上限。新增参数与归档实现已通过上述软件验证，未执行底层存储掉电测试。
+
+三方集成底层 `mergeTree`／`writeCommit` 核实精确共同祖先集合与实际提交，解析 Git 的 NUL stage／冲突消息，保留三方 SHA，生成确定提交对象，并沿用多 ref CAS。五条真实 Git 用例已通过，覆盖独立分支、同文件冲突、删除冲突、旧 CAS、固定验证 checkout 和交叉历史中的虚拟基点；既有 Git 5/5 及存储 28/28 回归通过。类型、lint、构建和原始日志见 `project/evidence/P1-05/development/integration-v1/`。持久集成日志、冲突内容发布及调度组合仍待实施，3.1／3.2／3.3 保持未完成。
+
+Worker 的 `candidate-basis.ts` 提供当前来源资格推导及只读 `getCandidateSourceBasis`／`assertCandidateSourceBasis` 命令：从已确认计划、当前 Work／需求／输入、最新核实结果及原源码 ACK 冻结精确来源集合，分别支持 Work 输入依赖闭包与完整 Run 候选；不接受调用方提供 SHA 作为资格。七条数据库资格用例已通过，来源 ACK 使用明确的数据库夹具，验证范围与真实 Git 用例分开记录。尚未接持久集成服务和调度准入；非空接口快照的批准来源查询仍待实现，当前代码对此明确拒绝。持久集成快照尚未实现时，无法证明来源集合的合成 SHA 也明确拒绝。
+
+`ce823fb` 的干净固定提交全量回归在 MCP Runner 屏障用例失败：前十二项通过，MCP 34/35，后八项未执行。原始证据见 `project/evidence/P1-04/windows-ce823fb-incomplete/`，2.1 已重新打开。当前补丁在新读写屏障前重新查询并校验当前许可；原操作 cleanup 仍使用独立恢复权威和原编辑 ID，不续期过期的 Host 授权。确定性用例主动使已准入请求的捕获许可过期，检查真实 Runner 收到当前许可；补丁已通过类型、lint、构建及全部 Repo Git／文件／Runner 联调 11/11，证据见 `project/evidence/P1-05/development/fence-refresh-v1/`。2.1 已依据开发验证恢复勾选，最终固定提交全量回归仍未完成。

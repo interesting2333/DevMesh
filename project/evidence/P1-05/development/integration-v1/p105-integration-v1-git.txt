@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: controlled Git transfers exact objects into separate repositories and checks out an immutable source manifest
+ok 1 - controlled Git transfers exact objects into separate repositories and checks out an immutable source manifest
+  ---
+  duration_ms: 125836.4553
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-7XDSIm
+# Subtest: configured external Git helpers are refused before source operations
+ok 2 - configured external Git helpers are refused before source operations
+  ---
+  duration_ms: 19089.7189
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-kVW6tG
+# Subtest: replacement of a directory at the same path is rejected using its frozen filesystem identity
+ok 3 - replacement of a directory at the same path is rejected using its frozen filesystem identity
+  ---
+  duration_ms: 10022.6881
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-f87fVa
+# Subtest: sensitive paths and Git symbolic link entries cannot enter source manifests
+ok 4 - sensitive paths and Git symbolic link entries cannot enter source manifests
+  ---
+  duration_ms: 34244.6639
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-iqmucD
+# Subtest: a fixed approved template subtree creates a distinct initial application commit without platform objects
+ok 5 - a fixed approved template subtree creates a distinct initial application commit without platform objects
+  ---
+  duration_ms: 85423.6229
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-Vf7Ujq
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 291017.572

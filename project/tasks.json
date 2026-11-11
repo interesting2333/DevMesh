@@ -669,14 +669,20 @@
         "project/evidence/P1-04/development/file-validation.json",
         "project/evidence/P1-04/windows-b77d12a-incomplete/evidence.json",
         "project/evidence/P1-05/development/source-v2/evidence.json",
-        "project/evidence/P1-05/development/source-v2/report.json"
+        "project/evidence/P1-05/development/source-v2/report.json",
+        "project/evidence/P1-04/windows-ce823fb-incomplete/evidence.json",
+        "project/evidence/P1-04/windows-ce823fb-incomplete/report.json",
+        "project/evidence/P1-05/development/fence-refresh-v1/evidence.json",
+        "project/evidence/P1-05/development/fence-refresh-v1/验证记录.md"
       ],
       "reviewNote": null,
       "notes": [
         "已完成五类 MCP 的独立身份、真实后端协议及文件编辑闭环代码。文件联调 v8 5/5，确认忙碌拒绝不阻断后续编辑；v7 屏障、Runner、存储和 lint 结果见 development/file-validation.json。此前失败均保存；P1-04 2.3 已完成，4.1 最终固定提交全量回归与复核仍待完成，正式前置／G0／真实模型和 Linux 产品验收保持未通过。",
         "文件工具细化已同步 D2／D6／实施基线与影响记录，既有冻结角色不自动扩权；源码归档与完整应用验收不由提交工具代替。",
         "固定 b77d12a 回归未通过：前 12 项通过，完整 MCP 34/35；超时夹具在 500ms 初始化阶段 MCP_CONNECT_FAILED，尚未到预期工具调用。原报告保留，余下 8 项未执行；归档新检查按门槛未启动，已修正测试夹具并安排串行重验，4.1 未勾选。",
-        "2026-11-12：源码归档 v2 开发驱动完整通过（源码指纹不变）：MCP 超时修正用例 1/1、归档 4/4、受控 Git 5/5、存储 28/28，类型／lint／构建通过；证据 source-v2/evidence.json。不是固定提交或容器验收。"
+        "2026-11-12：源码归档 v2 开发驱动完整通过（源码指纹不变）：MCP 超时修正用例 1/1、归档 4/4、受控 Git 5/5、存储 28/28，类型／lint／构建通过；证据 source-v2/evidence.json。不是固定提交或容器验收。",
+        "2026-11-12：ce823fb 固定干净 Windows checkout 全量回归实际失败：前 12 项通过，MCP 34/35，Runner 屏障编辑联调在 mcp-repo-git.test.mjs:159 返回 RUNNER_FORBIDDEN；后 8 项未执行。报告和材料 SHA-256 已保留于 windows-ce823fb-incomplete。2.1 重开，正在核实新屏障仍使用旧请求 permit 的时序；不将固定安装或此前局部通过当成全量通过。",
+        "2026-11-12：新 Runner 屏障前重新复核当前许可的补丁通过类型／lint／MCP 构建和真实 Repo Git／文件／Runner 联调 11/11。主动使已准入请求的捕获许可过期，实际 Host 继续续约，Runner 取得当前许可；暂停清理及排队 Job 拒绝保持。证据见 P1-05 development/fence-refresh-v1；不是最终固定提交全量或产品验收。"
       ]
     },
     {
@@ -724,7 +730,11 @@
         "packages/storage-sqlite/src/source-archive-protocol.ts",
         "packages/storage-sqlite/migrations/0015-sourcearchives.sql",
         "tests/workspace-source-archive.test.mjs",
-        "tests/fixtures/source-archive.mjs"
+        "tests/fixtures/source-archive.mjs",
+        "tests/workspace-integration-git.test.mjs",
+        "packages/storage-sqlite/src/candidate-basis.ts",
+        "packages/storage-sqlite/src/candidate-protocol.ts",
+        "tests/candidate-basis.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-05/离线实施进展.md",
@@ -735,7 +745,14 @@
         "project/evidence/P1-05/development/git-capability-probes.json",
         "project/evidence/P1-04/windows-b77d12a-incomplete/evidence.json",
         "project/evidence/P1-05/development/source-v2/evidence.json",
-        "project/evidence/P1-05/development/source-v2/report.json"
+        "project/evidence/P1-05/development/source-v2/report.json",
+        "project/evidence/P1-04/windows-ce823fb-incomplete/evidence.json",
+        "project/evidence/P1-04/windows-ce823fb-incomplete/report.json",
+        "project/evidence/P1-05/development/integration-v1/evidence.json",
+        "project/evidence/P1-05/development/integration-v1/验证记录.md",
+        "project/evidence/P1-05/development/directory-conflict-probe/evidence.json",
+        "project/evidence/P1-05/development/fence-refresh-v1/evidence.json",
+        "project/evidence/P1-05/development/fence-refresh-v1/验证记录.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -743,7 +760,13 @@
         "Repo MCP 已接实际本地进程锁和 Runner 持久屏障，包含活动／未知 Job、原操作 cleanup 和真实 SIGKILL 后准确 token 恢复；2.1 据 development/file-validation.json 完成。源码归档 ACK、三方候选、冲突材料、精确验证分配、回收及调度准备仍未实施，最终固定提交全量回归、正式前置和 G0 保持待验收。",
         "2.2 已补源码接收／保留 ref／Worker ACK 实现和真实 Git 回归用例，新增源码尚待串行类型、构建与业务检查，保持未勾选。P1-04 检查点 b77d12a 的独立干净目录完整回归正在执行，新检查在其退出后启动；不把待执行代码当成通过。",
         "固定 b77d12a 回归未通过：前 12 项通过，完整 MCP 34/35；超时夹具在 500ms 初始化阶段 MCP_CONNECT_FAILED，尚未到预期工具调用。原报告保留，余下 8 项未执行；归档新检查按门槛未启动，已修正测试夹具并安排串行重验，4.1 未勾选。",
-        "2026-11-12：源码归档 v2 开发驱动完整通过（源码指纹不变）：MCP 超时修正用例 1/1、归档 4/4、受控 Git 5/5、存储 28/28，类型／lint／构建通过；证据 source-v2/evidence.json。不是固定提交或容器验收。"
+        "2026-11-12：源码归档 v2 开发驱动完整通过（源码指纹不变）：MCP 超时修正用例 1/1、归档 4/4、受控 Git 5/5、存储 28/28，类型／lint／构建通过；证据 source-v2/evidence.json。不是固定提交或容器验收。",
+        "2026-11-12：源码归档检查点 ce823fb 已提交，独立干净 Windows checkout 的冻结安装和 21 项全量回归已启动，结果待记录。继续编写受控 merge-tree／确定提交对象及四条真实 Git 用例；目前仅源码／语法和差异检查，未执行新功能验证，3.1～3.3 保持未完成。当前依赖集合与最新候选的准入差异已补入变更设计和场景。",
+        "2026-11-12：继续 3.1 当前来源资格：已接只读 getCandidateSourceBasis/assertCandidateSourceBasis Worker 命令，冻结当前计划、最新核实 Attempt、Work epoch、成果哈希和原源码 ACK，区分 Work 依赖闭包与完整 Run 来源。已编写七条真实 SQLite 命令处理器用例（源码 ACK 为显式 DB 夹具，不代表 Git/Runner 验收），以及五条真实 Git 三方/交叉合并用例。首次类型检查发现类型收窄和品牌 ID 问题，已修正待复查；新业务用例尚未执行。持久集成 journal、冲突内容 ACK、Scheduler 组合尚未完成，3.1～3.3 不勾选。",
+        "2026-11-12：ce823fb 固定干净 Windows checkout 全量回归实际失败：前 12 项通过，MCP 34/35，Runner 屏障编辑联调在 mcp-repo-git.test.mjs:159 返回 RUNNER_FORBIDDEN；后 8 项未执行。报告和材料 SHA-256 已保留于 windows-ce823fb-incomplete。2.1 重开，正在核实新屏障仍使用旧请求 permit 的时序；不将固定安装或此前局部通过当成全量通过。",
+        "2026-11-12：三方底层及来源资格指纹检查通过：类型、lint、两包构建；SQLite 命令处理器资格 7/7、真实 Git 三方/交叉合并 5/5、既有 Git 5/5、既有存储 28/28。原始报告与哈希见 development/integration-v1；不代表持久串行候选、冲突内容 ACK、调度组合或产品验收，3.1～3.3 仍未完成。",
+        "2026-11-12：真实 Git 探测确认互不重叠的 old/a→new/a 与新增 old/b、new/b 仍产生目录重命名冲突，且只有冲突消息路径、无 stage。保留 raw NUL 输出与脚本，设计明确收集消息／stage 路径并集及 FILE／DIRECTORY／ABSENT 版本；不代表持久集成或 3.2 验证完成。",
+        "2026-11-12：新 Runner 屏障前重新复核当前许可的补丁通过类型／lint／MCP 构建和真实 Repo Git／文件／Runner 联调 11/11。主动使已准入请求的捕获许可过期，实际 Host 继续续约，Runner 取得当前许可；暂停清理及排队 Job 拒绝保持。证据见 P1-05 development/fence-refresh-v1；不是最终固定提交全量或产品验收。"
       ]
     },
     {
