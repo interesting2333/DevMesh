@@ -20,4 +20,6 @@ Provider 固定 `core.fsync=all` 和 `core.fsyncMethod=fsync`，使对象、pack
 
 Worker 的 `candidate-basis.ts` 提供当前来源资格推导及只读 `getCandidateSourceBasis`／`assertCandidateSourceBasis` 命令：从已确认计划、当前 Work／需求／输入、最新核实结果及原源码 ACK 冻结精确来源集合，分别支持 Work 输入依赖闭包与完整 Run 候选；不接受调用方提供 SHA 作为资格。七条数据库资格用例已通过，来源 ACK 使用明确的数据库夹具，验证范围与真实 Git 用例分开记录。尚未接持久集成服务和调度准入；非空接口快照的批准来源查询仍待实现，当前代码对此明确拒绝。持久集成快照尚未实现时，无法证明来源集合的合成 SHA 也明确拒绝。
 
+后续迁移 16 及 `candidate-integration-domain.ts` 已编写候选持久操作、顺序步骤、当前依据复核、确定提交正文、一次发送、原 ref ACK 与物理候选 head；新的来源资格查询使用已 ACK 快照的精确来源证明。Work 输入快照不修改 Run 候选，任一候选都不修改接受指针。完整依据与源码清单分别读取，避免将两个大对象拼进单条 Worker 响应。九条数据库操作用例及原七条资格用例共 16/16、既有存储 28/28 通过，类型／lint／构建与迁移日志见 `project/evidence/P1-05/development/journal-v2/`；其中 Git/ref/ACK 为明确数据库夹具，不能当成真实 Git 集成或冲突内容发布通过。3.1～3.3 仍未完成，默认后端仍关闭。
+
 `ce823fb` 的干净固定提交全量回归在 MCP Runner 屏障用例失败：前十二项通过，MCP 34/35，后八项未执行。原始证据见 `project/evidence/P1-04/windows-ce823fb-incomplete/`，2.1 已重新打开。当前补丁在新读写屏障前重新查询并校验当前许可；原操作 cleanup 仍使用独立恢复权威和原编辑 ID，不续期过期的 Host 授权。确定性用例主动使已准入请求的捕获许可过期，检查真实 Runner 收到当前许可；补丁已通过类型、lint、构建及全部 Repo Git／文件／Runner 联调 11/11，证据见 `project/evidence/P1-05/development/fence-refresh-v1/`。2.1 已依据开发验证恢复勾选，最终固定提交全量回归仍未完成。

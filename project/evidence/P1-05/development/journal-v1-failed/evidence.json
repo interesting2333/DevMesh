@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "baseCommit": "c9c1474c312d6bf294b6507032477af2485783af",
+  "sourceFingerprint": "525ab6f6a17acd14125ca132efecaf3a3bf36bb017e989ac21c8c12c50a29c18",
+  "finishedAt": "2026-11-11T21:13:43.233Z",
+  "checks": [
+    {
+      "name": "schema",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "candidate",
+      "exitCode": 1,
+      "tests": {
+        "tests": 16,
+        "pass": 15,
+        "fail": 1,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "failure": "Member fixture omitted NOT NULL project_members.created_at; candidate 15/16, storage regression not executed",
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/journal-v1-failed/p105-journal-v1-report.json",
+      "byteSize": 36579,
+      "sha256": "e84d5ab9dc06bdd081d533cac1b795db313d0395dc7a656d5da712910538af0f"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v1-failed/p105-journal-v1-schema.txt",
+      "byteSize": 213,
+      "sha256": "c96ccf8bb5170dbc637cca02f02a5718d098d0711089bb2b117ecd1b69bf5f50"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v1-failed/p105-journal-v1-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v1-failed/p105-journal-v1-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v1-failed/p105-journal-v1-build.txt",
+      "byteSize": 2526,
+      "sha256": "10cc9414b4bafca2d64a6dfcd68887403ffa3ce0288e18363922ef7d7f163e42"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v1-failed/p105-journal-v1-candidate.txt",
+      "byteSize": 5255,
+      "sha256": "10450f542c448ad8d18cd82aa55425107f3bdb87030c33a1d36d8a2de695d5ce"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v1-failed/candidate-journal.test.mjs.txt",
+      "byteSize": 14813,
+      "sha256": "0a695ca9e36e8d6528ef8757636ea968e46ee2bbe8c88366b19d3a12aa9b7a9a"
+    }
+  ]
+}

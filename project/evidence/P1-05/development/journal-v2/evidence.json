@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "baseCommit": "c9c1474c312d6bf294b6507032477af2485783af",
+  "sourceFingerprint": "edf5aea922fc346bb5c033218b1b075ca639c734133f4d2530d8650da84e74ec",
+  "finishedAt": "2026-11-11T21:28:06.533Z",
+  "scope": "Migration 16 and private candidate integration Worker journal; seeded Git/ref/ACK fixtures, not an actual Git adapter or product acceptance",
+  "checks": [
+    {
+      "name": "schema",
+      "exitCode": 0,
+      "inheritedFrom": ".cache/p105-journal-v1-report.json"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "inheritedFrom": ".cache/p105-journal-v1-report.json"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "inheritedFrom": ".cache/p105-journal-v1-report.json"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "candidate",
+      "exitCode": 0,
+      "tests": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "prerequisite": {
+    "path": ".cache/p105-journal-v1-report.json",
+    "sha256": "e84d5ab9dc06bdd081d533cac1b795db313d0395dc7a656d5da712910538af0f",
+    "changedFiles": [
+      {
+        "path": "tests\\candidate-journal.test.mjs",
+        "oldSha256": "0a695ca9e36e8d6528ef8757636ea968e46ee2bbe8c88366b19d3a12aa9b7a9a",
+        "newSha256": "36d473301137e772c3d5c0ce036c58e40a0b35b514ae4dbb5ece728940ce06ef"
+      }
+    ],
+    "reason": "Only missing created_at in the new member fixture was repaired; application/SQL/type inputs are byte-identical. Reuse schema/type/build and re-run lint and business suites."
+  },
+  "priorFailure": "project/evidence/P1-05/development/journal-v1-failed/evidence.json",
+  "limitations": [
+    "Schema, typecheck and build reused their actual v1 successful logs because every application/SQL/type/build input is byte-identical; only the missing created_at test fixture field changed.",
+    "Lint and all candidate/storage tests reran against the v2 source fingerprint.",
+    "Tasks 3.1 through 3.3 remain incomplete; no external model, Linux/runsc, OIDC, full P1-05 or phase gate acceptance is claimed."
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/journal-v2/p105-journal-v2-report.json",
+      "byteSize": 37758,
+      "sha256": "74264f68f46f0fb16b1783d02360569f82a71daf22ceadfa8f97e16f311f7966"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v2/p105-journal-v1-report.json",
+      "byteSize": 36579,
+      "sha256": "e84d5ab9dc06bdd081d533cac1b795db313d0395dc7a656d5da712910538af0f"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v2/p105-journal-v1-schema.txt",
+      "byteSize": 213,
+      "sha256": "c96ccf8bb5170dbc637cca02f02a5718d098d0711089bb2b117ecd1b69bf5f50"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v2/p105-journal-v1-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v2/p105-journal-v1-build.txt",
+      "byteSize": 2526,
+      "sha256": "10cc9414b4bafca2d64a6dfcd68887403ffa3ce0288e18363922ef7d7f163e42"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v2/p105-journal-v2-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v2/p105-journal-v2-candidate.txt",
+      "byteSize": 4643,
+      "sha256": "6db794707f9155a0ae63d8c9cbcf4ffede9960caf0d365b0b2f36d1e61d51cfd"
+    },
+    {
+      "path": "project/evidence/P1-05/development/journal-v2/p105-journal-v2-storage.txt",
+      "byteSize": 21468,
+      "sha256": "fb3e48cf67c52ed0a9086960eb67506259f063818bb9f026aad93bedcfc8c7ae"
+    }
+  ]
+}

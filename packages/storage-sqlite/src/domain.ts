@@ -20,7 +20,9 @@ import { inputRequests } from './input-protocol.js';
 import type { InputMethod } from './input-protocol.js';
 import { createPreparationDomain } from './preparation-domain.js';
 import { createPlanDomain } from './plan-domain.js';
-import {createCandidateBasis} from './candidate-basis.js';
+import {createCandidateIntegrationDomain} from './candidate-integration-domain.js';
+import {candidateIntegrationRequests} from './candidate-integration-protocol.js';
+import type {CandidateIntegrationMethod} from './candidate-integration-protocol.js';
 import { createSchedulerDomain } from './scheduler-domain.js';
 import { createDispatchDomain } from './dispatch-domain.js';
 import { preparationRequests } from './preparation-protocol.js';
@@ -66,9 +68,8 @@ export function createDomain(db: DatabaseSync) {
     bump(runId);event(runId,String(original),'PipelineChanged',payload,{attemptId});
   });
   const plans = createPlanDomain(db);
-  // Until durable integrated snapshots are implemented, a caller SHA cannot
-  // prove multi-source ancestry. Original source ACK chains remain usable.
-  const candidateBasis=createCandidateBasis(db,plans,()=>null);
+  const candidateIntegrations=createCandidateIntegrationDomain(db,plans);
+  const candidateBasis=candidateIntegrations.basis;
   const scheduler = createSchedulerDomain(db,plans);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
@@ -399,6 +400,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(candidateIntegrationRequests,method))return candidateIntegrations.execute(method as CandidateIntegrationMethod,input);
     if(Object.hasOwn(sourceArchiveRequests,method))return sourceArchives.execute(method as SourceArchiveMethod,input);
     if(Object.hasOwn(workspaceRequests,method))return workspaces.execute(method as WorkspaceMethod,input);
     if(Object.hasOwn(pipelineRequests,method))return pipelines.execute(method as PipelineMethod,input);
