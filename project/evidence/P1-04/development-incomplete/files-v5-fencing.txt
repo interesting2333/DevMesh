@@ -1,0 +1,64 @@
+TAP version 13
+# (node:28424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a durable Runner fence blocks job admission, protects holder identity and survives a real store reopen
+ok 1 - a durable Runner fence blocks job admission, protects holder identity and survives a real store reopen
+  ---
+  duration_ms: 13900.3356
+  type: 'test'
+  ...
+# (node:28424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: queued and unknown original Runner jobs keep their workspace unavailable for Git fencing
+ok 2 - queued and unknown original Runner jobs keep their workspace unavailable for Git fencing
+  ---
+  duration_ms: 5985.7927
+  type: 'test'
+  ...
+# (node:28424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: local filesystem and Runner fences recover lost replies without resending writes and bind an independent repo path
+ok 3 - local filesystem and Runner fences recover lost replies without resending writes and bind an independent repo path
+  ---
+  duration_ms: 7924.4023
+  type: 'test'
+  ...
+# (node:28424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: cleanup fencing requires separate original-operation authority and cannot become execution admission
+not ok 4 - cleanup fencing requires separate original-operation authority and cannot become execution admission
+  ---
+  duration_ms: 10160.943
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-fencing.test.mjs:56:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    [
+      {
+        "code": "custom",
+        "path": [
+          "permit",
+          "expiresAt"
+        ],
+        "message": "expiresAt must follow notBefore"
+      }
+    ]
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    RunnerClient.acquireWorkspaceFence (file:///D:/yms/AI/DevMesh/packages/runner/dist/index.mjs:99:96)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-fencing.test.mjs:60:92)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 3
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 45517.9289

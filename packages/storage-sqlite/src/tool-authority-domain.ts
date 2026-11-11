@@ -5,7 +5,7 @@ import {StorageError} from './errors.js';
 
 type Row=Record<string,string|number|null>;
 function fail():never{throw new StorageError('MCP_AUTHORITY_DENIED',403,'Current tool authority is unavailable');}
-const cleanup=new Set(['tests.get','tests.stop','tests.by-operation','issues.get','issues.by-operation','pipeline.get','pipeline.logs','pipeline.artifacts','pipeline.stop','pipeline.by-operation','repo.by-operation']);
+const cleanup=new Set(['tests.get','tests.stop','tests.by-operation','issues.get','issues.by-operation','pipeline.get','pipeline.logs','pipeline.artifacts','pipeline.stop','pipeline.by-operation','repo.by-operation','repo.fileByOperation']);
 export function createToolAuthorityDomain(db:DatabaseSync){
   const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined;
   function check(permit:ExecutionPermit,toolName:string,action:'read'|'write'|'stop'){

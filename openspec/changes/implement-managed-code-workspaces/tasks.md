@@ -6,7 +6,7 @@
 
 ## 2. Exclusive access and source retention
 
-- [ ] 2.1 实现项目／工作区准入及 Runner 状态 fencing，接 repo MCP 的 acquire 接口；验证并发互斥、暂停／旧代际拒绝、活动及未知 Job 拒绝写入和回收。
+- [x] 2.1 实现项目／工作区准入及 Runner 状态 fencing，接 repo MCP 的 acquire 接口；验证并发互斥、暂停／旧代际拒绝、活动及未知 Job 拒绝写入和回收。
 - [ ] 2.2 实现开发提交父链／范围／文件类型校验、受控对象传输和保留 ref；用分离的真实 Git 仓库验证错来源、越界、缺对象、原归档操作去重与 ACK 丢失恢复。
 
 ## 3. Candidate integration and conflict evidence

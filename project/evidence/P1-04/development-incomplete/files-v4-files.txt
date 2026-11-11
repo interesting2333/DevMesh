@@ -1,0 +1,97 @@
+TAP version 13
+# (node:13376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: MCP edits actual bytes with CAS, snapshots them, deletes by original identity and commits those changes
+not ok 1 - MCP edits actual bytes with CAS, snapshots them, deletes by original identity and commits those changes
+  ---
+  duration_ms: 42320.2549
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\mcp-repo-git.test.mjs:113:1'
+  failureType: 'testCodeFailure'
+  error: 'REPO_FILE_SCOPE_DENIED'
+  code: 'REPO_FILE_SCOPE_DENIED'
+  stack: |-
+    McpToolClient.call (file:///D:/yms/AI/DevMesh/packages/mcp-tools/dist/index.mjs:395:46)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/mcp-repo-git.test.mjs:119:101)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:13376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: file CAS, write scope, hard links and sensitive paths reject without overwriting source
+ok 2 - file CAS, write scope, hard links and sensitive paths reject without overwriting source
+  ---
+  duration_ms: 27276.2508
+  type: 'test'
+  ...
+# (node:13376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a file rename with lost SQLite acknowledgement reconciles exact proof after restart and pause without rewriting
+ok 3 - a file rename with lost SQLite acknowledgement reconciles exact proof after restart and pause without rewriting
+  ---
+  duration_ms: 32570.8407
+  type: 'test'
+  ...
+# (node:13376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: matching current bytes cannot prove an unprepared original edit and the unknown intent blocks further mutations
+ok 4 - matching current bytes cannot prove an unprepared original edit and the unknown intent blocks further mutations
+  ---
+  duration_ms: 16621.3652
+  type: 'test'
+  ...
+# (node:13376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: MCP editing holds the actual Runner barrier, rejects queued jobs and reconciles a paused original edit with cleanup authority
+not ok 5 - MCP editing holds the actual Runner barrier, rejects queued jobs and reconciles a paused original edit with cleanup authority
+  ---
+  duration_ms: 29580.8861
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\mcp-repo-git.test.mjs:156:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Comparison {
+    +   code: 'RUNNER_CONFLICT'
+    -   code: 'RUNNER_WORKSPACE_BUSY'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'RUNNER_WORKSPACE_BUSY'
+  actual:
+  error: 'RUNNER_CONFLICT'
+  stack: |-
+    McpToolClient.call (file:///D:/yms/AI/DevMesh/packages/mcp-tools/dist/index.mjs:395:46)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/mcp-repo-git.test.mjs:162:2)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/mcp-repo-git.test.mjs:162:2)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 168525.4809

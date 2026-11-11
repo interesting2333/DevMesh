@@ -1,0 +1,31 @@
+{
+  "scope": "Failed development checks, not product acceptance.",
+  "rounds": [
+    {
+      "version": 3,
+      "result": "typecheck/lint/build passed; five tests stopped at invalid migration filename before business actions"
+    },
+    {
+      "version": 4,
+      "result": "3/5 file checks passed; remaining fixture scope and RunnerClient public conflict-code expectations corrected without changing production authority"
+    }
+  ],
+  "logs": [
+    {
+      "path": "project/evidence/P1-04/development-incomplete/files-v3-report.json",
+      "sha256": "0b5f7ae36d2d3bcee47bef8654cf58b3d29911701f6f82f324f41966858131b7"
+    },
+    {
+      "path": "project/evidence/P1-04/development-incomplete/files-v3-files.txt",
+      "sha256": "5873f804ef75f88b7ad39b10bf60db8192f4d6ca0ce61b6d4472aee419cd8190"
+    },
+    {
+      "path": "project/evidence/P1-04/development-incomplete/files-v4-report.json",
+      "sha256": "3b2dff7f4114513cbf60c951c7b385cca5ef35fb3164c74fa52ce31e114cf253"
+    },
+    {
+      "path": "project/evidence/P1-04/development-incomplete/files-v4-files.txt",
+      "sha256": "45736051bc9585b1ca34fda90884976b99b4f462c9a16473531ad4f1602137f4"
+    }
+  ]
+}

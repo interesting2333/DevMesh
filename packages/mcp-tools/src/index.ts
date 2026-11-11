@@ -15,6 +15,6 @@ export {issueTools,issuesGetArgs,issuesOperationArgs} from './issues.js';
 export {workflowToolAuthority} from './authority.js';
 export {pipelineTools,PipelineCoordinator,pipelineStartArgs,pipelineGetArgs,pipelineLogsArgs,pipelineOperationArgs} from './pipeline.js';
 export {repoGitTools} from './repo-git.js';
-export type {RepoWorkspaceBinding,RepoWorkspaceLease,RepoGitOptions} from './repo-git.js';
+export type {RepoWorkspaceBinding,RepoWorkspaceLease,RepoGitOptions,RepoWorkspaceAccess} from './repo-git.js';
 export {startWorkflowMcpServices} from './composition.js';
 export type {WorkflowMcpOptions,WorkflowMcpServices,WorkflowMcpIdentity,McpServiceKind} from './composition.js';

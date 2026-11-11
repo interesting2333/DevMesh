@@ -6,17 +6,20 @@ import {isAbsolute,join,relative,resolve} from 'node:path';
 import {z} from 'zod';
 import {canonicalRoot} from '@devmesh/blob-store';
 import {opaqueKey,relativeFile} from '@devmesh/contracts';
-import {canonical,repoBinding,repoCommitArgs,repoIntegrateArgs} from '@devmesh/storage-sqlite';
+import type {ExecutionPermit} from '@devmesh/contracts';
+import {canonical,repoBinding,repoCommitArgs,repoIntegrateArgs,managedSourcePath} from '@devmesh/storage-sqlite';
 import type {RepoOperation,SqliteStorage} from '@devmesh/storage-sqlite';
 import {ToolError} from './protocol.js';
 import type {ToolDefinition} from './protocol.js';
+import {repoFileTools} from './repo-files.js';
 
 const bindingSchema=repoBinding.extend({root:z.string().min(1),gitDirectory:z.string().min(1),commonDirectory:z.string().min(1)});
 export type RepoWorkspaceBinding=z.output<typeof bindingSchema>;
 export interface RepoWorkspaceLease {release():Promise<void>}
 /** The allocator must fence Runner/editors as well as other Git writers. */
-export interface RepoGitOptions {storage:SqliteStorage;bindings:readonly RepoWorkspaceBinding[];scratchRoot:string;acquire:(binding:RepoWorkspaceBinding,signal:AbortSignal)=>Promise<RepoWorkspaceLease>;authorizeIntegration?:(binding:RepoWorkspaceBinding,commit:string,signal:AbortSignal)=>Promise<void>}
-const denied=(path:string)=>path.split('/').some(v=>v.startsWith('.')||['node_modules','vendor','secrets'].includes(v.toLowerCase())||v.includes(':')||Array.from(v).some(c=>c.charCodeAt(0)<32)||/\.(pem|key|p12|pfx)$/i.test(v));
+export interface RepoWorkspaceAccess {operationId:string;permit:ExecutionPermit;purpose:'read'|'write'|'reconcile'}
+export interface RepoGitOptions {storage:SqliteStorage;bindings:readonly RepoWorkspaceBinding[];scratchRoot:string;acquire:(binding:RepoWorkspaceBinding,signal:AbortSignal,access:RepoWorkspaceAccess)=>Promise<RepoWorkspaceLease>;authorizeIntegration?:(binding:RepoWorkspaceBinding,commit:string,signal:AbortSignal)=>Promise<void>}
+const denied=(path:string)=>!managedSourcePath.safeParse(path).success;
 const within=(root:string,path:string)=>{const rel=relative(root,path);return rel!==''&&!isAbsolute(rel)&&rel!=='..'&&!rel.startsWith('..'+(process.platform==='win32'?'\\':'/'));};
 const oid=(v:string)=>{if(!/^[a-f0-9]{40}$/.test(v))throw new ToolError('MCP_GIT_OBJECT_INVALID');return v;};
 const text=(b:Buffer)=>new TextDecoder('utf-8',{fatal:true}).decode(b);
@@ -100,7 +103,9 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
     const key=toolName==='repo.integrate'?'project:'+b.projectId:resolve(b.root).toLowerCase();if(locks.has(key)){await finish(operation,'FAILED',{code:'MCP_GIT_WORKSPACE_BUSY'});throw new ToolError('MCP_GIT_WORKSPACE_BUSY','not-sent');}
     locks.add(key);let lease:RepoWorkspaceLease|undefined;
     try{
-      lease=await options.acquire(structuredClone(b),input.signal);const root=await safeRoot(b,input.signal),base=args.baseCommit;
+      try{lease=await options.acquire(structuredClone(b),input.signal,{operationId:input.operationId,permit:input.permit,purpose:'write'});}
+      catch(error){await finish(operation,'FAILED',{code:'MCP_GIT_FENCE_NOT_ACQUIRED'});operation={...operation,state:'FAILED'};throw error;}
+      const root=await safeRoot(b,input.signal),base=args.baseCommit;
       if(toolName==='repo.commit'){
         const tree=await writeTree(root,operation,input.signal),message=(args as z.output<typeof repoCommitArgs>).message+'\n\nDevMesh-Operation: '+input.operationId+'\n',seconds=Math.floor(Date.parse(operation.createdAt)/1000);
         const identity='DevMesh <devmesh@localhost> '+seconds+' +0000',body=`tree ${tree}\nparent ${base}\nauthor ${identity}\ncommitter ${identity}\n\n${message}`;
@@ -135,9 +140,10 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
     if(refs.length!==1)throw new ToolError('MCP_GIT_INTEGRATION_SOURCE_DENIED','not-sent');return opaqueKey.parse(refs[0]!.slice('refs/devmesh/operations/'.length));
   }
   const tools:ToolDefinition[]=[
-    {name:'repo.diff',description:'Inspect bounded changes in an authorized fenced workspace against its frozen base',schema:z.strictObject({workspaceRef:opaqueKey,baseCommit:repoCommitArgs.shape.baseCommit}),action:'read',effectClass:'READ',async execute({args,permit,signal}){
+    ...repoFileTools({options,binding,safeRoot,git}),
+    {name:'repo.diff',description:'Inspect bounded changes in an authorized fenced workspace against its frozen base',schema:z.strictObject({workspaceRef:opaqueKey,baseCommit:repoCommitArgs.shape.baseCommit}),action:'read',effectClass:'READ',async execute({args,permit,signal,operationId}){
       const b=binding(String(args.workspaceRef));if(permit.ownerKind!=='workflowAttempt'||permit.runId!==b.runId||permit.attemptId!==b.attemptId||args.baseCommit!==b.baseCommit||!permit.resources.some(r=>r.kind==='workspace'&&r.resourceId===b.resourceId))throw new ToolError('MCP_WORKSPACE_DENIED','not-sent');
-      const lease=await options.acquire(structuredClone(b),signal);try{const root=await safeRoot(b,signal),changed=paths((await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--name-only','-z',b.baseCommit,'--'],signal)).out),untracked=paths((await git(root,['ls-files','--others','--exclude-standard','-z','--'],signal)).out),all=[...new Set([...changed,...untracked])];if(all.length>2000||all.some(denied))throw new ToolError('MCP_GIT_PATH_DENIED','not-sent');await physical(root,all);const diff=(await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--patch',b.baseCommit,'--'],signal)).out;if(diff.length>65536)throw new ToolError('MCP_GIT_DIFF_TOO_LARGE','not-sent');return {workspaceRef:b.workspaceRef,baseCommit:b.baseCommit,patch:text(diff),untracked};}finally{await lease.release();}
+      const lease=await options.acquire(structuredClone(b),signal,{operationId,permit,purpose:'read'});try{await options.storage.request('assertRepoWorkspaceSettled',{permit,workspaceRef:b.workspaceRef});const root=await safeRoot(b,signal),changed=paths((await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--name-only','-z',b.baseCommit,'--'],signal)).out),untracked=paths((await git(root,['ls-files','--others','--exclude-standard','-z','--'],signal)).out),all=[...new Set([...changed,...untracked])];if(all.length>2000||all.some(denied))throw new ToolError('MCP_GIT_PATH_DENIED','not-sent');await physical(root,all);const diff=(await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--patch',b.baseCommit,'--'],signal)).out;if(diff.length>65536)throw new ToolError('MCP_GIT_DIFF_TOO_LARGE','not-sent');return {workspaceRef:b.workspaceRef,baseCommit:b.baseCommit,patch:text(diff),untracked};}finally{await lease.release();}
     }},
     {name:'repo.commit',description:'Commit only approved files from a fenced workspace at the frozen base',schema:repoCommitArgs,action:'write',effectClass:'IDEMPOTENT_WRITE',execute:input=>execute('repo.commit',input)},
     {name:'repo.integrate',description:'Integrate a proven commit into the Run candidate ref with a serialized base compare-and-swap',schema:repoIntegrateArgs,action:'write',effectClass:'IDEMPOTENT_WRITE',execute:input=>execute('repo.integrate',input)},

@@ -10,7 +10,7 @@ import {ControlledGit,WorkspaceError} from './git.js';
 export interface AllocationFence {release():Promise<void>}
 export interface AllocationFencer {
   /** Must fence actual Runner writers; a timed control DB lock is insufficient. */
-  acquire(input:{kind:'project'|'workspace';directoryRoot:string;resourceId:string;operationId:string;permit?:Request<'beginWorkspaceAllocation'>['permit']},signal:AbortSignal):Promise<AllocationFence>;
+  acquire(input:{kind:'project'|'workspace';directoryRoot:string;resourceId:string;operationId:string;permit?:Request<'beginWorkspaceAllocation'>['permit'];purpose?:'write'|'cleanup'},signal:AbortSignal):Promise<AllocationFence>;
 }
 export interface LocalWorkspaceOptions {
   mode:'local-development';storage:SqliteStorage;controlDataRoot:string;runnerDataRoot:string;backupRoot:string;

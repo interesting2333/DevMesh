@@ -35,6 +35,8 @@ export interface RunnerAuthority {
  verify(controllerId:string,request:StartJob,permit:StartJob['permit']):Promise<void>;
   /** Required only for managed workspace fencing; must check the current grant. */
   verifyWorkspace?(controllerId:string,permit:StartJob['permit'],workspaceRef:string):Promise<void>;
+  /** Separate original-operation cleanup authority; cannot authorize new execution or edits. */
+  verifyWorkspaceCleanup?(controllerId:string,permit:StartJob['permit'],workspaceRef:string,parentOperationId:string):Promise<void>;
 }
 export const ownerKey=(p:StartJob['permit'])=>p.ownerKind==='workflowAttempt'?'run:'+p.runId:'invocation:'+p.invocationId;
 export const attemptKey=(p:StartJob['permit'])=>p.ownerKind==='workflowAttempt'?p.attemptId:p.invocationAttemptId;

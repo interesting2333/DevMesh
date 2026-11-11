@@ -30,11 +30,13 @@
 
 ### Exclusive access and Runner coordination
 
-分配器向 repo MCP 提供实际 `acquire(binding, signal)`。锁覆盖整个工作区动作，项目集成另外获得项目串行准入；顺序固定为项目后工作区，避免互锁。准入回查当前 Host／Grant／ACL、Run／Work epoch、实际 Runner 原 Job 与编辑器状态。仍活动或结果未知时不能获得可写／回收许可。
+分配器向 repo MCP 提供实际 `acquire(binding, signal, {operationId, permit, purpose})`。锁覆盖整个工作区动作，顺序固定为项目后工作区，避免互锁；上下文来自执行宿主，不作为模型业务参数。准入回查当前 Host／Grant／ACL、Run／Work epoch、实际 Runner 原 Job 与编辑器状态。仍活动或结果未知时不能获得可写／回收许可。
 
 跨进程或节点的资源 fencing 由拥有目录的 Runner 管理服务实施；只有控制面 SQLite 记录或锁超时不足以释放目录。启动／续租／停止的代际保持与已有 permit 协议一致。未接真实 Runner 时仅启用明确本地、无活动 Job 的测试／开发分配器，保存证据范围。
 
 本地适配组合实际目录的进程文件锁与 Runner SQLite 持久屏障。屏障不自动过期，登记／认领与屏障取得在同一 Runner Worker 串行事务复核；等待、运行、停止中和未知 Job 都阻止取得写许可。取得／释放保留原 operation、完整 permit 依据及 holder token，回复丢失查询原记录。崩溃恢复必须核实本机原持有进程已死亡并提供准确文件锁 token，不能因 Grant 到期或控制面锁超时推断 Git 已退出；实际 Git 子进程 close 之后才释放锁。Runner 返回的物理路径须匹配配置的本地 Runner 根和固定 Attempt repo 子目录。远程目录执行代理仍需单独配置，不以该本地适配代表远程验收。
+
+暂停或 Host 结束后的原文件操作核实，使用可选 `purpose=cleanup` 和单独的 `verifyWorkspaceCleanup` 回查原 operation、owner、资源与当前成员权限；它只能取得检查／收尾屏障，不能登记 Job、复活 Grant 或发送新编辑。未配置该权威回查时明确拒绝；缺省 purpose 仍按当前写准入，旧请求 JSON／哈希不补默认字段。`createLocalRepoAcquire` 绑定实际 Attempt repo 路径并按固定顺序组合两种锁；新动作使用 write，原操作核实使用 cleanup。
 
 ### Source verification and transfer acknowledgement
 

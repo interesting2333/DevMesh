@@ -2,6 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {mkdir,realpath} from 'node:fs/promises';
 import {join} from 'node:path';
 import {opaqueKey} from '@devmesh/contracts';
+import type {ExecutionPermit} from '@devmesh/contracts';
 import {canonicalRoot,assertSeparate} from '@devmesh/blob-store';
 import {acquireWriterLock,canonical} from '@devmesh/storage-sqlite';
 import {acquireWorkspaceFence} from '@devmesh/runner';
@@ -37,7 +38,7 @@ export class LocalRunnerWorkspaceFencer implements AllocationFencer {
         if(!input.permit||input.permit.ownerKind!=='workflowAttempt')throw new WorkspaceError('WORKSPACE_PERMIT_REQUIRED');const expected=join(await realpath(this.runnerDataRoot),'workspaces',input.permit.attemptId,'repo');
         const old=await this.active(input.resourceId);
         if(old){if(!recovery||old.holderToken!==recovery||old.workspacePath!==expected)throw new WorkspaceError('WORKSPACE_FENCE_RECOVERY_REQUIRED');await this.releaseRunner(old);}
-        const request=acquireWorkspaceFence.parse({operationId:'op_'+randomUUID().replaceAll('-',''),parentOperationId:input.operationId,workspaceRef:input.resourceId,permit:structuredClone(input.permit),holderToken:lock.token});
+        const request=acquireWorkspaceFence.parse({operationId:'op_'+randomUUID().replaceAll('-',''),parentOperationId:input.operationId,workspaceRef:input.resourceId,permit:structuredClone(input.permit),holderToken:lock.token,...(input.purpose?{purpose:input.purpose}:{})});
         try{fence=await this.options.runner.acquireWorkspaceFence(request);}catch(error){try{fence=await this.options.runner.workspaceFenceByOperation(request.operationId);}catch{throw error;}}
         if(!fence||fence.operationId!==request.operationId||fence.workspaceRef!==input.resourceId||fence.workspacePath!==expected||fence.holderToken!==lock.token||fence.state!=='ACTIVE'||canonical(fence.request)!==canonical(request))throw new WorkspaceError('WORKSPACE_FENCE_ACQUIRE_UNKNOWN','unknown');
       }
@@ -49,4 +50,16 @@ export class LocalRunnerWorkspaceFencer implements AllocationFencer {
       lock.release();throw error;
     }
   }
+}
+
+/** Trusted Repo MCP adapter: consistent project→workspace lock order and Runner admission barrier. */
+export function createLocalRepoAcquire(fencer:LocalRunnerWorkspaceFencer){
+ return async(binding:{root:string;attemptId:string;resourceId:string;projectResourceId:string},signal:AbortSignal,access:{operationId:string;permit:ExecutionPermit;purpose:'read'|'write'|'reconcile'})=>{
+  if(access.permit.ownerKind!=='workflowAttempt'||access.permit.attemptId!==binding.attemptId||await realpath(binding.root)!==join(await realpath(fencer.runnerDataRoot),'workspaces',binding.attemptId,'repo'))throw new WorkspaceError('WORKSPACE_REPO_BINDING_CHANGED');
+  const project=await fencer.acquire({kind:'project',directoryRoot:fencer.controlDataRoot,resourceId:binding.projectResourceId,operationId:access.operationId},signal);
+  try{
+   const workspace=await fencer.acquire({kind:'workspace',directoryRoot:fencer.runnerDataRoot,resourceId:binding.resourceId,operationId:access.operationId,permit:access.permit,purpose:access.purpose==='reconcile'?'cleanup':'write'},signal);let released=false;
+   return {release:async()=>{if(released)return;await workspace.release();await project.release();released=true;}};
+  }catch(error){await project.release();throw error;}
+ };
 }

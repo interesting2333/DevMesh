@@ -27,6 +27,11 @@ The system SHALL serialize project integration and fence workspace mutations aga
 - **WHEN** a Git write or reclamation is requested while an owning job may still be active
 - **THEN** the request SHALL be rejected and the original job SHALL remain available for query and stop
 
+#### Scenario: A paused original file mutation needs reconciliation
+
+- **WHEN** the original owner requests a filesystem reconciliation barrier after write admission has closed
+- **THEN** separate current membership, original-operation and resource authority SHALL be required; the cleanup barrier SHALL retain Runner exclusion and SHALL NOT authorize a new edit or Job
+
 ### Requirement: Development commits are verified and retained in the controlled repository
 
 The system SHALL verify a development commit's repository, original host, fixed base, ancestry and approved diff scope, transfer its objects to the controlled project repository, and retain a durable reference before acknowledging source archival.

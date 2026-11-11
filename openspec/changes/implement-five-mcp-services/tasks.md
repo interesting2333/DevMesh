@@ -8,7 +8,7 @@
 
 - [x] 2.1 实现受控 Git repo 写动作和原操作记录；用真实临时 Git 仓库验证写范围、baseCommit、去重、冲突和恢复。
 - [x] 2.2 增加独立流水线及阶段持久记录，冻结配置并接 RunnerClient；验证顺序、失败／未知阻断、原 Job 查询及重启，并完成原 Job 序号续租和十五秒子许可检查。
-- [ ] 2.3 补齐真实工作区读取、文件写入／删除、diff／snapshot 工具及原操作日志，接当前授权、旧内容 CAS、实际目录 fencing 和落盘证明；以官方 MCP HTTP 验证编辑后 Git 提交、越界／旧 SHA／链接拒绝、丢回复与重启只查询原事实。
+- [x] 2.3 补齐真实工作区读取、文件写入／删除、diff／snapshot 工具及原操作日志，接当前授权、旧内容 CAS、实际目录 fencing 和落盘证明；以官方 MCP HTTP 验证编辑后 Git 提交、越界／旧 SHA／链接拒绝、丢回复与重启只查询原事实。
 
 ## 3. Composition and recovery
 

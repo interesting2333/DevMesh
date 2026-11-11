@@ -36,6 +36,9 @@ import type {RepoMethod} from './repo-protocol.js';
 import {createWorkspaceDomain} from './workspace-domain.js';
 import {workspaceRequests} from './workspace-protocol.js';
 import type {WorkspaceMethod} from './workspace-protocol.js';
+import {createRepoFileDomain} from './repo-file-domain.js';
+import {repoFileRequests} from './repo-file-protocol.js';
+import type {RepoFileMethod} from './repo-file-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -47,6 +50,7 @@ export function createDomain(db: DatabaseSync) {
   });
   const runtime = createRuntimeDomain(db);
   const repository=createRepoDomain(db);
+  const repositoryFiles=createRepoFileDomain(db);
   const workspaces=createWorkspaceDomain(db);
   const sessions = createSessionDomain(db);
   const tools=createToolDomain(db,(runId,operationId,attemptId,payload)=>{
@@ -383,6 +387,7 @@ export function createDomain(db: DatabaseSync) {
   return { execute(method: Method, input: unknown): unknown {
     if(Object.hasOwn(workspaceRequests,method))return workspaces.execute(method as WorkspaceMethod,input);
     if(Object.hasOwn(pipelineRequests,method))return pipelines.execute(method as PipelineMethod,input);
+    if(Object.hasOwn(repoFileRequests,method))return repositoryFiles.execute(method as RepoFileMethod,input);
     if(Object.hasOwn(repoRequests,method))return repository.execute(method as RepoMethod,input);
     if(Object.hasOwn(toolRequests,method))return tools.execute(method as ToolMethod,input);
     if(Object.hasOwn(preparationRequests,method))return preparations.execute(method as PreparationMethod,input);

@@ -7,6 +7,7 @@ import {digest,transaction} from './migrations.js';
 import {createToolAuthorityDomain} from './tool-authority-domain.js';
 import {repoRequests,repoCommitArgs,repoIntegrateArgs} from './repo-protocol.js';
 import type {RepoInput,RepoMethod,RepoOperation} from './repo-protocol.js';
+import {assertRepoFilesSettled} from './repo-file-domain.js';
 type Row=Record<string,string|number|null>;
 function fail(code:string,status=409):never{throw new StorageError(code,status,'Repository action could not be applied');}
 export function createRepoDomain(db:DatabaseSync){
@@ -19,7 +20,9 @@ export function createRepoDomain(db:DatabaseSync){
     beginRepoOperation(i:RepoInput<'beginRepoOperation'>){return transaction(db,()=>{
       const args=i.toolName==='repo.commit'?parseContract(repoCommitArgs,i.args):parseContract(repoIntegrateArgs,i.args);
       const request={args,binding:i.binding},requestHash=digest(canonical({toolName:i.toolName,...request})),old=get('SELECT * FROM repo_operations WHERE operation_id=?',i.operationId);
-      if(old){owned(old,i.permit);if(old.request_hash!==requestHash)fail('IDEMPOTENCY_KEY_REUSED');return {...view(old),created:false};}
+      if(get('SELECT 1 FROM repo_file_operations WHERE operation_id=?',i.operationId))fail('IDEMPOTENCY_KEY_REUSED');
+       if(old){owned(old,i.permit);if(old.request_hash!==requestHash)fail('IDEMPOTENCY_KEY_REUSED');return {...view(old),created:false};}
+       assertRepoFilesSettled(db,i.binding.workspaceRef);
       const h=authority.check(i.permit,i.toolName,'write'),p=i.permit,b=i.binding;
       if(p.ownerKind!=='workflowAttempt'||b.projectId!==h.projectId||b.runId!==p.runId||b.attemptId!==p.attemptId||args.workspaceRef!==b.workspaceRef||args.baseCommit!==b.baseCommit)fail('REPO_BINDING_DENIED',403);
       const manifest=JSON.parse(String(h.host.input_manifest_json)) as {codeCommit:string};

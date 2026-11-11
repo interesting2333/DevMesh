@@ -27,9 +27,9 @@ export class RunnerPolicy {
   if(await realpath(path)!==path)throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);
   return {request,workspacePath:path,argv};
  }
-  private async workspacePath(permit:StartJob['permit'],w:WorkspaceBinding){
+  private async workspacePath(permit:StartJob['permit'],w:WorkspaceBinding,cleanup=false){
    if(w.ownerKind!==permit.ownerKind||w.attemptId!==attemptKey(permit))throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);
-   permit=parseContract(executionPermit,permit);assertPermit(permit,permit,{kind:'workspace',resourceId:w.resourceId,access:'write'},Date.now());
+   permit=parseContract(executionPermit,permit);if(cleanup){if(!permit.resources.some(r=>r.kind==='workspace'&&r.resourceId===w.resourceId&&r.access==='write'))throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);}else {try{assertPermit(permit,permit,{kind:'workspace',resourceId:w.resourceId,access:'write'},Date.now());}catch{throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);}}
    canonicalRoot(this.config.dataRoot);const root=await realpath(this.config.dataRoot),path=resolve(root,w.relativePath),expected=(permit.ownerKind==='workflowAttempt'?'workspaces/':'invocations/')+attemptKey(permit)+(w.sourceDirectory==='repo'?'/repo':'');
    if(w.relativePath.replaceAll('\\','/')!==expected||!path.startsWith(root+sep)||['\0','\r','\n',','].some(c=>path.includes(c)))throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);
    canonicalRoot(path);return {root,path};
@@ -37,6 +37,6 @@ export class RunnerPolicy {
   async fence(input:AcquireWorkspaceFence,stored?:WorkspaceBinding){
    if(input.permit.ownerKind!=='workflowAttempt')throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);
    const configured=this.config.workspaces[input.workspaceRef];if(configured&&stored&&canonical(configured)!==canonical(stored))throw new RunnerError('RUNNER_WORKSPACE_BINDING_CHANGED',409);const binding=configured??stored??{attemptId:input.permit.attemptId,ownerKind:'workflowAttempt' as const,resourceId:input.workspaceRef,relativePath:'workspaces/'+input.permit.attemptId+'/repo',sourceDirectory:'repo' as const};
-   return {binding,workspacePath:(await this.workspacePath(input.permit,binding)).path};
+   return {binding,workspacePath:(await this.workspacePath(input.permit,binding,input.purpose==='cleanup')).path};
   }
 }

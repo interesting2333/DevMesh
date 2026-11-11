@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {mkdir} from 'node:fs/promises';
 import {join} from 'node:path';
+import {fork} from 'node:child_process';
+import {once} from 'node:events';
+import {fileURLToPath} from 'node:url';
 import {RunnerClient,RunnerManager,RunnerMaterials,serveRunner,openRunnerStorage} from '../packages/runner/dist/index.mjs';
 import {LocalRunnerWorkspaceFencer} from '../packages/code-workspaces/dist/index.mjs';
 import {fixture as runnerFixture,request,until} from './fixtures/runner.mjs';
@@ -51,4 +54,29 @@ test('local filesystem and Runner fences recover lost replies without resending 
   globalThis.fetch=async(value,init)=>{const result=await native(value,init);if(init?.method==='POST'&&String(value instanceof Request?value.url:value).endsWith(':release')){releases++;assert.equal((await result.json()).state,'RELEASED');throw Error('release reply lost after commit');}return result;};
   try{await lease.release();}finally{globalThis.fetch=native;}assert.equal(releases,1);assert.equal((await f.client.getWorkspaceFence(original.fenceId)).state,'RELEASED');
   const next=await new LocalRunnerWorkspaceFencer(options).acquire(input,signal);await lease.release();assert.notEqual((await f.client.activeWorkspaceFence(input.resourceId)).fenceId,original.fenceId);await next.release();assert.equal((await f.client.start(f.startRequest())).state,'QUEUED');
+});
+
+test('cleanup fencing requires separate original-operation authority and cannot become execution admission',async t=>{
+ const f=await fixture(t),original=op(),input={...f.fenceRequest(),parentOperationId:original,purpose:'cleanup'};
+ await assert.rejects(f.client.acquireWorkspaceFence(input),{status:503});
+ let checked=0;f.authority.verifyWorkspaceCleanup=async(controller,permit,workspaceRef,parent)=>{assert.equal(controller,'controller.local');assert.equal(permit.grantId,f.base.permit.grantId);assert.equal(workspaceRef,f.base.workspaceRef);assert.equal(parent,original);checked++;};
+ input.permit.notBefore=new Date(Date.now()-15000).toISOString();input.permit.expiresAt=new Date(Date.now()-1000).toISOString();const fence=await f.client.acquireWorkspaceFence(input);assert.equal(fence.state,'ACTIVE');assert.equal(checked,1);
+ await assert.rejects(f.client.start({...f.startRequest(),permit:input.permit}),{status:403});await f.client.releaseWorkspaceFence(fence.fenceId,{holderToken:fence.holderToken,requestHash:fence.requestHash});
+ await assert.rejects(f.client.acquireWorkspaceFence({...input,operationId:op(),parentOperationId:op()}),{status:403});assert.equal((await f.layout.store.request('inspect',{})).jobs,0);
+});
+
+test('a real killed filesystem owner requires its exact dead-owner token before replacing the durable Runner barrier',async t=>{
+ const f=await fixture(t,7);await mkdir(join(f.root,'control'),{recursive:true});
+ const options={mode:'local-development',controlDataRoot:join(f.root,'control'),runnerDataRoot:f.layout.dataRoot,backupRoot:join(f.root,'backup')},input={kind:'workspace',directoryRoot:f.layout.dataRoot,resourceId:f.base.workspaceRef,operationId:op(),permit:f.base.permit},signal=new AbortController().signal;
+ const child=fork(fileURLToPath(new URL('./fixtures/workspace-fence-holder.mjs',import.meta.url)),[],{stdio:['ignore','ignore','pipe','ipc'],windowsHide:true,execArgv:[]});let stderr='';child.stderr.on('data',v=>{if(stderr.length<4096)stderr+=String(v);});const exited=once(child,'exit');let dead=false;
+ f.cleanup.push(async()=>{if(!dead){child.kill('SIGKILL');await exited;dead=true;}});
+ const held=new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Child fence acquisition timed out: '+stderr)),30000);timer.unref();child.once('message',message=>{clearTimeout(timer);if(message.error)reject(Error(message.error));else resolve(message);});child.once('error',error=>{clearTimeout(timer);reject(error);});});
+ child.send({options,input,endpoint:f.client.base.origin});const original=await held;assert.equal((await f.client.activeWorkspaceFence(input.resourceId)).fenceId,original.fenceId);
+ child.kill('SIGKILL');await exited;dead=true;assert.equal((await f.client.getWorkspaceFence(original.fenceId)).state,'ACTIVE');
+ await assert.rejects(new LocalRunnerWorkspaceFencer({...options,runner:f.client}).acquire(input,signal),{code:'STORAGE_LOCKED'});
+ await assert.rejects(new LocalRunnerWorkspaceFencer({...options,runner:f.client,recoveryTokens:new Map([['workspace:'+input.resourceId,randomUUID()]])}).acquire(input,signal),{code:'STORAGE_LOCKED'});
+ assert.equal((await f.client.getWorkspaceFence(original.fenceId)).state,'ACTIVE');
+ const recovered=await new LocalRunnerWorkspaceFencer({...options,runner:f.client,recoveryTokens:new Map([['workspace:'+input.resourceId,original.holderToken]])}).acquire(input,signal);
+ try{assert.equal((await f.client.getWorkspaceFence(original.fenceId)).state,'RELEASED');assert.notEqual((await f.client.activeWorkspaceFence(input.resourceId)).fenceId,original.fenceId);}finally{await recovered.release();}
+ await assert.rejects(f.client.activeWorkspaceFence(input.resourceId),{status:404});assert.equal((await f.layout.store.request('inspect',{})).jobs,0);
 });

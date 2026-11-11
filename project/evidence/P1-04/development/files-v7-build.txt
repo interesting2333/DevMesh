@@ -1,0 +1,32 @@
+$ tsdown src/index.ts src/worker.ts src/main.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\runner\package.json 
+ℹ entry: src/index.ts, src/worker.ts, src/main.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 14 files
+ℹ dist\worker.mjs                        20.94 kB │ gzip:  5.48 kB
+ℹ dist\index.mjs                         13.03 kB │ gzip:  4.12 kB
+ℹ dist\main.mjs                           3.09 kB │ gzip:  1.39 kB
+ℹ dist\server-DvErHrgw.mjs.map           55.23 kB │ gzip: 14.63 kB
+ℹ dist\worker.mjs.map                    33.69 kB │ gzip:  8.87 kB
+ℹ dist\server-DvErHrgw.mjs               32.21 kB │ gzip:  8.51 kB
+ℹ dist\index.mjs.map                     21.11 kB │ gzip:  6.58 kB
+ℹ dist\workspace-fence-Bv_Rtj-z.mjs.map   7.61 kB │ gzip:  2.45 kB
+ℹ dist\main.mjs.map                       5.15 kB │ gzip:  2.10 kB
+ℹ dist\workspace-fence-Bv_Rtj-z.mjs       3.55 kB │ gzip:  1.33 kB
+ℹ dist\index.d.mts                       50.46 kB │ gzip:  5.21 kB
+ℹ dist\main.d.mts                         0.01 kB │ gzip:  0.03 kB
+ℹ dist\worker.d.mts                       0.01 kB │ gzip:  0.03 kB
+ℹ 13 files, total: 246.09 kB
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (67%)
+  - tsdown:deps (29%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 80226ms

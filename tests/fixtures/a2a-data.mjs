@@ -26,7 +26,9 @@ export async function commit(storage,m){return storage.request('commitRegistry',
 export async function prepareDispatch(f,registry,roleConfig={},options={}){
  const body=await f.content.putText(meta(),{kind:'content'},'实现任务看板');
   const receipt=await f.storage.request('createProjectWithRun',{meta:meta(),name:'A2A protocol tests',baseCommit:options.baseCommit??'b'.repeat(40),contentHash:body.expectedHash,clientMessageId:randomUUID()});
- const p=receipt.result,draft=plan(),req=requirements(),content=await f.content.putJson(meta(),{kind:'content'},draft);
+  const p=receipt.result,draft=plan(),req=requirements();
+  if(options.writeScope)draft.works.find(w=>w.role==='developer').writeScope=[...options.writeScope];
+  const content=await f.content.putJson(meta(),{kind:'content'},draft);
  const publication=await f.storage.request('publishPlan',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r1"',requirementRevision:1,planRevision:1,requirements:req,plan:draft,planContentHash:content.expectedHash});
  await f.storage.request('confirmPlan',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r2"',requirementRevision:1,planRevision:1,reviewHash:publication.result.reviewHash});
  const input=await admission(f.storage,{...p,draft,requirements:req}),target=await registry.resolveRole('developer');

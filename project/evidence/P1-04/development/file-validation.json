@@ -1,0 +1,440 @@
+{
+  "scope": "Working-directory development checks only; not fixed-commit or product acceptance.",
+  "recordedAt": "2026-11-11T17:39:52.890Z",
+  "dependencyCoreIdenticalBetweenV7AndV8": true,
+  "checkedDependencyCore": [
+    {
+      "path": "packages\\code-workspaces\\src\\allocation.ts",
+      "sha256": "ddfbc1d11c06e993632bc457e49b62f604f43a05387b1936314f4567cf8129c9"
+    },
+    {
+      "path": "packages\\code-workspaces\\src\\fencing.ts",
+      "sha256": "e2d6f5bc71408e7023aaa23087b94d302d2c101607bac7ef472ff1e0dafa3eb1"
+    },
+    {
+      "path": "packages\\code-workspaces\\src\\git.ts",
+      "sha256": "df7a99b0506ac00adc5642b0217bbc41dd8c408f34dec42f06db02f1ba4a0315"
+    },
+    {
+      "path": "packages\\code-workspaces\\src\\index.ts",
+      "sha256": "b989c391ab25d6cd0428282797c28185aa4621afd28b2c9f1118f6fd7975c4b9"
+    },
+    {
+      "path": "packages\\runner\\src\\client.ts",
+      "sha256": "dc604cd811a3bc8d67c9b1d18cc964443f8d57b6e99c75926d7ddac81e84c55a"
+    },
+    {
+      "path": "packages\\runner\\src\\docker.ts",
+      "sha256": "5e28352b01943ccaab57349de59d3ac6b6237d8eb51958fd3935ee86965e4a93"
+    },
+    {
+      "path": "packages\\runner\\src\\fence-domain.ts",
+      "sha256": "56030d306d494f0bf08219b1014be55ec8ba7d32a51cd0e6e90fb479128db703"
+    },
+    {
+      "path": "packages\\runner\\src\\index.ts",
+      "sha256": "32bb69bfa3479f17f0dd79f3759f6d14e083f9d616ae5a379cb124de618cbe69"
+    },
+    {
+      "path": "packages\\runner\\src\\layout.ts",
+      "sha256": "0a5a5874d21e47722b0617444af7e5b9ff9ca3827101a6434dc73edc133d6919"
+    },
+    {
+      "path": "packages\\runner\\src\\main.ts",
+      "sha256": "469014966e142ccc1451c8cc630ebc559ba8b5b9c969890fe05bd4d4a9c2cfbe"
+    },
+    {
+      "path": "packages\\runner\\src\\manager.ts",
+      "sha256": "c137b0bf409cb8f5be5422899518824a7ec4573ba3f399cf6ad75ed44841ad47"
+    },
+    {
+      "path": "packages\\runner\\src\\materials.ts",
+      "sha256": "b8de0e8ae970b1ec95828f5b48634a4354306cb3f58a714e20cad24336defc78"
+    },
+    {
+      "path": "packages\\runner\\src\\policy.ts",
+      "sha256": "5c46ff86920eaf2a6f7eb324e19c7686e4938389a1e913dd2f181b4f897df32f"
+    },
+    {
+      "path": "packages\\runner\\src\\protocol.ts",
+      "sha256": "09507139a081e471ff90e52fd61551fa47690f9993847f7930ffea1e38d56c8d"
+    },
+    {
+      "path": "packages\\runner\\src\\server.ts",
+      "sha256": "abfabf45d8fdce64566c9ac70efd3d2b2db85dc29c0c780a0052b4c2bb2da556"
+    },
+    {
+      "path": "packages\\runner\\src\\store-protocol.ts",
+      "sha256": "f64835318b97e466491e28e47947863de1b7b0d8f827e2bd4542deec96fc4e12"
+    },
+    {
+      "path": "packages\\runner\\src\\store.ts",
+      "sha256": "5aa5343423e110f2e69034f1b6ac708fa51af5e84fa1aa7839ce5bd81ef39698"
+    },
+    {
+      "path": "packages\\runner\\src\\worker.ts",
+      "sha256": "52b3b7a497cfaab16622b3c747d413728ae3ff933b847805d63c50b166b6f093"
+    },
+    {
+      "path": "packages\\runner\\src\\workspace-fence.ts",
+      "sha256": "4e08840dc58fd21da5a53749646b5bc250389745f326137da213ab99cd336430"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\dispatch-domain.ts",
+      "sha256": "8e479c9047698c1c9b94771862237ac606bba7003dc96eb7ee9a7b6d95788417"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\domain.ts",
+      "sha256": "bb3be6f49f576d3869b17001bcc217488fe4fd55a4a9f8fbf79b54ab08c32817"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\errors.ts",
+      "sha256": "d49e1a6030c7e212438b75fefa0435284d10316d9622c1061e5a70f2ffb38e13"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\index.ts",
+      "sha256": "8ee5cd97512389590ad8bb4bb6a8cdddca83d181cdafdc526e6bc110205777ef"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\input-domain.ts",
+      "sha256": "c3d00b2897c1ce58e72cc8ba280e71e6b408a35dec642928077cbc69f13ff519"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\input-protocol.ts",
+      "sha256": "2053a8ac3529e50e8edf5b35a135205c295b66ab776da7f6fa6e638f1df928dc"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\json.ts",
+      "sha256": "4c5a1c60ca58c53a7c2c87cec9357ace7bc35c53fd6908338eb6bde7b7f723e3"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\lock.ts",
+      "sha256": "2c63e201e8913927073ab02e1cccb5e2aed023edc6f0cc5c8b96862d384043c9"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\migrations.ts",
+      "sha256": "a75a9d8ae3608ba0fc0bea032c4fd001c922bf5c1a4071e434ecec66b686fdce"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\pipeline-domain.ts",
+      "sha256": "9008bf53cce5317c47c86ecd0d6f7e01982708391e02934a4b5c8bba78a3096f"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\pipeline-protocol.ts",
+      "sha256": "0d211f41b004617ad6df4b6a5be598d544e399d50603145f78f362d04bb507bf"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\plan-domain.ts",
+      "sha256": "53f3459d80301c68ebb5b7eac4ed0872ac4ba57738386654e0a6b2db77f8e70e"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\preparation-domain.ts",
+      "sha256": "b1f0e85126222db467422f9ad44e4f5cc8ebebfadd4cc2b968b4317593e0a883"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\preparation-protocol.ts",
+      "sha256": "85a2b2981bcd763b8216ddc1e2c292de1f5b2df99f6599221663b8053633a349"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\protocol.ts",
+      "sha256": "5f90e688d7f80bae6068405018cf2fe21ac8a5c273f07e252fae30e93b0081bd"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\registry-domain.ts",
+      "sha256": "bcd201d233379dd8e7be5b902cee8f56abecd408037e5d4649a11feff93bdde1"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\registry-protocol.ts",
+      "sha256": "7e57491ad4bf90ab5c90e4cc0a1b115db28b87255e3abd10a959d9c1d4294952"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\repo-domain.ts",
+      "sha256": "76bd811d3aae792b2ca34abad19ad32af96d2827a181c143e91a1be80c764f02"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\repo-file-domain.ts",
+      "sha256": "08cb0e77aa4d115e459eeaff789e7a9fff4ef28954cfa2544272ae637bd25a9f"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\repo-file-protocol.ts",
+      "sha256": "a5b53622a07bb0500f5a5769f1670e2cb430a8b36da12d6a3bcc0954bf68ae28"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\repo-protocol.ts",
+      "sha256": "02ef9783ebdb6ae6eda129514717179cde7a19232b36f373f454bbd44ea9ecc4"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\runtime-domain.ts",
+      "sha256": "1ccf38a519b84e4feb39d651c1720dda2bcf51c41289b1bdc3d7df5a91923774"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\runtime-protocol.ts",
+      "sha256": "371cbb976c8c99e71f91eefb62f208e09660a408cd1882b253c4db8d2fbd2533"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\scheduler-domain.ts",
+      "sha256": "75759b70ffc918d76cf387233bc373745ce8816b417e68aa594a0e28c97569f4"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\session-domain.ts",
+      "sha256": "fc8a91da0226d961ce27b601cc0a37d5bf2ce54c2b56da0169fee1a0e0a5db4b"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\session-protocol.ts",
+      "sha256": "377c32b505bcf58d84f8c2af1e7fb734fd52c2fdf8bd248300ea37fa9b945bc4"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\tool-authority-domain.ts",
+      "sha256": "c065096eac9027a9b1fbd2ffdd20b513e7e2e57ac5718c2b073c2da30232a6fb"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\tool-domain.ts",
+      "sha256": "38bce1a5d380ce16c8beef4e8ad242ad6ce6e0b93dbec1e6f73078b44769282d"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\tool-protocol.ts",
+      "sha256": "7f43dcf7339d58da56b7ca3bb87307dd420178f818277d04048b71533f978427"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\understanding-domain.ts",
+      "sha256": "27ee0294bde216f9c82d82a3c8b68cfd7dea79c3cf4a3596795c45f2e54d66b4"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\worker.ts",
+      "sha256": "26baa1124be22de4432b84e0dd6706c3a662b54f6924e8aec8c72ddcde2e9b09"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\workspace-domain.ts",
+      "sha256": "edbb06898c7fabb4c94e097c3ff92f8c338d10bae88714972c1ddcf943316493"
+    },
+    {
+      "path": "packages\\storage-sqlite\\src\\workspace-protocol.ts",
+      "sha256": "370503d537c08962f1ee8b3d8ac9b06552eeee52948da1cd7bc6103154690034"
+    }
+  ],
+  "checks": [
+    {
+      "round": 3,
+      "typecheck": "passed",
+      "lint": "passed",
+      "build": "four affected packages passed; pre final Runner expired-denial mapping and test fixture edits"
+    },
+    {
+      "round": 5,
+      "files": "5/5 passed",
+      "wholeRound": "failed at later cleanup fencing fixture; full raw report retained"
+    },
+    {
+      "round": 7,
+      "status": "PASSED",
+      "checks": [
+        {
+          "name": "migration",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 4882,
+          "path": ".cache/p104-files-v7-migration.txt",
+          "sha256": "07b61b378507a82bb71fc7ddbad87880b4fa47a6a4a93ccb4137ad5cdd7ecd7a"
+        },
+        {
+          "name": "build",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 110769,
+          "path": ".cache/p104-files-v7-build.txt",
+          "sha256": "b054cc209771ef8b29429080629ac98eb482825c6313daa8a142c93f127c18d6"
+        },
+        {
+          "name": "fencing",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 63488,
+          "path": ".cache/p104-files-v7-fencing.txt",
+          "sha256": "801b548412fc3f340afad851263eb3a3c5796be4f9299369363ecefb06222b0b",
+          "tests": {
+            "tests": 5,
+            "pass": 5,
+            "fail": 0,
+            "skipped": 0,
+            "cancelled": 0
+          }
+        },
+        {
+          "name": "runner",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 163903,
+          "path": ".cache/p104-files-v7-runner.txt",
+          "sha256": "3e38634cb05cc94dda10fffa7e96cccd9bd2c6ec035c10a0cffb5533d92f32e5",
+          "tests": {
+            "tests": 15,
+            "pass": 14,
+            "fail": 0,
+            "skipped": 1,
+            "cancelled": 0
+          }
+        },
+        {
+          "name": "storage",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 291476,
+          "path": ".cache/p104-files-v7-storage.txt",
+          "sha256": "dbb36376d124912839f2f5e057340b0895a2632f760427f9ee8baa7cfa5a202e",
+          "tests": {
+            "tests": 28,
+            "pass": 28,
+            "fail": 0,
+            "skipped": 0,
+            "cancelled": 0
+          }
+        },
+        {
+          "name": "lint",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 46789,
+          "path": ".cache/p104-files-v7-lint.txt",
+          "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "status": "PASSED",
+      "checks": [
+        {
+          "name": "migration",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 2265,
+          "path": ".cache/p104-files-v8-migration.txt",
+          "sha256": "cd31c90d26e547920ba0989c237980273e3573b3e991765c0a4ec514e1a3c3f6"
+        },
+        {
+          "name": "build",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 89463,
+          "path": ".cache/p104-files-v8-build.txt",
+          "sha256": "ae8214e2a557b97cf191430b3d9a04f310a486aa95180cfe9317d1fc456f2edd"
+        },
+        {
+          "name": "files",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 255730,
+          "path": ".cache/p104-files-v8-files.txt",
+          "sha256": "c6d36812f7142ccc7a070d9686cf7ddfe70c4e3117e8f07b0e4a814f6f986407",
+          "tests": {
+            "tests": 5,
+            "pass": 5,
+            "fail": 0,
+            "skipped": 0,
+            "cancelled": 0
+          }
+        },
+        {
+          "name": "lint",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 11329,
+          "path": ".cache/p104-files-v8-lint.txt",
+          "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Controlled execution backend only; actual local HTTP, SQLite, Git, OS locks and SIGKILL child were exercised.",
+    "Real model, Linux Docker/runsc and enterprise OIDC not executed.",
+    "Scheduler preparation, source archival, integration and reclamation remain separate P1-05 tasks.",
+    "Final fixed-commit clean-checkout full verification still pending."
+  ],
+  "retained": [
+    {
+      "path": "project/evidence/P1-04/development/files-v3-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v3-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v3-build.txt",
+      "sha256": "be09448e2524ef300efcd92b7e45e306c42c966a93a37a57317998f3865fae46"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v5-files.txt",
+      "sha256": "ee6dd6ab49c409bfc02627d4f43bcae1f25b9505c84f713343987d05997ed197"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v5-report.json",
+      "sha256": "38ac1567b7537ca5b1a31656750d01691552c7752ff610e6e5aa6e8dce239992"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v7-migration.txt",
+      "sha256": "07b61b378507a82bb71fc7ddbad87880b4fa47a6a4a93ccb4137ad5cdd7ecd7a"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v7-build.txt",
+      "sha256": "b054cc209771ef8b29429080629ac98eb482825c6313daa8a142c93f127c18d6"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v7-fencing.txt",
+      "sha256": "801b548412fc3f340afad851263eb3a3c5796be4f9299369363ecefb06222b0b"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v7-runner.txt",
+      "sha256": "3e38634cb05cc94dda10fffa7e96cccd9bd2c6ec035c10a0cffb5533d92f32e5"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v7-storage.txt",
+      "sha256": "dbb36376d124912839f2f5e057340b0895a2632f760427f9ee8baa7cfa5a202e"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v7-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v7-report.json",
+      "sha256": "9a50254c2b157390eb5e8477d745fea8bfae8fa3493c029f63564d8918a324f9"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v8-migration.txt",
+      "sha256": "cd31c90d26e547920ba0989c237980273e3573b3e991765c0a4ec514e1a3c3f6"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v8-build.txt",
+      "sha256": "ae8214e2a557b97cf191430b3d9a04f310a486aa95180cfe9317d1fc456f2edd"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v8-files.txt",
+      "sha256": "c6d36812f7142ccc7a070d9686cf7ddfe70c4e3117e8f07b0e4a814f6f986407"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v8-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-04/development/files-v8-report.json",
+      "sha256": "f9b6770fae2ec60f6d82ab4aefa056ad4c25d332d7b8e3e1a4a41d789db9d3f4"
+    },
+    {
+      "path": "project/evidence/P1-04/development-incomplete/files-v5-fencing.txt",
+      "sha256": "2b441e280caeeb244eb58aa655d88eb9b2cc924335100b651758d1c1be4c2b14"
+    },
+    {
+      "path": "project/evidence/P1-04/development-incomplete/files-v5-report.json",
+      "sha256": "38ac1567b7537ca5b1a31656750d01691552c7752ff610e6e5aa6e8dce239992"
+    },
+    {
+      "path": "project/evidence/P1-04/development-incomplete/files-v6-fencing.txt",
+      "sha256": "2faece514636cd05824a4c3fb5ae53b09018c0912c5f4e9a7c4f75abc1f30a9b"
+    },
+    {
+      "path": "project/evidence/P1-04/development-incomplete/files-v6-report.json",
+      "sha256": "876a0bcd364180ba15a55a11aae7304540e5a80baa47e0bf95b7b97bf132fe11"
+    }
+  ]
+}

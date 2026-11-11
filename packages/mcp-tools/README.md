@@ -10,6 +10,9 @@
 | --- | --- | --- |
 | repo.list | snapshotRef、prefix、limit | 操作员绑定的显式快照清单，有界返回 |
 | repo.read | snapshotRef、path | 无链接／硬链接读取，SHA-256 与大小校验，不执行脚本 |
+| repo.workspaceRead | workspaceRef、baseCommit、path、offset／length | 真实工作区 UTF-8 源码；整文件 SHA、分页及实际目录屏障 |
+| repo.writeFile／deleteFile | workspaceRef、baseCommit、path、expectedSha256、text（仅写入） | 旧内容 CAS、批准范围、持久原操作、同卷原子变更与准确文件身份证明 |
+| repo.snapshot／fileByOperation | workspaceRef、baseCommit／operationId | 实际源码清单；原文件操作核实，不重放编辑 |
 | repo.diff／commit | workspaceRef、baseCommit、提交消息 | 固定 Git／common directory、批准 Work 写范围、独占工作区、私有 index；真实 Git 对象与原操作 ref |
 | repo.integrate／by-operation | workspaceRef、baseCommit、commit／原操作 | 受信任集成审批、项目 CAS 与原操作 ref 原子事务；原事实恢复，不重发写入 |
 | tests.start | checkId、workspaceRef | 批准的镜像／命令／限制／输出清单，经真实 RunnerClient 登记 |
@@ -23,6 +26,10 @@
 | pipeline.logs／artifacts／by-operation | pipelineId、阶段、字节游标／原操作 | 原 Runner 日志及成果引用；未知不重新创建 |
 
 repo 显式清单不接受隐藏文件、凭据扩展名或依赖目录；文件发生变化时拒绝读取，不悄悄换用新内容。实际清单的归属与授权仍由 authority 回查。tests 的模型参数不能修改命令 argv、digest、网络、限制或输出路径；这些值来自批准的 `CheckDefinition`。返回 QUEUED、EXITED 或 exitCode 是工具／作业事实，质量验证与候选接受仍由后续业务流程决定。
+
+实际工作区工具按共享源码路径策略允许 `.gitignore` 等批准的模板配置，仍拒绝 `.env`、密钥、链接和依赖目录。写入上限 64 KiB UTF-8／192 KiB JSON；创建传 `expectedSha256:null`，修改／删除传原 SHA。读取整文件至多 2 MiB，每页最多 65536 个 UTF-16 字符。源码清单是当前工作区事实，不等同 Git 提交或归档 ACK。文件变更先落迁移 14 的原操作，在私有 sidecar 保留准备文件身份证明及旧材料；未知未核实、receipt 未收尾时阻止后续编辑／提交。`RepoGitOptions.acquire` 必须使用宿主提供的第三参数关联原操作和当前许可；本地 Runner 适配见 `@devmesh/code-workspaces`，不会按锁超时放行。新增工具须显式写入新角色／连接快照，既有冻结角色不会自动扩权。
+
+`acquire` 在交付 lease 前只管理屏障。它未成功交付时，文件／Git 业务动作尚未开始，原记录进入 FAILED；Runner 的屏障请求仍按自身原操作核实。这样已知的忙碌拒绝不会在原 Job 退出后留下永久待核实业务意图。已进入业务动作后的未知状态继续保留现场和证明。
 
 `runtimeMcpTools(client, contracts)` 比对服务器的输入 schema，返回可注入 AgentRuntime 的工具。模型侧 `repo_read`／`tests_start` 与 MCP 侧 `repo.read`／`tests.start` 为同一工具映射，碰撞拒绝，只计一次能力。[DeepSeek 函数名约束](https://api-docs.deepseek.com/api/create-chat-completion/) 只允许字母、数字、下划线及短横线。模型只看到工具业务参数；稳定 operationId、permit 由执行宿主补齐，连接快照写入冻结配置。结果明确标 source=mcp。
 
@@ -38,10 +45,10 @@ repo 显式清单不接受隐藏文件、凭据扩展名或依赖目录；文件
 
 可通过 `startPlatform(config, { mcp: services => options })` 注入部署配置，平台将组合后的工具交给 Runtime 并管理连接生命周期。也可单独创建后使用返回的 `tools`、`connections`；此时调用方须调用 `close()`。先 `stopAdmission()` 会拒绝新写动作，原作业查询／停止仍经当前成员、原 Host／Grant 与角色授权检查。关闭时停止 pipeline Coordinator、关闭 Client／Server、等待已接受动作收尾；关闭失败明确返回错误。配置只包含资源／凭据引用，不把真实凭据写入持久连接快照。
 
-repo Git 配置必须由工作区分配器提供 root、gitDirectory、commonDirectory、资源归属及 frozen baseCommit，不能接受模型传入目录。`acquire(binding, signal)` 必须在整个动作期间排斥 Runner、编辑器和其他 Git 写入，同时序列化项目集成；只有 Git 命令内部锁不满足该约定。没有该分配器不启用写工具。`authorizeIntegration(binding, commit, signal)` 是另外的受信任业务验收检查；未配置时不注册 repo.integrate，普通 developer 不应获得 projectRepository 写许可。Git 操作成功仅说明仓库事务完成，不自动接受候选或推进 Run。
+repo Git 配置必须由工作区分配器提供 root、gitDirectory、commonDirectory、资源归属及 frozen baseCommit，不能接受模型传入目录。`acquire(binding, signal, {operationId, permit, purpose})` 必须在整个动作期间排斥 Runner、编辑器和其他 Git 写入，同时序列化项目集成；只有 Git 命令内部锁不满足该约定。没有该分配器不启用写工具。`authorizeIntegration(binding, commit, signal)` 是另外的受信任业务验收检查；未配置时不注册 repo.integrate，普通 developer 不应获得 projectRepository 写许可。Git 操作成功仅说明仓库事务完成，不自动接受候选或推进 Run。
 
 提交前拒绝不符的 HEAD／Git 仓库身份、配置过滤器、批准范围之外的变化、隐藏或凭据路径、链接、特殊 Git mode，以及超限内容。每次最多 2000 个变化文件、单文件 2 MiB、总大小 8 MiB；diff 最多 64 KiB。使用私有 index、固定作者、持久时间与原操作标识生成确定提交，保存预期 SHA 后写入原操作 ref。集成只接受原宿主已证明提交的固定父 base，通过 Git 多 ref 事务同时更新候选 `refs/devmesh/candidates/<runId>` 和 `refs/devmesh/integrations/<operationId>`；分配器负责初始化候选 ref，项目接受指针由后续业务验收管理。分叉／CAS 失败返回 CONFLICT，由后续受控集成处理。原结果未知时只查 ref 和对象，不能再次创建提交或重复更新候选。
 
-SQLite 增加向前 migrations 10～12，升级前按既有流程备份；不改历史 SQL。回退应用前保留数据库、内容、工作区与 Git 原操作 refs，不删除这些恢复依据。部署前仍需完成 P1-05 工作区分配／集成验收和真实模型、Runner 及身份环境验收。
+SQLite 增加向前 migrations 10～12，以及 P1-05 工作区迁移 13 之后的文件操作迁移 14，升级前按既有流程备份；不改历史 SQL。回退应用前保留数据库、内容、工作区、文件原操作材料与 Git 原操作 refs，不删除这些恢复依据。部署前仍需完成 P1-05 工作区分配／集成验收和真实模型、Runner 及身份环境验收。
 
 测试包含真实本地 MCP、Runner 管理 HTTP、SQLite 与文件读取，以及 A2A→Runtime→MCP 全链路。模型 HTTP 是明确标识的受控回复，Runner 容器事实是受控后端；没有执行真实模型、Docker/runsc 或生成应用。当前 P0-08 正式状态受前置验收约束，真实长任务与 T04/T05 保留待环境具备后验证。

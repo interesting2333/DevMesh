@@ -1,0 +1,56 @@
+TAP version 13
+# (node:38844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: MCP edits actual bytes with CAS, snapshots them, deletes by original identity and commits those changes
+ok 1 - MCP edits actual bytes with CAS, snapshots them, deletes by original identity and commits those changes
+  ---
+  duration_ms: 72362.3865
+  type: 'test'
+  ...
+# (node:38844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: file CAS, write scope, hard links and sensitive paths reject without overwriting source
+ok 2 - file CAS, write scope, hard links and sensitive paths reject without overwriting source
+  ---
+  duration_ms: 20191.795
+  type: 'test'
+  ...
+# (node:38844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a file rename with lost SQLite acknowledgement reconciles exact proof after restart and pause without rewriting
+ok 3 - a file rename with lost SQLite acknowledgement reconciles exact proof after restart and pause without rewriting
+  ---
+  duration_ms: 30539.767
+  type: 'test'
+  ...
+# (node:38844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: matching current bytes cannot prove an unprepared original edit and the unknown intent blocks further mutations
+ok 4 - matching current bytes cannot prove an unprepared original edit and the unknown intent blocks further mutations
+  ---
+  duration_ms: 23901.1555
+  type: 'test'
+  ...
+# (node:38844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: MCP editing holds the actual Runner barrier, rejects queued jobs and reconciles a paused original edit with cleanup authority
+ok 5 - MCP editing holds the actual Runner barrier, rejects queued jobs and reconciles a paused original edit with cleanup authority
+  ---
+  duration_ms: 76588.5861
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 240238.062

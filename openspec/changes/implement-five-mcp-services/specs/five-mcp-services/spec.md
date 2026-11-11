@@ -60,6 +60,11 @@ The repo service SHALL provide bounded authorized workspace reads, file writes a
 - **WHEN** the expected previous hash differs, the target is linked, or its path or size is outside the approved scope
 - **THEN** the service SHALL reject the mutation without overwriting another file or accepting the resulting code
 
+#### Scenario: A busy workspace declines the fence before any edit or Git action
+
+- **WHEN** the original mutation receives a confirmed admission refusal before the filesystem lease is handed to its action
+- **THEN** the business operation SHALL retain a failed, unperformed outcome; after the original Job has actually exited, the refused operation SHALL NOT permanently block a later authorized mutation, and any independently uncertain Runner barrier SHALL still require its own reconciliation
+
 ### Requirement: Pipelines and tests have independent execution facts
 
 The pipeline service SHALL preserve its own identity and frozen stages, execute only approved stages, and retain per-stage jobs and results independently from tests.

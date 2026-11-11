@@ -35,9 +35,10 @@ export class RunnerManager {
  }
  get(controllerId:string,jobId:string){return this.store.request('get',{controllerId,jobId});}
   async acquireWorkspaceFence(controllerId:string,input:AcquireWorkspaceFence){
-   if(this.#closed||!this.authority.verifyWorkspace)throw new RunnerError('RUNNER_FENCING_NOT_CONFIGURED',503,'not-sent');const request=acquireWorkspaceFence.parse(input);
+   const request=acquireWorkspaceFence.parse(input),cleanup=request.purpose==='cleanup';
+   if(this.#closed||!(cleanup?this.authority.verifyWorkspaceCleanup:this.authority.verifyWorkspace))throw new RunnerError('RUNNER_FENCING_NOT_CONFIGURED',503,'not-sent');
    const stored=await this.store.request('workspaceBinding',{workspaceRef:request.workspaceRef}),binding=await this.policy.fence(request,stored??undefined);
-   try{await this.authority.verifyWorkspace(controllerId,request.permit,request.workspaceRef);}catch{throw new RunnerError('RUNNER_AUTHORITY_DENIED',403);}
+   try{if(cleanup)await this.authority.verifyWorkspaceCleanup!(controllerId,request.permit,request.workspaceRef,request.parentOperationId);else await this.authority.verifyWorkspace!(controllerId,request.permit,request.workspaceRef);}catch{throw new RunnerError('RUNNER_AUTHORITY_DENIED',403);}
    return this.store.request('fenceAcquire',{controllerId,request,...binding});
   }
   getWorkspaceFence(controllerId:string,fenceId:string){return this.store.request('fenceGet',{controllerId,fenceId});}

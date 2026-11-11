@@ -29,8 +29,15 @@ HTTP 仅绑定明确的 loopback；异机部署由运维反向代理提供 TLS�
 | POST | `/jobs/:jobId:renew` | 当前许可与序号续租 |
 | GET | `/jobs/:jobId/logs?offset=0&limit=65536` | 已收集日志按字节续读，不重新执行 |
 | GET | `/jobs/:jobId/outputs/:index` | 有权限的材料下载，返回 SHA-256 |
+| POST | `/workspace-fences` | 持久取得工作区屏障；等待／活动／未知 Job 均拒绝 |
+| GET | `/workspace-fences/by-operation/:operationId` | 查询原屏障，丢回复不重发 |
+| GET | `/workspace-fences/active/:workspaceRef` | 查询本 controller 的活动屏障 |
+| GET | `/workspace-fences/:fenceId` | 查询原持有者、路径、请求哈希与状态 |
+| POST | `/workspace-fences/:fenceId:release` | 准确 holder token／请求哈希释放；不按超时释放 |
 
 `RunnerClient` 使用有时限、有体积上限、禁止重定向的真实 HTTP；不会自动重试写请求。传输失败返回 unknown，调用方必须保留原 operationId 查询，不能换键重做。返回 Job 经过完整 schema 校验。
+
+屏障要求显式 `verifyWorkspace` 回查当前 Host／Grant。原文件操作暂停后核实时，可选 `purpose=cleanup` 必须使用单独 `verifyWorkspaceCleanup`，核实原操作、owner、资源及当前成员；缺少则 503。该路径可检查过期原许可对应的材料，但不能通过正常 Job 准入、续租或新编辑。默认 purpose 按写准入处理，历史请求不补默认值、不改原哈希。v1→v2 升级保留历史 Job 并校验迁移指纹；不改写已发布 SQL。
 
 `DockerBackend` 使用参数数组执行显式 Docker 二进制，只连接配置的本地 Unix socket；没有控制主机 shell 执行回退。create 与 start 分开，首次发送前与创建后再次核实许可。容器固定 runsc、非 root、只读根文件系统、无网络、全部 capability 移除，并限制 CPU／内存／PID／tmpfs／日志。工作区可写绑定需要调用方提供**真实硬配额** `WorkspaceQuota.enforce`；仅限制 `/tmp` 不能限制工作区磁盘。未配置 Linux、enabled、配额或 runsc 时执行拒绝。create/start 丢响应后按原容器名、runner/job/request 标签和容器 ID 核实；不自动删除容器。停止使用 SIGTERM 与 10 秒等待，然后 inspect，CLI 回包成功本身不算退出证明。行为依据 [Docker create](https://docs.docker.com/reference/cli/docker/container/create/)、[Docker stop](https://docs.docker.com/reference/cli/docker/container/stop/) 和 [gVisor Docker 配置](https://gvisor.dev/docs/user_guide/quick_start/docker/)。
 
