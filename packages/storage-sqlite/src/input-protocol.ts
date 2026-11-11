@@ -30,7 +30,8 @@ export interface AttachmentView { attachmentId:string; clientAttachmentId:string
 export interface UploadIntake { intakeId:string; operationId:string; state:string; stagingKey:string; requestHash:string|null; attachmentId:string|null; errorCode:string|null; claimed:boolean }
 export interface WorkspaceView {
   project:{projectId:string;name:string;revision:number;acceptedReleaseId:string|null}; run:RunView;
-  mode:'current'|'history'; membership:'owner'|'operator'|'viewer'; allowedActions:('saveMessage'|'createTask')[]; eventCursor:number;
+  mode:'current'|'history'; membership:'owner'|'operator'|'viewer'; allowedActions:('saveMessage'|'createTask'|'answerQuestions')[]; eventCursor:number;
+  preparation:{understandingAvailable:boolean;requiredOpenQuestions:number;pending:boolean};
   messages:{messageId:string;author:string;bodyArtifactId:string;clientMessageId:string;createdAt:string;attachmentIds:string[];intentHint:'query'|'change'|'unsure'|null}[];
   nextMessageCursor:string|null;
 }

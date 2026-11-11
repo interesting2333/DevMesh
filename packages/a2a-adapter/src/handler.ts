@@ -3,7 +3,7 @@ import { AgentCard, Task, Role, TaskState } from '@a2a-js/sdk';
 import type { Message, SendMessageRequest, GetTaskRequest, CancelTaskRequest, ListTasksRequest, StreamResponse, SubscribeToTaskRequest, ListTasksResponse } from '@a2a-js/sdk';
 import type { A2ARequestHandler, TaskStore, ServerCallContext } from '@a2a-js/sdk/server';
 import { JsonRpcRequestMalformedError, JsonRpcTaskNotFoundError, JsonRpcTaskNotCancelableError, JsonRpcPushNotificationNotSupportedError, JsonRpcUnsupportedOperationError } from '@a2a-js/sdk/errors';
-import { parseContract, workDelegation } from '@devmesh/contracts';
+import { parseContract, workDelegation, preparationDelegation } from '@devmesh/contracts';
 import { StorageError } from '@devmesh/storage-sqlite';
 import type { SqliteStorage, EndpointConfig } from '@devmesh/storage-sqlite';
 import type { AgentRegistry } from './registry.js';
@@ -12,9 +12,10 @@ function caller(context:ServerCallContext){if(context.tenant||!context.user?.isA
 function protocolError(error:unknown):never{
  if(error instanceof StorageError){if(error.status===404)throw new JsonRpcTaskNotFoundError();if(error.code==='TASK_NOT_CANCELABLE')throw new JsonRpcTaskNotCancelableError();throw new JsonRpcRequestMalformedError({message:error.code});}throw error;
 }
+const preparationTask=(id:string)=>id.startsWith('prepTask_');
 export class DurableTaskStore implements TaskStore {
  constructor(readonly storage:SqliteStorage,readonly endpointId:string){}
- async load(taskId:string,context:ServerCallContext):Promise<Task|undefined>{try{const r=await this.storage.request('getA2ATask',{callerId:caller(context),endpointId:this.endpointId,taskId});return Task.fromJSON(r.snapshot);}catch(error){if(error instanceof StorageError&&error.status===404)return undefined;protocolError(error);}}
+  async load(taskId:string,context:ServerCallContext):Promise<Task|undefined>{try{const r=await this.storage.request(preparationTask(taskId)?'getPreparationTask':'getA2ATask',{callerId:caller(context),endpointId:this.endpointId,taskId});return Task.fromJSON(r.snapshot);}catch(error){if(error instanceof StorageError&&error.status===404)return undefined;protocolError(error);}}
  async save(task:Task,context:ServerCallContext){
   const c=context.state.get('devmesh.executionClaim') as {workerId:string;claimToken:string;stopVerified?:boolean}|undefined;
   if(!c)throw new JsonRpcUnsupportedOperationError({message:'Task creation requires atomic admission; updates require a durable consumer claim'});
@@ -26,11 +27,13 @@ export class DurableTaskStore implements TaskStore {
   // Filters/order beyond endpoint ownership are explicitly unsupported until implemented.
   if(params.contextId||params.status||params.statusTimestampAfter||params.includeArtifacts)throw new JsonRpcUnsupportedOperationError({message:'Requested task filter is unavailable'});
   const limit=params.pageSize||50;if(!Number.isInteger(limit)||limit<1||limit>100)throw new JsonRpcRequestMalformedError({message:'pageSize must be 1..100'});
-  const rows=await this.storage.request('listA2ATasks',{callerId:caller(context),endpointId:this.endpointId,limit,...(params.pageToken?{afterId:params.pageToken}:{})});
-  const tasks=rows.tasks.map(r=>Task.fromJSON(r.snapshot));
+   const query={callerId:caller(context),endpointId:this.endpointId,limit,...(params.pageToken?{afterId:params.pageToken}:{})};
+   const [work,preparation]=await Promise.all([this.storage.request('listA2ATasks',query),this.storage.request('listPreparationTasks',query)]);
+   const rows=[...work.tasks,...preparation.tasks].sort((a,b)=>a.taskId<b.taskId?-1:a.taskId>b.taskId?1:0);
+   const tasks=rows.slice(0,limit).map(r=>Task.fromJSON(r.snapshot));
   if(params.historyLength!==undefined){if(!Number.isInteger(params.historyLength)||params.historyLength<0)throw new JsonRpcRequestMalformedError();for(const task of tasks)task.history=params.historyLength===0?[]:task.history.slice(-params.historyLength);}
   for(const task of tasks)task.artifacts=[];
-  return {tasks,nextPageToken:rows.nextPageToken,pageSize:limit,totalSize:rows.totalSize};
+   return {tasks,nextPageToken:rows.length>limit||work.nextPageToken||preparation.nextPageToken?tasks.at(-1)!.id:'',pageSize:limit,totalSize:work.totalSize+preparation.totalSize};
  }
 }
 export class DurableRequestHandler implements A2ARequestHandler {
@@ -43,20 +46,26 @@ export class DurableRequestHandler implements A2ARequestHandler {
   if(!m||m.role!==Role.ROLE_USER||!m.messageId||m.taskId||m.contextId||m.parts.length!==1||m.parts[0]?.content?.$case!=='data')throw new JsonRpcRequestMalformedError({message:'Initial work requires one DataPart, a new messageId and no preassigned Task/context'});
   if(params.configuration?.taskPushNotificationConfig)throw new JsonRpcPushNotificationNotSupportedError();
   try{
-   const d=parseContract(workDelegation,m.parts[0].content.value);
+    const payload=m.parts[0].content.value;
+    if(payload?.schemaVersion==='devmesh.preparation.v1'){
+     const delegation=parseContract(preparationDelegation,payload),version=this.registry.version;
+     const r=await this.storage.request('acceptPreparationTask',{callerId:id,endpointId:this.endpoint.endpointId,endpointRevision:this.endpoint.revision,delegation,message:MessageJson(m),registryGenerationId:version.generationId,projectionRevision:version.projectionRevision});return Task.fromJSON(r.snapshot);
+    }
+    const d=parseContract(workDelegation,payload);
    const r=await this.storage.request('acceptA2AWork',{callerId:id,endpointId:this.endpoint.endpointId,endpointRevision:this.endpoint.revision,delegation:d,message:MessageJson(m),...this.registry.version});return Task.fromJSON(r.snapshot);
   }catch(error){if(error instanceof StorageError)protocolError(error);throw new JsonRpcRequestMalformedError({message:error instanceof Error?error.message:'Invalid work payload'});}
  }
  async getTask(params:GetTaskRequest,context:ServerCallContext):Promise<Task>{try{const t=await this.tasks.load(params.id,context);if(!t)throw new JsonRpcTaskNotFoundError();if(params.historyLength!==undefined){if(!Number.isInteger(params.historyLength)||params.historyLength<0)throw new JsonRpcRequestMalformedError();t.history=params.historyLength===0?[]:t.history.slice(-params.historyLength);}return t;}catch(error){protocolError(error);}}
- async cancelTask(params:CancelTaskRequest,context:ServerCallContext):Promise<Task>{try{const r=await this.storage.request('cancelA2ATask',{callerId:caller(context),endpointId:this.endpoint.endpointId,taskId:params.id});return Task.fromJSON(r.snapshot);}catch(error){protocolError(error);}}
+  async cancelTask(params:CancelTaskRequest,context:ServerCallContext):Promise<Task>{try{const r=await this.storage.request(preparationTask(params.id)?'cancelPreparationTask':'cancelA2ATask',{callerId:caller(context),endpointId:this.endpoint.endpointId,taskId:params.id});return Task.fromJSON(r.snapshot);}catch(error){protocolError(error);}}
  async *sendMessageStream(params:SendMessageRequest,context:ServerCallContext):AsyncGenerator<StreamResponse>{const t=await this.sendMessage(params,context);if(!('id' in t))throw new JsonRpcUnsupportedOperationError();yield* this.follow(t.id,context);}
  async *resubscribe(params:SubscribeToTaskRequest,context:ServerCallContext):AsyncGenerator<StreamResponse>{yield* this.follow(params.id,context);}
  private async *follow(taskId:string,context:ServerCallContext):AsyncGenerator<StreamResponse>{
-  let initial;try{initial=await this.storage.request('getA2ATask',{callerId:caller(context),endpointId:this.endpoint.endpointId,taskId});}catch(error){protocolError(error);}
+   const isPreparation=preparationTask(taskId);
+   let initial;try{initial=await this.storage.request(isPreparation?'getPreparationTask':'getA2ATask',{callerId:caller(context),endpointId:this.endpoint.endpointId,taskId});}catch(error){protocolError(error);}
   yield {payload:{$case:'task',value:Task.fromJSON(initial.snapshot)}};
   if(['completed','failed','canceled','rejected','input-required','auth-required'].includes(initial.state))return;
   let cursor=initial.revision;const signal=(context.user as {signal?:AbortSignal}|undefined)?.signal;
-  for(;;){if(signal?.aborted)return;let rows;try{rows=await this.storage.request('listA2ATaskEvents',{callerId:caller(context),endpointId:this.endpoint.endpointId,taskId,afterSeq:cursor});}catch(error){protocolError(error);}
+   for(;;){if(signal?.aborted)return;let rows;try{rows=await this.storage.request(isPreparation?'listPreparationTaskEvents':'listA2ATaskEvents',{callerId:caller(context),endpointId:this.endpoint.endpointId,taskId,afterSeq:cursor});}catch(error){protocolError(error);}
    for(const r of rows){cursor=r.seq;const t=Task.fromJSON(r.snapshot);yield {payload:{$case:'task',value:t}};if([TaskState.TASK_STATE_COMPLETED,TaskState.TASK_STATE_FAILED,TaskState.TASK_STATE_CANCELED,TaskState.TASK_STATE_REJECTED,TaskState.TASK_STATE_INPUT_REQUIRED,TaskState.TASK_STATE_AUTH_REQUIRED].includes(t.status?.state??0))return;}
    try{await delay(100,undefined,{signal});}catch(error){if(signal?.aborted)return;throw error;}
   }

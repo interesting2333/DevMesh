@@ -140,11 +140,22 @@ export function createInputDomain(db:DatabaseSync,h:Helpers){
       if(input.afterMessageId)after=Number(required(get('SELECT rowid AS cursor FROM input_messages WHERE run_id=? AND message_id=?',r.run_id!,input.afterMessageId)).cursor);
       const rows=all('SELECT m.*,p.intent_hint FROM input_messages m LEFT JOIN input_processing p ON p.message_id=m.message_id WHERE m.run_id=? AND m.rowid>? ORDER BY m.rowid LIMIT ?',r.run_id!,after,input.limit+1);
       const selected=rows.slice(0,input.limit),allowedActions:WorkspaceView['allowedActions']=[];
+      const questions=get(`SELECT COUNT(*) AS total, SUM(json_extract(q.content_json,'$.required')) AS required
+        FROM clarification_current c JOIN clarification_questions q ON q.run_id=c.run_id AND q.question_id=c.question_id AND q.revision=c.question_revision
+        WHERE c.run_id=? AND c.state='OPEN'`,r.run_id!);
+      const preparation={
+        understandingAvailable:!!get('SELECT 1 FROM understanding_revisions WHERE run_id=? AND requirement_revision=?',r.run_id!,r.current_requirement_revision??null),
+        requiredOpenQuestions:Number(questions?.required??0),
+        pending:!!get(`SELECT 1 FROM preparation_jobs WHERE run_id=? AND state IN ('WAITING','READY','ACTIVE','RECONCILE')
+          UNION ALL SELECT 1 FROM input_processing p JOIN input_messages m ON m.message_id=p.message_id JOIN operations o ON o.operation_id=p.operation_id
+          WHERE m.run_id=? AND o.status='WAITING' LIMIT 1`,r.run_id!,r.run_id!),
+      };
       if(membership!=='viewer'&&mode==='current'){
         if(r.terminal_outcome===null&&r.control_gate!=='CANCELLING')allowedActions.push('saveMessage');
+        if(r.terminal_outcome===null&&r.control_gate!=='CANCELLING'&&Number(questions?.total)>0)allowedActions.push('answerQuestions');
         if(p.accepted_release_id&&!get('SELECT 1 FROM runs WHERE project_id=? AND terminal_outcome IS NULL',input.projectId))allowedActions.push('createTask');
       }
-      return {project:{projectId:input.projectId,name:String(p.name),revision:Number(p.revision),acceptedReleaseId:p.accepted_release_id as string|null},run:h.runView(r),mode,membership,allowedActions,eventCursor:Number(r.event_seq),messages:selected.map(m=>({messageId:String(m.message_id),author:String(m.author),bodyArtifactId:String(m.body_artifact_id),clientMessageId:String(m.client_message_id),createdAt:String(m.created_at),attachmentIds:all('SELECT attachment_id FROM input_message_attachments WHERE message_id=? ORDER BY position',m.message_id!).map(a=>String(a.attachment_id)),intentHint:m.intent_hint as 'query'|'change'|'unsure'|null})),nextMessageCursor:rows.length>input.limit?String(selected.at(-1)!.message_id):null};
+      return {project:{projectId:input.projectId,name:String(p.name),revision:Number(p.revision),acceptedReleaseId:p.accepted_release_id as string|null},run:h.runView(r),mode,membership,allowedActions,preparation,eventCursor:Number(r.event_seq),messages:selected.map(m=>({messageId:String(m.message_id),author:String(m.author),bodyArtifactId:String(m.body_artifact_id),clientMessageId:String(m.client_message_id),createdAt:String(m.created_at),attachmentIds:all('SELECT attachment_id FROM input_message_attachments WHERE message_id=? ORDER BY position',m.message_id!).map(a=>String(a.attachment_id)),intentHint:m.intent_hint as 'query'|'change'|'unsure'|null})),nextMessageCursor:rows.length>input.limit?String(selected.at(-1)!.message_id):null};
     });},
     listInputProjects(input:InputParsed<'listInputProjects'>){return readTransaction(()=>{
       const rows=all('SELECT p.*,m.role FROM projects p JOIN project_members m ON m.project_id=p.project_id WHERE m.principal_id=? AND (? IS NULL OR p.updated_at<? OR (p.updated_at=? AND p.project_id<?)) ORDER BY p.updated_at DESC,p.project_id DESC LIMIT ?',input.principalId,input.cursor?.updatedAt??null,input.cursor?.updatedAt??null,input.cursor?.updatedAt??null,input.cursor?.projectId??null,input.limit+1);

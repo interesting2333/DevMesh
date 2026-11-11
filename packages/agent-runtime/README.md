@@ -27,3 +27,21 @@ await consumer.start();
 Provider 显式发送非 thinking 模式，防止把内部推理纳入可恢复会话。公开 DTO 不包含请求头、密钥或 `reasoning_content`。这是当前实现支持的能力边界，依据 [DeepSeek API](https://api-docs.deepseek.com/api/create-chat-completion/)、[thinking 与工具的跨轮要求](https://api-docs.deepseek.com/guides/thinking_mode/) 和 [工具调用协议](https://api-docs.deepseek.com/guides/tool_calls/)。
 
 `tests/runtime*.test.mjs` 使用真实本地 HTTP、SQLite 和文件，验证协议、持久化顺序、权限、预算与未知结果。它们不代表真实 DeepSeek 模型质量、能力或费用验收；三组实际模型样本保留待联调。
+## 只读需求与规划
+
+启动配置在已有 `runtime` 内额外声明 `preparation` 后才启用该消费者。它需要已启用的输入 API、可信模板仓库、内部 A2A 清单和服务主体。产品与架构分别在现有角色 Card 上声明 `devmesh.prepare.product` 和 `devmesh.prepare.architect`；修改 skill 列表后须重新生成并核对 Card 哈希。仅接受当前已提交 Registry 中健康的本地端点。
+
+```json
+{
+  "callerId": "orchestrator",
+  "productProviderId": "deepseek",
+  "architectProviderId": "deepseek",
+  "maxInputBytes": 262144,
+  "maxOutputTokens": 2048,
+  "bootstrapPaths": ["templates/web-crud-v1/template.json"]
+}
+```
+
+两个 Provider ID 须在 `runtime.providers` 中声明。未启用或缺少模型凭据时，输入照常保存，后台处理保持等待。上限同时受 Provider 上下文、单次输出和累计准备预算约束。配置的 Git 文件仅从该任务固定的 baseCommit 读取；准备角色没有工具，不能 checkout、安装依赖、执行生成代码或确认计划。
+
+SQLite 先记录委托和模型发送，再做外部调用。回复落盘并提交后，只有仍匹配 Run、控制代际与来源依据的结果才能发布。重启时，已持久回复可应用一次；已发送但没有可核实回复的请求保持待核实。澄清回答与解释结果分开查询。

@@ -3,8 +3,8 @@
   "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "DevMesh 核心契约",
-    "version": "0.2.0",
-    "description": "共享命令及 P1-01 输入 API。逐路由标记实现范围；离线代码与测试不代表企业身份、模型或产品全链路验收。其余 D3 API 随工作包增量补齐。"
+    "version": "0.3.0",
+    "description": "共享命令、输入与需求理解 API。逐路由标记实现范围；离线代码与测试不代表企业身份、模型或产品全链路验收。其余 D3 API 随工作包增量补齐。"
   },
   "x-runtime-constraints": [
     "permit 有效期顺序、宿主当前代际及资源范围",
@@ -451,11 +451,11 @@
     "/api/v1/runs/{runId}/questions:answer": {
       "post": {
         "operationId": "AnswerQuestions",
-        "x-implementation-status": "planned",
-        "description": "P0-02 契约。业务 handler 尚未实现。先认证、权限和原操作去重，再校验新操作版本；202 仅为持久受理。",
+        "x-implementation-status": "implemented-offline",
+        "description": "已实现持久输入与当前成员授权；默认无身份接入点时拒绝请求。保存成功不表示真实模型处理完成。",
         "security": [
           {
-            "browserSession": []
+            "trustedIdentity": []
           }
         ],
         "parameters": [
@@ -3745,6 +3745,373 @@
           }
         }
       }
+    },
+    "/api/v1/runs/{runId}/understanding": {
+      "get": {
+        "operationId": "ReadUnderstanding",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "requirementRevision",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Understanding"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/understanding:retry": {
+      "post": {
+        "operationId": "RetryUnderstanding",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\"r[1-9][0-9]*\"$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetryUnderstanding"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3986,6 +4353,7 @@
                 "properties": {
                   "answers": {
                     "minItems": 1,
+                    "maxItems": 100,
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -10612,7 +10980,12 @@
                   "MESSAGE_KEY_REUSED",
                   "RUN_NOT_WRITABLE",
                   "EVENT_CURSOR_INVALID",
-                  "CONTENT_UNAVAILABLE"
+                  "CONTENT_UNAVAILABLE",
+                  "QUESTION_SUPERSEDED",
+                  "ANSWER_INVALID",
+                  "INTERPRETATION_NOT_FAILED",
+                  "REQUIRED_QUESTIONS_UNANSWERED",
+                  "INTERPRETATION_PENDING"
                 ]
               },
               "message": {
@@ -11072,9 +11445,32 @@
               "type": "string",
               "enum": [
                 "saveMessage",
-                "createTask"
+                "createTask",
+                "answerQuestions"
               ]
             }
+          },
+          "preparation": {
+            "type": "object",
+            "properties": {
+              "understandingAvailable": {
+                "type": "boolean"
+              },
+              "requiredOpenQuestions": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "pending": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "understandingAvailable",
+              "requiredOpenQuestions",
+              "pending"
+            ],
+            "additionalProperties": false
           },
           "eventCursor": {
             "type": "integer",
@@ -11191,10 +11587,1407 @@
           "mode",
           "membership",
           "allowedActions",
+          "preparation",
           "eventCursor",
           "messages",
           "nextMessageCursor",
           "templateBaseline"
+        ],
+        "additionalProperties": false
+      },
+      "Understanding": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "requirementRevision": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "understanding": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "schemaVersion": {
+                    "type": "string",
+                    "const": "devmesh.understanding.v1"
+                  },
+                  "role": {
+                    "type": "string",
+                    "const": "product"
+                  },
+                  "requirements": {
+                    "minItems": 1,
+                    "maxItems": 200,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                        },
+                        "statement": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000
+                        },
+                        "sourceRefs": {
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "artifactId": {
+                                    "type": "string",
+                                    "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  },
+                                  "sha256": {
+                                    "type": "string",
+                                    "pattern": "^[a-f0-9]{64}$"
+                                  },
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "artifact"
+                                  }
+                                },
+                                "required": [
+                                  "artifactId",
+                                  "sha256",
+                                  "kind"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "message"
+                                  },
+                                  "messageId": {
+                                    "type": "string",
+                                    "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "messageId"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "requirement"
+                                  },
+                                  "requirementId": {
+                                    "type": "string",
+                                    "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  },
+                                  "requirementRevision": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 9007199254740991
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "requirementId",
+                                  "requirementRevision"
+                                ],
+                                "additionalProperties": false
+                              }
+                            ]
+                          }
+                        },
+                        "acceptance": {
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 20000
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "statement",
+                        "sourceRefs",
+                        "acceptance"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "assumptions": {
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[\\s\\S]{1,20000}$"
+                    }
+                  },
+                  "questions": {
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^question_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                        },
+                        "required": {
+                          "type": "boolean"
+                        },
+                        "reason": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000
+                        },
+                        "blockingScope": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "defaultOption": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20000
+                        },
+                        "prompt": {
+                          "type": "string",
+                          "pattern": "^[\\s\\S]{1,20000}$"
+                        },
+                        "sourceRefs": {
+                          "minItems": 1,
+                          "maxItems": 64,
+                          "type": "array",
+                          "items": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "artifactId": {
+                                    "type": "string",
+                                    "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  },
+                                  "sha256": {
+                                    "type": "string",
+                                    "pattern": "^[a-f0-9]{64}$"
+                                  },
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "artifact"
+                                  }
+                                },
+                                "required": [
+                                  "artifactId",
+                                  "sha256",
+                                  "kind"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "message"
+                                  },
+                                  "messageId": {
+                                    "type": "string",
+                                    "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "messageId"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "requirement"
+                                  },
+                                  "requirementId": {
+                                    "type": "string",
+                                    "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  },
+                                  "requirementRevision": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 9007199254740991
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "requirementId",
+                                  "requirementRevision"
+                                ],
+                                "additionalProperties": false
+                              }
+                            ]
+                          }
+                        },
+                        "options": {
+                          "default": [],
+                          "maxItems": 32,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                              },
+                              "label": {
+                                "type": "string",
+                                "pattern": "^[\\s\\S]{1,20000}$"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "label"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "required",
+                        "reason",
+                        "blockingScope",
+                        "prompt",
+                        "sourceRefs"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "conflicts": {
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        "description": {
+                          "type": "string",
+                          "pattern": "^[\\s\\S]{1,20000}$"
+                        },
+                        "sourceRefs": {
+                          "minItems": 2,
+                          "maxItems": 64,
+                          "type": "array",
+                          "items": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "artifactId": {
+                                    "type": "string",
+                                    "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  },
+                                  "sha256": {
+                                    "type": "string",
+                                    "pattern": "^[a-f0-9]{64}$"
+                                  },
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "artifact"
+                                  }
+                                },
+                                "required": [
+                                  "artifactId",
+                                  "sha256",
+                                  "kind"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "message"
+                                  },
+                                  "messageId": {
+                                    "type": "string",
+                                    "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "messageId"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "requirement"
+                                  },
+                                  "requirementId": {
+                                    "type": "string",
+                                    "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  },
+                                  "requirementRevision": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 9007199254740991
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "requirementId",
+                                  "requirementRevision"
+                                ],
+                                "additionalProperties": false
+                              }
+                            ]
+                          }
+                        },
+                        "questionId": {
+                          "type": "string",
+                          "pattern": "^question_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "description",
+                        "sourceRefs",
+                        "questionId"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "schemaVersion",
+                  "role",
+                  "requirements",
+                  "assumptions",
+                  "questions",
+                  "conflicts"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "questions": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "questionId": {
+                  "type": "string",
+                  "pattern": "^question_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "questionRevision": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "requirementBasis": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "OPEN",
+                    "ANSWERED",
+                    "SUPERSEDED"
+                  ]
+                },
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^question_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000
+                    },
+                    "blockingScope": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      }
+                    },
+                    "defaultOption": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000
+                    },
+                    "prompt": {
+                      "type": "string",
+                      "pattern": "^[\\s\\S]{1,20000}$"
+                    },
+                    "sourceRefs": {
+                      "minItems": 1,
+                      "maxItems": 64,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "artifactId": {
+                                "type": "string",
+                                "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              },
+                              "sha256": {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "const": "artifact"
+                              }
+                            },
+                            "required": [
+                              "artifactId",
+                              "sha256",
+                              "kind"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "message"
+                              },
+                              "messageId": {
+                                "type": "string",
+                                "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "messageId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "requirement"
+                              },
+                              "requirementId": {
+                                "type": "string",
+                                "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              },
+                              "requirementRevision": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "requirementId",
+                              "requirementRevision"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "options": {
+                      "default": [],
+                      "maxItems": 32,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          },
+                          "label": {
+                            "type": "string",
+                            "pattern": "^[\\s\\S]{1,20000}$"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "label"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "required",
+                    "reason",
+                    "blockingScope",
+                    "prompt",
+                    "sourceRefs"
+                  ],
+                  "additionalProperties": false
+                },
+                "answer": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "answerId": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        "value": {
+                          "$ref": "#/components/schemas/Understanding/$defs/__schema0"
+                        },
+                        "actor": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                        }
+                      },
+                      "required": [
+                        "answerId",
+                        "value",
+                        "actor",
+                        "createdAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "questionId",
+                "questionRevision",
+                "requirementBasis",
+                "state",
+                "content",
+                "answer"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "jobs": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "jobId": {
+                  "type": "string",
+                  "pattern": "^job_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "operationId": {
+                  "type": "string",
+                  "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "purpose": {
+                  "type": "string",
+                  "enum": [
+                    "UNDERSTAND",
+                    "INTERPRET",
+                    "PLAN"
+                  ]
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "product",
+                    "architect"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "retryOf": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^job_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "errorCode": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "resultArtifactId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "jobId",
+                "operationId",
+                "purpose",
+                "role",
+                "state",
+                "retryOf",
+                "errorCode",
+                "resultArtifactId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "pendingInputCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "answerInterventions": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "runId",
+          "requirementRevision",
+          "understanding",
+          "questions",
+          "jobs",
+          "pendingInputCount",
+          "answerInterventions"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "__schema0": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Understanding/$defs/__schema0"
+                }
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/Understanding/$defs/__schema0"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "UnderstandingOutput": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "string",
+            "const": "devmesh.understanding.v1"
+          },
+          "role": {
+            "type": "string",
+            "const": "product"
+          },
+          "requirements": {
+            "minItems": 1,
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "statement": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                },
+                "sourceRefs": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "artifactId": {
+                            "type": "string",
+                            "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "const": "artifact"
+                          }
+                        },
+                        "required": [
+                          "artifactId",
+                          "sha256",
+                          "kind"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "message"
+                          },
+                          "messageId": {
+                            "type": "string",
+                            "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "messageId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "requirement"
+                          },
+                          "requirementId": {
+                            "type": "string",
+                            "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "requirementRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "requirementId",
+                          "requirementRevision"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "acceptance": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "statement",
+                "sourceRefs",
+                "acceptance"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "assumptions": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[\\s\\S]{1,20000}$"
+            }
+          },
+          "questions": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^question_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                },
+                "blockingScope": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  }
+                },
+                "defaultOption": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                },
+                "prompt": {
+                  "type": "string",
+                  "pattern": "^[\\s\\S]{1,20000}$"
+                },
+                "sourceRefs": {
+                  "minItems": 1,
+                  "maxItems": 64,
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "artifactId": {
+                            "type": "string",
+                            "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "const": "artifact"
+                          }
+                        },
+                        "required": [
+                          "artifactId",
+                          "sha256",
+                          "kind"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "message"
+                          },
+                          "messageId": {
+                            "type": "string",
+                            "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "messageId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "requirement"
+                          },
+                          "requirementId": {
+                            "type": "string",
+                            "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "requirementRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "requirementId",
+                          "requirementRevision"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "options": {
+                  "default": [],
+                  "maxItems": 32,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                      },
+                      "label": {
+                        "type": "string",
+                        "pattern": "^[\\s\\S]{1,20000}$"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "label"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "required",
+                "reason",
+                "blockingScope",
+                "prompt",
+                "sourceRefs"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "conflicts": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "description": {
+                  "type": "string",
+                  "pattern": "^[\\s\\S]{1,20000}$"
+                },
+                "sourceRefs": {
+                  "minItems": 2,
+                  "maxItems": 64,
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "artifactId": {
+                            "type": "string",
+                            "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "const": "artifact"
+                          }
+                        },
+                        "required": [
+                          "artifactId",
+                          "sha256",
+                          "kind"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "message"
+                          },
+                          "messageId": {
+                            "type": "string",
+                            "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "messageId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "requirement"
+                          },
+                          "requirementId": {
+                            "type": "string",
+                            "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "requirementRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "requirementId",
+                          "requirementRevision"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "questionId": {
+                  "type": "string",
+                  "pattern": "^question_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                }
+              },
+              "required": [
+                "id",
+                "description",
+                "sourceRefs",
+                "questionId"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "role",
+          "requirements",
+          "assumptions",
+          "questions",
+          "conflicts"
+        ],
+        "additionalProperties": false
+      },
+      "RetryUnderstanding": {
+        "type": "object",
+        "properties": {
+          "failedInterpretationOperationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          }
+        },
+        "required": [
+          "failedInterpretationOperationId"
+        ],
+        "additionalProperties": false
+      },
+      "PreparationDelegation": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "string",
+            "const": "devmesh.preparation.v1"
+          },
+          "operationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "jobId": {
+            "type": "string",
+            "pattern": "^job_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "preparationAttemptId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "runEpoch": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "activationId": {
+            "type": "string",
+            "pattern": "^activation_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "grantId": {
+            "type": "string",
+            "pattern": "^grant_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "endpointId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "endpointRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "product",
+              "architect"
+            ]
+          },
+          "inputHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "profileHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "basisHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "operationId",
+          "jobId",
+          "preparationAttemptId",
+          "runId",
+          "runEpoch",
+          "activationId",
+          "grantId",
+          "endpointId",
+          "endpointRevision",
+          "role",
+          "inputHash",
+          "profileHash",
+          "basisHash"
+        ],
+        "additionalProperties": false
+      },
+      "PreparationInput": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "string",
+            "const": "devmesh.preparation-input.v1"
+          },
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "product",
+              "architect"
+            ]
+          },
+          "basisHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "requirementRevision": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "baseCommit": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40}$"
+          },
+          "sources": {
+            "minItems": 1,
+            "maxItems": 256,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "artifactId": {
+                          "type": "string",
+                          "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                        },
+                        "sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "artifact"
+                        }
+                      },
+                      "required": [
+                        "artifactId",
+                        "sha256",
+                        "kind"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "message"
+                        },
+                        "messageId": {
+                          "type": "string",
+                          "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "messageId"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "requirement"
+                        },
+                        "requirementId": {
+                          "type": "string",
+                          "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                        },
+                        "requirementRevision": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "requirementId",
+                        "requirementRevision"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "contentHash": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "byteSize": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2097152
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                }
+              },
+              "required": [
+                "ref",
+                "contentHash",
+                "byteSize",
+                "label"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "answerIds": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+            }
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "runId",
+          "role",
+          "basisHash",
+          "requirementRevision",
+          "baseCommit",
+          "sources",
+          "answerIds"
         ],
         "additionalProperties": false
       },
@@ -11288,6 +13081,7 @@
         "properties": {
           "answers": {
             "minItems": 1,
+            "maxItems": 100,
             "type": "array",
             "items": {
               "type": "object",

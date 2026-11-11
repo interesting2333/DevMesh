@@ -39,15 +39,16 @@ export async function prepareDispatch(f,registry,roleConfig={}){
  return {...p,attemptId,delegation,message,params:SendMessageRequest.fromJSON({message:Message.toJSON(message)}),request:{callerId,endpointId:delegation.endpointId,endpointRevision:delegation.endpointRevision,delegation,message:Message.toJSON(message),...registry.version}};
 }
 export async function registryFixture(t){const f=await contentFixture(t),m=manifest();await commit(f.storage,m);const registry=new AgentRegistry(f.storage);await registry.refresh();return Object.assign(f,{manifest:m,registry});}
-export async function httpFixture(t){
+export async function httpFixture(t,{preparation=false}={}){
  const f=await contentFixture(t),app=express(),server=createServer(app);let agents;
  t.after(async()=>{await agents?.stop();server.closeAllConnections();await new Promise(resolve=>server.close(()=>resolve()));});
  // Register routes before listening; select port first using Node's actual bind.
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base='http://127.0.0.1:'+server.address().port,m=manifest(base);
+ if(preparation)for(const e of m.endpoints.filter(e=>['product','architect'].includes(e.role))){e.supportedSkills.push('devmesh.prepare.'+e.role);e.cardHash=cardHash(createRoleCard(e));}
  agents=mountInternalAgents(app,f.storage,{manifest:m,identities:[{principalId:callerId,credentialRef:'test.service'},{principalId:'other.service',credentialRef:'other.service'}],resolveCredential:async ref=>ref==='other.service'?'devmesh-other-service-test-token':credential(ref),healthIntervalMs:60000});
  const fetched=async(url,init)=>fetch(url,{...init,headers:{...Object.fromEntries(new Headers(init?.headers)),Authorization:'Bearer '+serviceToken}});
  const factory=new ClientFactory({transports:[new JsonRpcTransportFactory({fetchImpl:fetched})],cardResolver:new DefaultAgentCardResolver({fetchImpl:fetched})});
  await agents.activate();const client=await factory.createFromUrl(base,'/internal/agents/developer/agent-card.json');
- return Object.assign(f,{agents,registry:agents.registry,base,manifest:m,client,factory,server});
+ return Object.assign(f,{agents,registry:agents.registry,base,manifest:m,client,factory,server,app});
 }
 export { AgentCard,Message,SendMessageRequest };

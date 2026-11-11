@@ -1,12 +1,13 @@
 import { z } from 'zod';
 import { ids, revision, sha256, inputText, opaqueKey, operationStatus, nonemptyText } from './primitives.js';
 import { createProjectInput, saveMessageInput } from './input.js';
+import { answerQuestionsInput } from './preparation.js';
 
 export const idempotencyKey = z.uuid();
 export const commandBodies = {
   CreateProject: createProjectInput,
   SaveMessage: saveMessageInput,
-  AnswerQuestions: z.strictObject({ answers: z.array(z.strictObject({ questionId: ids.question, questionRevision: revision, value: z.json() })).min(1) }),
+  AnswerQuestions: answerQuestionsInput,
   ConfirmPlan: z.strictObject({ requirementRevision: revision, reviewHash: sha256 }),
   PlanFeedback: z.strictObject({ text: inputText, workIds: z.array(ids.work).optional() }),
   ProposeChange: z.strictObject({ proposedText: inputText, sourceMessageId: ids.message }),

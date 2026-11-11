@@ -553,11 +553,19 @@
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "packages/storage-sqlite/migrations/0008-preparation.sql",
+        "packages/agent-runtime/src/preparation.ts",
+        "packages/a2a-adapter/src/preparation-client.ts",
+        "tests/preparation.test.mjs"
+      ],
+      "evidence": [
+        "project/evidence/P1-02/离线实施进展.md"
+      ],
       "reviewNote": null,
       "notes": [
-        "按连续目标和不依赖外部环境的用户指令，推进独立准备宿主、来源理解、部分回答与解释重试；正式 P1-01／G0 前置未验收，受控 Provider 只用于平台规则验证。"
+        "按连续目标和不依赖外部环境的用户指令，推进独立准备宿主、来源理解、部分回答与解释重试；正式 P1-01／G0 前置未验收，受控 Provider 只用于平台规则验证。",
+        "本地官方 A2A、HTTP、真实 SQLite Worker 和两次实际进程终止验证通过；完整固定提交回归另记。"
       ]
     },
     {

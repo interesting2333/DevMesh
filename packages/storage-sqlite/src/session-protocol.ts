@@ -17,6 +17,9 @@ export const objectTarget = z.discriminatedUnion('kind', [
 export const contentReference = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('attachment'), attachmentId: ids.attachment }),
   z.strictObject({ kind: z.literal('message'), messageId: ids.message }),
+  z.strictObject({ kind: z.literal('inputMessage'), messageId: ids.message }),
+  z.strictObject({ kind: z.literal('preparationInput'), preparationAttemptId: opaqueKey }),
+  z.strictObject({ kind: z.literal('preparationResponse'), preparationAttemptId: opaqueKey }),
   z.strictObject({ kind: z.literal('artifact'), artifactId: ids.artifact }),
   z.strictObject({ kind: z.literal('context'), contextSnapshotId: opaqueKey }),
   z.strictObject({ kind: z.literal('modelRequest'), sessionId: ids.session, stepNo: revision }),

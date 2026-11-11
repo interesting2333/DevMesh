@@ -113,6 +113,11 @@ export function createSessionDomain(db: DatabaseSync) {
     } else if (ref.kind === 'artifact') {
       row = required(get("SELECT a.content_hash,a.project_id,p.owner_id FROM artifacts a JOIN projects p ON p.project_id=a.project_id WHERE artifact_id=? AND a.state='READY'", ref.artifactId));
       if (!get('SELECT 1 FROM project_members WHERE project_id=? AND principal_id=?',row.project_id!,principalId)) reject('FORBIDDEN', 'Artifact belongs to another principal', 403);
+    } else if(ref.kind==='inputMessage'){
+      row=required(get("SELECT a.content_hash FROM input_messages i JOIN artifacts a ON a.artifact_id=i.body_artifact_id JOIN project_members m ON m.project_id=i.project_id AND m.principal_id=? WHERE i.message_id=? AND a.state='READY'",principalId,ref.messageId));
+    } else if(ref.kind==='preparationInput'||ref.kind==='preparationResponse'){
+      const column=ref.kind==='preparationInput'?'p.input_hash':'s.response_hash';
+      row=required(get(`SELECT ${column} AS content_hash FROM preparation_attempts p JOIN preparation_jobs j ON j.job_id=p.job_id JOIN runs r ON r.run_id=p.run_id JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=j.principal_id LEFT JOIN preparation_steps s ON s.preparation_attempt_id=p.preparation_attempt_id WHERE p.preparation_attempt_id=? AND j.principal_id=? AND ${column} IS NOT NULL`,ref.preparationAttemptId,principalId));
     } else if (ref.kind === 'message') {
       row = required(get('SELECT session_id,body_content_hash AS content_hash FROM session_messages WHERE message_id=?', ref.messageId));
       session(principalId, String(row.session_id));

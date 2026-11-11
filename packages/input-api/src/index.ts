@@ -3,7 +3,7 @@ import type { Express, Request, Response, NextFunction } from 'express';
 import { randomUUID, createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { createProjectInput,createTaskInput,saveMessageInput,idempotencyKey,ids,opaqueKey,parseContract,gitCommit,ContractError,errorCode } from '@devmesh/contracts';
+import { createProjectInput,createTaskInput,saveMessageInput,answerQuestionsInput,retryUnderstandingInput,idempotencyKey,ids,opaqueKey,parseContract,gitCommit,ContractError,errorCode } from '@devmesh/contracts';
 import { canonical, StorageError } from '@devmesh/storage-sqlite';
 import type { OperationResult } from '@devmesh/storage-sqlite';
 import type { LocalContentStore } from '@devmesh/blob-store';
@@ -142,6 +142,21 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:true});
     const bodyHash=await putBody(identity.principalId,runId,meta.idempotencyKey,body.text);
     response.status(202).json(receipt(await content.storage.request('appendInputMessage',{meta,runId,bodyHash,body,...(request.headers['if-match']!==undefined?{ifMatch:scalar(request.headers['if-match'],'If-Match')}:{})})));
+  }));
+  router.get('/runs/:runId/understanding',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId);
+    const requirementRevision=request.query.requirementRevision===undefined?undefined:positive(request.query.requirementRevision,1,Number.MAX_SAFE_INTEGER);
+    response.json(await content.storage.request('getUnderstanding',{runId,principalId:identity.principalId,...(requirementRevision===undefined?{}:{requirementRevision})}));
+  }));
+  router.post('/runs/:runId/questions\\:answer',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(answerQuestionsInput,json(request));
+    const ifMatch=request.headers['if-match'];
+    response.status(202).json(receipt(await content.storage.request('answerPreparationQuestions',{meta,runId,body,...(ifMatch===undefined?{}:{ifMatch:scalar(ifMatch,'If-Match')})})));
+  }));
+  router.post('/runs/:runId/understanding\\:retry',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(retryUnderstandingInput,json(request));
+    const ifMatch=request.headers['if-match'];
+    response.status(202).json(receipt(await content.storage.request('retryPreparationInterpretation',{meta,runId,...body,...(ifMatch===undefined?{}:{ifMatch:scalar(ifMatch,'If-Match')})})));
   }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const result=await content.storage.request('lookupInputOperation',{principalId:identity.principalId,scopeId:parseContract(opaqueKey,request.query.scope),idempotencyKey:parseContract(idempotencyKey,request.query.key)});

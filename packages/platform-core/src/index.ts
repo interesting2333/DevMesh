@@ -5,7 +5,7 @@ import { Context } from '@deepseek-ai/cordis';
 import type { ServerConfig } from './config.js';
 import type { LocalStorage, LocalContentStore, SessionStore } from '@devmesh/blob-store';
 import type { mountInternalAgents, CredentialResolver } from '@devmesh/a2a-adapter';
-import type { RuntimeConsumer, RuntimeTool } from '@devmesh/agent-runtime';
+import type { PreparationConsumer, RuntimeConsumer, RuntimeTool } from '@devmesh/agent-runtime';
 import type { IdentityResolver, mountInputApi } from '@devmesh/input-api';
 
 export { loadConfig, ConfigError } from './config.js';
@@ -17,6 +17,7 @@ export interface FoundationServer {
   services?: { local:LocalStorage; content:LocalContentStore; sessions:SessionStore } | undefined;
   agents?:ReturnType<typeof mountInternalAgents>|undefined;
   consumer?:RuntimeConsumer|undefined;
+  preparationConsumer?:PreparationConsumer|undefined;
   inputApi?:ReturnType<typeof mountInputApi>|undefined;
 }
 
@@ -28,6 +29,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   const inputBaseline=config.inputApi?await inputModule!.resolveTemplateBaseline(config.inputApi.repositoryRoot,config.inputApi.commit,config.inputApi.templatePath):undefined;
   const runtimeModule=config.runtime?await import('@devmesh/agent-runtime'):undefined;
   const runtimeConfig=runtimeModule?.parseRuntimeConfig(config.runtime);
+  if(runtimeConfig?.preparation&&!config.inputApi)throw new Error('Preparation requires the input API and its trusted baseline');
   const context = new Context();
   let services: FoundationServer['services'];
   const storageFiber=config.storage?context.plugin({name:'devmesh-local-storage',async apply(scope:Context){
@@ -60,6 +62,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   });
   let agents: ReturnType<typeof mountInternalAgents>|undefined;
   let consumer:RuntimeConsumer|undefined;
+  let preparationConsumer:PreparationConsumer|undefined;
   let a2aModule:typeof import('@devmesh/a2a-adapter')|undefined;
   let inputApi:ReturnType<typeof mountInputApi>|undefined;
   try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
@@ -116,12 +119,27 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
       const credentials=options.resolveCredential??a2aModule!.environmentCredentials();
       const providers=runtimeConfig.providers.map(p=>new DeepSeekProvider(p,credentials));
       const runtime=new AgentRuntime(services.local.storage,services.content,providers,options.runtimeTools??[],runtimeConfig.tokenLimit);
-      consumer=new RuntimeConsumer(services.local.storage,runtime,config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled).map(e=>e.endpointId),'runtime.local');
+      const localEndpoints=config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled);
+      consumer=new RuntimeConsumer(services.local.storage,runtime,localEndpoints.map(e=>e.endpointId),'runtime.local');
       await consumer.start();
+      const prep=runtimeConfig.preparation;
+      if(prep){
+        const {PreparationRuntime,PreparationConsumer}=runtimeModule;
+        if(!config.a2a!.identities.some(identity=>identity.principalId===prep.callerId))throw new Error('Preparation caller must be a configured internal identity');
+        const preparation=new PreparationRuntime(services.content,agents!.registry,credentials,{
+          callerId:prep.callerId,workerId:'preparation.local',tokenLimit:runtimeConfig.tokenLimit,maxInputBytes:prep.maxInputBytes,maxOutputTokens:prep.maxOutputTokens,
+          providers:{product:providers.find(p=>p.config.providerId===prep.productProviderId)!,architect:providers.find(p=>p.config.providerId===prep.architectProviderId)!},
+          available:async provider=>!!await credentials(provider.config.credentialRef),
+          ...(prep.bootstrapPaths.length?{bootstrap:{repositoryRoot:config.inputApi!.repositoryRoot,paths:prep.bootstrapPaths}}:{}),
+        });
+        preparationConsumer=new PreparationConsumer(preparation,localEndpoints.filter(e=>e.supportedSkills.includes('devmesh.prepare.'+e.role)).map(e=>e.endpointId));
+        await preparationConsumer.start();
+      }
     }
     ready = true;
   } catch (error) {
     await inputApi?.stop();
+    await preparationConsumer?.stop();
     await consumer?.stop();
     await agents?.stop();
     await fiber.dispose();
@@ -139,11 +157,12 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     ...(services?{services}:{}),
     ...(agents?{agents}:{}),
     ...(consumer?{consumer}:{}),
+    ...(preparationConsumer?{preparationConsumer}:{}),
     ...(inputApi?{inputApi}:{}),
     stop() {
       ready = false;
       stopping ??= (async () => {
-        try{await inputApi?.stop();await consumer?.stop();await agents?.stop();await fiber.dispose();}finally{await storageFiber?.dispose();}
+        try{await inputApi?.stop();await preparationConsumer?.stop();await consumer?.stop();await agents?.stop();await fiber.dispose();}finally{await storageFiber?.dispose();}
         if (cleanupError) throw cleanupError;
         if (server.listening || sockets.size !== 0) throw new Error('HTTP resources remained active after Cordis disposal');
       })();

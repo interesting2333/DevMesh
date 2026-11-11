@@ -1,0 +1,26 @@
+✔ checked-in positive and negative examples are executable contracts (72.8687ms)
+✔ ID namespaces, safe revisions and version literals cannot be coerced (2.3403ms)
+✔ schema errors retain field paths in a safe standard envelope (3.6718ms)
+✔ input and display names count Unicode code points at exact boundaries (2.8023ms)
+✔ conditional requests require a current single strong safe ETag (1.1898ms)
+✔ a current resource ETag cannot validate old business content or another review (0.9608ms)
+✔ both execution owners work only within the authority scope (1.5748ms)
+✔ host IDs, epochs, attempts, activation and grant are all current facts (2.1722ms)
+✔ validity is half-open and cannot be widened by caller JSON (1.0148ms)
+✔ forged scope and read-to-write escalation are denied (1.3136ms)
+✔ command target and payload are discriminated independently of client intent (0.9715ms)
+✔ event time fallback, persisted versions and host fields cannot contradict payload (4.2759ms)
+✔ token deltas do not become durable business events (0.9526ms)
+✔ A2A completed, findings and business success have different representations (1.7016ms)
+✔ reports must bind one exact commit, including optional preview (1.2363ms)
+✔ plan data has a scale limit and cannot embed a JavaScript completion checker (5.3071ms)
+✔ OpenAPI body references and route parameters resolve to shared schemas (82.8305ms)
+✔ OpenAPI drift check returns a real process success for the generated artifact (534.1678ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1260.2913

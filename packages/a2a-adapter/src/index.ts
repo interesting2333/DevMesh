@@ -4,3 +4,4 @@ export type { CredentialResolver } from './registry.js';
 export { DurableRequestHandler,DurableTaskStore } from './handler.js';
 export { mountInternalAgents,createRoleCard,environmentCredentials,loadInternalA2AConfig } from './server.js';
 export type { ServiceIdentity,InternalA2AOptions,InternalA2AConfig } from './server.js';
+export { preparationClient } from './preparation-client.js';

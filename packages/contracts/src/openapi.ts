@@ -7,6 +7,7 @@ import { roleOutput, productOutput, architectOutput, developerOutput, testerOutp
 import { errorEnvelope } from './errors.js';
 import { strongETag, contentBasis } from './versions.js';
 import { createTaskInput,uploadMetadata,attachmentView,inputOperation,workspaceView } from './input.js';
+import { preparationDelegation,preparationInput,retryUnderstandingInput,understandingOutput,understandingView } from './preparation.js';
 
 export const schemas = {
   Command: command, DomainEvent: domainEvent, EphemeralTokenDelta: ephemeralTokenDelta,
@@ -18,6 +19,8 @@ export const schemas = {
   OperationReceipt: operationReceipt, ErrorEnvelope: errorEnvelope, StrongETag: strongETag, ContentBasis: contentBasis,
   InputText: inputText, ProjectName: projectName, TaskTitle: taskTitle,
   CreateTask:createTaskInput,UploadMetadata:uploadMetadata,Attachment:attachmentView,InputOperation:inputOperation,Workspace:workspaceView,
+  Understanding:understandingView,UnderstandingOutput:understandingOutput,RetryUnderstanding:retryUnderstandingInput,
+  PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
   ...commandBodies,
 };
 
@@ -72,9 +75,9 @@ export function createOpenApiDocument() {
     ]),
   } }]));
   const errors=Object.fromEntries(['400','401','403','404','409','412','413','415','422','428','429','500','503'].map(code=>[code,{description:'公共错误；未知提交结果先按原操作键查询',content:content('ErrorEnvelope')}]));
-  const add=(path:string,method:string,operationId:string,responseSchema?:string,parameters:unknown[]=[],requestSchema?:string)=>{
+  const add=(path:string,method:string,operationId:string,responseSchema?:string,parameters:unknown[]=[],requestSchema?:string,status=method==='post'?'201':'200')=>{
     paths[path]??={};paths[path]![method]={operationId,'x-implementation-status':'implemented-offline',security:[{trustedIdentity:[]}],parameters,
-      ...(requestSchema?{requestBody:{required:true,content:content(requestSchema)}}:{}),responses:{[method==='post'?'201':'200']:{description:'已提交的输入事实或当前权限下的读取',...(responseSchema?{content:content(responseSchema)}:{})},...errors}};
+      ...(requestSchema?{requestBody:{required:true,content:content(requestSchema)}}:{}),responses:{[status]:{description:'已提交的输入事实或当前权限下的读取',...(responseSchema?{content:content(responseSchema)}:{})},...errors}};
   };
   const parameter=(name:string,schema:z.ZodType,location='path',required=true)=>({name,in:location,required,schema:jsonSchema(schema)});
   const key=parameter('Idempotency-Key',idempotencyKey,'header');
@@ -90,12 +93,14 @@ export function createOpenApiDocument() {
   add('/api/v1/attachments/{attachmentId}','get','ReadAttachment','Attachment',[parameter('attachmentId',ids.attachment)]);
   add('/api/v1/attachments/{attachmentId}','delete','RemoveAttachment','Attachment',[parameter('attachmentId',ids.attachment)]);
   add('/api/v1/attachments/{attachmentId}/content','get','ReadAttachmentContent',undefined,[parameter('attachmentId',ids.attachment)]);
-  for(const path of ['/api/v1/projects','/api/v1/runs/{runId}/messages']){
+  add('/api/v1/runs/{runId}/understanding','get','ReadUnderstanding','Understanding',[parameter('runId',ids.run),parameter('requirementRevision',revision,'query',false)]);
+  add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
+  for(const path of ['/api/v1/projects','/api/v1/runs/{runId}/messages','/api/v1/runs/{runId}/questions:answer']){
     const post=paths[path]!.post as Record<string,unknown>;post['x-implementation-status']='implemented-offline';post.security=[{trustedIdentity:[]}];post.description='已实现持久输入与当前成员授权；默认无身份接入点时拒绝请求。保存成功不表示真实模型处理完成。';
   }
   return {
     openapi: '3.1.0', jsonSchemaDialect: 'https://json-schema.org/draft/2020-12/schema',
-    info: { title: 'DevMesh 核心契约', version: '0.2.0', description: '共享命令及 P1-01 输入 API。逐路由标记实现范围；离线代码与测试不代表企业身份、模型或产品全链路验收。其余 D3 API 随工作包增量补齐。' },
+    info: { title: 'DevMesh 核心契约', version: '0.3.0', description: '共享命令、输入与需求理解 API。逐路由标记实现范围；离线代码与测试不代表企业身份、模型或产品全链路验收。其余 D3 API 随工作包增量补齐。' },
     'x-runtime-constraints': ['permit 有效期顺序、宿主当前代际及资源范围', '测试成果所有报告绑定相同 SHA', '事件 envelope 与 payload 版本和归属一致', 'ETag 安全整数范围', 'DAG 无环、来源存在、ACL、幂等及事务由后续服务负责'],
     paths,
     components: {

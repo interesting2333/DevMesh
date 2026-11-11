@@ -16,7 +16,8 @@ export const inputOperation = z.strictObject({ operationId: ids.operation, statu
 export const workspaceView = z.strictObject({
   project: z.strictObject({ projectId: ids.project, name: projectName, revision, acceptedReleaseId: ids.release.nullable() }),
   run: z.strictObject({ runId: ids.run, projectId: ids.project, taskId: ids.userTask, resourceRevision: revision, runEpoch: revision, controlRevision: revision, phase: z.string(), controlGate: z.string(), terminalOutcome: z.string().nullable(), currentPlanRevision: revision.nullable(), currentRequirementRevision: revision.nullable(), eventSeq: epoch }),
-  mode: z.enum(['current','history']), membership: z.enum(['owner','operator','viewer']), allowedActions: z.array(z.enum(['saveMessage','createTask'])),
+  mode: z.enum(['current','history']), membership: z.enum(['owner','operator','viewer']), allowedActions: z.array(z.enum(['saveMessage','createTask','answerQuestions'])),
+  preparation:z.strictObject({understandingAvailable:z.boolean(),requiredOpenQuestions:epoch,pending:z.boolean()}),
   eventCursor: epoch, messages: z.array(z.strictObject({ messageId: ids.message, author: opaqueKey, bodyArtifactId: ids.artifact, clientMessageId: z.string(), createdAt: timestamp, attachmentIds, intentHint: z.enum(['query','change','unsure']).nullable(), text:z.union([inputText,z.literal('')]) })).max(200),
   nextMessageCursor: z.string().nullable(),
   templateBaseline:z.strictObject({version:opaqueKey,baseCommit:z.string().regex(/^[a-f0-9]{40}$/)}),

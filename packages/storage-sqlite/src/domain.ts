@@ -18,6 +18,9 @@ import type { SessionMethod } from './session-protocol.js';
 import { createInputDomain } from './input-domain.js';
 import { inputRequests } from './input-protocol.js';
 import type { InputMethod } from './input-protocol.js';
+import { createPreparationDomain } from './preparation-domain.js';
+import { preparationRequests } from './preparation-protocol.js';
+import type { PreparationMethod } from './preparation-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -91,6 +94,23 @@ export function createDomain(db: DatabaseSync) {
     return {projectId,taskId,runId,artifactId,messageId,revision:1};
   }
   const inputs=createInputDomain(db,{operation,createInputFacts,event,outbox,runView});
+  function publishPlanFacts(current:Row,requirementRevision:number,planRevision:number,plan:Parsed<'publishPlan'>['plan'],planHash:string,operationId:string){
+    const runId=String(current.run_id),time=now(),planContent=readyContent(planHash),artifactId=uid('artifact');
+    insert('plan_revisions',{run_id:runId,revision:planRevision,requirement_revision:requirementRevision,content_hash:planHash,content_json:canonical(plan),created_at:time});
+    for(const work of plan.works){
+      exec('INSERT OR IGNORE INTO works(run_id,work_id) VALUES(?,?)',runId,work.workId);
+      const previous=get('SELECT definition_hash FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?',runId,work.workId,work.workRevision),hash=digest(canonical(work));
+      if(previous&&previous.definition_hash!==hash)throw new StorageError('WORK_REVISION_IMMUTABLE',409,'Published work definition cannot change');
+      if(!previous)insert('work_revisions',{run_id:runId,work_id:work.workId,revision:work.workRevision,role:work.role,definition_json:canonical(work),definition_hash:hash});
+      insert('plan_works',{run_id:runId,plan_revision:planRevision,work_id:work.workId,work_revision:work.workRevision});
+    }
+    for(const work of plan.works)for(const dependency of work.dependencies)insert('plan_edges',{run_id:runId,plan_revision:planRevision,predecessor:dependency.workId,successor:work.workId,required_outcome:dependency.requiredOutcome});
+    exec("UPDATE runs SET phase='PLANNING',current_requirement_revision=?,current_plan_revision=? WHERE run_id=?",requirementRevision,planRevision,runId);bump(runId);
+    insert('artifacts',{artifact_id:artifactId,project_id:String(current.project_id),run_id:runId,attempt_id:null,kind:'PLAN',content_hash:planHash,byte_size:Number(planContent.byte_size),storage_key:String(planContent.storage_key),state:'READY',created_at:time});
+    event(runId,operationId,'PlanPublished',{planRevision,planRef:{artifactId,sha256:planHash}});
+    return {artifactId,sha256:planHash,runId,planRevision,requirementRevision,reviewHash:planHash,revision:Number(run(runId).resource_revision)};
+  }
+  const preparations=createPreparationDomain(db,{operation,event,outbox,publishPlanFacts});
   function knownEffects(attemptId: string) {
     return !get("SELECT o.operation_id FROM tool_operations t JOIN operations o ON o.operation_id=t.operation_id WHERE t.attempt_id=? AND o.status NOT IN ('SUCCEEDED','FAILED')", attemptId)
       && !get("SELECT j.job_id FROM runner_jobs j JOIN tool_operations t ON t.operation_id=j.operation_id WHERE t.attempt_id=? AND j.state<>'EXITED'", attemptId);
@@ -125,25 +145,11 @@ export function createDomain(db: DatabaseSync) {
         const current = writable(input);
         if (get('SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL', input.runId)) throw new StorageError('ACTIVE_ATTEMPT_EXISTS', 409, 'Cannot replace a live execution plan');
         if (input.plan.requirementRevision !== input.requirementRevision || input.planRevision <= Number(current.current_plan_revision ?? 0) || input.requirementRevision <= Number(current.current_requirement_revision ?? 0)) throw new StorageError('PLAN_SUPERSEDED', 409, 'Plan/requirement revisions must advance together');
-        const time = now(), requirementHash = digest(canonical(input.requirements)), planHash = digest(canonical(input.plan));
+        const requirementHash = digest(canonical(input.requirements)), planHash = digest(canonical(input.plan));
         if (planHash !== input.planContentHash) throw new StorageError('PLAN_CONTENT_MISMATCH', 422, 'Published plan content must match its canonical JSON hash');
-        const planContent = readyContent(planHash), planArtifactId = uid('artifact');
-        insert('requirement_revisions', { run_id: input.runId, revision: input.requirementRevision, content_hash: requirementHash, content_json: canonical(input.requirements), created_at: time });
-        insert('plan_revisions', { run_id: input.runId, revision: input.planRevision, requirement_revision: input.requirementRevision, content_hash: planHash, content_json: canonical(input.plan), created_at: time });
-        for (const work of input.plan.works) {
-          exec('INSERT OR IGNORE INTO works(run_id,work_id) VALUES(?,?)', input.runId, work.workId);
-          const previous = get('SELECT definition_hash FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?', input.runId, work.workId, work.workRevision);
-          const hash = digest(canonical(work));
-          if (previous && previous.definition_hash !== hash) throw new StorageError('WORK_REVISION_IMMUTABLE', 409, 'Published work definition cannot change');
-          if (!previous) insert('work_revisions', { run_id: input.runId, work_id: work.workId, revision: work.workRevision, role: work.role, definition_json: canonical(work), definition_hash: hash });
-          insert('plan_works', { run_id: input.runId, plan_revision: input.planRevision, work_id: work.workId, work_revision: work.workRevision });
-        }
-        for (const work of input.plan.works) for (const dependency of work.dependencies) insert('plan_edges', { run_id: input.runId, plan_revision: input.planRevision, predecessor: dependency.workId, successor: work.workId, required_outcome: dependency.requiredOutcome });
-        exec("UPDATE runs SET phase='PLANNING',current_requirement_revision=?,current_plan_revision=? WHERE run_id=?", input.requirementRevision, input.planRevision, input.runId);
-        bump(input.runId);
-        insert('artifacts', { artifact_id: planArtifactId, project_id: String(current.project_id), run_id: input.runId, attempt_id: null, kind: 'PLAN', content_hash: planHash, byte_size: Number(planContent.byte_size), storage_key: String(planContent.storage_key), state: 'READY', created_at: time });
-        event(input.runId, operationId, 'PlanPublished', { planRevision: input.planRevision, planRef: { artifactId: planArtifactId, sha256: planHash } });
-        return { runId: input.runId, planRevision: input.planRevision, requirementRevision: input.requirementRevision, reviewHash: planHash, revision: Number(run(input.runId).resource_revision) };
+        insert('requirement_revisions', { run_id: input.runId, revision: input.requirementRevision, content_hash: requirementHash, content_json: canonical(input.requirements), created_at: now() });
+        const {runId,planRevision,requirementRevision,reviewHash,revision}=publishPlanFacts(current,input.requirementRevision,input.planRevision,input.plan,planHash,operationId);
+        return {runId,planRevision,requirementRevision,reviewHash,revision};
       });
     },
     confirmPlan(input: Parsed<'confirmPlan'>) {
@@ -151,6 +157,8 @@ export function createDomain(db: DatabaseSync) {
       return operation(meta, 'ConfirmPlan', payload, operationId => {
         const current = writable(input);
         const plan = required(get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?', input.runId, input.planRevision));
+        if(get("SELECT 1 FROM clarification_current c JOIN clarification_questions q ON q.run_id=c.run_id AND q.question_id=c.question_id AND q.revision=c.question_revision WHERE c.run_id=? AND c.state='OPEN' AND json_extract(q.content_json,'$.required')=1",input.runId))throw new StorageError('REQUIRED_QUESTIONS_UNANSWERED',409,'Required questions must be answered before implementation');
+        if(get("SELECT 1 FROM preparation_jobs WHERE run_id=? AND purpose='INTERPRET' AND state NOT IN ('APPLIED','SUPERSEDED') AND json_extract(basis_json,'$.requirementRevision')=?",input.runId,current.current_requirement_revision!))throw new StorageError('INTERPRETATION_PENDING',409,'Saved answers must be interpreted before plan confirmation');
         if (current.current_plan_revision !== input.planRevision || current.current_requirement_revision !== input.requirementRevision || plan.content_hash !== input.reviewHash || plan.requirement_revision !== input.requirementRevision) throw new StorageError('PLAN_SUPERSEDED', 409, 'The reviewed plan is no longer current');
         insert('plan_confirmations', { run_id: input.runId, plan_revision: input.planRevision, requirement_revision: input.requirementRevision, review_hash: input.reviewHash, actor: meta.principalId, operation_id: operationId, created_at: now() });
         const decisionId = uid('decision');
@@ -166,7 +174,7 @@ export function createDomain(db: DatabaseSync) {
       return operation(meta, 'AdmitWorks', payload, operationId => {
         const current = writable(input);
         if (current.control_gate !== 'OPEN' || current.run_epoch !== input.runEpoch) throw new StorageError('ADMISSION_CLOSED', 409, 'Run gate or epoch changed');
-        if (current.current_plan_revision !== input.planRevision || !get('SELECT run_id FROM plan_confirmations WHERE run_id=? AND plan_revision=?', input.runId, input.planRevision)) throw new StorageError('PLAN_NOT_CONFIRMED', 409, 'Current plan must be explicitly confirmed');
+        if (current.current_plan_revision !== input.planRevision || !get('SELECT run_id FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?', input.runId, input.planRevision,current.current_requirement_revision??null)) throw new StorageError('PLAN_NOT_CONFIRMED', 409, 'Current plan and requirement basis must be explicitly confirmed');
         const attemptIds: string[] = [];
         for (const requested of input.works) {
           const work = required(get('SELECT w.work_epoch,w.blocked_reason,r.role,r.definition_json FROM plan_works p JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN work_revisions r ON r.run_id=p.run_id AND r.work_id=p.work_id AND r.revision=p.work_revision WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND p.work_revision=?', input.runId, input.planRevision, requested.workId, requested.workRevision));
@@ -230,7 +238,8 @@ export function createDomain(db: DatabaseSync) {
       return operation(meta, 'SetControlIntent', payload, operationId => {
         const current = writable(input);
         if (current.control_gate === 'CANCELLING' && input.action === 'pause') throw new StorageError('CANCEL_INTENT_SAVED', 409, 'Pause cannot overwrite cancellation');
-        const gate = input.action === 'cancel' ? 'CANCELLING' : get('SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL', input.runId) ? 'PAUSING' : 'PAUSED';
+        const active=get('SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL',input.runId)||get('SELECT preparation_attempt_id FROM preparation_attempts WHERE run_id=? AND ended_at IS NULL',input.runId);
+        const gate = input.action === 'cancel' ? 'CANCELLING' : active ? 'PAUSING' : 'PAUSED';
         if (current.control_gate !== gate) exec('UPDATE runs SET control_gate=?,run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1 WHERE run_id=?', gate, input.runId);
         exec("UPDATE execution_grants SET status='REVOKED' WHERE run_id=? AND status='ACTIVE'", input.runId);
         const updated = run(input.runId);
@@ -244,6 +253,7 @@ export function createDomain(db: DatabaseSync) {
       return operation(meta, 'FinishRun', payload, operationId => {
         const current = writable(input);
         if (get('SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL', input.runId)) throw new StorageError('ACTIVE_ATTEMPT_EXISTS', 409, 'All attempts must be known and ended');
+        if(get('SELECT preparation_attempt_id FROM preparation_attempts WHERE run_id=? AND ended_at IS NULL',input.runId))throw new StorageError('ACTIVE_PREPARATION_EXISTS',409,'Preparation effects must be known and ended');
         if (input.outcome === 'CANCELLED' && current.control_gate !== 'CANCELLING') throw new StorageError('CANCEL_INTENT_REQUIRED', 409, 'Cancellation must have a saved control intent');
         exec('UPDATE runs SET terminal_outcome=?,ended_at=?,resource_revision=resource_revision+1 WHERE run_id=?', input.outcome, now(), input.runId);
         const updated = run(input.runId);
@@ -279,6 +289,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(preparationRequests,method))return preparations.execute(method as PreparationMethod,input);
     if (Object.hasOwn(inputRequests,method))return inputs.execute(method as InputMethod,input);
     if (Object.hasOwn(runtimeRequests, method)) return runtime.execute(method as RuntimeMethod, input);
     if (Object.hasOwn(registryRequests, method)) return registry.execute(method as RegistryMethod, input);
