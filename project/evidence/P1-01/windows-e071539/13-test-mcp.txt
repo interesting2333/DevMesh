@@ -1,0 +1,73 @@
+TAP version 13
+# (node:23840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: A2A HTTP to durable Runtime and official MCP HTTP persists a real verified file result
+ok 1 - A2A HTTP to durable Runtime and official MCP HTTP persists a real verified file result
+  ---
+  duration_ms: 1336.3171
+  type: 'test'
+  ...
+# Subtest: official MCP initialize/list/call over real HTTP reads a verified snapshot and records capabilities
+ok 2 - official MCP initialize/list/call over real HTTP reads a verified snapshot and records capabilities
+  ---
+  duration_ms: 267.6443
+  type: 'test'
+  ...
+# Subtest: MCP service denies anonymous, browser Origin, hostile Host and unapproved tools
+ok 3 - MCP service denies anonymous, browser Origin, hostile Host and unapproved tools
+  ---
+  duration_ms: 50.6205
+  type: 'test'
+  ...
+# Subtest: repo tool rejects hash changes, unauthorized paths and linked files without leaking host data
+ok 4 - repo tool rejects hash changes, unauthorized paths and linked files without leaking host data
+  ---
+  duration_ms: 64.8486
+  type: 'test'
+  ...
+# Subtest: connection revalidation refuses a changed signature instead of replacing its frozen snapshot
+ok 5 - connection revalidation refuses a changed signature instead of replacing its frozen snapshot
+  ---
+  duration_ms: 56.0275
+  type: 'test'
+  ...
+# (node:27836) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real MCP to Runner HTTP admits one job, enforces host ownership and allows stop after write gate closes
+ok 6 - real MCP to Runner HTTP admits one job, enforces host ownership and allows stop after write gate closes
+  ---
+  duration_ms: 316.4601
+  type: 'test'
+  ...
+# (node:27836) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost MCP start reply reconciles the original operation without resending mutation
+ok 7 - lost MCP start reply reconciles the original operation without resending mutation
+  ---
+  duration_ms: 288.053
+  type: 'test'
+  ...
+# Subtest: missing MCP credentials and deadline never trigger automatic tool call retries
+ok 8 - missing MCP credentials and deadline never trigger automatic tool call retries
+  ---
+  duration_ms: 537.5257
+  type: 'test'
+  ...
+# Subtest: oversized MCP responses remain unknown and do not replay the original tool
+ok 9 - oversized MCP responses remain unknown and do not replay the original tool
+  ---
+  duration_ms: 26.6667
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5090.637
+$ node --test --test-concurrency=1 --test-reporter=tap tests/mcp*.test.mjs

@@ -1,0 +1,219 @@
+TAP version 13
+# (node:6668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:6668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:6668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:6668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: platform listens before card self-check and opens admission after committed projection
+ok 1 - platform listens before card self-check and opens admission after committed projection
+  ---
+  duration_ms: 3863.5747
+  type: 'test'
+  ...
+# (node:6668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:6668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unconfigured service credentials keep every endpoint unavailable without bypassing auth
+ok 2 - unconfigured service credentials keep every endpoint unavailable without bypassing auth
+  ---
+  duration_ms: 1917.6836
+  type: 'test'
+  ...
+# (node:6668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: configuration resolves one explicit manifest path and rejects private or duplicate fields
+ok 3 - configuration resolves one explicit manifest path and rejects private or duplicate fields
+  ---
+  duration_ms: 849.8819
+  type: 'test'
+  ...
+# (node:2448) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2448) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2448) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real receiver death after-receipt preserves task and prevents duplicate activation
+ok 4 - real receiver death after-receipt preserves task and prevents duplicate activation
+  ---
+  duration_ms: 4020.9962
+  type: 'test'
+  ...
+# (node:2448) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2448) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real receiver death after-claim preserves task and prevents duplicate activation
+ok 5 - real receiver death after-claim preserves task and prevents duplicate activation
+  ---
+  duration_ms: 3257.4523
+  type: 'test'
+  ...
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: official 1.0 HTTP client reads authenticated cards and one durable task for concurrent repeated sends
+ok 6 - official 1.0 HTTP client reads authenticated cards and one durable task for concurrent repeated sends
+  ---
+  duration_ms: 2126.5969
+  type: 'test'
+  ...
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: official SSE sends durable snapshot, observes cancellation and releases on disconnect
+ok 7 - official SSE sends durable snapshot, observes cancellation and releases on disconnect
+  ---
+  duration_ms: 1428.2829
+  type: 'test'
+  ...
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: active cancellation records intent until stop is verified and consumer token is current
+ok 8 - active cancellation records intent until stop is verified and consumer token is current
+  ---
+  duration_ms: 1275.6451
+  type: 'test'
+  ...
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: invalid service, forged authority and unsupported private protocol cannot create work
+ok 9 - invalid service, forged authority and unsupported private protocol cannot create work
+  ---
+  duration_ms: 1075.6787
+  type: 'test'
+  ...
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real fifteen-second grant issuance and expired authority cannot create accepted work
+ok 10 - real fifteen-second grant issuance and expired authority cannot create accepted work
+  ---
+  duration_ms: 1124.6069
+  type: 'test'
+  ...
+# Subtest: public prototype is disabled by default and refuses invalid/ambiguous startup before mounting
+ok 11 - public prototype is disabled by default and refuses invalid/ambiguous startup before mounting
+  ---
+  duration_ms: 169.3793
+  type: 'test'
+  ...
+# Subtest: single/group discovery has one well-known card, immutable trusted URLs and filtered catalog
+ok 12 - single/group discovery has one well-known card, immutable trusted URLs and filtered catalog
+  ---
+  duration_ms: 121.016
+  type: 'test'
+  ...
+# Subtest: authentication, duplicate headers, origin and bounded body reject before protocol execution
+ok 13 - authentication, duplicate headers, origin and bounded body reject before protocol execution
+  ---
+  duration_ms: 109.1248
+  type: 'test'
+  ...
+# Subtest: official JSON-RPC/SSE clients return immediate Message for agent and group; executable requests are refused
+ok 14 - official JSON-RPC/SSE clients return immediate Message for agent and group; executable requests are refused
+  ---
+  duration_ms: 135.537
+  type: 'test'
+  ...
+# Subtest: documented prototype server starts with explicit test credentials and drains over IPC
+ok 15 - documented prototype server starts with explicit test credentials and drains over IPC
+  ---
+  duration_ms: 1323.9191
+  type: 'test'
+  ...
+# (node:27800) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27800) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed receipt transaction leaves no Task, Inbox or accepted work
+ok 16 - failed receipt transaction leaves no Task, Inbox or accepted work
+  ---
+  duration_ms: 1643.8712
+  type: 'test'
+  ...
+# (node:27800) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27800) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27800) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost receipt acknowledgement and process restart return original task without new acceptance
+ok 17 - lost receipt acknowledgement and process restart return original task without new acceptance
+  ---
+  duration_ms: 3061.5412
+  type: 'test'
+  ...
+# (node:27800) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed memory refresh closes admission and rebuilds from committed generation
+ok 18 - failed memory refresh closes admission and rebuilds from committed generation
+  ---
+  duration_ms: 905.68
+  type: 'test'
+  ...
+# (node:24640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:24640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:24640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: manifest versions are durable, atomic, idempotent and refuse historical startup rollback
+ok 19 - manifest versions are durable, atomic, idempotent and refuse historical startup rollback
+  ---
+  duration_ms: 2262.9488
+  type: 'test'
+  ...
+# (node:24640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: late health only archives and lifecycle remains draining across identical restarts
+ok 20 - late health only archives and lifecycle remains draining across identical restarts
+  ---
+  duration_ms: 915.573
+  type: 'test'
+  ...
+# (node:24640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: outdated projection and expired or changed card facts close new admission
+ok 21 - outdated projection and expired or changed card facts close new admission
+  ---
+  duration_ms: 907.3027
+  type: 'test'
+  ...
+# (node:24640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: registry import checks CAS and rolls back all newly inserted records
+ok 22 - registry import checks CAS and rolls back all newly inserted records
+  ---
+  duration_ms: 853.389
+  type: 'test'
+  ...
+# (node:24640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: health expiration blocks dispatch even when the memory projection has not changed
+ok 23 - health expiration blocks dispatch even when the memory projection has not changed
+  ---
+  duration_ms: 1050.4875
+  type: 'test'
+  ...
+# (node:24640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dispatch admission freezes checked endpoint and rejects stale caller supplied route
+ok 24 - dispatch admission freezes checked endpoint and rejects stale caller supplied route
+  ---
+  duration_ms: 1076.3431
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8606.8122
+$ node --test --test-reporter=tap tests/a2a*.test.mjs

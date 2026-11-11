@@ -519,12 +519,13 @@
       ],
       "evidence": [
         "project/evidence/P1-01/离线实施进展.md",
-        "project/evidence/P1-01/SHA256-local.json"
+        "project/evidence/P1-01/SHA256-local.json",
+        "project/evidence/P1-01/windows-e071539/report.json"
       ],
       "reviewNote": null,
       "notes": [
         "按用户连续目标授权，在 G0 和真实模型前置未验收时推进独立输入 API 代码与离线验证；企业身份接入默认未配置，正式工作包状态和阶段前置保留。",
-        "已实现默认关闭的可信身份扩展点、成员权限、流式附件与持久恢复、原子 T1、消息／原键查询／一致 workspace。实际 HTTP、Worker、SIGKILL 及组合检查已执行；开发日志保留失败和修正，固定提交完整回归另记。企业身份和真实模型未配置，正式前置与 G0 保留。"
+        "已实现默认关闭的可信身份扩展点、成员权限、流式附件与持久恢复、原子 T1、消息／原键查询／一致 workspace。固定 e071539 干净 Windows 冻结回归 18/18（输入 20/20）；首轮版本断言失败的报告也保留。企业身份和真实模型未配置，正式前置与 G0 保留。"
       ]
     },
     {
@@ -545,7 +546,9 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-understanding-and-readonly-planning"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -553,7 +556,9 @@
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "按连续目标和不依赖外部环境的用户指令，推进独立准备宿主、来源理解、部分回答与解释重试；正式 P1-01／G0 前置未验收，受控 Provider 只用于平台规则验证。"
+      ]
     },
     {
       "id": "P1-03",
