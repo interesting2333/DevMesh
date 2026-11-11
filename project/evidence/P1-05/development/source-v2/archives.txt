@@ -1,0 +1,46 @@
+TAP version 13
+# (node:34728) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:34728) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:34728) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source retention transfers the original real MCP commit, preserves dirty work and recovers its durable ACK after restart
+ok 1 - source retention transfers the original real MCP commit, preserves dirty work and recovers its durable ACK after restart
+  ---
+  duration_ms: 277595.0144
+  type: 'test'
+  ...
+# (node:34728) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unprepared source archival remains unknown and blocks replacement without importing or creating refs
+ok 2 - unprepared source archival remains unknown and blocks replacement without importing or creating refs
+  ---
+  duration_ms: 128795.0961
+  type: 'test'
+  ...
+# (node:34728) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared retained refs reconcile a lost acknowledgement without replaying object transfer after pause
+ok 3 - prepared retained refs reconcile a lost acknowledgement without replaying object transfer after pause
+  ---
+  duration_ms: 198113.8758
+  type: 'test'
+  ...
+# (node:34728) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source archive independently rejects a foreign parent, out of scope commit, special mode and missing commit object
+ok 4 - source archive independently rejects a foreign parent, out of scope commit, special mode and missing commit object
+  ---
+  duration_ms: 272141.3711
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 895368.5567

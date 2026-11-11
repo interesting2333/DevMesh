@@ -48,7 +48,7 @@ export class ControlledGit {
     const env=Object.fromEntries(Object.entries(process.env).filter(([k])=>!k.toUpperCase().startsWith('GIT_')));
     Object.assign(env,{GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:nullFile,GIT_ATTR_NOSYSTEM:'1',GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0',GIT_LITERAL_PATHSPECS:'1',LC_ALL:'C'});
     return new Promise((resolve,reject)=>{
-      const child=spawn(binary,['--no-replace-objects','--literal-pathspecs','-c','core.hooksPath='+nullFile,'-c','core.fsmonitor=false','-c','core.attributesFile='+nullFile,'-c','core.autocrlf=false','-c','commit.gpgSign=false','-c','protocol.allow=never',...args],{cwd:root,env,windowsHide:true,stdio:['pipe','pipe','pipe'],...(signal?{signal}:{})});
+      const child=spawn(binary,['--no-replace-objects','--literal-pathspecs','-c','core.hooksPath='+nullFile,'-c','core.fsmonitor=false','-c','core.attributesFile='+nullFile,'-c','core.autocrlf=false','-c','core.fsync=all','-c','core.fsyncMethod=fsync','-c','commit.gpgSign=false','-c','protocol.allow=never',...args],{cwd:root,env,windowsHide:true,stdio:['pipe','pipe','pipe'],...(signal?{signal}:{})});
       const chunks:Buffer[]=[];let bytes=0,overflow=false,ioFailure=false;
       const timer=setTimeout(()=>{overflow=true;child.kill();},30000);timer.unref();
       child.stdout.on('data',(part:Buffer)=>{bytes+=part.length;if(bytes>maxBytes){overflow=true;child.kill();}else chunks.push(part);});
@@ -69,7 +69,9 @@ export class ControlledGit {
     for(const name of ['alternates','http-alternates'])try{await lstat(join(b.gitDirectory,'objects/info',name));deny('GIT_ALTERNATES_DENIED');}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
   }
   async commit(commit:string,signal?:AbortSignal){
-    sha(commit);await this.validate(signal);const body=decode((await this.call(['cat-file','commit',commit],signal,undefined,1024*1024)).out),headers=body.split('\n\n',1)[0]!.split('\n'),tree=headers[0]?.slice(5);
+    sha(commit);await this.validate(signal);const bytes=(await this.call(['cat-file','commit',commit],signal,undefined,1024*1024)).out;
+    if(createHash('sha1').update(Buffer.from('commit '+bytes.length+'\0')).update(bytes).digest('hex')!==commit)deny('GIT_COMMIT_INVALID');
+    const body=decode(bytes),headers=body.split('\n\n',1)[0]!.split('\n'),tree=headers[0]?.slice(5);
     if(!body.startsWith('tree ')||!tree)deny('GIT_COMMIT_INVALID');return {commit,tree:sha(tree!),parents:headers.filter(v=>v.startsWith('parent ')).map(v=>sha(v.slice(7))),body};
   }
   async readBlob(objectId:string,signal?:AbortSignal){sha(objectId);await this.validate(signal);return (await this.call(['cat-file','blob',objectId],signal,undefined,2*1024*1024)).out;}

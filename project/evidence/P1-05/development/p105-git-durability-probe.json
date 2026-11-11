@@ -1,0 +1,43 @@
+{
+  "scope": "Installed Git fsync-path probe only; not crash/power-loss or platform archive acceptance",
+  "version": "git version 2.39.2.windows.1",
+  "object": "0debadbacf5b3a264e934d6ffa88e5b9482ef2f9",
+  "ref": "refs/devmesh/durability/866a885fe9854238b01ce78968e8e646",
+  "refCommit": "6a7c850d5597825a4f45c4f901d89f0273d54372",
+  "configuration": {
+    "core.fsync": "all",
+    "core.fsyncMethod": "fsync"
+  },
+  "events": [
+    {
+      "event": "data",
+      "sid": "20261111T183247.300143Z-H99f37667-P000063bc",
+      "thread": "main",
+      "time": "2026-11-11T18:32:47.925940Z",
+      "file": "wrapper.c",
+      "line": 600,
+      "repo": 1,
+      "t_abs": 0.634772,
+      "t_rel": 0.634772,
+      "nesting": 1,
+      "category": "fsync",
+      "key": "fsync/hardware-flush",
+      "value": "1"
+    },
+    {
+      "event": "data",
+      "sid": "20261111T183248.788087Z-H99f37667-P00007700",
+      "thread": "main",
+      "time": "2026-11-11T18:32:49.655065Z",
+      "file": "wrapper.c",
+      "line": 600,
+      "repo": 1,
+      "t_abs": 0.875618,
+      "t_rel": 0.875618,
+      "nesting": 1,
+      "category": "fsync",
+      "key": "fsync/hardware-flush",
+      "value": "1"
+    }
+  ]
+}

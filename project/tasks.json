@@ -666,12 +666,17 @@
         "project/evidence/P1-04/离线实施进展.md",
         "project/evidence/P1-04/repo-file-plan-baseline.json",
         "project/evidence/P1-05/development/v11-report.json",
-        "project/evidence/P1-04/development/file-validation.json"
+        "project/evidence/P1-04/development/file-validation.json",
+        "project/evidence/P1-04/windows-b77d12a-incomplete/evidence.json",
+        "project/evidence/P1-05/development/source-v2/evidence.json",
+        "project/evidence/P1-05/development/source-v2/report.json"
       ],
       "reviewNote": null,
       "notes": [
         "已完成五类 MCP 的独立身份、真实后端协议及文件编辑闭环代码。文件联调 v8 5/5，确认忙碌拒绝不阻断后续编辑；v7 屏障、Runner、存储和 lint 结果见 development/file-validation.json。此前失败均保存；P1-04 2.3 已完成，4.1 最终固定提交全量回归与复核仍待完成，正式前置／G0／真实模型和 Linux 产品验收保持未通过。",
-        "文件工具细化已同步 D2／D6／实施基线与影响记录，既有冻结角色不自动扩权；源码归档与完整应用验收不由提交工具代替。"
+        "文件工具细化已同步 D2／D6／实施基线与影响记录，既有冻结角色不自动扩权；源码归档与完整应用验收不由提交工具代替。",
+        "固定 b77d12a 回归未通过：前 12 项通过，完整 MCP 34/35；超时夹具在 500ms 初始化阶段 MCP_CONNECT_FAILED，尚未到预期工具调用。原报告保留，余下 8 项未执行；归档新检查按门槛未启动，已修正测试夹具并安排串行重验，4.1 未勾选。",
+        "2026-11-12：源码归档 v2 开发驱动完整通过（源码指纹不变）：MCP 超时修正用例 1/1、归档 4/4、受控 Git 5/5、存储 28/28，类型／lint／构建通过；证据 source-v2/evidence.json。不是固定提交或容器验收。"
       ]
     },
     {
@@ -713,18 +718,32 @@
         "packages/runner/src/workspace-fence.ts",
         "tests/workspace-storage.test.mjs",
         "tests/workspace-fencing.test.mjs",
-        "tests/runner-upgrade.test.mjs"
+        "tests/runner-upgrade.test.mjs",
+        "packages/code-workspaces/src/source-archives.ts",
+        "packages/storage-sqlite/src/source-archive-domain.ts",
+        "packages/storage-sqlite/src/source-archive-protocol.ts",
+        "packages/storage-sqlite/migrations/0015-sourcearchives.sql",
+        "tests/workspace-source-archive.test.mjs",
+        "tests/fixtures/source-archive.mjs"
       ],
       "evidence": [
         "project/evidence/P1-05/离线实施进展.md",
         "project/evidence/P1-05/development/logs.json",
         "project/evidence/P1-05/development/v11-report.json",
-        "project/evidence/P1-04/development/file-validation.json"
+        "project/evidence/P1-04/development/file-validation.json",
+        "project/evidence/P1-05/development/source-migration-preflight.json",
+        "project/evidence/P1-05/development/git-capability-probes.json",
+        "project/evidence/P1-04/windows-b77d12a-incomplete/evidence.json",
+        "project/evidence/P1-05/development/source-v2/evidence.json",
+        "project/evidence/P1-05/development/source-v2/report.json"
       ],
       "reviewNote": null,
       "notes": [
         "受控 Git、模板子树基线、迁移 13、原工作区分配与内部 Attempt 分支已验证；v11 分配 1/1、v9 工作区 10/10 的原始证据已保存。",
-        "Repo MCP 已接实际本地进程锁和 Runner 持久屏障，包含活动／未知 Job、原操作 cleanup 和真实 SIGKILL 后准确 token 恢复；2.1 据 development/file-validation.json 完成。源码归档 ACK、三方候选、冲突材料、精确验证分配、回收及调度准备仍未实施，最终固定提交全量回归、正式前置和 G0 保持待验收。"
+        "Repo MCP 已接实际本地进程锁和 Runner 持久屏障，包含活动／未知 Job、原操作 cleanup 和真实 SIGKILL 后准确 token 恢复；2.1 据 development/file-validation.json 完成。源码归档 ACK、三方候选、冲突材料、精确验证分配、回收及调度准备仍未实施，最终固定提交全量回归、正式前置和 G0 保持待验收。",
+        "2.2 已补源码接收／保留 ref／Worker ACK 实现和真实 Git 回归用例，新增源码尚待串行类型、构建与业务检查，保持未勾选。P1-04 检查点 b77d12a 的独立干净目录完整回归正在执行，新检查在其退出后启动；不把待执行代码当成通过。",
+        "固定 b77d12a 回归未通过：前 12 项通过，完整 MCP 34/35；超时夹具在 500ms 初始化阶段 MCP_CONNECT_FAILED，尚未到预期工具调用。原报告保留，余下 8 项未执行；归档新检查按门槛未启动，已修正测试夹具并安排串行重验，4.1 未勾选。",
+        "2026-11-12：源码归档 v2 开发驱动完整通过（源码指纹不变）：MCP 超时修正用例 1/1、归档 4/4、受控 Git 5/5、存储 28/28，类型／lint／构建通过；证据 source-v2/evidence.json。不是固定提交或容器验收。"
       ]
     },
     {

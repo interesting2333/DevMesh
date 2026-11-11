@@ -1,0 +1,52 @@
+Scope: 2 of 17 workspace projects
+$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 37 files
+ℹ dist\index.mjs                             7.15 kB │ gzip:   2.55 kB
+ℹ dist\worker.mjs                            5.33 kB │ gzip:   2.17 kB
+ℹ dist\migrations.mjs                        0.26 kB │ gzip:   0.17 kB
+ℹ dist\domain.mjs                            0.16 kB │ gzip:   0.13 kB
+ℹ dist\domain-BupR5bR7.mjs.map             477.49 kB │ gzip: 101.11 kB
+ℹ dist\domain-BupR5bR7.mjs                 292.28 kB │ gzip:  58.51 kB
+ℹ dist\registry-protocol-dimkuDLs.mjs.map   25.50 kB │ gzip:   6.25 kB
+ℹ dist\index.mjs.map                        13.62 kB │ gzip:   4.59 kB
+ℹ dist\registry-protocol-dimkuDLs.mjs       12.43 kB │ gzip:   3.48 kB
+ℹ dist\migrations-BNr8Cyfx.mjs.map           8.84 kB │ gzip:   3.20 kB
+ℹ dist\worker.mjs.map                        8.45 kB │ gzip:   3.15 kB
+ℹ dist\migrations-BNr8Cyfx.mjs               5.35 kB │ gzip:   2.12 kB
+ℹ dist\errors-BXl8kUAO.mjs.map               1.99 kB │ gzip:   0.85 kB
+ℹ dist\errors-BXl8kUAO.mjs                   1.08 kB │ gzip:   0.54 kB
+ℹ dist\index.d.mts                           3.92 kB │ gzip:   1.41 kB
+ℹ dist\migrations.d.mts                      0.91 kB │ gzip:   0.42 kB
+ℹ dist\domain.d.mts                          0.33 kB │ gzip:   0.23 kB
+ℹ dist\worker.d.mts                          0.01 kB │ gzip:   0.03 kB
+ℹ dist\json-eGHoq-bb.d.mts                 145.34 kB │ gzip:  14.07 kB
+ℹ 19 files, total: 1.01 MB
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (68%)
+  - tsdown:deps (29%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 110175ms
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\code-workspaces\package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 4 files
+ℹ dist\index.mjs      38.99 kB │ gzip:  9.53 kB
+ℹ dist\index.mjs.map  66.34 kB │ gzip: 16.69 kB
+ℹ dist\index.d.mts     6.84 kB │ gzip:  1.93 kB
+ℹ 3 files, total: 112.17 kB
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 48128ms

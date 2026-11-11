@@ -1,0 +1,101 @@
+{
+  "scope": "Fixed clean Windows checkout regression FAILED; not full or product acceptance",
+  "recordedAt": "2026-11-11T18:40:08.719Z",
+  "commit": "b77d12ab712c52ff05393a353c439f13c137aba6",
+  "completedChecks": 13,
+  "plannedChecks": 21,
+  "mcp": {
+    "tests": 35,
+    "pass": 34,
+    "fail": 1
+  },
+  "failure": "missing MCP credentials and deadline never trigger automatic tool call retries: MCP_CONNECT_FAILED during 500ms fixture initialization, before the intended tool call",
+  "unexecuted": [
+    "test:workspaces",
+    "test:input",
+    "test:preparation",
+    "test:scheduler",
+    "contracts:check",
+    "project:check",
+    "openspec",
+    "design-consistency"
+  ],
+  "retained": [
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/01-toolchain-check.txt",
+      "sha256": "71f250ad98445a5917760a85c86cdb030a60196d416e9ec070af97f46e6e44be"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/02-vendor-verify.txt",
+      "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/03-build.txt",
+      "sha256": "8ecf81d45b2f28045d53ce505ababe2036a81e8d04473803e8b88e66ff454705"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/04-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/05-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/06-test-smoke.txt",
+      "sha256": "1820d0689106eec419309a2e2a48b3abcbb8d71637fce551a55cc39a33f75a53"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/07-test-contracts.txt",
+      "sha256": "87aade20bc1462e6c0acb053845a333ff71128bcadfb0b3e1fe544760c690d3e"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/08-test-storage.txt",
+      "sha256": "24413dfb2097c28104cae65c1d8db63af3a048d452ea6bbfd950ba7791759a2e"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/09-test-content.txt",
+      "sha256": "c32c89c07c86c50e8bf2d61b310370992f4b35a110865d72d619c6d3c3f7952c"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/10-test-a2a.txt",
+      "sha256": "7ff3bdf608d5bb384022e89d9e5ddc7af2d96260c5873f6048b6a7e437cca6e9"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/11-test-runtime.txt",
+      "sha256": "8d809dd773f4fa3c0720d1670418dbec3630bce7908f800f89081f6fabcdb381"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/12-test-runner.txt",
+      "sha256": "73c6824cf848af713959ab6d568d9d53aac23743ab5765e4fb4549c8a923ea24"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/13-test-mcp.txt",
+      "sha256": "a9e3ab9871df7b937c30f3618011276ab299c8ddb3cbb0df72fd76a4ceec0d89"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/checkout.txt",
+      "sha256": "d74619b85fe00730a7aa0a17aa71c6285e3933b97ae2070ad943ee7ade9e03ec"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/clean-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/fetch.txt",
+      "sha256": "e6a85ea9a7ad0d5c54a977da15b387a19c97dfeb0a574a6fc51a22ca0e15c75f"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/frozen-install.txt",
+      "sha256": "192500ebf4cff5a8c31c592741ba80cfc7eeba5fabca6e049d7851a30e535b63"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/report.json",
+      "sha256": "d2f9526dec2d242acba67b80b7f7cc672e75ceebff32176a7582a3d5e145353a"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-b77d12a-incomplete/source.txt",
+      "sha256": "79847dfc4690377daffe610aec5b31b9f287356f930ca98e8d5e4e9422d4686c"
+    }
+  ]
+}

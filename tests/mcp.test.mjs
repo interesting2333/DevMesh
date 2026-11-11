@@ -56,7 +56,10 @@ test('lost MCP start reply reconciles the original operation without resending m
 });
 test('missing MCP credentials and deadline never trigger automatic tool call retries',async t=>{
  await assert.rejects(new McpToolClient({endpointId:'x',endpoint:'http://127.0.0.1:1/mcp',credentialRef:'x',credentials:async()=>undefined}).connect(),{code:'MCP_NOT_CONFIGURED'});
- let calls=0;const tool={name:'slow.read',description:'Controlled deadline fixture',schema:z.strictObject({}),action:'read',effectClass:'READ',async execute(){calls++;await new Promise(resolve=>setTimeout(resolve,1000));return 'done';}},s=await service(t,[tool]);const short=new McpToolClient({endpointId:'short',endpoint:s.server.endpoint,credentialRef:'x',credentials:async()=>key,timeoutMs:500});t.after(()=>short.close());await short.connect();await assert.rejects(short.call('slow.read','op_timeout',permit(),{}),ToolError);assert.equal(calls,1);
+  let calls=0,release;const held=new Promise(resolve=>{release=resolve;}),tool={name:'slow.read',description:'Controlled deadline fixture',schema:z.strictObject({}),action:'read',effectClass:'READ',async execute(){calls++;await held;return 'done';}},s=await service(t,[tool]);
+  // Initialize with the normal connection budget. Keep the accepted operation
+  // pending until its call deadline, independent of machine scheduling speed.
+  try{await assert.rejects(s.client.call('slow.read','op_timeout',permit(),{}),error=>error instanceof ToolError&&error.outcome==='unknown');assert.equal(calls,1);}finally{release();}
 });
 test('oversized MCP responses remain unknown and do not replay the original tool',async t=>{
  let calls=0;const tool={name:'large.read',description:'Response budget fixture',schema:z.strictObject({}),action:'read',effectClass:'READ',async execute(){calls++;return 'x'.repeat(600000);}},s=await service(t,[tool]);await assert.rejects(s.client.call('large.read','op_large',permit(),{}),error=>error instanceof ToolError&&error.outcome==='unknown');assert.equal(calls,1);

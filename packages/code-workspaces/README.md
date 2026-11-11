@@ -10,4 +10,8 @@ v9 中 Git／Worker／本地分配验证 10/10、存储 28/28 通过。v11 新�
 
 `createLocalRepoAcquire` 将 repo MCP 的原 operation／permit 接入实际锁：验证固定 Attempt repo，项目后工作区取得，按相反顺序释放。原操作恢复使用 Runner 的 cleanup 屏障，要求单独的当前成员／原归属权威回查；不取得新 Job 或编辑权。文件联调 v8 5/5、屏障 v7 5/5 已通过，包含真实子进程 SIGKILL 后准确 token 恢复。日志、源码指纹及历次失败见 `project/evidence/P1-04/development/file-validation.json`；最终固定提交全量回归仍需单独执行。
 
-repo MCP 已完成本地实际锁组合；调度准备、源码归档 ACK、三方候选集成、冲突内容、验证分配和安全回收仍按 `implement-managed-code-workspaces` 的未完成任务推进。默认平台与 CLI 尚未启用该后端；本地 Git 检查不代表远程身份、Linux/runsc 或 T05/T23 验收。
+repo MCP 已完成本地实际锁组合，源码对象归档已有开发验证；调度准备、三方候选集成、冲突内容、验证分配和完整材料回收仍按 `implement-managed-code-workspaces` 的未完成任务推进。默认平台与 CLI 尚未启用该后端；本地 Git 检查不代表远程身份、Linux/runsc 或 T05/T23 验收。
+
+`LocalSourceArchives` 与迁移 15 实现源码接收：输入仅含原分配／提交操作，核实唯一父 base、范围、实际对象及目录身份，传输后保留原操作 ref 和固定源码 ref，再写 Worker ACK。恢复只查原事实，未知不重传；使用本地 fencer 的 cleanup，部署者须用 `getSourceArchive` 核实原归属与资源。源码 ACK 不包含未提交、未跟踪和文件恢复 sidecar，不能授权回收。v2 开发驱动归档 4/4、受控 Git 5/5、存储 28/28 和类型／lint／构建通过，原始证据见 `project/evidence/P1-05/development/source-v2/`。这组测试使用明确无 Job 的受控 fencer，不能替代 Runner 或固定提交验收。
+
+Provider 固定 `core.fsync=all` 和 `core.fsyncMethod=fsync`，使对象、pack 元数据和保留 ref 使用 Git 的持久化路径；按 [Git 2.39 配置](https://git-scm.com/docs/git-config/2.39.0#Documentation/git-config.txt-corefsync) 选择，不沿用仓库的弱 flush 配置。提交正文沿用原准备契约的 10000 个 UTF-16 字符上限，允许原提交工具接受的中文消息；实际 JSON／传输仍有各自字节上限。新增参数与归档实现已通过上述软件验证，未执行底层存储掉电测试。

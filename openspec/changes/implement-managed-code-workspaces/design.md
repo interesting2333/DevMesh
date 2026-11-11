@@ -44,11 +44,21 @@
 
 传输和归档不改变接受指针。受控仓库收到对象只是保存事实，开发结果是否可用于当前集成仍需校验当前依赖和控制代际。
 
+源码接收只接受 `allocationOperationId` 与原 `commitOperationId`，不接受调用方替换 commit。迁移 15 冻结 READY 分配、项目仓库物理身份及 SUCCEEDED repo.commit 的绑定、准备正文、父起点与范围，状态为 SENT → PREPARED → ACKNOWLEDGED／FAILED。归档属于已执行动作的材料收尾，使用独立 cleanup fencing 和当前成员／原归属回查，可在暂停后保存原提交，不能取得新编辑或 Job 权限。屏障交付前失败尚未开始传输，可登记 FAILED；对象或 ref 动作未知则保留原记录。
+
+本地适配逐次核实目录设备／文件 ID、Git/common directory、原提交 ref、提交正文 SHA-1、唯一父 base、实际 diff 范围和完整源码清单。先持久 PREPARED，再传输有界 pack，目的仓库复核后以多 ref CAS 同时保留 `refs/devmesh/source-archives/<operationId>` 与 `refs/devmesh/sources/<commit>`。ACK 回复丢失先查原 DB；恢复仅查询原 ref／对象／清单，不重复导入或 ref 更新。SENT 或缺原 ref 不能证明成功，阻止同工作区替换归档操作。已确认的源码对象 ACK 不包含未提交／未跟踪／文件 sidecar 材料，不授权删除工作区；完整材料清单及回收门槛在 4.1／4.2 实施。
+
+Git Provider 的固定参数强制 `core.fsync=all`、`core.fsyncMethod=fsync`，覆盖对象、pack／索引和引用，不能继承仓库配置的弱持久化方式。选项按已安装 2.39.2 对应的 [官方配置文档](https://git-scm.com/docs/git-config/2.39.0#Documentation/git-config.txt-corefsync) 核实；命令返回后仍需核实原 ref／对象及 Worker ACK。软件检查不替代底层存储掉电持久性验收。
+
 ### Serialized three-way integration
 
 候选初始为 UserTask.baseCommit。持项目串行准入，读取前候选 SHA 与冻结源 manifest，校验本次输入仍属于当前依赖。使用受控仓库的三方 tree 合并产生候选 tree；禁止外部 merge driver、hooks、自动覆盖选择与可执行属性处理。优先使用本机实际支持的 `merge-tree --write-tree`，能力不足明确拒绝启动该后端。
 
 成功时先保存确定 commit 依据／父 SHA，再以多 ref 事务 CAS 更新候选及原 integration ref；之后提交 Worker 结果。开发分支不更新项目接受指针。并行分支依次整合，发生基础接口变化时重新验证依赖，不以调度时的独立性跳过。
+
+集成由受信任项目服务执行，不能拿已结束 Developer 的 permit 发送新的项目写入。Worker 从当前已确认计划、Run／Work epoch、Work revision、最新 Attempt、已核实输出及原源码 ACK 推导输入资格；调用方给出的 SHA 或 artifact 本身不足以授权。Git 动作发送后若发生暂停／换代，仍保存原动作的真实结果，但是否可供当前调度使用需另行复核，不能把历史成功直接当成当前准入。
+
+候选还需保存准确的依赖来源集合。给某个 Work 规划输入时，只能使用与其当前依赖闭包相符的已核实候选；全局最新候选可能包含无关或过期变更，不能静默代替输入。目前 Scheduler 对多个前驱 SHA 的 `CODE_BASIS_AMBIGUOUS` 拒绝，在可信集成快照及准入复核闭合前继续保留。
 
 冲突时保存 base／ours／theirs SHA、文件路径、各 stage blob／缺失标记、冲突详情和内容存储引用；原候选保留。冲突材料经 LocalContentStore 哈希验证并建立来源引用后回写 Worker，失败保留原操作待恢复。只有明确新工作／决策解决冲突后才重新准入，不暗中选择一方。
 

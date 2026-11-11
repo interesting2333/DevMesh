@@ -1,0 +1,44 @@
+{
+  "scope": "Installed Git capability probe only; not platform integration evidence",
+  "root": "D:\\yms\\AI\\DevMesh\\.cache\\p105-merge-probe-P5uYu6",
+  "version": "git version 2.39.2.windows.1",
+  "base": "7b545a3887223ac65905acd5bfb5025b2f2d0f9e",
+  "ours": "6a7c850d5597825a4f45c4f901d89f0273d54372",
+  "theirs": "6bdaa68acfb133914f8d2755896e887b5bf8ce5c",
+  "conflicting": "c05eabe7a5def25bdc4041855792bcabb6d05650",
+  "cases": [
+    {
+      "name": "clean",
+      "code": 0,
+      "output": "22153eae0e9c387b579d1716736c5fd7f62df098\u0000\u0000",
+      "fields": [
+        "22153eae0e9c387b579d1716736c5fd7f62df098",
+        "",
+        ""
+      ],
+      "mergeBase": "7b545a3887223ac65905acd5bfb5025b2f2d0f9e"
+    },
+    {
+      "name": "conflict",
+      "code": 1,
+      "output": "a0c246b26c49a6202da0c159085033ab170bc885\u0000100644 e4fb8ea2650bce992e441c6cf147223c8cf7d37f 1\ta.txt\u0000100644 35661f3428b9a6716d8cf737827acb0fa1209a7a 2\ta.txt\u0000100644 abc61680697cff610b57e348a3ea6153ac2b34e9 3\ta.txt\u0000\u00001\u0000a.txt\u0000Auto-merging\u0000Auto-merging a.txt\n\u00001\u0000a.txt\u0000CONFLICT (contents)\u0000CONFLICT (content): Merge conflict in a.txt\n\u0000",
+      "fields": [
+        "a0c246b26c49a6202da0c159085033ab170bc885",
+        "100644 e4fb8ea2650bce992e441c6cf147223c8cf7d37f 1\ta.txt",
+        "100644 35661f3428b9a6716d8cf737827acb0fa1209a7a 2\ta.txt",
+        "100644 abc61680697cff610b57e348a3ea6153ac2b34e9 3\ta.txt",
+        "",
+        "1",
+        "a.txt",
+        "Auto-merging",
+        "Auto-merging a.txt\n",
+        "1",
+        "a.txt",
+        "CONFLICT (contents)",
+        "CONFLICT (content): Merge conflict in a.txt\n",
+        ""
+      ],
+      "mergeBase": "7b545a3887223ac65905acd5bfb5025b2f2d0f9e"
+    }
+  ]
+}

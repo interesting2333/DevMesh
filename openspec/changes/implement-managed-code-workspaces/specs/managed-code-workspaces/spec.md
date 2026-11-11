@@ -41,6 +41,16 @@ The system SHALL verify a development commit's repository, original host, fixed 
 - **WHEN** its transfer, verification or retention acknowledgement is incomplete
 - **THEN** the commit SHALL NOT be treated as safely archived and its only workspace SHALL NOT be reclaimed
 
+#### Scenario: A source retention acknowledgement is lost
+
+- **WHEN** the original operation has prepared a frozen manifest but transfer or acknowledgement has an uncertain result
+- **THEN** recovery SHALL inspect the original retained refs, repository identity, exact commit and manifest without replaying object import or ref mutation; missing proof SHALL preserve the workspace and block a replacement archival operation
+
+#### Scenario: The original host is paused after committing its source
+
+- **WHEN** source retention is requested for its already proven original commit
+- **THEN** current membership and original owner, allocation, scope and cleanup resource authority SHALL be required; successful source retention SHALL NOT authorize new execution or reclamation of unarchived materials
+
 ### Requirement: Integration produces a distinct candidate without accepting it
 
 The system SHALL integrate verified development inputs serially into a candidate, revalidate the current dependency basis, preserve immutable original-operation facts, and leave the project acceptance pointer under the separate acceptance workflow.
@@ -54,6 +64,16 @@ The system SHALL integrate verified development inputs serially into a candidate
 
 - **WHEN** the original candidate update may already have committed
 - **THEN** recovery SHALL inspect its original retained operation fact and SHALL NOT repeat the integration as a new operation
+
+#### Scenario: A dependency changes after an integration was prepared
+
+- **WHEN** the confirmed plan, Run or Work generation, latest predecessor Attempt or verified source basis no longer matches the frozen integration inputs
+- **THEN** the system SHALL preserve any original Git operation fact for reconciliation and SHALL NOT expose it as a qualified current scheduling input
+
+#### Scenario: The newest project candidate contains unrelated changes
+
+- **WHEN** scheduling a Work whose current dependency closure differs from that candidate's frozen source set
+- **THEN** the system SHALL require a matching verified snapshot or reject code-basis admission rather than substituting the newest candidate
 
 ### Requirement: Integration conflicts preserve all three source versions
 

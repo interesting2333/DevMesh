@@ -1,0 +1,103 @@
+{
+  "scope": "Development working-directory checks with exact source fingerprint; not fixed commit, T05/T23 or container acceptance",
+  "baseCommit": "b77d12ab712c52ff05393a353c439f13c137aba6",
+  "sourceFingerprint": "0234c9d49dc6b305b458c1425db38d665149a21be4c21aa55f0a47637d0cbaca",
+  "finishedAt": "2026-11-11T19:13:32.335Z",
+  "checks": [
+    {
+      "name": "deadline",
+      "exitCode": 0,
+      "tests": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "archives",
+      "exitCode": 0,
+      "tests": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "git",
+      "exitCode": 0,
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "limitations": [
+    "Source archive fixture uses an explicit job-free fencing adapter; actual Runner and OS fencing evidence is separately recorded in P1-04 development/file-validation.json.",
+    "Source object acknowledgement does not include dirty, untracked or file-operation recovery material and never authorizes reclamation.",
+    "No live model, OIDC, remote Git identity, Linux/runsc or power-loss acceptance."
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/source-v2/report.json",
+      "sha256": "57db2b680910ad7a6f01a839016ec43011521b731df56a85378ff501e3ab9546"
+    },
+    {
+      "path": "project/evidence/P1-05/development/source-v2/deadline.txt",
+      "sha256": "d1185e208ce734899f008b04206a3817722786bcf037820355b8a4c866335ff7"
+    },
+    {
+      "path": "project/evidence/P1-05/development/source-v2/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/source-v2/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/source-v2/build.txt",
+      "sha256": "aa10d0c25aec5736100b1a2150733263e33f57a4536cf0bc402dbcb237db1251"
+    },
+    {
+      "path": "project/evidence/P1-05/development/source-v2/archives.txt",
+      "sha256": "87060a6e9290f89214c3ec143eaa1d5e328813383956301a48efaae073c315cf"
+    },
+    {
+      "path": "project/evidence/P1-05/development/source-v2/git.txt",
+      "sha256": "49d36f5ba7dbbe0f5e6965a08e6a6f54669fe2f8b9005e60d64fe8f9399a25f6"
+    },
+    {
+      "path": "project/evidence/P1-05/development/source-v2/storage.txt",
+      "sha256": "88313a8ddf16a9f20653f31cf43ebb57b6872ee74297725070b2ebd77f9c79b1"
+    }
+  ]
+}

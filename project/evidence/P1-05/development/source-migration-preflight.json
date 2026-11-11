@@ -1,0 +1,19 @@
+{
+  "scope": "Source SQL preflight only; no archive business validation",
+  "recordedAt": "2026-11-11T17:58:13.711Z",
+  "historicalBase": "b77d12ab712c52ff05393a353c439f13c137aba6",
+  "version": 15,
+  "foreignKeys": [],
+  "sourceArchiveTable": {
+    "name": "source_archives"
+  },
+  "historicalMigrationsUnchanged": true,
+  "rawLog": {
+    "path": "project/evidence/P1-05/development/source-migration-preflight.txt",
+    "sha256": "bbef15d652b85ba71edba945670f1a6cec08065e4c1b382bdb65417eedbb6654"
+  },
+  "migration": {
+    "path": "packages/storage-sqlite/migrations/0015-sourcearchives.sql",
+    "sha256": "fe8bfce151ef0ffa2a5704f5a6df5a8683151317692345da369899919630a2d7"
+  }
+}

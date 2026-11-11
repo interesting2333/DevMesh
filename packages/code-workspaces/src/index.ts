@@ -4,3 +4,5 @@ export {LocalManagedWorkspaces} from './allocation.js';
 export type {LocalWorkspaceOptions,AllocationFence,AllocationFencer} from './allocation.js';
 export {LocalRunnerWorkspaceFencer,createLocalRepoAcquire} from './fencing.js';
 export type {LocalRunnerFencerOptions} from './fencing.js';
+export {LocalSourceArchives} from './source-archives.js';
+export type {LocalSourceArchiveOptions} from './source-archives.js';
