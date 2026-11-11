@@ -14,5 +14,5 @@
 ## 3. Integration and evidence
 
 - [x] 3.1 增加理解查询、回答／解释重试 HTTP、OpenAPI 与 workspace 待办投影；用实际服务验证当前成员权限、CAS／原键、答案成功但解释失败和历史只读。
-- [ ] 3.2 执行适用构建、类型、lint、存储／内容／A2A／Runtime／输入回归，保存固定源码和原始日志，技术复核后同步文档、台账与 OpenSpec。
+- [x] 3.2 执行适用构建、类型、lint、存储／内容／A2A／Runtime／输入回归，保存固定源码和原始日志，技术复核后同步文档、台账与 OpenSpec。
 - [ ] 3.3 真实模型和企业环境具备后执行 U05～U08／I04～I06 的实际质量及产品验收；当前资源缺失保持 NOT_CONFIGURED／NOT_EXECUTED，阶段门槛单独评审。

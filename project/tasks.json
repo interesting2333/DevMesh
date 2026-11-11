@@ -560,12 +560,13 @@
         "tests/preparation.test.mjs"
       ],
       "evidence": [
-        "project/evidence/P1-02/离线实施进展.md"
+        "project/evidence/P1-02/离线实施进展.md",
+        "project/evidence/P1-02/windows-44d925f/report.json"
       ],
       "reviewNote": null,
       "notes": [
         "按连续目标和不依赖外部环境的用户指令，推进独立准备宿主、来源理解、部分回答与解释重试；正式 P1-01／G0 前置未验收，受控 Provider 只用于平台规则验证。",
-        "本地官方 A2A、HTTP、真实 SQLite Worker 和两次实际进程终止验证通过；完整固定提交回归另记。"
+        "固定 44d925f Windows 冻结回归 19/19，准备测试 10/10；含本地官方 A2A、HTTP、SQLite Worker 和两次实际进程终止。"
       ]
     },
     {
@@ -586,7 +587,9 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-plan-scheduler"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -594,7 +597,9 @@
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "按连续目标推进离线计划服务与调度；正式前置和目标环境集成仍按验收事实记录。"
+      ]
     },
     {
       "id": "P1-04",
