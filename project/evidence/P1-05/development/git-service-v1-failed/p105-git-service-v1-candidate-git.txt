@@ -1,0 +1,173 @@
+TAP version 13
+# (node:38056) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38056) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual A2A-admitted archived Git branches retain both changes, recover lost step/final ACKs and preserve accepted pointer
+not ok 1 - actual A2A-admitted archived Git branches retain both changes, recover lost step/final ACKs and preserve accepted pointer
+  ---
+  duration_ms: 563662.7255
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\candidate-git.test.mjs:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      {
+        acknowledgedAt: '2026-11-11T21:44:41.514Z',
+        acknowledgedSteps: 2,
+        acknowledgement: {
+          manifestSha256: 'cb87bb548538f8da380f8a2e232a5ea6107219f242e4226ecd3323f72dac883f',
+    ...
+        basisSha256: '49798e3131e4ef903aedffe97cc90babf14a2005e381343cc9e8de6e1f68056b',
+    +   created: false,
+        createdAt: '2026-11-11T21:42:44.289Z',
+        errorCode: null,
+        expectedHead: null,
+        failureProof: null,
+        manifest: {
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    operationId: 'op_af3ff1dfc08e49518fdc511e5543d553'
+    projectId: 'prj_e2d3385b6638454cafcefcb1be65008a'
+    runId: 'run_f5e9efbc84954a1384f7f1067bae20b9'
+    principalId: 'user_1'
+    purpose: 'run-candidate'
+    workId: ~
+    requestHash: 'd2391607806dbac2eb36030b99bd497eb3f018879506349da759a818ba84af00'
+    basisSha256: '49798e3131e4ef903aedffe97cc90babf14a2005e381343cc9e8de6e1f68056b'
+    expectedHead: ~
+    sourceCount: 2
+    acknowledgedSteps: 2
+    state: 'ACKNOWLEDGED'
+    manifest:
+      commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+      tree: '9c407acc937d0981ff364c1587c05e9b5ad78165'
+      sha256: 'cb87bb548538f8da380f8a2e232a5ea6107219f242e4226ecd3323f72dac883f'
+    updates:
+      0:
+        ref: 'refs/devmesh/integrations/op_af3ff1dfc08e49518fdc511e5543d553'
+        commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+        expected: ~
+      1:
+        ref: 'refs/devmesh/candidate-snapshots/op_af3ff1dfc08e49518fdc511e5543d553'
+        commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+        expected: ~
+      2:
+        ref: 'refs/devmesh/candidates/run_f5e9efbc84954a1384f7f1067bae20b9'
+        commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+        expected: ~
+    acknowledgement:
+      manifestSha256: 'cb87bb548538f8da380f8a2e232a5ea6107219f242e4226ecd3323f72dac883f'
+      refs:
+        0:
+          commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+          ref: 'refs/devmesh/integrations/op_af3ff1dfc08e49518fdc511e5543d553'
+        1:
+          commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+          ref: 'refs/devmesh/candidate-snapshots/op_af3ff1dfc08e49518fdc511e5543d553'
+        2:
+          commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+          ref: 'refs/devmesh/candidates/run_f5e9efbc84954a1384f7f1067bae20b9'
+      repositoryIdentity:
+        commonDirectory: 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\devmesh-content-test-wwI9Mv\\control\\repositories\\prj_e2d3385b6638454cafcefcb1be65008a\\repo.git'
+        gitDevice: '1646139714'
+        gitDirectory: 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\devmesh-content-test-wwI9Mv\\control\\repositories\\prj_e2d3385b6638454cafcefcb1be65008a\\repo.git'
+        gitFileId: '11540474046487983'
+        root: 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\devmesh-content-test-wwI9Mv\\control\\repositories\\prj_e2d3385b6638454cafcefcb1be65008a\\repo.git'
+        rootDevice: '1646139714'
+        rootFileId: '11540474046487983'
+    errorCode: ~
+    createdAt: '2026-11-11T21:42:44.289Z'
+    acknowledgedAt: '2026-11-11T21:44:41.514Z'
+    failureProof: ~
+  actual:
+    operationId: 'op_af3ff1dfc08e49518fdc511e5543d553'
+    projectId: 'prj_e2d3385b6638454cafcefcb1be65008a'
+    runId: 'run_f5e9efbc84954a1384f7f1067bae20b9'
+    principalId: 'user_1'
+    purpose: 'run-candidate'
+    workId: ~
+    requestHash: 'd2391607806dbac2eb36030b99bd497eb3f018879506349da759a818ba84af00'
+    basisSha256: '49798e3131e4ef903aedffe97cc90babf14a2005e381343cc9e8de6e1f68056b'
+    expectedHead: ~
+    sourceCount: 2
+    acknowledgedSteps: 2
+    state: 'ACKNOWLEDGED'
+    manifest:
+      commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+      tree: '9c407acc937d0981ff364c1587c05e9b5ad78165'
+      sha256: 'cb87bb548538f8da380f8a2e232a5ea6107219f242e4226ecd3323f72dac883f'
+    updates:
+      0:
+        ref: 'refs/devmesh/integrations/op_af3ff1dfc08e49518fdc511e5543d553'
+        commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+        expected: ~
+      1:
+        ref: 'refs/devmesh/candidate-snapshots/op_af3ff1dfc08e49518fdc511e5543d553'
+        commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+        expected: ~
+      2:
+        ref: 'refs/devmesh/candidates/run_f5e9efbc84954a1384f7f1067bae20b9'
+        commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+        expected: ~
+    acknowledgement:
+      manifestSha256: 'cb87bb548538f8da380f8a2e232a5ea6107219f242e4226ecd3323f72dac883f'
+      refs:
+        0:
+          commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+          ref: 'refs/devmesh/integrations/op_af3ff1dfc08e49518fdc511e5543d553'
+        1:
+          commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+          ref: 'refs/devmesh/candidate-snapshots/op_af3ff1dfc08e49518fdc511e5543d553'
+        2:
+          commit: '74b01c65dd8838568e2713289bd0c0614cf91691'
+          ref: 'refs/devmesh/candidates/run_f5e9efbc84954a1384f7f1067bae20b9'
+      repositoryIdentity:
+        commonDirectory: 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\devmesh-content-test-wwI9Mv\\control\\repositories\\prj_e2d3385b6638454cafcefcb1be65008a\\repo.git'
+        gitDevice: '1646139714'
+        gitDirectory: 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\devmesh-content-test-wwI9Mv\\control\\repositories\\prj_e2d3385b6638454cafcefcb1be65008a\\repo.git'
+        gitFileId: '11540474046487983'
+        root: 'C:\\Users\\Administrator\\AppData\\Local\\Temp\\devmesh-content-test-wwI9Mv\\control\\repositories\\prj_e2d3385b6638454cafcefcb1be65008a\\repo.git'
+        rootDevice: '1646139714'
+        rootFileId: '11540474046487983'
+    errorCode: ~
+    createdAt: '2026-11-11T21:42:44.289Z'
+    acknowledgedAt: '2026-11-11T21:44:41.514Z'
+    failureProof: ~
+    created: false
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/candidate-git.test.mjs:20:122)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:38056) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a recorded final send with no original refs remains unknown and cannot replay CAS or admit a replacement
+ok 2 - a recorded final send with no original refs remains unknown and cannot replay CAS or admit a replacement
+  ---
+  duration_ms: 532387.5384
+  type: 'test'
+  ...
+# (node:38056) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original atomic refs prove a lost final ACK after pause and a later global ref move without writing again
+ok 3 - original atomic refs prove a lost final ACK after pause and a later global ref move without writing again
+  ---
+  duration_ms: 547116.1716
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 2
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1665100.013

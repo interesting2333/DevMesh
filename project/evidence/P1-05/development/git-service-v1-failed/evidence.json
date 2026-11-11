@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "baseCommit": "26d20b824541b32c65ffd574b731b5a3782d60cf",
+  "sourceFingerprint": "5e6f0461a6f0f8eeac8331b3ebaaf5220edc64fedcfa217f6ef1fdb675ebf746",
+  "finishedAt": "2026-11-11T22:02:59.068Z",
+  "scope": "Local candidate Git adapter and actual A2A/Scheduler/Host/source archives with explicit job-free fencer and fixture verification decision; conflict publication, verification allocation and product acceptance remain incomplete",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "candidate-git",
+      "exitCode": 1,
+      "tests": {
+        "tests": 3,
+        "pass": 2,
+        "fail": 1,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "failure": "Final idempotent reconciliation leaked the begin-only created:false field; the actual merge and ACK assertions before that comparison succeeded. Original unresolved CAS and later moved global ref recovery passed separately.",
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/git-service-v1-failed/p105-git-service-v1-report.json",
+      "byteSize": 36871,
+      "sha256": "8350394ac1f8c7b4bf7ee408ae0491d08ad83a68829d617eafa61cbabee496b3"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v1-failed/p105-git-service-v1-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v1-failed/p105-git-service-v1-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v1-failed/p105-git-service-v1-build.txt",
+      "byteSize": 732,
+      "sha256": "7702f46aef876267b113027f1845e3b37ed562352aa45d1284815e606c786f0e"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v1-failed/p105-git-service-v1-candidate-git.txt",
+      "byteSize": 7943,
+      "sha256": "4dfd84149efbc04fe75724cf5c53cdcfedd40a5f003ce0af5c97ad4845309c10"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v1-failed/candidate-integrations.ts.txt",
+      "byteSize": 11221,
+      "sha256": "8bed26ac5dfddfd0330fcdff15abd016352577b0072d5e8b747f87db38cab597"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v1-failed/candidate-git.test.mjs.txt",
+      "byteSize": 5452,
+      "sha256": "7c9f765c43281d4333e1a502ce93d4f2ad68aaad05a2558672751168376e8360"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v1-failed/candidate-git.mjs.txt",
+      "byteSize": 8528,
+      "sha256": "e1ed0e25cd13b98a0e430e8e26c70831915e44f43daa97b96f03bc1e860f805a"
+    }
+  ]
+}

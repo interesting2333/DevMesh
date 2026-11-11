@@ -739,7 +739,10 @@
         "packages/storage-sqlite/src/candidate-integration-domain.ts",
         "packages/storage-sqlite/src/candidate-integration-protocol.ts",
         "tests/candidate-journal.test.mjs",
-        "tests/fixtures/candidate-data.mjs"
+        "tests/fixtures/candidate-data.mjs",
+        "packages/code-workspaces/src/candidate-integrations.ts",
+        "tests/candidate-git.test.mjs",
+        "tests/fixtures/candidate-git.mjs"
       ],
       "evidence": [
         "project/evidence/P1-05/离线实施进展.md",
@@ -759,7 +762,9 @@
         "project/evidence/P1-05/development/fence-refresh-v1/evidence.json",
         "project/evidence/P1-05/development/fence-refresh-v1/验证记录.md",
         "project/evidence/P1-05/development/journal-v1-failed/evidence.json",
-        "project/evidence/P1-05/development/journal-v2/evidence.json"
+        "project/evidence/P1-05/development/journal-v2/evidence.json",
+        "project/evidence/P1-05/development/git-service-v1-failed/evidence.json",
+        "project/evidence/P1-05/development/git-service-v2/evidence.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -776,7 +781,10 @@
         "2026-11-12：新 Runner 屏障前重新复核当前许可的补丁通过类型／lint／MCP 构建和真实 Repo Git／文件／Runner 联调 11/11。主动使已准入请求的捕获许可过期，实际 Host 继续续约，Runner 取得当前许可；暂停清理及排队 Job 拒绝保持。证据见 P1-05 development/fence-refresh-v1；不是最终固定提交全量或产品验收。",
         "2026-11-12：基于 c9c1474 编写候选集成迁移 16 和私有 Worker journal：精确主体／来源、项目未核实操作互斥、步骤顺序及确定双父提交、一次发送、暂停后原事实 ACK、当前资格查询及已知 CAS 拒绝证明。新增 9 条实际 SQLite 用例并复用原 7 条来源资格夹具；类型／迁移／构建／业务验证正在执行，Git 适配器和端到端仍待实施，3.1～3.3 不据此勾选。",
         "2026-11-12：候选 journal 首轮迁移／类型／lint／构建通过，候选用例 15/16；成员夹具漏 created_at 必填字段导致一条失败，后续存储回归未执行。原始失败记录保存于 development/journal-v1-failed，补夹具后按实际源码范围复用已通过检查并重跑业务验证。",
-        "2026-11-12：迁移 16 和候选私有 journal 开发验证通过：候选 16/16、既有存储 28/28，lint 重新执行；仅修复成员夹具 created_at，应用／SQL 输入完全不变，按源码指纹复用首轮真实迁移／类型／构建日志。证据保存于 development/journal-v2；首轮失败另存，真实 Git 服务、冲突内容、调度／验证 checkout 尚未完成，3.1～3.3 不勾选。"
+        "2026-11-12：迁移 16 和候选私有 journal 开发验证通过：候选 16/16、既有存储 28/28，lint 重新执行；仅修复成员夹具 created_at，应用／SQL 输入完全不变，按源码指纹复用首轮真实迁移／类型／构建日志。证据保存于 development/journal-v2；首轮失败另存，真实 Git 服务、冲突内容、调度／验证 checkout 尚未完成，3.1～3.3 不勾选。",
+        "2026-11-12：候选 journal 已提交 26d20b8；本地实际 Git 集成适配器已编写并通过类型／lint／构建，正在执行两个同基点来源的 A2A/Scheduler/Host/源码归档联调用例。使用明确无 Job 的 fencer 和夹具质量核实决策；尚无冲突内容适配、固定验证 checkout 或完整 P1-05 验收，3.1～3.3 不勾选。",
+        "2026-11-12：实际候选 Git 首轮类型／lint／构建通过，联调 2/3；合并与源码清单、ACK 丢失及未提交变更检查走通，首条最后的幂等比较因恢复接口多返回内部 created 字段失败。另两条未知 CAS／暂停后原 ref 核实通过。保留失败源码与日志，统一返回字段后重跑；第二轮复用同一真实来源夹具，但三个独立原操作和断言均保留。",
+        "2026-11-12：候选 Git 服务修复后类型／lint／构建及实际联调通过，Node 4/4（一个共享真实来源夹具、三个原操作场景）。覆盖同基点双分支保留、丢失步骤／最终 ACK、未知 CAS 禁止重放与替换、暂停和全局 ref 后续移动后的原事务核实；接受指针保持未改变。development/git-service-v2 保存原始日志；无 Job fencer 与夹具质量决策边界明确，冲突内容、验证工作区、调度组合及 3.1～3.3 仍未完成。"
       ]
     },
     {

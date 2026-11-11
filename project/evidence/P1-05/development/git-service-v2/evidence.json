@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "baseCommit": "26d20b824541b32c65ffd574b731b5a3782d60cf",
+  "sourceFingerprint": "9bec47bf8e919aea9b3b4fcf57f86e2832a086b8f771385343d00b25cb728b4d",
+  "finishedAt": "2026-11-11T22:25:29.584Z",
+  "scope": "Local candidate Git adapter and actual A2A/Scheduler/Host/source archives with explicit job-free fencer and fixture verification decision; conflict publication, verification allocation and product acceptance remain incomplete",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "candidate-git",
+      "exitCode": 0,
+      "tests": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "limitations": [
+    "Four Node test entries comprise one shared real source fixture and three separately asserted original integration operations.",
+    "The source pipeline uses actual Scheduler admission, official A2A HTTP delivery, Host lease renewal, isolated Git workspaces, repo tool commits and source transfer; verification decisions are explicit fixture facts and the fencer is job-free.",
+    "One fixture explicitly completes the same original Git action late to prove observation-only recovery; the service recovery path itself does not resend it.",
+    "Conflict material publication, fixed verification allocation, actual Runner jobs, live models, OIDC, Linux/runsc, T05/T23 and product gates are not covered.",
+    "Tasks 3.1 through 3.3 remain incomplete until their remaining behavior is implemented and verified."
+  ],
+  "priorFailure": "project/evidence/P1-05/development/git-service-v1-failed/evidence.json",
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/git-service-v2/p105-git-service-v2-report.json",
+      "byteSize": 36870,
+      "sha256": "638bb0792d7bb739c144dedf6fca53b44cdad677590833f71059af56035c0907"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v2/p105-git-service-v2-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v2/p105-git-service-v2-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v2/p105-git-service-v2-build.txt",
+      "byteSize": 732,
+      "sha256": "12c47cdc0f4b6cb8e524ce12b335ef078112d9f8a40d4646496885457a2b76ab"
+    },
+    {
+      "path": "project/evidence/P1-05/development/git-service-v2/p105-git-service-v2-candidate-git.txt",
+      "byteSize": 1612,
+      "sha256": "3168eb5bab551833bb843d4eb3038184e5c5cba74efb066ec4e3dd71bc0493b8"
+    }
+  ]
+}

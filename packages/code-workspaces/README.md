@@ -23,3 +23,6 @@ Worker 的 `candidate-basis.ts` 提供当前来源资格推导及只读 `getCand
 后续迁移 16 及 `candidate-integration-domain.ts` 已编写候选持久操作、顺序步骤、当前依据复核、确定提交正文、一次发送、原 ref ACK 与物理候选 head；新的来源资格查询使用已 ACK 快照的精确来源证明。Work 输入快照不修改 Run 候选，任一候选都不修改接受指针。完整依据与源码清单分别读取，避免将两个大对象拼进单条 Worker 响应。九条数据库操作用例及原七条资格用例共 16/16、既有存储 28/28 通过，类型／lint／构建与迁移日志见 `project/evidence/P1-05/development/journal-v2/`；其中 Git/ref/ACK 为明确数据库夹具，不能当成真实 Git 集成或冲突内容发布通过。3.1～3.3 仍未完成，默认后端仍关闭。
 
 `ce823fb` 的干净固定提交全量回归在 MCP Runner 屏障用例失败：前十二项通过，MCP 34/35，后八项未执行。原始证据见 `project/evidence/P1-04/windows-ce823fb-incomplete/`，2.1 已重新打开。当前补丁在新读写屏障前重新查询并校验当前许可；原操作 cleanup 仍使用独立恢复权威和原编辑 ID，不续期过期的 Host 授权。确定性用例主动使已准入请求的捕获许可过期，检查真实 Runner 收到当前许可；补丁已通过类型、lint、构建及全部 Repo Git／文件／Runner 联调 11/11，证据见 `project/evidence/P1-05/development/fence-refresh-v1/`。2.1 已依据开发验证恢复勾选，最终固定提交全量回归仍未完成。
+
+
+`LocalCandidateIntegrations` 已通过实际 Git／A2A 来源联调及类型／lint／构建：Node 4/4，包含一个来源夹具和三个原操作场景。受信任项目服务从 Worker 当前依据串行构建两父提交、保存原步骤 ref，并以多 ref CAS 保留 integration／snapshot；只有 Run 候选移动 Run ref，接受指针保持独立。原发送意图只核实原 ref，ACK 丢失、暂停与后续全局 ref 移动均不触发重新合并或发送。证据见 `project/evidence/P1-05/development/git-service-v2/`，首轮返回内部 created 字段的失败另存。联调使用明确无 Job 的 fencer 和夹具质量决策，冲突发布 hook 尚未完成，默认后端仍未启用；3.1～3.3 保持未完成。

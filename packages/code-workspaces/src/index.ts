@@ -6,3 +6,5 @@ export {LocalRunnerWorkspaceFencer,createLocalRepoAcquire} from './fencing.js';
 export type {LocalRunnerFencerOptions} from './fencing.js';
 export {LocalSourceArchives} from './source-archives.js';
 export type {LocalSourceArchiveOptions} from './source-archives.js';
+export {LocalCandidateIntegrations} from './candidate-integrations.js';
+export type {LocalCandidateIntegrationOptions} from './candidate-integrations.js';

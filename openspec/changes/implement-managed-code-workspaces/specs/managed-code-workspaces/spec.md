@@ -84,6 +84,21 @@ The system SHALL preserve conflict paths and exact base, ours and theirs source 
 - **WHEN** automatic integration cannot resolve that file
 - **THEN** all three versions and conflict metadata SHALL be retrievable by authorized users, and no automatic ours or theirs overwrite SHALL resolve the conflict
 
+#### Scenario: A directory rename conflict has messages but no stages
+
+- **WHEN** Git reports a conflict only through message paths without stage entries
+- **THEN** conflict material collection SHALL include those paths and preserve exact file, directory or absent versions from the original source trees without treating an absent version as an empty file
+
+#### Scenario: A conflict report contains a virtual merge base
+
+- **WHEN** a computed conflict depends on virtual stage-one blobs that are not reachable through an original ancestor commit
+- **THEN** the persisted report SHALL retain and verify their bytes, and recovery SHALL use that original report rather than rerunning the merge
+
+#### Scenario: Conflict content publication is interrupted
+
+- **WHEN** any required report or source material lacks verified publication and an atomic business content reference
+- **THEN** the original integration SHALL remain unresolved, its prior candidate SHALL remain unchanged, and no complete conflict acknowledgement SHALL be recorded
+
 ### Requirement: Verification workspaces use an immutable candidate SHA
 
 The system SHALL create verification inputs from the exact candidate SHA and preserve its source manifest rather than testing an evolving developer directory.

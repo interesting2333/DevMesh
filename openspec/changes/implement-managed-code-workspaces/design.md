@@ -78,6 +78,8 @@ Git Provider 的固定参数强制 `core.fsync=all`、`core.fsyncMethod=fsync`�
 
 冲突材料需要专用的内容 target／reference，`commitObjectWrite` 在登记内容的同一 Worker 事务写入带 `content_objects` 外键的业务引用，避免“先裸写 content、再单独建引用”期间 GC 获准删除。先冻结报告描述及哈希，再按有界页登记不可变材料元数据、稳定写入 UUID 和字节哈希；全部必要材料 READY 或明确 ABSENT 后才确认冲突 ACK。内容登记失败保留原操作和原材料，不能推进候选。批准主体与当前非 viewer 成员参与写入复核，读取仍按当前项目成员校验；历史 ACK 不授权新集成。
 
+报告保存安排在步骤的 COMPUTING 意图之后、冻结三方结果之前。内容封装保存完整 Git 报告和原 stage 1 blob 字节，后者可能来自不属于任一原祖先提交的虚拟基点；仅保存 blob SHA 而无保留对象或字节不足以保证恢复。封装字节哈希和规范化合并报告哈希分别记录，虚拟 blob 按 Git 对象 ID 复核并限制体积。报告已经持久保存时可从原内容对象或经哈希核实的原 staging 继续准备；尚未保存的计算结果保持未知，不重新执行 merge-tree。文件／目录／缺失材料按原来源 tree、消息与 stage 路径并集生成，目录有准确 tree 对象身份，缺失不伪装为零字节文件。报告和各版本内容仍沿用批准的 `artifacts/sha256` 与 `staging/objects` 布局，不增加独立的数据根目录。上述内容适配及完整冲突 ACK 仍待实现和真实冲突验证。
+
 真实 Git 探测已经证明，合法的互斥路径范围也会产生冲突：来源 A 将 `old/a` 移至 `new/a`，来源 B 新建 `old/b` 和 `new/b`，两者改动路径没有重叠；本机 `merge-tree` 返回 `CONFLICT (file in way of directory rename)`，包含 `new/b`／`old/b` 两个消息路径，却没有 stage 条目。因此材料收集必须遍历消息与 stage 路径的并集，另查每个原 base／ours／theirs tree 中的实际文件、目录或缺失，并保留虚拟基点的 stage 1 blob。不能把“无 stage”当成“无冲突”，也不能把缺失版本当成零字节文件。该探测仅证明夹具成立，后续持久集成和内容 ACK 验证尚未完成。
 
 ### Verification inputs and safe reclamation
