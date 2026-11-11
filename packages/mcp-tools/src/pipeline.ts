@@ -40,6 +40,12 @@ export function pipelineTools(storage:SqliteStorage,runner:RunnerClient,input:re
 export class PipelineCoordinator {
   readonly #stop=new AbortController();#loop:Promise<void>|undefined;lastError:string|null=null;
   constructor(readonly storage:SqliteStorage,readonly runner:RunnerClient){}
+  private async record(item:PipelineDispatch,job:Job){
+    const {jobId,operationId,requestHash,request,state,exitCode,errorCode,stopRequested,stopEvidence,containerId,startedAt,logCursor,outputRefs}=job;
+    executionPermit.parse(request.permit);
+    await this.storage.request('recordPipelineStage',{pipelineId:item.pipelineId,ordinal:item.ordinal,
+      job:{jobId,operationId,requestHash,request:z.record(z.string(),z.json()).parse(request),state,exitCode,errorCode,stopRequested,stopEvidence:z.record(z.string(),z.json()).nullable().parse(stopEvidence),containerId,startedAt,logCursor,outputRefs}});
+  }
   async process(item:PipelineDispatch){
     if(this.#stop.signal.aborted)return;
     let job:Job;
@@ -53,11 +59,15 @@ export class PipelineCoordinator {
         // SENT may have reached Runner even when no local job ID exists. Never resend it.
         job=item.jobId?await this.runner.get(item.jobId):await this.runner.byOperation(item.operationId);
       }
+      // Preserve an observed original job even if current authority no longer
+      // permits renewing it after restart. Query facts and continuation differ.
+      await this.record(item,job);const observed=job;
       if(item.stopRequested&&job.state!=='EXITED')job=await this.runner.stop(job.jobId);
-      const {jobId,operationId,requestHash,request,state,exitCode,errorCode,stopRequested,logCursor,outputRefs}=job;
-      executionPermit.parse(request.permit);
-      await this.storage.request('recordPipelineStage',{pipelineId:item.pipelineId,ordinal:item.ordinal,
-        job:{jobId,operationId,requestHash,request:z.record(z.string(),z.json()).parse(request),state,exitCode,errorCode,stopRequested,logCursor,outputRefs}});
+      else if(job.state!=='EXITED'&&!job.stopRequested&&Date.now()-Date.parse(job.lastHeartbeat)>=5000){
+        const permit=await this.storage.request('getPipelineStagePermit',{pipelineId:item.pipelineId,ordinal:item.ordinal});
+        job=await this.runner.renew(job.jobId,{permit,sequence:job.leaseSequence+1});
+      }
+      if(job!==observed)await this.record(item,job);
     }catch(error){
       this.lastError=error instanceof RunnerError||error instanceof ToolError?error.code:'PIPELINE_STAGE_UNAVAILABLE';
       await this.storage.request('markPipelineStageUnknown',{pipelineId:item.pipelineId,ordinal:item.ordinal,errorCode:this.lastError});

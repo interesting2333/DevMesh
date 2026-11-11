@@ -26,7 +26,7 @@ export function acquireWriterLock(databasePath: string, recoveryToken?: string) 
     try { writeFileSync(fd, JSON.stringify({ pid: process.pid, hostname: hostname(), token, createdAt: new Date().toISOString() })); fsyncSync(fd); }
     finally { closeSync(fd); }
   } finally { closeSync(guard); unlinkSync(guardPath); }
-  return { path, release() {
+  return { path, token, release() {
     if (existsSync(lockPath)) {
       const owner = JSON.parse(readFileSync(lockPath, 'utf8')) as { token: string };
       if (owner.token === token) unlinkSync(lockPath);

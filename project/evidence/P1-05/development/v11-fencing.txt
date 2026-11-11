@@ -1,0 +1,36 @@
+TAP version 13
+# (node:26428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:26428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a durable Runner fence blocks job admission, protects holder identity and survives a real store reopen
+ok 1 - a durable Runner fence blocks job admission, protects holder identity and survives a real store reopen
+  ---
+  duration_ms: 16087.2412
+  type: 'test'
+  ...
+# (node:26428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: queued and unknown original Runner jobs keep their workspace unavailable for Git fencing
+ok 2 - queued and unknown original Runner jobs keep their workspace unavailable for Git fencing
+  ---
+  duration_ms: 8065.6781
+  type: 'test'
+  ...
+# (node:26428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: local filesystem and Runner fences recover lost replies without resending writes and bind an independent repo path
+ok 3 - local filesystem and Runner fences recover lost replies without resending writes and bind an independent repo path
+  ---
+  duration_ms: 9237.5833
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 43847.3132

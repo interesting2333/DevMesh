@@ -1,0 +1,30 @@
+{
+  "recordedAt": "2026-11-11T16:31:50.083Z",
+  "kind": "design-refinement-not-implementation-or-acceptance",
+  "reason": "Close the missing MCP-driven workspace editing path before claiming the developer workflow is implemented.",
+  "affectedWorkPackages": [
+    "P1-04",
+    "P1-05",
+    "P1-01",
+    "P0-06"
+  ],
+  "affectedTechnicalAcceptance": [
+    "T04"
+  ],
+  "productAcceptance": "R01/R02 objectives unchanged; still require actual generated code. No product acceptance or G0/G1 pass is inferred.",
+  "scope": "Bounded file read/write/delete, fixed-base diff/snapshot, previous-content CAS and operation-specific recovery evidence; no arbitrary shell or automatic unknown-write retry.",
+  "permissionCompatibility": "Existing frozen role snapshots do not gain additional tools automatically. New role/config snapshots must explicitly allow the new tools.",
+  "evidenceImpact": "Existing read-only, Git commit, Host lease and Runner checks remain evidence for their own scope; they do not prove this new file-editing path.",
+  "changes": [
+    {
+      "file": "DevMesh_技术设计方案_V1.1.md",
+      "previousSha256": "3f06bcb75f695013af3d63a90ba51daf29abde6f13bdf65f16baa6716a943811",
+      "sha256": "31fc12c35e9aecb51ed9f91d90fcefe60ccc81c6afd433e65cf6a7f63922d708"
+    },
+    {
+      "file": "DevMesh_实施文档_V1.0.md",
+      "previousSha256": "c18778d7ac68c0b8b3c41340099c95bcfa0ed9d6df3436e15090c7953fff00a8",
+      "sha256": "101e597b575421aa6f42a7b39508f3db959159cb26f29688ae9aa20c381f37a5"
+    }
+  ]
+}

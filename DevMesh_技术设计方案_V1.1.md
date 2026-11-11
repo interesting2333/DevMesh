@@ -789,6 +789,7 @@ sequenceDiagram
 | 服务 | 操作 | 权限／幂等 | 输出 |
 | --- | --- | --- | --- |
 | repo | read、diff、snapshot | 项目与 commit 只读；可重试 | 文件／差异／SHA |
+| repo | workspaceRead、writeFile、deleteFile | 专属工作区；写范围与旧内容 CAS；原 operationId 核实；实际 Runner／编辑器 fencing | 实际文件 SHA、原操作落盘证明 |
 | repo | commit、integrate | 指定 worktree／baseCommit；operationId 去重 | commit、treeHash、冲突文件 |
 | docs | search、read | 授权附件；版本固定 | 段落、offset、原文 artifactId |
 | tests | start、get、stop | start 使用 operationId；结果未知查询 jobId | job 状态、报告引用 |
@@ -798,6 +799,8 @@ sequenceDiagram
 五个服务以独立 identity 注册实际能力；即使同进程，Agent 仍通过官方 MCP Client 调用 Server。一个工具的别名不重复计数。连接检查与每项实际动作验收分开。
 
 首版 repo 由受控 Git CLI／仓库服务实现，docs 由附件原文与关键词索引实现，tests 由 Runner 上的 Vitest／Playwright 实现，issues 由缺陷领域服务与 SQLite 实现，pipeline 由独立流水线记录管理安装、检查、构建与受限预览阶段。tests 的单次测试作业和 pipeline 的阶段编排有独立身份、状态和结果，不能将同一调用改名后计成两个接入。单个 run 按需使用，不强制每次调用全部五类。
+
+开发 Agent 通过 repo 的文件工具实际修改其工作区，再请求受控 Git 提交；不能用提交接口存在或测试手工写文件替代开发闭环。文件写入／删除先保存原意图，在当前授权与实际目录独占许可下核对旧 SHA（新建要求不存在），使用同卷暂存／原子替换或隔离移动，并保存原操作关联的文件身份／材料证明。未核实编辑阻止后续写入／提交；丢回复只查询原记录与证明，不重放编辑，也不能仅凭当前内容哈希相同确认旧操作。只允许批准范围内的有界普通 UTF-8 源文件，拒绝链接、敏感路径和任意命令。
 
 远端使用 Streamable HTTP，本地受管进程可使用 stdio；协议协商实际版本保存到连接快照，协商失败明确阻塞。长期作业使用本文业务 job 契约，不把可选协议扩展当成停止控制必需条件。内部直接文件操作标 source=internal；只有实际经 MCP Client／Server 的动作标 source=mcp。
 
@@ -1858,7 +1861,7 @@ node --test ./design/contracts/验证核心约束.mjs
 | T01 干净安装 | 新 Windows 开发环境与 Linux 构建容器安装独立工程 | 锁文件可复现、Cordis peer 闭包完整、无外部源码路径依赖、原生模块来源与平台明确 | P0 |
 | T02 A2A 互通与重复接收 | 标准 SDK client 发请求；接收事务后丢响应；原键重发；服务重启 | 真实 HTTP 记录、唯一 Task／AcceptedWork、一次 Runtime 激活；非自定义伪协议 | P0 |
 | T03 A2A 状态与分块 | input-required、auth-required、completed、failed、canceled、rejected；乱序／重复分块和断流 | 原任务查询可恢复；终态不回退；缺成果末块不放行业务成功 | P0/P2 |
-| T04 五类 MCP | 每个独立服务执行实际动作；断开再连；schema 改版 | 5 个身份和真实结果；别名不增数；不兼容变化阻塞相关工作 | P0/P1 |
+| T04 五类 MCP | 每个独立服务执行实际动作；repo 文件编辑→实际 Git 提交、旧 SHA／写范围拒绝、丢回复核实；断开再连；schema 改版 | 5 个身份和真实结果；文件编辑有原操作证明且未知不重放；别名不增数；不兼容变化阻塞相关工作 | P0/P1 |
 | T05 未知写操作 | 工具已接收提交时丢响应，故意使查询暂不可用 | 同 operation 可追踪；不创建第二个 commit/job；独立分支仍可继续 | P2 |
 | T06 暂停／取消 | 编码、安装、测试分别进行时暂停；进程树含子进程；使日志保存失败 | 准入已关闭；所有子进程／远端 job 有退出证据；重试仅保存；未知时不显示完成 | P2 |
 | T07 崩溃切点 | 在 D4 §5 每个位置杀控制进程／Runner，保留实际故障注入标记 | 重启不重复执行；暂停保持；事件与结果可定位；日志包含操作键 | P2 |

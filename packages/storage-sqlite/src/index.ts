@@ -11,6 +11,8 @@ export type {IssueView,IssueOperation} from './tool-protocol.js';
 export type {PipelineView,PipelineStageView,PipelineDispatch} from './pipeline-protocol.js';
 export {repoCommitArgs,repoIntegrateArgs,repoBinding} from './repo-protocol.js';
 export type {RepoOperation} from './repo-protocol.js';
+export {sourceManifest,gitDirectoryIdentity,managedSourcePath} from './workspace-protocol.js';
+export type {ManagedRepository,WorkspaceAllocation,SourceManifest,GitDirectoryIdentity} from './workspace-protocol.js';
 export { agentManifest, endpointConfig } from './registry-protocol.js';
 export type { EndpointConfig, AgentManifest, EndpointView, RegistrySnapshot, A2ATaskRecord } from './registry-protocol.js';
 export type { ExecutionHostView,RuntimeActivationView,RuntimeToolView } from './runtime-protocol.js';

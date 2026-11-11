@@ -11,27 +11,31 @@ import {httpFixture,prepareDispatch} from './fixtures/a2a-data.mjs';
 import {contentFixture} from './fixtures/content-data.mjs';
 import {fixture as runnerFixture,image,until} from './fixtures/runner.mjs';
 import {meta} from './fixtures/storage-data.mjs';
+import {ExecutionGrantLease} from '../packages/agent-runtime/dist/index.mjs';
 const op=()=> 'op_'+randomUUID().replaceAll('-','');
 const kinds=['repo','docs','tests','issues','pipeline'];
 const identities=Object.fromEntries(kinds.map(kind=>[kind,{serviceId:kind+'.service',controllerId:kind+'.controller',credentialRef:kind+'.credential'}]));
 const credentials=async ref=>'independent-local-service-secret-'+ref;
 
 test('five separate MCP identities execute actual actions and keep original cleanup available after pause',async t=>{
-  const f=await httpFixture(t),r=await runnerFixture(t),names=['repo.read','repo.list','docs.read','docs.search','tests.start','tests.get','tests.stop','tests.by-operation','issues.create','issues.get','issues.by-operation','issues.linkFix','issues.recordVerification','pipeline.start','pipeline.get','pipeline.stop','pipeline.by-operation','pipeline.logs','pipeline.artifacts'];
+  const cleanup=[];t.after(async()=>{const errors=[];for(const fn of cleanup.toReversed())try{await fn();}catch(e){errors.push(e);}if(errors.length)throw new AggregateError(errors,'Composition cleanup failed');});const context={after:fn=>cleanup.push(fn)};
+  const f=await httpFixture(context),r=await runnerFixture(context),names=['repo.read','repo.list','docs.read','docs.search','tests.start','tests.get','tests.stop','tests.by-operation','issues.create','issues.get','issues.by-operation','issues.linkFix','issues.recordVerification','pipeline.start','pipeline.get','pipeline.stop','pipeline.by-operation','pipeline.logs','pipeline.artifacts'];
   const p=await prepareDispatch(f,f.registry,{allowedTools:names.map(n=>n.replaceAll('.','_'))},{resources:[{kind:'workspace',resourceId:'workspace_01',access:'write'},{kind:'snapshot',resourceId:'snapshot.resource',access:'read'},{kind:'dataset',resourceId:'docs.resource',access:'read'}]});
-  await f.storage.request('acceptA2AWork',p.request);await f.storage.request('claimAcceptedWork',{endpointId:'builtin.developer',workerId:'composition.fixture'});
+  await f.storage.request('acceptA2AWork',p.request);const [{endpointId,taskId,workerId,claimToken}]=await f.storage.request('claimAcceptedWork',{endpointId:'builtin.developer',workerId:'composition.fixture'});
   const db=new DatabaseSync(join(f.local.dataRoot,'db/devmesh.sqlite'));let permit,artifact;try{permit=JSON.parse(db.prepare('SELECT permit_json FROM execution_grants WHERE attempt_id=?').get(p.attemptId).permit_json);artifact=db.prepare('SELECT content_hash,content_objects.byte_size FROM artifacts JOIN content_objects USING(content_hash) WHERE artifact_id=?').get(p.artifactId);}finally{db.close();}
+  const lease=new ExecutionGrantLease(f.storage,{endpointId,taskId,workerId,claimToken},value=>{Object.assign(permit,value);r.current.set(value.grantId,value);});await lease.start();cleanup.push(()=>lease.stop());
   const snapshotRoot=join(f.root,'snapshot');await mkdir(snapshotRoot);const bytes=Buffer.from('repository snapshot\n');await writeFile(join(snapshotRoot,'README.md'),bytes);
   const relativePath='workspaces/'+p.attemptId;await mkdir(join(r.layout.dataRoot,relativePath));
   const policy=new RunnerPolicy({...r.policy.config,workspaces:{workspace_01:{attemptId:p.attemptId,ownerKind:'workflowAttempt',resourceId:'workspace_01',relativePath}}});
   const manager=new RunnerManager(r.layout.store,policy,r.backend,r.authority,new RunnerMaterials(r.layout.dataRoot),{pollIntervalMs:10000}),secret='composition-runner-service-secret';
   const http=await serveRunner(manager,{identities:[{controllerId:'controller.local',credentialRef:'runner.credential'}],credentials:async()=>secret});r.cleanup.push(()=>http.close());await manager.start();
+  cleanup.push(()=>manager.close());
   const runner=new RunnerClient('http://127.0.0.1:'+http.address.port,'runner.credential',async()=>secret),resourceLimits={cpu:1,memoryMiB:128,pids:32,temporaryMiB:32,timeoutMs:10000};
   const services=await startWorkflowMcpServices(f.storage,f.content,{identities,credentials,
     repo:{snapshots:[{snapshotRef:'snapshot.v1',resourceId:'snapshot.resource',root:snapshotRoot,files:[{path:'README.md',sha256:createHash('sha256').update(bytes).digest('hex'),byteSize:bytes.length}]}]},
     docs:[{documentRef:'plan',version:'v1',resourceId:'docs.resource',runId:p.runId,principalId:'user_1',reference:{kind:'artifact',artifactId:p.artifactId},sha256:artifact.content_hash,byteSize:artifact.byte_size}],
     issues:true,tests:{runner,checks:[{checkId:'approved.build',imageDigest:image,commandSpec:{kind:'build'},resourceLimits,networkPolicyRef:'none',outputSpec:[]}]},
-    pipeline:{runner,definitions:[{definitionId:'approved.pipeline',version:'v1',stages:[{stageId:'build',kind:'build',imageDigest:image,resourceLimits,networkPolicyRef:'none',outputSpec:[]}]}]}});t.after(()=>services.close());
+    pipeline:{runner,definitions:[{definitionId:'approved.pipeline',version:'v1',stages:[{stageId:'build',kind:'build',imageDigest:image,resourceLimits,networkPolicyRef:'none',outputSpec:[]}]}]}});cleanup.push(()=>services.close());
   assert.equal(services.connections.length,5);assert.equal(new Set(services.connections.map(c=>c.endpoint)).size,5);assert.equal(new Set(services.connections.map(c=>c.server.name)).size,5);
   const execute=(name,args,key=op())=>services.tools.find(t=>t.name===name).execute(key,args,{permit},new AbortController().signal);
   const read=await execute('repo_read',{snapshotRef:'snapshot.v1',path:'README.md'});assert.equal(read.state,'SUCCEEDED');assert.equal(read.value.source,'mcp');assert.equal(read.value.result.text,bytes.toString());

@@ -1,0 +1,53 @@
+{
+  "scope": "Working-directory development checks only. Source changed after v9 build; this is not a fixed-commit or product acceptance report.",
+  "checks": [
+    {
+      "source": ".cache/p1-04-validation-v7-test.txt",
+      "target": "project/evidence/P1-04/development-incomplete/mcp-v7.txt",
+      "tests": 30,
+      "pass": 28,
+      "fail": 2,
+      "sha256": "a1a0b626f375afee86a0042d651a52c3218ce6caf01e89f5a4f1465ed268f5e0"
+    },
+    {
+      "source": ".cache/p1-04-p1-05-v8-mcp.txt",
+      "target": "project/evidence/P1-04/development-incomplete/mcp-v8.txt",
+      "tests": 8,
+      "pass": 7,
+      "fail": 1,
+      "sha256": "cbee9d369a3ee00140501f5fca25342db2a5a9d8c8a0c947cac6cb02d369e769"
+    },
+    {
+      "source": ".cache/p1-04-p1-05-v9-pipeline-recovery.txt",
+      "target": "project/evidence/P1-04/development-incomplete/pipeline-recovery-v9.txt",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "sha256": "af477d4df6c1a275029bf1c3f3b078606ff990f5bfa56a00805feb01353601ce"
+    },
+    {
+      "source": ".cache/p1-04-p1-05-v9-runtime.txt",
+      "target": "project/evidence/P1-04/development-incomplete/runtime-v9.txt",
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "sha256": "aef77b281b958e347a7c5e95135e8a2e3b089721a65ed2660649db6c51cfc118"
+    },
+    {
+      "source": ".cache/p1-04-p1-05-v9-workspaces.txt",
+      "target": "project/evidence/P1-05/development/workspaces-v9.txt",
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "sha256": "b62e96d805c8d6a04d298ed32f36353ceb3072ad97740330a73ba82f8347e5be"
+    },
+    {
+      "source": ".cache/p1-04-p1-05-v9-storage.txt",
+      "target": "project/evidence/P1-05/development/storage-v9.txt",
+      "tests": 28,
+      "pass": 28,
+      "fail": 0,
+      "sha256": "14447513aa23580c51aa7a961622f08b2c33ae1a2c785612067678d8906ca1ab"
+    }
+  ]
+}

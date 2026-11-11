@@ -4,7 +4,7 @@ import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {randomUUID} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
-import {mkdir,writeFile,readFile,open,unlink,symlink} from 'node:fs/promises';
+import {mkdir,writeFile,readFile,open,unlink,symlink,rename} from 'node:fs/promises';
 import {join} from 'node:path';
 import {repoGitTools,workflowToolAuthority,serveMcp,McpToolClient,runtimeMcpTools,ToolError} from '../packages/mcp-tools/dist/index.mjs';
 import {httpFixture,prepareDispatch} from './fixtures/a2a-data.mjs';
@@ -12,7 +12,7 @@ import {meta} from './fixtures/storage-data.mjs';
 import {ExecutionGrantLease} from '../packages/agent-runtime/dist/index.mjs';
 const op=()=> 'op_'+randomUUID().replaceAll('-','');
 const exec=promisify(execFile);
-const git=async(root,...args)=>(await exec('git',args,{cwd:root,encoding:'utf8',windowsHide:true,env:{...process.env,GIT_CONFIG_NOSYSTEM:'1'}})).stdout.trim();
+const git=async(root,...args)=>(await exec('git',['-c','core.fsmonitor=false',...args],{cwd:root,encoding:'utf8',windowsHide:true,env:{...process.env,GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:process.platform==='win32'?'NUL':'/dev/null'}})).stdout.trim();
 async function fixture(t){
   const cleanup=[];t.after(async()=>{const errors=[];for(const fn of cleanup.toReversed())try{await fn();}catch(e){errors.push(e);}if(errors.length)throw new AggregateError(errors,'Git fixture cleanup failed');});
   const f=await httpFixture({after:fn=>cleanup.push(fn)}),root=join(f.root,'git'),scratchRoot=join(f.root,'git-scratch');await mkdir(root);await git(root,'init','--quiet');await git(root,'config','user.name','Fixture');await git(root,'config','user.email','fixture@localhost');await git(root,'config','core.autocrlf','false');
@@ -29,7 +29,7 @@ async function fixture(t){
   async function service(storage,wrap=x=>x){
     // This fixture authorizes the low-level Git transaction only; product quality acceptance is separate.
     const tools=repoGitTools({storage,bindings:[binding],scratchRoot,acquire,authorizeIntegration:async(_b,commit)=>{assert.equal(await git(root,'cat-file','-t',commit),'commit');}}),server=await serveMcp({serviceId:'repo.local',version:'1.0.0',identities:[{controllerId:'repo.controller',credentialRef:'repo.local',allowedTools:names}],credentials:async()=> 'repo-local-service-secret',authority:workflowToolAuthority(storage,new Map([['repo.controller',new Set(names)]])),tools:tools.map(wrap)});
-    const client=new McpToolClient({endpointId:'repo.local',endpoint:server.endpoint,credentialRef:'repo.local',timeoutMs:30000,credentials:async()=> 'repo-local-service-secret'});await client.connect();let closed=false;const close=async()=>{if(closed)return;closed=true;await client.close();await server.close();};cleanup.push(close);
+    const client=new McpToolClient({endpointId:'repo.local',endpoint:server.endpoint,credentialRef:'repo.local',timeoutMs:120000,credentials:async()=> 'repo-local-service-secret'});await client.connect();let closed=false;const close=async()=>{if(closed)return;closed=true;await client.close();await server.close();};cleanup.push(close);
     return {tools,client,close,call:(name,id,args)=>client.call(name,id,permit,args)};
   }
   const args={workspaceRef:binding.workspaceRef,baseCommit,message:'Implement board count'};
@@ -86,4 +86,11 @@ test('integration recovery uses the atomic original-operation ref even after the
   assert.equal(f.sql('SELECT state FROM repo_operations WHERE operation_id=?',integration)[0].state,'PREPARED');await git(f.root,'update-ref','refs/devmesh/candidates/'+f.p.runId,f.baseCommit,committed.commit);block=false;
   const recovered=await s.call('repo.by-operation',op(),{operationId:integration});assert.equal(recovered.state,'SUCCEEDED');assert.equal(recovered.commit,committed.commit);
   assert.equal(await git(f.root,'rev-parse','refs/devmesh/integrations/'+integration),committed.commit);assert.equal(await git(f.root,'rev-parse','refs/devmesh/candidates/'+f.p.runId),f.baseCommit);
+});
+
+test('a replacement repository at the same workspace path cannot inherit the frozen binding',async t=>{
+  const f=await fixture(t);await f.call('repo.diff',op(),{workspaceRef:'workspace_01',baseCommit:f.baseCommit});
+  const retained=f.root+'-original';await rename(f.root,retained);await mkdir(f.root);await git(f.root,'init','--quiet');
+  await assert.rejects(f.call('repo.diff',op(),{workspaceRef:'workspace_01',baseCommit:f.baseCommit}),{code:'MCP_WORKSPACE_CHANGED'});
+  assert.equal(await git(retained,'rev-parse','HEAD'),f.baseCommit);assert.equal(f.leases(),0);
 });

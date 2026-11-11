@@ -1,0 +1,3 @@
+$ oxlint --deny-warnings apps packages scripts project tests
+packages/code-workspaces/src/git.ts:16:182: warning eslint(no-control-regex): Unexpected control characters help: Avoid matching control characters in regular expressions. If intentional, disable this rule for the expression.
+[ELIFECYCLE] Command failed with exit code 1.

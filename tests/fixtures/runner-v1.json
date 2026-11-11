@@ -1,0 +1,77 @@
+{
+  "description": "Synthetic regression fixture: original v1 schema and one test registration, captured before the v2 build. No process or user session was executed; host paths and generated job IDs are replaced.",
+  "sourceCommit": "008f0bb9f2e0d4c095a0c92339aa8292deb255bc",
+  "sourceSha256": "2713ee923c9c082e1728ba6ab018013720ebd2d7ed58938535eab2c06b07ca27",
+  "compiledWorkerSha256": "47892ec4408414fc2c99e0bb934c0781791763b63301a6633fde0e184ac31cb3",
+  "userVersion": 1,
+  "schema": [
+    {
+      "name": "job_events",
+      "type": "table",
+      "sql": "CREATE TABLE job_events(job_id TEXT NOT NULL REFERENCES jobs(job_id),sequence INTEGER NOT NULL,snapshot_json TEXT NOT NULL CHECK(json_valid(snapshot_json)),created_at TEXT NOT NULL,PRIMARY KEY(job_id,sequence)) STRICT"
+    },
+    {
+      "name": "jobs",
+      "type": "table",
+      "sql": "CREATE TABLE jobs(job_id TEXT PRIMARY KEY,controller_id TEXT NOT NULL,operation_id TEXT NOT NULL,request_hash TEXT NOT NULL,request_json TEXT NOT NULL CHECK(json_valid(request_json)),execution_json TEXT NOT NULL CHECK(json_valid(execution_json)),owner_key TEXT NOT NULL,state TEXT NOT NULL CHECK(state IN ('QUEUED','STARTING','RUNNING','STOPPING','EXITED','OUTCOME_UNKNOWN')),container_id TEXT,created_at TEXT NOT NULL,started_at TEXT,ended_at TEXT,exit_code INTEGER,stop_requested INTEGER NOT NULL CHECK(stop_requested IN (0,1)),stop_evidence TEXT CHECK(stop_evidence IS NULL OR json_valid(stop_evidence)),error_code TEXT,lease_sequence INTEGER NOT NULL CHECK(lease_sequence>=0),lease_hash TEXT NOT NULL,lease_permit_json TEXT NOT NULL CHECK(json_valid(lease_permit_json)),lease_renewed_at TEXT NOT NULL,log_cursor INTEGER NOT NULL DEFAULT 0,outputs_json TEXT NOT NULL DEFAULT '[]' CHECK(json_valid(outputs_json)),UNIQUE(controller_id,operation_id),CHECK(state='EXITED' OR exit_code IS NULL)) STRICT"
+    },
+    {
+      "name": "runner_identity",
+      "type": "table",
+      "sql": "CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=1)) STRICT"
+    },
+    {
+      "name": "immutable_job_identity",
+      "type": "trigger",
+      "sql": "CREATE TRIGGER immutable_job_identity BEFORE UPDATE ON jobs WHEN NEW.job_id<>OLD.job_id OR NEW.controller_id<>OLD.controller_id OR NEW.operation_id<>OLD.operation_id OR NEW.request_hash<>OLD.request_hash OR NEW.request_json<>OLD.request_json OR NEW.execution_json<>OLD.execution_json OR NEW.owner_key<>OLD.owner_key BEGIN SELECT RAISE(ABORT,'JOB_IDENTITY_IMMUTABLE'); END"
+    },
+    {
+      "name": "immutable_job_terminal",
+      "type": "trigger",
+      "sql": "CREATE TRIGGER immutable_job_terminal BEFORE UPDATE ON jobs WHEN OLD.state='EXITED' BEGIN SELECT RAISE(ABORT,'JOB_TERMINAL_IMMUTABLE'); END"
+    }
+  ],
+  "rows": {
+    "runner_identity": [
+      {
+        "singleton": 1,
+        "runner_id": "runner.test",
+        "version": 1
+      }
+    ],
+    "jobs": [
+      {
+        "job_id": "job_legacy_fixture_0",
+        "controller_id": "controller.local",
+        "operation_id": "op_runner1",
+        "request_hash": "3c41dd6605629451bc3b4ba92f6f3d934971c869a2c5e9702507c9da7acd32c3",
+        "request_json": "{\"commandSpec\":{\"kind\":\"build\"},\"imageDigest\":\"registry.example/devmesh@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"networkPolicyRef\":\"none\",\"operationId\":\"op_runner1\",\"outputSpec\":[],\"permit\":{\"activationId\":\"activation_runner1\",\"attemptId\":\"attempt_runner1\",\"expiresAt\":\"2026-11-11T16:00:06.519Z\",\"grantId\":\"grant_runner1\",\"notBefore\":\"2026-11-11T15:59:52.509Z\",\"ownerKind\":\"workflowAttempt\",\"resources\":[{\"access\":\"write\",\"kind\":\"workspace\",\"resourceId\":\"workspace1\"}],\"runEpoch\":0,\"runId\":\"run_runner1\",\"schemaVersion\":\"devmesh.permit.v1\",\"workEpoch\":0,\"workId\":\"work_runner1\"},\"resourceLimits\":{\"cpu\":1,\"memoryMiB\":128,\"pids\":32,\"temporaryMiB\":32,\"timeoutMs\":10000},\"schemaVersion\":\"devmesh.runner-job.v1\",\"workspaceRef\":\"workspace1\"}",
+        "execution_json": "{\"argv\":[\"node\",\"scripts/build.mjs\"],\"workspacePath\":\"__SYNTHETIC_FIXTURE_WORKSPACE__\"}",
+        "owner_key": "run:run_runner1",
+        "state": "QUEUED",
+        "container_id": null,
+        "created_at": "2026-11-11T15:59:52.833Z",
+        "started_at": null,
+        "ended_at": null,
+        "exit_code": null,
+        "stop_requested": 0,
+        "stop_evidence": null,
+        "error_code": null,
+        "lease_sequence": 0,
+        "lease_hash": "45c375ec379d7915404d85816f2d0c190cb30ca74e73fc244d58fcd888e324a8",
+        "lease_permit_json": "{\"activationId\":\"activation_runner1\",\"attemptId\":\"attempt_runner1\",\"expiresAt\":\"2026-11-11T16:00:06.519Z\",\"grantId\":\"grant_runner1\",\"notBefore\":\"2026-11-11T15:59:52.509Z\",\"ownerKind\":\"workflowAttempt\",\"resources\":[{\"access\":\"write\",\"kind\":\"workspace\",\"resourceId\":\"workspace1\"}],\"runEpoch\":0,\"runId\":\"run_runner1\",\"schemaVersion\":\"devmesh.permit.v1\",\"workEpoch\":0,\"workId\":\"work_runner1\"}",
+        "lease_renewed_at": "2026-11-11T15:59:52.833Z",
+        "log_cursor": 0,
+        "outputs_json": "[]"
+      }
+    ],
+    "job_events": [
+      {
+        "job_id": "job_legacy_fixture_0",
+        "sequence": 1,
+        "snapshot_json": "{\"containerId\":null,\"controllerId\":\"controller.local\",\"createdAt\":\"2026-11-11T15:59:52.833Z\",\"endedAt\":null,\"errorCode\":null,\"exitCode\":null,\"jobId\":\"job_legacy_fixture_0\",\"lastHeartbeat\":\"2026-11-11T15:59:52.833Z\",\"leaseSequence\":0,\"logCursor\":0,\"operationId\":\"op_runner1\",\"outputRefs\":[],\"request\":{\"commandSpec\":{\"kind\":\"build\"},\"imageDigest\":\"registry.example/devmesh@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"networkPolicyRef\":\"none\",\"operationId\":\"op_runner1\",\"outputSpec\":[],\"permit\":{\"activationId\":\"activation_runner1\",\"attemptId\":\"attempt_runner1\",\"expiresAt\":\"2026-11-11T16:00:06.519Z\",\"grantId\":\"grant_runner1\",\"notBefore\":\"2026-11-11T15:59:52.509Z\",\"ownerKind\":\"workflowAttempt\",\"resources\":[{\"access\":\"write\",\"kind\":\"workspace\",\"resourceId\":\"workspace1\"}],\"runEpoch\":0,\"runId\":\"run_runner1\",\"schemaVersion\":\"devmesh.permit.v1\",\"workEpoch\":0,\"workId\":\"work_runner1\"},\"resourceLimits\":{\"cpu\":1,\"memoryMiB\":128,\"pids\":32,\"temporaryMiB\":32,\"timeoutMs\":10000},\"schemaVersion\":\"devmesh.runner-job.v1\",\"workspaceRef\":\"workspace1\"},\"requestHash\":\"3c41dd6605629451bc3b4ba92f6f3d934971c869a2c5e9702507c9da7acd32c3\",\"startedAt\":null,\"state\":\"QUEUED\",\"stopEvidence\":null,\"stopRequested\":false}",
+        "created_at": "2026-11-11T15:59:52.841Z"
+      }
+    ]
+  }
+}

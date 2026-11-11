@@ -1,10 +1,11 @@
 import {z} from 'zod';
-import {executionPermit,ids,opaqueKey,pipelineDefinition,relativeFile,sha256} from '@devmesh/contracts';
+import {executionPermit,ids,opaqueKey,pipelineDefinition,relativeFile,sha256,timestamp} from '@devmesh/contracts';
 const pipelineId=opaqueKey;
 const ordinal=z.number().int().min(0).max(7);
 const permit={permit:executionPermit};
 export const pipelineJobFact=z.strictObject({jobId:ids.job,operationId:ids.operation,requestHash:sha256,request:z.record(z.string(),z.json()),
   state:z.enum(['QUEUED','STARTING','RUNNING','STOPPING','EXITED','OUTCOME_UNKNOWN']),exitCode:z.number().int().nullable(),errorCode:opaqueKey.nullable(),stopRequested:z.boolean(),logCursor:z.number().int().nonnegative(),
+  containerId:z.string().min(1).nullable(),startedAt:timestamp.nullable(),stopEvidence:z.record(z.string(),z.json()).nullable(),
   outputRefs:z.array(z.strictObject({path:relativeFile,sha256,byteSize:z.number().int().nonnegative()})).max(33)});
 export const pipelineRequests={
   createPipeline:z.strictObject({...permit,operationId:ids.operation,definition:pipelineDefinition,workspaceRef:opaqueKey}),
@@ -13,6 +14,7 @@ export const pipelineRequests={
   stopPipeline:z.strictObject({...permit,pipelineId}),
   listPipelineStages:z.strictObject({limit:z.number().int().min(1).max(40).default(20)}),
   markPipelineStageSent:z.strictObject({pipelineId,ordinal}),
+  getPipelineStagePermit:z.strictObject({pipelineId,ordinal}),
   recordPipelineStage:z.strictObject({pipelineId,ordinal,job:pipelineJobFact}),
   markPipelineStageUnknown:z.strictObject({pipelineId,ordinal,errorCode:opaqueKey}),
 };
@@ -25,5 +27,6 @@ export interface PipelineResults {
   createPipeline:PipelineView;getPipeline:PipelineView;getPipelineOperation:PipelineView;stopPipeline:PipelineView;
   listPipelineStages:PipelineDispatch[];
   markPipelineStageSent:{send:boolean;request:Record<string,unknown>|null};
+  getPipelineStagePermit:z.output<typeof executionPermit>;
   recordPipelineStage:PipelineView;markPipelineStageUnknown:PipelineView;
 }

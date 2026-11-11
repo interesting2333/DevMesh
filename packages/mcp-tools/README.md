@@ -34,7 +34,7 @@ repo 显式清单不接受隐藏文件、凭据扩展名或依赖目录；文件
 
 `startWorkflowMcpServices(storage, content, options)` 按已配置后端启动 repo／docs／tests／issues／pipeline 的独立 loopback 服务和官方 Client。每类分别配置 serviceId、controllerId、credentialRef；三个字段与实际解析到的凭据均不得跨服务复用。身份未配置、凭据不可领取或 schema 变化时启动失败并释放已创建的连接。没有配置的类别不注册，默认 CLI 不自动启用。
 
-身份配置可用 timeoutMs 指定该服务连接／调用时限，沿用 Client 的 10～30000 ms 范围；Git 管理动作可配置 30000 ms。超时仍返回未知并通过原操作恢复。当前已认领 Runtime Host 每五秒在 Worker 事务内复核 ACL／控制代际并续租同一 Grant，窗口保持十五秒；暂停、过期、旧 claim 或续租失败会停止新准入。Git 已接受动作在准备提交前读取同一当前 Grant 的原资源子集，不能自行续租或恢复过期许可。
+身份配置可用 timeoutMs 指定该服务连接／调用时限，Client 默认 10000 ms，允许显式配置 10～120000 ms；时限进入连接快照，Git 管理动作可按实际环境配置。超时仍返回未知并通过原操作恢复。当前已认领 Runtime Host 每五秒在 Worker 事务内复核 ACL／控制代际并续租同一 Grant，到期时间只延长至当前时间后十五秒，保留原生效时间以允许尚未到期的在途许可；暂停、过期、旧 claim 或续租失败会停止新准入。Git 已接受动作在准备提交前读取同一当前 Grant 的原资源子集，不能自行续租或恢复过期许可。发往 Runner 的子许可另行收窄到不超过十五秒区间；流水线按原 Job 的持久序号续租，回复丢失后先查询该 Job 的最新序号，不重新启动阶段。
 
 可通过 `startPlatform(config, { mcp: services => options })` 注入部署配置，平台将组合后的工具交给 Runtime 并管理连接生命周期。也可单独创建后使用返回的 `tools`、`connections`；此时调用方须调用 `close()`。先 `stopAdmission()` 会拒绝新写动作，原作业查询／停止仍经当前成员、原 Host／Grant 与角色授权检查。关闭时停止 pipeline Coordinator、关闭 Client／Server、等待已接受动作收尾；关闭失败明确返回错误。配置只包含资源／凭据引用，不把真实凭据写入持久连接快照。
 

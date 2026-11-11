@@ -47,7 +47,7 @@ export function createPipelineDomain(db:DatabaseSync,changed:(runId:string,opera
     if(!grant)fail('MCP_AUTHORITY_DENIED',403);
     const current=parseContract(executionPermit,JSON.parse(String(grant.permit_json)));
     if(original.ownerKind!=='workflowAttempt'||current.ownerKind!=='workflowAttempt'||original.runEpoch!==current.runEpoch||original.workEpoch!==current.workEpoch)fail('MCP_AUTHORITY_DENIED',403);
-    const permit=parseContract(executionPermit,{...current,resources:original.resources});
+    const permit=parseContract(executionPermit,{...current,notBefore:new Date(Math.max(Date.parse(current.notBefore),Date.parse(current.expiresAt)-15000)).toISOString(),resources:original.resources});
     owned(p,permit,'pipeline.start','write');return permit;
   }
   const handlers={
@@ -85,11 +85,13 @@ export function createPipelineDomain(db:DatabaseSync,changed:(runId:string,opera
       exec("UPDATE pipeline_stages SET state='SENT',request_json=?,checked_at=? WHERE pipeline_id=? AND ordinal=?",canonical(request),now(),input.pipelineId,input.ordinal);
       refresh(p);return {send:true,request};
     });},
+    getPipelineStagePermit(input:PipelineInput<'getPipelineStagePermit'>){return transaction(db,()=>{const p=pipeline(input.pipelineId),s=stage(input.pipelineId,input.ordinal);if(p.stop_requested===1||!['SENT','ACKED','UNKNOWN'].includes(String(s.state)))fail('PIPELINE_ADMISSION_CLOSED');return livePermit(p);});},
     recordPipelineStage(input:PipelineInput<'recordPipelineStage'>){return transaction(db,()=>{
       const p=pipeline(input.pipelineId),s=stage(input.pipelineId,input.ordinal),j=input.job;
       if(!s.request_json||s.operation_id!==j.operationId||digest(String(s.request_json))!==j.requestHash||canonical(j.request)!==s.request_json||s.job_id!==null&&s.job_id!==j.jobId)fail('PIPELINE_JOB_BASIS_CHANGED');
       if(s.state==='EXITED'){if(s.job_json!==canonical(j))fail('PIPELINE_STAGE_RESULT_IMMUTABLE');return view(p);}
-      if(j.state==='EXITED'&&j.exitCode===null)fail('PIPELINE_EXIT_UNPROVEN');
+      const neverDispatched=j.stopRequested&&j.containerId===null&&j.startedAt===null&&j.stopEvidence?.neverDispatched===true&&typeof j.stopEvidence.verifiedAt==='string'&&Number.isFinite(Date.parse(j.stopEvidence.verifiedAt))&&j.logCursor===0&&j.outputRefs.length===0;
+      if(j.state==='EXITED'&&j.exitCode===null&&!neverDispatched)fail('PIPELINE_EXIT_UNPROVEN');
       const state=j.state==='EXITED'?'EXITED':j.state==='OUTCOME_UNKNOWN'?'UNKNOWN':'ACKED';
       exec('UPDATE pipeline_stages SET state=?,job_id=?,job_json=?,error_code=?,checked_at=? WHERE pipeline_id=? AND ordinal=?',state,j.jobId,canonical(j),j.errorCode,now(),input.pipelineId,input.ordinal);
       const updated=refresh(p);if(updated.state===p.state&&s.job_json!==canonical(j))notify(updated);return view(updated);

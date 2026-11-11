@@ -1,0 +1,96 @@
+Scope: 4 of 17 workspace projects
+packages/storage-sqlite build$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+packages/storage-sqlite build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/storage-sqlite build: ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+packages/storage-sqlite build: ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+packages/storage-sqlite build: ℹ target: node24
+packages/storage-sqlite build: ℹ tsconfig: ..\..\tsconfig.json
+packages/storage-sqlite build: ℹ Build start
+packages/storage-sqlite build: ℹ Cleaning 35 files
+packages/storage-sqlite build: ℹ dist\index.mjs                             6.99 kB │ gzip:  2.51 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs                            5.33 kB │ gzip:  2.17 kB
+packages/storage-sqlite build: ℹ dist\migrations.mjs                        0.26 kB │ gzip:  0.17 kB
+packages/storage-sqlite build: ℹ dist\domain.mjs                            0.16 kB │ gzip:  0.13 kB
+packages/storage-sqlite build: ℹ dist\domain-FeNkYs98.mjs.map             447.15 kB │ gzip: 96.69 kB
+packages/storage-sqlite build: ℹ dist\domain-FeNkYs98.mjs                 275.14 kB │ gzip: 56.33 kB
+packages/storage-sqlite build: ℹ dist\registry-protocol-Cr3Xfgiz.mjs.map   21.16 kB │ gzip:  5.58 kB
+packages/storage-sqlite build: ℹ dist\index.mjs.map                        13.38 kB │ gzip:  4.54 kB
+packages/storage-sqlite build: ℹ dist\registry-protocol-Cr3Xfgiz.mjs       10.42 kB │ gzip:  3.13 kB
+packages/storage-sqlite build: ℹ dist\migrations-BNr8Cyfx.mjs.map           8.84 kB │ gzip:  3.20 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs.map                        8.45 kB │ gzip:  3.15 kB
+packages/storage-sqlite build: ℹ dist\migrations-BNr8Cyfx.mjs               5.35 kB │ gzip:  2.12 kB
+packages/storage-sqlite build: ℹ dist\errors-BXl8kUAO.mjs.map               1.99 kB │ gzip:  0.85 kB
+packages/storage-sqlite build: ℹ dist\errors-BXl8kUAO.mjs                   1.08 kB │ gzip:  0.54 kB
+packages/storage-sqlite build: ℹ dist\index.d.mts                           3.66 kB │ gzip:  1.34 kB
+packages/storage-sqlite build: ℹ dist\migrations.d.mts                      0.91 kB │ gzip:  0.42 kB
+packages/storage-sqlite build: ℹ dist\domain.d.mts                          0.33 kB │ gzip:  0.23 kB
+packages/storage-sqlite build: ℹ dist\worker.d.mts                          0.01 kB │ gzip:  0.03 kB
+packages/storage-sqlite build: ℹ dist\json-s2T6Rnc1.d.mts                 117.92 kB │ gzip: 13.03 kB
+packages/storage-sqlite build: ℹ 19 files, total: 928.56 kB
+packages/storage-sqlite build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/storage-sqlite build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/storage-sqlite build:   - tsdown:deps (60%)
+packages/storage-sqlite build:   - rolldown-plugin-dts:generate (34%)
+packages/storage-sqlite build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/storage-sqlite build: ✔ Build complete in 58213ms
+packages/storage-sqlite build: Done
+packages/runner build$ tsdown src/index.ts src/worker.ts src/main.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/runner build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/runner build: ℹ config file: D:\yms\AI\DevMesh\packages\runner\package.json 
+packages/runner build: ℹ entry: src/index.ts, src/worker.ts, src/main.ts
+packages/runner build: ℹ target: node24
+packages/runner build: ℹ tsconfig: ..\..\tsconfig.json
+packages/runner build: ℹ Build start
+packages/runner build: ℹ Cleaning 14 files
+packages/runner build: ℹ dist\worker.mjs                        20.94 kB │ gzip:  5.48 kB
+packages/runner build: ℹ dist\index.mjs                         13.03 kB │ gzip:  4.12 kB
+packages/runner build: ℹ dist\main.mjs                           3.09 kB │ gzip:  1.39 kB
+packages/runner build: ℹ dist\server-C-IKeWOk.mjs.map           54.39 kB │ gzip: 14.43 kB
+packages/runner build: ℹ dist\worker.mjs.map                    33.69 kB │ gzip:  8.87 kB
+packages/runner build: ℹ dist\server-C-IKeWOk.mjs               31.64 kB │ gzip:  8.40 kB
+packages/runner build: ℹ dist\index.mjs.map                     21.11 kB │ gzip:  6.58 kB
+packages/runner build: ℹ dist\workspace-fence-BRkx6qvI.mjs.map   7.28 kB │ gzip:  2.36 kB
+packages/runner build: ℹ dist\main.mjs.map                       5.15 kB │ gzip:  2.10 kB
+packages/runner build: ℹ dist\workspace-fence-BRkx6qvI.mjs       3.50 kB │ gzip:  1.31 kB
+packages/runner build: ℹ dist\index.d.mts                       49.44 kB │ gzip:  5.08 kB
+packages/runner build: ℹ dist\main.d.mts                         0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ dist\worker.d.mts                       0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ 13 files, total: 243.29 kB
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/runner build:   - tsdown:deps (46%)
+packages/runner build:   - rolldown-plugin-dts:generate (41%)
+packages/runner build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/runner build: ✔ Build complete in 66006ms
+packages/runner build: Done
+packages/mcp-tools build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/code-workspaces build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/code-workspaces build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/mcp-tools build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/code-workspaces build: ℹ config file: D:\yms\AI\DevMesh\packages\code-workspaces\package.json 
+packages/mcp-tools build: ℹ config file: D:\yms\AI\DevMesh\packages\mcp-tools\package.json 
+packages/code-workspaces build: ℹ entry: src/index.ts
+packages/code-workspaces build: ℹ target: node24
+packages/mcp-tools build: ℹ entry: src/index.ts
+packages/code-workspaces build: ℹ tsconfig: ..\..\tsconfig.json
+packages/mcp-tools build: ℹ target: node24
+packages/mcp-tools build: ℹ tsconfig: ..\..\tsconfig.json
+packages/code-workspaces build: ℹ Build start
+packages/mcp-tools build: ℹ Build start
+packages/code-workspaces build: ℹ Cleaning 4 files
+packages/mcp-tools build: ℹ Cleaning 4 files
+packages/code-workspaces build: ℹ dist\index.mjs      30.06 kB │ gzip:  7.98 kB
+packages/code-workspaces build: ℹ dist\index.mjs.map  51.69 kB │ gzip: 13.83 kB
+packages/code-workspaces build: ℹ dist\index.d.mts     5.42 kB │ gzip:  1.58 kB
+packages/code-workspaces build: ℹ 3 files, total: 87.17 kB
+packages/code-workspaces build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/code-workspaces build: ✔ Build complete in 68720ms
+packages/code-workspaces build: Done
+packages/mcp-tools build: ℹ dist\index.mjs       64.47 kB │ gzip: 16.98 kB
+packages/mcp-tools build: ℹ dist\index.mjs.map  109.51 kB │ gzip: 28.78 kB
+packages/mcp-tools build: ℹ dist\index.d.mts     13.94 kB │ gzip:  3.27 kB
+packages/mcp-tools build: ℹ 3 files, total: 187.92 kB
+packages/mcp-tools build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/mcp-tools build: ✔ Build complete in 80968ms
+packages/mcp-tools build: Done

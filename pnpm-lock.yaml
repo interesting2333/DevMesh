@@ -109,6 +109,21 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
 
+  packages/code-workspaces:
+    dependencies:
+      '@devmesh/blob-store':
+        specifier: workspace:*
+        version: link:../blob-store
+      '@devmesh/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@devmesh/runner':
+        specifier: workspace:*
+        version: link:../runner
+      '@devmesh/storage-sqlite':
+        specifier: workspace:*
+        version: link:../storage-sqlite
+
   packages/contracts:
     dependencies:
       zod:

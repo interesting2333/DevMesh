@@ -7,6 +7,8 @@ import { RunnerPolicy } from './policy.js';
 import { RunnerStore } from './store.js';
 import { RunnerMaterials } from './materials.js';
 import type { InternalJob } from './store-protocol.js';
+import {acquireWorkspaceFence,releaseWorkspaceFence} from './workspace-fence.js';
+import type {AcquireWorkspaceFence} from './workspace-fence.js';
 
 interface Watch {leaseDeadline:number;executionDeadline:number;sequence:number;timer:NodeJS.Timeout}
 export interface ManagerOptions {maximumJobs?:number;pollIntervalMs?:number;onError?:(code:string)=>void}
@@ -14,6 +16,7 @@ export class RunnerManager {
  readonly #watch=new Map<string,Watch>();readonly #starts=new Set<string>();readonly #stops=new Map<string,Promise<void>>();readonly #background=new Set<Promise<void>>();
  #timer:NodeJS.Timeout|undefined;#tick:Promise<void>|undefined;#closed=false;#closing:Promise<void>|undefined;
  constructor(readonly store:RunnerStore,readonly policy:RunnerPolicy,readonly backend:ExecutionBackend,readonly authority:RunnerAuthority,readonly materials:RunnerMaterials,readonly options:ManagerOptions={}){
+   if(policy.config.runnerId!==store.options.runnerId)throw new RunnerError('RUNNER_STORE_IDENTITY_MISMATCH',409);
   if(!Number.isInteger(options.maximumJobs??4)||(options.maximumJobs??4)<1||(options.maximumJobs??4)>4||!Number.isInteger(options.pollIntervalMs??100)||(options.pollIntervalMs??100)<10)throw new RunnerError('RUNNER_CONFIG_INVALID',422);
  }
  private time(permit:StartJob['permit']){const now=Date.now(),from=Date.parse(permit.notBefore),until=Date.parse(permit.expiresAt);if(from>now||until<=now||until-from>15000)throw new RunnerError('RUNNER_LEASE_INVALID',403);return Math.min(15000,until-now);}
@@ -27,10 +30,20 @@ export class RunnerManager {
   if(this.#closed||!this.backend.configured)throw new RunnerError('RUNNER_NOT_CONFIGURED',503,'not-sent');const request=startJob.parse(input);
   // Same-operation query remains possible even after the original permit expired.
   const existing=await this.store.request('byOperation',{controllerId,operationId:request.operationId});if(existing){if(canonical(existing.request)!==canonical(request))throw new RunnerError('IDEMPOTENCY_KEY_REUSED',409);return existing;}
-  const execution=await this.policy.validate(request);await this.verify(controllerId,request);
+   const binding=await this.store.request('workspaceBinding',{workspaceRef:request.workspaceRef}),execution=await this.policy.validate(request,binding??undefined);await this.verify(controllerId,request);
   return this.store.request('register',{controllerId,request,execution:{workspacePath:execution.workspacePath,argv:[...execution.argv]}});
  }
  get(controllerId:string,jobId:string){return this.store.request('get',{controllerId,jobId});}
+  async acquireWorkspaceFence(controllerId:string,input:AcquireWorkspaceFence){
+   if(this.#closed||!this.authority.verifyWorkspace)throw new RunnerError('RUNNER_FENCING_NOT_CONFIGURED',503,'not-sent');const request=acquireWorkspaceFence.parse(input);
+   const stored=await this.store.request('workspaceBinding',{workspaceRef:request.workspaceRef}),binding=await this.policy.fence(request,stored??undefined);
+   try{await this.authority.verifyWorkspace(controllerId,request.permit,request.workspaceRef);}catch{throw new RunnerError('RUNNER_AUTHORITY_DENIED',403);}
+   return this.store.request('fenceAcquire',{controllerId,request,...binding});
+  }
+  getWorkspaceFence(controllerId:string,fenceId:string){return this.store.request('fenceGet',{controllerId,fenceId});}
+  async workspaceFenceByOperation(controllerId:string,operationId:string){const value=await this.store.request('fenceByOperation',{controllerId,operationId});if(!value)throw new RunnerError('WORKSPACE_FENCE_NOT_FOUND',404);return value;}
+  async activeWorkspaceFence(controllerId:string,workspaceRef:string){const value=await this.store.request('fenceActive',{controllerId,workspaceRef});if(!value)throw new RunnerError('WORKSPACE_FENCE_NOT_FOUND',404);return value;}
+  releaseWorkspaceFence(controllerId:string,fenceId:string,input:unknown){return this.store.request('fenceRelease',{controllerId,fenceId,release:releaseWorkspaceFence.parse(input)});}
  async byOperation(controllerId:string,operationId:string){const job=await this.store.request('byOperation',{controllerId,operationId});if(!job)throw new RunnerError('JOB_NOT_FOUND',404);return job;}
  async renew(controllerId:string,jobId:string,input:RenewJob){
   const renewal=renewJob.parse(input),job=await this.get(controllerId,jobId);await this.verify(controllerId,job.request,renewal.permit);

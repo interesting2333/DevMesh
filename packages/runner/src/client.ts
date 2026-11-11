@@ -2,6 +2,8 @@ import { RunnerError,startJob,renewJob,jobSchema } from './protocol.js';
 import type { Job,StartJob,RenewJob } from './protocol.js';
 import {z} from 'zod';
 import {ids} from '@devmesh/contracts';
+import {acquireWorkspaceFence,releaseWorkspaceFence,workspaceFenceSchema} from './workspace-fence.js';
+import type {AcquireWorkspaceFence,WorkspaceFence} from './workspace-fence.js';
 export class RunnerClient {
  readonly base:URL;
  constructor(endpoint:string,readonly credentialRef:string,readonly credentials:(ref:string)=>Promise<string|undefined>,readonly timeoutMs=10000){
@@ -25,6 +27,12 @@ export class RunnerClient {
  async byOperation(operationId:string):Promise<Job>{return this.decode(await this.request('GET','jobs/by-operation/'+encodeURIComponent(operationId)));}
  async stop(jobId:string):Promise<Job>{return this.decode(await this.request('POST','jobs/'+encodeURIComponent(jobId)+':stop',{}));}
  async renew(jobId:string,input:RenewJob):Promise<Job>{return this.decode(await this.request('POST','jobs/'+encodeURIComponent(jobId)+':renew',renewJob.parse(input)));}
+  private decodeFence(value:unknown):WorkspaceFence{const result=workspaceFenceSchema.safeParse(value);if(!result.success)throw new RunnerError('RUNNER_RESPONSE_INVALID',502,'unknown');return result.data;}
+  async acquireWorkspaceFence(input:AcquireWorkspaceFence){return this.decodeFence(await this.request('POST','workspace-fences',acquireWorkspaceFence.parse(input)));}
+  async getWorkspaceFence(fenceId:string){return this.decodeFence(await this.request('GET','workspace-fences/'+encodeURIComponent(fenceId)));}
+  async workspaceFenceByOperation(operationId:string){return this.decodeFence(await this.request('GET','workspace-fences/by-operation/'+encodeURIComponent(operationId)));}
+  async activeWorkspaceFence(workspaceRef:string){return this.decodeFence(await this.request('GET','workspace-fences/active/'+encodeURIComponent(workspaceRef)));}
+  async releaseWorkspaceFence(fenceId:string,input:z.input<typeof releaseWorkspaceFence>){return this.decodeFence(await this.request('POST','workspace-fences/'+encodeURIComponent(fenceId)+':release',releaseWorkspaceFence.parse(input)));}
  async logs(jobId:string,offset=0,limit=16384){
   ids.job.parse(jobId);if(!Number.isSafeInteger(offset)||offset<0||!Number.isSafeInteger(limit)||limit<1||limit>65536)throw new RunnerError('RUNNER_LOG_CURSOR_INVALID',422,'not-sent');
   const schema=z.strictObject({jobId:ids.job,offset:z.number().int().nonnegative(),nextOffset:z.number().int().nonnegative(),complete:z.boolean(),data:z.string().max(87384)});

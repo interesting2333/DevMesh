@@ -19,6 +19,11 @@ export async function serveRunner(manager:RunnerManager,options:{host?:string;po
  app.get('/healthz',(_req,res)=>res.json({status:'ok',component:'devmesh-runner',executionConfigured:manager.backend.configured}));
  app.use('/runner/v1',auth,express.json({limit:'256kb',strict:true}));
  app.post('/runner/v1/jobs',async(req,res)=>res.status(202).json(await manager.submit(String(res.locals.controllerId),req.body)));
+  app.post('/runner/v1/workspace-fences',async(req,res)=>res.status(201).json(await manager.acquireWorkspaceFence(String(res.locals.controllerId),req.body)));
+  app.get('/runner/v1/workspace-fences/by-operation/:id',async(req,res)=>res.json(await manager.workspaceFenceByOperation(String(res.locals.controllerId),String(req.params.id))));
+  app.get('/runner/v1/workspace-fences/active/:id',async(req,res)=>res.json(await manager.activeWorkspaceFence(String(res.locals.controllerId),String(req.params.id))));
+  app.get('/runner/v1/workspace-fences/:id',async(req,res)=>res.json(await manager.getWorkspaceFence(String(res.locals.controllerId),String(req.params.id))));
+  app.post(/^\/runner\/v1\/workspace-fences\/(fence_[A-Za-z0-9_-]+):release$/,async(req,res)=>res.json(await manager.releaseWorkspaceFence(String(res.locals.controllerId),String(req.params[0]),req.body)));
  app.get('/runner/v1/jobs/by-operation/:id',async(req,res)=>res.json(await manager.byOperation(String(res.locals.controllerId),String(req.params.id))));
  app.get('/runner/v1/jobs/:id',async(req,res)=>res.json(await manager.get(String(res.locals.controllerId),String(req.params.id))));
  // A literal colon action uses a regexp so it is not parsed as a named parameter.

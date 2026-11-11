@@ -8,11 +8,11 @@ import { ToolError,toolResult } from './protocol.js';
 const hash=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
 const freeze=(v:unknown):void=>{if(v&&typeof v==='object'){for(const child of Object.values(v))freeze(child);Object.freeze(v);}};
 class TrackingTransport extends StreamableHTTPClientTransport {negotiated='';override setProtocolVersion(value:string){super.setProtocolVersion(value);this.negotiated=value;}}
-export interface ConnectionSnapshot {endpointId:string;endpoint:string;protocolVersion:string;server:Record<string,unknown>;capabilities:Record<string,unknown>;tools:{name:string;description?:string;inputSchema:Record<string,unknown>;annotations?:Record<string,unknown>}[];sha256:string}
+export interface ConnectionSnapshot {endpointId:string;endpoint:string;requestTimeoutMs:number;protocolVersion:string;server:Record<string,unknown>;capabilities:Record<string,unknown>;tools:{name:string;description?:string;inputSchema:Record<string,unknown>;annotations?:Record<string,unknown>}[];sha256:string}
 export interface McpClientOptions {endpointId:string;endpoint:string;credentialRef:string;credentials:(ref:string)=>Promise<string|undefined>;timeoutMs?:number;expectedSnapshotHash?:string}
 export class McpToolClient {
  readonly endpoint:URL;readonly timeoutMs:number;#client:Client|undefined;#transport:TrackingTransport|undefined;#snapshot:ConnectionSnapshot|undefined;
- constructor(readonly options:McpClientOptions){const url=new URL(options.endpoint);if(url.username||url.password||url.hash||url.search||!['https:','http:'].includes(url.protocol)||url.protocol==='http:'&&!['127.0.0.1','[::1]','localhost'].includes(url.hostname))throw new ToolError('MCP_ENDPOINT_INVALID','not-sent');this.endpoint=url;this.timeoutMs=options.timeoutMs??10000;if(!Number.isInteger(this.timeoutMs)||this.timeoutMs<10||this.timeoutMs>30000)throw new ToolError('MCP_TIMEOUT_INVALID','not-sent');}
+  constructor(readonly options:McpClientOptions){const url=new URL(options.endpoint);if(url.username||url.password||url.hash||url.search||!['https:','http:'].includes(url.protocol)||url.protocol==='http:'&&!['127.0.0.1','[::1]','localhost'].includes(url.hostname))throw new ToolError('MCP_ENDPOINT_INVALID','not-sent');this.endpoint=url;this.timeoutMs=options.timeoutMs??10000;if(!Number.isInteger(this.timeoutMs)||this.timeoutMs<10||this.timeoutMs>120000)throw new ToolError('MCP_TIMEOUT_INVALID','not-sent');}
  get snapshot(){if(!this.#snapshot)throw new ToolError('MCP_NOT_CONNECTED','not-sent');return this.#snapshot;}
  connect(){return this.connectAttempt(0);}
  private async connectAttempt(attempt:number):Promise<ConnectionSnapshot>{
@@ -26,7 +26,7 @@ export class McpToolClient {
   const transport=new TrackingTransport(this.endpoint,{fetch:fetchBound,reconnectionOptions:{maxReconnectionDelay:0,initialReconnectionDelay:0,reconnectionDelayGrowFactor:1,maxRetries:0}}),client=new Client({name:'devmesh-agent-runtime',version:'0.1.0'});
   try{await client.connect(transport,{timeout:this.timeoutMs});const listed=await client.listTools({}, {timeout:this.timeoutMs});if(listed.nextCursor)throw new ToolError('MCP_TOOL_CATALOG_TOO_LARGE','not-sent');
    const tools=listed.tools.map(t=>({name:t.name,...(t.description?{description:t.description}:{}),inputSchema:t.inputSchema as Record<string,unknown>,...(t.annotations?{annotations:t.annotations as Record<string,unknown>}:{})})).sort((a,b)=>a.name.localeCompare(b.name));
-   const basis={endpointId:this.options.endpointId,endpoint:this.endpoint.href,protocolVersion:transport.negotiated,server:client.getServerVersion() as Record<string,unknown>,capabilities:client.getServerCapabilities() as Record<string,unknown>,tools};const sha256=hash(basis);
+   const basis={endpointId:this.options.endpointId,endpoint:this.endpoint.href,requestTimeoutMs:this.timeoutMs,protocolVersion:transport.negotiated,server:client.getServerVersion() as Record<string,unknown>,capabilities:client.getServerCapabilities() as Record<string,unknown>,tools};const sha256=hash(basis);
    if(!transport.negotiated||this.options.expectedSnapshotHash&&sha256!==this.options.expectedSnapshotHash||this.#snapshot&&sha256!==this.#snapshot.sha256)throw new ToolError('MCP_SCHEMA_CHANGED','not-sent');
    const snapshot={...basis,sha256};freeze(snapshot);this.#snapshot=snapshot;this.#client=client;this.#transport=transport;return snapshot;
   }catch(error){await client.close();if(error instanceof ToolError)throw error;

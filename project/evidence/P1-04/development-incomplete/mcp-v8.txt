@@ -1,0 +1,117 @@
+TAP version 13
+# (node:23604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: five separate MCP identities execute actual actions and keep original cleanup available after pause
+ok 1 - five separate MCP identities execute actual actions and keep original cleanup available after pause
+  ---
+  duration_ms: 33413.2667
+  type: 'test'
+  ...
+# (node:23604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: composition rejects shared credentials and platform owns optional MCP startup and release
+ok 2 - composition rejects shared credentials and platform owns optional MCP startup and release
+  ---
+  duration_ms: 29949.1488
+  type: 'test'
+  ...
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pipeline MCP freezes independent stages and returns real Runner log/output facts
+ok 3 - pipeline MCP freezes independent stages and returns real Runner log/output facts
+  ---
+  duration_ms: 18245.684
+  type: 'test'
+  ...
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a failed stage prevents later jobs and explicit stop before dispatch starts no Runner job
+ok 4 - a failed stage prevents later jobs and explicit stop before dispatch starts no Runner job
+  ---
+  duration_ms: 15873.8104
+  type: 'test'
+  ...
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost Runner acknowledgement and process restart recover the original stage without a second start
+not ok 5 - lost Runner acknowledgement and process restart recover the original stage without a second start
+  ---
+  duration_ms: 46575.8602
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\mcp-pipeline.test.mjs:69:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'SKIPPED'
+    - 'PENDING'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'PENDING'
+  actual: 'SKIPPED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/mcp-pipeline.test.mjs:76:193)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unresolved original send keeps later stages blocked and is never replayed
+ok 6 - an unresolved original send keeps later stages blocked and is never replayed
+  ---
+  duration_ms: 21161.9949
+  type: 'test'
+  ...
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost MCP creation response is repaired through the original pipeline operation
+ok 7 - lost MCP creation response is repaired through the original pipeline operation
+  ---
+  duration_ms: 30049.5806
+  type: 'test'
+  ...
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:11260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an active pipeline renews its original Runner job with bounded sub-permits and increasing sequences
+ok 8 - an active pipeline renews its original Runner job with bounded sub-permits and increasing sequences
+  ---
+  duration_ms: 32882.6065
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 262874.3343

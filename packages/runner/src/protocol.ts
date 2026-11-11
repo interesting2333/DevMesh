@@ -33,6 +33,8 @@ export const jobSchema=z.strictObject({jobId:ids.job,controllerId:opaqueKey,oper
 export interface RunnerAuthority {
  /** Must check current committed grant/epochs and service caller scopes. */
  verify(controllerId:string,request:StartJob,permit:StartJob['permit']):Promise<void>;
+  /** Required only for managed workspace fencing; must check the current grant. */
+  verifyWorkspace?(controllerId:string,permit:StartJob['permit'],workspaceRef:string):Promise<void>;
 }
 export const ownerKey=(p:StartJob['permit'])=>p.ownerKind==='workflowAttempt'?'run:'+p.runId:'invocation:'+p.invocationId;
 export const attemptKey=(p:StartJob['permit'])=>p.ownerKind==='workflowAttempt'?p.attemptId:p.invocationAttemptId;

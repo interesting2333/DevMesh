@@ -41,6 +41,25 @@ The repo service SHALL bind writes to an authorized workspace, base commit and w
 - **WHEN** the trusted workspace allocator or integration acceptance check is absent
 - **THEN** the corresponding write tool SHALL NOT be registered and a Git commit fact SHALL NOT imply candidate acceptance
 
+### Requirement: Workspace file edits have durable exact mutation identities
+
+The repo service SHALL provide bounded authorized workspace reads, file writes and deletes, fixed-base diffs and exact source manifests. File mutations SHALL verify the expected previous content or absence, approved write scope and physical workspace identity under actual Runner/editor fencing, and retain immutable original-operation evidence before acknowledging completion.
+
+#### Scenario: A model edits a file and then requests a commit
+
+- **WHEN** an authorized file mutation is durably confirmed through the MCP service
+- **THEN** the corresponding bytes SHALL exist in that Attempt's workspace and the controlled Git commit SHALL include those actual approved changes
+
+#### Scenario: A file mutation reply is lost
+
+- **WHEN** the caller queries the original operation after an uncertain file mutation
+- **THEN** recovery SHALL inspect durable operation-specific filesystem evidence without repeating the edit; a matching current content hash alone SHALL NOT prove that operation completed, and unresolved edits SHALL block later mutations
+
+#### Scenario: A file mutation has a stale basis or escapes its workspace
+
+- **WHEN** the expected previous hash differs, the target is linked, or its path or size is outside the approved scope
+- **THEN** the service SHALL reject the mutation without overwriting another file or accepting the resulting code
+
 ### Requirement: Pipelines and tests have independent execution facts
 
 The pipeline service SHALL preserve its own identity and frozen stages, execute only approved stages, and retain per-stage jobs and results independently from tests.

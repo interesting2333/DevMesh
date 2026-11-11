@@ -2,8 +2,16 @@ import { z } from 'zod';
 import { opaqueKey } from '@devmesh/contracts';
 import { startJob,renewJob } from './protocol.js';
 import type { Job } from './protocol.js';
+import {acquireWorkspaceFence,releaseWorkspaceFence,workspaceBindingSchema} from './workspace-fence.js';
+import type {WorkspaceFence,WorkspaceBinding} from './workspace-fence.js';
 const owner={controllerId:opaqueKey};
 export const storeRequests={
+ fenceAcquire:z.strictObject({...owner,request:acquireWorkspaceFence,workspacePath:z.string().min(1),binding:workspaceBindingSchema}),
+ fenceGet:z.strictObject({...owner,fenceId:opaqueKey}),
+ fenceByOperation:z.strictObject({...owner,operationId:opaqueKey}),
+ fenceActive:z.strictObject({...owner,workspaceRef:opaqueKey}),
+ fenceRelease:z.strictObject({...owner,fenceId:opaqueKey,release:releaseWorkspaceFence}),
+ workspaceBinding:z.strictObject({workspaceRef:opaqueKey}),
  register:z.strictObject({...owner,request:startJob,execution:z.strictObject({workspacePath:z.string().min(1),argv:z.array(z.string()).min(1)})}),
  get:z.strictObject({...owner,jobId:opaqueKey}),
  byOperation:z.strictObject({...owner,operationId:opaqueKey}),
@@ -19,6 +27,7 @@ export type RunnerStoreMethod=keyof typeof storeRequests;
 export type StoreInput<M extends RunnerStoreMethod>=z.input<(typeof storeRequests)[M]>;
 export interface InternalJob {job:Job;execution:{workspacePath:string;argv:string[]};leasePermit:Job['request']['permit'];leaseRenewedAt:string}
 export interface StoreResults {
+ fenceAcquire:WorkspaceFence;fenceGet:WorkspaceFence;fenceByOperation:WorkspaceFence|null;fenceActive:WorkspaceFence|null;fenceRelease:WorkspaceFence;workspaceBinding:WorkspaceBinding|null;
  register:Job;get:Job;byOperation:Job|null;pending:InternalJob[];active:InternalJob[];
  claim:InternalJob|null;stop:Job;renew:Job;record:Job;
  inspect:{version:number;runnerId:string;jobs:number;foreignKeyErrors:unknown[]};

@@ -29,7 +29,7 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
   canonicalRoot(options.scratchRoot);for(const b of bindings){canonicalRoot(b.root);canonicalRoot(b.gitDirectory);canonicalRoot(b.commonDirectory);}
   // Windows may provide a legitimate short (8.3) spelling for the temp root.
   // Freeze physical identities once; later path replacement must still fail.
-  const physicalBindings=new Map(bindings.map(b=>{const ready=Promise.all([realpath(b.root),realpath(b.gitDirectory),realpath(b.commonDirectory)]).then(([root,gitDirectory,commonDirectory])=>({root,gitDirectory,commonDirectory}));void ready.catch(()=>{});return [b.workspaceRef,ready] as const;}));
+  const physicalBindings=new Map(bindings.map(b=>{const ready=Promise.all([realpath(b.root),realpath(b.gitDirectory),realpath(b.commonDirectory)]).then(async([root,gitDirectory,commonDirectory])=>({root,gitDirectory,commonDirectory,directories:await Promise.all([...new Set([root!,gitDirectory!,commonDirectory!])].map(async path=>{const stat=await lstat(path,{bigint:true});return {path,dev:stat.dev,ino:stat.ino};}))}));void ready.catch(()=>{});return [b.workspaceRef,ready] as const;}));
   const binding=(ref:string)=>bindings.find(b=>b.workspaceRef===ref)??(()=>{throw new ToolError('MCP_WORKSPACE_DENIED','not-sent');})();
   const publicBinding=(b:RepoWorkspaceBinding)=>repoBinding.parse(Object.fromEntries(Object.entries(b).filter(([k])=>!['root','gitDirectory','commonDirectory'].includes(k))));
   function git(root:string,args:string[],signal:AbortSignal,index?:string,input?:string,allowFailure=false):Promise<{code:number;out:Buffer}>{
@@ -38,20 +38,22 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
     Object.assign(env,{GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:gitNull,GIT_ATTR_NOSYSTEM:'1',GIT_TERMINAL_PROMPT:'0',GIT_OPTIONAL_LOCKS:'0',GIT_LITERAL_PATHSPECS:'1',LC_ALL:'C',...(index?{GIT_INDEX_FILE:index}:{})});
     return new Promise((resolve,reject)=>{
       const child=spawn('git',['--no-replace-objects','--literal-pathspecs','-c','core.hooksPath='+gitNull,'-c','core.fsmonitor=false','-c','core.attributesFile='+gitNull,'-c','commit.gpgSign=false','-c','core.pager=cat','-c','protocol.allow=never',...args],{cwd:root,env,windowsHide:true,stdio:['pipe','pipe','pipe'],signal});
-      const chunks:Buffer[]=[];let bytes=0,failed=false;
+      const chunks:Buffer[]=[];let bytes=0,failed=false,ioFailure=false;
       const timer=setTimeout(()=>{failed=true;child.kill();},30000);timer.unref();
       child.stdout.on('data',(b:Buffer)=>{bytes+=b.length;if(bytes>16*1024*1024){failed=true;child.kill();}else chunks.push(b);});
       child.stderr.resume();child.stdin.on('error',()=>{});child.stdin.end(input);
-      child.on('error',()=>{clearTimeout(timer);reject(new ToolError('MCP_GIT_IO_UNKNOWN','unknown'));});
-      child.on('close',code=>{clearTimeout(timer);if(failed||code===null||code!==0&&!allowFailure)reject(new ToolError('MCP_GIT_ACTION_FAILED','unknown'));else resolve({code,out:Buffer.concat(chunks)});});
+      child.on('error',()=>{ioFailure=true;});
+      child.on('close',code=>{clearTimeout(timer);if(ioFailure)reject(new ToolError('MCP_GIT_IO_UNKNOWN','unknown'));else if(failed||code===null||code!==0&&!allowFailure)reject(new ToolError('MCP_GIT_ACTION_FAILED','unknown'));else resolve({code,out:Buffer.concat(chunks)});});
     });
   }
   async function safeRoot(b:RepoWorkspaceBinding,signal:AbortSignal){
     const frozen=await physicalBindings.get(b.workspaceRef)!,root=await realpath(b.root);if(root!==frozen.root)throw new ToolError('MCP_WORKSPACE_CHANGED','not-sent');
-    const [top,format,actualGit,common]=text((await git(root,['rev-parse','--show-toplevel','--show-object-format','--absolute-git-dir','--git-common-dir'],signal)).out).trim().split('\n');
+    for(const entry of frozen.directories){const stat=await lstat(entry.path,{bigint:true});if(!stat.isDirectory()||stat.isSymbolicLink()||stat.dev!==entry.dev||stat.ino!==entry.ino)throw new ToolError('MCP_WORKSPACE_CHANGED','not-sent');}
+    const [location,filters]=await Promise.all([git(root,['rev-parse','--show-toplevel','--show-object-format','--absolute-git-dir','--git-common-dir'],signal),git(root,['config','--get-regexp','^filter\\.'],signal,undefined,undefined,true)]);
+    const [top,format,actualGit,common]=text(location.out).trim().split('\n');
     if(!top||format!=='sha1'||!actualGit||!common||await realpath(top)!==root)throw new ToolError('MCP_GIT_CONFIGURATION_INVALID','not-sent');
     if(await realpath(actualGit)!==frozen.gitDirectory||await realpath(resolve(root,common))!==frozen.commonDirectory)throw new ToolError('MCP_GIT_REPOSITORY_CHANGED','not-sent');
-    if((await git(root,['config','--get-regexp','^filter\\.'],signal,undefined,undefined,true)).code!==1)throw new ToolError('MCP_GIT_FILTER_DENIED','not-sent');
+    if(filters.code!==1)throw new ToolError('MCP_GIT_FILTER_DENIED','not-sent');
     return root;
   }
   function scoped(paths:string[],scope:string[]){
@@ -67,16 +69,17 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
   async function cleanIndex(temp:string,index:string){for(const file of [index,index+'.lock'])try{await unlink(file);}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}await rmdir(temp);}
   async function writeTree(root:string,operation:RepoOperation,signal:AbortSignal){
     const base=operation.request.binding.baseCommit;
-    if(text((await git(root,['rev-parse','HEAD'],signal)).out).trim()!==base)throw new ToolError('MCP_GIT_BASE_CHANGED','not-sent');
-    const changed=paths((await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--name-only','-z',base,'--'],signal)).out);
-    const untracked=paths((await git(root,['ls-files','--others','--exclude-standard','-z','--'],signal)).out),all=[...new Set([...changed,...untracked])];
+    const [head,changeList,otherList]=await Promise.all([git(root,['rev-parse','HEAD'],signal),git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--name-only','-z',base,'--'],signal),git(root,['ls-files','--others','--exclude-standard','-z','--'],signal)]);
+    if(text(head.out).trim()!==base)throw new ToolError('MCP_GIT_BASE_CHANGED','not-sent');
+    const changed=paths(changeList.out),untracked=paths(otherList.out),all=[...new Set([...changed,...untracked])];
     scoped(all,operation.scope);if(!all.length)throw new ToolError('MCP_GIT_EMPTY_COMMIT','not-sent');await physical(root,all);
     await mkdir(options.scratchRoot,{recursive:true});const scratch=await realpath(options.scratchRoot);if(scratch===root||within(root,scratch))throw new ToolError('MCP_GIT_SCRATCH_DENIED','not-sent');
     const temp=await mkdtemp(join(scratch,'repo-')),index=join(temp,'index');
     try{
       await git(root,['read-tree',base],signal,index);await git(root,['add','-A','--',...all],signal,index);
-      for(const row of paths((await git(root,['ls-files','--stage','-z'],signal,index)).out))if(!/^100(644|755) [a-f0-9]{40} 0\t/.test(row))throw new ToolError('MCP_GIT_SPECIAL_ENTRY_DENIED','not-sent');
-      scoped(paths((await git(root,['diff','--cached','--no-ext-diff','--no-textconv','--name-only','-z',base,'--'],signal,index)).out),operation.scope);
+      const [entries,changes]=await Promise.all([git(root,['ls-files','--stage','-z'],signal,index),git(root,['diff','--cached','--no-ext-diff','--no-textconv','--name-only','-z',base,'--'],signal,index)]);
+      for(const row of paths(entries.out))if(!/^100(644|755) [a-f0-9]{40} 0\t/.test(row))throw new ToolError('MCP_GIT_SPECIAL_ENTRY_DENIED','not-sent');
+      scoped(paths(changes.out),operation.scope);
       await physical(root,all);return oid(text((await git(root,['write-tree'],signal,index)).out).trim());
     }finally{await cleanIndex(temp,index);}
   }
@@ -122,7 +125,8 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
         const updated=await git(root,['update-ref','--stdin'],input.signal,undefined,`start\nupdate ${projectRef} ${commit} ${base}\ncreate ${ref} ${commit}\nprepare\ncommit\n`,true);
         if(updated.code!==0){await finish(operation,'CONFLICT',{code:'MCP_GIT_INTEGRATION_CONFLICT'});return {operationId:operation.operationId,state:'CONFLICT',code:'MCP_GIT_INTEGRATION_CONFLICT'};}
       }
-      return reconcile(operation,b,input.signal);
+      const p=operation.prepared!,result={commit:p.commit,tree:p.tree,baseCommit:b.baseCommit,ref:p.ref};await finish(operation,'SUCCEEDED',result);
+      return {operationId:operation.operationId,state:'SUCCEEDED',...result};
     }catch(error){if(error instanceof ToolError&&error.outcome==='not-sent'&&operation.state==='SENT')await finish(operation,'FAILED',{code:error.code});throw error;}
     finally{try{await lease?.release();}finally{locks.delete(key);}}
   }

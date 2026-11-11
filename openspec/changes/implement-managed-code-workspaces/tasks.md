@@ -1,8 +1,8 @@
 ## 1. Repository ownership and durable allocation
 
-- [ ] 1.1 建立受控 Git Provider、固定 argv／环境和目录身份校验；以真实临时仓库验证精确对象、禁外部 helper 和路径漂移拒绝。
-- [ ] 1.2 增加项目仓库、工作区、原分配操作及状态的向前迁移和 Worker 命令；验证去重、错 base／错归属拒绝、准备中断恢复及历史迁移升级。
-- [ ] 1.3 实现独立 checkout、内部 ID 分支和固定源码清单；验证工作区与项目目录隔离、精确 HEAD，未知目录保留且不覆盖。
+- [x] 1.1 建立受控 Git Provider、固定 argv／环境和目录身份校验，从固定模板子树生成独立初始提交；以真实临时仓库验证精确对象、来源、禁外部 helper 和路径漂移拒绝。
+- [x] 1.2 增加项目仓库、工作区、原分配操作及状态的向前迁移和 Worker 命令；验证去重、错 base／错归属拒绝、准备中断恢复及历史迁移升级。
+- [x] 1.3 实现独立 checkout、内部 ID 分支和固定源码清单；验证工作区与项目目录隔离、精确 HEAD，未知目录保留且不覆盖。
 
 ## 2. Exclusive access and source retention
 
