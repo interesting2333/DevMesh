@@ -604,11 +604,12 @@
         "tests/scheduler.test.mjs"
       ],
       "evidence": [
-        "project/evidence/P1-03/离线实施进展.md"
+        "project/evidence/P1-03/离线实施进展.md",
+        "project/evidence/P1-03/windows-037d2bf/report.json"
       ],
       "reviewNote": null,
       "notes": [
-        "按连续目标完成离线计划读取／确认、图校验与显式 A2A 调度；工作树定向 10/10，固定提交回归待执行。正式前置、真实模型与 Linux Runner 集成和 G0 仍按实际验收记录。"
+        "固定提交 037d2bf：Windows 干净检出、冻结安装、完整回归 20/20，调度 10/10；实现计划详情／确认、DAG 复核与显式 A2A 持久调度。正式前置、真实模型与 Linux Runner 集成及 G0 仍待实际验收，未据离线结果关闭父包。"
       ]
     },
     {
@@ -630,7 +631,9 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-five-mcp-services"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -638,7 +641,9 @@
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "按连续目标授权推进五类服务的离线代码与协议验证，现有 repo 只读与 tests 接续，缺真实资源的验收项保持未执行。"
+      ]
     },
     {
       "id": "P1-05",

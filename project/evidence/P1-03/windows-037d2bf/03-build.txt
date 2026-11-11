@@ -1,0 +1,250 @@
+ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\package.json 
+ℹ entry: vendor\cosmokit\lib\types\index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor\cosmokit\lib\index.js      17.31 kB │ gzip: 5.29 kB
+ℹ vendor\cosmokit\lib\index.js.map  31.20 kB │ gzip: 8.14 kB
+ℹ 2 files, total: 48.50 kB
+✔ Build complete in 29ms
+ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\package.json 
+ℹ entry: vendor\schemastery\lib\types\index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ [CJS] vendor\schemastery\lib\index.cjs      23.88 kB │ gzip:  5.88 kB
+ℹ [CJS] vendor\schemastery\lib\index.cjs.map  47.40 kB │ gzip: 10.55 kB
+ℹ [CJS] 2 files, total: 71.27 kB
+ℹ [ESM] vendor\schemastery\lib\index.mjs      23.04 kB │ gzip:  5.85 kB
+ℹ [ESM] vendor\schemastery\lib\index.mjs.map  46.85 kB │ gzip: 10.47 kB
+ℹ [ESM] 2 files, total: 69.89 kB
+✔ Build complete in 16ms
+✔ Build complete in 20ms
+ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\package.json 
+ℹ entry: vendor\cordis\lib\types\index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor\cordis\lib\index.js       64.27 kB │ gzip: 17.72 kB
+ℹ vendor\cordis\lib\index.js.map  122.02 kB │ gzip: 29.48 kB
+ℹ 2 files, total: 186.29 kB
+✔ Build complete in 24ms
+ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\package.json 
+ℹ entry: vendor\loader\lib\types\index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor\loader\lib\index.js      26.60 kB │ gzip:  8.42 kB
+ℹ vendor\loader\lib\index.js.map  54.04 kB │ gzip: 14.62 kB
+ℹ 2 files, total: 80.64 kB
+✔ Build complete in 16ms
+ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\package.json 
+ℹ entry: vendor\include\lib\types\index.js
+ℹ target: node24
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ vendor\include\lib\index.js       8.66 kB │ gzip: 3.28 kB
+ℹ vendor\include\lib\index.js.map  17.12 kB │ gzip: 5.57 kB
+ℹ 2 files, total: 25.78 kB
+✔ Build complete in 10ms
+Scope: 10 of 16 workspace projects
+packages/contracts build$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+packages/contracts build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/contracts build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\contracts\package.json 
+packages/contracts build: ℹ entry: src/index.ts
+packages/contracts build: ℹ target: es2024
+packages/contracts build: ℹ tsconfig: ..\..\tsconfig.json
+packages/contracts build: ℹ Build start
+packages/contracts build: ℹ Cleaning 4 files
+packages/contracts build: ℹ dist\index.js       50.77 kB │ gzip: 14.26 kB
+packages/contracts build: ℹ dist\index.js.map   86.67 kB │ gzip: 23.02 kB
+packages/contracts build: ℹ dist\index.d.ts    183.95 kB │ gzip: 17.14 kB
+packages/contracts build: ℹ 3 files, total: 321.39 kB
+packages/contracts build: ✔ Build complete in 2464ms
+packages/contracts build: Done
+packages/storage-sqlite build$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+packages/storage-sqlite build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/storage-sqlite build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\storage-sqlite\package.json 
+packages/storage-sqlite build: ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+packages/storage-sqlite build: ℹ target: node24
+packages/storage-sqlite build: ℹ tsconfig: ..\..\tsconfig.json
+packages/storage-sqlite build: ℹ Build start
+packages/storage-sqlite build: ℹ Cleaning 30 files
+packages/storage-sqlite build: ℹ dist\index.mjs                             6.63 kB │ gzip:  2.39 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs                            5.33 kB │ gzip:  2.17 kB
+packages/storage-sqlite build: ℹ dist\migrations.mjs                        0.26 kB │ gzip:  0.17 kB
+packages/storage-sqlite build: ℹ dist\domain.mjs                            0.16 kB │ gzip:  0.13 kB
+packages/storage-sqlite build: ℹ dist\domain-Dvp3MGMm.mjs.map             370.61 kB │ gzip: 81.40 kB
+packages/storage-sqlite build: ℹ dist\domain-Dvp3MGMm.mjs                 230.52 kB │ gzip: 47.61 kB
+packages/storage-sqlite build: ℹ dist\index.mjs.map                        12.77 kB │ gzip:  4.37 kB
+packages/storage-sqlite build: ℹ dist\migrations-BNr8Cyfx.mjs.map           8.84 kB │ gzip:  3.20 kB
+packages/storage-sqlite build: ℹ dist\registry-protocol-C7S989-w.mjs.map    8.49 kB │ gzip:  2.81 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs.map                        8.45 kB │ gzip:  3.15 kB
+packages/storage-sqlite build: ℹ dist\migrations-BNr8Cyfx.mjs               5.35 kB │ gzip:  2.12 kB
+packages/storage-sqlite build: ℹ dist\registry-protocol-C7S989-w.mjs        4.27 kB │ gzip:  1.64 kB
+packages/storage-sqlite build: ℹ dist\errors-BXl8kUAO.mjs.map               1.99 kB │ gzip:  0.85 kB
+packages/storage-sqlite build: ℹ dist\errors-BXl8kUAO.mjs                   1.08 kB │ gzip:  0.54 kB
+packages/storage-sqlite build: ℹ dist\index.d.mts                           2.80 kB │ gzip:  1.09 kB
+packages/storage-sqlite build: ℹ dist\migrations.d.mts                      0.91 kB │ gzip:  0.42 kB
+packages/storage-sqlite build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/storage-sqlite build: ℹ dist\domain.d.mts                          0.33 kB │ gzip:  0.23 kB
+packages/storage-sqlite build: ℹ dist\worker.d.mts                          0.01 kB │ gzip:  0.03 kB
+packages/storage-sqlite build: ℹ dist\json-BlyOGdI3.d.mts                  64.00 kB │ gzip:  9.17 kB
+packages/storage-sqlite build: ℹ 19 files, total: 732.80 kB
+packages/storage-sqlite build: ✔ Build complete in 3060ms
+packages/storage-sqlite build: Done
+packages/a2a-adapter build$ tsdown src/index.ts src/config.ts src/public-prototype.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/blob-store build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/blob-store build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/a2a-adapter build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/blob-store build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\blob-store\package.json 
+packages/a2a-adapter build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\a2a-adapter\package.json 
+packages/blob-store build: ℹ entry: src/index.ts
+packages/blob-store build: ℹ target: node24
+packages/blob-store build: ℹ tsconfig: ..\..\tsconfig.json
+packages/a2a-adapter build: ℹ entry: src/index.ts, src/config.ts, src/public-prototype.ts
+packages/a2a-adapter build: ℹ target: node24
+packages/a2a-adapter build: ℹ tsconfig: ..\..\tsconfig.json
+packages/blob-store build: ℹ Build start
+packages/a2a-adapter build: ℹ Build start
+packages/blob-store build: ℹ Cleaning 4 files
+packages/a2a-adapter build: ℹ Cleaning 11 files
+packages/blob-store build: ℹ dist\index.mjs      26.23 kB │ gzip:  7.68 kB
+packages/blob-store build: ℹ dist\index.mjs.map  46.43 kB │ gzip: 13.32 kB
+packages/blob-store build: ℹ dist\index.d.mts     5.56 kB │ gzip:  1.64 kB
+packages/blob-store build: ℹ 3 files, total: 78.21 kB
+packages/blob-store build: ✔ Build complete in 2564ms
+packages/blob-store build: Done
+packages/runner build$ tsdown src/index.ts src/worker.ts src/main.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/input-api build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/runner build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/input-api build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/runner build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\runner\package.json 
+packages/runner build: ℹ entry: src/index.ts, src/worker.ts, src/main.ts
+packages/runner build: ℹ target: node24
+packages/runner build: ℹ tsconfig: ..\..\tsconfig.json
+packages/input-api build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\input-api\package.json 
+packages/runner build: ℹ Build start
+packages/input-api build: ℹ entry: src/index.ts
+packages/input-api build: ℹ target: node24
+packages/input-api build: ℹ tsconfig: ..\..\tsconfig.json
+packages/input-api build: ℹ Build start
+packages/runner build: ℹ Cleaning 14 files
+packages/input-api build: ℹ Cleaning 4 files
+packages/a2a-adapter build: ℹ dist\index.mjs                 22.11 kB │ gzip:  6.39 kB
+packages/a2a-adapter build: ℹ dist\public-prototype.mjs      10.66 kB │ gzip:  3.48 kB
+packages/a2a-adapter build: ℹ dist\config.mjs                 1.12 kB │ gzip:  0.53 kB
+packages/a2a-adapter build: ℹ dist\index.mjs.map             37.63 kB │ gzip: 10.97 kB
+packages/a2a-adapter build: ℹ dist\public-prototype.mjs.map  18.81 kB │ gzip:  5.69 kB
+packages/a2a-adapter build: ℹ dist\config.mjs.map             1.96 kB │ gzip:  0.83 kB
+packages/a2a-adapter build: ℹ dist\index.d.mts                4.74 kB │ gzip:  1.41 kB
+packages/a2a-adapter build: ℹ dist\public-prototype.d.mts     1.95 kB │ gzip:  0.71 kB
+packages/a2a-adapter build: ℹ dist\config.d.mts               0.18 kB │ gzip:  0.13 kB
+packages/a2a-adapter build: ℹ dist\config-C3H_Bws-.d.mts      0.49 kB │ gzip:  0.29 kB
+packages/a2a-adapter build: ℹ 10 files, total: 99.66 kB
+packages/a2a-adapter build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/a2a-adapter build:   - tsdown:deps (54%)
+packages/a2a-adapter build:   - rolldown-plugin-dts:generate (44%)
+packages/a2a-adapter build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/a2a-adapter build: ✔ Build complete in 3395ms
+packages/a2a-adapter build: Done
+packages/agent-runtime build$ tsdown src/index.ts src/config.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/agent-runtime build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/agent-runtime build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\agent-runtime\package.json 
+packages/agent-runtime build: ℹ entry: src/index.ts, src/config.ts
+packages/agent-runtime build: ℹ target: node24
+packages/agent-runtime build: ℹ tsconfig: ..\..\tsconfig.json
+packages/agent-runtime build: ℹ Build start
+packages/agent-runtime build: ℹ Cleaning 8 files
+packages/input-api build: ℹ dist\index.mjs      27.50 kB │ gzip:  7.40 kB
+packages/input-api build: ℹ dist\index.mjs.map  46.06 kB │ gzip: 12.82 kB
+packages/input-api build: ℹ dist\index.d.mts     1.23 kB │ gzip:  0.58 kB
+packages/input-api build: ℹ 3 files, total: 74.79 kB
+packages/input-api build: ✔ Build complete in 2576ms
+packages/input-api build: Done
+packages/runner build: ℹ dist\worker.mjs                 13.44 kB │ gzip:  4.10 kB
+packages/runner build: ℹ dist\index.mjs                  10.80 kB │ gzip:  3.68 kB
+packages/runner build: ℹ dist\main.mjs                    3.09 kB │ gzip:  1.39 kB
+packages/runner build: ℹ dist\server-wb9JyQ15.mjs.map    48.11 kB │ gzip: 13.37 kB
+packages/runner build: ℹ dist\server-wb9JyQ15.mjs        27.83 kB │ gzip:  7.84 kB
+packages/runner build: ℹ dist\worker.mjs.map             22.01 kB │ gzip:  6.48 kB
+packages/runner build: ℹ dist\index.mjs.map              17.42 kB │ gzip:  5.84 kB
+packages/runner build: ℹ dist\protocol-CwvFGRhj.mjs.map   5.31 kB │ gzip:  1.94 kB
+packages/runner build: ℹ dist\main.mjs.map                5.15 kB │ gzip:  2.10 kB
+packages/runner build: ℹ dist\protocol-CwvFGRhj.mjs       2.44 kB │ gzip:  1.09 kB
+packages/runner build: ℹ dist\index.d.mts                20.65 kB │ gzip:  3.64 kB
+packages/runner build: ℹ dist\main.d.mts                  0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ dist\worker.d.mts                0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ 13 files, total: 176.28 kB
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: ✔ Build complete in 3132ms
+packages/runner build: Done
+packages/agent-runtime build: ℹ dist\index.mjs                33.32 kB │ gzip:  8.68 kB
+packages/agent-runtime build: ℹ dist\config.mjs                0.10 kB │ gzip:  0.09 kB
+packages/agent-runtime build: ℹ dist\index.mjs.map            53.88 kB │ gzip: 14.75 kB
+packages/agent-runtime build: ℹ dist\config-Ci7_7HOr.mjs.map  18.12 kB │ gzip:  5.77 kB
+packages/agent-runtime build: ℹ dist\config-Ci7_7HOr.mjs      10.49 kB │ gzip:  3.54 kB
+packages/agent-runtime build: ℹ dist\index.d.mts               8.77 kB │ gzip:  2.52 kB
+packages/agent-runtime build: ℹ dist\config.d.mts              1.52 kB │ gzip:  0.61 kB
+packages/agent-runtime build: ℹ 7 files, total: 126.19 kB
+packages/agent-runtime build: ✔ Build complete in 2997ms
+packages/agent-runtime build: Done
+packages/mcp-tools build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/platform-core build$ tsdown src/index.ts src/config.ts src/scheduler.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/platform-core build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/mcp-tools build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/mcp-tools build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\mcp-tools\package.json 
+packages/platform-core build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\platform-core\package.json 
+packages/mcp-tools build: ℹ entry: src/index.ts
+packages/mcp-tools build: ℹ target: node24
+packages/mcp-tools build: ℹ tsconfig: ..\..\tsconfig.json
+packages/mcp-tools build: ℹ Build start
+packages/platform-core build: ℹ entry: src/index.ts, src/config.ts, src/scheduler.ts
+packages/platform-core build: ℹ target: node24
+packages/platform-core build: ℹ tsconfig: ..\..\tsconfig.json
+packages/platform-core build: ℹ Build start
+packages/mcp-tools build: ℹ Cleaning 4 files
+packages/platform-core build: ℹ Cleaning 7 files
+packages/mcp-tools build: ℹ dist\index.mjs      23.47 kB │ gzip:  7.09 kB
+packages/mcp-tools build: ℹ dist\index.mjs.map  40.36 kB │ gzip: 11.93 kB
+packages/mcp-tools build: ℹ dist\index.d.mts     7.94 kB │ gzip:  2.08 kB
+packages/mcp-tools build: ℹ 3 files, total: 71.77 kB
+packages/mcp-tools build: ✔ Build complete in 3102ms
+packages/mcp-tools build: Done
+packages/platform-core build: ℹ dist\index.mjs           8.88 kB │ gzip: 2.79 kB
+packages/platform-core build: ℹ dist\config.mjs          4.01 kB │ gzip: 1.56 kB
+packages/platform-core build: ℹ dist\scheduler.mjs       3.96 kB │ gzip: 1.34 kB
+packages/platform-core build: ℹ dist\index.mjs.map      16.01 kB │ gzip: 4.92 kB
+packages/platform-core build: ℹ dist\config.mjs.map      7.33 kB │ gzip: 2.65 kB
+packages/platform-core build: ℹ dist\scheduler.mjs.map   6.93 kB │ gzip: 2.50 kB
+packages/platform-core build: ℹ dist\scheduler.d.mts     1.50 kB │ gzip: 0.68 kB
+packages/platform-core build: ℹ dist\index.d.mts         1.45 kB │ gzip: 0.58 kB
+packages/platform-core build: ℹ dist\config.d.mts        0.90 kB │ gzip: 0.45 kB
+packages/platform-core build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/platform-core build:   - rolldown-plugin-dts:generate (51%)
+packages/platform-core build:   - tsdown:deps (47%)
+packages/platform-core build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/platform-core build: ℹ 9 files, total: 50.97 kB
+packages/platform-core build: ✔ Build complete in 3180ms
+packages/platform-core build: Done
+apps/server build$ tsdown src/main.ts --format esm --platform node --target node24 --sourcemap --clean
+apps/server build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+apps/server build: ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\apps\server\package.json 
+apps/server build: ℹ entry: src/main.ts
+apps/server build: ℹ target: node24
+apps/server build: ℹ tsconfig: ..\..\tsconfig.json
+apps/server build: ℹ Build start
+apps/server build: ℹ Cleaning 3 files
+apps/server build: ℹ dist\main.mjs      2.89 kB │ gzip: 1.08 kB
+apps/server build: ℹ dist\main.mjs.map  5.23 kB │ gzip: 1.81 kB
+apps/server build: ℹ 2 files, total: 8.12 kB
+apps/server build: ✔ Build complete in 33ms
+apps/server build: Done
+$ pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/a2a-adapter --filter @devmesh/agent-runtime --filter @devmesh/runner --filter @devmesh/mcp-tools --filter @devmesh/input-api --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build
+$ node scripts/build-vendor.mjs
+
+ WARN  We recommend using the ESM format instead of CommonJS.
+The ESM format is compatible with modern platforms and runtimes, and most new libraries are now distributed only in ESM format.
+Learn more at https://nodejs.org/en/learn/modules/publishing-a-package#how-did-we-get-here
+

@@ -1,0 +1,18 @@
+## 1. Documents and issues
+
+- [ ] 1.1 实现固定附件版本 docs.search/read，使用真实内容存储与官方 MCP HTTP 验证来源、offset、越权和漂移拒绝。
+- [ ] 1.2 增加 issues 领域迁移、修订历史、创建／关联修复／验证及原键查询，以 SQLite 和 HTTP 验证去重、旧修订、越权、重启不丢历史。
+
+## 2. Repository and pipeline
+
+- [ ] 2.1 实现受控 Git repo 写动作和原操作记录；用真实临时 Git 仓库验证写范围、baseCommit、去重、冲突和恢复。
+- [ ] 2.2 增加独立流水线及阶段持久记录，冻结配置并接 RunnerClient；验证顺序、失败／未知阻断、原 Job 查询及重启。
+
+## 3. Composition and recovery
+
+- [ ] 3.1 组合五类独立 MCP 身份、连接及 schema 快照，接当前 Host／Grant／ACL／角色授权；验证真实调用、暂停写拒绝、原作业查询／停止和释放。
+- [ ] 3.2 扩展 bridge 原操作恢复映射，验证丢失写回复只查询原事实，不重发写动作。
+
+## 4. Evidence
+
+- [ ] 4.1 完成固定提交全量回归、部署文档及父工作包台账，记录五类实际动作和仍待真实模型／Linux Runner 的验收项。
