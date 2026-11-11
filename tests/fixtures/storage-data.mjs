@@ -5,6 +5,8 @@ import { randomUUID, createHash } from 'node:crypto';
 import { openStorage } from '../../packages/storage-sqlite/dist/index.mjs';
 
 const examples = JSON.parse(readFileSync(new URL('../../packages/contracts/examples/valid.json', import.meta.url)));
+export const migrationManifest=JSON.parse(readFileSync(new URL('../../packages/storage-sqlite/migrations/manifest.json',import.meta.url),'utf8'));
+export const schemaVersion=migrationManifest.at(-1).version;
 export const canonical = value => Array.isArray(value) ? '['+value.map(canonical).join(',')+']' : value && typeof value==='object' ? '{'+Object.entries(value).filter(([,v])=>v!==undefined).sort(([a],[b])=>a<b?-1:a>b?1:0).map(([k,v])=>JSON.stringify(k)+':'+canonical(v)).join(',')+'}' : JSON.stringify(value);
 export const hash = value => createHash('sha256').update(value).digest('hex');
 export const meta = (scopeId = 'creation.user_1') => ({ principalId: 'user_1', scopeId, idempotencyKey: randomUUID() });

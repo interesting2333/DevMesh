@@ -605,11 +605,11 @@
     "/api/v1/runs/{runId}/plans/{revision}:confirm": {
       "post": {
         "operationId": "ConfirmPlan",
-        "x-implementation-status": "planned",
-        "description": "P0-02 契约。业务 handler 尚未实现。先认证、权限和原操作去重，再校验新操作版本；202 仅为持久受理。",
+        "x-implementation-status": "implemented-offline",
+        "description": "按当前成员、原操作键、版本、审阅哈希和计划校验记录明确确认；后台执行另行准入。",
         "security": [
           {
-            "browserSession": []
+            "trustedIdentity": []
           }
         ],
         "parameters": [
@@ -3976,6 +3976,180 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OperationReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/plans": {
+      "get": {
+        "operationId": "ReadPlan",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanReview"
                 }
               }
             }
@@ -8069,6 +8243,7 @@
                           "maxLength": 20000
                         },
                         "inputRefs": {
+                          "maxItems": 64,
                           "type": "array",
                           "items": {
                             "oneOf": [
@@ -8123,6 +8298,7 @@
                         },
                         "outputSpec": {
                           "minItems": 1,
+                          "maxItems": 64,
                           "type": "array",
                           "items": {
                             "type": "object",
@@ -8145,6 +8321,7 @@
                         },
                         "completionChecks": {
                           "minItems": 1,
+                          "maxItems": 64,
                           "type": "array",
                           "items": {
                             "oneOf": [
@@ -8290,6 +8467,7 @@
                           }
                         },
                         "dependencies": {
+                          "maxItems": 29,
                           "type": "array",
                           "items": {
                             "type": "object",
@@ -8314,6 +8492,7 @@
                           }
                         },
                         "writeScope": {
+                          "maxItems": 64,
                           "type": "array",
                           "items": {
                             "type": "string",
@@ -8349,6 +8528,7 @@
                         },
                         "requirementIds": {
                           "minItems": 1,
+                          "maxItems": 200,
                           "type": "array",
                           "items": {
                             "type": "string",
@@ -9020,6 +9200,7 @@
                       "maxLength": 20000
                     },
                     "inputRefs": {
+                      "maxItems": 64,
                       "type": "array",
                       "items": {
                         "oneOf": [
@@ -9074,6 +9255,7 @@
                     },
                     "outputSpec": {
                       "minItems": 1,
+                      "maxItems": 64,
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -9096,6 +9278,7 @@
                     },
                     "completionChecks": {
                       "minItems": 1,
+                      "maxItems": 64,
                       "type": "array",
                       "items": {
                         "oneOf": [
@@ -9241,6 +9424,7 @@
                       }
                     },
                     "dependencies": {
+                      "maxItems": 29,
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -9265,6 +9449,7 @@
                       }
                     },
                     "writeScope": {
+                      "maxItems": 64,
                       "type": "array",
                       "items": {
                         "type": "string",
@@ -9300,6 +9485,7 @@
                     },
                     "requirementIds": {
                       "minItems": 1,
+                      "maxItems": 200,
                       "type": "array",
                       "items": {
                         "type": "string",
@@ -9736,6 +9922,7 @@
             "maxLength": 20000
           },
           "inputRefs": {
+            "maxItems": 64,
             "type": "array",
             "items": {
               "oneOf": [
@@ -9790,6 +9977,7 @@
           },
           "outputSpec": {
             "minItems": 1,
+            "maxItems": 64,
             "type": "array",
             "items": {
               "type": "object",
@@ -9812,6 +10000,7 @@
           },
           "completionChecks": {
             "minItems": 1,
+            "maxItems": 64,
             "type": "array",
             "items": {
               "oneOf": [
@@ -9957,6 +10146,7 @@
             }
           },
           "dependencies": {
+            "maxItems": 29,
             "type": "array",
             "items": {
               "type": "object",
@@ -9981,6 +10171,7 @@
             }
           },
           "writeScope": {
+            "maxItems": 64,
             "type": "array",
             "items": {
               "type": "string",
@@ -10016,6 +10207,7 @@
           },
           "requirementIds": {
             "minItems": 1,
+            "maxItems": 200,
             "type": "array",
             "items": {
               "type": "string",
@@ -10077,6 +10269,7 @@
                   "maxLength": 20000
                 },
                 "inputRefs": {
+                  "maxItems": 64,
                   "type": "array",
                   "items": {
                     "oneOf": [
@@ -10131,6 +10324,7 @@
                 },
                 "outputSpec": {
                   "minItems": 1,
+                  "maxItems": 64,
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -10153,6 +10347,7 @@
                 },
                 "completionChecks": {
                   "minItems": 1,
+                  "maxItems": 64,
                   "type": "array",
                   "items": {
                     "oneOf": [
@@ -10298,6 +10493,7 @@
                   }
                 },
                 "dependencies": {
+                  "maxItems": 29,
                   "type": "array",
                   "items": {
                     "type": "object",
@@ -10322,6 +10518,7 @@
                   }
                 },
                 "writeScope": {
+                  "maxItems": 64,
                   "type": "array",
                   "items": {
                     "type": "string",
@@ -10357,6 +10554,7 @@
                 },
                 "requirementIds": {
                   "minItems": 1,
+                  "maxItems": 200,
                   "type": "array",
                   "items": {
                     "type": "string",
@@ -10950,6 +11148,10 @@
                   "LIMIT_EXCEEDED",
                   "OUTCOME_UNKNOWN",
                   "SERVICE_UNAVAILABLE",
+                  "PLAN_INVALID",
+                  "PLAN_ALREADY_CONFIRMED",
+                  "RUN_TERMINAL",
+                  "ADMISSION_CLOSED",
                   "IDENTITY_NOT_CONFIGURED",
                   "REQUEST_ORIGIN_INVALID",
                   "REQUEST_HEADERS_INVALID",
@@ -12988,6 +13190,511 @@
           "baseCommit",
           "sources",
           "answerIds"
+        ],
+        "additionalProperties": false
+      },
+      "PlanReview": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "resourceRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "planRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "requirementRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "reviewHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "baseCommit": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40}$"
+          },
+          "plan": {
+            "type": "object",
+            "properties": {
+              "requirementRevision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "works": {
+                "minItems": 1,
+                "maxItems": 30,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "workId": {
+                      "type": "string",
+                      "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "workRevision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "product",
+                        "architect",
+                        "developer",
+                        "tester"
+                      ]
+                    },
+                    "goal": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000
+                    },
+                    "inputRefs": {
+                      "maxItems": 64,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "artifactId": {
+                                "type": "string",
+                                "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              },
+                              "sha256": {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "const": "artifact"
+                              }
+                            },
+                            "required": [
+                              "artifactId",
+                              "sha256",
+                              "kind"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "output"
+                              },
+                              "workId": {
+                                "type": "string",
+                                "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              },
+                              "outputSlot": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "workId",
+                              "outputSlot"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "outputSpec": {
+                      "minItems": 1,
+                      "maxItems": 64,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "slot": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          },
+                          "schemaId": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "slot",
+                          "schemaId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "completionChecks": {
+                      "minItems": 1,
+                      "maxItems": 64,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "artifact-exists"
+                              },
+                              "outputSlot": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "outputSlot"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "schema-valid"
+                              },
+                              "outputSlot": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                              },
+                              "schemaId": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "outputSlot",
+                              "schemaId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "commit-resolved"
+                              },
+                              "outputSlot": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "outputSlot"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "command-exit-zero"
+                              },
+                              "checkId": {
+                                "type": "string",
+                                "pattern": "^check_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "checkId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "required-tests-pass"
+                              },
+                              "checkId": {
+                                "type": "string",
+                                "pattern": "^check_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "checkId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "coverage-threshold"
+                              },
+                              "lines": {
+                                "type": "number",
+                                "minimum": 80,
+                                "maximum": 100
+                              },
+                              "branches": {
+                                "type": "number",
+                                "minimum": 70,
+                                "maximum": 100
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "lines",
+                              "branches"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "human-decision"
+                              },
+                              "checkId": {
+                                "type": "string",
+                                "pattern": "^check_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "checkId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "dependencies": {
+                      "maxItems": 29,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "workId": {
+                            "type": "string",
+                            "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "requiredOutcome": {
+                            "type": "string",
+                            "enum": [
+                              "success",
+                              "completed-with-findings"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "workId",
+                          "requiredOutcome"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "writeScope": {
+                      "maxItems": 64,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 512
+                      }
+                    },
+                    "estimatedResources": {
+                      "type": "object",
+                      "properties": {
+                        "cpu": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 64
+                        },
+                        "memoryMiB": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 9007199254740991
+                        },
+                        "timeoutMs": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "cpu",
+                        "memoryMiB",
+                        "timeoutMs"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "requirementIds": {
+                      "minItems": 1,
+                      "maxItems": 200,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      }
+                    }
+                  },
+                  "required": [
+                    "workId",
+                    "workRevision",
+                    "role",
+                    "goal",
+                    "inputRefs",
+                    "outputSpec",
+                    "completionChecks",
+                    "dependencies",
+                    "writeScope",
+                    "estimatedResources",
+                    "requirementIds"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "requirementRevision",
+              "works"
+            ],
+            "additionalProperties": false
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "current",
+              "history"
+            ]
+          },
+          "canConfirm": {
+            "type": "boolean"
+          },
+          "confirmation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "actor": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                  },
+                  "operationId": {
+                    "type": "string",
+                    "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "confirmedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                  }
+                },
+                "required": [
+                  "actor",
+                  "operationId",
+                  "confirmedAt"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "workId": {
+                  "type": "string",
+                  "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "relatedWorkId": {
+                  "type": "string",
+                  "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "requirementId": {
+                  "type": "string",
+                  "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                }
+              },
+              "required": [
+                "code",
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "topology": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workId": {
+                  "type": "string",
+                  "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "layer": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 29
+                }
+              },
+              "required": [
+                "workId",
+                "layer"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "projectId",
+          "runId",
+          "resourceRevision",
+          "planRevision",
+          "requirementRevision",
+          "reviewHash",
+          "baseCommit",
+          "plan",
+          "mode",
+          "canConfirm",
+          "confirmation",
+          "issues",
+          "topology"
         ],
         "additionalProperties": false
       },

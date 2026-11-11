@@ -27,7 +27,7 @@
     "project:status": "node project/manage.mjs status",
     "project:check": "node project/manage.mjs check",
     "spec": "node project/openspec.mjs",
-    "check": "pnpm toolchain:check && pnpm vendor:verify && pnpm build && pnpm typecheck && pnpm lint && pnpm test:smoke && pnpm test:contracts && pnpm test:storage && pnpm test:content && pnpm test:a2a && pnpm test:runtime && pnpm test:runner && pnpm test:mcp && pnpm test:input && pnpm test:preparation && pnpm contracts:check && pnpm project:check",
+    "check": "pnpm toolchain:check && pnpm vendor:verify && pnpm build && pnpm typecheck && pnpm lint && pnpm test:smoke && pnpm test:contracts && pnpm test:storage && pnpm test:content && pnpm test:a2a && pnpm test:runtime && pnpm test:runner && pnpm test:mcp && pnpm test:input && pnpm test:preparation && pnpm test:scheduler && pnpm contracts:check && pnpm project:check",
     "test:content": "node --test --test-reporter=tap tests/content*.test.mjs",
     "storage:init": "node scripts/storage.mjs init",
     "storage:verify": "node scripts/storage.mjs verify",
@@ -38,7 +38,8 @@
     "test:mcp": "node --test --test-concurrency=1 --test-reporter=tap tests/mcp*.test.mjs",
     "template:verify": "node scripts/verify-template.mjs",
     "test:input": "node --test --test-concurrency=1 --test-reporter=tap tests/input*.test.mjs",
-    "test:preparation": "node --test --test-concurrency=1 --test-reporter=tap tests/preparation*.test.mjs"
+    "test:preparation": "node --test --test-concurrency=1 --test-reporter=tap tests/preparation*.test.mjs",
+    "test:scheduler": "node --test --test-concurrency=1 --test-reporter=tap tests/scheduler*.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

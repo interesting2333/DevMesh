@@ -3,7 +3,7 @@ import type { Express, Request, Response, NextFunction } from 'express';
 import { randomUUID, createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { createProjectInput,createTaskInput,saveMessageInput,answerQuestionsInput,retryUnderstandingInput,idempotencyKey,ids,opaqueKey,parseContract,gitCommit,ContractError,errorCode } from '@devmesh/contracts';
+import { createProjectInput,createTaskInput,saveMessageInput,answerQuestionsInput,retryUnderstandingInput,commandBodies,idempotencyKey,ids,opaqueKey,parseContract,gitCommit,ContractError,errorCode } from '@devmesh/contracts';
 import { canonical, StorageError } from '@devmesh/storage-sqlite';
 import type { OperationResult } from '@devmesh/storage-sqlite';
 import type { LocalContentStore } from '@devmesh/blob-store';
@@ -158,6 +158,18 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const ifMatch=request.headers['if-match'];
     response.status(202).json(receipt(await content.storage.request('retryPreparationInterpretation',{meta,runId,...body,...(ifMatch===undefined?{}:{ifMatch:scalar(ifMatch,'If-Match')})})));
   }));
+  router.get('/runs/:runId/plans',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId);
+    const planRevision=request.query.revision===undefined?undefined:positive(request.query.revision,1,Number.MAX_SAFE_INTEGER);
+    const review=await content.storage.request('getPlanReview',{runId,principalId:identity.principalId,...(planRevision===undefined?{}:{planRevision})});
+    if(review.mode==='current')response.setHeader('ETag',`"r${review.resourceRevision}"`);
+    response.json(review);
+  }));
+  router.post('/runs/:runId/plans/:planRevision\\:confirm',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(commandBodies.ConfirmPlan,json(request));
+    const planRevision=positive(request.params.planRevision,1,Number.MAX_SAFE_INTEGER),ifMatch=request.headers['if-match'];
+    response.status(202).json(receipt(await content.storage.request('confirmReviewedPlan',{meta,runId,planRevision,...body,...(ifMatch===undefined?{}:{ifMatch:scalar(ifMatch,'If-Match')})})));
+  }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const result=await content.storage.request('lookupInputOperation',{principalId:identity.principalId,scopeId:parseContract(opaqueKey,request.query.scope),idempotencyKey:parseContract(idempotencyKey,request.query.key)});
     if(!result)fail('RESOURCE_NOT_FOUND',404,'Original operation has not been recorded');response.json(result);
@@ -194,7 +206,8 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const requestId=requestIds.get(request)??`req_${randomUUID().replaceAll('-','')}`;
     try{options.diagnostic?.({requestId,error});}catch{/* Diagnostic sinks cannot change an HTTP result. */}
     if(!request.complete&&!response.headersSent){response.setHeader('Connection','close');response.once('finish',()=>request.destroy());}
-    if(!response.headersSent&&!response.destroyed)response.status(status).json({error:{code,message:status>=500?'Service is unavailable; query the original operation before retrying':'Request could not be accepted',requestId,retryable:status>=500||status===429,details:{}}});
+    const details=error instanceof StorageError&&['PLAN_INVALID','PLAN_SUPERSEDED'].includes(code)?error.details:{};
+    if(!response.headersSent&&!response.destroyed)response.status(status).json({error:{code,message:status>=500?'Service is unavailable; query the original operation before retrying':'Request could not be accepted',requestId,retryable:status>=500||status===429,details}});
   });
   app.use('/api/v1',router);
   return {enabled:true as const,async stop(){

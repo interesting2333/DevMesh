@@ -27,13 +27,13 @@ export const workRevision = z.strictObject({
   inputRefs: z.array(z.discriminatedUnion('kind', [
     artifactRef.extend({ kind: z.literal('artifact') }),
     z.strictObject({ kind: z.literal('output'), workId: ids.work, outputSlot: opaqueKey }),
-  ])),
-  outputSpec: z.array(z.strictObject({ slot: opaqueKey, schemaId: opaqueKey })).min(1),
-  completionChecks: z.array(completionCheck).min(1),
-  dependencies: z.array(z.strictObject({ workId: ids.work, requiredOutcome: z.enum(['success', 'completed-with-findings']) })),
-  writeScope: z.array(relativeFile),
+  ])).max(64),
+  outputSpec: z.array(z.strictObject({ slot: opaqueKey, schemaId: opaqueKey })).min(1).max(64),
+  completionChecks: z.array(completionCheck).min(1).max(64),
+  dependencies: z.array(z.strictObject({ workId: ids.work, requiredOutcome: z.enum(['success', 'completed-with-findings']) })).max(29),
+  writeScope: z.array(relativeFile).max(64),
   estimatedResources: z.strictObject({ cpu: z.number().positive().max(64), memoryMiB: revision, timeoutMs: revision }),
-  requirementIds: z.array(ids.requirement).min(1),
+  requirementIds: z.array(ids.requirement).min(1).max(200),
 });
 export const planDraft = z.strictObject({
   requirementRevision: revision, works: z.array(workRevision).min(1).max(30),

@@ -7,9 +7,11 @@ import type { LocalStorage, LocalContentStore, SessionStore } from '@devmesh/blo
 import type { mountInternalAgents, CredentialResolver } from '@devmesh/a2a-adapter';
 import type { PreparationConsumer, RuntimeConsumer, RuntimeTool } from '@devmesh/agent-runtime';
 import type { IdentityResolver, mountInputApi } from '@devmesh/input-api';
+import type { WorkflowScheduler, WorkflowSchedulerOptions } from './scheduler.js';
 
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
+export type { WorkflowSchedulerOptions } from './scheduler.js';
 
 export interface FoundationServer {
   readonly address: Readonly<AddressInfo>;
@@ -18,13 +20,16 @@ export interface FoundationServer {
   agents?:ReturnType<typeof mountInternalAgents>|undefined;
   consumer?:RuntimeConsumer|undefined;
   preparationConsumer?:PreparationConsumer|undefined;
+  scheduler?:WorkflowScheduler|undefined;
   inputApi?:ReturnType<typeof mountInputApi>|undefined;
 }
 
-export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];identityResolver?:IdentityResolver}={}): Promise<FoundationServer> {
+export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];identityResolver?:IdentityResolver;scheduler?:WorkflowSchedulerOptions}={}): Promise<FoundationServer> {
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
   if(config.runtime&&(!config.storage||!config.a2a))throw new Error('Runtime requires durable storage and hosted A2A endpoints');
   if(config.inputApi&&!config.storage)throw new Error('Input API requires durable storage');
+  if(options.scheduler&&(!config.runtime||!config.a2a?.identities.some(identity=>identity.principalId===options.scheduler?.callerId)))
+    throw new Error('Scheduler requires configured Runtime and an internal service identity');
   const inputModule=config.inputApi?await import('@devmesh/input-api'):undefined;
   const inputBaseline=config.inputApi?await inputModule!.resolveTemplateBaseline(config.inputApi.repositoryRoot,config.inputApi.commit,config.inputApi.templatePath):undefined;
   const runtimeModule=config.runtime?await import('@devmesh/agent-runtime'):undefined;
@@ -63,6 +68,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   let agents: ReturnType<typeof mountInternalAgents>|undefined;
   let consumer:RuntimeConsumer|undefined;
   let preparationConsumer:PreparationConsumer|undefined;
+  let scheduler:WorkflowScheduler|undefined;
   let a2aModule:typeof import('@devmesh/a2a-adapter')|undefined;
   let inputApi:ReturnType<typeof mountInputApi>|undefined;
   try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
@@ -122,6 +128,11 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
       const localEndpoints=config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled);
       consumer=new RuntimeConsumer(services.local.storage,runtime,localEndpoints.map(e=>e.endpointId),'runtime.local');
       await consumer.start();
+      if(options.scheduler){
+        const {WorkflowScheduler}=await import('./scheduler.js');
+        scheduler=new WorkflowScheduler(services.local.storage,agents!.registry,credentials,options.scheduler);
+        scheduler.start();
+      }
       const prep=runtimeConfig.preparation;
       if(prep){
         const {PreparationRuntime,PreparationConsumer}=runtimeModule;
@@ -139,6 +150,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     ready = true;
   } catch (error) {
     await inputApi?.stop();
+    await scheduler?.stop();
     await preparationConsumer?.stop();
     await consumer?.stop();
     await agents?.stop();
@@ -158,11 +170,12 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     ...(agents?{agents}:{}),
     ...(consumer?{consumer}:{}),
     ...(preparationConsumer?{preparationConsumer}:{}),
+    ...(scheduler?{scheduler}:{}),
     ...(inputApi?{inputApi}:{}),
     stop() {
       ready = false;
       stopping ??= (async () => {
-        try{await inputApi?.stop();await preparationConsumer?.stop();await consumer?.stop();await agents?.stop();await fiber.dispose();}finally{await storageFiber?.dispose();}
+        try{await inputApi?.stop();await scheduler?.stop();await preparationConsumer?.stop();await consumer?.stop();await agents?.stop();await fiber.dispose();}finally{await storageFiber?.dispose();}
         if (cleanupError) throw cleanupError;
         if (server.listening || sockets.size !== 0) throw new Error('HTTP resources remained active after Cordis disposal');
       })();

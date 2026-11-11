@@ -13,13 +13,21 @@ const now=()=>new Date().toISOString();
 const reject=(code:string,message:string,status=409):never=>{throw new StorageError(code,status,message);};
 const terminal=new Set(['completed','failed','canceled','rejected']);
 const wireState=(state:string)=>'TASK_STATE_'+state.toUpperCase().replaceAll('-','_');
-export function createRegistryDomain(db:DatabaseSync){
+export function createRegistryDomain(db:DatabaseSync,onAttemptState?:(runId:string,operationId:string,workId:string,attemptId:string,state:string)=>void){
  const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined;
  const all=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).all(...p) as Row[];
  const exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
  const required=(r:Row|undefined)=>r??reject('RESOURCE_NOT_FOUND','Requested record does not exist',404);
  const control=()=>get('SELECT c.*,g.manifest_revision,g.manifest_hash FROM registry_control c JOIN registry_generations g ON g.generation_id=c.active_generation_id WHERE singleton_id=1');
  const bump=()=>exec('UPDATE registry_control SET projection_revision=projection_revision+1 WHERE singleton_id=1');
+ function scheduledState(attemptId:string,state:string,prior:string[]){
+   const a=get(`SELECT a.*,r.run_epoch,r.control_gate,r.terminal_outcome FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id
+     JOIN runs r ON r.run_id=a.run_id WHERE a.attempt_id=?`,attemptId);
+   if(!a||a.ended_at!==null||!prior.includes(String(a.state)))return;
+   if(state!=='OUTCOME_UNKNOWN'&&(a.control_gate!=='OPEN'||a.admitted_run_epoch!==a.run_epoch||a.terminal_outcome!==null))return;
+   exec('UPDATE attempts SET state=? WHERE attempt_id=?',state,attemptId);
+   onAttemptState?.(String(a.run_id),String(a.dispatch_operation_id),String(a.work_id),attemptId,state);
+ }
  const endpoint=(id:string,rev:number):EndpointView=>{
   const r=required(get('SELECT e.*,s.lifecycle,s.last_applied_sequence,s.latest_check_id,c.status,c.expires_at FROM endpoint_registrations e JOIN endpoint_runtime_state s ON s.endpoint_id=e.endpoint_id AND s.revision=e.revision LEFT JOIN endpoint_checks c ON c.check_id=s.latest_check_id WHERE e.endpoint_id=? AND e.revision=?',id,rev));
   return {config:JSON.parse(String(r.config_json)) as EndpointConfig,configHash:String(r.config_hash),lifecycle:String(r.lifecycle),checkId:r.latest_check_id===null?null:String(r.latest_check_id),status:String(r.status??'UNKNOWN'),expiresAt:r.expires_at===null?null:String(r.expires_at),checkSequence:Number(r.last_applied_sequence)};
@@ -96,6 +104,8 @@ export function createRegistryDomain(db:DatabaseSync){
    if(old){if(old.request_hash!==hash)reject('IDEMPOTENCY_KEY_REUSED','Original operation belongs to a different A2A request');return taskView(taskRow(input.callerId,String(old.endpoint_id),String(old.task_id)));}
    if(d.endpointId!==input.endpointId||d.endpointRevision!==input.endpointRevision)reject('ENDPOINT_REVISION_UNAVAILABLE','Requested implementation is not hosted by this route');
    const {b}=validateDelegation(d,input.callerId),c=required(control());if(c.projection_revision!==input.projectionRevision||b.registry_generation_id!==input.generationId)reject('REGISTRY_PROJECTION_STALE','Registry projection is not current',503);
+    const scheduled=get('SELECT caller_id FROM scheduled_work WHERE attempt_id=?',d.attemptId);
+    if(scheduled&&(scheduled.caller_id!==input.callerId||!get("SELECT 1 FROM scheduled_dispatch_delivery WHERE attempt_id=? AND operation_id=? AND state IN ('SENT','RECONCILE')",d.attemptId,d.operationId)))reject('DISPATCH_NOT_SENT','Scheduled work requires its persisted original send',403);
    if(get('SELECT task_id FROM a2a_tasks WHERE attempt_id=?',d.attemptId))reject('ATTEMPT_ALREADY_ACCEPTED','An Attempt already has a task');
    const id=randomUUID(),context=randomUUID(),time=now(),body={id,contextId:context,status:{state:wireState('submitted'),timestamp:time},history:[input.message],metadata:{operationId:d.operationId,endpointRevision:d.endpointRevision},artifacts:[]},text=canonical(body);
    exec('INSERT INTO a2a_tasks VALUES(?,?,?,?,?,?,?)',input.endpointId,id,context,d.runId,d.attemptId,'submitted',text);
@@ -103,6 +113,7 @@ export function createRegistryDomain(db:DatabaseSync){
    exec('INSERT INTO delegation_inbox VALUES(?,?,?,?,?,?)',input.callerId,d.operationId,hash,input.endpointId,id,time);
    exec("INSERT INTO accepted_work(endpoint_id,task_id,state,activation_id) VALUES(?,?,'PENDING',?)",input.endpointId,id,d.activationId);
    exec('INSERT INTO a2a_task_events VALUES(?,?,1,?,?)',input.endpointId,id,text,time);
+    if(scheduled)scheduledState(d.attemptId,'SUBMITTED',['RESERVED','OUTCOME_UNKNOWN']);
    return taskView(taskRow(input.callerId,input.endpointId,id));
   });},
   getA2ATask(input:RegistryInput<'getA2ATask'>){return taskView(taskRow(input.callerId,input.endpointId,input.taskId));},
@@ -113,10 +124,22 @@ export function createRegistryDomain(db:DatabaseSync){
    const result=[];for(const r of all("SELECT task_id FROM accepted_work WHERE endpoint_id=? AND state='PENDING' ORDER BY task_id LIMIT ?",input.endpointId,input.limit)){
     const t=internalTask(input.endpointId,String(r.task_id)),body=JSON.parse(String(t.snapshot_json)) as {history:{parts:{data?:unknown}[]}[]};
     const d=parseContract(registryRequests.acceptA2AWork.shape.delegation,body.history[0]?.parts[0]?.data);validateDelegation(d,String(t.caller_id));
-    const token=uid('claim');exec("UPDATE accepted_work SET state='ACTIVE',worker_id=?,claim_token=?,claimed_at=? WHERE endpoint_id=? AND task_id=?",input.workerId,token,now(),input.endpointId,String(r.task_id));updateTask(t,'working');result.push({endpointId:input.endpointId,taskId:String(r.task_id),workerId:input.workerId,claimToken:token,delegation:d});
+     const token=uid('claim');exec("UPDATE accepted_work SET state='ACTIVE',worker_id=?,claim_token=?,claimed_at=? WHERE endpoint_id=? AND task_id=?",input.workerId,token,now(),input.endpointId,String(r.task_id));updateTask(t,'working');
+     scheduledState(d.attemptId,'WORKING',['SUBMITTED']);
+     result.push({endpointId:input.endpointId,taskId:String(r.task_id),workerId:input.workerId,claimToken:token,delegation:d});
    }return result;
   });},
-  settleAcceptedWork(input:RegistryInput<'settleAcceptedWork'>){return transaction(db,()=>{const a=required(get('SELECT * FROM accepted_work WHERE endpoint_id=? AND task_id=?',input.endpointId,input.taskId)),r=internalTask(input.endpointId,input.taskId);if(a.worker_id!==input.workerId||a.claim_token!==input.claimToken||a.state!=='ACTIVE')reject('ACCEPTED_WORK_CLAIM_CHANGED','Only current active consumer can update Task');if(input.state==='canceled'&&(!input.stopVerified||get("SELECT operation_id FROM tool_operations WHERE attempt_id=? AND operation_id IN (SELECT operation_id FROM operations WHERE status NOT IN ('SUCCEEDED','FAILED'))",String(r.attempt_id))||get("SELECT j.job_id FROM runner_jobs j JOIN tool_operations t ON t.operation_id=j.operation_id WHERE t.attempt_id=? AND j.state<>'EXITED'",String(r.attempt_id))))reject('STOP_NOT_VERIFIED','Cancellation needs known stopped effects');const result=updateTask(r,input.state,input.snapshot);exec('UPDATE accepted_work SET state=? WHERE endpoint_id=? AND task_id=?',terminal.has(input.state)?'FINISHED':['input-required','auth-required'].includes(input.state)?'WAITING':'ACTIVE',input.endpointId,input.taskId);return result;});},
+   settleAcceptedWork(input:RegistryInput<'settleAcceptedWork'>){return transaction(db,()=>{
+    const a=required(get('SELECT * FROM accepted_work WHERE endpoint_id=? AND task_id=?',input.endpointId,input.taskId)),r=internalTask(input.endpointId,input.taskId);
+    if(a.worker_id!==input.workerId||a.claim_token!==input.claimToken||a.state!=='ACTIVE')reject('ACCEPTED_WORK_CLAIM_CHANGED','Only current active consumer can update Task');
+    if(input.state==='canceled'&&(!input.stopVerified||get("SELECT operation_id FROM tool_operations WHERE attempt_id=? AND operation_id IN (SELECT operation_id FROM operations WHERE status NOT IN ('SUCCEEDED','FAILED'))",String(r.attempt_id))||get("SELECT j.job_id FROM runner_jobs j JOIN tool_operations t ON t.operation_id=j.operation_id WHERE t.attempt_id=? AND j.state<>'EXITED'",String(r.attempt_id))))reject('STOP_NOT_VERIFIED','Cancellation needs known stopped effects');
+    const result=updateTask(r,input.state,input.snapshot);
+    exec('UPDATE accepted_work SET state=? WHERE endpoint_id=? AND task_id=?',terminal.has(input.state)?'FINISHED':['input-required','auth-required'].includes(input.state)?'WAITING':'ACTIVE',input.endpointId,input.taskId);
+    if(input.state==='completed')scheduledState(String(r.attempt_id),'VERIFYING',['WORKING']);
+    if(['input-required','auth-required'].includes(input.state))scheduledState(String(r.attempt_id),'INPUT_REQUIRED',['WORKING']);
+    if(['failed','rejected','canceled'].includes(input.state))scheduledState(String(r.attempt_id),'OUTCOME_UNKNOWN',['SUBMITTED','WORKING','INPUT_REQUIRED']);
+    return result;
+   });},
   recoverAcceptedWork(){return transaction(db,()=>({reconcileCount:Number(exec("UPDATE accepted_work SET state='RECONCILE' WHERE state='ACTIVE'").changes)}));},
  };
  return {

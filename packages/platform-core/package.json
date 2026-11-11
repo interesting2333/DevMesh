@@ -11,10 +11,14 @@
     "./config": {
       "types": "./dist/config.d.mts",
       "import": "./dist/config.mjs"
+    },
+    "./scheduler": {
+      "types": "./dist/scheduler.d.mts",
+      "import": "./dist/scheduler.mjs"
     }
   },
   "scripts": {
-    "build": "tsdown src/index.ts src/config.ts --format esm --platform node --target node24 --dts --sourcemap --clean"
+    "build": "tsdown src/index.ts src/config.ts src/scheduler.ts --format esm --platform node --target node24 --dts --sourcemap --clean"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",
@@ -26,7 +30,8 @@
     "@devmesh/blob-store": "workspace:*",
     "@devmesh/a2a-adapter": "workspace:*",
     "@devmesh/agent-runtime": "workspace:*",
-    "@devmesh/input-api": "workspace:*"
+    "@devmesh/input-api": "workspace:*",
+    "@devmesh/storage-sqlite": "workspace:*"
   },
   "optionalDependencies": {
     "node-addon-require-builtin": "0.1.9"

@@ -3,7 +3,7 @@ import { StorageError } from './errors.js';
 import { acquireWriterLock } from './lock.js';
 import type { Method, Request, Results } from './protocol.js';
 export { StorageError } from './errors.js';
-export type { Method, Request, Results, OperationResult, RunView, AttemptView, OutboxView } from './protocol.js';
+export type { Method, Request, Results, OperationResult, RunView, AttemptView, OutboxView, ScheduledCandidate, ScheduledDispatch } from './protocol.js';
 export type { ContentInfo, ObjectWrite, ObjectTarget, ContentReference, SessionInfo, SessionMessage, ModelStep, ContextManifest } from './session-protocol.js';
 export { canonical } from './json.js';
 export { agentManifest, endpointConfig } from './registry-protocol.js';

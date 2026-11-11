@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
-import { assertResourceVersion, domainEvent, executionPermit, parseContract } from '@devmesh/contracts';
+import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
 import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView } from './protocol.js';
 import { StorageError } from './errors.js';
@@ -19,6 +19,9 @@ import { createInputDomain } from './input-domain.js';
 import { inputRequests } from './input-protocol.js';
 import type { InputMethod } from './input-protocol.js';
 import { createPreparationDomain } from './preparation-domain.js';
+import { createPlanDomain } from './plan-domain.js';
+import { createSchedulerDomain } from './scheduler-domain.js';
+import { createDispatchDomain } from './dispatch-domain.js';
 import { preparationRequests } from './preparation-protocol.js';
 import type { PreparationMethod } from './preparation-protocol.js';
 export { canonical } from './json.js';
@@ -27,9 +30,13 @@ type Row = Record<string, string | number | null>;
 const uid = (prefix: string) => `${prefix}_${randomUUID().replaceAll('-', '')}`;
 const now = () => new Date().toISOString();
 export function createDomain(db: DatabaseSync) {
-  const registry = createRegistryDomain(db);
+  const registry = createRegistryDomain(db,(runId,operationId,workId,attemptId,state)=>{
+    bump(runId);event(runId,operationId,'AttemptStateChanged',{attemptId,state},{workId,attemptId});
+  });
   const runtime = createRuntimeDomain(db);
   const sessions = createSessionDomain(db);
+  const plans = createPlanDomain(db);
+  const scheduler = createSchedulerDomain(db,plans);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
   const exec = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).run(...args);
@@ -111,6 +118,37 @@ export function createDomain(db: DatabaseSync) {
     return {artifactId,sha256:planHash,runId,planRevision,requirementRevision,reviewHash:planHash,revision:Number(run(runId).resource_revision)};
   }
   const preparations=createPreparationDomain(db,{operation,event,outbox,publishPlanFacts});
+  const dispatch=createDispatchDomain(db,(runId,operationId,workId,attemptId,state)=>{
+    bump(runId);event(runId,operationId,'AttemptStateChanged',{attemptId,state},{workId,attemptId});
+  });
+  function confirm(input:Parsed<'confirmPlan'>,strict:boolean){
+    const {meta,ifMatch:_ifMatch,...payload}=input;
+    if(meta.scopeId!==input.runId)throw new StorageError('OPERATION_SCOPE_INVALID',422,'Invalid Run scope');
+    return operation(meta,'ConfirmPlan',payload,operationId=>{
+      const current=writable(input);
+      if(!['OPEN','PAUSED'].includes(String(current.control_gate)))throw new StorageError('ADMISSION_CLOSED',409,'The Run is stopping');
+      const plan=required(get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?',input.runId,input.planRevision));
+      if(current.current_plan_revision!==input.planRevision||current.current_requirement_revision!==input.requirementRevision||plan.content_hash!==input.reviewHash||plan.requirement_revision!==input.requirementRevision)
+        throw new StorageError('PLAN_SUPERSEDED',409,'The reviewed plan is no longer current',{currentPlanRevision:current.current_plan_revision,currentRequirementRevision:current.current_requirement_revision});
+      if(get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=?',input.runId,input.planRevision))
+        throw new StorageError('PLAN_ALREADY_CONFIRMED',409,'This plan already has a decision');
+      if(plans.pendingQuestions(input.runId))throw new StorageError('REQUIRED_QUESTIONS_UNANSWERED',409,'Required questions must be answered before implementation');
+      if(plans.pendingInterpretation(input.runId,input.requirementRevision))throw new StorageError('INTERPRETATION_PENDING',409,'Saved answers must be interpreted before plan confirmation');
+      if(plans.pendingSource(input.runId,input.requirementRevision))throw new StorageError('BASIS_SUPERSEDED',409,'Saved source input has not been processed into this plan');
+      if(strict||get('SELECT 1 FROM understanding_revisions WHERE run_id=? AND requirement_revision=?',input.runId,input.requirementRevision)){
+        const graph=plans.inspect(current,parseContract(planDraft,JSON.parse(String(plan.content_json))));
+        if(graph.issues.length)throw new StorageError('PLAN_INVALID',422,'Plan checks must pass before confirmation',{issues:graph.issues.slice(0,100)});
+      }
+      insert('plan_confirmations',{run_id:input.runId,plan_revision:input.planRevision,requirement_revision:input.requirementRevision,review_hash:input.reviewHash,actor:meta.principalId,operation_id:operationId,created_at:now()});
+      const decisionId=uid('decision');
+      insert('decisions',{decision_id:decisionId,run_id:input.runId,subject_id:String(input.planRevision),subject_kind:'PLAN',basis_hash:input.reviewHash,choice_json:'{"confirmed":true}',operation_id:operationId,actor_id:meta.principalId,created_at:now()});
+      insert('input_operation_resources',{operation_id:operationId,project_id:current.project_id!,run_id:input.runId});
+      bump(input.runId);
+      event(input.runId,operationId,'PlanConfirmed',{planRevision:input.planRevision,decisionId});
+      if(current.control_gate==='OPEN')outbox(operationId,'scheduler',{schemaVersion:1,runId:input.runId,planRevision:input.planRevision});
+      return {projectId:current.project_id,runId:input.runId,planRevision:input.planRevision,revision:Number(run(input.runId).resource_revision)};
+    },()=>{plans.authorized(meta.principalId,input.runId,true);});
+  }
   function knownEffects(attemptId: string) {
     return !get("SELECT o.operation_id FROM tool_operations t JOIN operations o ON o.operation_id=t.operation_id WHERE t.attempt_id=? AND o.status NOT IN ('SUCCEEDED','FAILED')", attemptId)
       && !get("SELECT j.job_id FROM runner_jobs j JOIN tool_operations t ON t.operation_id=j.operation_id WHERE t.attempt_id=? AND j.state<>'EXITED'", attemptId);
@@ -119,6 +157,46 @@ export function createDomain(db: DatabaseSync) {
     if (!ref || !get("SELECT artifact_id FROM artifacts WHERE artifact_id=? AND run_id=? AND content_hash=? AND state='READY'", ref.artifactId, runId, ref.sha256)) throw new StorageError('RECONCILIATION_EVIDENCE_REQUIRED', 409, 'A persisted evidence artifact belonging to the Run is required');
   }
 
+  function admitWorkFacts(input:Parsed<'admitWorks'>,operationId:string){
+    const {meta}=input;
+    const current = writable(input);
+    if (current.control_gate !== 'OPEN' || current.run_epoch !== input.runEpoch) throw new StorageError('ADMISSION_CLOSED', 409, 'Run gate or epoch changed');
+    if (current.current_plan_revision !== input.planRevision || !get('SELECT run_id FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?', input.runId, input.planRevision,current.current_requirement_revision??null)) throw new StorageError('PLAN_NOT_CONFIRMED', 409, 'Current plan and requirement basis must be explicitly confirmed');
+    const attemptIds: string[] = [];
+    for (const requested of input.works) {
+      const work = required(get('SELECT w.work_epoch,w.blocked_reason,r.role,r.definition_json FROM plan_works p JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN work_revisions r ON r.run_id=p.run_id AND r.work_id=p.work_id AND r.revision=p.work_revision WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND p.work_revision=?', input.runId, input.planRevision, requested.workId, requested.workRevision));
+      if (work.work_epoch !== requested.workEpoch || work.blocked_reason !== null || work.role !== requested.roleSnapshot.role) throw new StorageError('WORK_BASIS_CHANGED', 409, 'Work epoch, role or freeze changed');
+      if (get('SELECT attempt_id FROM attempts WHERE run_id=? AND work_id=? AND ended_at IS NULL', input.runId, requested.workId)) throw new StorageError('ACTIVE_ATTEMPT_EXISTS', 409, 'Original attempt must be reconciled/ended before retry');
+      for (const edge of all('SELECT predecessor,required_outcome FROM plan_edges WHERE run_id=? AND plan_revision=? AND successor=?', input.runId, input.planRevision, requested.workId)) {
+        const previous = get('SELECT state FROM attempts WHERE run_id=? AND work_id=? ORDER BY attempt_no DESC LIMIT 1', input.runId, String(edge.predecessor));
+        if (!previous || (previous.state !== 'SUCCEEDED' && !(edge.required_outcome === 'completed-with-findings' && previous.state === 'FAILED'))) throw new StorageError('DEPENDENCY_UNSATISFIED', 409, 'Predecessor has no required verified outcome');
+      }
+      const attemptId = uid('attempt'), activationId = uid('activation'), grantId = uid('grant'), dispatchId = uid('op'), time = now();
+      const number = Number(get('SELECT max(attempt_no) n FROM attempts WHERE run_id=? AND work_id=?', input.runId, requested.workId)?.n ?? 0) + 1;
+      const fingerprint = digest(canonical(requested.inputManifest));
+      if (requested.inputManifest.requirements.length === 0) throw new StorageError('INPUT_MANIFEST_EMPTY', 422, 'Implementation work must reference requirements');
+      const requirementData = JSON.parse(String(required(get('SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?', input.runId, Number(current.current_requirement_revision))).content_json)) as { requirements: { id: string }[] };
+      const hashes = new Map(requirementData.requirements.map(requirement => [requirement.id, digest(canonical(requirement))]));
+      if (requested.inputManifest.requirements.some(ref => hashes.get(ref.requirementId) !== ref.sha256)) throw new StorageError('INPUT_BASIS_CHANGED', 409, 'Input requirement fingerprints differ from the current snapshot');
+      const definition = JSON.parse(String(work.definition_json)) as { requirementIds: string[] };
+      const included = new Set<string>(requested.inputManifest.requirements.map(ref => ref.requirementId));
+      if (definition.requirementIds.some(id => !included.has(id))) throw new StorageError('INPUT_REQUIREMENTS_MISSING', 409, 'Input manifest omits requirements assigned to this work');
+      insert('operations', { operation_id: dispatchId, principal_id: meta.principalId, scope_id: input.runId, idempotency_key: uid('dispatch'), request_hash: digest(canonical(requested)), kind: 'DISPATCH', status: 'ACCEPTED', result_json: null, created_at: time, updated_at: time });
+      insert('attempts', { attempt_id: attemptId, run_id: input.runId, work_id: requested.workId, work_revision: requested.workRevision, role: String(work.role), attempt_no: number, state: 'RESERVED', admitted_run_epoch: input.runEpoch, admitted_work_epoch: requested.workEpoch, input_manifest_json: canonical(requested.inputManifest), input_fingerprint: fingerprint, role_snapshot_json: canonical(requested.roleSnapshot), dispatch_operation_id: dispatchId, created_at: time });
+      const snapshotId = uid('role');
+      insert('role_snapshots', { snapshot_id: snapshotId, role: String(work.role), revision: requested.roleSnapshot.revision, snapshot_json: canonical(requested.roleSnapshot), content_hash: digest(canonical(requested.roleSnapshot)), created_at: time });
+      const permit = parseContract(executionPermit, { schemaVersion: 'devmesh.permit.v1', ownerKind: 'workflowAttempt', runId: input.runId, runEpoch: input.runEpoch, workId: requested.workId, workEpoch: requested.workEpoch, attemptId, grantId, activationId, notBefore: time, expiresAt: new Date(Date.parse(time)+15000).toISOString(), resources: requested.resources });
+      insert('execution_grants', { grant_id: grantId, run_id: input.runId, attempt_id: attemptId, activation_id: activationId, permit_json: canonical(permit), status: 'ACTIVE', created_at: time, expires_at: permit.expiresAt });
+      insert('role_slots', { run_id: input.runId, role: String(work.role), attempt_id: attemptId, activation_id: activationId });
+      const inputManifestId=registry.freezeDispatch(attemptId,String(work.role),requested.endpoint,fingerprint,snapshotId);
+      outbox(dispatchId, requested.endpoint.endpointId, { schemaVersion: 'devmesh.dispatch-intent.v1', operationId: dispatchId, runId: input.runId, attemptId, workId: requested.workId, workRevision: requested.workRevision, endpoint: requested.endpoint, roleSnapshotId: snapshotId, permit, inputFingerprint: fingerprint, ...(inputManifestId?{inputManifestId}:{}) });
+      bump(input.runId);
+      event(input.runId, operationId, 'WorkAdmitted', { workId: requested.workId, attemptId, activationId }, { workId: requested.workId, attemptId });
+      attemptIds.push(attemptId);
+    }
+    exec("UPDATE runs SET phase='EXECUTING' WHERE run_id=?", input.runId);
+    return { runId: input.runId, attemptIds, revision: Number(run(input.runId).resource_revision) };
+  }
   const handlers = {
     registerContent(input: Parsed<'registerContent'>) {
       return transaction(db, () => {
@@ -153,62 +231,55 @@ export function createDomain(db: DatabaseSync) {
       });
     },
     confirmPlan(input: Parsed<'confirmPlan'>) {
-      const { meta, ...payload } = input;
-      return operation(meta, 'ConfirmPlan', payload, operationId => {
-        const current = writable(input);
-        const plan = required(get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?', input.runId, input.planRevision));
-        if(get("SELECT 1 FROM clarification_current c JOIN clarification_questions q ON q.run_id=c.run_id AND q.question_id=c.question_id AND q.revision=c.question_revision WHERE c.run_id=? AND c.state='OPEN' AND json_extract(q.content_json,'$.required')=1",input.runId))throw new StorageError('REQUIRED_QUESTIONS_UNANSWERED',409,'Required questions must be answered before implementation');
-        if(get("SELECT 1 FROM preparation_jobs WHERE run_id=? AND purpose='INTERPRET' AND state NOT IN ('APPLIED','SUPERSEDED') AND json_extract(basis_json,'$.requirementRevision')=?",input.runId,current.current_requirement_revision!))throw new StorageError('INTERPRETATION_PENDING',409,'Saved answers must be interpreted before plan confirmation');
-        if (current.current_plan_revision !== input.planRevision || current.current_requirement_revision !== input.requirementRevision || plan.content_hash !== input.reviewHash || plan.requirement_revision !== input.requirementRevision) throw new StorageError('PLAN_SUPERSEDED', 409, 'The reviewed plan is no longer current');
-        insert('plan_confirmations', { run_id: input.runId, plan_revision: input.planRevision, requirement_revision: input.requirementRevision, review_hash: input.reviewHash, actor: meta.principalId, operation_id: operationId, created_at: now() });
-        const decisionId = uid('decision');
-        insert('decisions', { decision_id: decisionId, run_id: input.runId, subject_id: String(input.planRevision), subject_kind: 'PLAN', basis_hash: input.reviewHash, choice_json: '{"confirmed":true}', operation_id: operationId, actor_id: meta.principalId, created_at: now() });
+      return confirm(input,false);
+    },
+    confirmReviewedPlan(input: Parsed<'confirmReviewedPlan'>){return confirm(input,true);},
+    getPlanReview(input:Parsed<'getPlanReview'>){return transaction(db,()=>plans.getPlanReview(input));},
+    nextScheduledWork(input:Parsed<'nextScheduledWork'>){return transaction(db,()=>scheduler.next(input));},
+    deferScheduledWork(input:Parsed<'deferScheduledWork'>){return transaction(db,()=>scheduler.defer(input));},
+    listScheduledDispatches(input:Parsed<'listScheduledDispatches'>){return transaction(db,()=>dispatch.list(input));},
+    markScheduledDispatchSent(input:Parsed<'markScheduledDispatchSent'>){return transaction(db,()=>dispatch.mark(input));},
+    reconcileScheduledDispatch(input:Parsed<'reconcileScheduledDispatch'>){return transaction(db,()=>dispatch.reconcile(input));},
+    admitScheduledWork(input:Parsed<'admitScheduledWork'>){
+      const {meta,ifMatch:_version,...payload}=input;
+      if(meta.scopeId!==input.runId)throw new StorageError('OPERATION_SCOPE_INVALID',422,'Invalid scheduler scope');
+      return operation(meta,'AdmitScheduledWork',payload,operationId=>{
+        const current=writable(input);
+        if(current.run_epoch!==input.runEpoch||current.control_gate!=='OPEN'||current.current_plan_revision!==input.planRevision||
+          !get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?',input.runId,input.planRevision,current.current_requirement_revision??null))
+          throw new StorageError('ADMISSION_CLOSED',409,'Run or confirmed plan changed before scheduling');
+        if(plans.pendingQuestions(input.runId)||plans.pendingInterpretation(input.runId,Number(current.current_requirement_revision))||
+          plans.pendingSource(input.runId,Number(current.current_requirement_revision)))
+          throw new StorageError('ADMISSION_CLOSED',409,'Run still requires clarification');
+        const {work,manifest,promptHash}=scheduler.currentManifest(input,current);
+        scheduler.reserve(input,current,work,promptHash);
+        const result=admitWorkFacts({...input,works:[{...input.work,inputManifest:manifest}]},operationId);
+        insert('scheduled_work',{attempt_id:result.attemptIds[0]!,run_id:input.runId,plan_revision:input.planRevision,runner_id:input.runnerId,reservation_key:input.reservationKey,caller_id:input.callerId});
+        return result;
+      },()=>{plans.authorized(meta.principalId,input.runId,true);});
+    },
+    recordVerifiedWork(input:Parsed<'recordVerifiedWork'>){
+      const {meta,...payload}=input;
+      if(meta.scopeId!==input.runId)throw new StorageError('OPERATION_SCOPE_INVALID',422,'Invalid verification scope');
+      return operation(meta,'RecordVerifiedWork',payload,operationId=>{
+        const current=run(input.runId);
+        if(current.terminal_outcome!==null||current.control_gate!=='OPEN')throw new StorageError('ADMISSION_CLOSED',409,'Run does not accept a verification result');
+        if(!knownEffects(input.attemptId))throw new StorageError('OUTCOME_UNKNOWN',409,'Original effects must be known before verification');
+        const {a,workId}=scheduler.verify(input);
+        if(a.admitted_run_epoch!==current.run_epoch)throw new StorageError('WORK_BASIS_CHANGED',409,'Verification belongs to an older Run epoch');
+        const state=input.outcome==='success'?'SUCCEEDED':'FAILED';
+        exec('UPDATE attempts SET state=?,ended_at=? WHERE attempt_id=?',state,now(),input.attemptId);
+        exec('DELETE FROM role_slots WHERE attempt_id=?',input.attemptId);
+        exec("UPDATE execution_grants SET status='REVOKED' WHERE attempt_id=?",input.attemptId);
         bump(input.runId);
-        event(input.runId, operationId, 'PlanConfirmed', { planRevision: input.planRevision, decisionId });
-        outbox(operationId, 'scheduler', { schemaVersion: 1, runId: input.runId, planRevision: input.planRevision });
-        return { runId: input.runId, planRevision: input.planRevision, revision: Number(run(input.runId).resource_revision) };
-      });
+        event(input.runId,operationId,'AttemptStateChanged',{attemptId:input.attemptId,state},{workId,attemptId:input.attemptId});
+        return {attemptId:input.attemptId,state,revision:Number(run(input.runId).resource_revision)};
+      },()=>{plans.authorized(meta.principalId,input.runId,true);});
     },
     admitWorks(input: Parsed<'admitWorks'>) {
       const { meta, ...payload } = input;
       return operation(meta, 'AdmitWorks', payload, operationId => {
-        const current = writable(input);
-        if (current.control_gate !== 'OPEN' || current.run_epoch !== input.runEpoch) throw new StorageError('ADMISSION_CLOSED', 409, 'Run gate or epoch changed');
-        if (current.current_plan_revision !== input.planRevision || !get('SELECT run_id FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?', input.runId, input.planRevision,current.current_requirement_revision??null)) throw new StorageError('PLAN_NOT_CONFIRMED', 409, 'Current plan and requirement basis must be explicitly confirmed');
-        const attemptIds: string[] = [];
-        for (const requested of input.works) {
-          const work = required(get('SELECT w.work_epoch,w.blocked_reason,r.role,r.definition_json FROM plan_works p JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN work_revisions r ON r.run_id=p.run_id AND r.work_id=p.work_id AND r.revision=p.work_revision WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND p.work_revision=?', input.runId, input.planRevision, requested.workId, requested.workRevision));
-          if (work.work_epoch !== requested.workEpoch || work.blocked_reason !== null || work.role !== requested.roleSnapshot.role) throw new StorageError('WORK_BASIS_CHANGED', 409, 'Work epoch, role or freeze changed');
-          if (get('SELECT attempt_id FROM attempts WHERE run_id=? AND work_id=? AND ended_at IS NULL', input.runId, requested.workId)) throw new StorageError('ACTIVE_ATTEMPT_EXISTS', 409, 'Original attempt must be reconciled/ended before retry');
-          for (const edge of all('SELECT predecessor,required_outcome FROM plan_edges WHERE run_id=? AND plan_revision=? AND successor=?', input.runId, input.planRevision, requested.workId)) {
-            const previous = get('SELECT state FROM attempts WHERE run_id=? AND work_id=? ORDER BY attempt_no DESC LIMIT 1', input.runId, String(edge.predecessor));
-            if (!previous || (previous.state !== 'SUCCEEDED' && !(edge.required_outcome === 'completed-with-findings' && previous.state === 'FAILED'))) throw new StorageError('DEPENDENCY_UNSATISFIED', 409, 'Predecessor has no required verified outcome');
-          }
-          const attemptId = uid('attempt'), activationId = uid('activation'), grantId = uid('grant'), dispatchId = uid('op'), time = now();
-          const number = Number(get('SELECT max(attempt_no) n FROM attempts WHERE run_id=? AND work_id=?', input.runId, requested.workId)?.n ?? 0) + 1;
-          const fingerprint = digest(canonical(requested.inputManifest));
-          if (requested.inputManifest.requirements.length === 0) throw new StorageError('INPUT_MANIFEST_EMPTY', 422, 'Implementation work must reference requirements');
-          const requirementData = JSON.parse(String(required(get('SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?', input.runId, Number(current.current_requirement_revision))).content_json)) as { requirements: { id: string }[] };
-          const hashes = new Map(requirementData.requirements.map(requirement => [requirement.id, digest(canonical(requirement))]));
-          if (requested.inputManifest.requirements.some(ref => hashes.get(ref.requirementId) !== ref.sha256)) throw new StorageError('INPUT_BASIS_CHANGED', 409, 'Input requirement fingerprints differ from the current snapshot');
-          const definition = JSON.parse(String(work.definition_json)) as { requirementIds: string[] };
-          const included = new Set<string>(requested.inputManifest.requirements.map(ref => ref.requirementId));
-          if (definition.requirementIds.some(id => !included.has(id))) throw new StorageError('INPUT_REQUIREMENTS_MISSING', 409, 'Input manifest omits requirements assigned to this work');
-          insert('operations', { operation_id: dispatchId, principal_id: meta.principalId, scope_id: input.runId, idempotency_key: uid('dispatch'), request_hash: digest(canonical(requested)), kind: 'DISPATCH', status: 'ACCEPTED', result_json: null, created_at: time, updated_at: time });
-          insert('attempts', { attempt_id: attemptId, run_id: input.runId, work_id: requested.workId, work_revision: requested.workRevision, role: String(work.role), attempt_no: number, state: 'RESERVED', admitted_run_epoch: input.runEpoch, admitted_work_epoch: requested.workEpoch, input_manifest_json: canonical(requested.inputManifest), input_fingerprint: fingerprint, role_snapshot_json: canonical(requested.roleSnapshot), dispatch_operation_id: dispatchId, created_at: time });
-          const snapshotId = uid('role');
-          insert('role_snapshots', { snapshot_id: snapshotId, role: String(work.role), revision: requested.roleSnapshot.revision, snapshot_json: canonical(requested.roleSnapshot), content_hash: digest(canonical(requested.roleSnapshot)), created_at: time });
-          const permit = parseContract(executionPermit, { schemaVersion: 'devmesh.permit.v1', ownerKind: 'workflowAttempt', runId: input.runId, runEpoch: input.runEpoch, workId: requested.workId, workEpoch: requested.workEpoch, attemptId, grantId, activationId, notBefore: time, expiresAt: new Date(Date.parse(time)+15000).toISOString(), resources: requested.resources });
-          insert('execution_grants', { grant_id: grantId, run_id: input.runId, attempt_id: attemptId, activation_id: activationId, permit_json: canonical(permit), status: 'ACTIVE', created_at: time, expires_at: permit.expiresAt });
-          insert('role_slots', { run_id: input.runId, role: String(work.role), attempt_id: attemptId, activation_id: activationId });
-          const inputManifestId=registry.freezeDispatch(attemptId,String(work.role),requested.endpoint,fingerprint,snapshotId);
-          outbox(dispatchId, requested.endpoint.endpointId, { schemaVersion: 'devmesh.dispatch-intent.v1', operationId: dispatchId, runId: input.runId, attemptId, workId: requested.workId, workRevision: requested.workRevision, endpoint: requested.endpoint, roleSnapshotId: snapshotId, permit, inputFingerprint: fingerprint, ...(inputManifestId?{inputManifestId}:{}) });
-          bump(input.runId);
-          event(input.runId, operationId, 'WorkAdmitted', { workId: requested.workId, attemptId, activationId }, { workId: requested.workId, attemptId });
-          attemptIds.push(attemptId);
-        }
-        exec("UPDATE runs SET phase='EXECUTING' WHERE run_id=?", input.runId);
-        return { runId: input.runId, attemptIds, revision: Number(run(input.runId).resource_revision) };
+        return admitWorkFacts(input,operationId);
       });
     },
     transitionAttempt(input: Parsed<'transitionAttempt'>) {

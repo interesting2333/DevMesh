@@ -1,14 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { openStorage } from '../packages/storage-sqlite/dist/index.mjs';
-import { fixture, content, project, planned, admission, meta, plan, requirements } from './fixtures/storage-data.mjs';
+import { fixture, content, project, planned, admission, meta, plan, requirements, schemaVersion, migrationManifest } from './fixtures/storage-data.mjs';
 const rejects = (promise, code) => assert.rejects(promise, error=>error.code===code);
 
 test('real Worker owns a migrated WAL/FULL/foreign-key connection',async t=>{
   const {storage}=await fixture(t), info=await storage.request('inspect',{});
-  assert.equal(info.version,8); assert.ok(info.workerThreadId>0); assert.ok('preparation_attempts' in info.counts); assert.ok('clarification_answers' in info.counts);
+  assert.equal(info.version,schemaVersion); assert.ok(info.workerThreadId>0); assert.ok('preparation_attempts' in info.counts); assert.ok('scheduled_work' in info.counts);
   assert.deepEqual(info.pragmas,{journal_mode:'wal',foreign_keys:1,synchronous:2,busy_timeout:5000});
   assert.deepEqual(info.foreignKeyErrors,[]);
   await rejects(storage.request('exec',{sql:'DROP TABLE projects'}),'METHOD_NOT_ALLOWED');
@@ -186,6 +185,6 @@ test('formal foreign keys reject missing/cross-run input and immutable snapshots
   assert.throws(()=>db.prepare('UPDATE runs SET origin_run_id=? WHERE run_id=?').run(b.runId,a.runId),/FOREIGN KEY/);
   assert.throws(()=>db.prepare("UPDATE plan_revisions SET content_json='{}' WHERE run_id=?").run(a.runId),/IMMUTABLE/);
   assert.throws(()=>db.prepare('DELETE FROM requirement_revisions WHERE run_id=?').run(a.runId),/IMMUTABLE/);
-  assert.equal(JSON.parse(readFileSync(new URL('../packages/storage-sqlite/migrations/manifest.json',import.meta.url))).at(-1).name,'0008-preparation.sql');
+  assert.ok(migrationManifest.some(m=>m.name==='0009-scheduler.sql'));
   } finally { db.close(); }
 });

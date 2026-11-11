@@ -1,6 +1,6 @@
 # 工程使用与验证
 
-当前交付 Node HTTP／Express 5、Cordis 生命周期、[核心契约](../packages/contracts/README.md)、[SQLite Worker](../packages/storage-sqlite/README.md)、[本地内容／会话](../packages/blob-store/README.md) 和 [内部 A2A／Registry](../packages/a2a-adapter/README.md)。可选持久存储及 A2A 已组合进 HTTP 宿主，readiness 等待完整性核实、监听后 Card 自检与注册投影；MCP、模型、Runner 和 UI 继续按对应工作包接入。
+当前交付 Node HTTP／Express 5、Cordis 生命周期、[核心契约](../packages/contracts/README.md)、[SQLite Worker](../packages/storage-sqlite/README.md)、[本地内容／会话](../packages/blob-store/README.md) 和 [内部 A2A／Registry](../packages/a2a-adapter/README.md)。可选持久存储及 A2A 已组合进 HTTP 宿主，readiness 等待完整性核实、监听后 Card 自检与注册投影；各项模型、MCP、Runner 和产品验收状态以台账及实际证据为准。
 
 各工作包实际结果和同提交两平台报告见 [P0-01 工程](../project/evidence/P0-01/验收记录.md)、[P0-02 契约](../project/evidence/P0-02/验收记录.md)、[P0-03 存储](../project/evidence/P0-03/验收记录.md)。
 
@@ -56,6 +56,16 @@ host 当前仅允许 `127.0.0.1`／`::1`；port 为 0～65535，0 用于临时�
 交互终端使用 Ctrl+C；POSIX 支持 SIGTERM。服务通过 Cordis fiber disposer 关闭监听器和连接，期限到达会关闭残留连接；只有资源释放完成才输出 stopped。Node 子进程支持 IPC `{ "type": "shutdown" }`，用于 Windows 自动验证；父进程断连也触发收尾。Windows 的强制进程终止不能当作执行了 graceful shutdown。
 
 ## 同一提交的独立验证
+
+### 显式启用计划调度
+
+输入 API 启用后，可读取 `GET /api/v1/runs/:runId/plans`，通过 `?revision=N` 查询历史。确认使用 `POST /api/v1/runs/:runId/plans/:planRevision:confirm`，请求携带 `If-Match`、`Idempotency-Key`、当前 `requirementRevision` 和 `reviewHash`。必要问题、未处理输入、无效图、旧依据均阻止确认；暂停期间可保存确认但不派发。
+
+程序化宿主可向 `startPlatform(config, options)` 传入 `scheduler: { callerId, planResources }`；要求同时启用 Runtime 和已配置的内部 A2A 服务身份。`planResources(candidate, signal)` 是受信任的只读配置查询：返回冻结角色、资源引用、Runner ID／并发容量／CPU／内存／超时上限、总预算和模板／检查版本；返回 `null` 时保留排队。CLI 默认不注入这个分配器，不会因保存计划而开始虚构的 Runner 执行。回调不得占用外部资源，具体资源登记由实际 Runner／Git 服务实施。
+
+调度器持久保存项目轮询顺序，短事务内复核图、当前确认、容量、输入及前序验证；网络发送在事务外通过官方 A2A SDK 完成。发送前保存原身份，回复未知则核实原 Inbox／Task，保持原 Attempt 和槽位。A2A completed 仅进入 `VERIFYING`；后续验证服务提供真实证据后才允许依赖工作准入。内部 `recordVerifiedWork` 是验证服务边界，未暴露为用户绕过检查的 HTTP 接口。目标 Runner 和真实模型的产品闭环仍需对应环境验收。
+
+### 执行固定提交回归
 
 ```powershell
 corepack pnpm@11.28.5 verify:foundation --commit <完整40位提交SHA>

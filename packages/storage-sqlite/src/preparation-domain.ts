@@ -1,5 +1,5 @@
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
-import {parseContract,preparationDelegation,preparationProfile,architectOutput} from '@devmesh/contracts';
+import {parseContract,preparationDelegation,preparationProfile,architectOutput,inspectPlan} from '@devmesh/contracts';
 import {canonical} from './json.js';
 import {digest,transaction} from './migrations.js';
 import {preparationRequests} from './preparation-protocol.js';
@@ -231,22 +231,9 @@ export function createPreparationDomain(db:DatabaseSync,h:PreparationHelpers){
         if(draft.requirementRevision!==context.requirementRevision||!input.planContentHash||digest(canonical(draft))!==input.planContentHash)fail('BASIS_SUPERSEDED',409,'Draft is not bound to the current requirement basis');
         const artifacts=new Set(context.sources.filter(s=>s.ref.kind==='artifact').map(s=>canonical({artifactId:s.ref.artifactId,sha256:s.contentHash})));
         for(const item of output.interfaces)if(!artifacts.has(canonical(item.specificationRef)))fail('SOURCE_REFERENCE_INVALID',422,'Interface source is outside frozen input');
-        const works=new Map(draft.works.map(w=>[w.workId,w])),requirements=new Set((context.requirements?.requirements as {id:string}[]|undefined)?.map(r=>r.id));
-        const done=new Set<string>(),visiting=new Set<string>();
-        function visit(id:(typeof draft.works)[number]['workId']){
-          if(done.has(id))return;
-          const work=works.get(id);
-          if(!work||visiting.has(id))return fail('PREPARATION_OUTPUT_INVALID',422,'Draft dependencies must reference existing work and be acyclic');
-          visiting.add(id);
-          const deps=new Set(work.dependencies.map(d=>d.workId)),slots=new Set(work.outputSpec.map(s=>s.slot));
-          if(deps.size!==work.dependencies.length||slots.size!==work.outputSpec.length||work.requirementIds.some(ref=>!requirements.has(ref))||
-            work.inputRefs.some(ref=>ref.kind==='artifact'?!artifacts.has(canonical({artifactId:ref.artifactId,sha256:ref.sha256})):!deps.has(ref.workId)||!works.get(ref.workId)?.outputSpec.some(s=>s.slot===ref.outputSlot))||
-            work.completionChecks.some(check=>'outputSlot' in check&&!slots.has(check.outputSlot)))fail('PREPARATION_OUTPUT_INVALID',422,'Draft references are invalid');
-          for(const dep of deps)visit(dep);
-          visiting.delete(id);done.add(id);
-        }
-        if(works.size!==draft.works.length)fail('PREPARATION_OUTPUT_INVALID',422,'Duplicate Work ID');
-        for(const id of works.keys())visit(id);
+        const requirements=new Set((context.requirements?.requirements as {id:string}[]|undefined)?.map(r=>r.id));
+        const {issues}=inspectPlan(draft,{requirementIds:requirements,hasArtifact:ref=>artifacts.has(canonical({artifactId:ref.artifactId,sha256:ref.sha256}))});
+        if(issues.length)throw new StorageError('PLAN_INVALID',422,'Draft references are invalid',{issues:issues.slice(0,100)});
         return h.publishPlanFacts(run,draft.requirementRevision,Number(run.current_plan_revision??0)+1,draft,input.planContentHash!,String(job.operation_id));
       })();
       exec('UPDATE preparation_jobs SET result_artifact_id=? WHERE job_id=?',result.artifactId,a.job_id!);settle(a,t,'SUCCEEDED');

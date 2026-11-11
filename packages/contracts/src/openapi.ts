@@ -8,6 +8,7 @@ import { errorEnvelope } from './errors.js';
 import { strongETag, contentBasis } from './versions.js';
 import { createTaskInput,uploadMetadata,attachmentView,inputOperation,workspaceView } from './input.js';
 import { preparationDelegation,preparationInput,retryUnderstandingInput,understandingOutput,understandingView } from './preparation.js';
+import { planReviewView } from './plans.js';
 
 export const schemas = {
   Command: command, DomainEvent: domainEvent, EphemeralTokenDelta: ephemeralTokenDelta,
@@ -21,6 +22,7 @@ export const schemas = {
   CreateTask:createTaskInput,UploadMetadata:uploadMetadata,Attachment:attachmentView,InputOperation:inputOperation,Workspace:workspaceView,
   Understanding:understandingView,UnderstandingOutput:understandingOutput,RetryUnderstanding:retryUnderstandingInput,
   PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
+  PlanReview:planReviewView,
   ...commandBodies,
 };
 
@@ -95,9 +97,13 @@ export function createOpenApiDocument() {
   add('/api/v1/attachments/{attachmentId}/content','get','ReadAttachmentContent',undefined,[parameter('attachmentId',ids.attachment)]);
   add('/api/v1/runs/{runId}/understanding','get','ReadUnderstanding','Understanding',[parameter('runId',ids.run),parameter('requirementRevision',revision,'query',false)]);
   add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
+  add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
   for(const path of ['/api/v1/projects','/api/v1/runs/{runId}/messages','/api/v1/runs/{runId}/questions:answer']){
     const post=paths[path]!.post as Record<string,unknown>;post['x-implementation-status']='implemented-offline';post.security=[{trustedIdentity:[]}];post.description='已实现持久输入与当前成员授权；默认无身份接入点时拒绝请求。保存成功不表示真实模型处理完成。';
   }
+  const confirm=paths['/api/v1/runs/{runId}/plans/{revision}:confirm']!.post as Record<string,unknown>;
+  confirm['x-implementation-status']='implemented-offline';confirm.security=[{trustedIdentity:[]}];
+  confirm.description='按当前成员、原操作键、版本、审阅哈希和计划校验记录明确确认；后台执行另行准入。';
   return {
     openapi: '3.1.0', jsonSchemaDialect: 'https://json-schema.org/draft/2020-12/schema',
     info: { title: 'DevMesh 核心契约', version: '0.3.0', description: '共享命令、输入与需求理解 API。逐路由标记实现范围；离线代码与测试不代表企业身份、模型或产品全链路验收。其余 D3 API 随工作包增量补齐。' },

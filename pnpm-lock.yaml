@@ -199,6 +199,9 @@ importers:
       '@devmesh/input-api':
         specifier: workspace:*
         version: link:../input-api
+      '@devmesh/storage-sqlite':
+        specifier: workspace:*
+        version: link:../storage-sqlite
       express:
         specifier: 5.2.1
         version: 5.2.1

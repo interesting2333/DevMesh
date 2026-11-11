@@ -594,11 +594,21 @@
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "packages/contracts/src/plans.ts",
+        "packages/storage-sqlite/src/plan-domain.ts",
+        "packages/storage-sqlite/src/scheduler-domain.ts",
+        "packages/storage-sqlite/src/dispatch-domain.ts",
+        "packages/platform-core/src/scheduler.ts",
+        "packages/input-api/src/index.ts",
+        "tests/scheduler.test.mjs"
+      ],
+      "evidence": [
+        "project/evidence/P1-03/离线实施进展.md"
+      ],
       "reviewNote": null,
       "notes": [
-        "按连续目标推进离线计划服务与调度；正式前置和目标环境集成仍按验收事实记录。"
+        "按连续目标完成离线计划读取／确认、图校验与显式 A2A 调度；工作树定向 10/10，固定提交回归待执行。正式前置、真实模型与 Linux Runner 集成和 G0 仍按实际验收记录。"
       ]
     },
     {
