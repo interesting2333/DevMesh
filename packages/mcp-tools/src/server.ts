@@ -5,7 +5,7 @@ import express from 'express';
 import type { RequestHandler,ErrorRequestHandler } from 'express';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { canonical } from '@devmesh/storage-sqlite';
+import { canonical,StorageError } from '@devmesh/storage-sqlite';
 import { opaqueKey } from '@devmesh/contracts';
 import { RunnerError } from '@devmesh/runner';
 import { ToolError,toolEnvelope } from './protocol.js';
@@ -29,7 +29,7 @@ export async function serveMcp(options:McpServiceOptions){
     const base={schemaVersion:'devmesh.mcp-tool-result.v1' as const,source:'mcp' as const,tool:def.name,operationId:input.operationId};
     try{await options.authority.authorize(identity.controllerId,def.name,input.permit,def.action);}catch{const body={...base,state:'FAILED',error:{code:'MCP_AUTHORITY_DENIED',outcome:'not-sent'}};return {isError:true,content:[{type:'text' as const,text:canonical(body)}],structuredContent:body};}
     try{const value=await def.execute({controllerId:identity.controllerId,operationId:input.operationId,permit:input.permit,args:def.schema.parse(input.args),signal:extra.signal}),body={...base,state:'SUCCEEDED',value};return {content:[{type:'text' as const,text:canonical(body)}],structuredContent:body};}
-    catch(error){const body={...base,state:'FAILED',error:{code:error instanceof ToolError||error instanceof RunnerError?error.code:'MCP_TOOL_FAILED',outcome:error instanceof ToolError||error instanceof RunnerError?error.outcome:'unknown'}};return {isError:true,content:[{type:'text' as const,text:canonical(body)}],structuredContent:body};}
+    catch(error){const body={...base,state:'FAILED',error:{code:error instanceof ToolError||error instanceof RunnerError||error instanceof StorageError?error.code:'MCP_TOOL_FAILED',outcome:error instanceof ToolError||error instanceof RunnerError?error.outcome:error instanceof StorageError?'known':'unknown'}};return {isError:true,content:[{type:'text' as const,text:canonical(body)}],structuredContent:body};}
   });}
   const transport=new StreamableHTTPServerTransport({enableJsonResponse:true});
   res.once('close',()=>{instances.delete(server);void server.close().catch(()=>{});});

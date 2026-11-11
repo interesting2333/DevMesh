@@ -1,12 +1,13 @@
 ## 1. Documents and issues
 
-- [ ] 1.1 实现固定附件版本 docs.search/read，使用真实内容存储与官方 MCP HTTP 验证来源、offset、越权和漂移拒绝。
-- [ ] 1.2 增加 issues 领域迁移、修订历史、创建／关联修复／验证及原键查询，以 SQLite 和 HTTP 验证去重、旧修订、越权、重启不丢历史。
+- [x] 1.1 实现固定附件版本 docs.search/read，使用真实内容存储与官方 MCP HTTP 验证来源、offset、越权和漂移拒绝。
+- [x] 1.2 增加 issues 领域迁移、修订历史、创建／关联修复／验证及原键查询，以 SQLite 和 HTTP 验证去重、旧修订、越权、重启不丢历史。
+- [ ] 1.3 补齐当前已认领 Host 的五秒续租和 Runtime 生命周期管理；验证固定十五秒窗口、旧 claim／暂停／过期拒绝，Git 在提交副作用前复核当前许可，未知操作不重放。
 
 ## 2. Repository and pipeline
 
 - [ ] 2.1 实现受控 Git repo 写动作和原操作记录；用真实临时 Git 仓库验证写范围、baseCommit、去重、冲突和恢复。
-- [ ] 2.2 增加独立流水线及阶段持久记录，冻结配置并接 RunnerClient；验证顺序、失败／未知阻断、原 Job 查询及重启。
+- [x] 2.2 增加独立流水线及阶段持久记录，冻结配置并接 RunnerClient；验证顺序、失败／未知阻断、原 Job 查询及重启。
 
 ## 3. Composition and recovery
 

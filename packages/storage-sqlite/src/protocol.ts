@@ -12,6 +12,12 @@ import { inputRequests } from './input-protocol.js';
 import type { InputResults } from './input-protocol.js';
 import { preparationRequests } from './preparation-protocol.js';
 import type { PreparationResults } from './preparation-protocol.js';
+import {toolRequests} from './tool-protocol.js';
+import type {ToolResults} from './tool-protocol.js';
+import {pipelineRequests} from './pipeline-protocol.js';
+import type {PipelineResults} from './pipeline-protocol.js';
+import {repoRequests} from './repo-protocol.js';
+import type {RepoResults} from './repo-protocol.js';
 
 const meta = z.strictObject({ principalId: opaqueKey, scopeId: opaqueKey, idempotencyKey: z.uuid() });
 const conditional = { meta, runId: ids.run, ifMatch: z.string().optional() };
@@ -22,6 +28,9 @@ const resources=z.array(z.strictObject({kind:z.enum(['snapshot','workspace','pro
 const admissionWork=z.strictObject({workId:ids.work,workRevision:revision,workEpoch:epoch,inputManifest,roleSnapshot,endpoint:endpointTarget,resources});
 const verificationOutputs=z.array(z.strictObject({slot:opaqueKey,ref:artifactRef})).max(64);
 export const requests = {
+  ...repoRequests,
+  ...pipelineRequests,
+  ...toolRequests,
   ...preparationRequests,
   ...inputRequests,
   ...runtimeRequests,
@@ -64,7 +73,7 @@ export type OperationResult = { operationId: string; status: string; result: Rec
 export type RunView = { runId: string; projectId: string; taskId: string; resourceRevision: number; runEpoch: number; controlRevision: number; phase: string; controlGate: string; terminalOutcome: string | null; currentPlanRevision: number | null; currentRequirementRevision: number | null; eventSeq: number };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
-export interface Results extends SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults {
+export interface Results extends SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults {
   registerContent: { contentHash: string; storageKey: string };
   createProjectWithRun: OperationResult;
   publishPlan: OperationResult;

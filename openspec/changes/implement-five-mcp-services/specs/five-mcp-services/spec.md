@@ -31,6 +31,16 @@ The repo service SHALL bind writes to an authorized workspace, base commit and w
 - **WHEN** changed files exceed the approved write scope or the base commit differs
 - **THEN** the service SHALL reject the mutation and SHALL NOT integrate the changes into the project
 
+#### Scenario: A Git acknowledgement is lost
+
+- **WHEN** the original operation has a durable prepared SHA and its atomic operation ref exists
+- **THEN** recovery SHALL return that original commit fact without writing another commit or updating the project again; an unprepared or unproven operation SHALL remain unknown
+
+#### Scenario: Integration acceptance is not configured
+
+- **WHEN** the trusted workspace allocator or integration acceptance check is absent
+- **THEN** the corresponding write tool SHALL NOT be registered and a Git commit fact SHALL NOT imply candidate acceptance
+
 ### Requirement: Pipelines and tests have independent execution facts
 
 The pipeline service SHALL preserve its own identity and frozen stages, execute only approved stages, and retain per-stage jobs and results independently from tests.
@@ -48,3 +58,8 @@ All five services SHALL use separate authenticated identities and actual protoco
 
 - **WHEN** a Run pauses or the original grant is revoked
 - **THEN** new writes SHALL be rejected while original-job query and stop SHALL use restricted cleanup authority
+
+#### Scenario: A claimed host renews a long action
+
+- **WHEN** the current active host renews while its original grant is still valid
+- **THEN** the same owner, generations and resource scope SHALL retain a fifteen-second lease window; a paused, expired or stale host SHALL NOT revive or expand the grant

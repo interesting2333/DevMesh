@@ -11,6 +11,8 @@ export const eventPayloads = {
   AttemptStateChanged: z.strictObject({ attemptId: ids.attempt, state: attemptState }),
   A2ATaskObserved: z.strictObject({ attemptId: ids.attempt, endpointId: opaqueKey, taskId: protocolTaskId, state: a2aTaskState }),
   ToolOperationUpdated: z.strictObject({ toolOperationId: ids.operation, status: operationStatus }),
+  IssueChanged:z.strictObject({issueId:opaqueKey,issueRevision:revision,toolOperationId:ids.operation,toolName:z.enum(['issues.create','issues.linkFix','issues.recordVerification'])}),
+  PipelineChanged:z.strictObject({pipelineId:opaqueKey,toolOperationId:ids.operation,state:z.enum(['QUEUED','RUNNING','SUCCEEDED','FAILED','STOPPING','CANCELLED','OUTCOME_UNKNOWN'])}),
   ArtifactRegistered: z.strictObject({ artifact: artifactRef }),
   ChangeApplied: z.strictObject({ changeId: ids.change, requirementRevision: revision, planRevision: revision }),
   DecisionSaved: z.strictObject({ decisionId: ids.decision }),
@@ -33,7 +35,7 @@ export const domainEvent = z.discriminatedUnion('type', [
   eventOf('PlanConfirmed'), eventOf('WorkAdmitted'), eventOf('AttemptStateChanged'), eventOf('A2ATaskObserved'),
   eventOf('ToolOperationUpdated'), eventOf('ArtifactRegistered'), eventOf('ChangeApplied'), eventOf('DecisionSaved'),
   eventOf('ControlProgress'), eventOf('ConfigurationApplied'), eventOf('CandidateUpdated'), eventOf('ReleaseAccepted'),
-  eventOf('PreviewStateChanged'), eventOf('ExportUpdated'),
+  eventOf('PreviewStateChanged'), eventOf('ExportUpdated'),eventOf('IssueChanged'),eventOf('PipelineChanged'),
 ]).superRefine((event, ctx) => {
   if (event.timeSource === 'observed' && event.occurredAt !== event.observedAt) ctx.addIssue({ code: 'custom', path: ['occurredAt'], message: 'Observed time must equal occurredAt when no producer time exists' });
   const payload = event.payload as Record<string, unknown>;

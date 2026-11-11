@@ -8,6 +8,7 @@ import type { LocalContentStore,WriteMeta } from '@devmesh/blob-store';
 import { ModelError,checkModelRequest,estimateTokens } from './provider.js';
 import type { ModelProvider,ModelRequest,ModelResponse,ChatMessage } from './provider.js';
 import { RoleRegistry } from './roles.js';
+import {ExecutionGrantLease} from './lease.js';
 
 const hash=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
 function fail(code:string):never{throw new ModelError(code,false,'not-sent');}
@@ -31,8 +32,11 @@ export class AgentRuntime {
  }
  async execute(claim:ExecutionClaim,signal=new AbortController().signal):Promise<RuntimeOutcome>{
   let host:ExecutionHostView|undefined,sessionId:string|undefined,started=false,sent=false,responseSaved=false;
+  let lease:ExecutionGrantLease|undefined;
   try{
+   if(signal.aborted)fail('RUNTIME_ABORTED');
    host=await this.storage.request('getExecutionHost',claim);
+   lease=new ExecutionGrantLease(this.storage,claim,permit=>{host!.permit=permit;});await lease.start();signal=AbortSignal.any([signal,lease.signal]);
    const {role,provider}=this.roles.resolve(host.roleSnapshot);
    const tools=role.allowedTools.map(name=>this.#tools.get(name)??fail('TOOL_NOT_CONFIGURED'));
    const definitions=tools.map(t=>({name:t.name,description:t.description,parameters:z.toJSONSchema(t.schema) as Record<string,unknown>}));
@@ -102,7 +106,7 @@ export class AgentRuntime {
     const candidate=await this.storage.request('publishRuntimeResult',{activationId:host.activationId,stepNo,contentHash:body.expectedHash,output:z.record(z.string(),z.json()).parse(parsed.data)});
     return {state:'completed',candidate,sessionId};
    }
-   fail('MODEL_STEP_LIMIT');
+   return fail('MODEL_STEP_LIMIT');
   }catch(error){
    const code=error instanceof ModelError||error instanceof StorageError?error.code:'RUNTIME_INVALID_RESPONSE';
    if(sent&&!responseSaved&&host&&sessionId&&error instanceof ModelError&&error.outcome!=='unknown'){
@@ -110,8 +114,8 @@ export class AgentRuntime {
    }
    const unknown=sent&&!responseSaved&&(!(error instanceof ModelError)||error.outcome==='unknown')||['TOOL_OUTCOME_UNKNOWN','TOOL_RESULT_PERSISTENCE_FAILED','RUNTIME_RESUME_REQUIRES_RECONCILIATION','OUTCOME_UNKNOWN','STORAGE_CLOSED'].includes(code);
    if(started&&host)await this.storage.request('setRuntimeState',{activationId:host.activationId,state:unknown?'RECONCILE':'FAILED',reason:code,unknownUsage:sent&&!responseSaved||error instanceof ModelError&&error.outcome==='known-failed'}).catch(()=>{});
-   return {state:unknown?'reconcile':'failed',code};
-  }
+    return {state:unknown?'reconcile':'failed',code};
+   }finally{await lease?.stop();}
  }
  private async saveToolResult(host:ExecutionHostView,op:RuntimeToolView,result:Exclude<ToolResult,{state:'OUTCOME_UNKNOWN'}>){
   const meta={principalId:host.principalId,scopeId:host.runId,idempotencyKey:randomUUID()};

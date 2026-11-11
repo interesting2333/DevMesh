@@ -1,5 +1,7 @@
 import { RunnerError,startJob,renewJob,jobSchema } from './protocol.js';
 import type { Job,StartJob,RenewJob } from './protocol.js';
+import {z} from 'zod';
+import {ids} from '@devmesh/contracts';
 export class RunnerClient {
  readonly base:URL;
  constructor(endpoint:string,readonly credentialRef:string,readonly credentials:(ref:string)=>Promise<string|undefined>,readonly timeoutMs=10000){
@@ -23,6 +25,15 @@ export class RunnerClient {
  async byOperation(operationId:string):Promise<Job>{return this.decode(await this.request('GET','jobs/by-operation/'+encodeURIComponent(operationId)));}
  async stop(jobId:string):Promise<Job>{return this.decode(await this.request('POST','jobs/'+encodeURIComponent(jobId)+':stop',{}));}
  async renew(jobId:string,input:RenewJob):Promise<Job>{return this.decode(await this.request('POST','jobs/'+encodeURIComponent(jobId)+':renew',renewJob.parse(input)));}
+ async logs(jobId:string,offset=0,limit=16384){
+  ids.job.parse(jobId);if(!Number.isSafeInteger(offset)||offset<0||!Number.isSafeInteger(limit)||limit<1||limit>65536)throw new RunnerError('RUNNER_LOG_CURSOR_INVALID',422,'not-sent');
+  const schema=z.strictObject({jobId:ids.job,offset:z.number().int().nonnegative(),nextOffset:z.number().int().nonnegative(),complete:z.boolean(),data:z.string().max(87384)});
+  const parsed=schema.safeParse(await this.request('GET','jobs/'+encodeURIComponent(jobId)+'/logs?offset='+offset+'&limit='+limit));
+  if(!parsed.success)throw new RunnerError('RUNNER_RESPONSE_INVALID',502,'unknown');
+  const value=parsed.data,bytes=Buffer.from(value.data,'base64');
+  if(value.jobId!==jobId||value.offset!==offset||value.nextOffset!==offset+bytes.byteLength||bytes.byteLength>limit||bytes.toString('base64')!==value.data)throw new RunnerError('RUNNER_RESPONSE_INVALID',502,'unknown');
+  return value;
+ }
  private decode(value:unknown):Job{
   const result=jobSchema.safeParse(value);
   if(!result.success)throw new RunnerError('RUNNER_RESPONSE_INVALID',502,'unknown');return result.data;

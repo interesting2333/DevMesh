@@ -638,11 +638,32 @@
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "packages/mcp-tools/src/docs.ts",
+        "packages/mcp-tools/src/issues.ts",
+        "packages/mcp-tools/src/pipeline.ts",
+        "packages/mcp-tools/src/repo-git.ts",
+        "packages/mcp-tools/src/composition.ts",
+        "packages/mcp-tools/src/authority.ts",
+        "packages/storage-sqlite/src/tool-domain.ts",
+        "packages/storage-sqlite/src/tool-authority-domain.ts",
+        "packages/storage-sqlite/src/pipeline-domain.ts",
+        "packages/storage-sqlite/src/repo-domain.ts",
+        "packages/platform-core/src/index.ts",
+        "tests/mcp-docs.test.mjs",
+        "tests/mcp-issues.test.mjs",
+        "tests/mcp-pipeline.test.mjs",
+        "tests/mcp-repo-git.test.mjs",
+        "tests/mcp-composition.test.mjs",
+        "packages/agent-runtime/src/lease.ts",
+        "tests/mcp-lease.test.mjs"
+      ],
+      "evidence": [
+        "project/evidence/P1-04/离线实施进展.md"
+      ],
       "reviewNote": null,
       "notes": [
-        "按连续目标授权推进五类服务的离线代码与协议验证，现有 repo 只读与 tests 接续，缺真实资源的验收项保持未执行。"
+        "连续目标授权下推进离线代码：docs、issues、独立 pipeline 及当前授权复核已验证；repo 受控 Git 写入、原 ref 恢复、五身份组合及平台生命周期代码已补入，正在执行新增验证和固定提交全量回归。正式前置／G0、真实模型和 Linux Runner 产品验收未执行。"
       ]
     },
     {
@@ -665,7 +686,9 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-managed-code-workspaces"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -673,7 +696,9 @@
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "已按 D4 §3、D5 §7.2～7.3 建立受控工作区、源码保留／归档 ACK、三方候选集成与冲突材料的 OpenSpec 实施变更。当前仅规划材料，应用代码未实施；正式前置及 G0 仍待验收。"
+      ]
     },
     {
       "id": "P1-06",

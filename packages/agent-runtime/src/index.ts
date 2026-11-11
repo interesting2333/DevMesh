@@ -9,3 +9,4 @@ export { RoleRegistry,roleConfigSchema,roleSchemas } from './roles.js';
 export type { RoleConfig } from './roles.js';
 export { PreparationRuntime, PreparationConsumer, readPreparationGitSource } from './preparation.js';
 export type { PreparationOptions } from './preparation.js';
+export {ExecutionGrantLease} from './lease.js';

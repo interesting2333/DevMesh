@@ -24,6 +24,15 @@ import { createSchedulerDomain } from './scheduler-domain.js';
 import { createDispatchDomain } from './dispatch-domain.js';
 import { preparationRequests } from './preparation-protocol.js';
 import type { PreparationMethod } from './preparation-protocol.js';
+import {createToolDomain} from './tool-domain.js';
+import {toolRequests} from './tool-protocol.js';
+import type {ToolMethod} from './tool-protocol.js';
+import {createPipelineDomain} from './pipeline-domain.js';
+import {pipelineRequests} from './pipeline-protocol.js';
+import type {PipelineMethod} from './pipeline-protocol.js';
+import {createRepoDomain} from './repo-domain.js';
+import {repoRequests} from './repo-protocol.js';
+import type {RepoMethod} from './repo-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -34,7 +43,15 @@ export function createDomain(db: DatabaseSync) {
     bump(runId);event(runId,operationId,'AttemptStateChanged',{attemptId,state},{workId,attemptId});
   });
   const runtime = createRuntimeDomain(db);
+  const repository=createRepoDomain(db);
   const sessions = createSessionDomain(db);
+  const tools=createToolDomain(db,(runId,operationId,attemptId,payload)=>{
+    bump(runId);event(runId,operationId,'IssueChanged',payload,{attemptId});
+  });
+  const pipelines=createPipelineDomain(db,(runId,operationId,attemptId,payload)=>{
+    const original=get('SELECT operation_id FROM operations WHERE operation_id=?',operationId)?.operation_id??get('SELECT dispatch_operation_id FROM attempts WHERE attempt_id=?',attemptId)!.dispatch_operation_id;
+    bump(runId);event(runId,String(original),'PipelineChanged',payload,{attemptId});
+  });
   const plans = createPlanDomain(db);
   const scheduler = createSchedulerDomain(db,plans);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
@@ -360,6 +377,9 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(pipelineRequests,method))return pipelines.execute(method as PipelineMethod,input);
+    if(Object.hasOwn(repoRequests,method))return repository.execute(method as RepoMethod,input);
+    if(Object.hasOwn(toolRequests,method))return tools.execute(method as ToolMethod,input);
     if(Object.hasOwn(preparationRequests,method))return preparations.execute(method as PreparationMethod,input);
     if (Object.hasOwn(inputRequests,method))return inputs.execute(method as InputMethod,input);
     if (Object.hasOwn(runtimeRequests, method)) return runtime.execute(method as RuntimeMethod, input);

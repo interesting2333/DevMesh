@@ -199,6 +199,9 @@ importers:
       '@devmesh/input-api':
         specifier: workspace:*
         version: link:../input-api
+      '@devmesh/mcp-tools':
+        specifier: workspace:*
+        version: link:../mcp-tools
       '@devmesh/storage-sqlite':
         specifier: workspace:*
         version: link:../storage-sqlite

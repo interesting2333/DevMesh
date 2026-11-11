@@ -4,6 +4,7 @@ const claim={endpointId:opaqueKey,taskId:opaqueKey,workerId:opaqueKey,claimToken
 const activation={activationId:ids.activation};
 export const runtimeRequests={
  getExecutionHost:z.strictObject(claim),
+ renewExecutionHost:z.strictObject(claim),
  getAcceptedTaskSnapshot:z.strictObject(claim),
  reconcileRuntimeTask:z.strictObject({...claim,reason:opaqueKey}),
  beginRuntimeActivation:z.strictObject({...claim,...activation,principalId:opaqueKey,sessionId:ids.session,configHash:sha256,config:z.record(z.string(),z.json()),maxSteps:z.number().int().min(1).max(200),tokenLimit:z.number().int().min(1)}),
@@ -26,6 +27,7 @@ export interface RuntimeActivationView {activationId:string;sessionId:string;sta
 export interface RuntimeToolView {operationId:string;activationId:string;sessionId:string;stepNo:number;toolCallId:string;toolName:string;state:string;resultMessageId:string|null;argsHash:string;errorCode:string|null}
 export interface RuntimeResults {
  getExecutionHost:ExecutionHostView;
+  renewExecutionHost:{permit:Record<string,unknown>};
  getAcceptedTaskSnapshot:Record<string,unknown>;
  reconcileRuntimeTask:{state:'RECONCILE'};
  beginRuntimeActivation:RuntimeActivationView;
