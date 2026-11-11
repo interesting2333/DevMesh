@@ -8,3 +8,5 @@ export {LocalSourceArchives} from './source-archives.js';
 export type {LocalSourceArchiveOptions} from './source-archives.js';
 export {LocalCandidateIntegrations} from './candidate-integrations.js';
 export type {LocalCandidateIntegrationOptions} from './candidate-integrations.js';
+export {LocalCandidateConflicts} from './candidate-conflicts.js';
+export type {CandidateConflictContext,CandidateMerge} from './candidate-integrations.js';

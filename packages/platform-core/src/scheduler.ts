@@ -10,6 +10,8 @@ type ResourcePlan=Pick<Admission,'runnerId'|'reservationKey'|'runnerCapacity'|'r
   Pick<Admission['work'],'roleSnapshot'|'resources'>;
 export interface WorkflowSchedulerOptions {
   callerId:string;
+  /** Trusted pre-admission code preparation; Worker admission rechecks its current basis. */
+  prepareCodeBasis?(candidate:ScheduledCandidate,signal:AbortSignal):Promise<void>;
   /** Trusted, read-only allocator. Absence of a concrete grant plan keeps the work queued. */
   planResources(candidate:ScheduledCandidate,signal:AbortSignal):Promise<ResourcePlan|null>;
 }
@@ -43,6 +45,8 @@ export class WorkflowScheduler {
       if(signal.aborted)return null;
       const defer=()=>this.storage.request('deferScheduledWork',{runId:candidate.runId,resourceRevision:candidate.resourceRevision});
       try{
+        await this.options.prepareCodeBasis?.(candidate,signal);
+        signal.throwIfAborted();
         const allocation=await this.options.planResources(candidate,signal);
         if(!allocation){await defer();continue;}
         const target=await this.registry.resolveRole(candidate.work.role),version=this.registry.version;

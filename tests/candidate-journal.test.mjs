@@ -114,7 +114,7 @@ test('a known rejected final CAS preserves its exact adapter proof and never ado
 test('migration 16 preserves version 15 data and the original migration history',()=>{
  const db=new DatabaseSync(':memory:'),migrations=readMigrations(),storeId=randomUUID();db.exec('PRAGMA foreign_keys=ON');try{
   applyMigrations(db,migrations,storeId,1,15);const contentHash='a'.repeat(64);db.prepare("INSERT INTO content_objects(content_hash,byte_size,storage_key,mime_type,state,created_at) VALUES(?,0,?,'text/plain','READY',?)").run(contentHash,'sha256/aa/'+contentHash,new Date().toISOString());
-  const old=db.prepare('SELECT version,name,sha256 FROM schema_migrations ORDER BY version').all();assert.equal(applyMigrations(db,migrations,storeId),16);
+  const old=db.prepare('SELECT version,name,sha256 FROM schema_migrations ORDER BY version').all();assert.equal(applyMigrations(db,migrations,storeId,1,16),16);
   assert.deepEqual(db.prepare('SELECT version,name,sha256 FROM schema_migrations WHERE version<=15 ORDER BY version').all(),old);assert.equal(db.prepare('SELECT content_hash FROM content_objects').get().content_hash,contentHash);assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
  }finally{db.close();}
 });

@@ -1,0 +1,60 @@
+TAP version 13
+# (node:31936) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31936) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual A2A-admitted archived Git branches retain immutable candidates and original operation recovery
+    # Subtest: both changes survive lost step/final ACKs and later unsubmitted developer writes
+    ok 1 - both changes survive lost step/final ACKs and later unsubmitted developer writes
+      ---
+      duration_ms: 195870.0316
+      type: 'test'
+      ...
+    # Subtest: a sent intent with missing original refs stays unknown until the original delayed Git action is observed
+    ok 2 - a sent intent with missing original refs stays unknown until the original delayed Git action is observed
+      ---
+      duration_ms: 119132.2217
+      type: 'test'
+      ...
+    # Subtest: scheduler admission and an isolated verification checkout freeze the exact dependency snapshot
+    not ok 3 - scheduler admission and an isolated verification checkout freeze the exact dependency snapshot
+      ---
+      duration_ms: 229535.9334
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\candidate-git.test.mjs:32:12'
+      failureType: 'testCodeFailure'
+      error: 'Cancellation needs known stopped effects'
+      code: 'STOP_NOT_VERIFIED'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+    # Subtest: unique atomic refs prove a lost ACK after pause and a later global ref move without replaying writes
+    ok 4 - unique atomic refs prove a lost ACK after pause and a later global ref move without replaying writes
+      ---
+      duration_ms: 115568.8501
+      type: 'test'
+      ...
+    1..4
+not ok 1 - actual A2A-admitted archived Git branches retain immutable candidates and original operation recovery
+  ---
+  duration_ms: 997430.8288
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\candidate-git.test.mjs:12:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1011188.6687

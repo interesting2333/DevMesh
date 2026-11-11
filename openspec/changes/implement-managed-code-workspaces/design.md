@@ -64,7 +64,9 @@ Git Provider 的固定参数强制 `core.fsync=all`、`core.fsyncMethod=fsync`�
 
 集成由受信任项目服务执行，不能拿已结束 Developer 的 permit 发送新的项目写入。Worker 从当前已确认计划、Run／Work epoch、Work revision、最新 Attempt、已核实输出及原源码 ACK 推导输入资格；调用方给出的 SHA 或 artifact 本身不足以授权。Git 动作发送后若发生暂停／换代，仍保存原动作的真实结果，但是否可供当前调度使用需另行复核，不能把历史成功直接当成当前准入。
 
-候选还需保存准确的依赖来源集合。给某个 Work 规划输入时，只能使用与其当前依赖闭包相符的已核实候选；全局最新候选可能包含无关或过期变更，不能静默代替输入。目前 Scheduler 对多个前驱 SHA 的 `CODE_BASIS_AMBIGUOUS` 拒绝，在可信集成快照及准入复核闭合前继续保留。
+候选还需保存准确的依赖来源集合。给某个 Work 规划输入时，只能使用与其当前依赖闭包相符的已核实候选；全局最新候选可能包含无关或过期变更，不能静默代替输入。对于显式受控项目后端，Scheduler 从当前来源依据查询匹配的 `work-input` ACK；缺少匹配快照时拒绝准入。未接受控项目后端的既有路径继续保留多个前驱 SHA 的 `CODE_BASIS_AMBIGUOUS` 拒绝。该组合代码已编写，真实联调与回归验证正在执行。
+
+快照准备使用独立的受信任 `prepareCodeBasis` 钩子，保持 `planResources` 只读。准备服务使用当前依据哈希与主体生成稳定的原操作 ID，存在未知操作时只能核实，已知失败需显式受信任重试；不在调度循环内自动换 ID。已有 ACK 也要核实受控仓库身份、原 integration／snapshot refs 与实际源码清单，并在 I/O 后再复核当前来源。Worker 最后在原调度准入事务内查询当前精确快照，不嵌套打开事务，也不接受调用方 SHA 充当输入权威。无开发来源的初始 Work 使用冻结 base；tester 必须具有已核实开发来源。Work 输入快照不移动 Run 全局候选。
 
 实现上区分 `work-input` 与 `run-candidate` 两种受信任请求：前者只取指定 Work 的当前依赖闭包，后者在当前计划的开发结果均核实后取完整开发来源。它们分别保留固定源码快照；Work 输入快照不移动 Run 候选 ref，Run 候选也不移动人工接受指针。冻结依据包含计划及需求版本、当前 Run epoch、Work revision／epoch、最新已结束且核实的 Attempt、输入指纹、成果引用及原源码 ACK；按拓扑从 UserTask.baseCommit 串行构建，来源集合不匹配时不以全局最新值代替。
 
@@ -78,7 +80,7 @@ Git Provider 的固定参数强制 `core.fsync=all`、`core.fsyncMethod=fsync`�
 
 冲突材料需要专用的内容 target／reference，`commitObjectWrite` 在登记内容的同一 Worker 事务写入带 `content_objects` 外键的业务引用，避免“先裸写 content、再单独建引用”期间 GC 获准删除。先冻结报告描述及哈希，再按有界页登记不可变材料元数据、稳定写入 UUID 和字节哈希；全部必要材料 READY 或明确 ABSENT 后才确认冲突 ACK。内容登记失败保留原操作和原材料，不能推进候选。批准主体与当前非 viewer 成员参与写入复核，读取仍按当前项目成员校验；历史 ACK 不授权新集成。
 
-报告保存安排在步骤的 COMPUTING 意图之后、冻结三方结果之前。内容封装保存完整 Git 报告和原 stage 1 blob 字节，后者可能来自不属于任一原祖先提交的虚拟基点；仅保存 blob SHA 而无保留对象或字节不足以保证恢复。封装字节哈希和规范化合并报告哈希分别记录，虚拟 blob 按 Git 对象 ID 复核并限制体积。报告已经持久保存时可从原内容对象或经哈希核实的原 staging 继续准备；尚未保存的计算结果保持未知，不重新执行 merge-tree。文件／目录／缺失材料按原来源 tree、消息与 stage 路径并集生成，目录有准确 tree 对象身份，缺失不伪装为零字节文件。报告和各版本内容仍沿用批准的 `artifacts/sha256` 与 `staging/objects` 布局，不增加独立的数据根目录。上述内容适配及完整冲突 ACK 仍待实现和真实冲突验证。
+报告保存安排在步骤的 COMPUTING 意图之后、冻结三方结果之前。内容封装保存完整 Git 报告和原 stage 1 blob 字节，后者可能来自不属于任一原祖先提交的虚拟基点；仅保存 blob SHA 而无保留对象或字节不足以保证恢复。封装字节哈希和规范化合并报告哈希分别记录，虚拟 blob 按 Git 对象 ID 复核并限制体积。报告已经持久保存时可从原内容对象或经哈希核实的原 staging 继续准备；尚未保存的计算结果保持未知，不重新执行 merge-tree。文件／目录／缺失材料按原来源 tree、消息与 stage 路径并集生成，目录有准确 tree 对象身份，缺失不伪装为零字节文件。报告和各版本内容仍沿用批准的 `artifacts/sha256` 与 `staging/objects` 布局，不增加独立的数据根目录。上述迁移 17、内容适配及完整冲突 ACK 代码已编写，正在执行类型、构建、原子引用、ACL 与真实冲突恢复验证；验证前不作为已完成能力归档。
 
 真实 Git 探测已经证明，合法的互斥路径范围也会产生冲突：来源 A 将 `old/a` 移至 `new/a`，来源 B 新建 `old/b` 和 `new/b`，两者改动路径没有重叠；本机 `merge-tree` 返回 `CONFLICT (file in way of directory rename)`，包含 `new/b`／`old/b` 两个消息路径，却没有 stage 条目。因此材料收集必须遍历消息与 stage 路径的并集，另查每个原 base／ours／theirs tree 中的实际文件、目录或缺失，并保留虚拟基点的 stage 1 blob。不能把“无 stage”当成“无冲突”，也不能把缺失版本当成零字节文件。该探测仅证明夹具成立，后续持久集成和内容 ACK 验证尚未完成。
 

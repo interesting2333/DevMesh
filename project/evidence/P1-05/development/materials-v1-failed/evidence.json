@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "baseCommit": "b889d69bfca4571154cf528aa18ae9048db24981",
+  "sourceFingerprint": "6234218d535ad613d0b09cd06420523f3abcdc07c9a0dbeed54021c632f116ac",
+  "startedAt": "2026-11-11T22:33:27.158Z",
+  "finishedAt": "2026-11-11T23:15:07.601Z",
+  "scope": "Migration 17 and immutable candidate report/material publication with atomic business content references, current ACLs, original conflict recovery and dependency-specific verification checkout/admission. Real local Git/A2A source scenarios use an explicit job-free fencer and fixture verification decision; no live model, Runner job, OIDC, Linux/runsc or product acceptance.",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "build-storage",
+      "exitCode": 0
+    },
+    {
+      "name": "build-workspaces",
+      "exitCode": 0
+    },
+    {
+      "name": "build-platform",
+      "exitCode": 0
+    },
+    {
+      "name": "candidate-material",
+      "exitCode": 0,
+      "tests": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "candidate-journal",
+      "exitCode": 0,
+      "tests": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "content",
+      "exitCode": 0,
+      "tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "name": "candidate-git",
+      "exitCode": 1,
+      "tests": {
+        "tests": 5,
+        "pass": 3,
+        "fail": 2,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-report.json",
+      "byteSize": 40473,
+      "sha256": "f7469e4929d35e417bc218cd64c9461213b5f4ebf500168f02ef02c85ff31a44"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-build-storage.txt",
+      "byteSize": 2716,
+      "sha256": "529e0a7809cd8b765124615d9b6f56d92855310bd2c9097e00d94b4475a96be3"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-build-workspaces.txt",
+      "byteSize": 803,
+      "sha256": "a77529a8ece371d79303794d7093674ee1a27c1cabaf8cc67f090b70fdcad868"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-build-platform.txt",
+      "byteSize": 1185,
+      "sha256": "44aebd019f39602249386991f8bb7162731a9ba0ebd8cef1c49f7c12ea8e741c"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-candidate-material.txt",
+      "byteSize": 1162,
+      "sha256": "81699e67cfbd4137c893fc0b57e5eb2422ec272f496b1851eda2931aeba2232d"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-candidate-journal.txt",
+      "byteSize": 4641,
+      "sha256": "d72f0ff8cc44295328edfe160cefc7cf3d5e67a9dacb2c4c9c5a32537a951571"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-storage.txt",
+      "byteSize": 22058,
+      "sha256": "0410da3bb50906b70722879c2e765262770d10301eec77df19e3fd09803af00e"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-content.txt",
+      "byteSize": 10630,
+      "sha256": "c553cbb5c06189c25f69d7cbd1280c733a369fa6d74d52609257a5c4cb8025bc"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-scheduler.txt",
+      "byteSize": 4433,
+      "sha256": "dbfe83c15853cc5408f26d4fa33ca541e12125d5cb26f2835305c91e6dcc0441"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/p105-materials-v1-candidate-git.txt",
+      "byteSize": 2670,
+      "sha256": "f8de8fb616f293256475e4d7b954d9488bd604baabe8ecc25f88e00d7c853c15"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__code-workspaces__src__candidate-integrations.ts.txt",
+      "byteSize": 14216,
+      "sha256": "248be511af697e66cfa64140f173de232c0ee7ff2da7b6a10b8cdb3f4a763626"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__code-workspaces__src__git.ts.txt",
+      "byteSize": 21484,
+      "sha256": "0d9812a008f0e84608eb36e6f51874795ee69f10bd006873603dedee9ede93f6"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__code-workspaces__src__index.ts.txt",
+      "byteSize": 879,
+      "sha256": "e4b13c6ae07585296e52342173aef0e24cdd948d9105bc2cae117cc372e3c159"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__platform-core__src__scheduler.ts.txt",
+      "byteSize": 4680,
+      "sha256": "271293c5ef09d292ce537c599e194a3778528557e544655666697bc3cde65e78"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__migrations__manifest.json.txt",
+      "byteSize": 2429,
+      "sha256": "23a530f8693d57c7822563f943f9eb6ec18b86a8b8d219bbe4c087dc33b6e128"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__candidate-integration-domain.ts.txt",
+      "byteSize": 18228,
+      "sha256": "378705afe624dd1373ab04087c83cb4c7af551e559c4c1b1bfda0f459693fc7c"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__candidate-integration-protocol.ts.txt",
+      "byteSize": 4923,
+      "sha256": "ba1aa91813d9f8f6b64175063e4da30de40fdd42143ef72867933c2cc84eb34c"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__domain.ts.txt",
+      "byteSize": 42924,
+      "sha256": "73af0028e994abeaa72b50d41cd439bbf4ec94601724f574ff91dec4bcec1102"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__index.ts.txt",
+      "byteSize": 7317,
+      "sha256": "c6c22820c1424ae261fb07bf7c1c53a402f694213251cdd649cccf84a35faeb8"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__protocol.ts.txt",
+      "byteSize": 9966,
+      "sha256": "181d7485ed7b7a6d3a0c59035ec68432457230a2a50b7bc62e179a4ee478f72d"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__scheduler-domain.ts.txt",
+      "byteSize": 16554,
+      "sha256": "d038372cd9fe915fe12a28f4d7c76c753f3cd67824203a7cd760d6a4ee69249e"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__session-domain.ts.txt",
+      "byteSize": 26372,
+      "sha256": "ef755fd2212198a1ba1b6e4aab9770fb42accf09d07b9b45b9e514713baa6ffe"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__session-protocol.ts.txt",
+      "byteSize": 6875,
+      "sha256": "ab8a1e44d34963da3f5960fbf9d2023d893da6ce323a1620ef4cdd18ef4e261e"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/tests__candidate-git.test.mjs.txt",
+      "byteSize": 10045,
+      "sha256": "1f8785345e41479af9359fad778c3593ed92e00a28c69ac51b1ee502968a182c"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/tests__candidate-journal.test.mjs.txt",
+      "byteSize": 14840,
+      "sha256": "8e1ced58cef181cf0d4d15ecb12b53e6ff3b58c7216b98ff97fb06bb61055565"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/tests__fixtures__candidate-git.mjs.txt",
+      "byteSize": 8548,
+      "sha256": "8e56d84c17cb37c0f93f6fc11b7a6ebccec76d1c077ab2044cf5e3864d79adf1"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__code-workspaces__src__candidate-conflicts.ts.txt",
+      "byteSize": 8659,
+      "sha256": "d58e583ace0f55073f42fcb4736f1b94e8113bec966577101609b2c64ea1cea1"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__migrations__0017-candidatematerials.sql.txt",
+      "byteSize": 3615,
+      "sha256": "15b9cc5284709ff244eb126f0eb0f1d223dfb25eb09a96528d4a6d8c913baf6b"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__candidate-material-domain.ts.txt",
+      "byteSize": 10733,
+      "sha256": "392b9bec5b83f80df397e99dc2414c13d38b6fce8ce21f7f8ce7f5aa52fd3dc6"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/packages__storage-sqlite__src__candidate-material-protocol.ts.txt",
+      "byteSize": 3894,
+      "sha256": "7e1fa9495dfda24a114758720befc1ac9a96f1b6a9d7f1d87afb60b589125e94"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/tests__candidate-conflict-git.test.mjs.txt",
+      "byteSize": 5956,
+      "sha256": "b389b32084d58b1ef333f8f640a16ec958e9e462c3b3470810a3e8f19fe6ae61"
+    },
+    {
+      "path": "project/evidence/P1-05/development/materials-v1-failed/tests__candidate-material.test.mjs.txt",
+      "byteSize": 8612,
+      "sha256": "03b34e6812ed48f86780ccc67877a84d098fad4e29d2d92271fcb8ae62dc4f14"
+    }
+  ],
+  "limitations": [
+    "Local real content files, SQLite transactions and Git/A2A HTTP sources; test fixture verification decisions and job-free fencing are explicit.",
+    "No live model, quality execution, real Runner job, OIDC, remote Git, Linux/runsc, T05/T23 or product gate acceptance.",
+    "Full archive preservation, reclamation and final managed-workspaces composition remain unfinished.",
+    "The historical fixed c9c1474 regression failed in two workspace fixtures and remains separately retained.",
+    "OpenSpec task completion requires a separate review; terminal checks do not automatically complete parent work packages."
+  ]
+}

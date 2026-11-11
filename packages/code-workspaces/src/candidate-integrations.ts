@@ -8,10 +8,11 @@ import type {AllocationFence,AllocationFencer} from './allocation.js';
 import {ControlledGit,WorkspaceError} from './git.js';
 
 type Merge=Awaited<ReturnType<ControlledGit['mergeTree']>>;
-interface ConflictContext {record:CandidateIntegration;basis:CandidateBasis;step:CandidateIntegrationStep;repository:ControlledGit;signal:AbortSignal}
+export interface CandidateConflictContext {record:CandidateIntegration;basis:CandidateBasis;step:CandidateIntegrationStep;repository:ControlledGit;signal:AbortSignal}
+export type CandidateMerge=Merge;
 export interface LocalCandidateIntegrationOptions {
  mode:'local-development';storage:SqliteStorage;controlDataRoot:string;runnerDataRoot:string;backupRoot:string;fencer:AllocationFencer;
- conflicts?:{publish(context:ConflictContext,merge:Merge):Promise<CandidateIntegration>;reconcile(context:ConflictContext):Promise<CandidateIntegration>};
+ conflicts?:{capture(context:CandidateConflictContext,merge:Merge):Promise<void>;recoverReport(context:CandidateConflictContext):Promise<Merge|null>;publish(context:CandidateConflictContext,merge:Merge):Promise<CandidateIntegration>;reconcile(context:CandidateConflictContext):Promise<CandidateIntegration>};
 }
 function deny(code:string):never{throw new WorkspaceError(code,'unknown');}
 const hash=(bytes:string)=>createHash('sha256').update(bytes).digest('hex');
@@ -71,8 +72,16 @@ export class LocalCandidateIntegrations {
     if(step?.state==='ACKNOWLEDGED')continue;
     if(!step){await this.source(provider,basis.sources[ordinal]!,signal);const begun=await this.options.storage.request('beginCandidateStep',{...original(record),ordinal});step=begun;created=begun.created;}
     if(step.state==='COMPUTING'){
-     if(!created)deny('CANDIDATE_COMPUTATION_OUTCOME_UNKNOWN');
-     const bases=await provider.mergeBases(step.ours,step.theirs,signal),merge=await provider.mergeTree(bases,step.ours,step.theirs,signal),reportSha256=hash(canonical(merge));
+     const context={record,basis,step,repository:provider,signal};let merge:Merge;
+     if(created){
+      const bases=await provider.mergeBases(step.ours,step.theirs,signal);merge=await provider.mergeTree(bases,step.ours,step.theirs,signal);
+      // Persist exact original report bytes before freezing the preparation.
+      // A lost reply can then resume this computation without another merge.
+      if(this.options.conflicts)await this.options.conflicts.capture(context,merge);
+     }else{
+      const originalReport=await this.options.conflicts?.recoverReport(context);if(!originalReport)deny('CANDIDATE_COMPUTATION_OUTCOME_UNKNOWN');merge=originalReport;
+     }
+     const reportSha256=hash(canonical(merge));
      try{step=await this.options.storage.request('prepareCandidateStep',{...original(record),ordinal,bases:merge.bases,tree:merge.tree,clean:merge.clean,reportSha256});}
      catch(error){const old=await this.options.storage.request('getCandidateIntegrationStep',{...query(record),ordinal}).catch(()=>null);if(!old?.preparation||old.preparation.reportSha256!==reportSha256||old.preparation.tree!==merge.tree||old.preparation.clean!==merge.clean)throw error;step=old;}
      if(!merge.clean){record=await this.options.storage.request('getCandidateIntegration',query(record));if(!this.options.conflicts)deny('CANDIDATE_CONFLICT_STORAGE_REQUIRED');return await this.options.conflicts.publish({record,basis,step,repository:provider,signal},merge);}
@@ -100,6 +109,31 @@ export class LocalCandidateIntegrations {
    if(!failed)await this.options.storage.request('markCandidateIntegrationUncertain',{...original(record),errorCode}).catch(()=>{});throw error;
   }finally{if(fence)await fence.release();}
  }
+  /** Prepare a dependency-specific snapshot before scheduler admission. This is
+   * a trusted hook, separate from its read-only resource planner. */
+  async prepareWorkInput(input:{principalId:string;runId:string;workId:string},signal=new AbortController().signal){
+   const subject={...input,purpose:'work-input' as const},basis=await this.options.storage.request('getCandidateSourceBasis',subject);
+   if(basis.sources.length===0)return;
+   let snapshot:CandidateIntegration;
+   try{snapshot=await this.options.storage.request('getQualifiedCandidateSnapshot',subject);}
+   catch(error){
+    if((error as {code?:unknown})?.code!=='CANDIDATE_SNAPSHOT_UNAVAILABLE')throw error;
+    // A stable original ID prevents a tick/process restart from replacing an
+    // unresolved operation. Known failures require an explicit trusted retry.
+    const operationId='op_'+hash(canonical({principalId:input.principalId,basisSha256:basis.sha256})).slice(0,32);
+    snapshot=await this.integrate({...subject,operationId},signal);
+   }
+   if(snapshot.state!=='ACKNOWLEDGED'||snapshot.purpose!=='work-input'||snapshot.workId!==input.workId||snapshot.basisSha256!==basis.sha256||!snapshot.manifest)deny('CANDIDATE_SNAPSHOT_UNAVAILABLE');
+   const fence=await this.options.fencer.acquire({kind:'project',directoryRoot:this.controlDataRoot,resourceId:basis.repository.resourceId,operationId:snapshot.operationId},signal);
+   try{
+    const provider=await this.project(basis);
+    for(const ref of snapshot.updates){if(ref.ref.startsWith('refs/devmesh/candidates/')||await provider.readRef(ref.ref,signal)!==snapshot.manifest.commit)deny('CANDIDATE_SNAPSHOT_REF_CHANGED');}
+    const manifest=await provider.manifest(snapshot.manifest.commit,signal);
+    if(canonical({commit:manifest.commit,tree:manifest.tree,sha256:manifest.sha256})!==canonical(snapshot.manifest))deny('CANDIDATE_MANIFEST_CHANGED');
+    await this.options.storage.request('assertCandidateSourceBasis',{...subject,basisSha256:basis.sha256});
+    const current=await this.options.storage.request('getQualifiedCandidateSnapshot',subject);if(current.operationId!==snapshot.operationId||canonical(current.manifest)!==canonical(snapshot.manifest))deny('CANDIDATE_SNAPSHOT_CHANGED');
+   }finally{await fence.release();}
+  }
  async reconcile(input:Request<'getCandidateIntegration'>,signal=new AbortController().signal){
   const record=await this.options.storage.request('getCandidateIntegration',input);
   return this.integrate({principalId:input.principalId,operationId:input.operationId,runId:record.runId,purpose:record.purpose,...(record.workId?{workId:record.workId}:{})},signal);

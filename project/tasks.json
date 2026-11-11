@@ -673,7 +673,10 @@
         "project/evidence/P1-04/windows-ce823fb-incomplete/evidence.json",
         "project/evidence/P1-04/windows-ce823fb-incomplete/report.json",
         "project/evidence/P1-05/development/fence-refresh-v1/evidence.json",
-        "project/evidence/P1-05/development/fence-refresh-v1/验证记录.md"
+        "project/evidence/P1-05/development/fence-refresh-v1/验证记录.md",
+        "project/evidence/P1-04/windows-c9c1474-incomplete/evidence.json",
+        "project/evidence/P1-04/windows-c9c1474-incomplete/report.json",
+        "project/evidence/P1-05/development/workspace-fixture-repair-v1/evidence.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -682,7 +685,9 @@
         "固定 b77d12a 回归未通过：前 12 项通过，完整 MCP 34/35；超时夹具在 500ms 初始化阶段 MCP_CONNECT_FAILED，尚未到预期工具调用。原报告保留，余下 8 项未执行；归档新检查按门槛未启动，已修正测试夹具并安排串行重验，4.1 未勾选。",
         "2026-11-12：源码归档 v2 开发驱动完整通过（源码指纹不变）：MCP 超时修正用例 1/1、归档 4/4、受控 Git 5/5、存储 28/28，类型／lint／构建通过；证据 source-v2/evidence.json。不是固定提交或容器验收。",
         "2026-11-12：ce823fb 固定干净 Windows checkout 全量回归实际失败：前 12 项通过，MCP 34/35，Runner 屏障编辑联调在 mcp-repo-git.test.mjs:159 返回 RUNNER_FORBIDDEN；后 8 项未执行。报告和材料 SHA-256 已保留于 windows-ce823fb-incomplete。2.1 重开，正在核实新屏障仍使用旧请求 permit 的时序；不将固定安装或此前局部通过当成全量通过。",
-        "2026-11-12：新 Runner 屏障前重新复核当前许可的补丁通过类型／lint／MCP 构建和真实 Repo Git／文件／Runner 联调 11/11。主动使已准入请求的捕获许可过期，实际 Host 继续续约，Runner 取得当前许可；暂停清理及排队 Job 拒绝保持。证据见 P1-05 development/fence-refresh-v1；不是最终固定提交全量或产品验收。"
+        "2026-11-12：新 Runner 屏障前重新复核当前许可的补丁通过类型／lint／MCP 构建和真实 Repo Git／文件／Runner 联调 11/11。主动使已准入请求的捕获许可过期，实际 Host 继续续约，Runner 取得当前许可；暂停清理及排队 Job 拒绝保持。证据见 P1-05 development/fence-refresh-v1；不是最终固定提交全量或产品验收。",
+        "2026-11-12：c9c1474 独立干净 Windows checkout 冻结安装全量回归未通过：前 13 项通过，其中 MCP 35/35；workspace 29/31，真实子进程持锁用例返回 RUNNER_FORBIDDEN、未归属目录用例准备时返回 REGISTRY_PROJECTION_STALE，后 7 项未执行。原报告和日志 SHA-256 保留于 windows-c9c1474-incomplete，正在区分子进程启动捕获许可／长 Git 夹具导致的投影过期与实际实现问题；不放宽生产授权或登记全量通过。",
+        "2026-11-12：c9c1474 两处失败的测试准备修复在 .cache 专项实际通过 2/2（含 lint）：子进程模块加载就绪后才序列化当前十五秒许可；实际 Agent Card 探测制造旧投影并验证拒绝，准备新准入前刷新投影。生产授权不变。原主目录处于冲突材料验证源码冻结，修复尚未复制到主测试文件，固定提交全量仍未通过；原始证据见 P1-05 development/workspace-fixture-repair-v1。"
       ]
     },
     {
@@ -742,7 +747,15 @@
         "tests/fixtures/candidate-data.mjs",
         "packages/code-workspaces/src/candidate-integrations.ts",
         "tests/candidate-git.test.mjs",
-        "tests/fixtures/candidate-git.mjs"
+        "tests/fixtures/candidate-git.mjs",
+        "packages/storage-sqlite/migrations/0017-candidatematerials.sql",
+        "packages/storage-sqlite/src/candidate-material-protocol.ts",
+        "packages/storage-sqlite/src/candidate-material-domain.ts",
+        "packages/code-workspaces/src/candidate-conflicts.ts",
+        "packages/storage-sqlite/src/scheduler-domain.ts",
+        "packages/platform-core/src/scheduler.ts",
+        "tests/candidate-material.test.mjs",
+        "tests/candidate-conflict-git.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-05/离线实施进展.md",
@@ -764,7 +777,11 @@
         "project/evidence/P1-05/development/journal-v1-failed/evidence.json",
         "project/evidence/P1-05/development/journal-v2/evidence.json",
         "project/evidence/P1-05/development/git-service-v1-failed/evidence.json",
-        "project/evidence/P1-05/development/git-service-v2/evidence.json"
+        "project/evidence/P1-05/development/git-service-v2/evidence.json",
+        "project/evidence/P1-04/windows-c9c1474-incomplete/evidence.json",
+        "project/evidence/P1-04/windows-c9c1474-incomplete/report.json",
+        "project/evidence/P1-05/development/workspace-fixture-repair-v1/evidence.json",
+        "project/evidence/P1-05/development/materials-v1-failed/evidence.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -784,7 +801,12 @@
         "2026-11-12：迁移 16 和候选私有 journal 开发验证通过：候选 16/16、既有存储 28/28，lint 重新执行；仅修复成员夹具 created_at，应用／SQL 输入完全不变，按源码指纹复用首轮真实迁移／类型／构建日志。证据保存于 development/journal-v2；首轮失败另存，真实 Git 服务、冲突内容、调度／验证 checkout 尚未完成，3.1～3.3 不勾选。",
         "2026-11-12：候选 journal 已提交 26d20b8；本地实际 Git 集成适配器已编写并通过类型／lint／构建，正在执行两个同基点来源的 A2A/Scheduler/Host/源码归档联调用例。使用明确无 Job 的 fencer 和夹具质量核实决策；尚无冲突内容适配、固定验证 checkout 或完整 P1-05 验收，3.1～3.3 不勾选。",
         "2026-11-12：实际候选 Git 首轮类型／lint／构建通过，联调 2/3；合并与源码清单、ACK 丢失及未提交变更检查走通，首条最后的幂等比较因恢复接口多返回内部 created 字段失败。另两条未知 CAS／暂停后原 ref 核实通过。保留失败源码与日志，统一返回字段后重跑；第二轮复用同一真实来源夹具，但三个独立原操作和断言均保留。",
-        "2026-11-12：候选 Git 服务修复后类型／lint／构建及实际联调通过，Node 4/4（一个共享真实来源夹具、三个原操作场景）。覆盖同基点双分支保留、丢失步骤／最终 ACK、未知 CAS 禁止重放与替换、暂停和全局 ref 后续移动后的原事务核实；接受指针保持未改变。development/git-service-v2 保存原始日志；无 Job fencer 与夹具质量决策边界明确，冲突内容、验证工作区、调度组合及 3.1～3.3 仍未完成。"
+        "2026-11-12：候选 Git 服务修复后类型／lint／构建及实际联调通过，Node 4/4（一个共享真实来源夹具、三个原操作场景）。覆盖同基点双分支保留、丢失步骤／最终 ACK、未知 CAS 禁止重放与替换、暂停和全局 ref 后续移动后的原事务核实；接受指针保持未改变。development/git-service-v2 保存原始日志；无 Job fencer 与夹具质量决策边界明确，冲突内容、验证工作区、调度组合及 3.1～3.3 仍未完成。",
+        "2026-11-12：候选实际 Git 服务成功路径及原操作恢复提交 b889d69（真实联调 4/4）。后续已编写迁移 17、原始合并报告和虚拟基点字节保存、不可变冲突材料与原子内容引用、消息／stage 路径并集、失败原写入恢复，以及 Work 专属候选快照的调度准入与验证 checkout 联调。新代码的类型／构建／存储／内容／调度及真实 Git 验证正在执行；3.1～3.3 仍待验证，不据此完成父工作包或阶段门槛。",
+        "2026-11-12：c9c1474 独立干净 Windows checkout 冻结安装全量回归未通过：前 13 项通过，其中 MCP 35/35；workspace 29/31，真实子进程持锁用例返回 RUNNER_FORBIDDEN、未归属目录用例准备时返回 REGISTRY_PROJECTION_STALE，后 7 项未执行。原报告和日志 SHA-256 保留于 windows-c9c1474-incomplete，正在区分子进程启动捕获许可／长 Git 夹具导致的投影过期与实际实现问题；不放宽生产授权或登记全量通过。",
+        "2026-11-12：c9c1474 两处失败的测试准备修复在 .cache 专项实际通过 2/2（含 lint）：子进程模块加载就绪后才序列化当前十五秒许可；实际 Agent Card 探测制造旧投影并验证拒绝，准备新准入前刷新投影。生产授权不变。原主目录处于冲突材料验证源码冻结，修复尚未复制到主测试文件，固定提交全量仍未通过；原始证据见 P1-05 development/workspace-fixture-repair-v1。",
+        "2026-11-12：冲突材料／固定验证输入 v1 开发验证 FAILED，实际检查及用例数见 project/evidence/P1-05/development/materials-v1-failed/evidence.json；原始日志、源码指纹和范围限制已保留。源码完整归档／回收、真实环境及最终固定提交验收仍未完成。",
+        "2026-11-12：materials-v1 在十项类型／构建／材料／日志／存储／内容／调度检查通过后，真实 Git 验证输入用例因取消收尾缺少 stopVerified 被拒绝；原始 FAILED 报告及当时源码已保留。现已先断言该夹具 Host 未启动工具、Runner Job 且屏障已释放，再提交已知空副作用的停止证据，待固定提交重跑。c9c1474 的两项工作区夹具修复已按专项 2/2 原字节应用到主测试，不放宽十五秒许可或 Registry 过期拒绝。"
       ]
     },
     {

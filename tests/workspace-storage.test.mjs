@@ -8,15 +8,24 @@ import {join} from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 import {ControlledGit,LocalManagedWorkspaces} from '../packages/code-workspaces/dist/index.mjs';
 import {ExecutionGrantLease} from '../packages/agent-runtime/dist/index.mjs';
-import {httpFixture,prepareDispatch} from './fixtures/a2a-data.mjs';
+import {AgentRegistry} from '../packages/a2a-adapter/dist/index.mjs';
+import {httpFixture,prepareDispatch,credential} from './fixtures/a2a-data.mjs';
 import {meta} from './fixtures/storage-data.mjs';
 const exec=promisify(execFile),op=()=> 'op_'+randomUUID().replaceAll('-',''),nullFile=process.platform==='win32'?'NUL':'/dev/null';
 const git=async(root,...args)=>(await exec('git',['-c','core.fsmonitor=false','-c','core.hooksPath='+nullFile,...args],{cwd:root,windowsHide:true,encoding:'utf8',env:{...process.env,GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:nullFile}})).stdout.trim();
 async function identity(provider){const {root,gitDirectory,commonDirectory}=provider.identity,[r,g]=await Promise.all([lstat(root,{bigint:true}),lstat(gitDirectory,{bigint:true})]);return {root,gitDirectory,commonDirectory,rootDevice:String(r.dev),rootFileId:String(r.ino),gitDevice:String(g.dev),gitFileId:String(g.ino)};}
-async function fixture(t,{claim=true,preparedDirectories=true}={}){
+async function fixture(t,{claim=true,preparedDirectories=true,staleProjection=false}={}){
   const cleanup=[];t.after(async()=>{for(const fn of cleanup.toReversed())await fn();});const f=await httpFixture({after:fn=>cleanup.push(fn)}),root=join(f.root,'source');await mkdir(root);await mkdir(join(root,'src'));await writeFile(join(root,'src/board.ts'),'export const count = 0;\n');await git(root,'init','--quiet');await git(root,'config','user.name','Workspace fixture');await git(root,'config','user.email','fixture@localhost');await git(root,'add','.');await git(root,'commit','--quiet','--no-gpg-sign','-m','Initial');
   const base=await git(root,'rev-parse','HEAD'),source=await ControlledGit.open(root,'checkout'),manifest=await source.manifest(base);let repoIdentity,workspaceIdentity;
   if(preparedDirectories){const pack=await source.exportCommit(base),repository=await ControlledGit.initialize(join(f.root,'project.git'),'bare');await repository.importCommit(pack,base);await repository.updateRefs([{ref:'refs/devmesh/templates/initial',commit:base,expected:null}]);repoIdentity=await identity(repository);const checkout=await ControlledGit.initialize(join(f.root,'workspace'),'checkout');await checkout.importCommit(pack,base);await checkout.checkout(base);workspaceIdentity=await identity(checkout);}
+  if(staleProjection){
+   const projection=new AgentRegistry(f.storage);await projection.refresh();const before=projection.version,endpoint=f.manifest.endpoints.find(endpoint=>endpoint.role==='developer'),check=await f.registry.probe(endpoint,credential);assert.equal(check.status,'HEALTHY');await f.storage.request('recordEndpointCheck',check);
+   assert.notEqual((await f.storage.request('getRegistrySnapshot',{})).projectionRevision,before.projectionRevision);await assert.rejects(projection.resolveRole('developer'),{code:'REGISTRY_PROJECTION_STALE'});
+  }
+  // Long real Git preparation can cross a health projection update. Refresh
+  // the projection before using it for a new admission, without weakening the
+  // Worker's stale-projection rejection or replaying any side effect.
+  await f.registry.refresh();
   const p=await prepareDispatch(f,f.registry,{}, {baseCommit:base,resources:[{kind:'workspace',resourceId:'workspace_01',access:'write'},{kind:'projectRepository',resourceId:'repository_01',access:'write'}]});
   const sql=(query,...params)=>{const db=new DatabaseSync(join(f.local.dataRoot,'db/devmesh.sqlite'));try{return db.prepare(query).all(...params);}finally{db.close();}};
   const permit=JSON.parse(sql('SELECT permit_json FROM execution_grants WHERE attempt_id=?',p.attemptId)[0].permit_json);let lease;
@@ -65,6 +74,6 @@ test('local allocation recovers a lost READY reply and never overwrites edits or
   assert.equal(f.sql('SELECT count(*) n FROM workspace_allocations')[0].n,1);assert.deepEqual(a.counts(),{held:false,acquired:5,released:5});
 });
 test('an unowned repository directory is preserved and never adopted as a completed allocation',async t=>{
-  const f=await fixture(t,{preparedDirectories:false}),a=await allocator(f),unknown=join(f.options.dataRoot,'repositories',f.p.projectId);await mkdir(unknown);await writeFile(join(unknown,'owner.txt'),'pre-existing material');
+  const f=await fixture(t,{preparedDirectories:false,staleProjection:true}),a=await allocator(f),unknown=join(f.options.dataRoot,'repositories',f.p.projectId);await mkdir(unknown);await writeFile(join(unknown,'owner.txt'),'pre-existing material');
   await assert.rejects(a.service.ensureRepository(f.registration),{code:'WORKSPACE_DIRECTORY_UNOWNED'});assert.equal(await readFile(join(unknown,'owner.txt'),'utf8'),'pre-existing material');await assert.rejects(lstat(join(unknown,'repo.git')),{code:'ENOENT'});assert.equal((await f.storage.request('getManagedRepository',{principalId:'user_1',projectId:f.p.projectId})).state,'PREPARING');assert.deepEqual(a.counts(),{held:false,acquired:1,released:1});
 });

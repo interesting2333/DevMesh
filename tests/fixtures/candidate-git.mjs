@@ -44,5 +44,5 @@ export async function candidateGitFixture(t,{initial={'src/left.ts':'export cons
   const result={attemptId,binding,archive,commit:archive.manifest.commit,workId:attempt.workId};sources.push(result);return result;
  }
  const service=(storage=f.storage,extra={})=>new LocalCandidateIntegrations({...options,...extra,storage});
- return {...f,p,draft,base,source,repository,options,held,sql,develop,sources,service,subject:{principalId:'user_1',runId:p.runId,purpose:'run-candidate'},input:()=>({principalId:'user_1',runId:p.runId,purpose:'run-candidate',operationId:archiveOp()})};
+ return {...f,p,draft,base,source,repository,options,held,sql,develop,sources,service,scheduler,allocator,subject:{principalId:'user_1',runId:p.runId,purpose:'run-candidate'},input:()=>({principalId:'user_1',runId:p.runId,purpose:'run-candidate',operationId:archiveOp()})};
 }

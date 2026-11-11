@@ -75,6 +75,13 @@ export class ControlledGit {
     if(!body.startsWith('tree ')||!tree)deny('GIT_COMMIT_INVALID');return {commit,tree:sha(tree!),parents:headers.filter(v=>v.startsWith('parent ')).map(v=>sha(v.slice(7))),body};
   }
   async readBlob(objectId:string,signal?:AbortSignal){sha(objectId);await this.validate(signal);return (await this.call(['cat-file','blob',objectId],signal,undefined,2*1024*1024)).out;}
+  async treeEntries(commit:string,signal?:AbortSignal){
+    const info=await this.commit(commit,signal),rows=decode((await this.call(['ls-tree','-r','-t','-z',info.tree],signal)).out).split('\0').filter(Boolean);
+    if(rows.length>8000)deny('GIT_SOURCE_TOO_LARGE');
+    const entries=rows.map(row=>{const m=/^(100644|100755|040000) (blob|tree) ([a-f0-9]{40})\t(.+)$/.exec(row);if(!m||!safePath(m[4]!)||(m[1]==='040000')!==(m[2]==='tree'))deny('GIT_SOURCE_PATH_DENIED');return m[1]==='040000'?{path:m[4]!,kind:'DIRECTORY' as const,mode:'040000' as const,objectId:m[3]!}:{path:m[4]!,kind:'FILE' as const,mode:m[1] as '100644'|'100755',objectId:m[3]!};});
+    if(new Set(entries.map(entry=>entry.path.toLowerCase())).size!==entries.length)deny('GIT_SOURCE_PATH_COLLISION');return entries;
+  }
+
   async manifest(commit:string,signal?:AbortSignal):Promise<SourceManifest>{
     const info=await this.commit(commit,signal),tree=await this.treeManifest(info.tree,signal),basis={commit,tree:info.tree,files:tree.files,byteSize:tree.byteSize};if(Buffer.byteLength(canonical(basis))>192*1024)deny('GIT_SOURCE_MANIFEST_TOO_LARGE');return {...basis,sha256:hash(canonical(basis))};
   }

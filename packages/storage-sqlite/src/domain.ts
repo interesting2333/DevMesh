@@ -23,6 +23,9 @@ import { createPlanDomain } from './plan-domain.js';
 import {createCandidateIntegrationDomain} from './candidate-integration-domain.js';
 import {candidateIntegrationRequests} from './candidate-integration-protocol.js';
 import type {CandidateIntegrationMethod} from './candidate-integration-protocol.js';
+import {createCandidateMaterialDomain} from './candidate-material-domain.js';
+import {candidateMaterialRequests} from './candidate-material-protocol.js';
+import type {CandidateMaterialMethod} from './candidate-material-protocol.js';
 import { createSchedulerDomain } from './scheduler-domain.js';
 import { createDispatchDomain } from './dispatch-domain.js';
 import { preparationRequests } from './preparation-protocol.js';
@@ -69,8 +72,9 @@ export function createDomain(db: DatabaseSync) {
   });
   const plans = createPlanDomain(db);
   const candidateIntegrations=createCandidateIntegrationDomain(db,plans);
+  const candidateMaterials=createCandidateMaterialDomain(db);
   const candidateBasis=candidateIntegrations.basis;
-  const scheduler = createSchedulerDomain(db,plans);
+  const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
   const exec = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).run(...args);
@@ -400,6 +404,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(candidateMaterialRequests,method))return candidateMaterials.execute(method as CandidateMaterialMethod,input);
     if(Object.hasOwn(candidateIntegrationRequests,method))return candidateIntegrations.execute(method as CandidateIntegrationMethod,input);
     if(Object.hasOwn(sourceArchiveRequests,method))return sourceArchives.execute(method as SourceArchiveMethod,input);
     if(Object.hasOwn(workspaceRequests,method))return workspaces.execute(method as WorkspaceMethod,input);

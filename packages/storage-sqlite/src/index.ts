@@ -114,3 +114,6 @@ export async function openStorage(options: StorageOptions): Promise<SqliteStorag
   try { await storage.ready; return storage; }
   catch (error) { await storage.terminate(); throw error; }
 }
+
+export {candidateMaterialKey,candidateMergeReport,candidateReportEnvelope} from './candidate-material-protocol.js';
+export type {CandidateMaterial,CandidateMaterialDescriptor,CandidateConflictAcknowledgement} from './candidate-material-protocol.js';

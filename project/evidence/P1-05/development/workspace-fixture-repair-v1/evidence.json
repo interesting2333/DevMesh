@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "Focused real Runner/fork and Git/unowned-directory tests using drafted fixture repairs in .cache against the current built application. Does not alter the active application-source validation; not a fixed-checkout or full-suite pass.",
+  "finishedAt": "2026-11-11T22:49:37.302Z",
+  "checks": [
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "focused",
+      "exitCode": 0,
+      "tests": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/workspace-fixture-repair-v1/p105-fixture-repair-v1-report.json",
+      "sha256": "88573a8bd81c20f117345b64b53a8ca6e4461b88336748d7e0e9ba18a65ed459",
+      "byteSize": 40771
+    },
+    {
+      "path": "project/evidence/P1-05/development/workspace-fixture-repair-v1/p105-fixture-repair-v1-lint.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteSize": 0
+    },
+    {
+      "path": "project/evidence/P1-05/development/workspace-fixture-repair-v1/p105-fixture-repair-v1-focused.txt",
+      "sha256": "97fdefae0f6a04b9d2d60b6f733c0e60d29abac85a5e8f2eb1d2aefb9b960af7",
+      "byteSize": 1180
+    },
+    {
+      "path": "project/evidence/P1-05/development/workspace-fixture-repair-v1/p105-fixed-workspace-fencing.test.mjs.txt",
+      "sha256": "dd15d2cbcb50725690dde10f56b13fe373adb2abc5898f109c6232d71fdf9f98",
+      "byteSize": 12374
+    },
+    {
+      "path": "project/evidence/P1-05/development/workspace-fixture-repair-v1/p105-fixed-workspace-storage.test.mjs.txt",
+      "sha256": "fbc25b76e18eff0ab7d8722f5be6a8d2d86dc4ab2ba6877334d339899b556b82",
+      "byteSize": 12984
+    },
+    {
+      "path": "project/evidence/P1-05/development/workspace-fixture-repair-v1/p105-fixed-workspace-fence-holder.mjs.txt",
+      "sha256": "1ad8f4e94e8fe4a0f7e1c0955c9cd0807211b4886b608edce7618cdec83eb240",
+      "byteSize": 904
+    }
+  ],
+  "limitations": [
+    "The repaired test files were executed from .cache and have not yet replaced the main test fixtures because candidate material validation freezes those sources.",
+    "The actual child reports ready after imports before the parent serializes a current fifteen-second fixture permit. No production authority window or rejection is weakened.",
+    "A separate real Registry projection is deliberately made stale through an actual Agent Card probe/check, proves rejection, and the fixture refreshes before new admission.",
+    "This focused 2/2 pass does not replace the failed c9c1474 full regression or establish a fixed-checkout full-suite pass."
+  ]
+}

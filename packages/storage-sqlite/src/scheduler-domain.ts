@@ -6,13 +6,14 @@ import { canonical } from './json.js';
 import { digest } from './migrations.js';
 import type { Parsed, ScheduledCandidate } from './protocol.js';
 import type { createPlanDomain } from './plan-domain.js';
+import type {createCandidateIntegrationDomain} from './candidate-integration-domain.js';
 
 type Row=Record<string,string|number|null>;
 type Work=Draft['works'][number];
 type Admission=Parsed<'admitScheduledWork'>;
 function reject(code:string,message:string,status=409):never{throw new StorageError(code,status,message);}
 const json=(v:unknown)=>JSON.parse(String(v)) as unknown;
-export function createSchedulerDomain(db:DatabaseSync,plans:ReturnType<typeof createPlanDomain>){
+export function createSchedulerDomain(db:DatabaseSync,plans:ReturnType<typeof createPlanDomain>,candidates:ReturnType<typeof createCandidateIntegrationDomain>){
   const get=(sql:string,...args:SQLInputValue[])=>db.prepare(sql).get(...args) as Row|undefined;
   const all=(sql:string,...args:SQLInputValue[])=>db.prepare(sql).all(...args) as Row[];
   const exec=(sql:string,...args:SQLInputValue[])=>db.prepare(sql).run(...args);
@@ -118,9 +119,20 @@ export function createSchedulerDomain(db:DatabaseSync,plans:ReturnType<typeof cr
       refs.set(source.artifactId,{artifactId:source.artifactId,sha256:source.sha256});
     }
     const bases=new Set([...dep.values()].map(r=>r.code_commit as string|null).filter((x):x is string=>x!==null));
-    if(bases.size>1)reject('CODE_BASIS_AMBIGUOUS','Predecessor outputs require an integrated code snapshot');
-    const codeCommit=[...bases][0]??String(get('SELECT base_commit FROM user_tasks WHERE task_id=?',run.task_id!)!.base_commit);
-    if(work.role==='tester'&&bases.size===0)reject('VERIFICATION_BASIS_UNAVAILABLE','Tester requires a verified code snapshot from its predecessor');
+    let codeCommit:string;
+    if(get("SELECT 1 FROM managed_repositories WHERE project_id=? AND state='READY'",run.project_id!)){
+      // This executes within the existing admission transaction. Calling the
+      // public command here would open a nested SQLite transaction.
+      const subject={principalId:input.meta.principalId,runId:input.runId,purpose:'work-input' as const,workId:work.workId},basis=candidates.basis.freeze(subject);
+      if(work.role==='tester'&&basis.sources.length===0)reject('VERIFICATION_BASIS_UNAVAILABLE','Tester requires a verified development source');
+      const snapshot=basis.sources.length?candidates.qualified(subject):null;
+      if(snapshot&&(!snapshot.manifest||snapshot.purpose!=='work-input'||snapshot.workId!==work.workId||snapshot.basisSha256!==basis.sha256))reject('CANDIDATE_SNAPSHOT_UNAVAILABLE','Work requires its exact current dependency snapshot');
+      codeCommit=snapshot?.manifest?.commit??basis.baseCommit;
+    }else{
+      if(bases.size>1)reject('CODE_BASIS_AMBIGUOUS','Predecessor outputs require an integrated code snapshot');
+      codeCommit=[...bases][0]??String(get('SELECT base_commit FROM user_tasks WHERE task_id=?',run.task_id!)!.base_commit);
+      if(work.role==='tester'&&bases.size===0)reject('VERIFICATION_BASIS_UNAVAILABLE','Tester requires a verified code snapshot from its predecessor');
+    }
     const req=get('SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?',input.runId,draft.requirementRevision)!;
     const requirements=parseContract(productOutput,json(req.content_json)).requirements;
     const decision=get('SELECT decision_id FROM decisions WHERE run_id=? AND subject_kind=\'PLAN\' AND subject_id=?',input.runId,String(input.planRevision));

@@ -70,8 +70,16 @@ test('a real killed filesystem owner requires its exact dead-owner token before 
  const options={mode:'local-development',controlDataRoot:join(f.root,'control'),runnerDataRoot:f.layout.dataRoot,backupRoot:join(f.root,'backup')},input={kind:'workspace',directoryRoot:f.layout.dataRoot,resourceId:f.base.workspaceRef,operationId:op(),permit:f.base.permit},signal=new AbortController().signal;
  const child=fork(fileURLToPath(new URL('./fixtures/workspace-fence-holder.mjs',import.meta.url)),[],{stdio:['ignore','ignore','pipe','ipc'],windowsHide:true,execArgv:[]});let stderr='';child.stderr.on('data',v=>{if(stderr.length<4096)stderr+=String(v);});const exited=once(child,'exit');let dead=false;
  f.cleanup.push(async()=>{if(!dead){child.kill('SIGKILL');await exited;dead=true;}});
- const held=new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Child fence acquisition timed out: '+stderr)),30000);timer.unref();child.once('message',message=>{clearTimeout(timer);if(message.error)reject(Error(message.error));else resolve(message);});child.once('error',error=>{clearTimeout(timer);reject(error);});});
- child.send({options,input,endpoint:f.client.base.origin});const original=await held;assert.equal((await f.client.activeWorkspaceFence(input.resourceId)).fenceId,original.fenceId);
+  const message=(label,timeout)=>new Promise((resolve,reject)=>{
+   const cleanup=()=>{clearTimeout(timer);child.off('message',received);child.off('error',failed);child.off('exit',closed);};
+   const received=value=>{cleanup();if(value.error)reject(Error(value.error));else resolve(value);},failed=error=>{cleanup();reject(error);},closed=code=>failed(Error('Child '+label+' exited before reply: '+code+' '+stderr));
+   const timer=setTimeout(()=>failed(Error('Child '+label+' timed out: '+stderr)),timeout);timer.unref();child.once('message',received);child.once('error',failed);child.once('exit',closed);
+  });
+  assert.deepEqual(await message('startup',60000),{ready:true});
+  // Startup/import time is outside execution admission. Keep the actual
+  // fifteen-second fixture authority and serialize its current heartbeat now.
+  const held=message('fence acquisition',30000);
+  child.send({options,input:{...input,permit:structuredClone(f.base.permit)},endpoint:f.client.base.origin});const original=await held;assert.equal((await f.client.activeWorkspaceFence(input.resourceId)).fenceId,original.fenceId);
  child.kill('SIGKILL');await exited;dead=true;assert.equal((await f.client.getWorkspaceFence(original.fenceId)).state,'ACTIVE');
  await assert.rejects(new LocalRunnerWorkspaceFencer({...options,runner:f.client}).acquire(input,signal),{code:'STORAGE_LOCKED'});
  await assert.rejects(new LocalRunnerWorkspaceFencer({...options,runner:f.client,recoveryTokens:new Map([['workspace:'+input.resourceId,randomUUID()]])}).acquire(input,signal),{code:'STORAGE_LOCKED'});

@@ -1,28 +1,61 @@
 # Managed code workspaces（实施中）
 
-`ControlledGit` 目前提供固定 Git 操作：独立 bare／checkout 初始化与绑定、精确 commit／源码清单、有界 pack 对象传输、固定 SHA checkout 和 `refs/devmesh/` 多 ref CAS。每次动作复核物理目录、设备／文件 ID、Git directory／common directory；拒绝外部 filter／merge helper、对象 alternates、符号链接源码、敏感路径和越界体积。它不开放调用方 argv、仓库 URL、shell 或共享可写 `.git`。
+本包提供显式 `local-development` 后端。默认平台与 CLI 尚未启用它；构造服务必须提供实际目录边界及 fencing。控制面、Runner、备份根目录分开，跨节点不共享可写 `.git`。
 
-传输使用受控 pack-objects／index-pack，目的仓库重新校验 commit、tree、文件 SHA-256 与大小；它没有更新业务接受指针。目录只能在明确空闲且受信任的所有权／fencing 下使用，Provider 本身不能代替 Runner 作业准入或数据库 ACK。
+## 实现与验证状态
 
-迁移 13 和 Worker 命令保存项目仓库及工作区的原操作、准入代际、base、写范围、清单和物理目录身份。`LocalManagedWorkspaces` 仅在明确 `local-development` 模式和部署者提供实际 fencing 时可构造；项目目录为控制面 `repositories/<projectId>/repo.git`，独立 checkout 为 Runner `workspaces/<attemptId>/repo`。准备先落库，未知目录拒绝接管，READY 目录丢失拒绝重建；恢复查询与继续写入分别检查，暂停后不因原操作存在就允许继续 checkout。源码清单有 192 KiB 上限，以适配 Worker 消息限额。
+| 组件 | 行为 | 当前证据 |
+| --- | --- | --- |
+| `ControlledGit` | 固定 argv／环境、物理目录身份、有界源码清单和 pack、固定 checkout、多 ref CAS、三方合并及全部最佳祖先 | 真实 Git／交叉历史用例通过；`development/integration-v1` |
+| `LocalManagedWorkspaces` | 原操作先落库，独立项目仓库和 Attempt checkout；未知目录不接管、READY 目录丢失不重建 | 迁移 13 与分配开发验证通过；最终全量待复核 |
+| `LocalRunnerWorkspaceFencer`／`createLocalRepoAcquire` | 组合进程文件锁、Runner 持久屏障、当前许可或独立 cleanup 权威；活动／未知 Job 排斥写入 | 实际 Runner 管理、MCP 文件／Git 联调通过；`development/fence-refresh-v1` |
+| `LocalSourceArchives` | 核实原分配／repo.commit、父起点、范围和内容；传输并保留原操作／源码 refs 后提交 ACK | 实际分离仓库归档 4/4；`development/source-v2` |
+| `LocalCandidateIntegrations` | 按当前来源顺序合并、固定双父提交、一次发送、多 ref CAS；保留原操作并核实丢失 ACK | 实际 A2A／Scheduler／Host／Git 来源联调 4/4；`development/git-service-v2` |
+| `LocalCandidateConflicts`、Work 专属输入快照及验证分配组合 | 原报告及虚拟基点字节、原子内容引用、文件／目录／缺失版本、精确依赖快照准入 | 代码已编写；类型／lint／构建、材料 3/3、候选日志及资格 16/16、存储 28/28、内容 20/20、调度 10/10 已通过；真实输入用例取消收尾首次失败，已修复夹具待重跑，完整冲突待执行 |
+| 完整材料归档与回收 | 未提交／未跟踪／恢复材料、完整保存清单与持久 ACK、原目录隔离及删除核实 | 尚未完成；源码 ACK 不授权回收 |
 
-v9 中 Git／Worker／本地分配验证 10/10、存储 28/28 通过。v11 新增内部 Attempt 分支与分配 1/1、Runner 持久屏障 3/3，通过日志与源码指纹已保存。本地实际目录的进程文件锁与 Runner v2 持久屏障共同排除写入；等待、活动、停止中或未知 Job 都阻止取得屏障，屏障也阻止新作业登记／认领，不以超时自动解锁。回复丢失只查询原记录；死进程恢复需准确文件锁 token。Runner 的实际路径必须匹配本地配置根，Git 子进程 close 之后才可释放许可。该适配只接受本机 Runner，不能替代远程执行代理。
+证据目录以仓库根 `project/evidence/P1-05/` 为准。任务状态以 OpenSpec 和项目台账为准；局部通过不等于完整 P1-05、T05/T23 或产品验收。
 
-`createLocalRepoAcquire` 将 repo MCP 的原 operation／permit 接入实际锁：验证固定 Attempt repo，项目后工作区取得，按相反顺序释放。原操作恢复使用 Runner 的 cleanup 屏障，要求单独的当前成员／原归属权威回查；不取得新 Job 或编辑权。文件联调 v8 5/5、屏障 v7 5/5 已通过，包含真实子进程 SIGKILL 后准确 token 恢复。日志、源码指纹及历次失败见 `project/evidence/P1-04/development/file-validation.json`；最终固定提交全量回归仍需单独执行。
+固定提交 `c9c1474` 的干净 Windows 全量回归有两条工作区用例失败，见 `project/evidence/P1-04/windows-c9c1474-incomplete/`。模块加载后的当前许可交付、长 Git 准备后的 Registry 刷新修复在独立测试文件专项通过 2/2，见 `development/workspace-fixture-repair-v1`；已按专项验证原字节替换主测试，待新固定提交全量回归。此前失败也单独保留，不能用局部通过覆盖。
 
-repo MCP 已完成本地实际锁组合，源码对象归档已有开发验证；调度准备、三方候选集成、冲突内容、验证分配和完整材料回收仍按 `implement-managed-code-workspaces` 的未完成任务推进。默认平台与 CLI 尚未启用该后端；本地 Git 检查不代表远程身份、Linux/runsc 或 T05/T23 验收。
+## 目录与固定输入
 
-`LocalSourceArchives` 与迁移 15 实现源码接收：输入仅含原分配／提交操作，核实唯一父 base、范围、实际对象及目录身份，传输后保留原操作 ref 和固定源码 ref，再写 Worker ACK。恢复只查原事实，未知不重传；使用本地 fencer 的 cleanup，部署者须用 `getSourceArchive` 核实原归属与资源。源码 ACK 不包含未提交、未跟踪和文件恢复 sidecar，不能授权回收。v2 开发驱动归档 4/4、受控 Git 5/5、存储 28/28 和类型／lint／构建通过，原始证据见 `project/evidence/P1-05/development/source-v2/`。这组测试使用明确无 Job 的受控 fencer，不能替代 Runner 或固定提交验收。
+- 项目仓库：`<controlDataRoot>/repositories/<projectId>/repo.git`。
+- 独立 checkout：`<runnerDataRoot>/workspaces/<attemptId>/repo`。
+- 文件操作恢复材料：Attempt 父目录中的 `.devmesh-file-operations/`；源码 ACK 不包含这些材料。
+- 冲突报告／文件：现有内容存储 `artifacts/sha256/<前两位>/<哈希>`，暂存使用 `staging/objects/`。
 
-Provider 固定 `core.fsync=all` 和 `core.fsyncMethod=fsync`，使对象、pack 元数据和保留 ref 使用 Git 的持久化路径；按 [Git 2.39 配置](https://git-scm.com/docs/git-config/2.39.0#Documentation/git-config.txt-corefsync) 选择，不沿用仓库的弱 flush 配置。提交正文沿用原准备契约的 10000 个 UTF-16 字符上限，允许原提交工具接受的中文消息；实际 JSON／传输仍有各自字节上限。新增参数与归档实现已通过上述软件验证，未执行底层存储掉电测试。
+`ControlledGit` 每次动作核实 root、Git/common directory 及设备／文件 ID。源码只允许批准的普通文件，拒绝链接、敏感路径、外部 filter／merge helper、alternates 和越界大小；源码清单最多 192 KiB。传输使用受控 pack，目的仓库重新验证 commit、tree、大小和 SHA-256。固定 `core.fsync=all`、`core.fsyncMethod=fsync`；软件检查没有验证底层存储掉电行为。
 
-三方集成底层 `mergeTree`／`writeCommit` 核实精确共同祖先集合与实际提交，解析 Git 的 NUL stage／冲突消息，保留三方 SHA，生成确定提交对象，并沿用多 ref CAS。五条真实 Git 用例已通过，覆盖独立分支、同文件冲突、删除冲突、旧 CAS、固定验证 checkout 和交叉历史中的虚拟基点；既有 Git 5/5 及存储 28/28 回归通过。类型、lint、构建和原始日志见 `project/evidence/P1-05/development/integration-v1/`。持久集成日志、冲突内容发布及调度组合仍待实施，3.1／3.2／3.3 保持未完成。
+验证分配使用已准入的准确 SHA 及源码清单，目录与 Developer 分开。当前改动验证输入提交固定和目录隔离；质量执行、报告解释及候选接受属于 P1-06 的独立流程。
 
-Worker 的 `candidate-basis.ts` 提供当前来源资格推导及只读 `getCandidateSourceBasis`／`assertCandidateSourceBasis` 命令：从已确认计划、当前 Work／需求／输入、最新核实结果及原源码 ACK 冻结精确来源集合，分别支持 Work 输入依赖闭包与完整 Run 候选；不接受调用方提供 SHA 作为资格。七条数据库资格用例已通过，来源 ACK 使用明确的数据库夹具，验证范围与真实 Git 用例分开记录。尚未接持久集成服务和调度准入；非空接口快照的批准来源查询仍待实现，当前代码对此明确拒绝。持久集成快照尚未实现时，无法证明来源集合的合成 SHA 也明确拒绝。
+## 当前来源与原操作恢复
 
-后续迁移 16 及 `candidate-integration-domain.ts` 已编写候选持久操作、顺序步骤、当前依据复核、确定提交正文、一次发送、原 ref ACK 与物理候选 head；新的来源资格查询使用已 ACK 快照的精确来源证明。Work 输入快照不修改 Run 候选，任一候选都不修改接受指针。完整依据与源码清单分别读取，避免将两个大对象拼进单条 Worker 响应。九条数据库操作用例及原七条资格用例共 16/16、既有存储 28/28 通过，类型／lint／构建与迁移日志见 `project/evidence/P1-05/development/journal-v2/`；其中 Git/ref/ACK 为明确数据库夹具，不能当成真实 Git 集成或冲突内容发布通过。3.1～3.3 仍未完成，默认后端仍关闭。
+Worker 从已确认计划、当前 Run／Work 代际、最新核实结果、输入成果和原源码 ACK 推导来源。`work-input` 只取目标 Work 的依赖闭包；`run-candidate` 取当前全部开发来源。非空接口快照尚无批准来源查询时明确拒绝，不把调用方 SHA 或历史 ACK 当作当前资格。
 
-`ce823fb` 的干净固定提交全量回归在 MCP Runner 屏障用例失败：前十二项通过，MCP 34/35，后八项未执行。原始证据见 `project/evidence/P1-04/windows-ce823fb-incomplete/`，2.1 已重新打开。当前补丁在新读写屏障前重新查询并校验当前许可；原操作 cleanup 仍使用独立恢复权威和原编辑 ID，不续期过期的 Host 授权。确定性用例主动使已准入请求的捕获许可过期，检查真实 Runner 收到当前许可；补丁已通过类型、lint、构建及全部 Repo Git／文件／Runner 联调 11/11，证据见 `project/evidence/P1-05/development/fence-refresh-v1/`。2.1 已依据开发验证恢复勾选，最终固定提交全量回归仍未完成。
+每步先持久记录计算意图，再冻结三方结果及确定提交正文，标记发送后只核实原 ref。最终事务同时保留 integration／snapshot refs，只有 Run 候选更新 Run ref；它们都不修改接受指针。原事务的唯一 refs 可用于核实暂停或后续全局 ref 移动前的结果。结果未知时禁止重放 Git 动作或换 operation ID。
 
+冲突适配代码在冻结步骤前保存原报告和虚拟 stage 1 字节；恢复只用原内容对象或经哈希验证的 staging。材料路径取 Git 消息与 stage 的并集，目录保留 tree 身份，缺失显式记录；内容登记与业务外键引用在同一 Worker 事务提交。完整材料 READY 前不能确认冲突 ACK，也不推进候选。首次验证在前置 Git 输入用例的取消收尾被拒绝后停止，完整真实冲突检查尚未执行；失败证据为 `development/materials-v1-failed/`。
 
-`LocalCandidateIntegrations` 已通过实际 Git／A2A 来源联调及类型／lint／构建：Node 4/4，包含一个来源夹具和三个原操作场景。受信任项目服务从 Worker 当前依据串行构建两父提交、保存原步骤 ref，并以多 ref CAS 保留 integration／snapshot；只有 Run 候选移动 Run ref，接受指针保持独立。原发送意图只核实原 ref，ACK 丢失、暂停与后续全局 ref 移动均不触发重新合并或发送。证据见 `project/evidence/P1-05/development/git-service-v2/`，首轮返回内部 created 字段的失败另存。联调使用明确无 Job 的 fencer 和夹具质量决策，冲突发布 hook 尚未完成，默认后端仍未启用；3.1～3.3 保持未完成。
+## 显式组合
+
+在配置了对应本地 Runner、根目录、内容存储和实际 fencing 的受信任服务中组合：
+
+```ts
+const conflicts = new LocalCandidateConflicts(storage, content);
+const integrations = new LocalCandidateIntegrations({
+  mode: 'local-development', storage,
+  controlDataRoot, runnerDataRoot, backupRoot, fencer, conflicts,
+});
+
+// 传给 WorkflowScheduler 的受信任选项；planResources 保持只读。
+const prepareCodeBasis = (candidate, signal) => integrations.prepareWorkInput({
+  principalId: candidate.principalId,
+  runId: candidate.runId,
+  workId: candidate.work.workId,
+}, signal);
+```
+
+快照准备核实受控仓库身份、原 refs 和实际清单，I/O 后再复核来源；调度准入事务最终只接受与当前依赖匹配的 Work 快照。缺失快照时保持排队，不替换成全局最新候选。稳定原操作 ID 防止调度 tick／进程重启绕过未知结果；已知失败需显式受信任重试。
+
+以上服务未自动接入默认应用启动流程。真实远程身份、跨节点执行代理、模型、Linux/runsc 及完整材料生命周期仍按各自验收范围推进；当前本地测试夹具的质量决策及无 Job fencer 不代表这些能力通过。

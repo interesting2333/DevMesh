@@ -2,7 +2,7 @@ import {createHash} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {parseContract} from '@devmesh/contracts';
 import {createCandidateBasis} from './candidate-basis.js';
-import type {CandidateBasis,CandidateProof} from './candidate-basis.js';
+import type {CandidateBasis,CandidateProof,CandidateSubject} from './candidate-basis.js';
 import {candidateIntegrationRequests} from './candidate-integration-protocol.js';
 import type {CandidateHead,CandidateIntegration,CandidateIntegrationInput,CandidateIntegrationMethod,CandidateIntegrationStep} from './candidate-integration-protocol.js';
 import {StorageError} from './errors.js';
@@ -41,13 +41,17 @@ export function createCandidateIntegrationDomain(db:DatabaseSync,plans:ReturnTyp
   if(r.purpose==='run-candidate')result.push({ref:'refs/devmesh/candidates/'+r.run_id,commit:m.commit,expected:expectedHead(r)?.commit??null});return result;
  }
  function view(r:Row):CandidateIntegration{
-  const m=manifest(r);return {operationId:String(r.operation_id),projectId:String(r.project_id),runId:String(r.run_id),principalId:String(r.principal_id),purpose:r.purpose as CandidateIntegration['purpose'],workId:r.work_id as string|null,requestHash:String(r.request_hash),basisSha256:String(r.basis_sha256),expectedHead:expectedHead(r),sourceCount:frozen(r).sources.length,acknowledgedSteps:Number(get("SELECT count(*) n FROM candidate_integration_steps WHERE operation_id=? AND state='ACKNOWLEDGED'",r.operation_id!)!.n),state:r.state as CandidateIntegration['state'],manifest:m?{commit:m.commit,tree:m.tree,sha256:m.sha256}:null,updates:updates(r),acknowledgement:r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,errorCode:r.error_code as string|null,createdAt:String(r.created_at),acknowledgedAt:r.acknowledged_at as string|null,failureProof:r.failure_json?JSON.parse(String(r.failure_json)):null};
+  const m=manifest(r);return {operationId:String(r.operation_id),projectId:String(r.project_id),runId:String(r.run_id),principalId:String(r.principal_id),purpose:r.purpose as CandidateIntegration['purpose'],workId:r.work_id as string|null,requestHash:String(r.request_hash),basisSha256:String(r.basis_sha256),expectedHead:expectedHead(r),sourceCount:frozen(r).sources.length,acknowledgedSteps:Number(get("SELECT count(*) n FROM candidate_integration_steps WHERE operation_id=? AND state='ACKNOWLEDGED'",r.operation_id!)!.n),state:r.state as CandidateIntegration['state'],manifest:m?{commit:m.commit,tree:m.tree,sha256:m.sha256}:null,updates:updates(r),acknowledgement:r.state==='ACKNOWLEDGED'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,conflictAcknowledgement:r.state==='CONFLICT'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,errorCode:r.error_code as string|null,createdAt:String(r.created_at),acknowledgedAt:r.acknowledged_at as string|null,failureProof:r.failure_json?JSON.parse(String(r.failure_json)):null};
  }
- const stepView=(r:Row):CandidateIntegrationStep=>({operationId:String(r.operation_id),ordinal:Number(r.ordinal),ours:String(r.ours),theirs:String(r.theirs),state:r.state as CandidateIntegrationStep['state'],preparation:r.preparation_json?JSON.parse(String(r.preparation_json)):null,acknowledgement:r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,createdAt:String(r.created_at),acknowledgedAt:r.acknowledged_at as string|null});
+ const stepView=(r:Row):CandidateIntegrationStep=>({operationId:String(r.operation_id),ordinal:Number(r.ordinal),ours:String(r.ours),theirs:String(r.theirs),state:r.state as CandidateIntegrationStep['state'],preparation:r.preparation_json?JSON.parse(String(r.preparation_json)):null,acknowledgement:r.state==='ACKNOWLEDGED'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,conflictAcknowledgement:r.state==='CONFLICT'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,createdAt:String(r.created_at),acknowledgedAt:r.acknowledged_at as string|null});
  function stepBound(input:{operationId:string;principalId:string;requestHash:string;ordinal:number}){const r=bound(input),s=originalStep(input.operationId,input.ordinal)??fail('CANDIDATE_STEP_NOT_FOUND',404);return {r,s,step:stepView(s)};}
  function allAcknowledged(r:Row){const count=frozen(r).sources.length;const rows=all('SELECT * FROM candidate_integration_steps WHERE operation_id=? ORDER BY ordinal',r.operation_id!);if(rows.length!==count||rows.some((s,index)=>s.ordinal!==index||s.state!=='ACKNOWLEDGED'))fail('CANDIDATE_STEPS_UNRESOLVED');return rows;}
  function headUnchanged(r:Row){if(r.purpose==='run-candidate'&&!same(head(String(r.run_id)),expectedHead(r)))fail('CANDIDATE_HEAD_CHANGED');}
- const handlers={
+ function qualified(input:CandidateSubject){
+   const admitted=basis.freeze(input),row=get("SELECT * FROM candidate_integrations WHERE run_id=? AND basis_sha256=? AND state='ACKNOWLEDGED' ORDER BY rowid DESC LIMIT 1",input.runId,admitted.sha256);
+   if(!row)fail('CANDIDATE_SNAPSHOT_UNAVAILABLE');return view(row);
+  }
+  const handlers={
   beginCandidateIntegration(i:CandidateIntegrationInput<'beginCandidateIntegration'>){return transaction(db,()=>{
    const requestHash=digest(canonical({principalId:i.principalId,runId:i.runId,purpose:i.purpose,workId:i.workId??null})),old=get('SELECT * FROM candidate_integrations WHERE operation_id=?',i.operationId);
    if(old){owned(i.operationId,i.principalId);if(old.request_hash!==requestHash)fail('IDEMPOTENCY_KEY_REUSED');return {...view(old),created:false};}
@@ -121,8 +125,8 @@ export function createCandidateIntegrationDomain(db:DatabaseSync,plans:ReturnTyp
   });},
   markCandidateIntegrationUncertain(i:CandidateIntegrationInput<'markCandidateIntegrationUncertain'>){return transaction(db,()=>{const r=bound(i);if(!closed(String(r.state)))exec('UPDATE candidate_integrations SET error_code=? WHERE operation_id=?',i.errorCode,i.operationId);return view(required(i.operationId));});},
   getQualifiedCandidateSnapshot(i:CandidateIntegrationInput<'getQualifiedCandidateSnapshot'>){return transaction(db,()=>{
-   const admitted=basis.freeze(i),r=get("SELECT * FROM candidate_integrations WHERE run_id=? AND basis_sha256=? AND state='ACKNOWLEDGED' ORDER BY rowid DESC LIMIT 1",i.runId,admitted.sha256);if(!r)fail('CANDIDATE_SNAPSHOT_UNAVAILABLE');return view(r);
+   return qualified(i);
   });},
  };
- return {basis,execute(method:CandidateIntegrationMethod,input:unknown){return (handlers[method] as (input:unknown)=>unknown)(parseContract(candidateIntegrationRequests[method],input));}};
+ return {basis,qualified,execute(method:CandidateIntegrationMethod,input:unknown){return (handlers[method] as (input:unknown)=>unknown)(parseContract(candidateIntegrationRequests[method],input));}};
 }

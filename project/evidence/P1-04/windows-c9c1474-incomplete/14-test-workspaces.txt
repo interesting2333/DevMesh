@@ -1,0 +1,269 @@
+TAP version 13
+# (node:37244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate qualification freezes both latest verified sources and the exact target dependency closure
+ok 1 - candidate qualification freezes both latest verified sources and the exact target dependency closure
+  ---
+  duration_ms: 1702.336
+  type: 'test'
+  ...
+# Subtest: candidate qualification rejects unarchived, superseded, blocked and old Work generations
+ok 2 - candidate qualification rejects unarchived, superseded, blocked and old Work generations
+  ---
+  duration_ms: 969.9328
+  type: 'test'
+  ...
+# Subtest: candidate qualification rechecks current membership and current Run epoch after a pause
+ok 3 - candidate qualification rechecks current membership and current Run epoch after a pause
+  ---
+  duration_ms: 1404.1258
+  type: 'test'
+  ...
+# Subtest: candidate qualification never substitutes unrelated code and validates strict target requests
+ok 4 - candidate qualification never substitutes unrelated code and validates strict target requests
+  ---
+  duration_ms: 1010.9977
+  type: 'test'
+  ...
+# Subtest: acknowledged code containing an unrelated predecessor cannot qualify for the current graph
+ok 5 - acknowledged code containing an unrelated predecessor cannot qualify for the current graph
+  ---
+  duration_ms: 1094.0865
+  type: 'test'
+  ...
+# Subtest: nonempty interface inputs require an approved current interface source authority
+ok 6 - nonempty interface inputs require an approved current interface source authority
+  ---
+  duration_ms: 998.4108
+  type: 'test'
+  ...
+# Subtest: missing current evidence cannot qualify an otherwise acknowledged source
+ok 7 - missing current evidence cannot qualify an otherwise acknowledged source
+  ---
+  duration_ms: 1028.4227
+  type: 'test'
+  ...
+# (node:3220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a durable Runner fence blocks job admission, protects holder identity and survives a real store reopen
+ok 8 - a durable Runner fence blocks job admission, protects holder identity and survives a real store reopen
+  ---
+  duration_ms: 15180.8725
+  type: 'test'
+  ...
+# (node:3220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: queued and unknown original Runner jobs keep their workspace unavailable for Git fencing
+ok 9 - queued and unknown original Runner jobs keep their workspace unavailable for Git fencing
+  ---
+  duration_ms: 7131.2131
+  type: 'test'
+  ...
+# (node:3220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: local filesystem and Runner fences recover lost replies without resending writes and bind an independent repo path
+ok 10 - local filesystem and Runner fences recover lost replies without resending writes and bind an independent repo path
+  ---
+  duration_ms: 19813.0058
+  type: 'test'
+  ...
+# (node:3220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: cleanup fencing requires separate original-operation authority and cannot become execution admission
+ok 11 - cleanup fencing requires separate original-operation authority and cannot become execution admission
+  ---
+  duration_ms: 8200.4927
+  type: 'test'
+  ...
+# (node:3220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a real killed filesystem owner requires its exact dead-owner token before replacing the durable Runner barrier
+not ok 12 - a real killed filesystem owner requires its exact dead-owner token before replacing the durable Runner barrier
+  ---
+  duration_ms: 26218.7359
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\workspace-fencing.test.mjs:68:1'
+  failureType: 'testCodeFailure'
+  error: 'RUNNER_FORBIDDEN'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ChildProcess.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/workspace-fencing.test.mjs:73:227)
+    Object.onceWrapper (node:events:623:26)
+    ChildProcess.emit (node:events:508:28)
+    emit (node:internal/child_process:949:14)
+    process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+  ...
+# Subtest: controlled Git transfers exact objects into separate repositories and checks out an immutable source manifest
+ok 13 - controlled Git transfers exact objects into separate repositories and checks out an immutable source manifest
+  ---
+  duration_ms: 80442.5594
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-zK8UNO
+# Subtest: configured external Git helpers are refused before source operations
+ok 14 - configured external Git helpers are refused before source operations
+  ---
+  duration_ms: 21597.7098
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-pI2DLm
+# Subtest: replacement of a directory at the same path is rejected using its frozen filesystem identity
+ok 15 - replacement of a directory at the same path is rejected using its frozen filesystem identity
+  ---
+  duration_ms: 12785.7158
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-pBAvB3
+# Subtest: sensitive paths and Git symbolic link entries cannot enter source manifests
+ok 16 - sensitive paths and Git symbolic link entries cannot enter source manifests
+  ---
+  duration_ms: 27498.5082
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-tQgl1Z
+# Subtest: a fixed approved template subtree creates a distinct initial application commit without platform objects
+ok 17 - a fixed approved template subtree creates a distinct initial application commit without platform objects
+  ---
+  duration_ms: 150167.5008
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-vW6VNX
+# Subtest: fixed three-way Git integration retains both sibling changes, exact parents and immutable verification checkout
+ok 18 - fixed three-way Git integration retains both sibling changes, exact parents and immutable verification checkout
+  ---
+  duration_ms: 161552.4933
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-B4EDi7
+# Subtest: same-file Git conflicts preserve original three stages and leave candidate and checkout unchanged
+ok 19 - same-file Git conflicts preserve original three stages and leave candidate and checkout unchanged
+  ---
+  duration_ms: 135265.6592
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-o54M6H
+# Subtest: merge refuses a substituted base and configured external merge helpers before integration
+ok 20 - merge refuses a substituted base and configured external merge helpers before integration
+  ---
+  duration_ms: 84650.1711
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-GxCp1P
+# Subtest: modify-delete Git conflict retains missing ours stage explicitly without creating a replacement file
+ok 21 - modify-delete Git conflict retains missing ours stage explicitly without creating a replacement file
+  ---
+  duration_ms: 99024.4926
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-Ze43Wr
+# Subtest: criss-cross histories freeze every best merge base and preserve both later changes through the virtual base
+ok 22 - criss-cross histories freeze every best merge base and preserve both later changes through the virtual base
+  ---
+  duration_ms: 346579.1945
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-NF0Hpz
+# (node:29808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:29808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:29808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source retention transfers the original real MCP commit, preserves dirty work and recovers its durable ACK after restart
+ok 23 - source retention transfers the original real MCP commit, preserves dirty work and recovers its durable ACK after restart
+  ---
+  duration_ms: 325467.0717
+  type: 'test'
+  ...
+# (node:29808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unprepared source archival remains unknown and blocks replacement without importing or creating refs
+ok 24 - unprepared source archival remains unknown and blocks replacement without importing or creating refs
+  ---
+  duration_ms: 151112.2984
+  type: 'test'
+  ...
+# (node:29808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared retained refs reconcile a lost acknowledgement without replaying object transfer after pause
+ok 25 - prepared retained refs reconcile a lost acknowledgement without replaying object transfer after pause
+  ---
+  duration_ms: 208376.542
+  type: 'test'
+  ...
+# (node:29808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source archive independently rejects a foreign parent, out of scope commit, special mode and missing commit object
+ok 26 - source archive independently rejects a foreign parent, out of scope commit, special mode and missing commit object
+  ---
+  duration_ms: 312740.349
+  type: 'test'
+  ...
+# (node:32840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: repository and allocation journals freeze the admitted owner, base, scope, actual source and physical identity
+ok 27 - repository and allocation journals freeze the admitted owner, base, scope, actual source and physical identity
+  ---
+  duration_ms: 70830.0636
+  type: 'test'
+  ...
+# (node:32840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an uncertain allocation preserves its original identity across pause and restart without admitting new work
+ok 28 - an uncertain allocation preserves its original identity across pause and restart without admitting new work
+  ---
+  duration_ms: 62885.9254
+  type: 'test'
+  ...
+# (node:32840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: allocation intent is allowed from an admitted grant before the A2A Host claims it
+ok 29 - allocation intent is allowed from an admitted grant before the A2A Host claims it
+  ---
+  duration_ms: 80991.5091
+  type: 'test'
+  ...
+# (node:32840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: local allocation recovers a lost READY reply and never overwrites edits or recreates a missing READY directory
+ok 30 - local allocation recovers a lost READY reply and never overwrites edits or recreates a missing READY directory
+  ---
+  duration_ms: 214203.1933
+  type: 'test'
+  ...
+# (node:32840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unowned repository directory is preserved and never adopted as a completed allocation
+not ok 31 - an unowned repository directory is preserved and never adopted as a completed allocation
+  ---
+  duration_ms: 79217.8533
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\workspace-storage.test.mjs:67:1'
+  failureType: 'testCodeFailure'
+  error: 'Refresh registry before executing'
+  code: 'REGISTRY_PROJECTION_STALE'
+  name: 'StorageError'
+  stack: |-
+    Worker.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/index.mjs:115:34)
+    Worker.emit (node:events:508:28)
+    MessagePort.<anonymous> (node:internal/worker:332:53)
+    [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 29
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2806248.677
+[ELIFECYCLE] Command failed with exit code 1.
+$ node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs tests/candidate-basis.test.mjs

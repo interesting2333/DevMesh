@@ -3,6 +3,7 @@ import {gitCommit,ids,opaqueKey,sha256} from '@devmesh/contracts';
 import {candidateSubjectFields,validCandidateSubject} from './candidate-protocol.js';
 import {gitDirectoryIdentity,sourceManifest} from './workspace-protocol.js';
 import type {CandidateBasis} from './candidate-basis.js';
+import type {CandidateConflictAcknowledgement} from './candidate-material-protocol.js';
 import type {GitDirectoryIdentity,SourceManifest} from './workspace-protocol.js';
 
 const original={principalId:opaqueKey,operationId:ids.operation};
@@ -37,7 +38,7 @@ export interface CandidateIntegration {
  requestHash:string;basisSha256:string;expectedHead:CandidateHead|null;sourceCount:number;acknowledgedSteps:number;
  state:'BUILDING'|'PREPARED'|'CAS_SENT'|'ACKNOWLEDGED'|'CONFLICT_PENDING'|'CONFLICT'|'FAILED';
  manifest:{commit:string;tree:string;sha256:string}|null;updates:CandidateRefUpdate[];
- acknowledgement:z.output<typeof acknowledgement>|null;errorCode:string|null;createdAt:string;acknowledgedAt:string|null;
+ acknowledgement:z.output<typeof acknowledgement>|null;conflictAcknowledgement:CandidateConflictAcknowledgement|null;errorCode:string|null;createdAt:string;acknowledgedAt:string|null;
  failureProof:{originalRefsAbsent:true;gitChildExited:true;observedHead:string|null}|null;
 }
 export interface CandidateIntegrationStep {
@@ -45,6 +46,7 @@ export interface CandidateIntegrationStep {
  state:'COMPUTING'|'PREPARED'|'REF_SENT'|'ACKNOWLEDGED'|'CONFLICT_PENDING'|'CONFLICT'|'ABANDONED';
  preparation:{bases:string[];tree:string;clean:boolean;reportSha256:string;commit:string|null;commitBody:string|null;ref:string|null}|null;
  acknowledgement:{repositoryIdentity:GitDirectoryIdentity;commit:string;tree:string;ref:string}|null;
+ conflictAcknowledgement:CandidateConflictAcknowledgement|null;
  createdAt:string;acknowledgedAt:string|null;
 }
 export interface CandidateIntegrationResults {

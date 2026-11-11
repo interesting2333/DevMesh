@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "commit": "c9c1474c312d6bf294b6507032477af2485783af",
+  "status": "FAILED",
+  "sourceFingerprint": "29ce96747a2d36a09e36344114ab38ae9968356fb2789f63dcd0ff705fae9cf5",
+  "lockfileSha256": "34d80524e13896578e0eba0f92ef3a4539f397dd80bde2933860ac5020140340",
+  "startedAt": "2026-11-11T20:52:02.281Z",
+  "finishedAt": "2026-11-11T22:36:23.435Z",
+  "passedChecks": 13,
+  "failedCheck": {
+    "name": "test:workspaces",
+    "tests": {
+      "tests": 31,
+      "pass": 29,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "cases": [
+      {
+        "location": "tests/workspace-fencing.test.mjs:68",
+        "code": "RUNNER_FORBIDDEN",
+        "scope": "Real forked filesystem owner startup and captured fixture permit; root cause review pending"
+      },
+      {
+        "location": "tests/workspace-storage.test.mjs:67",
+        "code": "REGISTRY_PROJECTION_STALE",
+        "scope": "Registry projection after actual Git fixture preparation; root cause review pending"
+      }
+    ]
+  },
+  "notExecuted": [
+    "test:input",
+    "test:preparation",
+    "test:scheduler",
+    "contracts:check",
+    "project:check",
+    "openspec",
+    "design-consistency"
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/01-toolchain-check.txt",
+      "byteSize": 199,
+      "sha256": "71f250ad98445a5917760a85c86cdb030a60196d416e9ec070af97f46e6e44be"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/02-vendor-verify.txt",
+      "byteSize": 88,
+      "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/03-build.txt",
+      "byteSize": 22097,
+      "sha256": "7124a8e8a39b2677c82693e219975eef5497e3a65c43a0f961b12eb656d9c714"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/04-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/05-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/06-test-smoke.txt",
+      "byteSize": 2159,
+      "sha256": "f8e9bc6181d831be3f20a21a1fbcb9165974e335d46145866abd07954200231f"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/07-test-contracts.txt",
+      "byteSize": 3862,
+      "sha256": "dbf038d1d4d81e4ea5667dd7cd15ac1fec23f0d21e57a4fa5fd971828b789736"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/08-test-storage.txt",
+      "byteSize": 21017,
+      "sha256": "1171e62c07adca190a1a09c15bdc481ae89ac04a87afe8c8282ecf520d7c7744"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/09-test-content.txt",
+      "byteSize": 10651,
+      "sha256": "c45948bda951e9e987a6452f70ffa5ff6a7fce8634b53f08582804e02c390e74"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/10-test-a2a.txt",
+      "byteSize": 11556,
+      "sha256": "e8e59743a9d46a7600539b7b6604da898aa3d90d37787ab26b3959381b1dad11"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/11-test-runtime.txt",
+      "byteSize": 7555,
+      "sha256": "a160409d0f8d4f5235dd00c8f55df300e3fe528da7af9f7ca2e34dbcf40761b1"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/12-test-runner.txt",
+      "byteSize": 6588,
+      "sha256": "be303ca29f456d9210fe458344a5b38fa4966ab8cf3e3d819ffce750c4dadbe6"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/13-test-mcp.txt",
+      "byteSize": 17811,
+      "sha256": "5ab36433583d30422464fe7dd3d68039d0851ed696aa891f2ea5c5cafbb4c288"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/14-test-workspaces.txt",
+      "byteSize": 14232,
+      "sha256": "0ad309b13c91d4ac894d12cad9df4acbb00d5232bf37f8db624c28c713a6f4bd"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/checkout.txt",
+      "byteSize": 215,
+      "sha256": "90b237cd64c9d6b979b87a4a610faa4ddadc84b7accfbea1646d4a6f0854105b"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/clean-check.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/fetch.txt",
+      "byteSize": 99,
+      "sha256": "560c49fe908c80c00a96dacaf3eac9e6b9eed67f80d489e6df59eed56bbed68d"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/frozen-install.txt",
+      "byteSize": 86,
+      "sha256": "60f0cfc362e0cd0dc86eb4684c505af07dd52843ecb4a175be44d34d7a6ea158"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/report.json",
+      "byteSize": 47788,
+      "sha256": "7c70ac064f2f3f21085a1eb08cce665e45ad8c3876b2243d49a6fea48f727fb8"
+    },
+    {
+      "path": "project/evidence/P1-04/windows-c9c1474-incomplete/source.txt",
+      "byteSize": 41,
+      "sha256": "4d49d840f6ab5508d3828ec2aad7897279cf1e64cec621bb7e62ba60071469ab"
+    }
+  ],
+  "limitations": [
+    "Clean fixed Windows checkout with frozen installation; all 21 checks did not pass.",
+    "MCP 35/35 passed, workspaces 29/31 failed in two actual authority/projection cases; no product or Linux/runsc acceptance.",
+    "Earlier ce823fb MCP failure is retained separately; the newer c9c1474 failure must not overwrite it.",
+    "P1-04 task 4.1 remains incomplete and no gate or parent status is changed."
+  ]
+}
