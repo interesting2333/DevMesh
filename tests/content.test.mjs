@@ -5,12 +5,12 @@ import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { openLocalStorage,resolveStorageConfig,safePath } from '../packages/blob-store/dist/index.mjs';
-import { contentFixture,createSession,messageTarget,digest,meta } from './fixtures/content-data.mjs';
+import { contentFixture,createSession,messageTarget,digest,meta,currentSchemaVersion } from './fixtures/content-data.mjs';
 const rejects=(promise,code)=>assert.rejects(promise,e=>e.code===code,'Expected error '+code);
 
 test('layout is explicit, durable, identity checked and exclusively locked',async t=>{
   const f=await contentFixture(t),info=await f.storage.request('inspect',{});
-  assert.equal(info.storeId,f.local.marker.storeId);assert.equal(info.version,6);assert.equal(Object.keys(info.counts).length,55);
+  assert.equal(info.storeId,f.local.marker.storeId);assert.equal(info.version,currentSchemaVersion);assert.equal(info.counts.content_objects,0);assert.equal(info.counts.agent_sessions,0);
   assert.ok(['supported','unsupported'].includes(f.local.directorySync));
   await rejects(openLocalStorage(f.options),'STORAGE_LOCKED');
   const id=f.local.marker.storeId;await f.local.close();

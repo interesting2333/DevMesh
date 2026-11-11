@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { openLocalStorage } from '../packages/blob-store/dist/index.mjs';
 import { startPlatform,loadConfig } from '../packages/platform-core/dist/index.mjs';
-import { contentFixture } from './fixtures/content-data.mjs';
+import { contentFixture,currentSchemaVersion } from './fixtures/content-data.mjs';
 
 test('failed initialization resumes only explicitly and retains its original store identity',async t=>{
   const f=await contentFixture(t),options={...f.options,dataRoot:join(f.root,'capacity-control'),minimumFreeBytes:Number.MAX_SAFE_INTEGER};
@@ -27,7 +27,7 @@ test('HTTP composition verifies stored content before readiness and disposes its
     assert.ok(server.services);assert.equal(server.services.local.marker.storeId,f.local.marker.storeId);
     const response=await fetch(`http://127.0.0.1:${server.address.port}/readyz`);assert.equal(response.status,200);await response.json();
   }finally{await server.stop();}
-  await f.reopen();assert.equal((await f.storage.request('inspect',{})).version,6);
+  await f.reopen();assert.equal((await f.storage.request('inspect',{})).version,currentSchemaVersion);
 });
 
 test('maintenance CLI verifies an existing store, refuses implicit creation and releases resources before exit',async t=>{
@@ -41,5 +41,5 @@ test('maintenance CLI verifies an existing store, refuses implicit creation and 
   await f.reopen();await f.local.close();
   const fresh={...f.options,dataRoot:join(f.root,'cli-new')};
   const missing=await run('verify',fresh);assert.equal(missing.code,1);assert.equal(existsSync(fresh.dataRoot),false);
-  const created=await run('init',fresh);assert.equal(created.code,0,created.err);assert.equal(JSON.parse(created.out).database.version,6);
+  const created=await run('init',fresh);assert.equal(created.code,0,created.err);assert.equal(JSON.parse(created.out).database.version,currentSchemaVersion);
 });

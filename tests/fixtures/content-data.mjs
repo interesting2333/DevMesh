@@ -1,10 +1,11 @@
-import { mkdtempSync,rmSync } from 'node:fs';
+import { mkdtempSync,rmSync,readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID,createHash } from 'node:crypto';
 import { openLocalStorage,LocalContentStore,SessionStore } from '../../packages/blob-store/dist/index.mjs';
 import { requirements,plan,admission,meta } from './storage-data.mjs';
 export { meta } from './storage-data.mjs';
+export const currentSchemaVersion=JSON.parse(readFileSync(new URL('../../packages/storage-sqlite/migrations/manifest.json',import.meta.url),'utf8')).at(-1).version;
 export const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 export async function contentFixture(t){
   const root=mkdtempSync(join(tmpdir(),'devmesh-content-test-'));
