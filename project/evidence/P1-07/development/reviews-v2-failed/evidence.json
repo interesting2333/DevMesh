@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "facf9ef7a4c59e3dd1755e7570e4bddcf6b9bd1a",
+  "dirty": true,
+  "sourceFingerprint": "79c36e2bcae3c3bd880058a3474cff1cfd2e50e6fb1dfb0077ec7a381c2564a4",
+  "startedAt": "2026-11-12T07:56:35.689Z",
+  "finishedAt": "2026-11-12T07:57:09.986Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9956,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1057,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 8846,
+      "output": "current-build.txt",
+      "sha256": "1f3efe75de7d7a4eb41a90c391f05c6ac6108c0262caa75e5ce2d0dd24e492cb"
+    },
+    {
+      "name": "review",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 14361,
+      "output": "review.txt",
+      "sha256": "25bc28ca4a32b9923587ddc152997af7f745ef44eab2f8163fc36f21fc9ed15e",
+      "tests": {
+        "tests": 8,
+        "pass": 7,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/current-build.txt",
+      "sha256": "1f3efe75de7d7a4eb41a90c391f05c6ac6108c0262caa75e5ce2d0dd24e492cb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/contracts/openapi.json",
+      "sha256": "daf28e023cb8f1d53e3a0ca13710dd2b88832991460dc85952d8ac4d06dd111b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/contracts/src/events.ts",
+      "sha256": "1387b338c55ff662c37a9d94548b2d84bacf26122a1fb39a3a5b184c7229405f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/storage-sqlite/migrations/0030-candidatereviews.sql",
+      "sha256": "31a88c369d77983eb494f1b6172cdce61c9bc7131e13d5962605f8decc3f358b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "669ddf136041e0f379fcf359451f50ea2cb8f33eb43cb4dc33b6ca3a9368785c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/storage-sqlite/src/candidate-review-domain.ts",
+      "sha256": "94c2c2ff35db8383bb8f739ca9e56c22a586245e5b9c3f721315beeec71f76db"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/storage-sqlite/src/candidate-review-protocol.ts",
+      "sha256": "04530d772489b5a592e65109dc65c9e440cc8376dbb58288252c2cf9190d66bc"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "a3e9ca13629ee1420054c092f6f443aca4a4ee100e0bacb167594ebefb25002b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "30ba3c594aed1930fb178e037f6fda502c304b70735c20ea6ea24afcd280c36a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "9ef3b68b69399e3ef17f525174a0ef64514d0cda3aeaeda658bc1d9e9c7b5f23"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/packages/storage-sqlite/src/release-freeze-domain.ts",
+      "sha256": "fc655e3d70b964bc0fa684ad674fe88377d288d85b8d55932113f44e72ed08de"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/tests/candidate-review.test.mjs",
+      "sha256": "0c1ffec19f9af8e8daef90d21ef396cad2abca937bfb3163bc42fadce73f8448"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/failed-source/tests/fixtures/release-freeze.mjs",
+      "sha256": "d150d38a653fbb277c1d1734d53224395dc94ec2bde23d22f35c86794489089f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/report.json",
+      "sha256": "bd3556a526fd5c2363e69ac33c3f003e27674f0b2bbbfd8b4776d950fcb6a045"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/review.txt",
+      "sha256": "25bc28ca4a32b9923587ddc152997af7f745ef44eab2f8163fc36f21fc9ed15e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v2-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 tasks1.1/1.2 development: exact candidate review projection and append-only human observations, owner permissions, current result CAS, original key recovery, stale history, transactional rollback. Actual SQLite/HTTP material collection; original source/admission/Runtime publication are explicit release-freeze fixtures. No actual human/product acceptance, preview, dataset preparation, model or container.",
+  "limitations": [
+    "Same Codex agent implementation and review; explicit source/admission/Runtime fixtures, no real model, OIDC, container, preview health, dataset or product/stage acceptance.",
+    "Review flags describe readiness to request a later acceptance preparation only; review writes do not accept, complete pending Work or rewrite original automatic facts."
+  ],
+  "failure": "New Work human-decision fixture omitted its matching frozen quality policy check. Original QUALITY_REQUIRED_CHECK_MISSING guard rejected setup; 7/8 review tests passed. Add the same explicit human check to the fixture policy before registration/admission; no production guard weakened."
+}

@@ -132,3 +132,4 @@ export type {QualityBasis,QualityVerification,QualityOrigin,QualityMaterial,Qual
 
 export type {ReleaseDelivery,ReleaseDeliveryBasis,ReleaseDeliveryMaterial} from './release-delivery-protocol.js';
 export type {ReleaseCandidateRevision,ReleaseCandidateSummary,ReleaseCandidateManifest,CandidateWorkProof} from './release-freeze-protocol.js';
+export type {CandidateReviewItem,CandidateHumanResult,CandidateReviewView} from './candidate-review-protocol.js';

@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "dc4a0b2993fdb33618382362113237d6e49fec6b",
+  "dirty": true,
+  "sourceFingerprint": "2c0dbadb45fdac7b7a6bc4c86fecd6d4ab40adfecbdb185d5cf5ee9c9087b3de",
+  "startedAt": "2026-11-12T08:01:21.529Z",
+  "finishedAt": "2026-11-12T08:02:49.732Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6907,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 705,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7171,
+      "output": "current-build.txt",
+      "sha256": "db41b2ff46774029f7363212522706e3859588cf139d926ff41f5d6c694495dd"
+    },
+    {
+      "name": "review",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 16025,
+      "output": "review.txt",
+      "sha256": "1cfd6d7e1268d0e04765ca6de0776356582b85df56a550eb9132936e78bbbba2",
+      "tests": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "freeze",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26527,
+      "output": "freeze.txt",
+      "sha256": "b9e8777ddf674b44390242b5e24c671c1cd478c631df5a81b6cb0c3f355679e7",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28805,
+      "output": "storage.txt",
+      "sha256": "96d5a8ef5977d5ffb3e2673298ba595680b03e4095ddd84ae502ee791ae6a6bd",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1137,
+      "output": "contracts.txt",
+      "sha256": "b3d63eff8b0869cc27f10a2e5c66dd4a272134106a86d9ee843b3e0c64910c2c",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 854,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/contracts.txt",
+      "sha256": "b3d63eff8b0869cc27f10a2e5c66dd4a272134106a86d9ee843b3e0c64910c2c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/current-build.txt",
+      "sha256": "db41b2ff46774029f7363212522706e3859588cf139d926ff41f5d6c694495dd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/freeze.txt",
+      "sha256": "b9e8777ddf674b44390242b5e24c671c1cd478c631df5a81b6cb0c3f355679e7"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/report.json",
+      "sha256": "b40ae6b00eee75dcf2e721cf1ac9eb6077c711167280335abfa780be6e69975f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/review.txt",
+      "sha256": "1cfd6d7e1268d0e04765ca6de0776356582b85df56a550eb9132936e78bbbba2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/storage.txt",
+      "sha256": "96d5a8ef5977d5ffb3e2673298ba595680b03e4095ddd84ae502ee791ae6a6bd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v4/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 tasks1.1/1.2 development: exact candidate review projection and append-only human observations, owner permissions, current result CAS, original key recovery, stale history, transactional rollback. Actual SQLite/HTTP material collection; original source/admission/Runtime publication are explicit release-freeze fixtures. No actual human/product acceptance, preview, dataset preparation, model or container.",
+  "limitations": [
+    "Same Codex agent implementation and review; explicit source/admission/Runtime fixtures, no real model, OIDC, container, preview health, dataset or product/stage acceptance.",
+    "Review flags describe readiness to request a later acceptance preparation only; review writes do not accept, complete pending Work or rewrite original automatic facts."
+  ]
+}

@@ -71,6 +71,9 @@ import {createVerifiedRepairDomain} from './verified-repair-domain.js';
 import {createReleaseFreezeDomain} from './release-freeze-domain.js';
 import {releaseFreezeRequests} from './release-freeze-protocol.js';
 import type {ReleaseFreezeMethod} from './release-freeze-protocol.js';
+import {createCandidateReviewDomain} from './candidate-review-domain.js';
+import {candidateReviewRequests} from './candidate-review-protocol.js';
+import type {CandidateReviewMethod} from './candidate-review-protocol.js';
 import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
@@ -113,6 +116,10 @@ export function createDomain(db: DatabaseSync) {
   });
   const verifiedFindings=createVerifiedFindingDomain(db,quality,candidateIntegrations,(runId,operationId,attemptId,payload)=>{
     bump(runId);event(runId,operationId,'IssueChanged',payload,{attemptId});
+  });
+  const candidateReviews=createCandidateReviewDomain(db,plans,releaseFreezes,{
+    operation:(...args)=>operation(...args),
+    changed(runId,operationId,candidateId,resultId){bump(runId);event(runId,operationId,'CandidateReviewRecorded',{candidateId,resultId});},
   });
   const candidateMaterials=createCandidateMaterialDomain(db);
   const candidateBasis=candidateIntegrations.basis;
@@ -452,6 +459,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(candidateReviewRequests,method))return candidateReviews.execute(method as CandidateReviewMethod,input);
     if(Object.hasOwn(releaseFreezeRequests,method))return releaseFreezes.execute(method as ReleaseFreezeMethod,input);
     if(Object.hasOwn(releaseDeliveryRequests,method))return releaseDeliveries.execute(method as ReleaseDeliveryMethod,input);
     if(Object.hasOwn(verifiedRepairRequests,method))return verifiedRepairs.execute(method as VerifiedRepairMethod,input);

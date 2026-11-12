@@ -1,0 +1,53 @@
+Scope: 2 of 18 workspace projects
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\contracts\package.json 
+ℹ entry: src/index.ts
+ℹ target: es2024
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 4 files
+ℹ dist\index.js       65.99 kB │ gzip: 17.95 kB
+ℹ dist\index.js.map  113.53 kB │ gzip: 29.38 kB
+ℹ dist\index.d.ts    209.38 kB │ gzip: 20.27 kB
+ℹ 3 files, total: 388.90 kB
+✔ Build complete in 3745ms
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 50 files
+ℹ dist\index.mjs                            7.61 kB │ gzip:   2.67 kB
+ℹ dist\worker.mjs                           5.29 kB │ gzip:   2.15 kB
+ℹ dist\migrations.mjs                       0.26 kB │ gzip:   0.17 kB
+ℹ dist\domain.mjs                           0.16 kB │ gzip:   0.13 kB
+ℹ dist\domain-Dt08QKFl.mjs.map            822.64 kB │ gzip: 174.10 kB
+ℹ dist\domain-Dt08QKFl.mjs                491.65 kB │ gzip:  99.45 kB
+ℹ dist\quality-protocol-CfHf3Ypl.mjs.map   96.82 kB │ gzip:  21.16 kB
+ℹ dist\quality-protocol-CfHf3Ypl.mjs       52.84 kB │ gzip:  11.82 kB
+ℹ dist\index.mjs.map                       15.57 kB │ gzip:   5.03 kB
+ℹ dist\migrations-CmCClcp5.mjs.map         10.73 kB │ gzip:   3.79 kB
+ℹ dist\worker.mjs.map                       8.45 kB │ gzip:   3.15 kB
+ℹ dist\migrations-CmCClcp5.mjs              6.31 kB │ gzip:   2.46 kB
+ℹ dist\index.d.mts                          6.71 kB │ gzip:   2.07 kB
+ℹ dist\migrations.d.mts                     0.91 kB │ gzip:   0.42 kB
+ℹ dist\domain.d.mts                         0.33 kB │ gzip:   0.24 kB
+ℹ dist\worker.d.mts                         0.01 kB │ gzip:   0.03 kB
+ℹ dist\json-DHA_3JX-.d.mts                278.35 kB │ gzip:  25.50 kB
+ℹ 17 files, total: 1.80 MB
+✔ Build complete in 3397ms
+$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (63%)
+  - rolldown-plugin-dts:fake-js (32%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (79%)
+  - tsdown:deps (16%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+

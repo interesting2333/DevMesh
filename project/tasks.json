@@ -1085,11 +1085,24 @@
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "packages/storage-sqlite/migrations/0030-candidatereviews.sql",
+        "packages/storage-sqlite/src/candidate-review-domain.ts",
+        "packages/storage-sqlite/src/candidate-review-protocol.ts",
+        "packages/contracts/src/events.ts",
+        "tests/candidate-review.test.mjs"
+      ],
+      "evidence": [
+        "project/evidence/P1-07/review-development-review.md",
+        "project/evidence/P1-07/development/reviews-v4/evidence.json",
+        "project/evidence/P1-07/development/reviews-v1-failed/evidence.json",
+        "project/evidence/P1-07/development/reviews-v2-failed/evidence.json",
+        "project/evidence/P1-07/development/reviews-v3-failed/evidence.json"
+      ],
       "reviewNote": null,
       "notes": [
-        "2026-11-12：按既有连续实施授权开始不依赖真实模型／OIDC／Linux Runner 的本地开发准备，建立 implement-preview-review-and-acceptance 的 proposal／design／delta specs／tasks；候选人工审查、隔离 dataset／预览、T5 两阶段接受和独立发布恢复分项验证。正式工作包仍等待 P1-06 和 G0，不提前认领或宣称产品验收。"
+        "2026-11-12：按既有连续实施授权开始不依赖真实模型／OIDC／Linux Runner 的本地开发准备，建立 implement-preview-review-and-acceptance 的 proposal／design／delta specs／tasks；候选人工审查、隔离 dataset／预览、T5 两阶段接受和独立发布恢复分项验证。正式工作包仍等待 P1-06 和 G0，不提前认领或宣称产品验收。",
+        "2026-11-12：按连续实施授权完成本地开发子项 1.1／1.2：迁移 30、准确候选审查投影与不可变人工观察。必要需求 acceptance、Work human-decision 和原质量 human 检查分别生成稳定条目；owner 写入、标准 meta／If-Match／当前记录 CAS、准确同 Run 证据、历史／原键恢复、原子事件与 GC 引用均验证。reviews-v4 审查 8/8、冻结 14/14、存储 28/28、契约 18/18，以及类型／lint／当前依赖构建／OpenAPI 通过，源码运行期间未变化；三轮原失败日志／源码保留，未放宽质量守卫。当前只有私有 Worker API，没有人工审查页面、预览／dataset、T5 接受或发布实现；人工结果不改原质量／待人工 Tester／接受指针。源码准入／Runtime 为明确 DB 夹具，其他本地 SQLite／HTTP／内容流程实际执行，缺企业身份／真实模型／Linux／容器／生产映射／数据迁移与人工产品验收。正式 P1-07 仍等待 P1-06 和 G0。"
       ]
     },
     {

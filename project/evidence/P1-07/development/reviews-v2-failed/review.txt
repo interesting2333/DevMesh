@@ -1,0 +1,90 @@
+TAP version 13
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: review projects every requirement acceptance and stable human checks without accepting or rewriting quality
+not ok 1 - review projects every requirement acceptance and stable human checks without accepting or rewriting quality
+  ---
+  duration_ms: 348.7487
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\candidate-review.test.mjs:12:1'
+  failureType: 'testCodeFailure'
+  error: 'Quality verification requires immutable original execution and source facts'
+  code: 'QUALITY_REQUIRED_CHECK_MISSING'
+  name: 'StorageError'
+  stack: |-
+    fail$16 (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Dt08QKFl.mjs:2311:8)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Dt08QKFl.mjs:2523:96
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginQualityVerification (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Dt08QKFl.mjs:2503:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Dt08QKFl.mjs:2762:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Dt08QKFl.mjs:9070:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-storage.mjs:36:179)
+    async qualityRunnerFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-runner.mjs:14:10)
+    async releaseFreezeFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:24:10)
+  ...
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed observations append corrections and original acknowledgement recovers exactly with paginated history
+ok 2 - failed observations append corrections and original acknowledgement recovers exactly with paginated history
+  ---
+  duration_ms: 2099.6696
+  type: 'test'
+  ...
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: standard version and item CAS reject concurrent overwrites, altered original keys and unknown checks
+ok 3 - standard version and item CAS reject concurrent overwrites, altered original keys and unknown checks
+  ---
+  duration_ms: 1774.1547
+  type: 'test'
+  ...
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new candidate requires fresh review while stale history and original replay retain the old observations
+ok 4 - new candidate requires fresh review while stale history and original replay retain the old observations
+  ---
+  duration_ms: 1926.2089
+  type: 'test'
+  ...
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: owner writes, members read, cross-project and revoked original replay cannot expose protected review
+ok 5 - owner writes, members read, cross-project and revoked original replay cannot expose protected review
+  ---
+  duration_ms: 2299.8441
+  type: 'test'
+  ...
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy READY rows without a formal freeze never obtain review or implicit approval
+ok 6 - legacy READY rows without a formal freeze never obtain review or implicit approval
+  ---
+  duration_ms: 1669.3912
+  type: 'test'
+  ...
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: review evidence is exact same Run content and immutable links pin original bytes against GC
+ok 7 - review evidence is exact same Run content and immutable links pin original bytes against GC
+  ---
+  duration_ms: 1799.7409
+  type: 'test'
+  ...
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: result, evidence, current pointer, operation and event roll back together then original key is safe
+ok 8 - result, evidence, current pointer, operation and event roll back together then original key is safe
+  ---
+  duration_ms: 1649.8464
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14269.6716
