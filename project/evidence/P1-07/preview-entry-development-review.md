@@ -39,3 +39,5 @@
 ## 后续边界
 
 本增量没有启用 CLI 默认身份或共享网络写入口，没有接受或路由切换。继续实施 4.1 原接受依据与外部准备、4.2 T5、4.3 发布及导出恢复。2.3 的真实容器适配／可信装配和产品、阶段验收仍未完成，变更不归档。
+
+源码检查点 `ec889aa72bedc247da4cf244c90ffbc4df25ef68`；[checkpoint-binding](./development/preview-entry/checkpoint-binding.json) 将 431 个最终输入、保留材料及设计／管理上下文共 572 项逐字节绑定到该提交 Git 对象。绑定是只读核对，不能代替再次执行或干净 checkout。
