@@ -10,6 +10,8 @@
 4. SOURCE 字节和业务引用在内容 ACK 事务落定后，才允许 verification 工作区首次发送流水线。可信服务用 `bind` 将每个 producer 固定到原 pipeline／ordinal；必须在该 stage PENDING 时完成，之后不能改 Job。
 5. PipelineCoordinator 持续核实原 Job。`collect({principalId,operationId})` 只 GET 原 Job／operation 和输出索引；验证实际 argv 哈希、镜像、退出事实、原输出 SHA／大小，再登记日志、报告和计算结果。
 6. `PENDING` 返回明确待核实代码，保持原验证 PREPARED。未知 Job、缺报告、HTTP 不可用或字节不符均不能形成通过。已登记材料可从内容库重读；终态回执丢失只返回原 EVALUATED，不发起测试。
+7. Runtime 已发布原角色候选后，项目负责人调用 `WorkVerifier.verify({principalId,operationId,runId,attemptId,qualityOperationId})`。服务读取原候选和材料字节；Worker 从当前计划／需求／Work revision／epoch、原归档或质量操作及完成条件派生评估。Developer 无法证明的检查保留 MISSING；Tester 不能用模型 PASSED 覆盖原失败。未解决候选缺陷及缺失引用也不能变为成功，独立质量计算仍保留原结果。
+8. Work 评估正文与 artifact 在同一内容 ACK 事务登记，随后完成事务重核依据并应用固定的 outcome／outputs／commit／evidence。PASS 可完成，Tester 的确定 findings 单独保留；必要人工项待处理时保持未完成。原键恢复只查询原证据和完成操作，不调用模型或 Runner。只读成员可查询历史，不通过该服务以负责人身份写入或重放。
 
 SOURCE 声明／登记与 stage 首次 SENT 的互斥由 SQLite 顺序保证，不依赖控制面和远端的时钟比较。原操作、依据、producer 绑定、材料 writeKey 和终态结果不可变；暂停后原历史可保留，但 qualification 变为 STALE。读取受当前项目成员权限约束，写入只允许原项目负责人。
 
@@ -17,4 +19,6 @@ SOURCE 声明／登记与 stage 首次 SENT 的互斥由 SQLite 顺序保证，�
 
 本包提供显式服务和可信映射 provider 接口，没有默认生产映射工具链，也没有自动将模型结论作为验证。源码、报告、结果留在专用本地内容 target，数据库保存其引用和原始依据；正文不穿过 256 KiB Worker RPC。材料最多 50 项／128 MiB，单报告最多 8 MiB，SOURCE／日志最多 16 MiB。
 
-本地采集测试使用实际认证 HTTP、Runner SQLite、输出文件、PipelineCoordinator 和内容存储；执行后端写入固定报告，Git／准入与独立映射为明确夹具。它们不证明真实模型、OIDC、Linux／gVisor 执行或生产工具链。正式 Work 完成绑定、Runtime 自动组合、修复和候选冻结按 OpenSpec 后续任务继续实施。
+新的 `recordVerifiedWork` 只接受已 ACK 的不可变 Work 评估及其稳定 completionKey，调用方不能自行提交 success；一般 `transitionAttempt` 不能直接进入 SUCCEEDED。历史已提交操作按原键重放，旧结果保留。测试用历史数据只在测试文件中显式种入，不向应用提供 fixture 开关。Work 评估及质量材料的外键会阻止 GC，缺失或变更的来源不能复用为当前证明。
+
+本地采集测试使用实际认证 HTTP、Runner SQLite、输出文件、PipelineCoordinator 和内容存储；执行后端写入固定报告，Git／准入与独立映射为明确夹具。正式 Tester 完成用例明确种入原 Runtime 候选等数据库事实；Developer 链路另用真实本地模型协议 HTTP 夹具、Runtime、认证 MCP、Git 提交／归档和 Worker 测试。这些用例不证明真实模型、OIDC、Linux／gVisor 执行或生产工具链。生产映射 provider、Runtime 自动组合、修复和候选冻结继续按 OpenSpec 实施。

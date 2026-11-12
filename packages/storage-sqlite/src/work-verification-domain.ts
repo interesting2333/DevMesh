@@ -62,6 +62,8 @@ export function createWorkVerificationDomain(db:DatabaseSync,quality?:Pick<Retur
     else if((actual[0]!.status==='PASSED')!==(measured.status==='PASS'))add('candidate-tests','FAIL','CANDIDATE_STATUS_CONTRADICTS_RAW_REPORT');
    }
    for(const defect of output.defects)for(const ref of defect.evidenceRefs)if(!readyRef(ref)||!materials.some(m=>m.contentHash===ref.sha256))add('candidate-defect','FAIL','CANDIDATE_REPORT_PROVENANCE_CHANGED');
+    if(output.defects.length)add('candidate-defect','FAIL','CANDIDATE_FINDING_UNRESOLVED');
+    if(output.previewRef&&!readyRef(output.previewRef))add('candidate-preview','MISSING','CANDIDATE_EVIDENCE_UNAVAILABLE');
    add('independent-quality',evaluation.automaticStatus==='STALE'?'MISSING':evaluation.automaticStatus,'ORIGINAL_QUALITY_'+evaluation.automaticStatus);
     if(evaluation.reviewStatus==='PENDING')add('quality-review','PENDING','HUMAN_DECISION_REQUIRED');
   }else if(output.role==='architect')for(const entry of output.interfaces)if(!readyRef(entry.specificationRef))add('candidate-interface','MISSING','CANDIDATE_EVIDENCE_UNAVAILABLE');

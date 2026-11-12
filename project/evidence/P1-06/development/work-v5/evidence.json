@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "Focused review corrections after 6414720: unresolved candidate findings/preview and owner-only service reads/replay. Run type/lint and dependency-filtered verifier build plus expanded Work tests. Does not claim to rerun the main checkout workspace regression; that remains separately running on its original frozen source.",
+  "sourceCommit": "6414720a7a167307fda07318645718b046ef736a",
+  "dirty": true,
+  "sourceFingerprint": "17bfd672de98f83b1e374ff36f9a61db7c8e6647fd6f6c5311c188de1eaa91b1",
+  "unchanged": true,
+  "startedAt": "2026-11-12T04:01:42.584Z",
+  "finishedAt": "2026-11-12T04:11:33.982Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 150666,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12901,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "verifier-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 295693,
+      "output": "verifier-build.txt",
+      "sha256": "9d2a476c10258b790023834dc2b82170d2fbae7d89f418b5b691973b0dcf69fa"
+    },
+    {
+      "name": "work-verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 126602,
+      "output": "work-verification.txt",
+      "sha256": "c6572351d3851645a583c2ccb1590e1db88533a2f904e204a82818d7726c9f97"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/work-v5/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v5/report.json",
+      "sha256": "af607808156617e5caaad9c6cd4e672b2b5bf61c3a76ddcb31360e60aed61be5"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v5/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v5/verifier-build.txt",
+      "sha256": "9d2a476c10258b790023834dc2b82170d2fbae7d89f418b5b691973b0dcf69fa"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v5/work-verification.txt",
+      "sha256": "c6572351d3851645a583c2ccb1590e1db88533a2f904e204a82818d7726c9f97"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; not an exact clean checkpoint or stage/product acceptance.",
+    "Tester verification unit fixtures explicitly seed original admission/Git/Runner/Runtime candidate facts while exercising real migrated SQLite, report evaluator, content publication and completion transactions.",
+    "workspace-runtime exercises actual local HTTP model-protocol fixture, Runtime, authenticated MCP, Git commit/archive and Worker publication. It proves no production model, generated container execution, OIDC, Linux or runsc.",
+    "Production source instrumentation, automatic composition, defect/forward repair and ReleaseCandidate freeze remain subsequent work."
+  ]
+}

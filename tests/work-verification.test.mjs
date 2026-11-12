@@ -40,6 +40,17 @@ test('candidate evidence from another report and pending human checks cannot bec
  assert.equal(result.verification.evaluation.automaticStatus,'FAIL');assert.equal(result.verification.evaluation.outcome,'completed-with-findings');assert.ok(result.verification.evaluation.checks.some(c=>c.code==='CANDIDATE_REPORT_PROVENANCE_CHANGED'));
  const human=await workVerificationFixture(t,{human:true}),pending=await new WorkVerifier(human.storage,human.content).verify(human.subject);assert.equal(pending.verification.state,'READY');assert.equal(pending.verification.evaluation.automaticStatus,'PENDING');assert.equal(pending.completion,null);assert.equal(human.get('SELECT state FROM attempts WHERE attempt_id=?',human.attemptId).state,'VERIFYING');
 });
+test('passing raw checks cannot hide a declared unresolved finding or an unavailable preview artifact',async t=>{
+ const f=await workVerificationFixture(t,{mutateOutput:o=>o.defects.push({id:'defect.declared',severity:'HIGH',description:'Explicit candidate finding requiring resolution',evidenceRefs:[{artifactId:o.coverageRef.artifactId,sha256:o.coverageRef.sha256}]})}),result=await new WorkVerifier(f.storage,f.content).verify(f.subject);
+ assert.equal((await f.read()).evaluation.automaticStatus,'PASS');assert.equal(result.verification.evaluation.automaticStatus,'FAIL');assert.equal(result.verification.evaluation.outcome,'completed-with-findings');assert.ok(result.verification.evaluation.checks.some(c=>c.code==='CANDIDATE_FINDING_UNRESOLVED'));
+ const preview=await workVerificationFixture(t,{mutateOutput:o=>{o.previewRef={artifactId:'artifact_missing',sha256:'a'.repeat(64),targetCommit:o.targetCommit};}}),missing=await new WorkVerifier(preview.storage,preview.content).verify(preview.subject);
+ assert.equal((await preview.read()).evaluation.automaticStatus,'PASS');assert.equal(missing.verification.evaluation.automaticStatus,'MISSING');assert.equal(missing.verification.evaluation.outcome,'completed-with-findings');
+});
+test('a read-only member cannot make WorkVerifier read or replay as the original owner',async t=>{
+ const f=await workVerificationFixture(t);await f.storage.request('beginWorkVerification',f.workBegin);f.insert('project_members',{project_id:f.p.projectId,principal_id:'viewer.work',role:'viewer',created_at:new Date().toISOString()});
+ const original=f.content.readBytes.bind(f.content),reads=[];f.content.readBytes=(...args)=>{reads.push(args[0]);return original(...args);};
+ await assert.rejects(new WorkVerifier(f.storage,f.content).verify({...f.subject,principalId:'viewer.work'}),{code:'WORK_VERIFICATION_NOT_FOUND'});assert.deepEqual(reads,[]);assert.equal(f.get('SELECT state FROM attempts WHERE attempt_id=?',f.attemptId).state,'VERIFYING');
+});
 test('proof basis and completion payload are immutable; code/config changes and unknown original writes stay blocked',async t=>{
  const f=await workVerificationFixture(t),row=await f.storage.request('beginWorkVerification',f.workBegin);assert.deepEqual(await f.storage.request('beginWorkVerification',f.workBegin),row);
  await assert.rejects(f.storage.request('beginWorkVerification',{...f.workBegin,candidate:{...f.output,caseResults:f.output.caseResults.map(c=>({...c,status:'FAILED'}))}}),{code:'WORK_VERIFICATION_REQUEST_CHANGED'});

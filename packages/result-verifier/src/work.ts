@@ -27,6 +27,7 @@ export class WorkVerifier {
  async verify(input:Subject):Promise<WorkVerificationResult>{
   let row:WorkVerification|undefined;
   try{row=await this.storage.request('getWorkVerification',{principalId:input.principalId,operationId:input.operationId});}catch(error){if(!(error instanceof Error&&'code' in error&&error.code==='WORK_VERIFICATION_NOT_FOUND'))throw error;}
+  if(row&&row.principalId!==input.principalId)return reject('WORK_VERIFICATION_NOT_FOUND');
   if(row&&(row.runId!==input.runId||row.attemptId!==input.attemptId||row.evaluation.qualityOperationId!==(input.qualityOperationId??null)))return reject('WORK_VERIFICATION_REQUEST_CHANGED');
   if(row?.state==='APPLIED')return {verification:row,completion:await this.storage.request('recordVerifiedWork',this.completion(row))};
   if(!row){
