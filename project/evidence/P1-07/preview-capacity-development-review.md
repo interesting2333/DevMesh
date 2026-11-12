@@ -38,6 +38,8 @@
 
 证据保存后再次检查 Lint、台账、OpenSpec 严格校验、设计完整主文和 diff 格式，全部通过；[post-retention-checks.json](./development/capacity-v23/post-retention-checks.json) 同时核对 390 个当前源码／模板输入、18 份原日志、37 项保留材料及 9 个原失败源码快照的 SHA。补验命令、日志和 driver 另随 `workspace-supplement` 保留。这些记录检查不替代产品或干净 checkout 验收。
 
+代码检查点为 `fb90480a5e8778890aff2ce3619619566471e671`；[checkpoint-binding.json](./development/capacity-v23/checkpoint-binding.json) 核对 v23 全部 390 个源码／模板输入与该 Git 提交对象字节一致。这是只读核对，不是新一轮测试或干净 checkout。完整 2.3 仍未完成。
+
 ## 边界与后续
 
 容量测试实际执行 Node SQLite Worker、并发准入、事务回滚、SQL 不可变约束、关闭重开，以及实际等待到期后继续持有占用。镜像／容器健康／EXITED 均是明确测试值；没有真实容器、物理退出、gVisor 隔离或 cgroup／磁盘配额证据。PID／临时盘声明只固定为后续容器策略输入；本次准入实际统计 slot／CPU／内存。

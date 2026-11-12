@@ -1163,7 +1163,8 @@
         "project/evidence/P1-07/development/capacity-v22-failed/evidence.json",
         "project/evidence/P1-07/development/capacity-v23/evidence.json",
         "project/evidence/P1-07/development/capacity-v23/commands.json",
-        "project/evidence/P1-07/development/capacity-v23/workspace-supplement/report.json"
+        "project/evidence/P1-07/development/capacity-v23/workspace-supplement/report.json",
+        "project/evidence/P1-07/development/capacity-v23/checkpoint-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1178,7 +1179,8 @@
         "2026-11-12：实际 SQLite 数据准备开发源码固定在 20c2ca9f4450dafcbcc63f6f1e87a2434bbc509f，datasets-v16 全部 381 个源码／模板输入与提交 Git 对象字节一致。绑定为只读核对，不冒充再次测试、干净 checkout、预览健康或产品／阶段验收。",
         "2026-11-12：继续开发子项 2.3 的控制面部分，迁移 33 保存独立持续健康历史、准确原启动／requestHash 复合外键、原实例／端口固定和 CAS／时间／事务事件；当前可用性需要 30 秒内准确健康，不以原启动成功冒充持续可用。固定完整 OCI／config／层、dataset 准备操作及模板 schema；私有生命周期扫描和 PreviewLifecycleManager 只派发一次启动／停止，SENT／UNKNOWN 仅查原对象，停止前复核 Release 归属，未接受预览到期生成原幂等停止；关闭／并发启动守卫及真实控制定时器恢复均验证。loopback HTTP 探针实际验证固定路径、无平台凭据、无重定向、响应限额／结构和超时。启动／健康／退出容器事实来自明确 ControlledPreviewBackend，源／准入／Runtime 和 Release 归属仍为夹具；停止测试使用实际本地 SQLite／原模板，证明新未接受预览停止不改旧 Release／接受指针／实例／数据。v17 类型失败与 v18 归档脚本 lint 失败均留原日志／源码；保留归档字节，仅为共享 ID 解析和 project/evidence 下 validation-driver.mjs 增加精确 lint 排除，活跃代码检查不放宽。v19 新增生命周期 13/13、意图／目录 14/14；v20 全相关回归 149 项（147 通过、2 条条件跳过）。最终 v21 离线冻结安装／类型／lint／依赖构建与 150 项测试：148 通过、POSIX／Linux Docker 条件 2 条跳过，OpenAPI 通过，源码运行期间不变。预览专用 Docker／gVisor 后端、统一 Runner 资源容量、独立 Runner 到期 watchdog、容器监听／网络和平台装配尚待实施，因此 2.3 不勾选，正式 P1-07／阶段门槛不改变。",
         "2026-11-12：预览生命周期控制面部分的开发源码固定在 8a87baafa3f90759f4a3e60de70b93fad6886bb7，lifecycle-v21 全部 386 个源码／模板输入与 Git 对象字节一致。此绑定仅为只读核对，完整 2.3 仍未勾选，不冒充实际镜像／容器健康、干净 checkout 或产品／阶段验收。",
-        "2026-11-12：继续开发子项 2.3 的 Runner 持久容量部分，前向迁移 v3 保持原 v2 指纹／作业／workspace fence，新增私有预览预留与不可变历史。作业 claim 和预览 reserve 在同一 Worker 事务累计全主体 slot／CPU／内存，统一显式预算，UNKNOWN／已派发到期继续占用；只有未派发取消或准确原实例 EXITED 才释放。原请求完整 hash／固定资源、跨 controller 的 preview／可写 dataset 互斥、一次派发位和丢回执不重复许可、实例／端口固定、revision／时间 CAS、重开保留、历史失败原子回滚均验证。capacity-v22 13/14，一处测试把两份实际占用误预期为一份；原失败源码／日志保留并修正断言，没有放宽守卫。最终 v23 安装／类型／Lint／构建／OpenAPI 均通过；主回归 122 次执行含重复子集 14，去重 108 项（106 通过、POSIX／Linux 两条条件跳过）；另补当前 code-workspaces 构建和工作区互斥 5/5，合计去重 113 项（111 通过、2 条跳过），全部源码指纹不变。真实 Runner SQLite／Worker／并发与文件系统／HTTP 实际执行，镜像／容器健康／EXITED 仍为明确测试事实，非物理退出、容器或 cgroup／磁盘配额证据。预览生产容器后端／动作日志、独立 watchdog、模板容器监听／网络和平台装配继续实施，完整 2.3 保持未勾选，正式 P1-07 与阶段门槛保持等待。"
+        "2026-11-12：继续开发子项 2.3 的 Runner 持久容量部分，前向迁移 v3 保持原 v2 指纹／作业／workspace fence，新增私有预览预留与不可变历史。作业 claim 和预览 reserve 在同一 Worker 事务累计全主体 slot／CPU／内存，统一显式预算，UNKNOWN／已派发到期继续占用；只有未派发取消或准确原实例 EXITED 才释放。原请求完整 hash／固定资源、跨 controller 的 preview／可写 dataset 互斥、一次派发位和丢回执不重复许可、实例／端口固定、revision／时间 CAS、重开保留、历史失败原子回滚均验证。capacity-v22 13/14，一处测试把两份实际占用误预期为一份；原失败源码／日志保留并修正断言，没有放宽守卫。最终 v23 安装／类型／Lint／构建／OpenAPI 均通过；主回归 122 次执行含重复子集 14，去重 108 项（106 通过、POSIX／Linux 两条条件跳过）；另补当前 code-workspaces 构建和工作区互斥 5/5，合计去重 113 项（111 通过、2 条跳过），全部源码指纹不变。真实 Runner SQLite／Worker／并发与文件系统／HTTP 实际执行，镜像／容器健康／EXITED 仍为明确测试事实，非物理退出、容器或 cgroup／磁盘配额证据。预览生产容器后端／动作日志、独立 watchdog、模板容器监听／网络和平台装配继续实施，完整 2.3 保持未勾选，正式 P1-07 与阶段门槛保持等待。",
+        "2026-11-12：Runner 预览容量部分开发源码固定在 fb90480a5e8778890aff2ce3619619566471e671，capacity-v23 全部 390 个源码／模板输入与 Git 对象字节一致；该绑定是只读核对，不是新一轮测试或干净 checkout，完整 2.3／正式 P1-07 与阶段验收仍未完成。"
       ]
     },
     {
