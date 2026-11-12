@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceFingerprint": "4572803cd42073a21dbd97f18e5b05bfb829296f75403ea099f19de2276fc6b2",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "checks": [
+    {
+      "name": "watchdog-repair",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 326030,
+      "output": "watchdog-repair.txt",
+      "sha256": "79dd529a0298977eed3f8b954d86776e82f7f701526f5fb5cf05de8f9cf216ed",
+      "tests": {
+        "tests": 15,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 1,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 107094,
+      "output": "scheduler.txt",
+      "sha256": "510bc435b942e994f2fae938846d0447da0bc009cec5c787f2ed1c9523988868",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "smoke",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 54490,
+      "output": "smoke.txt",
+      "sha256": "5b0d13ac3f30fd1a30486234f2ef4a528ef60fd445fc55d14a5bb8dd62944a06",
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 22856,
+      "output": "contracts.txt",
+      "sha256": "7716e9527eb24880b26c3d70a2ce55b10faefd731afacafedf1ff276cd392426",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 16864,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 17917,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/commands.json",
+      "sha256": "bd7ffe103fde5ceaaf1ac6ae326cda9c51b1d31c48d08c1dea176c9fbcd609d1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/contracts.txt",
+      "sha256": "7716e9527eb24880b26c3d70a2ce55b10faefd731afacafedf1ff276cd392426"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "sha256": "634807b517a7bb6a244d819041f40756fac00833cdcb7df53a3587541d127d22"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/original-report.json",
+      "sha256": "e5b82d770dbcc48e4de8160a047c6cb2a203cbf447384ebceccc9992fa26dffb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/report.json",
+      "sha256": "b49c8dff27404d3b300892419db363215c1bcb6d0ef3f5d57dc8c3fb23314bae"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/scheduler.txt",
+      "sha256": "510bc435b942e994f2fae938846d0447da0bc009cec5c787f2ed1c9523988868"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/smoke.txt",
+      "sha256": "5b0d13ac3f30fd1a30486234f2ef4a528ef60fd445fc55d14a5bb8dd62944a06"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/validation-driver.mjs",
+      "sha256": "b23b4f36c55227024139f41568331bfacbafb61a2c36a60beffb5e608f51c8ce"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v41-failed/watchdog-repair.txt",
+      "sha256": "79dd529a0298977eed3f8b954d86776e82f7f701526f5fb5cf05de8f9cf216ed"
+    }
+  ],
+  "scope": "Fresh test-only watchdog wait repair and previously unexecuted tail checks. The old test closed its watchdog after EXITED but asserted later independent cleanup mutations. Wait for REMOVED plus both original OBSERVED absence records, without changing production code or the 90-second test timeout or dropping assertions. v40 still exited its additional expiry+15s wait at EXITED; v41 removes that additional cutoff, awaits REMOVED using the original test abort signal and captures watchdog errors/cleanup on abort. Other historical checks are not rerun or relabeled by this report; any later aggregate must preserve exact per-check provenance and the changed test file.",
+  "failure": "Whole watchdog file: 14 pass, 1 cancelled at the unchanged 90-second test timeout. Both original CONTAINER_REMOVE and NETWORK_REMOVE observations are OBSERVED with absenceVerified, but reservation remains EXITED. Diagnosis corrected the previous test interpretation: released EXITED reservation is intentionally immutable (capacity-domain recordRemoved returns for released rows; unchanged v6 SQL trigger forbids rewriting). Waiting for REMOVED was impossible for this already released subject, not proof of slow or failed cleanup. The next test keeps EXITED and separately awaits both original absence records. Five independent remaining checks executed and are reported individually; this FAILED report is never promoted to passing. Only this changed test file is snapshotted; all 414 source input SHA are recorded."
+}

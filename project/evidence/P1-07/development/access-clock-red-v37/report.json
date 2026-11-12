@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-12T13:27:46.784Z",
+  "finishedAt": "2026-11-12T13:28:40.775Z",
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "args": [
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    ".cache/p107-clock-red.test.mjs"
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "expected": "One failing missing-rejection assertion against the original negative health-age projection, before the source fix. This expected red is not a passing validation.",
+  "sourceFiles": [
+    {
+      "path": "packages/storage-sqlite/src/preview-domain.ts",
+      "sha256": "576adb9963139be46e8f457848954aee0ee8a3b81b8ba8962dfdb7e7e4e81c41"
+    },
+    {
+      "path": "tests/fixtures/preview-access.mjs",
+      "sha256": "3fb83dbd04219c81a00fdb2e3476318dd45f76574092401f1fb9023a1ed13481"
+    },
+    {
+      "path": ".cache/p107-clock-red.test.mjs",
+      "sha256": "b5b3c6a0c5b51013948779476068a0aaff1421a8f3386a796deeae460d54d262"
+    }
+  ],
+  "unchanged": true,
+  "output": {
+    "path": "red.txt",
+    "sha256": "8312879e05c597b41b13ad6bef34b465189ad481d95b6668c6369f98cc6f2e7b"
+  }
+}

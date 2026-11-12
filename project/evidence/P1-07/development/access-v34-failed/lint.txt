@@ -1,0 +1,3 @@
+packages/storage-sqlite/src/preview-access-protocol.ts:8:159: warning eslint(no-control-regex): Unexpected control character help: Avoid matching control characters in regular expressions. If intentional, disable this rule for the expression.
+[ELIFECYCLE] Command failed with exit code 1.
+$ oxlint --deny-warnings --ignore-pattern=project/evidence/**/failed-source/** --ignore-pattern=project/evidence/**/validation-driver.mjs apps packages scripts project tests

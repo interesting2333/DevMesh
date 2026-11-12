@@ -114,6 +114,16 @@ Runner v6 为准确原容器增加 REMOVED，区别于进程 EXITED；PREVIEW_RE
 
 准确原容器消失后才能移除原独占空网络。Runner watchdog 另扫已停止但清理未完成的原记录，包含已 EXITED／REMOVED 释放容量的对象，网络移除丢 ACK 后仍可恢复，不因活动预留扫描排除它而遗失。HELD／OWNED、未登记旧对象及运行中／未知容器都不会被清理；每步最后授权和原对象校验保留。Windows 的受控 Driver 事实不构成实际 Docker 移除或 Linux 隔离验收。
 
+### 14. Preview access admission is durable and does not assert data quiescence
+
+独立 HTTP 网关使用每个 preview 独立的 host，不以换端口或共享 path 代替应用隔离。平台身份与预览短期用途凭据分开，正式部署还须隔离可注册域及 Cookie 作用域；HTTP／浏览器验证另行接入，不把仅有授权表当作网关已运行。
+
+迁移 34 为显式可信装配登记不可替换的 gateway／project／configurationHash／service principal 策略；没有公共登记或回执入口。每次访问先以用户成员身份取得准确原 preview／image／dataset／实例／loopback endpoint 绑定，并核实 READY、新鲜健康和期限；健康年龄须在 0～30 秒内，控制时钟回拨后原未来观察不保持可用。owner／operator 可写业务预览，viewer 只读；这不授予平台写权限。服务主体、配置、项目及原请求均不能由请求 URL 任意替换。
+
+dataset 写门只由原数据后端显式登记，固定原准备 operation／hash；缺登记关闭访问。关闭门使用固定原请求、递增 fence 和不可变历史，与访问派发在同一 SQLite writer 串行。读请求仍可通过关闭门；新写请求不通过。每次 HTTP 访问持久保存方法／路径／body hash、准确目标、用户及原 fence；只有明确一次 dispatch=true 才可转发，并在实际发送前复核授权。丢许可、未知请求或重启后不重发写请求，UNKNOWN 不因超时减去在途写计数。
+
+该门仅证明网关准入与原请求观察，不证明 HTTP 实际发送、数据库写成功或后台写入已排空。GET／HEAD 只按 HTTP 安全方法分类，模板仍须证明这些路由无写副作用、无绕开网关的后台写入；不能把方法名当作数据库只读强制。真实 HTTP 适配器必须回填原请求的完整响应或明确未发送事实；无法核实保留 UNKNOWN。T5 的数据排空／Runner 停止或 fencing 证明以及明确未提交后重开门的协议继续实施；本增量没有自动超时重开接口，不伪造迁移或接受准备完成。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

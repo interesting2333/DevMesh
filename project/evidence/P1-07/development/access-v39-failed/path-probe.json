@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-12T14:15:54.137Z",
+  "scope": "Read-only canonicalRoot timing on two newly created isolated local directory trees. This diagnoses path traversal cost, not the root cause of a historical test failure. No production path validation changes.",
+  "taskRoot": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d",
+  "results": [
+    {
+      "name": "normal",
+      "path": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-preview-path-probe-m8YuTk\\data\\artifacts",
+      "calls": 10,
+      "durationMs": 894.7186999999999
+    },
+    {
+      "name": "short",
+      "path": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d\\data\\artifacts",
+      "calls": 10,
+      "durationMs": 182.08370000000014
+    },
+    {
+      "name": "short",
+      "path": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d\\data\\artifacts",
+      "calls": 10,
+      "durationMs": 128.04370000000017
+    },
+    {
+      "name": "normal",
+      "path": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-preview-path-probe-m8YuTk\\data\\artifacts",
+      "calls": 10,
+      "durationMs": 964.7480000000005
+    },
+    {
+      "name": "normal",
+      "path": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-preview-path-probe-m8YuTk\\data\\artifacts",
+      "calls": 10,
+      "durationMs": 889.3694999999998
+    },
+    {
+      "name": "short",
+      "path": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d\\data\\artifacts",
+      "calls": 10,
+      "durationMs": 121.75120000000061
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@devmesh/platform-core/config": [
+        "./packages/platform-core/src/config.ts"
+      ],
+      "@devmesh/a2a-adapter/config": [
+        "./packages/a2a-adapter/src/config.ts"
+      ],
+      "@devmesh/agent-runtime/config": [
+        "./packages/agent-runtime/src/config.ts"
+      ],
+      "@devmesh/platform-core": [
+        "./packages/platform-core/src/index.ts"
+      ],
+      "@devmesh/contracts": [
+        "./packages/contracts/src/index.ts"
+      ],
+      "@devmesh/result-verifier": [
+        "./packages/result-verifier/src/index.ts"
+      ],
+      "@devmesh/storage-sqlite": [
+        "./packages/storage-sqlite/src/index.ts"
+      ],
+      "@devmesh/blob-store": [
+        "./packages/blob-store/src/index.ts"
+      ],
+      "@devmesh/code-workspaces": [
+        "./packages/code-workspaces/src/index.ts"
+      ],
+      "@devmesh/a2a-adapter": [
+        "./packages/a2a-adapter/src/index.ts"
+      ],
+      "@devmesh/agent-runtime": [
+        "./packages/agent-runtime/src/index.ts"
+      ],
+      "@devmesh/runner": [
+        "./packages/runner/src/index.ts"
+      ],
+      "@devmesh/mcp-tools": [
+        "./packages/mcp-tools/src/index.ts"
+      ],
+      "@devmesh/input-api": [
+        "./packages/input-api/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "apps/*/src/**/*.ts",
+    "packages/*/src/**/*.ts",
+    "tests/**/*.ts"
+  ]
+}

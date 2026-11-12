@@ -34,7 +34,8 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
  function previewView(r:Row):PreviewView {
    const d=dataset(String(r.dataset_id)),stop=get("SELECT operation_id FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",r.preview_id!),runtime=latestRuntime(String(r.preview_id));
   const basis={previewId:r.preview_id,previewRevision:r.revision,datasetId:r.dataset_id,datasetRevision:d.revision,imageDigest:r.image_digest,instanceId:r.instance_id,accepted:accepted(r)};
-   const fresh=runtime?.fact.state==='HEALTHY'&&runtime.fact.instanceId===r.instance_id&&Date.now()-Date.parse(runtime.fact.checkedAt)<=30000;
+   const healthAge=runtime?Date.now()-Date.parse(runtime.fact.checkedAt):null;
+   const fresh=runtime?.fact.state==='HEALTHY'&&runtime.fact.instanceId===r.instance_id&&healthAge!==null&&healthAge>=0&&healthAge<=30000;
    return {previewId:String(r.preview_id),projectId:String(r.project_id),runId:String(r.run_id),candidateId:String(r.candidate_id),operationId:String(r.operation_id),datasetId:String(r.dataset_id),policyHash:String(r.policy_hash),imageDigest:String(r.image_digest),state:r.state as PreviewView['state'],revision:Number(r.revision),instanceId:r.instance_id as string|null,expiresAt:String(r.expires_at),createdAt:String(r.created_at),impactReviewHash:digest(canonical(basis)),stopOperationId:stop?String(stop.operation_id):null,availability:r.state==='READY'&&String(r.expires_at)>now()&&d.state==='READY'&&fresh?'AVAILABLE':'UNAVAILABLE',healthState:runtime?.fact.state??'UNKNOWN',healthCheckedAt:runtime?.fact.checkedAt??null};
  }
  function scoped(principalId:string,runId:string,r:Row,write=false){const run=authorized(principalId,runId,write);if(r.run_id!==runId||r.project_id!==run.project_id)fail('PREVIEW_NOT_FOUND',404);return run;}

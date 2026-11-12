@@ -1,0 +1,115 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "steps": [
+    [
+      "datasets",
+      [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-datasets.test.mjs"
+      ]
+    ],
+    [
+      "storage",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:storage"
+      ]
+    ],
+    [
+      "runner",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:runner"
+      ]
+    ],
+    [
+      "scheduler",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:scheduler"
+      ]
+    ],
+    [
+      "smoke",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:smoke"
+      ]
+    ],
+    [
+      "contracts",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:contracts"
+      ]
+    ],
+    [
+      "contracts-check",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "contracts:check"
+      ]
+    ]
+  ],
+  "environment": {
+    "newChecksOnly": {
+      "TEMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d",
+      "TMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d"
+    },
+    "otherEnvironment": "Inherited unchanged; secrets not copied into evidence."
+  },
+  "reusedChecks": [
+    {
+      "name": "frozen-install",
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "output": "project/evidence/P1-07/development/access-v38-failed/frozen-install.txt",
+      "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+    },
+    {
+      "name": "typecheck",
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "output": "project/evidence/P1-07/development/access-v38-failed/typecheck.txt",
+      "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+    },
+    {
+      "name": "lint",
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "output": "project/evidence/P1-07/development/access-v38-failed/lint.txt",
+      "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+    },
+    {
+      "name": "current-build",
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "output": "project/evidence/P1-07/development/access-v38-failed/current-build.txt",
+      "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+    },
+    {
+      "name": "access",
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "output": "project/evidence/P1-07/development/access-v38-failed/access.txt",
+      "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+    },
+    {
+      "name": "lifecycle",
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "output": "project/evidence/P1-07/development/access-v38-failed/lifecycle.txt",
+      "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+    },
+    {
+      "name": "preview-intents",
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "output": "project/evidence/P1-07/development/access-v38-failed/preview-intents.txt",
+      "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+    }
+  ],
+  "scope": "P1-07 partial3.1: durable private preview gateway admission, exact original target and current membership, original dataset write gate fencing, once-only dispatch journal and uncertain-write retention. Real SQLite and storage Workers; preview/dataset runtime facts are explicit fixtures. No HTTP forwarding, browser credentials/isolation, physical data quiescence, production composition, T5 or stage acceptance. Full3.1 remains unchecked. Incremental validation bundle: first seven checks are unchanged successful v38 evidence, not rerun. v38 dataset failure is retained separately. Only datasets and previously unexecuted regression checks run here with an isolated short temporary root; no production timers, source or path checks are weakened."
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "outcome": "UPSTREAM_FIXTURE_FAILURE_NOT_REPRODUCED",
+  "exitCode": 1,
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/access-clock-red-v37/red.txt",
+      "sha256": "8312879e05c597b41b13ad6bef34b465189ad481d95b6668c6369f98cc6f2e7b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-clock-red-v37/report.json",
+      "sha256": "8b8723919cf03b52c1865ea58bc41a940b241cfef3cbb82ebbb47d4816c20bdd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-clock-red-v37/test-source.txt",
+      "sha256": "b5b3c6a0c5b51013948779476068a0aaff1421a8f3386a796deeae460d54d262"
+    }
+  ],
+  "scope": "Original attempt failed in unrelated Runner fixture with condition not reached, before the health assertion. This is not a reproduction or a passing test."
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T15:22:02.531Z",
+  "comparisons": [
+    {
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "sha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "sourceFiles": 414,
+      "unchangedInputs": 413,
+      "changedInputs": [
+        {
+          "path": "tests/runner-preview-watchdog.test.mjs",
+          "before": "5bf52a2fc001c98daa6973e3a41137e3bc0c94b6f844dc35fc36c3d97f3d7276",
+          "after": "35f9e60fe6b87940d39fa4487316cf27c014a9062b23ca047ae8a0b0129b18da"
+        }
+      ],
+      "scope": "Only the watchdog timer test changed. Historical results remain historical; no full clean-checkout or same-global-fingerprint validation bundle is claimed."
+    },
+    {
+      "report": "project/evidence/P1-07/development/access-v39-failed/report.json",
+      "sha256": "bdc535f58fcc30b5b9472c67b21597f0fe22ba2dcc20b0b4db937ddea160a125",
+      "sourceFiles": 414,
+      "unchangedInputs": 413,
+      "changedInputs": [
+        {
+          "path": "tests/runner-preview-watchdog.test.mjs",
+          "before": "5bf52a2fc001c98daa6973e3a41137e3bc0c94b6f844dc35fc36c3d97f3d7276",
+          "after": "35f9e60fe6b87940d39fa4487316cf27c014a9062b23ca047ae8a0b0129b18da"
+        }
+      ],
+      "scope": "Only the watchdog timer test changed. Historical results remain historical; no full clean-checkout or same-global-fingerprint validation bundle is claimed."
+    },
+    {
+      "report": "project/evidence/P1-07/development/access-v41-failed/report.json",
+      "sha256": "b49c8dff27404d3b300892419db363215c1bcb6d0ef3f5d57dc8c3fb23314bae",
+      "sourceFiles": 414,
+      "unchangedInputs": 413,
+      "changedInputs": [
+        {
+          "path": "tests/runner-preview-watchdog.test.mjs",
+          "before": "634807b517a7bb6a244d819041f40756fac00833cdcb7df53a3587541d127d22",
+          "after": "35f9e60fe6b87940d39fa4487316cf27c014a9062b23ca047ae8a0b0129b18da"
+        }
+      ],
+      "scope": "Only the watchdog timer test changed. Historical results remain historical; no full clean-checkout or same-global-fingerprint validation bundle is claimed."
+    }
+  ]
+}

@@ -37,9 +37,14 @@ test('watchdog is explicitly closed by default; real Runner timer expires origin
  const f=await containerFixture(t),off=new RunnerPreviewWatchdog(f.backend);await assert.rejects(off.reconcile(),{code:'PREVIEW_WATCHDOG_NOT_CONFIGURED'});assert.deepEqual(f.mutations(),[]);await off.close();
  // Allow actual dataset/Worker startup before the immutable original deadline.
  f.effect.request.expiresAt=new Date(Date.now()+20000).toISOString();f.effect.requestHash=hash(f.effect.request);
- const ready=await f.backend.execute(f.effect,f.dataset,allowed);assert.equal(ready.fact.state,'HEALTHY');const r=await f.reservation(),w=watch(t,f.backend);await w.start();await assert.rejects(w.start(),{code:'PREVIEW_WATCHDOG_ALREADY_STARTED'});
- const until=Date.parse(r.request.expiresAt)+15000;let current;do{await delay(100);current=await f.reservation();}while(!current.releasedAt&&Date.now()<until);
- await w.close();assert.equal(current.state,'EXITED');assert.equal(current.instanceId,ready.fact.instanceId);assert.deepEqual(f.mutations(),['NETWORK_CREATE','CREATE','START','STOP','CONTAINER_REMOVE','NETWORK_REMOVE']);assert.equal((await f.store.request('capacityUsage',{})).usage.previewSlots,0);
+  const ready=await f.backend.execute(f.effect,f.dataset,allowed);assert.equal(ready.fact.state,'HEALTHY');const r=await f.reservation(),w=watch(t,f.backend),errors=[];let current,cleanup;
+  t.after(()=>{if(t.signal.aborted||errors.length)t.diagnostic(JSON.stringify({watchdogErrors:errors,state:current?.state,cleanup,mutations:f.mutations()}));});
+  await w.start(code=>errors.push(code));await assert.rejects(w.start(),{code:'PREVIEW_WATCHDOG_ALREADY_STARTED'});
+  // Released EXITED reservations are immutable; cleanup evidence is independent.
+  // Keep the watchdog alive for both original absence observations; the existing
+  // 90-second test timeout bounds the wait and aborts the poll on failure.
+  do{await delay(100,undefined,{signal:t.signal});current=await f.reservation();cleanup=await f.store.request('previewCleanupGet',bound(r));}while(current.state!=='EXITED'||cleanup.length!==2||cleanup.some(a=>a.state!=='OBSERVED'));
+  await w.close();assert.equal(current.state,'EXITED');assert.equal(current.instanceId,ready.fact.instanceId);assert.deepEqual(cleanup.map(a=>a.request.kind),['CONTAINER_REMOVE','NETWORK_REMOVE']);assert.ok(cleanup.every(a=>a.state==='OBSERVED'&&a.observation.absenceVerified));assert.deepEqual(f.mutations(),['NETWORK_CREATE','CREATE','START','STOP','CONTAINER_REMOVE','NETWORK_REMOVE']);assert.equal((await f.store.request('capacityUsage',{})).usage.previewSlots,0);
  const lifecycle=await life(f,r);assert.equal(lifecycle.state,'STOPPING');assert.equal(lifecycle.expiryRequest.reason,'EXPIRED');assert.equal(lifecycle.expiryRequest.instanceId,r.instanceId);assert.equal(lifecycle.expiryRequestHash,hash(lifecycle.expiryRequest));assert.ok(lifecycle.expiredAt);
  await w.close();await assert.rejects(w.reconcile(),{code:'PREVIEW_WATCHDOG_CLOSED'});
 });

@@ -136,3 +136,5 @@ export type {CandidateReviewItem,CandidateHumanResult,CandidateReviewView,Candid
 export {previewBackendPolicy,previewEffectReceipt,datasetPreparationRequest} from './preview-protocol.js';
 export type {PreviewBackendPolicy,DatasetView,PreviewView,PreviewEffect,PreviewEffectReceipt,DatasetPreparationRequest,DatasetPreparationObservation,DatasetPreparationBackend,PreviewStartRequest,PreviewStopRequest,PreviewRuntimeFact,PreviewRuntimeObservation,PreviewLifecycle,PreviewExecutionObservation,PreviewExecutionResult,PreviewExecutionBackend} from './preview-protocol.js';
 export {previewStartRequest,previewStopRequest,previewRuntimeFact} from './preview-protocol.js';
+export {previewAccessPolicy,previewAccessHttpRequest,previewWriteCloseRequest,previewAccessObservation} from './preview-access-protocol.js';
+export type {PreviewWriteGate,PreviewAccessTarget,PreviewAccessBinding,PreviewAccessRecord} from './preview-access-protocol.js';

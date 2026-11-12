@@ -1,0 +1,54 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "steps": [
+    [
+      "watchdog-repair",
+      [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-preview-watchdog.test.mjs"
+      ]
+    ],
+    [
+      "scheduler",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:scheduler"
+      ]
+    ],
+    [
+      "smoke",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:smoke"
+      ]
+    ],
+    [
+      "contracts",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:contracts"
+      ]
+    ],
+    [
+      "contracts-check",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "contracts:check"
+      ]
+    ],
+    [
+      "lint",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ]
+    ]
+  ],
+  "environment": {
+    "TEMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d",
+    "TMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d"
+  },
+  "scope": "Fresh test-only watchdog wait repair and previously unexecuted tail checks. The old test closed its watchdog after EXITED but asserted later independent cleanup mutations. Wait for REMOVED plus both original OBSERVED absence records, without changing production code or the 90-second test timeout or dropping assertions. v40 still exited its additional expiry+15s wait at EXITED; v41 removes that additional cutoff, awaits REMOVED using the original test abort signal and captures watchdog errors/cleanup on abort. Other historical checks are not rerun or relabeled by this report; any later aggregate must preserve exact per-check provenance and the changed test file."
+}

@@ -1,0 +1,87 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "steps": [
+    {
+      "name": "frozen-install",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--frozen-lockfile",
+        "--offline",
+        "--ignore-scripts"
+      ]
+    },
+    {
+      "name": "typecheck",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "typecheck"
+      ]
+    },
+    {
+      "name": "lint",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ]
+    },
+    {
+      "name": "current-build",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/code-workspaces",
+        "-r",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "name": "access",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-access.test.mjs",
+        "tests/storage-preview-access.test.mjs"
+      ]
+    },
+    {
+      "name": "lifecycle",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-lifecycle.test.mjs"
+      ]
+    },
+    {
+      "name": "preview-intents",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-intents.test.mjs",
+        "tests/verification-dataset-paths.test.mjs"
+      ]
+    },
+    {
+      "name": "datasets",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-datasets.test.mjs"
+      ]
+    }
+  ],
+  "scope": "Executed command arrays reconstructed from unchanged shared driver definitions; the failed recipe is reconstructed with its original five steps. No rerun."
+}

@@ -1,0 +1,27 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "steps": [
+    [
+      "watchdog-repair",
+      [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "--test-name-pattern=^watchdog is explicitly closed by default; real Runner timer expires original instance without a control database$",
+        "tests/runner-preview-watchdog.test.mjs"
+      ]
+    ],
+    [
+      "lint",
+      [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ]
+    ]
+  ],
+  "environment": {
+    "TEMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d",
+    "TMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d"
+  },
+  "scope": "Fresh single timer-case regression plus Lint. v41 proves both original cleanup records complete but the released EXITED reservation is intentionally immutable. v42 preserves that original EXITED fact and independently awaits both OBSERVED absence records within the unchanged 90-second test timeout. Only the changed case runs; prior successful other watchdog cases and independent tail checks are not rerun or relabeled. No product code or production deadline changes."
+}

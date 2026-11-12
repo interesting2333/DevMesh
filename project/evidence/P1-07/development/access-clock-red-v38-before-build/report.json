@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-12T13:36:36.472Z",
+  "finishedAt": "2026-11-12T13:36:54.152Z",
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "args": [
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    ".cache/p107-clock-red.test.mjs"
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "compiledFiles": [
+    {
+      "path": "packages/storage-sqlite/dist/domain-CXL73UY1.mjs",
+      "sha256": "24f8bdfb70a87d840b034d51acfbdda2e9ee6cfd47d3286873ea351ddb594ce9"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/domain.mjs",
+      "sha256": "54885a9276d5fc44cbd2cd4193fee52efa7e0f41f616b5cf00a90aaf1ac6692d"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/index.mjs",
+      "sha256": "8602005bc57ff3be72e223266d512849c54099ec3d250b07c7e73c9dc88902f9"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/migrations-CmCClcp5.mjs",
+      "sha256": "e810ea480d18b40c3fd47f2a2fe7a0fc3656f814f0ad390ea575bd01c305bd17"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/migrations.mjs",
+      "sha256": "c760111f59b1a8a63a3c433505de35b2f211df85293511c1f1d4e08394fd1178"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/preview-access-protocol-hjeW0VN5.mjs",
+      "sha256": "e7831a5a8192633e7881622dfd42ccd0c54beb8852dfeb0e4b98655d9bf085f0"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/worker.mjs",
+      "sha256": "1970c48707018f0495e21f5331c0a718da2eaadc19b4b06ac79f2598485ec779"
+    }
+  ],
+  "unchanged": true,
+  "reproduced": true,
+  "output": {
+    "path": "red.txt",
+    "sha256": "49d7f08e553625e83e92bb0666ecd6d2e33df20d195830a166ba790a8d92bf7c"
+  },
+  "scope": "Original pre-fix emitted storage artifacts from the successful access-v37 current-build, before access-v38 rebuild. Current source already has the pending fix. New pure SQLite fixture avoids unrelated Runner setup. This is an expected-red reproduction only, not passing validation."
+}

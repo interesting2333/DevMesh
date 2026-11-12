@@ -1,0 +1,170 @@
+TAP version 13
+# (node:30200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: version 33 Worker upgrade requires a verified external backup and leaves old rows intact
+ok 1 - version 33 Worker upgrade requires a verified external backup and leaves old rows intact
+  ---
+  duration_ms: 24598.6151
+  type: 'test'
+  ...
+# (node:30200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: version 34 migration DDL, original rows and version markers roll back on failure then retry unchanged
+ok 2 - version 34 migration DDL, original rows and version markers roll back on failure then retry unchanged
+  ---
+  duration_ms: 7427.5552
+  type: 'test'
+  ...
+# (node:30200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fresh access tables/history refuse invalid identities and event faults preserve atomic admission
+not ok 3 - fresh access tables/history refuse invalid identities and event faults preserve atomic admission
+  ---
+  duration_ms: 48747.077
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\storage-preview-access.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: 'Release delivery requires the original approved build and exact retained bytes'
+  code: 'RELEASE_DELIVERY_POLICY_CHANGED'
+  name: 'StorageError'
+  stack: |-
+    fail$16 (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3097:8)
+    freeze (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3125:214)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3252:15
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginReleaseDelivery (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3245:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3326:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:9986:80)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    DeliveryCollector.collect (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:1079:39)
+    releaseFreezeFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:26:83)
+  ...
+# (node:30200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical SQL bytes stay pinned; changed version 34 deployment SQL is rejected
+ok 4 - historical SQL bytes stay pinned; changed version 34 deployment SQL is rejected
+  ---
+  duration_ms: 13798.3551
+  type: 'test'
+  ...
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: access is closed until an owner configures its private gateway and the original backend enrolls its gate
+not ok 5 - access is closed until an owner configures its private gateway and the original backend enrolls its gate
+  ---
+  duration_ms: 35589.5014
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:11:1'
+  failureType: 'testCodeFailure'
+  error: 'condition not reached'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    until (file:///D:/yms/AI/DevMesh/tests/fixtures/runner.mjs:26:174)
+    runNextTicks (node:internal/process/task_queues:64:5)
+    process.processTimers (node:internal/timers:538:9)
+    async Object.runJob (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-runner.mjs:24:265)
+    async releaseFreezeFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:24:343)
+    async previewIntentFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/preview-intents.mjs:4:10)
+    async originalSeed (file:///D:/yms/AI/DevMesh/tests/fixtures/preview-access.mjs:16:10)
+    async previewAccessFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/preview-access.mjs:26:15)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-preview-access.test.mjs:12:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+  ...
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: current membership and safe HTTP classification are checked without granting platform mutation rights
+not ok 6 - current membership and safe HTTP classification are checked without granting platform mutation rights
+  ---
+  duration_ms: 60606.4094
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'Release delivery requires the original approved build and exact retained bytes'
+  code: 'RELEASE_DELIVERY_POLICY_CHANGED'
+  name: 'StorageError'
+  stack: |-
+    fail$16 (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3097:8)
+    freeze (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3125:214)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3252:15
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginReleaseDelivery (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3245:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3326:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:9986:80)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    DeliveryCollector.collect (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:1079:39)
+    releaseFreezeFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:26:83)
+  ...
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: request schema rejects ambiguous paths, hidden credentials and bodies on safe reads
+not ok 7 - request schema rejects ambiguous paths, hidden credentials and bodies on safe reads
+  ---
+  duration_ms: 49704.1346
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:23:1'
+  failureType: 'testCodeFailure'
+  error: 'Release delivery requires the original approved build and exact retained bytes'
+  code: 'RELEASE_DELIVERY_POLICY_CHANGED'
+  name: 'StorageError'
+  stack: |-
+    fail$16 (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3097:8)
+    freeze (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3125:214)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3252:15
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginReleaseDelivery (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3245:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:3326:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-CXL73UY1.mjs:9986:80)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    DeliveryCollector.collect (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:1079:39)
+    releaseFreezeFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:26:83)
+  ...
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared admission pins the original instance, image, dataset, start identity, endpoint and gate fence
+ok 8 - prepared admission pins the original instance, image, dataset, start identity, endpoint and gate fence
+  ---
+  duration_ms: 50727.7662
+  type: 'test'
+  ...
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dispatch wins once; committed grant ACK loss and actual Worker restart never grant a second dispatch
+ok 9 - dispatch wins once; committed grant ACK loss and actual Worker restart never grant a second dispatch
+  ---
+  duration_ms: 14798.4925
+  type: 'test'
+  ...
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker serializes dispatch before close, retains its uncertain write and permits new fenced reads
+ok 10 - actual Worker serializes dispatch before close, retains its uncertain write and permits new fenced reads
+  ---
+  duration_ms: 19542.9775
+  type: 'test'
+  ...
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker serializes close before dispatch; a stale prepared write never passes admission
+ok 11 - actual Worker serializes close before dispatch; a stale prepared write never passes admission
+  ---
+  duration_ms: 11163.6503
+  type: 'test'
+  ...
+# (node:14992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)

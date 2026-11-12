@@ -77,6 +77,9 @@ import type {CandidateReviewMethod} from './candidate-review-protocol.js';
 import {createPreviewDomain} from './preview-domain.js';
 import {previewRequests} from './preview-protocol.js';
 import type {PreviewMethod} from './preview-protocol.js';
+import {createPreviewAccessDomain} from './preview-access-domain.js';
+import {previewAccessRequests} from './preview-access-protocol.js';
+import type {PreviewAccessMethod} from './preview-access-protocol.js';
 import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
@@ -130,6 +133,7 @@ export function createDomain(db: DatabaseSync) {
     operation:(...args)=>operation(...args),
     changed(runId,operationId,target){bump(runId);event(runId,operationId,'datasetId' in target?'DatasetStateChanged':'PreviewOperationChanged',target);},
   });
+  const previewAccess=createPreviewAccessDomain(db,previews);
   const candidateBasis=candidateIntegrations.basis;
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
@@ -467,6 +471,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(previewAccessRequests,method))return previewAccess.execute(method as PreviewAccessMethod,input);
     if(Object.hasOwn(previewRequests,method))return previews.execute(method as PreviewMethod,input);
     if(Object.hasOwn(candidateReviewRequests,method))return candidateReviews.execute(method as CandidateReviewMethod,input);
     if(Object.hasOwn(releaseFreezeRequests,method))return releaseFreezes.execute(method as ReleaseFreezeMethod,input);

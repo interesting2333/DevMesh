@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "validationMode": "FRESH_REPAIR_RUN",
+  "sourceCommit": "46c63c0bd57effad426d9e141b9904515894cb15",
+  "dirty": true,
+  "sourceFingerprint": "9381efd1857cb28b475c7efd7d9a6228b3f0d6b7ca9c833624e74cff4f994b2a",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T15:20:10.400Z",
+  "finishedAt": "2026-11-12T15:21:06.975Z",
+  "checks": [
+    {
+      "name": "watchdog-repair",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 44604,
+      "output": "watchdog-repair.txt",
+      "sha256": "464fedcfc7d5e0464d6c96acd3e4c4fe9b21d31facec233e4149d9a7ceda67eb",
+      "tests": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 11259,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "environment": {
+    "TEMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d",
+    "TMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d"
+  },
+  "comparisons": [
+    {
+      "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+      "sha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+      "sourceFiles": 414,
+      "unchangedInputs": 413,
+      "changedInputs": [
+        {
+          "path": "tests/runner-preview-watchdog.test.mjs",
+          "before": "5bf52a2fc001c98daa6973e3a41137e3bc0c94b6f844dc35fc36c3d97f3d7276",
+          "after": "35f9e60fe6b87940d39fa4487316cf27c014a9062b23ca047ae8a0b0129b18da"
+        }
+      ],
+      "scope": "Only the watchdog timer test changed. Historical results remain historical; no full clean-checkout or same-global-fingerprint validation bundle is claimed."
+    },
+    {
+      "report": "project/evidence/P1-07/development/access-v39-failed/report.json",
+      "sha256": "bdc535f58fcc30b5b9472c67b21597f0fe22ba2dcc20b0b4db937ddea160a125",
+      "sourceFiles": 414,
+      "unchangedInputs": 413,
+      "changedInputs": [
+        {
+          "path": "tests/runner-preview-watchdog.test.mjs",
+          "before": "5bf52a2fc001c98daa6973e3a41137e3bc0c94b6f844dc35fc36c3d97f3d7276",
+          "after": "35f9e60fe6b87940d39fa4487316cf27c014a9062b23ca047ae8a0b0129b18da"
+        }
+      ],
+      "scope": "Only the watchdog timer test changed. Historical results remain historical; no full clean-checkout or same-global-fingerprint validation bundle is claimed."
+    },
+    {
+      "report": "project/evidence/P1-07/development/access-v41-failed/report.json",
+      "sha256": "b49c8dff27404d3b300892419db363215c1bcb6d0ef3f5d57dc8c3fb23314bae",
+      "sourceFiles": 414,
+      "unchangedInputs": 413,
+      "changedInputs": [
+        {
+          "path": "tests/runner-preview-watchdog.test.mjs",
+          "before": "634807b517a7bb6a244d819041f40756fac00833cdcb7df53a3587541d127d22",
+          "after": "35f9e60fe6b87940d39fa4487316cf27c014a9062b23ca047ae8a0b0129b18da"
+        }
+      ],
+      "scope": "Only the watchdog timer test changed. Historical results remain historical; no full clean-checkout or same-global-fingerprint validation bundle is claimed."
+    }
+  ],
+  "scope": "Fresh single timer-case regression plus Lint. v41 proves both original cleanup records complete but the released EXITED reservation is intentionally immutable. v42 preserves that original EXITED fact and independently awaits both OBSERVED absence records within the unchanged 90-second test timeout. Only the changed case runs; prior successful other watchdog cases and independent tail checks are not rerun or relabeled. No product code or production deadline changes.",
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/access-v42/commands.json",
+      "sha256": "6b9a88890882cbae26eac67114df182abc6b38ed951c94ac78ce8427b2c9f41a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v42/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v42/report.json",
+      "sha256": "917cea4be02b487b32471817fd593f927ba68b5116e182436b1a57f2e9aa26f6"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v42/source-comparisons.json",
+      "sha256": "c1efe32e0ca30b870e57f080ac2ebd4804b2f13398b0b982589c175f0c2cda7a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v42/temporary-root-check.json",
+      "sha256": "c5b69b1bd985d3083157a386bd5f7428e01c54557da069a3532e11aa1e6807f2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v42/validation-driver.mjs",
+      "sha256": "cda65bf05f05e5eccc53fda84cd227ddbf7780324be1b4887db601bda4739e39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v42/watchdog-repair.txt",
+      "sha256": "464fedcfc7d5e0464d6c96acd3e4c4fe9b21d31facec233e4149d9a7ceda67eb"
+    }
+  ],
+  "limitations": [
+    "Only the changed timer case and Lint ran in v42. Other v38/v39/v41 successful checks remain historical. Their FAILED reports are not relabeled; no complete same-fingerprint full Runner rerun or clean checkout.",
+    "414 source input SHA, runtime and exact driver/commands/logs are retained. All but the test file match the earlier successful checks byte-for-byte.",
+    "Actual SQLite, storage Workers, termination/restart, timers and filesystem are used. Original access candidate/image/data/health are explicit legal-state fixtures; controlled container driver facts are not actual Docker/gVisor or a generated-app gateway/browser.",
+    "Safe methods, pending count zero and HTTP FINISHED do not establish physical read-only/drain, business success, T5 or Release. Gateway/session/Runner-local transport, browser isolation, production composition and physical data fencing remain.",
+    "OpenSpec stays 5/13, full 2.3 and 3.1 unchecked; formal P1-07 waits P1-06/G0. Same agent implementation/review, no independent/human/product/stage acceptance."
+  ]
+}

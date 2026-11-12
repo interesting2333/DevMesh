@@ -1,0 +1,323 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "46c63c0bd57effad426d9e141b9904515894cb15",
+  "dirty": true,
+  "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T14:16:52.960Z",
+  "finishedAt": "2026-11-12T14:58:32.514Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 15095,
+      "output": "frozen-install.txt",
+      "sha256": "64c334c3ebef1a07eeb74e1e508a69f7ba290105eb3401b2e055224dcea3774b",
+      "execution": "REUSED",
+      "reusedFrom": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/frozen-install.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 154004,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "execution": "REUSED",
+      "reusedFrom": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/typecheck.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 19873,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661",
+      "execution": "REUSED",
+      "reusedFrom": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/lint.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 260738,
+      "output": "current-build.txt",
+      "sha256": "f57489e8a6c53a3b01e634ec23276dffa8789a1ff06ce7d3fa278bb312dec031",
+      "execution": "REUSED",
+      "reusedFrom": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/current-build.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "access",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 106309,
+      "output": "access.txt",
+      "sha256": "36a96c6b68c77cdb292720e53461c4fd65119d71ad76f2db929d10c868ed8a95",
+      "tests": {
+        "tests": 19,
+        "pass": 19,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "execution": "REUSED",
+      "reusedFrom": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/access.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "lifecycle",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 655041,
+      "output": "lifecycle.txt",
+      "sha256": "4a3fa49df60a33fc110bbda3ac494c995a3fd3ece7f9b8bf708d02057e2ecc7c",
+      "tests": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "execution": "REUSED",
+      "reusedFrom": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/lifecycle.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 404177,
+      "output": "preview-intents.txt",
+      "sha256": "de1654912e4bf54175c19f88695f1403bbcf0280ed621258f94bf812e392f2c1",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "execution": "REUSED",
+      "reusedFrom": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/preview-intents.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "datasets",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 339274,
+      "output": "datasets.txt",
+      "sha256": "581c6e71474701724ed8eef9ce977fa3f1e030b89828b3a182b0f9c1603ad66a",
+      "execution": "EXECUTED",
+      "tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 786695,
+      "output": "storage.txt",
+      "sha256": "93907c4884a2cb54b0f85fccc689f7416a715d1676ac0488d1841871e9a10dd2",
+      "execution": "EXECUTED",
+      "tests": {
+        "tests": 32,
+        "pass": 32,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "runner",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 1371212,
+      "output": "runner.txt",
+      "sha256": "03385640d64cb0be941079ecbbbd0d00b3b15cbafe8e69f398c917df3e4e5065",
+      "execution": "EXECUTED",
+      "tests": {
+        "tests": 77,
+        "pass": 75,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/access.txt",
+      "sha256": "36a96c6b68c77cdb292720e53461c4fd65119d71ad76f2db929d10c868ed8a95"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/continuation-commands.json",
+      "sha256": "891fc1c5f192d548ace21dc63a8d3297d4cc8fa32e05586c196cefc5bf75a6d8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/continuation-driver.mjs",
+      "sha256": "0dd9527320e65da94e55c9d5160efd69c54ffb04c1505eff03c58cb5ebdbcaf3"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/current-build.txt",
+      "sha256": "f57489e8a6c53a3b01e634ec23276dffa8789a1ff06ce7d3fa278bb312dec031"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/datasets.txt",
+      "sha256": "581c6e71474701724ed8eef9ce977fa3f1e030b89828b3a182b0f9c1603ad66a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/migrations/0034-previewaccess.sql",
+      "sha256": "34c07bd4c72363c10c14c336cdea4c71887798d54d3eb7c7c34624dac493b6fc"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "ba93a9cae6a1cafbb6608e172eccd1598f7f8e759ed626a122ef4cbc93eb707f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/PREVIEW-ACCESS.md",
+      "sha256": "15626190106c010eef6031e9ff711772fb04b4b6e221a602443202cafb9d6efd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "18c3c973971f7ff2d3760a94f36380a2de047ad00ad30c61201bacbd32481b88"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "d8baf05f918c1cb62abf26e8ab5f178d6ae6763fe5ce012a9bd2b888bc111482"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/src/preview-access-domain.ts",
+      "sha256": "332039a5319e7318da3f82ca2bf3e0e19314a0480ee98a7d2eb7f0d9d3327c78"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/src/preview-access-protocol.ts",
+      "sha256": "98f140a0e73c7d1185bc7c644cb073f58f21aa6a2036d0ee53d4acb2bb8612a8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/src/preview-domain.ts",
+      "sha256": "57fbd6b9163c3894ebbf05867d4c47aecf0e3f0ee58c185641af8b5cd53ccf73"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "1ef0d1e585742547d86f7cf352d0428598f8df06d5e6c51251fc745de13baecf"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/tests/fixtures/preview-access-seed.mjs",
+      "sha256": "ee55ce0553678a2a10ea41732935c8454c35ea0972288898642950547d29f882"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/tests/fixtures/preview-access.mjs",
+      "sha256": "c0117b419abf76a0db86898993e219ef27dfddad756583304a6f2ee14c70fd33"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/tests/storage-preview-access.test.mjs",
+      "sha256": "0247dec2b3033d42097c14c8e6a8d9bb06814b20623883be5b92e6e55189af9b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/failed-source/tests/verification-preview-access.test.mjs",
+      "sha256": "8b4bd2977123d7ed54a3cf86219d743027e526874d15bb2dbe90e7c9e3617e83"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/frozen-install.txt",
+      "sha256": "64c334c3ebef1a07eeb74e1e508a69f7ba290105eb3401b2e055224dcea3774b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/lifecycle-profile.json",
+      "sha256": "4e1b3e70fcfe1f39ad59d91813104b1d7768948a911ad2354d66cbf5e8d24882"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/lifecycle.txt",
+      "sha256": "4a3fa49df60a33fc110bbda3ac494c995a3fd3ece7f9b8bf708d02057e2ecc7c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/path-probe.json",
+      "sha256": "95db10b6418ac543f11ed15a484f6d5dcf723daaaa616ff48afa74791bcd8655"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/preview-intents.txt",
+      "sha256": "de1654912e4bf54175c19f88695f1403bbcf0280ed621258f94bf812e392f2c1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/report.json",
+      "sha256": "bdc535f58fcc30b5b9472c67b21597f0fe22ba2dcc20b0b4db937ddea160a125"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/resource-probe.json",
+      "sha256": "d6cd88cb623df33d9f5c2de93c0adaa526d2e7312fd89db604f119995ada5231"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/runner.txt",
+      "sha256": "03385640d64cb0be941079ecbbbd0d00b3b15cbafe8e69f398c917df3e4e5065"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/storage.txt",
+      "sha256": "93907c4884a2cb54b0f85fccc689f7416a715d1676ac0488d1841871e9a10dd2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/validation-driver.mjs",
+      "sha256": "0dd9527320e65da94e55c9d5160efd69c54ffb04c1505eff03c58cb5ebdbcaf3"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v39-failed/commands.json",
+      "sha256": "155195a571573603b46c1cdd5a7bccab59bc1155582fc81b073c823c91beb67f"
+    }
+  ],
+  "scope": "P1-07 partial3.1: durable private preview gateway admission, exact original target and current membership, original dataset write gate fencing, once-only dispatch journal and uncertain-write retention. Real SQLite and storage Workers; preview/dataset runtime facts are explicit fixtures. No HTTP forwarding, browser credentials/isolation, physical data quiescence, production composition, T5 or stage acceptance. Full3.1 remains unchecked. Incremental validation bundle: first seven checks are unchanged successful v38 evidence, not rerun. v38 dataset failure is retained separately. Only datasets and previously unexecuted regression checks run here with an isolated short temporary root; no production timers, source or path checks are weakened.",
+  "limitations": [
+    "Partial3.1 and full2.3 remain unchecked; formal P1-07 still waits P1-06/G0. Same Codex implementation/review, no independent or human product/stage acceptance.",
+    "Actual migrated SQLite domain commands and real storage Workers are exercised. Original candidate, image and preview/dataset facts are explicit fixtures; no generated application HTTP forwarding occurs.",
+    "Safe HTTP method admission is not physical read-only enforcement; gate closure, pending count zero or HTTP FINISHED are not data quiescence, mutation success, T5 or Release evidence.",
+    "No preview origin/cookie/session/ticket HTTP adapter, browser isolation, trusted production composition, real model/OIDC/Linux Docker/gVisor, physical data fencing or migration acceptance."
+  ]
+}

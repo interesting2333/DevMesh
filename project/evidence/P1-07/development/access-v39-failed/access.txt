@@ -1,0 +1,156 @@
+TAP version 13
+# (node:12296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:12296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:12296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:12296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:12296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: version 33 Worker upgrade requires a verified external backup and leaves old rows intact
+ok 1 - version 33 Worker upgrade requires a verified external backup and leaves old rows intact
+  ---
+  duration_ms: 20150.9626
+  type: 'test'
+  ...
+# (node:12296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: version 34 migration DDL, original rows and version markers roll back on failure then retry unchanged
+ok 2 - version 34 migration DDL, original rows and version markers roll back on failure then retry unchanged
+  ---
+  duration_ms: 6089.8959
+  type: 'test'
+  ...
+# Subtest: fresh access tables/history refuse invalid identities and event faults preserve atomic admission
+ok 3 - fresh access tables/history refuse invalid identities and event faults preserve atomic admission
+  ---
+  duration_ms: 5831.3745
+  type: 'test'
+  ...
+# (node:12296) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical SQL bytes stay pinned; changed version 34 deployment SQL is rejected
+ok 4 - historical SQL bytes stay pinned; changed version 34 deployment SQL is rejected
+  ---
+  duration_ms: 7166.5178
+  type: 'test'
+  ...
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: access is closed until an owner configures its private gateway and the original backend enrolls its gate
+ok 5 - access is closed until an owner configures its private gateway and the original backend enrolls its gate
+  ---
+  duration_ms: 4518.4001
+  type: 'test'
+  ...
+# Subtest: current membership and safe HTTP classification are checked without granting platform mutation rights
+ok 6 - current membership and safe HTTP classification are checked without granting platform mutation rights
+  ---
+  duration_ms: 657.5963
+  type: 'test'
+  ...
+# Subtest: request schema rejects ambiguous paths, hidden credentials and bodies on safe reads
+ok 7 - request schema rejects ambiguous paths, hidden credentials and bodies on safe reads
+  ---
+  duration_ms: 429.3624
+  type: 'test'
+  ...
+# Subtest: prepared admission pins the original instance, image, dataset, start identity, endpoint and gate fence
+ok 8 - prepared admission pins the original instance, image, dataset, start identity, endpoint and gate fence
+  ---
+  duration_ms: 578.3783
+  type: 'test'
+  ...
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dispatch wins once; committed grant ACK loss and actual Worker restart never grant a second dispatch
+ok 9 - dispatch wins once; committed grant ACK loss and actual Worker restart never grant a second dispatch
+  ---
+  duration_ms: 13329.0083
+  type: 'test'
+  ...
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker serializes dispatch before close, retains its uncertain write and permits new fenced reads
+ok 10 - actual Worker serializes dispatch before close, retains its uncertain write and permits new fenced reads
+  ---
+  duration_ms: 9351.2096
+  type: 'test'
+  ...
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker serializes close before dispatch; a stale prepared write never passes admission
+ok 11 - actual Worker serializes close before dispatch; a stale prepared write never passes admission
+  ---
+  duration_ms: 9354.7998
+  type: 'test'
+  ...
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: UNKNOWN survives actual Worker restart and never permits a resend or NOT_SENT inference
+ok 12 - UNKNOWN survives actual Worker restart and never permits a resend or NOT_SENT inference
+  ---
+  duration_ms: 9791.0737
+  type: 'test'
+  ...
+# Subtest: HTTP completion and an empty logical gate do not manufacture data quiescence, releases or acceptance
+ok 13 - HTTP completion and an empty logical gate do not manufacture data quiescence, releases or acceptance
+  ---
+  duration_ms: 556.6919
+  type: 'test'
+  ...
+# Subtest: definitive NOT_SENT releases only its original dispatch; times, principals and observations are immutable
+ok 14 - definitive NOT_SENT releases only its original dispatch; times, principals and observations are immutable
+  ---
+  duration_ms: 538.6657
+  type: 'test'
+  ...
+# Subtest: revocation, stale health and preview expiry deny final authorization without losing uncertain write accounting
+ok 15 - revocation, stale health and preview expiry deny final authorization without losing uncertain write accounting
+  ---
+  duration_ms: 945.8252
+  type: 'test'
+  ...
+# Subtest: gate close and request state/history writes roll back together on real SQLite transaction faults
+ok 16 - gate close and request state/history writes roll back together on real SQLite transaction faults
+  ---
+  duration_ms: 670.57
+  type: 'test'
+  ...
+# Subtest: original close hash/fence cannot be replaced, reenrollment never reopens and pending recovery is bounded/private
+ok 17 - original close hash/fence cannot be replaced, reenrollment never reopens and pending recovery is bounded/private
+  ---
+  duration_ms: 661.2243
+  type: 'test'
+  ...
+# Subtest: all configured gateways share one dataset gate and an interim HTTP status cannot finish a write
+ok 18 - all configured gateways share one dataset gate and an interim HTTP status cannot finish a write
+  ---
+  duration_ms: 650.3113
+  type: 'test'
+  ...
+# Subtest: a backwards control clock cannot turn a future original health observation into fresh access
+ok 19 - a backwards control clock cannot turn a future original health observation into fresh access
+  ---
+  duration_ms: 711.904
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 105024.873

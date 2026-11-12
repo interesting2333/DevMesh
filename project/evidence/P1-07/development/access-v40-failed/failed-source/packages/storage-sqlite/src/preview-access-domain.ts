@@ -1,0 +1,118 @@
+import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
+import { parseContract } from '@devmesh/contracts';
+import { canonical } from './json.js';
+import { digest, transaction } from './migrations.js';
+import { StorageError } from './errors.js';
+import { previewBackendPolicy, previewRuntimeFact } from './preview-protocol.js';
+import type { PreviewView } from './preview-protocol.js';
+import { previewAccessRequests, previewAccessPolicy } from './preview-access-protocol.js';
+import type { PreviewAccessMethod, PreviewAccessInput, PreviewWriteGate, PreviewAccessBinding, PreviewAccessTarget, PreviewAccessRecord } from './preview-access-protocol.js';
+import type { createPreviewDomain } from './preview-domain.js';
+type Row = Record<string, string | number | null>;
+type Gateway = {
+    principalId: string;
+    gatewayId: string;
+    configurationHash: string;
+};
+const now = () => new Date().toISOString(), hash = (v: unknown) => digest(canonical(v)), json = <T>(v: unknown) => JSON.parse(String(v)) as T;
+function fail(code: string, status = 409): never { throw new StorageError(code, status, 'Preview access requires current membership, original target, gate fencing and its configured gateway'); }
+export function createPreviewAccessDomain(db: DatabaseSync, previews: ReturnType<typeof createPreviewDomain>) {
+    const get = (sql: string, ...p: SQLInputValue[]) => db.prepare(sql).get(...p) as Row | undefined, all = (sql: string, ...p: SQLInputValue[]) => db.prepare(sql).all(...p) as Row[], exec = (sql: string, ...p: SQLInputValue[]) => db.prepare(sql).run(...p), tx = <T>(f: () => T) => transaction(db, f);
+    const member = (subject: string, project: string) => get('SELECT role FROM project_members WHERE principal_id=? AND project_id=?', subject, project) ?? fail('PREVIEW_NOT_FOUND', 404);
+    const gateway = (i: Gateway, projectId: string) => { const p = get('SELECT * FROM preview_access_policies WHERE project_id=? AND gateway_id=?', projectId, i.gatewayId) ?? fail('PREVIEW_ACCESS_NOT_CONFIGURED', 503); if (p.principal_id !== i.principalId || p.configuration_hash !== i.configurationHash)
+        fail('FORBIDDEN', 403); return p; };
+    const data = (i: {
+        principalId: string;
+        datasetOperationId: string;
+        datasetRequestHash: string;
+    }) => { const d = get('SELECT d.*,e.request_hash,e.state effect_state,e.kind effect_kind,e.receipt_json FROM datasets d JOIN preview_effects e ON e.operation_id=d.operation_id WHERE d.operation_id=?', i.datasetOperationId) ?? fail('PREVIEW_DATASET_NOT_FOUND', 404), p = previewBackendPolicy.parse(json(get('SELECT policy_json FROM preview_backend_policies WHERE project_id=? AND policy_hash=?', d.project_id!, d.policy_hash!)?.policy_json ?? fail('PREVIEW_BACKEND_NOT_CONFIGURED', 503))); if (p.backendPrincipalId !== i.principalId)
+        fail('FORBIDDEN', 403); if (d.request_hash !== i.datasetRequestHash || d.effect_kind !== 'DATASET_PREPARE')
+        fail('PREVIEW_REQUEST_CHANGED'); return d; };
+    const gate = (id: string): PreviewWriteGate => { const r = get('SELECT * FROM preview_write_gates WHERE dataset_id=?', id) ?? fail('PREVIEW_WRITE_GATE_NOT_CONFIGURED', 503), count = get("SELECT count(*) n FROM preview_access_requests WHERE dataset_id=? AND is_write=1 AND state IN ('DISPATCHED','UNKNOWN')", id)!; return { datasetId: id, projectId: String(r.project_id), datasetOperationId: String(r.dataset_operation_id), datasetRequestHash: String(r.dataset_request_hash), state: r.state as PreviewWriteGate['state'], fence: Number(r.fence), revision: Number(r.revision), closeOperationId: r.close_operation_id as string | null, closeRequestHash: r.close_request_hash as string | null, pendingWrites: Number(count.n), createdAt: String(r.created_at), updatedAt: String(r.updated_at) }; };
+    const gateEvent = (id: string) => { const g = gate(id); exec('INSERT INTO preview_write_gate_events VALUES(?,?,?,?)', id, g.revision, canonical(g), g.updatedAt); return g; };
+    function binding(i: Gateway & {
+        subjectPrincipalId: string;
+        runId: string;
+        previewId: string;
+    }): PreviewAccessBinding {
+        const p = get('SELECT * FROM previews WHERE preview_id=?', i.previewId) ?? fail('PREVIEW_NOT_FOUND', 404);
+        gateway(i, String(p.project_id));
+        const role = member(i.subjectPrincipalId, String(p.project_id));
+        const v = previews.execute('getPreview', { principalId: i.subjectPrincipalId, runId: i.runId, previewId: i.previewId }) as PreviewView;
+        if (v.availability !== 'AVAILABLE')
+            fail('PREVIEW_UNAVAILABLE', 503);
+        const d = get('SELECT * FROM datasets WHERE dataset_id=?', v.datasetId)!, s = get('SELECT * FROM preview_effects WHERE operation_id=?', v.operationId)!, de = get('SELECT * FROM preview_effects WHERE operation_id=?', d.operation_id!)!, request = json<Record<string, string>>(s.request_json), fact = previewRuntimeFact.parse(json(get('SELECT fact_json FROM preview_runtime_observations WHERE preview_id=? ORDER BY sequence DESC LIMIT 1', v.previewId)!.fact_json)), g = gate(v.datasetId);
+        if (!fact.endpoint || fact.state !== 'HEALTHY' || fact.instanceId !== v.instanceId || g.projectId !== v.projectId || g.datasetOperationId !== d.operation_id || g.datasetRequestHash !== de.request_hash)
+            fail('PREVIEW_ACCESS_TARGET_CHANGED');
+        const target: PreviewAccessTarget = { projectId: v.projectId, runId: v.runId, previewId: v.previewId, candidateId: v.candidateId, manifestHash: request.manifestHash!, policyHash: v.policyHash, datasetId: v.datasetId, datasetOperationId: String(d.operation_id), datasetRequestHash: String(de.request_hash), imageDigest: v.imageDigest, instanceId: v.instanceId!, startOperationId: v.operationId, startRequestHash: String(s.request_hash), runnerId: request.runnerId!, backendRef: request.backendRef!, endpoint: fact.endpoint, expiresAt: v.expiresAt };
+        return { target, gate: g, canWrite: role.role !== 'viewer' && g.state === 'OPEN', healthCheckedAt: fact.checkedAt };
+    }
+    const row = (id: string) => get('SELECT * FROM preview_access_requests WHERE access_request_id=?', id) ?? fail('PREVIEW_ACCESS_REQUEST_NOT_FOUND', 404);
+    const record = (r: Row): PreviewAccessRecord => { const original = json<{
+        target: PreviewAccessTarget;
+        request: PreviewAccessRecord['request'];
+        gateFence: number;
+    }>(r.request_json); return { accessRequestId: String(r.access_request_id), gatewayId: String(r.gateway_id), configurationHash: String(r.configuration_hash), subjectPrincipalId: String(r.subject_principal_id), ...original, requestHash: String(r.request_hash), state: r.state as PreviewAccessRecord['state'], revision: Number(r.revision), observation: r.observation_json ? json(r.observation_json) : null, createdAt: String(r.created_at), dispatchedAt: r.dispatched_at as string | null, finishedAt: r.finished_at as string | null }; };
+    const owned = (i: Gateway & {
+        accessRequestId: string;
+        requestHash: string;
+    }) => { const r = row(i.accessRequestId); if (r.gateway_id !== i.gatewayId)
+        fail('PREVIEW_ACCESS_REQUEST_NOT_FOUND', 404); gateway(i, String(r.project_id)); if (r.request_hash !== i.requestHash || r.configuration_hash !== i.configurationHash)
+        fail('PREVIEW_ACCESS_REQUEST_CHANGED'); return r; };
+    const event = (id: string) => { const r = row(id), v = record(r); exec('INSERT INTO preview_access_request_events VALUES(?,?,?,?)', id, v.revision, canonical(v), now()); return v; };
+    const current = (i: Gateway, r: Row) => { const old = record(r), b = binding({ ...i, subjectPrincipalId: old.subjectPrincipalId, runId: old.target.runId, previewId: old.target.previewId }); if (canonical(old.target) !== canonical(b.target))
+        fail('PREVIEW_ACCESS_TARGET_CHANGED'); if (old.gateFence !== b.gate.fence)
+        fail('PREVIEW_WRITE_FENCE_CHANGED'); if (r.is_write === 1 && !b.canWrite)
+        fail(b.gate.state === 'CLOSED' ? 'PREVIEW_WRITE_GATE_CLOSED' : 'FORBIDDEN', b.gate.state === 'CLOSED' ? 409 : 403); return b; };
+    const handlers = {
+        registerPreviewAccessPolicy(i: PreviewAccessInput<'registerPreviewAccessPolicy'>) { return tx(() => { if (member(i.principalId, i.projectId).role !== 'owner')
+            fail('FORBIDDEN', 403); const old = get('SELECT * FROM preview_access_policies WHERE project_id=? AND gateway_id=?', i.projectId, i.policy.gatewayId), body = canonical(i.policy); if (old) {
+            if (old.policy_json !== body)
+                fail('PREVIEW_ACCESS_POLICY_CHANGED');
+            return { policy: previewAccessPolicy.parse(json(old.policy_json)) };
+        } exec('INSERT INTO preview_access_policies VALUES(?,?,?,?,?,?)', i.projectId, i.policy.gatewayId, i.policy.gatewayPrincipalId, i.policy.configurationHash, body, now()); return { policy: i.policy }; }); },
+        enrollPreviewWriteGate(i: PreviewAccessInput<'enrollPreviewWriteGate'>) { return tx(() => { const d = data(i), id = String(d.dataset_id); if (get('SELECT 1 FROM preview_write_gates WHERE dataset_id=?', id))
+            return gate(id); if (d.state !== 'READY' || d.effect_state !== 'SUCCEEDED' || !d.receipt_json)
+            fail('PREVIEW_DATASET_UNVERIFIED'); const at = now(); exec("INSERT INTO preview_write_gates VALUES(?,?,?,?,'OPEN',0,0,NULL,NULL,?,?)", id, d.project_id!, i.datasetOperationId, i.datasetRequestHash, at, at); return gateEvent(id); }); },
+        getPreviewWriteGate(i: PreviewAccessInput<'getPreviewWriteGate'>) { return gate(String(data(i).dataset_id)); },
+        closePreviewWriteGate(i: PreviewAccessInput<'closePreviewWriteGate'>) { return tx(() => { const r = i.request, d = data({ ...r, principalId: i.principalId }); if (hash(r) !== i.requestHash || d.project_id !== r.projectId || d.dataset_id !== r.datasetId)
+            fail('PREVIEW_WRITE_CLOSE_CHANGED'); const old = get('SELECT * FROM preview_write_closures WHERE operation_id=?', r.operationId); if (old) {
+            if (old.request_hash !== i.requestHash || old.request_json !== canonical(r))
+                fail('PREVIEW_WRITE_CLOSE_CHANGED');
+            const g = gate(r.datasetId);
+            return { gate: g, closeRequest: r, current: g.closeOperationId === r.operationId && g.closeRequestHash === i.requestHash };
+        } const g = gate(r.datasetId); if (g.state !== 'OPEN' || g.fence !== r.expectedFence)
+            fail('PREVIEW_WRITE_FENCE_CHANGED'); const at = now(); exec('INSERT INTO preview_write_closures VALUES(?,?,?,?,?)', r.operationId, r.datasetId, i.requestHash, canonical(r), at); exec("UPDATE preview_write_gates SET state='CLOSED',fence=fence+1,revision=revision+1,close_operation_id=?,close_request_hash=?,updated_at=? WHERE dataset_id=?", r.operationId, i.requestHash, at, r.datasetId); return { gate: gateEvent(r.datasetId), closeRequest: r, current: true }; }); },
+        resolvePreviewAccess(i: PreviewAccessInput<'resolvePreviewAccess'>) { return binding(i); },
+        preparePreviewAccessRequest(i: PreviewAccessInput<'preparePreviewAccessRequest'>) { return tx(() => { const p = get('SELECT project_id,run_id FROM previews WHERE preview_id=?', i.previewId) ?? fail('PREVIEW_NOT_FOUND', 404); gateway(i, String(p.project_id)); member(i.subjectPrincipalId, String(p.project_id)); if (p.run_id !== i.runId)
+            fail('PREVIEW_NOT_FOUND', 404); const { principalId: _principal, ...intent } = i, intentHash = hash(intent), old = get('SELECT * FROM preview_access_requests WHERE access_request_id=?', i.accessRequestId); if (old) {
+            if (old.gateway_id !== i.gatewayId || old.configuration_hash !== i.configurationHash || old.intent_hash !== intentHash)
+                fail('PREVIEW_ACCESS_REQUEST_CHANGED');
+            return record(old);
+        } const b = binding(i), write = !['GET', 'HEAD'].includes(i.request.method); if (write && !b.canWrite)
+            fail(b.gate.state === 'CLOSED' ? 'PREVIEW_WRITE_GATE_CLOSED' : 'FORBIDDEN', b.gate.state === 'CLOSED' ? 409 : 403); const original = { target: b.target, request: i.request, gateFence: b.gate.fence }; exec("INSERT INTO preview_access_requests(access_request_id,project_id,preview_id,dataset_id,gateway_id,configuration_hash,subject_principal_id,intent_hash,request_hash,request_json,is_write,state,revision,observation_json,created_at,dispatched_at,finished_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,'PREPARED',0,NULL,?,NULL,NULL)", i.accessRequestId, b.target.projectId, b.target.previewId, b.target.datasetId, i.gatewayId, i.configurationHash, i.subjectPrincipalId, intentHash, hash(original), canonical(original), write ? 1 : 0, now()); return event(i.accessRequestId); }); },
+        beginPreviewAccessRequest(i: PreviewAccessInput<'beginPreviewAccessRequest'>) { return tx(() => { const r = owned(i); if (r.state !== 'PREPARED')
+            return { dispatch: false, record: record(r) }; current(i, r); exec("UPDATE preview_access_requests SET state='DISPATCHED',revision=revision+1,dispatched_at=? WHERE access_request_id=?", now(), i.accessRequestId); return { dispatch: true, record: event(i.accessRequestId) }; }); },
+        previewAccessRequestAuthorized(i: PreviewAccessInput<'previewAccessRequestAuthorized'>) { const r = owned(i); if (r.state !== 'DISPATCHED')
+            return { allowed: false }; try {
+            current(i, r);
+            return { allowed: true };
+        }
+        catch (error) {
+            if (error instanceof StorageError)
+                return { allowed: false };
+            throw error;
+        } },
+        getPreviewAccessRequest(i: PreviewAccessInput<'getPreviewAccessRequest'>) { return record(owned(i)); },
+        recordPreviewAccessObservation(i: PreviewAccessInput<'recordPreviewAccessObservation'>) { return tx(() => { const r = owned(i), o = i.observation, body = canonical(o); if (r.observation_json === body)
+            return record(r); if (!['DISPATCHED', 'UNKNOWN'].includes(String(r.state)))
+            fail('PREVIEW_ACCESS_OBSERVATION_CONFLICT'); if (r.state === 'UNKNOWN' && o.state === 'NOT_SENT')
+            fail('PREVIEW_ACCESS_OBSERVATION_CONFLICT'); if (o.checkedAt < String(r.dispatched_at) || o.checkedAt > now() || r.observation_json && o.checkedAt < json<{
+            checkedAt: string;
+        }>(r.observation_json).checkedAt)
+            fail('PREVIEW_ACCESS_OBSERVATION_STALE'); exec('UPDATE preview_access_requests SET state=?,revision=revision+1,observation_json=?,finished_at=? WHERE access_request_id=?', o.state, body, o.state === 'UNKNOWN' ? null : now(), i.accessRequestId); return event(i.accessRequestId); }); },
+        listPreviewAccessRequests(i: PreviewAccessInput<'listPreviewAccessRequests'>) { gateway(i, i.projectId); const rows = all("SELECT * FROM preview_access_requests WHERE project_id=? AND gateway_id=? AND configuration_hash=? AND sequence>? AND state IN ('PREPARED','DISPATCHED','UNKNOWN') ORDER BY sequence LIMIT ?", i.projectId, i.gatewayId, i.configurationHash, i.afterSequence, i.limit + 1), more = rows.length > i.limit; if (more)
+            rows.pop(); return { items: rows.map(r => ({ sequence: Number(r.sequence), record: record(r) })), nextSequence: more ? Number(rows.at(-1)!.sequence) : null }; },
+    };
+    return { execute(method: PreviewAccessMethod, input: unknown): unknown { const parsed = parseContract(previewAccessRequests[method], input); return (handlers[method] as (i: unknown) => unknown)(parsed); } };
+}

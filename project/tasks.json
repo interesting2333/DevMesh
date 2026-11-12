@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "a9ad7e5cdba0fc01eab28000fab6e294702b3646c5e0444b65fd29190c1cc6f8"
+      "sha256": "00e4279c6d7ccfc75c95b0dd1a31d2897e351d96ef20e0b1aa6b26b3540dc9f5"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "1aa509101db72f18b1f01933d3d803e70153c331014d647465a656d9d6e462c3"
+      "sha256": "3df38d825b6700666f051f61ed5c3cc21930861e367cd720f3ea979af6955a25"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "0c44604715a93b3cb823d09862cbdb6d2f64a98aa9f2137717c5f7073f70a6d0"
+      "sha256": "c23e7fafa14a79aa98003716eec1e0a891b22ad85aa9372c80be4b2845afae70"
     }
   ],
   "gates": [
@@ -1142,7 +1142,15 @@
         "packages/runner/src/cleanup-migration.ts",
         "packages/runner/src/preview-cleanup.ts",
         "tests/fixtures/runner-version.mjs",
-        "tests/runner-preview-cleanup.test.mjs"
+        "tests/runner-preview-cleanup.test.mjs",
+        "packages/storage-sqlite/migrations/0034-previewaccess.sql",
+        "packages/storage-sqlite/src/preview-access-domain.ts",
+        "packages/storage-sqlite/src/preview-access-protocol.ts",
+        "tests/fixtures/preview-access.mjs",
+        "tests/verification-preview-access.test.mjs",
+        "tests/storage-preview-access.test.mjs",
+        "packages/storage-sqlite/PREVIEW-ACCESS.md",
+        "tests/fixtures/preview-access-seed.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1206,7 +1214,23 @@
         "project/evidence/P1-07/development/cleanup-v32/evidence.json",
         "project/evidence/P1-07/development/cleanup-v32/commands.json",
         "project/evidence/P1-07/development/cleanup-v32/post-retention-checks.json",
-        "project/evidence/P1-07/development/cleanup-v32/checkpoint-binding.json"
+        "project/evidence/P1-07/development/cleanup-v32/checkpoint-binding.json",
+        "project/evidence/P1-07/development/access-clock-red-v37/evidence.json",
+        "project/evidence/P1-07/development/access-clock-red-v38-before-build/evidence.json",
+        "project/evidence/P1-07/preview-access-development-review.md",
+        "project/evidence/P1-07/development/access-v33-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v34-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v35-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v36-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v37-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v38-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v39-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v40-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v41-failed/evidence.json",
+        "project/evidence/P1-07/development/access-v42/evidence.json",
+        "project/evidence/P1-07/development/access-v42/commands.json",
+        "project/evidence/P1-07/development/access-v42/source-comparisons.json",
+        "project/evidence/P1-07/development/access-v42/post-retention-checks.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1229,7 +1253,10 @@
         "2026-11-12：Runner 独立到期与 Release 归属增量源码固定在 bdb3711b3b238fd929e295eb7e211371a77d5303，watchdog-v29 全部 401 个源码／模板输入与该提交 Git 对象字节一致。只读绑定不等同再次测试、干净 checkout、真实 Docker／T5 或产品／阶段验收；完整 2.3 和正式 P1-07 仍未完成。",
         "2026-11-12：原容器／网络清理协议设计影响评估：技术专题 D4 及完整主文、实施文档 P1-07、D07 验收同步增加独立 REMOVED／PREVIEW_REMOVED、原 ID 消失证明、容量与历史原子提交、唯一移除日志和已释放预留网络恢复；普通作业真实退出要求、未知创建占用、接受归属及 dataset 保留不变。基线按实际字节更新，代码与回归结果另记；本次同步不代表正式工作包或阶段完成。",
         "2026-11-12：继续开发子项 2.3：Runner v6 独立 REMOVED／PREVIEW_REMOVED、原容器／独占网络清理日志和已释放预留清理扫描；每动作唯一派发，ACK 丢失仅查准确原 ID，容器消失观察与容量／历史原子提交。HELD／OWNED、未登记旧预览、运行中／未知对象和 dataset 保持保护。v2～v5 SQL 不改写，实际迁移失败回滚／重试及旧行／子表／历史保留。v30 14 项中 13 通过，测试幂等键过短；v31 18 项中 17 通过，新增 UNKNOWN 测试误传非空 instanceId；原失败日志／源码保留，契约不放宽。最终 v32 安装／类型／Lint／构建／OpenAPI 和 18 项检查通过，251 次测试执行去重 189 项：187 通过、2 条条件跳过，全部 406 个输入指纹不变。真实 Runner Worker／控制 SQLite 处理器／控制 Worker 重开、dataset CRUD、定时器与原 ACK 恢复有证据；网络／容器移除事实由明确 Driver 夹具提供，无实际 Docker／物理移除或 Linux 隔离证据。真实适配器、可信装配、网关／T5／发布及真实环境继续实施，完整 2.3 不勾选，正式 P1-07／门槛保持等待。",
-        "2026-11-12：原容器／网络移除增量源码固定在 e0aaca02e67a02eb567731f0ae72cdbe7f6e45c5，cleanup-v32 全部 406 个源码／模板输入与该提交 Git 对象字节一致。只读绑定不等同再次测试、干净 checkout、实际 Docker／物理移除／T5 或产品／阶段验收；完整 2.3 和正式 P1-07 仍未完成。"
+        "2026-11-12：原容器／网络移除增量源码固定在 e0aaca02e67a02eb567731f0ae72cdbe7f6e45c5，cleanup-v32 全部 406 个源码／模板输入与该提交 Git 对象字节一致。只读绑定不等同再次测试、干净 checkout、实际 Docker／物理移除／T5 或产品／阶段验收；完整 2.3 和正式 P1-07 仍未完成。",
+        "2026-11-12：独立预览访问设计影响评估：技术专题 D4／完整主文、实施文档、D06／D08 及 OpenSpec 补充每预览 host／可注册域与 Cookie 边界、可信 gateway／配置／主体绑定、原 dataset 写门及请求唯一派发。逻辑准入、HTTP 安全方法、在途计数和完整响应均不能代替实际数据库只读／排空或 T5；重启／UNKNOWN 不重发、不超时重开。迁移 34 向前新增，历史迁移不改。HTTP／短期用途凭据／浏览器和可信装配继续实施，完整 3.1 不勾选；基线按实际字节同步，正式 P1-07／门槛仍等待。",
+        "2026-11-12：复核发现旧健康年龄仅有 30 秒上界，控制时钟回拨时未来观察仍可用；旧构建已复现 missing-rejection，原产物 SHA 不变。当前源码增加 0 秒下界，原事实与未知写不清除；修正后测试另记。访问测试改为显式状态 SQLite seed，保留全部 FK／CHECK 与原请求 schema 校验，不证明上游冻结／质量／镜像执行；v37 中断与第一次复现的上游夹具失败分别保留。设计 D4／主文和 OpenSpec 同步，门槛不提前通过。",
+        "2026-11-12：继续开发3.1：迁移34私有预览网关策略、准确原目标／当前成员授权、原dataset写门和请求唯一派发／观察历史。关闭与dispatch同writer串行，DISPATCHED／UNKNOWN跨网关持续计数，丢ACK／重启不重发，健康仅0～30秒；安全方法和计数归零不证明数据库只读／排空，无接受／T5／自动重开。v38访问19/19、lifecycle16/16、意图路径14/14；v39数据集11/11、存储32/32，Runner75通过1失败1条件跳过。原定时器测试提前关闭watchdog；v40／v41两次修正又错误等待不可变EXITED变REMOVED，失败日志与源码保留。v42保留EXITED并等待独立两项OBSERVED消失证明，原90秒用例超时不变；只重跑变化单例和Lint通过，v41其余14项与scheduler／smoke／contracts等原成功单列。414输入中仅该测试变化，其余413逐SHA一致，不称完整Runner重跑、同指纹全绿或干净checkout。真实SQLite／Worker／terminate与本地定时器有证据，上游候选／镜像／健康为明确夹具。完整3.1、2.3及正式P1-07／门槛等待，实际HTTP／用途会话／浏览器／可信装配／物理fencing继续。"
       ]
     },
     {

@@ -1,0 +1,13 @@
+{
+  "name": "@devmesh/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown src/main.ts --format esm --platform node --target node24 --sourcemap --clean",
+    "dev": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@devmesh/platform-core": "workspace:*"
+  }
+}

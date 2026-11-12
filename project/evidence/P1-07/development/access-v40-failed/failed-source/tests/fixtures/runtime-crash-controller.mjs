@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+import { z } from '../../packages/agent-runtime/node_modules/zod/index.js';
+import { openLocalStorage,LocalContentStore } from '../../packages/blob-store/dist/index.mjs';
+import { AgentRuntime,DeepSeekProvider } from '../../packages/agent-runtime/dist/index.mjs';
+const c=JSON.parse(readFileSync(process.argv[2],'utf8'));
+const local=await openLocalStorage(c.options),storage=local.storage,content=new LocalContentStore(storage,local.dataRoot,0);
+const [original]=await storage.request('claimAcceptedWork',{endpointId:c.endpointId,workerId:'runtime.crash',limit:1});
+const claim={endpointId:original.endpointId,taskId:original.taskId,workerId:original.workerId,claimToken:original.claimToken};
+const tool={name:'repo_read',description:'Read a file',schema:z.strictObject({path:z.string()}),effectClass:'NONIDEMPOTENT_WRITE',async execute(operationId){process.send({stage:'tool-sent',operationId});return new Promise(()=>{});},async query(){return {state:'OUTCOME_UNKNOWN'};}};
+const runtime=new AgentRuntime(storage,content,[new DeepSeekProvider(c.provider,async()=>'local-test-key')],[tool]);
+const result=await runtime.execute(claim);process.send({stage:'unexpected-result',result});await local.close();

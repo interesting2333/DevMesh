@@ -1,0 +1,160 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "steps": [
+    {
+      "name": "frozen-install",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--frozen-lockfile",
+        "--offline",
+        "--ignore-scripts"
+      ],
+      "execution": "REUSED",
+      "provenance": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/frozen-install.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "typecheck",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "typecheck"
+      ],
+      "execution": "REUSED",
+      "provenance": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/typecheck.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "lint",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ],
+      "execution": "REUSED",
+      "provenance": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/lint.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "current-build",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/code-workspaces",
+        "-r",
+        "run",
+        "build"
+      ],
+      "execution": "REUSED",
+      "provenance": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/current-build.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "access",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-access.test.mjs",
+        "tests/storage-preview-access.test.mjs"
+      ],
+      "execution": "REUSED",
+      "provenance": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/access.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "lifecycle",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-lifecycle.test.mjs"
+      ],
+      "execution": "REUSED",
+      "provenance": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/lifecycle.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "preview-intents",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-intents.test.mjs",
+        "tests/verification-dataset-paths.test.mjs"
+      ],
+      "execution": "REUSED",
+      "provenance": {
+        "report": "project/evidence/P1-07/development/access-v38-failed/report.json",
+        "reportSha256": "cfd617a934a4b6532751844ddafff172bf3dbc1231c7384066af3e53e8091b25",
+        "output": "project/evidence/P1-07/development/access-v38-failed/preview-intents.txt",
+        "sourceFingerprint": "54d63b0ced45dcec748223413bbe065c9018800ea9ea31a3df432347450b197d"
+      }
+    },
+    {
+      "name": "datasets",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-datasets.test.mjs"
+      ],
+      "execution": "EXECUTED"
+    },
+    {
+      "name": "storage",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:storage"
+      ],
+      "execution": "EXECUTED"
+    },
+    {
+      "name": "runner",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:runner"
+      ],
+      "execution": "EXECUTED"
+    }
+  ],
+  "environment": {
+    "newChecksOnly": {
+      "TEMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d",
+      "TMP": "D:\\devmesh-preview-validation-2a97ae35-9c0c-4bdd-862f-72c1258ab15d"
+    },
+    "otherEnvironment": "Inherited unchanged; secrets not copied into evidence."
+  },
+  "scope": "Incremental bundle: seven successful unchanged v38 checks are reused with exact provenance and were not rerun. Only EXECUTED command arrays ran under the explicit new temporary environment. The v38 dataset failure is retained separately."
+}

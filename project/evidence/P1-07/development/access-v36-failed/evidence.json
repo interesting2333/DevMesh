@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "46c63c0bd57effad426d9e141b9904515894cb15",
+  "dirty": true,
+  "sourceFingerprint": "1d821c060792223a7d839e33e3828b22f3fdeb412c257af90d4b0c18674d3a52",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T13:07:43.928Z",
+  "finishedAt": "2026-11-12T13:12:40.139Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 683,
+      "output": "frozen-install.txt",
+      "sha256": "915948615c073c65662f477262375a384952d8f0a3c71c5e7bc1458d85e302c6"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9962,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 882,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 17527,
+      "output": "current-build.txt",
+      "sha256": "06d02834f116eccb018d967b53b2a892bb30014444229b8f1922fdd8b0543692"
+    },
+    {
+      "name": "access",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 265693,
+      "output": "access.txt",
+      "sha256": "5b5de788389b2f8e86992f2773d09a0c99815bb92e6b4a15ef11d2e729825aca",
+      "tests": {
+        "tests": 18,
+        "pass": 14,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/access.txt",
+      "sha256": "5b5de788389b2f8e86992f2773d09a0c99815bb92e6b4a15ef11d2e729825aca"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/current-build.txt",
+      "sha256": "06d02834f116eccb018d967b53b2a892bb30014444229b8f1922fdd8b0543692"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/packages/storage-sqlite/migrations/0034-previewaccess.sql",
+      "sha256": "34c07bd4c72363c10c14c336cdea4c71887798d54d3eb7c7c34624dac493b6fc"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "ba93a9cae6a1cafbb6608e172eccd1598f7f8e759ed626a122ef4cbc93eb707f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "18c3c973971f7ff2d3760a94f36380a2de047ad00ad30c61201bacbd32481b88"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "d8baf05f918c1cb62abf26e8ab5f178d6ae6763fe5ce012a9bd2b888bc111482"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/packages/storage-sqlite/src/preview-access-domain.ts",
+      "sha256": "332039a5319e7318da3f82ca2bf3e0e19314a0480ee98a7d2eb7f0d9d3327c78"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/packages/storage-sqlite/src/preview-access-protocol.ts",
+      "sha256": "98f140a0e73c7d1185bc7c644cb073f58f21aa6a2036d0ee53d4acb2bb8612a8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "1ef0d1e585742547d86f7cf352d0428598f8df06d5e6c51251fc745de13baecf"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/tests/fixtures/preview-access.mjs",
+      "sha256": "a3a7d8838f7724c7b48076c99eb38cf29ff35c6eef5e980a0cf590bb3ca8874b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/tests/storage-preview-access.test.mjs",
+      "sha256": "0247dec2b3033d42097c14c8e6a8d9bb06814b20623883be5b92e6e55189af9b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/failed-source/tests/verification-preview-access.test.mjs",
+      "sha256": "10b02301acc9a7d391bd01f46a5019e54081a83a5c909025f36a39a183af83ab"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/frozen-install.txt",
+      "sha256": "915948615c073c65662f477262375a384952d8f0a3c71c5e7bc1458d85e302c6"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/hang-diagnostic.json",
+      "sha256": "4612333255c25051e49fddb25ce6c0e1227acf32163959dda1e167f9a367162f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/report.json",
+      "sha256": "925a451a133d042d0e7d808205db854d402770c0a339a73cdbbc744b3c941fa4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/validation-driver.mjs",
+      "sha256": "dd1a49fc6d372ca57a33adea59b0a78856611e2846693106a0b634ccaddb03dd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-v36-failed/commands.json",
+      "sha256": "f6f0e7b0fed4ddfec6bdd9dce327df43b8b235ef5648884e9effdca7729528ec"
+    }
+  ],
+  "scope": "P1-07 partial3.1: durable private preview gateway admission, exact original target and current membership, original dataset write gate fencing, once-only dispatch journal and uncertain-write retention. Real SQLite and storage Workers; preview/dataset runtime facts are explicit fixtures. No HTTP forwarding, browser credentials/isolation, physical data quiescence, production composition, T5 or stage acceptance. Full3.1 remains unchecked.",
+  "limitations": [
+    "Partial3.1 and full2.3 remain unchecked; formal P1-07 still waits P1-06/G0. Same Codex implementation/review, no independent or human product/stage acceptance.",
+    "Actual migrated SQLite domain commands and real storage Workers are exercised. Original candidate, image and preview/dataset facts are explicit fixtures; no generated application HTTP forwarding occurs.",
+    "Safe HTTP method admission is not physical read-only enforcement; gate closure, pending count zero or HTTP FINISHED are not data quiescence, mutation success, T5 or Release evidence.",
+    "No preview origin/cookie/session/ticket HTTP adapter, browser isolation, trusted production composition, real model/OIDC/Linux Docker/gVisor, physical data fencing or migration acceptance."
+  ],
+  "failure": "18 tests reported 14 pass / 4 fail, natural exit. The repaired actual Worker restart/concurrency cases passed. Last four failures occurred in upstream fixture preparation before access commands: two RUNNER_FORBIDDEN and two RELEASE_DELIVERY_POLICY_CHANGED. Setup times increased from about 2 seconds to 31-92 seconds; original short-lived fixture grants remain enforced. Read-only inspector diagnosis showed active FS/HTTP work, not the prior cleanup leak; no process was stopped. Later access fixtures will clone one verified immutable SQLite seed instead of repeating unrelated upstream Runner builds."
+}

@@ -108,6 +108,30 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 - **WHEN** 唯一派发许可已提交但调用者没收到许可，也不能证明原动作已完成
 - **THEN** 后续只核实原对象并保留 UNKNOWN，不以重试为由再次初始化，不伪造 READY 或解除未知副作用阻塞
 
+### Requirement: Durable private preview access admission
+
+The system SHALL 固定可信网关的项目、service principal 及配置摘要，只向当前成员开放准确原候选／镜像／dataset／实例／端点，并重新检查健康、期限及带 fencing 写门。每次原 HTTP 请求 MUST 持久保存方法／路径／正文摘要及绑定，只派发一次；未知结果不得通过重试或超时解除写入占用。该准入记录 SHALL NOT 充当实际 HTTP、数据排空或接受完成证据。
+
+#### Scenario: Missing or mismatched gateway and dataset gate
+- **WHEN** 没有显式策略或原后端写门，或请求的主体／配置／用户成员身份不匹配
+- **THEN** 拒绝准入，不开放任意目标代理；viewer 不能取得写方法许可，operator 的预览业务写权限不扩大平台权限
+
+#### Scenario: Gate closure competes with dispatch
+- **WHEN** 关闭原 dataset 写门与基于旧 fence 的写请求同时提交
+- **THEN** 同一 writer 中先提交关闭则拒绝该派发，先提交派发则关闭后仍计入未确定写；最后授权失败不自行假定未发送，关闭后安全方法读取须基于当前 fence
+
+#### Scenario: Dispatch grant or response acknowledgement is lost
+- **WHEN** 原许可已经提交但 ACK 丢失，或原请求为 DISPATCHED／UNKNOWN 时服务重启
+- **THEN** 不再次发放派发许可，保留准确原记录和写入计数；只有可信原完整响应或明确未发送观察可终结相应请求，UNKNOWN 不可凭假定未发送消除
+
+#### Scenario: Control clock moves behind an original health observation
+- **WHEN** 控制节点时钟回拨使原健康观察落在当前时间之后
+- **THEN** 关闭当前可用性及访问许可，原观察和未确定写保持不变，不把负健康年龄当作新鲜
+
+#### Scenario: Logical requests finish without physical quiescence proof
+- **WHEN** 原 HTTP 返回包括错误状态在内的完整响应，且网关在途写计数归零
+- **THEN** 仅记录传输观察，不把 HTTP 完成或方法分类当作业务成功／数据库排空，不创建 Release、切换接受指针或自动重开旧门
+
 ### Requirement: Durable acceptance preparation without destructive defaults
 
 The system SHALL 在外部准备前固定候选、审查、原接受指针和数据策略，保存原操作身份。保留数据 MUST 用带 fencing 写门排空旧写入并快照最新数据，经准确迁移／完整性和服务健康验证后才准备完成；替换数据 MUST 有准确明确确认。未知结果 SHALL 查询原操作且不重复执行副作用。

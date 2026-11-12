@@ -48,6 +48,8 @@ import {candidateReviewRequests} from './candidate-review-protocol.js';
 import type {CandidateReviewResults} from './candidate-review-protocol.js';
 import {previewRequests} from './preview-protocol.js';
 import type {PreviewResults} from './preview-protocol.js';
+import {previewAccessRequests} from './preview-access-protocol.js';
+import type {PreviewAccessResults} from './preview-access-protocol.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryResults} from './release-delivery-protocol.js';
 import {verifiedRepairRequests,verifiedRepairPublish} from './verified-repair-protocol.js';
@@ -62,6 +64,7 @@ const resources=z.array(z.strictObject({kind:z.enum(['snapshot','workspace','pro
 const admissionWork=z.strictObject({workId:ids.work,workRevision:revision,workEpoch:epoch,inputManifest,roleSnapshot,endpoint:endpointTarget,resources});
 const verificationOutputs=z.array(z.strictObject({slot:opaqueKey,ref:artifactRef})).max(64);
 export const requests = {
+  ...previewAccessRequests,
   ...previewRequests,
   ...candidateReviewRequests,
   ...releaseFreezeRequests,
@@ -125,7 +128,7 @@ export type OperationResult = { operationId: string; status: string; result: Rec
 export type RunView = { runId: string; projectId: string; taskId: string; resourceRevision: number; runEpoch: number; controlRevision: number; phase: string; controlGate: string; terminalOutcome: string | null; currentPlanRevision: number | null; currentRequirementRevision: number | null; eventSeq: number };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
-export interface Results extends SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceReclamationResults, WorkspaceMaintenanceResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults {
+export interface Results extends SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceReclamationResults, WorkspaceMaintenanceResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults {
   registerContent: { contentHash: string; storageKey: string };
   createProjectWithRun: OperationResult;
   publishPlan: OperationResult;

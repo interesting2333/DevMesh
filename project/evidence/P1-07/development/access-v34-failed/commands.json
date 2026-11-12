@@ -1,0 +1,30 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "steps": [
+    {
+      "name": "frozen-install",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--frozen-lockfile",
+        "--offline",
+        "--ignore-scripts"
+      ]
+    },
+    {
+      "name": "typecheck",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "typecheck"
+      ]
+    },
+    {
+      "name": "lint",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ]
+    }
+  ],
+  "scope": "Executed command arrays reconstructed from unchanged shared driver definitions; the failed recipe is reconstructed with its original five steps. No rerun."
+}

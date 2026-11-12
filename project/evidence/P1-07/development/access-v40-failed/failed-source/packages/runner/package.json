@@ -1,0 +1,6 @@
+{
+ "name":"@devmesh/runner","version":"0.0.0","private":true,"type":"module",
+ "exports":{".":{"types":"./dist/index.d.mts","import":"./dist/index.mjs"}},
+ "scripts":{"build":"tsdown src/index.ts src/worker.ts src/main.ts src/dataset-worker.ts --format esm --platform node --target node24 --dts --sourcemap --clean"},
+ "dependencies":{"@devmesh/contracts":"workspace:*","@devmesh/storage-sqlite":"workspace:*","@devmesh/blob-store":"workspace:*","zod":"4.4.3","express":"5.2.1"}
+}

@@ -1,0 +1,17 @@
+import {z} from 'zod';
+import {RunnerError} from './protocol.js';
+import type {RunnerPreviewBackend} from './preview-backend.js';
+const optionsSchema=z.strictObject({enabled:z.boolean().default(false),pollIntervalMs:z.number().int().min(100).max(30000).default(1000),pageSize:z.number().int().min(1).max(100).default(20)});
+export interface PreviewWatchdogResult {reservationId:string;state:string;errorCode:string|null}
+/** A Runner-local loop, deliberately independent of platform/control liveness. */
+export class RunnerPreviewWatchdog {
+ readonly options:z.output<typeof optionsSchema>;#closed=false;#timer:NodeJS.Timeout|undefined;#tick:Promise<PreviewWatchdogResult[]>|undefined;
+ constructor(readonly backend:RunnerPreviewBackend,options:z.input<typeof optionsSchema>={}){this.options=optionsSchema.parse(options);}
+ #configured(){if(this.#closed)throw new RunnerError('PREVIEW_WATCHDOG_CLOSED',503);if(!this.options.enabled||!this.backend.configured)throw new RunnerError('PREVIEW_WATCHDOG_NOT_CONFIGURED',503);}
+  async #cycle(){const results:PreviewWatchdogResult[]=[];let afterSequence=0;do{const page=await this.backend.store.request('previewReservationPage',{controllerId:this.backend.options.controllerId,afterSequence,limit:this.options.pageSize});for(const {reservation} of page.items){if(this.#closed)break;try{const result=await this.backend.expireReservation(reservation.reservationId,()=>!this.#closed);results.push({reservationId:reservation.reservationId,state:result.state,errorCode:null});}catch(error){results.push({reservationId:reservation.reservationId,state:reservation.state,errorCode:error instanceof RunnerError?error.code:'PREVIEW_WATCHDOG_UNKNOWN'});}}if(page.nextSequence===null)break;afterSequence=page.nextSequence;}while(!this.#closed);
+   afterSequence=0;while(!this.#closed){const page=await this.backend.store.request('previewCleanupPage',{controllerId:this.backend.options.controllerId,afterSequence,limit:this.options.pageSize});for(const {reservationId} of page.items){if(this.#closed)break;let result:PreviewWatchdogResult;try{const value=await this.backend.cleanupReservation(reservationId,()=>!this.#closed);result={reservationId,state:value.state,errorCode:null};}catch(error){result={reservationId,state:'UNKNOWN',errorCode:error instanceof RunnerError?error.code:'PREVIEW_WATCHDOG_UNKNOWN'};}const index=results.findIndex(r=>r.reservationId===reservationId);if(index<0)results.push(result);else if(results[index]!.errorCode===null)results[index]=result;}if(page.nextSequence===null)break;afterSequence=page.nextSequence;}
+   return results;}
+ async reconcile(){this.#configured();if(this.#tick)return this.#tick;this.#tick=this.#cycle();try{return await this.#tick;}finally{this.#tick=undefined;}}
+  async start(onError?:(code:string)=>void){this.#configured();if(this.#timer||this.#tick)throw new RunnerError('PREVIEW_WATCHDOG_ALREADY_STARTED',409);const report=(code:string)=>{try{onError?.(code);}catch{/* Observer failures cannot interrupt Runner reconciliation. */}};const first=await this.reconcile();if(!this.#closed){this.#timer=setInterval(()=>{if(!this.#tick)this.reconcile().then(results=>{for(const result of results)if(result.errorCode)report(result.errorCode);}).catch(()=>report('PREVIEW_WATCHDOG_UNKNOWN'));},this.options.pollIntervalMs);this.#timer.unref();}return first;}
+ async close(){this.#closed=true;clearInterval(this.#timer);await this.#tick;}
+}

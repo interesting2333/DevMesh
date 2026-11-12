@@ -1,0 +1,229 @@
+TAP version 13
+# (node:31560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: version 33 Worker upgrade requires a verified external backup and leaves old rows intact
+not ok 1 - version 33 Worker upgrade requires a verified external backup and leaves old rows intact
+  ---
+  duration_ms: 422.3204
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\storage-preview-access.test.mjs:12:1'
+  failureType: 'testCodeFailure'
+  error: 'Partial migration targets only allow inspection'
+  code: 'SCHEMA_UPGRADE_REQUIRED'
+  name: 'StorageError'
+  stack: |-
+    Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+    Worker.emit (node:events:508:28)
+    MessagePort.<anonymous> (node:internal/worker:332:53)
+    [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+  ...
+# (node:31560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: version 34 migration DDL, original rows and version markers roll back on failure then retry unchanged
+not ok 2 - version 34 migration DDL, original rows and version markers roll back on failure then retry unchanged
+  ---
+  duration_ms: 428.5191
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\storage-preview-access.test.mjs:15:1'
+  failureType: 'testCodeFailure'
+  error: 'Partial migration targets only allow inspection'
+  code: 'SCHEMA_UPGRADE_REQUIRED'
+  name: 'StorageError'
+  stack: |-
+    Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+    Worker.emit (node:events:508:28)
+    MessagePort.<anonymous> (node:internal/worker:332:53)
+    [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+  ...
+# (node:31560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fresh access tables/history refuse invalid identities and event faults preserve atomic admission
+ok 3 - fresh access tables/history refuse invalid identities and event faults preserve atomic admission
+  ---
+  duration_ms: 2242.2169
+  type: 'test'
+  ...
+# (node:31560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical SQL bytes stay pinned; changed version 34 deployment SQL is rejected
+ok 4 - historical SQL bytes stay pinned; changed version 34 deployment SQL is rejected
+  ---
+  duration_ms: 474.5713
+  type: 'test'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: access is closed until an owner configures its private gateway and the original backend enrolls its gate
+ok 5 - access is closed until an owner configures its private gateway and the original backend enrolls its gate
+  ---
+  duration_ms: 2599.9439
+  type: 'test'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: current membership and safe HTTP classification are checked without granting platform mutation rights
+not ok 6 - current membership and safe HTTP classification are checked without granting platform mutation rights
+  ---
+  duration_ms: 1855.6933
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'NOT NULL constraint failed: project_members.created_at'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.run (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:19:91)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-preview-access.test.mjs:18:112)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: request schema rejects ambiguous paths, hidden credentials and bodies on safe reads
+ok 7 - request schema rejects ambiguous paths, hidden credentials and bodies on safe reads
+  ---
+  duration_ms: 1842.6505
+  type: 'test'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared admission pins the original instance, image, dataset, start identity, endpoint and gate fence
+ok 8 - prepared admission pins the original instance, image, dataset, start identity, endpoint and gate fence
+  ---
+  duration_ms: 1755.3766
+  type: 'test'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dispatch wins once; committed grant ACK loss and actual Worker restart never grant a second dispatch
+not ok 9 - dispatch wins once; committed grant ACK loss and actual Worker restart never grant a second dispatch
+  ---
+  duration_ms: 2327.5415
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:32:1'
+  failureType: 'hookFailed'
+  error: "EBUSY: resource busy or locked, unlink 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-freeze-E0zXLw\\access.sqlite-shm'"
+  code: 'EBUSY'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker serializes dispatch before close, retains its uncertain write and permits new fenced reads
+not ok 10 - actual Worker serializes dispatch before close, retains its uncertain write and permits new fenced reads
+  ---
+  duration_ms: 2368.1029
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:35:1'
+  failureType: 'hookFailed'
+  error: "EBUSY: resource busy or locked, unlink 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-freeze-oqqDM3\\access.sqlite-shm'"
+  code: 'EBUSY'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker serializes close before dispatch; a stale prepared write never passes admission
+not ok 11 - actual Worker serializes close before dispatch; a stale prepared write never passes admission
+  ---
+  duration_ms: 2369.7336
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:40:1'
+  failureType: 'hookFailed'
+  error: "EBUSY: resource busy or locked, unlink 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-freeze-WBYa2t\\access.sqlite'"
+  code: 'EBUSY'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: UNKNOWN survives actual Worker restart and never permits a resend or NOT_SENT inference
+not ok 12 - UNKNOWN survives actual Worker restart and never permits a resend or NOT_SENT inference
+  ---
+  duration_ms: 2722.508
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:43:1'
+  failureType: 'hookFailed'
+  error: "EBUSY: resource busy or locked, unlink 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-freeze-xmSs9z\\access.sqlite'"
+  code: 'EBUSY'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HTTP completion and an empty logical gate do not manufacture data quiescence, releases or acceptance
+ok 13 - HTTP completion and an empty logical gate do not manufacture data quiescence, releases or acceptance
+  ---
+  duration_ms: 1938.7904
+  type: 'test'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: definitive NOT_SENT releases only its original dispatch; times, principals and observations are immutable
+ok 14 - definitive NOT_SENT releases only its original dispatch; times, principals and observations are immutable
+  ---
+  duration_ms: 1960.8198
+  type: 'test'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: revocation, stale health and preview expiry deny final authorization without losing uncertain write accounting
+not ok 15 - revocation, stale health and preview expiry deny final authorization without losing uncertain write accounting
+  ---
+  duration_ms: 1787.3193
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-preview-access.test.mjs:55:1'
+  failureType: 'testCodeFailure'
+  error: 'NOT NULL constraint failed: project_members.created_at'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.run (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:19:91)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-preview-access.test.mjs:56:214)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: gate close and request state/history writes roll back together on real SQLite transaction faults
+ok 16 - gate close and request state/history writes roll back together on real SQLite transaction faults
+  ---
+  duration_ms: 1868.3804
+  type: 'test'
+  ...
+# (node:39220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original close hash/fence cannot be replaced, reenrollment never reopens and pending recovery is bounded/private
+ok 17 - original close hash/fence cannot be replaced, reenrollment never reopens and pending recovery is bounded/private
+  ---
+  duration_ms: 2747.1937
+  type: 'test'
+  ...
+# Debugger listening on ws://127.0.0.1:9229/bc12666d-199e-4334-9001-a165365df8e3
+# For help, see: https://nodejs.org/en/docs/inspector
+# Debugger attached.
+# Debugger ending on ws://127.0.0.1:9229/bc12666d-199e-4334-9001-a165365df8e3
+# For help, see: https://nodejs.org/en/docs/inspector
+1..17
+# tests 17
+# suites 0
+# pass 9
+# fail 8
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 234409.4435

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "outcome": "EXPECTED_RED_REPRODUCED",
+  "exitCode": 1,
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/access-clock-red-v38-before-build/red.txt",
+      "sha256": "49d7f08e553625e83e92bb0666ecd6d2e33df20d195830a166ba790a8d92bf7c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-clock-red-v38-before-build/report.json",
+      "sha256": "cc31db68d41f35067329353ab1aa7b7d64618431b2c9fb34a990ed230a8f9e74"
+    },
+    {
+      "path": "project/evidence/P1-07/development/access-clock-red-v38-before-build/test-source.txt",
+      "sha256": "b5b3c6a0c5b51013948779476068a0aaff1421a8f3386a796deeae460d54d262"
+    }
+  ],
+  "scope": "Exact missing-rejection assertion on original emitted storage artifacts; original healthy observation remained available after a backwards control clock. Current source already fixed but not yet rebuilt. Expected-red proof, not passing validation."
+}

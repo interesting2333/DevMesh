@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {previewAccessFixture} from '../tests/fixtures/preview-access.mjs';
+test('regression: original future health must close access after a backwards clock',async t=>{
+ const f=await previewAccessFixture(t);await f.register();await f.enroll();const r=await f.prepare();await f.call('beginPreviewAccessRequest',f.original(r));t.mock.timers.enable({apis:['Date'],now:Date.now()-60000});await assert.rejects(f.call('resolvePreviewAccess',{...f.gateway,...f.target}),{code:'PREVIEW_UNAVAILABLE'});
+});
