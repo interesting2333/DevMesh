@@ -963,7 +963,11 @@
         "packages/storage-sqlite/migrations/0027-releasedeliveries.sql",
         "packages/storage-sqlite/src/release-delivery-domain.ts",
         "packages/result-verifier/src/delivery.ts",
-        "tests/verification-delivery.test.mjs"
+        "tests/verification-delivery.test.mjs",
+        "packages/storage-sqlite/migrations/0028-candidatefreezes.sql",
+        "packages/storage-sqlite/src/release-freeze-domain.ts",
+        "packages/result-verifier/src/freeze.ts",
+        "tests/verification-freeze.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-06/development/pure-v1-failed/evidence.json",
@@ -1017,7 +1021,15 @@
         "project/evidence/P1-06/development/deliveries-v3/checkpoint-binding.json",
         "project/evidence/P1-06/development/deliveries-v3/reused-validation.json",
         "project/evidence/P1-06/development/deliveries-v1-failed/evidence.json",
-        "project/evidence/P1-06/development/deliveries-v2-failed/evidence.json"
+        "project/evidence/P1-06/development/deliveries-v2-failed/evidence.json",
+        "project/evidence/P1-06/freeze-development-review.md",
+        "project/evidence/P1-06/development/freezes-v5/evidence.json",
+        "project/evidence/P1-06/development/freezes-v5/checkpoint-binding.json",
+        "project/evidence/P1-06/development/freezes-v5/reused-validation.json",
+        "project/evidence/P1-06/development/freezes-v1-failed/evidence.json",
+        "project/evidence/P1-06/development/freezes-v2-failed/evidence.json",
+        "project/evidence/P1-06/development/freezes-v3-failed/evidence.json",
+        "project/evidence/P1-06/development/freezes-v4/evidence.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1033,7 +1045,8 @@
         "2026-11-12：46d846d 主目录合并后，findings-v6 的类型、lint、当前存储／验证构建、缺陷 10/10、Work 11/11 和质量存储 10/10 再次通过且源码指纹不变。全部源码字节与该提交匹配，作为合并开发检查，不替代后续干净 checkout 或工作包验收。",
         "2026-11-12：64d5a9d 合入迁移 25 与前向修复规划／内容 ACK／计划发布／明确沿用确认，完成子任务 3.2。最多两轮、总计 30 项，只在已批准范围内追加修复／复验 Work；需求和接口变化明确拒绝自动规划。repairs-v4 共 132 个相关测试通过；增加发布后迟到未知副作用的确认守卫后，v5 共 57 个定向测试通过。合入后 repairs-v6 的类型、lint、当前依赖构建、9 个修复和 9 个真实本地 HTTP／MCP／Git Runtime 用例通过，305 个源码指纹全部匹配 64d5a9d。原失败日志保留；候选冻结、最终组合及干净 checkout 回归仍待任务 4／5，正式状态及阶段门槛不变。",
         "2026-11-12：8dc4b0c 合入迁移 26，将原 Work 输入准确提交以独立 Run 候选 CAS 发布，不重新合并、不伪造新步骤；当前来源／计划／需求／原 refs／manifest 均复核，未知结果只核实原动作。promotions-v1 的类型／构建／来源、真实 Git 新旧服务及存储回归通过，v2 新增日志 12/12；应用源码与 8dc4b0c 匹配，保留测试后 README 的单独差异。05b4455 增加实际 OCI manifest／config／layer 字节校验，images-v1 类型／构建／contracts／原报告计算通过，v2 镜像 6/6 且源码指纹完全匹配固定提交。只是准确源码与镜像内容身份准备，原交付构建来源、内容 ACK、数据方案及冻结服务仍在实施，4.1／4.2／5.1／5.2 未完成，正式 P1-06 与阶段状态不变。",
-        "2026-11-12：fd7e825 增加迁移 27 与只读 DeliveryCollector。交付 producer／材料清单在 Tester 准入前纳入质量配置，绑定原 Job／输出索引／字节及内容 ACK，校验实际 OCI 身份和准确数据方案；拒绝事后削弱、篡改、未知副作用、陈旧来源与未经批准的数据替换，保留人工待审。deliveries-v3 交付 12/12、质量材料 10/10、contracts 18/18、存储 28/28 及 lint／OpenAPI 通过；v2 的类型／当前构建／原采集 8/8／镜像 6/6 复用仅因应用源码一致，v2 驱动路径失败和 v1 成员夹具失败保留。最终 318 个源码指纹全部匹配 fd7e825。实际认证本地 HTTP／Runner SQLite／内容 ACK 使用受控输出字节，未执行 Docker 构建或数据迁移；候选冻结、完整组合及固定提交干净 checkout 仍待实施，4.1／4.2／5.1／5.2、正式 P1-06 与阶段门槛不变。"
+        "2026-11-12：fd7e825 增加迁移 27 与只读 DeliveryCollector。交付 producer／材料清单在 Tester 准入前纳入质量配置，绑定原 Job／输出索引／字节及内容 ACK，校验实际 OCI 身份和准确数据方案；拒绝事后削弱、篡改、未知副作用、陈旧来源与未经批准的数据替换，保留人工待审。deliveries-v3 交付 12/12、质量材料 10/10、contracts 18/18、存储 28/28 及 lint／OpenAPI 通过；v2 的类型／当前构建／原采集 8/8／镜像 6/6 复用仅因应用源码一致，v2 驱动路径失败和 v1 成员夹具失败保留。最终 318 个源码指纹全部匹配 fd7e825。实际认证本地 HTTP／Runner SQLite／内容 ACK 使用受控输出字节，未执行 Docker 构建或数据迁移；候选冻结、完整组合及固定提交干净 checkout 仍待实施，4.1／4.2／5.1／5.2、正式 P1-06 与阶段门槛不变。",
+        "2026-11-12：a53c085 增加迁移 28、CandidateFreezer 与不可变候选修订。实际读取正式评估／角色候选引用／原质量与交付字节，最终事务重核准确源码、当前正式 Work 证明、未知副作用及高严重问题；原子追加修订／内容外键／REVIEW／事件，接受指针不变。人工项保持 PENDING，不由旧报告或历史兼容结果放行；回执丢失恢复原候选，当前／历史资格分别保留。freezes-v5 类型／lint／当前依赖构建／冻结 14/14 通过；v4 Work 验证 11/11、存储 28/28、OpenAPI 复用的源码差异有单独记录。最终源码指纹绑定 a53c085，三轮原失败报告与源码保留。OpenSpec 4.1／4.2 完成，5.1 真实 Git／Runtime 失败修复组合和 5.2 干净固定 checkout 继续实施；本组准入／Git／Runtime 发布仍是明确 DB 夹具，Runner 使用受控输出，没有 Docker／真实模型／OIDC／Linux/runsc／数据迁移或产品阶段验收，正式工作包状态与门槛不变。"
       ]
     },
     {
