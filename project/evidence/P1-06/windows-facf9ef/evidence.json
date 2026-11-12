@@ -1,0 +1,317 @@
+{
+  "schemaVersion": 1,
+  "commit": "facf9ef7a4c59e3dd1755e7570e4bddcf6b9bd1a",
+  "status": "PASSED",
+  "sourceFingerprint": "7d97753030c8924d2f05f311dc49e411e768a8bd98ee6f6a38e05bc37ab9a235",
+  "sourceFiles": 393,
+  "lockfileSha256": "aa4454307a48c03e2a9703ca65136e252b8da9e23ee4e1342d63820d73ae2cde",
+  "startedAt": "2026-11-12T07:38:00.442Z",
+  "finishedAt": "2026-11-12T07:56:52.044Z",
+  "platform": "win32",
+  "node": "v24.13.1",
+  "checks": [
+    {
+      "name": "toolchain:check",
+      "exitCode": 0
+    },
+    {
+      "name": "vendor:verify",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "test:smoke",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "test:contracts",
+      "exitCode": 0,
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:content",
+      "exitCode": 0,
+      "tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:a2a",
+      "exitCode": 0,
+      "tests": {
+        "tests": 24,
+        "pass": 24,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:runtime",
+      "exitCode": 0,
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:runner",
+      "exitCode": 0,
+      "tests": {
+        "tests": 16,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "test:mcp",
+      "exitCode": 0,
+      "tests": {
+        "tests": 35,
+        "pass": 35,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:workspaces",
+      "exitCode": 0,
+      "tests": {
+        "tests": 103,
+        "pass": 103,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:input",
+      "exitCode": 0,
+      "tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:preparation",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:scheduler",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:verification",
+      "exitCode": 0,
+      "tests": {
+        "tests": 111,
+        "pass": 111,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts:check",
+      "exitCode": 0
+    },
+    {
+      "name": "project:check",
+      "exitCode": 0
+    },
+    {
+      "name": "openspec",
+      "exitCode": 0
+    },
+    {
+      "name": "design-consistency",
+      "exitCode": 0
+    }
+  ],
+  "skipped": [
+    {
+      "name": "test:smoke",
+      "skipped": 1
+    },
+    {
+      "name": "test:runner",
+      "skipped": 1
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/00-frozen-install.txt",
+      "sha256": "c3400fdda9959a9b2b3c22e27507889ec30da77240ba36cd25e1835ce5608121"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/01-toolchain-check.txt",
+      "sha256": "71f250ad98445a5917760a85c86cdb030a60196d416e9ec070af97f46e6e44be"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/02-vendor-verify.txt",
+      "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/03-build.txt",
+      "sha256": "5d105d128a7f0b3f9dcee960911f43c93d1ac6a604d38ae0d3497178496e0ec7"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/04-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/05-lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/06-test-smoke.txt",
+      "sha256": "b4ec2944e6c6c7b9301b5268630840b90c0b1d501f7ad69c3c6a1fd3b8961594"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/07-test-contracts.txt",
+      "sha256": "9372e18296b8523575d7d32a3a437c544dd41280c1ff2726f151068054d3ae45"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/08-test-storage.txt",
+      "sha256": "843d0bb83cb604daf115bf589cc1a03d134324ecfc675a4816a7441cfcc383dc"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/09-test-content.txt",
+      "sha256": "0f526fc1e31ff00523fc70135f82d4e01489978ea98c967c94a1edccbd503c92"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/10-test-a2a.txt",
+      "sha256": "9acb8d9feec37d4809b33e543f4e5c9c063c8b4340ad218272354a2e3a31ff73"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/11-test-runtime.txt",
+      "sha256": "0ef0433c7d3a3c5704d7fbee58658469747242d407668247b816d58b6690788f"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/12-test-runner.txt",
+      "sha256": "ac1b0612c1beed4f00a2b2ecd99a1647b6676ba1deb909371fa97bfd32d49341"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/13-test-mcp.txt",
+      "sha256": "06b094d8bd71d0ea00f9059c0460d2f59b0dcc7fe072da73db7d3c90ff7c075d"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/14-test-workspaces.txt",
+      "sha256": "75cbdff14ef8046da383f7d95dea4e289a32798bbb37238fcc3760ebca7c5c75"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/15-test-input.txt",
+      "sha256": "e3a0d2dbb089dd9def473fd7c4d6a68636237c63781e08ffb051f265c7ce88e4"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/16-test-preparation.txt",
+      "sha256": "a21f55e70b6a12360b2758be5e7754a7a92cab8d97de2f17b154b0b1f39b23ab"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/17-test-scheduler.txt",
+      "sha256": "28aeebbb5bcd9045235b229063729dfa57182fea73602f1a4cc0550efcf77f65"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/18-test-verification.txt",
+      "sha256": "5d2d74532299b60c865d7ef071f649328b8517b673bc8a325af2f73f8873001d"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/19-contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/20-project-check.txt",
+      "sha256": "a091c1dd96ef39747dc66cd5658859dd8a6a8c5e29dcbe3847ab905266df03ab"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/21-openspec.txt",
+      "sha256": "412fb404521f082ac9a2e790acbd9059ee1592fdff7dd485a2341fb1a5e3711d"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/22-design-consistency.txt",
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/preflight.json",
+      "sha256": "331acf561a06cd18c52ce177b5b8d4616638c429d4aa56b8e019edddffb2d9ce"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-facf9ef/report.json",
+      "sha256": "4cc3d7160a41a62700fc13f823573277c3f633eee678c1fbcd284af0bffe52f5"
+    }
+  ],
+  "review": {
+    "reviewer": "Codex (same implementation agent)",
+    "sourceHashesVerifiedAfter": true,
+    "checkoutCleanAfter": true
+  },
+  "scope": "Exact independent clean Windows checkout with offline frozen install and all 22 applicable checks; migrations 1–29, original quality and artifact references, formal Work verification, bounded repair, exact tested source promotion, delivery byte checks, candidate freeze and actual local Git/A2A/MCP/Runtime/Runner composition.",
+  "limitations": [
+    "Model protocol responses and Runner reports/build/OCI bytes are controlled local fixture outputs; no real model or production build/test/health result.",
+    "No enterprise OIDC, Linux/Docker/gVisor or deployment/product/stage acceptance; environment-conditional skips remain explicit.",
+    "Coverage topology in composition supports an explicit fixed single-line fixture grammar only; production trusted source provider remains unconfigured.",
+    "Candidate freeze leaves accepted pointer unchanged; P1-07 review, datasets, preview health and acceptance are separate unfinished work."
+  ]
+}

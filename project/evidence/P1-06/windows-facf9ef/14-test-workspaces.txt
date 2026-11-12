@@ -1,0 +1,779 @@
+TAP version 13
+# (node:38780) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate qualification freezes both latest verified sources and the exact target dependency closure
+ok 1 - candidate qualification freezes both latest verified sources and the exact target dependency closure
+  ---
+  duration_ms: 104.3669
+  type: 'test'
+  ...
+# Subtest: candidate qualification rejects unarchived, superseded, blocked and old Work generations
+ok 2 - candidate qualification rejects unarchived, superseded, blocked and old Work generations
+  ---
+  duration_ms: 63.781
+  type: 'test'
+  ...
+# Subtest: candidate qualification rechecks current membership and current Run epoch after a pause
+ok 3 - candidate qualification rechecks current membership and current Run epoch after a pause
+  ---
+  duration_ms: 64.5894
+  type: 'test'
+  ...
+# Subtest: candidate qualification never substitutes unrelated code and validates strict target requests
+ok 4 - candidate qualification never substitutes unrelated code and validates strict target requests
+  ---
+  duration_ms: 64.9643
+  type: 'test'
+  ...
+# Subtest: acknowledged code containing an unrelated predecessor cannot qualify for the current graph
+ok 5 - acknowledged code containing an unrelated predecessor cannot qualify for the current graph
+  ---
+  duration_ms: 59.2128
+  type: 'test'
+  ...
+# Subtest: nonempty interface inputs require an approved current interface source authority
+ok 6 - nonempty interface inputs require an approved current interface source authority
+  ---
+  duration_ms: 53.7753
+  type: 'test'
+  ...
+# Subtest: missing current evidence cannot qualify an otherwise acknowledged source
+ok 7 - missing current evidence cannot qualify an otherwise acknowledged source
+  ---
+  duration_ms: 56.6292
+  type: 'test'
+  ...
+# (node:14936) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14936) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a legal disjoint-scope directory rename conflict retains exact original materials across computation and publication interruption
+ok 8 - a legal disjoint-scope directory rename conflict retains exact original materials across computation and publication interruption
+  ---
+  duration_ms: 38771.4362
+  type: 'test'
+  ...
+# (node:23488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual A2A-admitted archived Git branches retain immutable candidates and original operation recovery
+    # Subtest: both changes survive lost step/final ACKs and later unsubmitted developer writes
+    ok 1 - both changes survive lost step/final ACKs and later unsubmitted developer writes
+      ---
+      duration_ms: 10229.8057
+      type: 'test'
+      ...
+    # Subtest: a sent intent with missing original refs stays unknown until the original delayed Git action is observed
+    ok 2 - a sent intent with missing original refs stays unknown until the original delayed Git action is observed
+      ---
+      duration_ms: 7993.5416
+      type: 'test'
+      ...
+    # Subtest: scheduler admission and an isolated verification checkout freeze the exact dependency snapshot
+    ok 3 - scheduler admission and an isolated verification checkout freeze the exact dependency snapshot
+      ---
+      duration_ms: 12524.1839
+      type: 'test'
+      ...
+    # Subtest: unique atomic refs prove a lost ACK after pause and a later global ref move without replaying writes
+    ok 4 - unique atomic refs prove a lost ACK after pause and a later global ref move without replaying writes
+      ---
+      duration_ms: 8469.895
+      type: 'test'
+      ...
+    1..4
+ok 9 - actual A2A-admitted archived Git branches retain immutable candidates and original operation recovery
+  ---
+  duration_ms: 68486.9612
+  type: 'test'
+  ...
+# (node:31020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate journal owns an exact subject, preserves membership checks and keeps unknown operations exclusive
+ok 10 - candidate journal owns an exact subject, preserves membership checks and keeps unknown operations exclusive
+  ---
+  duration_ms: 166.439
+  type: 'test'
+  ...
+# Subtest: candidate steps serialize exact parents and final acknowledgement preserves both sources without accepting release
+ok 11 - candidate steps serialize exact parents and final acknowledgement preserves both sources without accepting release
+  ---
+  duration_ms: 128.4952
+  type: 'test'
+  ...
+# Subtest: a paused prepared result cannot send and can be abandoned only before its original ref was sent
+ok 12 - a paused prepared result cannot send and can be abandoned only before its original ref was sent
+  ---
+  duration_ms: 163.9205
+  type: 'test'
+  ...
+# Subtest: a sent step remains unknown across handler reconstruction and pause until original proof arrives
+ok 13 - a sent step remains unknown across handler reconstruction and pause until original proof arrives
+  ---
+  duration_ms: 161.3064
+  type: 'test'
+  ...
+# Subtest: the final CAS has one sender, can record original success after pause and requires fresh qualification after resume
+ok 14 - the final CAS has one sender, can record original success after pause and requires fresh qualification after resume
+  ---
+  duration_ms: 129.3072
+  type: 'test'
+  ...
+# Subtest: an exact Work snapshot proves downstream ancestry and never moves the global Run candidate
+ok 15 - an exact Work snapshot proves downstream ancestry and never moves the global Run candidate
+  ---
+  duration_ms: 93.0489
+  type: 'test'
+  ...
+# Subtest: a computed conflict cannot become a candidate or close before durable conflict materials are acknowledged
+ok 16 - a computed conflict cannot become a candidate or close before durable conflict materials are acknowledged
+  ---
+  duration_ms: 73.3495
+  type: 'test'
+  ...
+# Subtest: a known rejected final CAS preserves its exact adapter proof and never adopts an unexpected physical head
+ok 17 - a known rejected final CAS preserves its exact adapter proof and never adopts an unexpected physical head
+  ---
+  duration_ms: 79.4656
+  type: 'test'
+  ...
+# Subtest: promotion reuses exact original manifest and steps without relabeling them as a new merge
+ok 18 - promotion reuses exact original manifest and steps without relabeling them as a new merge
+  ---
+  duration_ms: 101.204
+  type: 'test'
+  ...
+# Subtest: a smaller dependency closure cannot be promoted as the complete final source set
+ok 19 - a smaller dependency closure cannot be promoted as the complete final source set
+  ---
+  duration_ms: 78.777
+  type: 'test'
+  ...
+# Subtest: migration 26 preserves old journals and operation request identity
+ok 20 - migration 26 preserves old journals and operation request identity
+  ---
+  duration_ms: 41.8555
+  type: 'test'
+  ...
+# Subtest: migration 16 preserves version 15 data and the original migration history
+ok 21 - migration 16 preserves version 15 data and the original migration history
+  ---
+  duration_ms: 39.3085
+  type: 'test'
+  ...
+# (node:32888) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate content registration and its foreign-key business reference commit in the same transaction
+ok 22 - candidate content registration and its foreign-key business reference commit in the same transaction
+  ---
+  duration_ms: 262.9825
+  type: 'test'
+  ...
+# Subtest: an interrupted original file publication blocks conflict ACK and resumes the same write and immutable manifest
+ok 23 - an interrupted original file publication blocks conflict ACK and resumes the same write and immutable manifest
+  ---
+  duration_ms: 227.7818
+  type: 'test'
+  ...
+# Subtest: candidate material targets enforce original bytes/write identity and current membership while permitting member reads
+ok 24 - candidate material targets enforce original bytes/write identity and current membership while permitting member reads
+  ---
+  duration_ms: 171.0291
+  type: 'test'
+  ...
+# (node:20208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: final publication retains the exact original Work-input commit without new merge steps
+    # Subtest: exact commit, manifest and archive identities are preserved with an independent CAS receipt
+    ok 1 - exact commit, manifest and archive identities are preserved with an independent CAS receipt
+      ---
+      duration_ms: 4783.3961
+      type: 'test'
+      ...
+    # Subtest: missing retained original refs reject publication before any new final ref is sent
+    ok 2 - missing retained original refs reject publication before any new final ref is sent
+      ---
+      duration_ms: 2796.3337
+      type: 'test'
+      ...
+    # Subtest: a durable CAS intent is not resent while its original refs are unknown
+    ok 3 - a durable CAS intent is not resent while its original refs are unknown
+      ---
+      duration_ms: 5584.3428
+      type: 'test'
+      ...
+    # Subtest: lost database ACK can be recovered after pause without remerging or moving refs
+    ok 4 - lost database ACK can be recovered after pause without remerging or moving refs
+      ---
+      duration_ms: 5335.6275
+      type: 'test'
+      ...
+    1..4
+ok 25 - final publication retains the exact original Work-input commit without new merge steps
+  ---
+  duration_ms: 46564.1184
+  type: 'test'
+  ...
+# (node:27824) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27824) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27824) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a previously started MCP service resolves a later allocation and preserves its exact owner through real Git and Runner HTTP
+ok 26 - a previously started MCP service resolves a later allocation and preserves its exact owner through real Git and Runner HTTP
+  ---
+  duration_ms: 14203.8986
+  type: 'test'
+  ...
+# (node:27824) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27824) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the first dynamic MCP call rejects a replacement directory using the original allocation ACK identity
+ok 27 - the first dynamic MCP call rejects a replacement directory using the original allocation ACK identity
+  ---
+  duration_ms: 7840.9269
+  type: 'test'
+  ...
+# (node:2420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a durable Runner fence blocks job admission, protects holder identity and survives a real store reopen
+ok 28 - a durable Runner fence blocks job admission, protects holder identity and survives a real store reopen
+  ---
+  duration_ms: 978.1286
+  type: 'test'
+  ...
+# (node:2420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: queued and unknown original Runner jobs keep their workspace unavailable for Git fencing
+ok 29 - queued and unknown original Runner jobs keep their workspace unavailable for Git fencing
+  ---
+  duration_ms: 492.399
+  type: 'test'
+  ...
+# (node:2420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: local filesystem and Runner fences recover lost replies without resending writes and bind an independent repo path
+ok 30 - local filesystem and Runner fences recover lost replies without resending writes and bind an independent repo path
+  ---
+  duration_ms: 446.9087
+  type: 'test'
+  ...
+# (node:2420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: cleanup fencing requires separate original-operation authority and cannot become execution admission
+ok 31 - cleanup fencing requires separate original-operation authority and cannot become execution admission
+  ---
+  duration_ms: 324.5104
+  type: 'test'
+  ...
+# (node:2420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a real killed filesystem owner requires its exact dead-owner token before replacing the durable Runner barrier
+ok 32 - a real killed filesystem owner requires its exact dead-owner token before replacing the durable Runner barrier
+  ---
+  duration_ms: 1134.2073
+  type: 'test'
+  ...
+# (node:36400) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: controlled Git transfers exact objects into separate repositories and checks out an immutable source manifest
+ok 33 - controlled Git transfers exact objects into separate repositories and checks out an immutable source manifest
+  ---
+  duration_ms: 5341.8013
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-CsQjLu
+# Subtest: configured external Git helpers are refused before source operations
+ok 34 - configured external Git helpers are refused before source operations
+  ---
+  duration_ms: 1224.5816
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-UjpSvr
+# Subtest: replacement of a directory at the same path is rejected using its frozen filesystem identity
+ok 35 - replacement of a directory at the same path is rejected using its frozen filesystem identity
+  ---
+  duration_ms: 858.3653
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-EC4wMy
+# Subtest: sensitive paths and Git symbolic link entries cannot enter source manifests
+ok 36 - sensitive paths and Git symbolic link entries cannot enter source manifests
+  ---
+  duration_ms: 1841.9473
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-wQ76X7
+# Subtest: a fixed approved template subtree creates a distinct initial application commit without platform objects
+ok 37 - a fixed approved template subtree creates a distinct initial application commit without platform objects
+  ---
+  duration_ms: 7599.5353
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-workspace-git-s3qZmG
+# (node:35872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fixed three-way Git integration retains both sibling changes, exact parents and immutable verification checkout
+ok 38 - fixed three-way Git integration retains both sibling changes, exact parents and immutable verification checkout
+  ---
+  duration_ms: 8951.6013
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-LrONwo
+# Subtest: same-file Git conflicts preserve original three stages and leave candidate and checkout unchanged
+ok 39 - same-file Git conflicts preserve original three stages and leave candidate and checkout unchanged
+  ---
+  duration_ms: 7916.6609
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-2DEzIr
+# Subtest: merge refuses a substituted base and configured external merge helpers before integration
+ok 40 - merge refuses a substituted base and configured external merge helpers before integration
+  ---
+  duration_ms: 6721.2194
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-T3BAV1
+# Subtest: modify-delete Git conflict retains missing ours stage explicitly without creating a replacement file
+ok 41 - modify-delete Git conflict retains missing ours stage explicitly without creating a replacement file
+  ---
+  duration_ms: 8273.5428
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-gKIHr6
+# Subtest: criss-cross histories freeze every best merge base and preserve both later changes through the virtual base
+ok 42 - criss-cross histories freeze every best merge base and preserve both later changes through the virtual base
+  ---
+  duration_ms: 14878.3491
+  type: 'test'
+  ...
+# Temporary evidence root: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-git-integration-zjXkjj
+# (node:40776) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40776) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40776) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed maintenance uses original SQLite authority through authenticated Runner HTTP and cannot bypass queued or unknown jobs
+ok 43 - managed maintenance uses original SQLite authority through authenticated Runner HTTP and cannot bypass queued or unknown jobs
+  ---
+  duration_ms: 15206.69
+  type: 'test'
+  ...
+# (node:40776) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40776) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a test-tools-only owner can preserve and reclaim its exact original read-attenuated workspace via the real Runner maintenance boundary
+ok 44 - a test-tools-only owner can preserve and reclaim its exact original read-attenuated workspace via the real Runner maintenance boundary
+  ---
+  duration_ms: 23221.8121
+  type: 'test'
+  ...
+# (node:38796) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: captures ignored, untracked and deleted tracked materials without treating absence as an empty file
+ok 45 - captures ignored, untracked and deleted tracked materials without treating absence as an empty file
+  ---
+  duration_ms: 61.9667
+  type: 'test'
+  ...
+# Subtest: captures every internal hardlink and recovery copy
+ok 46 - captures every internal hardlink and recovery copy
+  ---
+  duration_ms: 31.7941
+  type: 'test'
+  ...
+# Subtest: external hardlinks deny a complete snapshot and preserve both files
+ok 47 - external hardlinks deny a complete snapshot and preserve both files
+  ---
+  duration_ms: 19.018
+  type: 'test'
+  ...
+# Subtest: directory junctions cannot expose files outside the original owned attempt
+ok 48 - directory junctions cannot expose files outside the original owned attempt
+  ---
+  duration_ms: 21.0205
+  type: 'test'
+  ...
+# Subtest: explicit rebuildable exclusions cannot hide tracked or recovery material
+ok 49 - explicit rebuildable exclusions cannot hide tracked or recovery material
+  ---
+  duration_ms: 30.0653
+  type: 'test'
+  ...
+# Subtest: new files and hash drift invalidate the exact original snapshot
+ok 50 - new files and hash drift invalidate the exact original snapshot
+  ---
+  duration_ms: 34.6722
+  type: 'test'
+  ...
+# Subtest: secrets and unsupported large bytes deny completion without removing source material
+ok 51 - secrets and unsupported large bytes deny completion without removing source material
+  ---
+  duration_ms: 17.217
+  type: 'test'
+  ...
+# Subtest: invalid and ambiguous base paths never become missing markers
+ok 52 - invalid and ambiguous base paths never become missing markers
+  ---
+  duration_ms: 12.9094
+  type: 'test'
+  ...
+# (node:39036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual isolated Git source and complete workspace bytes require original preservation proof before reclamation
+    # Subtest: a workspace with no repo.commit retains the admitted base and all unsubmitted bytes
+    ok 1 - a workspace with no repo.commit retains the admitted base and all unsubmitted bytes
+      ---
+      duration_ms: 7765.0861
+      type: 'test'
+      ...
+    # Subtest: interrupted publication retains its original operation, every source commit and immutable material bytes
+    ok 2 - interrupted publication retains its original operation, every source commit and immutable material bytes
+      ---
+      duration_ms: 14660.8954
+      type: 'test'
+      ...
+    # Subtest: unknown refs, staged bytes, missing content and a busy Runner boundary independently block reclamation
+    ok 3 - unknown refs, staged bytes, missing content and a busy Runner boundary independently block reclamation
+      ---
+      duration_ms: 11757.7284
+      type: 'test'
+      ...
+    # Subtest: hash drift stays preserved and a lost complete ACK cannot turn unknown recovery material into deletion permission
+    ok 4 - hash drift stays preserved and a lost complete ACK cannot turn unknown recovery material into deletion permission
+      ---
+      duration_ms: 13562.1694
+      type: 'test'
+      ...
+    1..4
+ok 53 - actual isolated Git source and complete workspace bytes require original preservation proof before reclamation
+  ---
+  duration_ms: 63976.6021
+  type: 'test'
+  ...
+# (node:37696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: workspace preservation atomically registers content and its immutable business reference
+ok 54 - workspace preservation atomically registers content and its immutable business reference
+  ---
+  duration_ms: 213.3438
+  type: 'test'
+  ...
+# Subtest: failed original publication cannot produce an ACK and resumes its exact original write
+ok 55 - failed original publication cannot produce an ACK and resumes its exact original write
+  ---
+  duration_ms: 148.5005
+  type: 'test'
+  ...
+# Subtest: saved recovery bytes cannot convert unresolved original file operations into reclamation authority
+ok 56 - saved recovery bytes cannot convert unresolved original file operations into reclamation authority
+  ---
+  duration_ms: 143.7913
+  type: 'test'
+  ...
+# Subtest: preserved material writes require original target bytes and current ACL while project members can read
+ok 57 - preserved material writes require original target bytes and current ACL while project members can read
+  ---
+  duration_ms: 121.9315
+  type: 'test'
+  ...
+# (node:36200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only the exact original preserved Attempt is isolated and reclaimed with durable same-operation recovery
+    # Subtest: a live execution grant cannot enter reclamation even when the fixture reports no jobs
+    ok 1 - a live execution grant cannot enter reclamation even when the fixture reports no jobs
+      ---
+      duration_ms: 15.4011
+      type: 'test'
+      ...
+    # Subtest: an unavailable Runner cleanup barrier preserves the original source directory
+    ok 2 - an unavailable Runner cleanup barrier preserves the original source directory
+      ---
+      duration_ms: 12.5944
+      type: 'test'
+      ...
+    # Subtest: lost isolation persistence is reconciled from the exact original directory and receipt
+    ok 3 - lost isolation persistence is reconciled from the exact original directory and receipt
+      ---
+      duration_ms: 10551.3985
+      type: 'test'
+      ...
+    # Subtest: a persisted deletion intent survives interruption and rejects additions, modified bytes and new external links
+    ok 4 - a persisted deletion intent survives interruption and rejects additions, modified bytes and new external links
+      ---
+      duration_ms: 7480.6287
+      type: 'test'
+      ...
+    # Subtest: deletion before control ACK resumes the same fact and a lost final reply never repeats directory deletion
+    ok 5 - deletion before control ACK resumes the same fact and a lost final reply never repeats directory deletion
+      ---
+      duration_ms: 3339.5537
+      type: 'test'
+      ...
+    1..5
+ok 58 - only the exact original preserved Attempt is isolated and reclaimed with durable same-operation recovery
+  ---
+  duration_ms: 38545.168
+  type: 'test'
+  ...
+# (node:35944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: reclamation freezes its original archive and requires revoked execution admission for every transition
+ok 59 - reclamation freezes its original archive and requires revoked execution admission for every transition
+  ---
+  duration_ms: 241.1789
+  type: 'test'
+  ...
+# Subtest: an unacknowledged archive or unsettled original file operation cannot begin reclamation
+ok 60 - an unacknowledged archive or unsettled original file operation cannot begin reclamation
+  ---
+  duration_ms: 157.8867
+  type: 'test'
+  ...
+# (node:18640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a relocated original directory can verify the exact subset remaining after interrupted deletion
+ok 61 - a relocated original directory can verify the exact subset remaining after interrupted deletion
+  ---
+  duration_ms: 34.9549
+  type: 'test'
+  ...
+# Subtest: an original internal hardlink may lose one preserved name during partial deletion
+ok 62 - an original internal hardlink may lose one preserved name during partial deletion
+  ---
+  duration_ms: 14.6505
+  type: 'test'
+  ...
+# Subtest: new material after the frozen delete intent is preserved and blocks further reclamation
+ok 63 - new material after the frozen delete intent is preserved and blocks further reclamation
+  ---
+  duration_ms: 12.9572
+  type: 'test'
+  ...
+# Subtest: modified original bytes block reclamation even under the original filename and inode
+ok 64 - modified original bytes block reclamation even under the original filename and inode
+  ---
+  duration_ms: 12.5248
+  type: 'test'
+  ...
+# Subtest: a replacement trash root cannot inherit the original deletion decision
+ok 65 - a replacement trash root cannot inherit the original deletion decision
+  ---
+  duration_ms: 12.4045
+  type: 'test'
+  ...
+# Subtest: an external link replacing a deleted original name is not mistaken for valid reduced link count
+ok 66 - an external link replacing a deleted original name is not mistaken for valid reduced link count
+  ---
+  duration_ms: 17.6986
+  type: 'test'
+  ...
+# Subtest: the original root can remain empty after all original children were removed
+ok 67 - the original root can remain empty after all original children were removed
+  ---
+  duration_ms: 10.3085
+  type: 'test'
+  ...
+# Subtest: a newly created formerly absent tracked file is not part of the deletion manifest
+ok 68 - a newly created formerly absent tracked file is not part of the deletion manifest
+  ---
+  duration_ms: 12.2253
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed Runtime allocates before real HTTP model calls, commits through MCP and requires retained source before atomic A2A completion
+ok 69 - managed Runtime allocates before real HTTP model calls, commits through MCP and requires retained source before atomic A2A completion
+  ---
+  duration_ms: 14303.2684
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival
+ok 70 - lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival
+  ---
+  duration_ms: 19376.1065
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed final result journal rejects replacing its original commit
+ok 71 - managed final result journal rejects replacing its original commit
+  ---
+  duration_ms: 17885.5949
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a lost candidate publication receipt returns the existing atomic result without new execution
+ok 72 - a lost candidate publication receipt returns the existing atomic result without new execution
+  ---
+  duration_ms: 14834.0185
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an invented final commit cannot enter the result journal or trigger source archival
+ok 73 - an invented final commit cannot enter the result journal or trigger source archival
+  ---
+  duration_ms: 10745.6246
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate publication rolls back with its verification handoff and recovers the original result
+ok 74 - candidate publication rolls back with its verification handoff and recovers the original result
+  ---
+  duration_ms: 17665.8612
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an interrupted preparation with no model step cannot reenter its lifecycle on a second execute call
+ok 75 - an interrupted preparation with no model step cannot reenter its lifecycle on a second execute call
+  ---
+  duration_ms: 8338.6722
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: formal Developer success requires original Runtime candidate and actual Git archive ACK
+ok 76 - formal Developer success requires original Runtime candidate and actual Git archive ACK
+  ---
+  duration_ms: 14099.6271
+  type: 'test'
+  ...
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a Developer candidate declaring unverified checks remains VERIFYING even with an archived commit
+ok 77 - a Developer candidate declaring unverified checks remains VERIFYING even with an archived commit
+  ---
+  duration_ms: 14406.2559
+  type: 'test'
+  ...
+# (node:27664) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27664) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27664) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source retention transfers the original real MCP commit, preserves dirty work and recovers its durable ACK after restart
+ok 78 - source retention transfers the original real MCP commit, preserves dirty work and recovers its durable ACK after restart
+  ---
+  duration_ms: 13107.2607
+  type: 'test'
+  ...
+# (node:27664) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unprepared source archival remains unknown and blocks replacement without importing or creating refs
+ok 79 - unprepared source archival remains unknown and blocks replacement without importing or creating refs
+  ---
+  duration_ms: 8822.3114
+  type: 'test'
+  ...
+# (node:27664) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared retained refs reconcile a lost acknowledgement without replaying object transfer after pause
+ok 80 - prepared retained refs reconcile a lost acknowledgement without replaying object transfer after pause
+  ---
+  duration_ms: 11300.5287
+  type: 'test'
+  ...
+# (node:27664) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source archive independently rejects a foreign parent, out of scope commit, special mode and missing commit object
+ok 81 - source archive independently rejects a foreign parent, out of scope commit, special mode and missing commit object
+  ---
+  duration_ms: 19471.5282
+  type: 'test'
+  ...
+# (node:32532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: repository and allocation journals freeze the admitted owner, base, scope, actual source and physical identity
+ok 82 - repository and allocation journals freeze the admitted owner, base, scope, actual source and physical identity
+  ---
+  duration_ms: 5397.5281
+  type: 'test'
+  ...
+# (node:32532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an uncertain allocation preserves its original identity across pause and restart without admitting new work
+ok 83 - an uncertain allocation preserves its original identity across pause and restart without admitting new work
+  ---
+  duration_ms: 5624.9066
+  type: 'test'
+  ...
+# (node:32532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: allocation intent is allowed from an admitted grant before the A2A Host claims it
+ok 84 - allocation intent is allowed from an admitted grant before the A2A Host claims it
+  ---
+  duration_ms: 4458.1137
+  type: 'test'
+  ...
+# (node:32532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: local allocation recovers a lost READY reply and never overwrites edits or recreates a missing READY directory
+ok 85 - local allocation recovers a lost READY reply and never overwrites edits or recreates a missing READY directory
+  ---
+  duration_ms: 11727.4007
+  type: 'test'
+  ...
+# (node:32532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unowned repository directory is preserved and never adopted as a completed allocation
+ok 86 - an unowned repository directory is preserved and never adopted as a completed allocation
+  ---
+  duration_ms: 1720.3947
+  type: 'test'
+  ...
+1..86
+# tests 103
+# suites 0
+# pass 103
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 614966.371
+$ node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs tests/candidate*.test.mjs

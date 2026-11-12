@@ -23,4 +23,4 @@
 ## 5. Composition, evidence and review
 
 - [x] 5.1 接 Runtime、Scheduler、Runner、内容库与候选来源，用真实本地 SQLite／Git／HTTP 联调失败→修复→复验→候选，记录无模型／OIDC／Linux/runsc 的实际范围。
-- [ ] 5.2 执行固定提交干净 checkout 冻结安装和适用回归，保存原报告／SHA／源码指纹、部署说明及 T10 复核，同步台账与 OpenSpec，不提前替代产品或阶段验收。
+- [x] 5.2 执行固定提交干净 checkout 冻结安装和适用回归，保存原报告／SHA／源码指纹、部署说明及 T10 复核，同步台账与 OpenSpec，不提前替代产品或阶段验收。

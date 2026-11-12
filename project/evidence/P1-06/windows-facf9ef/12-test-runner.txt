@@ -1,0 +1,146 @@
+TAP version 13
+# (node:31204) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: built Runner CLI starts with execution disabled and disposes HTTP/Worker without Docker
+ok 1 - built Runner CLI starts with execution disabled and disposes HTTP/Worker without Docker
+  ---
+  duration_ms: 731.0005
+  type: 'test'
+  ...
+# (node:37600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: SIGKILL of real manager/SQLite Worker recovers original job without execution replay or output cleanup
+ok 2 - SIGKILL of real manager/SQLite Worker recovers original job without execution replay or output cleanup
+  ---
+  duration_ms: 1007.7876
+  type: 'test'
+  ...
+# (node:33204) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33204) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: authenticated Runner reports the original immutable approved argv hash across configuration changes
+ok 3 - authenticated Runner reports the original immutable approved argv hash across configuration changes
+  ---
+  duration_ms: 378.7199
+  type: 'test'
+  ...
+# (node:22260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:22260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:22260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:22260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Runner v1 upgrades transactionally without changing original jobs and rejects a changed v2 migration fingerprint
+ok 4 - Runner v1 upgrades transactionally without changing original jobs and rejects a changed v2 migration fingerprint
+  ---
+  duration_ms: 647.8964
+  type: 'test'
+  ...
+# Retained dedicated upgrade evidence: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-runner-upgrade-zUfbVb
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: job protocol rejects caller shell arguments, mixed owners, invalid images and unsafe outputs
+ok 5 - job protocol rejects caller shell arguments, mixed owners, invalid images and unsafe outputs
+  ---
+  duration_ms: 7.3871
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: workspace policy binds current owner, allowed digest, command and resource scope
+ok 6 - workspace policy binds current owner, allowed digest, command and resource scope
+  ---
+  duration_ms: 300.7884
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent Worker atomically deduplicates operations, scopes queries and rolls back invalid exit
+ok 7 - independent Worker atomically deduplicates operations, scopes queries and rolls back invalid exit
+  ---
+  duration_ms: 274.1428
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: capacity holds unknown jobs, limits one workspace and two jobs per run
+ok 8 - capacity holds unknown jobs, limits one workspace and two jobs per run
+  ---
+  duration_ms: 368.3691
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTP bearer identities, idempotency, cancellation and retained outputs
+ok 9 - real HTTP bearer identities, idempotency, cancellation and retained outputs
+  ---
+  duration_ms: 429.4558
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost start response queries original container and never starts it twice
+ok 10 - lost start response queries original container and never starts it twice
+  ---
+  duration_ms: 318.6207
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lease watchdog stops without controller requests; an unknown stop retains capacity
+ok 11 - lease watchdog stops without controller requests; an unknown stop retains capacity
+  ---
+  duration_ms: 5369.7859
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: renewals preserve owner, enforce sequence and current authority, and stop cannot be undone
+ok 12 - renewals preserve owner, enforce sequence and current authority, and stop cannot be undone
+  ---
+  duration_ms: 313.9836
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: configured roots are separate, unknown data is not adopted and terminal facts cannot regress
+ok 13 - configured roots are separate, unknown data is not adopted and terminal facts cannot regress
+  ---
+  duration_ms: 278.2908
+  type: 'test'
+  ...
+# (node:20220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: restart reads original job records without replaying create/start
+ok 14 - restart reads original job records without replaying create/start
+  ---
+  duration_ms: 335.0276
+  type: 'test'
+  ...
+# Subtest: Docker provider stays disabled without quota/runtime and exposes only bounded arguments
+ok 15 - Docker provider stays disabled without quota/runtime and exposes only bounded arguments
+  ---
+  duration_ms: 0.6212
+  type: 'test'
+  ...
+# Subtest: Linux Docker adapter validates original labels and maps verified stop facts with a controlled CLI
+ok 16 - Linux Docker adapter validates original labels and maps verified stop facts with a controlled CLI # SKIP
+  ---
+  duration_ms: 0.0442
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 12817.1201
+$ node --test --test-concurrency=1 --test-reporter=tap tests/runner*.test.mjs
