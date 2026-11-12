@@ -1,0 +1,102 @@
+{
+  "scope": "Read-only input fingerprint comparison; no tests rerun. Final entry and browser inputs are checked individually. Early failures remain failures. Reconstruction uses each report baseCommit plus its byte-exact source-delta.",
+  "comparisons": [
+    {
+      "run": "entry-1",
+      "baseCommit": "bbc4350e70087b1218e4af4d700b105e0ce3820d",
+      "sourceFiles": 431,
+      "scope": "Actual local platform entry and exact frozen material access; real HTTP/HTTPS and control/Runner/business SQLite. Browser suite separately exercises actual built React assets. Explicit trusted identity and upstream/container facts; no OIDC, OCI or clean-checkout acceptance. Source is reconstructible from baseCommit plus the retained source-delta, with every input SHA recorded.",
+      "tests": {
+        "tests": 42,
+        "pass": 38,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "unchangedDuringRun": true,
+      "differentFromFinal": [
+        "packages/contracts/openapi.json",
+        "packages/contracts/src/errors.ts",
+        "packages/input-api/src/preview.ts",
+        "tests/contracts.test.mjs",
+        "tests/fixtures/preview-entry.mjs",
+        "tests/fixtures/preview-http.mjs",
+        "tests/input-preview.test.mjs"
+      ],
+      "finalInputsAbsent": []
+    },
+    {
+      "run": "entry-2",
+      "baseCommit": "bbc4350e70087b1218e4af4d700b105e0ce3820d",
+      "sourceFiles": 431,
+      "scope": "Actual local platform entry and exact frozen material access; real HTTP/HTTPS and control/Runner/business SQLite. Browser suite separately exercises actual built React assets. Explicit trusted identity and upstream/container facts; no OIDC, OCI or clean-checkout acceptance. Source is reconstructible from baseCommit plus the retained source-delta, with every input SHA recorded.",
+      "tests": {
+        "tests": 23,
+        "pass": 21,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "unchangedDuringRun": true,
+      "differentFromFinal": [
+        "tests/fixtures/preview-entry.mjs"
+      ],
+      "finalInputsAbsent": []
+    },
+    {
+      "run": "entry-3",
+      "baseCommit": "bbc4350e70087b1218e4af4d700b105e0ce3820d",
+      "sourceFiles": 431,
+      "scope": "Actual local platform entry and exact frozen material access; real HTTP/HTTPS and control/Runner/business SQLite. Browser suite separately exercises actual built React assets. Explicit trusted identity and upstream/container facts; no OIDC, OCI or clean-checkout acceptance. Source is reconstructible from baseCommit plus the retained source-delta, with every input SHA recorded.",
+      "tests": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "unchangedDuringRun": true,
+      "differentFromFinal": [
+        "tests/fixtures/preview-entry.mjs"
+      ],
+      "finalInputsAbsent": []
+    },
+    {
+      "run": "entry-4",
+      "baseCommit": "bbc4350e70087b1218e4af4d700b105e0ce3820d",
+      "sourceFiles": 431,
+      "scope": "Actual local platform entry and exact frozen material access; real HTTP/HTTPS and control/Runner/business SQLite. Browser suite separately exercises actual built React assets. Explicit trusted identity and upstream/container facts; no OIDC, OCI or clean-checkout acceptance. Source is reconstructible from baseCommit plus the retained source-delta, with every input SHA recorded.",
+      "tests": {
+        "tests": 23,
+        "pass": 23,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "unchangedDuringRun": true,
+      "differentFromFinal": [],
+      "finalInputsAbsent": []
+    },
+    {
+      "run": "entry-5",
+      "baseCommit": "bbc4350e70087b1218e4af4d700b105e0ce3820d",
+      "sourceFiles": 431,
+      "scope": "Actual local platform entry and exact frozen material access; real HTTP/HTTPS and control/Runner/business SQLite. Browser suite separately exercises actual built React assets. Explicit trusted identity and upstream/container facts; no OIDC, OCI or clean-checkout acceptance. Source is reconstructible from baseCommit plus the retained source-delta, with every input SHA recorded.",
+      "tests": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "unchangedDuringRun": true,
+      "differentFromFinal": [],
+      "finalInputsAbsent": []
+    }
+  ]
+}

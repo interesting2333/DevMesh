@@ -1,0 +1,18 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "args": [
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tests/contracts.test.mjs",
+    "tests/input-preview.test.mjs"
+  ],
+  "baseCommit": "bbc4350e70087b1218e4af4d700b105e0ce3820d",
+  "startedAt": "2026-11-12T17:24:03.647Z",
+  "pid": 22468,
+  "parentPid": 40564,
+  "environment": {
+    "TEMP": "D:\\devmesh-session-validation-362cd158-26c7-4f8c-9913-de63b84eaf22",
+    "TMP": "D:\\devmesh-session-validation-362cd158-26c7-4f8c-9913-de63b84eaf22"
+  }
+}

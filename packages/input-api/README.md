@@ -14,4 +14,12 @@
 
 workspace 在单个读事务中冻结元数据、材料引用与 eventCursor，随后读取不可变正文，再复核当前成员权限；事件可从该 cursor 补取，默认 50、最多 200 条。历史 Run 只读，项目列表按更新时间和 ID 分页。现有项目新任务必须从当前人工接受 release 的固定代码提交开始，且项目没有其他活动 Run。
 
+显式 `previewGateway` 组合增加以下预览入口，`startPlatform(config, {identityResolver, previewGateway})` 透传同一可信对象；其 HTTPS listener、DNS／证书及原 Runner transport 由宿主拥有，平台停止不据此宣称外部预览已停止。网关平台 origin 必须准确匹配实际 socket 协议／固定 loopback Host／端口；本模块不信任转发协议头，也不默认开启网关或身份。
+
+- `GET /runs/:runId/previews/:previewId` 返回当前成员可见的状态与受限访问投影，排除实例、Runner 端点和宿主路径；未配置、恢复中、到期等分别显示。
+- `GET .../view` 是只读预览页，使用 nonce CSP 与受限 iframe；点击才通过 `POST .../access` 的空 JSON、准确平台 Origin 和已解析身份签票据。页面兑换 Cookie 后查询原会话，确认跨站凭据实际保留才加载 iframe；不把 ticket 放进 URL 或持久浏览器存储。实际 Cookie 登录仍未配置，当前页面不创造匿名身份；测试按平台 origin 单独注入明确的本地身份夹具。
+- `GET /runs/:runId/candidates/:candidateId/materials/:materialKey/download` 只解析原冻结 delivery 材料，经内容库授权、实际 hash／大小与发送前当前成员复核后流式下载。统一 attachment／octet-stream／nosniff／sandbox，禁止任意 hash／宿主路径；Range 当前返回 416，打包与续权由独立导出工作包继续。
+
+查询／打开预览／下载没有接受命令、替代执行或重建材料的路径。共享 HTTPS／企业身份、实际容器和 T5 验收与这些本地入口验证分开记录。公共 DTO 及 OpenAPI 与入口一同维护。
+
 企业身份、真实模型、完整工作台、WebSocket 和真实 Runner 均不由本模块的离线测试宣称验收。运行 `pnpm test:input` 查看实际 HTTP、真实 Worker、迁移和进程 SIGKILL 恢复检查；原始结果随父工作包保存。

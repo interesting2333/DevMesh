@@ -199,3 +199,18 @@ The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增
 #### Scenario: A new candidate cannot hide an unresolved rejection
 - **WHEN** Run 中仍有 OPEN 退回时冻结新候选，或负责人明确撤回原历史候选的退回
 - **THEN** 新候选继续展示待处理项并阻止接受准备；有理由撤回追加保留历史，只解除该项，不批准质量或人工检查
+
+### Requirement: Authenticated platform preview entry and read-only material download
+系统 SHALL 从已配置的可信平台身份解析访问主体，准确展示不可用状态，签票据要求准确平台 Origin 与空 JSON。查询、页面导航与下载 MUST NOT 接受候选或启动替代执行。
+
+#### Scenario: Preview entry has no configured identity or gateway
+- **WHEN** 身份解析未配置或准确网关未配置
+- **THEN** 鉴权或访问保持关闭，当前成员只看到适用的不可用状态，不创建票据、实例或 Release
+
+#### Scenario: Browser opens the exact preview
+- **WHEN** 已鉴权成员明确打开可用预览
+- **THEN** 浏览器在准确预览 origin 兑换一次性票据，经限定平台 CORS 确认 HttpOnly 会话，只在受限 iframe 加载该 origin；票据不进 URL，平台凭据不转发
+
+#### Scenario: A frozen material is downloaded
+- **WHEN** 当前成员按准确冻结候选的材料键下载
+- **THEN** 服务端解析原交付引用，核实内容 hash／大小，发送前复核成员，以不能作为平台 HTML 执行的 attachment 返回，接受指针与 Run 终态不变

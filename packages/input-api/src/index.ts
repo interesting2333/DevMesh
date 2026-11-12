@@ -8,12 +8,17 @@ import { canonical, StorageError } from '@devmesh/storage-sqlite';
 import type { OperationResult } from '@devmesh/storage-sqlite';
 import type { LocalContentStore } from '@devmesh/blob-store';
 import { receiveUpload } from './upload.js';
+import {mountPreviewRoutes} from './preview.js';
+import type {PreviewAccessGateway} from './preview.js';
+import type {TLSSocket} from 'node:tls';
+export type {PreviewAccessGateway} from './preview.js';
 
 export interface Identity { principalId:string }
 export type IdentityResolver=(request:Request,context:{signal:AbortSignal})=>Identity|null|Promise<Identity|null>;
 export interface TemplateBaseline { readonly version:string;readonly baseCommit:string }
 export type InputApiOptions={enabled?:false}|{
   enabled:true; identityResolver?:IdentityResolver|undefined; baseline:TemplateBaseline;
+  previewGateway?:PreviewAccessGateway|undefined;
   maximumUploads?:number;diagnostic?:(detail:{requestId:string;error:unknown})=>void;
 };
 const runFile=promisify(execFile);
@@ -44,7 +49,8 @@ function publicBoundary(request:Request){
   }
   const host=request.socket.localAddress==='::1'?`[::1]:${request.socket.localPort}`:`127.0.0.1:${request.socket.localPort}`;
   if(request.headers.host!==host)fail('REQUEST_HOST_INVALID',403,'Unexpected request host');
-  if(request.headers.origin!==undefined&&request.headers.origin!==`http://${host}`)fail('REQUEST_ORIGIN_INVALID',403,'Unexpected request origin');
+  const protocol=(request.socket as TLSSocket).encrypted?'https':'http';
+  if(request.headers.origin!==undefined&&request.headers.origin!==`${protocol}://${host}`)fail('REQUEST_ORIGIN_INVALID',403,'Unexpected request origin');
   if(request.headers['sec-fetch-site']==='cross-site')fail('REQUEST_ORIGIN_INVALID',403,'Cross site input is not allowed');
   // Enterprise cookie sessions require a future trusted resolver with explicit
   // CSRF validation. This version never issues or accepts cookies by itself.
@@ -197,6 +203,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const after=request.query.afterSeq===undefined?'0':scalar(request.query.afterSeq,'afterSeq');if(!/^\d+$/.test(after)||!Number.isSafeInteger(Number(after)))fail('SCHEMA_INVALID',422,'Invalid event cursor');
     response.json(await content.storage.request('listInputEvents',{principalId:identity.principalId,projectId:parseContract(ids.project,request.params.projectId),runId:parseContract(ids.run,request.params.runId),afterSeq:Number(after),limit:positive(request.query.limit,50,200)}));
   }));
+  mountPreviewRoutes(router,content,options.previewGateway,route);
   router.use((error:unknown,request:Request,response:Response,_next:NextFunction)=>{
     const framework=error as {type?:string;status?:number};
     const schemaFailure=error instanceof ContractError||Boolean(error&&typeof error==='object'&&'issues' in error);

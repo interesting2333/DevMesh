@@ -50,6 +50,11 @@ export class PreviewGateway {
   }
   get policy() {return {schemaVersion: 'devmesh.preview-access-policy.v1' as const, gatewayId: this.config.gatewayId, gatewayPrincipalId: this.config.principalId, configurationHash: this.configurationHash};}
   #enabled() {if (this.#closed || !this.config.enabled || !this.transport.configured) fail('PREVIEW_ACCESS_NOT_CONFIGURED', 503);}
+  async accessForMember(subject: {principalId: string; runId: string; previewId: string}) {
+    this.#enabled();
+    const binding = await this.storage.request('resolvePreviewAccess', {...this.#gateway, subjectPrincipalId: subject.principalId, runId: subject.runId, previewId: subject.previewId});
+    return {previewOrigin: originForPreview(this.config, subject.previewId), canWrite: binding.canWrite && binding.gate.state === 'OPEN', expiresAt: binding.target.expiresAt};
+  }
   /** Call only after the platform's configured identity resolver and CSRF boundary. */
   async issueForMember(subject: {principalId: string; runId: string; previewId: string}) {
     this.#enabled();
@@ -111,6 +116,11 @@ export class PreviewGateway {
       const preview = this.#origin(req), path = req.url ?? '', method = req.method ?? '';
       if (path === sessionPath) {
         this.#cors(req, res);
+        if (method === 'GET') {
+          const current = await this.#authenticate(preview, this.#credential(req));
+          if (abort.signal.aborted) fail('PREVIEW_REQUEST_ABORTED', 408);
+          json(res, 200, {expiresAt: current.session.expiresAt}); return;
+        }
         if (method === 'OPTIONS') {
           if (req.headers['access-control-request-method'] !== 'POST' || (req.headers['access-control-request-headers'] ?? '').toString().toLowerCase() !== 'content-type') fail('PREVIEW_PREFLIGHT_INVALID', 403);
           res.writeHead(204, {'access-control-allow-methods': 'POST', 'access-control-allow-headers': 'content-type'}); res.end(); return;

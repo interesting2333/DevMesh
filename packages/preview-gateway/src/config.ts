@@ -21,9 +21,10 @@ export const previewGatewayConfig = z.strictObject({
   const platform = new URL(c.platformOrigin), preview = new URL(c.previewBaseOrigin);
   const p = parse(platform.hostname, {allowPrivateDomains: true});
   const v = parse(preview.hostname, {allowPrivateDomains: true});
+  const localPlatform = c.mode === 'loopback-development' && ['127.0.0.1', '[::1]'].includes(platform.hostname);
   if (preview.protocol !== 'https:' || c.mode === 'shared' && platform.protocol !== 'https:')
     ctx.addIssue({code: 'custom', message: 'Preview uses HTTPS; shared platform also requires HTTPS'});
-  if (isIP(preview.hostname) || !p.domain || !v.domain || p.domain === v.domain || preview.hostname === v.domain)
+  if (isIP(preview.hostname) || !p.domain && !localPlatform || !v.domain || p.domain === v.domain || preview.hostname === v.domain)
     ctx.addIssue({code: 'custom', message: 'Use a preview subdomain below a separate registrable domain'});
   if (c.mode === 'shared' && (!(p.isIcann || p.isPrivate) || !(v.isIcann || v.isPrivate)))
     ctx.addIssue({code: 'custom', message: 'Shared origins require public/private suffix recognition'});

@@ -136,6 +136,14 @@ HTTP 业务请求须绑定实际转发的方法、原路径、正文和筛选后
 
 以上为 3.1／3.2 的目标装配与验证协议，具体已实现范围仍以 tasks.md 和实际证据为准；不将新授权表、受控容器事实或本地 HTTPS／浏览器测试代替 Linux／企业身份、物理数据排空或 T5 验收。
 
+### 16. Platform preview entry uses authenticated reads and an explicit access action
+
+3.2 复用平台 Input API 的可信身份解析和 loopback 请求边界，通过显式组合的 gateway 提供准确 Run／preview 查询、只读预览页及 POST 访问票据。未配置身份不开放入口；未配置网关、健康失效、到期和停止状态分别显示，不泄露 Runner 端点、实例或宿主路径。POST 票据要求准确平台 Origin 和空 JSON，主体只能来自解析后的身份；GET 页面与状态不签票据、不启动实例、不接受候选。`startPlatform` 只显式传入组合对象，不从客户端字段登记 service principal。
+
+现有本地平台使用固定 loopback IP／端口；开发模式允许它作为平台 origin，预览仍为独立 HTTPS DNS host 且仅 loopback 连接。共享模式继续要求平台 HTTPS 与不同可注册域，不能把开发例外带入共享部署。浏览器从平台先签票据，再在准确预览 origin 兑换 HttpOnly Cookie，并通过仅允许原平台 Origin 的会话查询确认浏览器实际保留凭据，最后设置受限 iframe；原票据不进 URL 或父页面持久存储。
+
+下载从准确冻结候选的 delivery materialKey 解析原操作／hash／字节数，经内容存储权限、实际内容校验及发送前成员复核后，以 attachment／octet-stream／nosniff／sandbox 输出。调用者不能传内容 hash 或宿主路径；历史候选可只读查看，下载不修改接受指针、Run 终态或质量。下载失败只影响该次读取，不重新生成或接受。此入口不实现导出打包任务或企业登录提供者；各自按已有工作包继续。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

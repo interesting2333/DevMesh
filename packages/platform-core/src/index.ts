@@ -6,7 +6,7 @@ import type { ServerConfig } from './config.js';
 import type { LocalStorage, LocalContentStore, SessionStore } from '@devmesh/blob-store';
 import type { mountInternalAgents, CredentialResolver } from '@devmesh/a2a-adapter';
 import type { PreparationConsumer, RuntimeConsumer, RuntimeTool,RuntimeWorkspaceLifecycle } from '@devmesh/agent-runtime';
-import type { IdentityResolver, mountInputApi } from '@devmesh/input-api';
+import type { IdentityResolver, mountInputApi,PreviewAccessGateway } from '@devmesh/input-api';
 import type { WorkflowScheduler, WorkflowSchedulerOptions } from './scheduler.js';
 import type {WorkflowMcpOptions,WorkflowMcpServices} from '@devmesh/mcp-tools';
 
@@ -29,10 +29,11 @@ export interface FoundationServer {
   mcp?:WorkflowMcpServices|undefined;
 }
 
-export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
+export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;previewGateway?:PreviewAccessGateway;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
   if(config.runtime&&(!config.storage||!config.a2a))throw new Error('Runtime requires durable storage and hosted A2A endpoints');
   if(config.inputApi&&!config.storage)throw new Error('Input API requires durable storage');
+  if(options.previewGateway&&!config.inputApi)throw new Error('Preview entry requires the explicitly configured Input API');
   if(options.mcp&&!config.storage)throw new Error('MCP services require durable storage');
   if(options.workspaceLifecycle&&!config.runtime)throw new Error('Managed workspaces require an explicitly configured Runtime');
   if(options.scheduler&&(!config.runtime||!config.a2a?.identities.some(identity=>identity.principalId===options.scheduler?.callerId)))
@@ -81,7 +82,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   let mcp:WorkflowMcpServices|undefined;
   try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
   catch(error){await storageFiber?.dispose();throw error;}
-  try{if(inputModule&&inputBaseline&&services)inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver});}
+  try{if(inputModule&&inputBaseline&&services)inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,previewGateway:options.previewGateway});}
   catch(error){await agents?.stop();await storageFiber?.dispose();throw error;}
   app.use((_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
   const server = createServer({ headersTimeout: 5000, requestTimeout: config.inputApi?35000:10000 }, app);

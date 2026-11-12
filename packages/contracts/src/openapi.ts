@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle } from './primitives.js';
+import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle,opaqueKey } from './primitives.js';
+import {previewAccessInput,previewAccessTicket,previewEntryView} from './preview.js';
 import { command, commandBodies, operationReceipt, idempotencyKey } from './commands.js';
 import { domainEvent, ephemeralTokenDelta } from './events.js';
 import { executionPermit, executionOwner } from './permits.js';
@@ -23,6 +24,7 @@ export const schemas = {
   Understanding:understandingView,UnderstandingOutput:understandingOutput,RetryUnderstanding:retryUnderstandingInput,
   PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
   PlanReview:planReviewView,
+  PreviewAccessInput:previewAccessInput,PreviewAccessTicket:previewAccessTicket,PreviewEntryView:previewEntryView,
   ...commandBodies,
 };
 
@@ -98,6 +100,17 @@ export function createOpenApiDocument() {
   add('/api/v1/runs/{runId}/understanding','get','ReadUnderstanding','Understanding',[parameter('runId',ids.run),parameter('requirementRevision',revision,'query',false)]);
   add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
   add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
+  const previewPath='/api/v1/runs/{runId}/previews/{previewId}',previewParameters=[parameter('runId',ids.run),parameter('previewId',ids.preview)];
+  add(previewPath,'get','ReadPreviewEntry','PreviewEntryView',previewParameters);
+  add(previewPath+'/access','post','IssuePreviewAccess','PreviewAccessTicket',[...previewParameters,parameter('Origin',z.url(),'header')],'PreviewAccessInput','200');
+  add(previewPath+'/view','get','ReadPreviewPage',undefined,previewParameters);
+  const previewPage=paths[previewPath+'/view']!.get as {responses:Record<string,unknown>};
+  previewPage.responses['200']={description:'当前成员只读预览页；受限 iframe，GET 不签票据、不接受版本',content:{'text/html':{schema:{type:'string'}}}};
+  const downloadPath='/api/v1/runs/{runId}/candidates/{candidateId}/materials/{materialKey}/download';
+  add(downloadPath,'get','DownloadFrozenMaterial',undefined,[parameter('runId',ids.run),parameter('candidateId',ids.candidate),parameter('materialKey',opaqueKey)]);
+  const download=paths[downloadPath]!.get as {responses:Record<string,unknown>};
+  download.responses['200']={description:'原冻结材料的 inert attachment；权限和实际内容复核；不接受或重新生成',headers:{'Content-Disposition':{schema:{type:'string'},description:'attachment'},'X-Content-Type-Options':{schema:{type:'string',const:'nosniff'}}},content:{'application/octet-stream':{schema:{type:'string',format:'binary'}}}};
+  download.responses['416']={description:'此材料入口不支持 Range；原下载授权及内容保持不变',content:content('ErrorEnvelope')};
   for(const path of ['/api/v1/projects','/api/v1/runs/{runId}/messages','/api/v1/runs/{runId}/questions:answer']){
     const post=paths[path]!.post as Record<string,unknown>;post['x-implementation-status']='implemented-offline';post.security=[{trustedIdentity:[]}];post.description='已实现持久输入与当前成员授权；默认无身份接入点时拒绝请求。保存成功不表示真实模型处理完成。';
   }

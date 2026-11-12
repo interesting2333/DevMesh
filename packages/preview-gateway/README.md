@@ -2,13 +2,18 @@
 
 This package provides `PreviewGateway` for explicit trusted composition. It is
 disabled by default and is not automatically mounted by `startPlatform`. A trusted
-platform identity resolver/issuance route, remote Runner RPC adapter, deployment
-DNS/TLS and operational composition remain separate work. The user has authorized
+platform identity resolver, remote Runner RPC adapter, deployment DNS/TLS and
+operational composition remain separate work. Input API preview routes accept an
+explicit `previewGateway` through `startPlatform` options; they do not create its
+HTTPS listener or issue credentials without a configured identity. The user has authorized
 local development without OIDC or real Linux/container resources.
 
 `gatewayConfiguration` validates canonical origins, HTTPS and separate registrable
 sites using pinned `tldts` with private suffix support. The base preview origin must
 have a subdomain; `originForPreview` derives one independent host per preview ID.
+Local development may use an exact loopback IP as the platform origin; the preview
+still requires a separate HTTPS DNS host and loopback peer. Shared mode keeps its
+HTTPS and separate registrable domain requirements, without that local exception.
 The configuration hash covers all parsed options, including limits. Register
 `gateway.policy` as the project's current owner and separately enroll the original
 dataset backend's write gate. No HTTP endpoint can register those service rights.
@@ -21,6 +26,10 @@ ticket, preview origin, ticket expiry and `sessionExpiresAt`. The browser sends
 The gateway requires the exact configured platform Origin and allows only its
 credentialed CORS exchange. Session expiry remains bounded in the storage domain;
 the supplied expiry cannot extend a ticket, session or preview lifetime.
+`GET` on the same session path, with the exact platform Origin and credentials,
+revalidates the current HttpOnly session and returns only its expiry. The platform
+page uses this to confirm the browser retained its cross-site Cookie before
+loading the iframe. It does not dispatch an application request or mint a ticket.
 
 The session Cookie is `__Host-devmesh-preview`, Path=/, Secure, HttpOnly and
 SameSite=None, with no Domain. Business writes require the exact preview Origin and

@@ -15,7 +15,7 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "5f48775ac30ef5319864a8287f263567056ec6ef7862a48b726b81a9026d33f2"
+      "sha256": "03321ed0e4649ddedf9ff32a44a894b40685ce3c50b605bcb4f873d190210f85"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
@@ -23,7 +23,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "36771012e80954ddf87b05d84e7a5aafe8439bb015789ff051718787d89b9271"
+      "sha256": "b7420aa3ca11eaf74ff2a6f91882364b996321b321b57e2cd74fe3bb136f0877"
     }
   ],
   "gates": [
@@ -1165,7 +1165,16 @@
         "tests/storage-preview-sessions.test.mjs",
         "tests/browser/preview-isolation.test.mjs",
         "templates/web-crud-v1/src/web/api.ts",
-        "templates/web-crud-v1/tests/api.test.ts"
+        "templates/web-crud-v1/tests/api.test.ts",
+        "packages/contracts/src/preview.ts",
+        "packages/contracts/src/openapi.ts",
+        "packages/contracts/src/errors.ts",
+        "packages/input-api/src/preview.ts",
+        "packages/input-api/src/index.ts",
+        "packages/platform-core/src/index.ts",
+        "tests/fixtures/preview-entry.mjs",
+        "tests/input-preview.test.mjs",
+        "tests/browser/preview-entry.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1255,7 +1264,10 @@
         "project/evidence/P1-07/development/preview-http/source-comparisons.json",
         "project/evidence/P1-07/development/preview-http/retention.json",
         "project/evidence/P1-07/development/preview-http/post-retention/report.json",
-        "project/evidence/P1-07/development/preview-http/checkpoint-binding.json"
+        "project/evidence/P1-07/development/preview-http/checkpoint-binding.json",
+        "project/evidence/P1-07/preview-entry-development-review.md",
+        "project/evidence/P1-07/development/preview-entry/retention.json",
+        "project/evidence/P1-07/development/preview-entry/source-comparisons.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1285,7 +1297,9 @@
         "2026-11-12：私有预览访问／写门增量源码固定在 9bef56249b642403e690aa3c23da95026d29b03a，access-v42 全部 414 个输入与该提交 Git 对象字节一致。只读绑定不是再次测试、干净 checkout、实际网关／浏览器／数据排空／T5 或产品／阶段验收；完整 3.1、2.3 和正式 P1-07 仍等待。",
         "2026-11-13：预览 HTTP／会话设计细化：技术专题 D4／完整主文、实施文档、D06／D08 与 OpenSpec 同步一次性 ticket／短期 session、摘要存储与原消费事务、独立可注册域及私有 PSL、HTTPS／host-only Cookie／CORS／iframe、最终请求头正文绑定、原 Runner 本地转发与实际未发送／未知边界。业务写键按主体／预览／配置隔离，模板保留已记录原键；注销不排空未知写。基线按实际字节更新，具体执行证据另记；真实身份入口／生产装配／物理 fencing／T5 继续实施，不把本地开发当成正式 P1-07 或阶段验收。",
         "2026-11-13：完成OpenSpec 3.1本地独立预览HTTPS／会话及可信Runner传输，变更6/13。迁移35摘要ticket／session、单次消费及原目标成员复核；真实头正文绑定、原HTTP唯一派发、未发送／UNKNOWN／完整响应边界。实际HTTP／会话／访问／迁移组合40/40、存储全量33/33、Edge隔离1/1；模板客户端6/6及类型检查验证原写key与认证失效恢复保护。所有失败原报告／源码单列保留；HTTP与存储最终源码只后变两份模板客户端文件，已独立验证，浏览器源差异明确比对，不称同指纹整套重跑或干净checkout。控制／Runner／业务SQLite与HTTPS为真实，候选／镜像／容器身份为显式夹具。可信平台身份入口／页面／下载继续3.2，实际容器／物理排空／T5和正式P1-07／门槛仍待，不归档。",
-        "2026-11-13：独立HTTPS预览／会话本地实现固定在 2b1cb5419f98b7f3cae7f2c5a347ef27ff241d41；426 个当前输入及 910 份保留材料与 Git 对象逐字节一致。HTTP／存储原运行与客户端恢复补丁的两文件差异已单列、独立验证；绑定不等同同指纹整套重跑、干净checkout、实际容器、企业身份、T5或正式验收。"
+        "2026-11-13：独立HTTPS预览／会话本地实现固定在 2b1cb5419f98b7f3cae7f2c5a347ef27ff241d41；426 个当前输入及 910 份保留材料与 Git 对象逐字节一致。HTTP／存储原运行与客户端恢复补丁的两文件差异已单列、独立验证；绑定不等同同指纹整套重跑、干净checkout、实际容器、企业身份、T5或正式验收。",
+        "2026-11-13：3.2 平台预览入口设计影响评估：D3／D4 与完整主文、实施文档及 OpenSpec 同步准确成员查询／用途 ticket 签发、限制 iframe、实际 Cookie 留存探测和冻结材料 attachment 下载。仅 loopback-development 允许平台为实际 loopback IP origin，预览继续 HTTPS／独立 host；共享部署仍要求不同可注册域。下载只按原冻结 materialKey 与内容引用读取并复核成员，不执行或接受；缺可信身份／网关／写门明确关闭。PRD 与 D06／D08 的隔离、下载不等于接受要求不变，实际验证结果另记；基线更新不代表工作包或门槛完成。",
+        "2026-11-13：完成 OpenSpec 3.2 本地平台预览查询／nonce CSP 页面／用途票据及实际 Cookie 留存探测、冻结材料只读下载，变更7/13。最终契约与入口23/23、实际Edge／真实React表单／业务SQLite写入1/1，接受指针与Run终态不变；缺身份／网关／写门关闭，越权404，Range416，发送前撤权阻止下载。五次真实执行含三次失败全部保留，最终入口与浏览器输入一致；最初42项中的旧输入／网关20项成功单列，不冒充最终同指纹全量回归。两次构建、类型／Lint／OpenAPI均通过，六依赖包129项源码map绑定一致。源Git／镜像／容器身份和身份解析仍为明确夹具，无企业身份／实际容器／物理排空／T5或干净checkout验收；正式P1-07／门槛继续等待，4.1起继续。"
       ]
     },
     {

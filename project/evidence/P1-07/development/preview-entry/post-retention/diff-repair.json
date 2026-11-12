@@ -1,0 +1,14 @@
+{
+  "scope": "Only removed the extra trailing blank line in the OpenSpec delta. Previous diff failure retained. Lint, project, strict OpenSpec and design checks already passed; no product code changed.",
+  "executable": "git",
+  "args": [
+    "diff",
+    "--check"
+  ],
+  "startedAt": "2026-11-12T17:30:31.757Z",
+  "finishedAt": "2026-11-12T17:30:35.646Z",
+  "exitCode": 0,
+  "signal": null,
+  "output": "",
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "scope": "Actual current contracts and entry builds, template web build, typecheck, lint and generated OpenAPI consistency; not an integration test or clean checkout.",
+  "checks": [
+    {
+      "name": "contracts-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "run",
+        "build"
+      ],
+      "cwd": ".",
+      "startedAt": "2026-11-12T17:01:30.001Z",
+      "finishedAt": "2026-11-12T17:02:50.185Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-build.txt",
+      "sha256": "f1f83dcadc92f5d9e10ac0e4275bb278437ae69f0b21420522eb6288f6fbce5b"
+    },
+    {
+      "name": "contracts-generate",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs"
+      ],
+      "cwd": ".",
+      "startedAt": "2026-11-12T17:02:50.198Z",
+      "finishedAt": "2026-11-12T17:02:57.228Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-generate.txt",
+      "sha256": "cb6a787855f1a36b6b04259f69dab3b5ba4236d25efaa4e9a6401c806d3d16e5"
+    },
+    {
+      "name": "entry-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "--filter",
+        "@devmesh/platform-core",
+        "-r",
+        "run",
+        "build"
+      ],
+      "cwd": ".",
+      "startedAt": "2026-11-12T17:02:57.233Z",
+      "finishedAt": "2026-11-12T17:05:02.573Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "entry-build.txt",
+      "sha256": "730335e9340ffa18cf1e80219509d136f7f88b26a6ed39543e0f69d10361afd2"
+    },
+    {
+      "name": "template-web-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/vite/bin/vite.js",
+        "build"
+      ],
+      "cwd": "templates/web-crud-v1",
+      "startedAt": "2026-11-12T17:05:02.580Z",
+      "finishedAt": "2026-11-12T17:05:30.800Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "template-web-build.txt",
+      "sha256": "9fac8d264316316b503f7e9bb3d3531842d46cb6cdb7b0775433429754f3eeb7"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": ".",
+      "startedAt": "2026-11-12T17:05:30.806Z",
+      "finishedAt": "2026-11-12T17:08:04.553Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "cwd": ".",
+      "startedAt": "2026-11-12T17:08:04.559Z",
+      "finishedAt": "2026-11-12T17:08:19.643Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "contracts-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs",
+        "--check"
+      ],
+      "cwd": ".",
+      "startedAt": "2026-11-12T17:08:19.648Z",
+      "finishedAt": "2026-11-12T17:08:26.055Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-check.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    }
+  ]
+}

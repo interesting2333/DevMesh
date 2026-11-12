@@ -15,9 +15,11 @@
 ## 3. Separate preview access
 
 - [x] 3.1 实现独立 origin、固定目标、短期用途凭据与成员复核，使用真实本地 HTTP 验证 Cookie／用途／项目隔离、目标限制、读写门和到期。
-- [ ] 3.2 接平台预览查询／访问入口、隔离 iframe 策略及下载只读边界，验证未配置关闭、状态明确、访问或下载不接受。
+- [x] 3.2 接平台预览查询／访问入口、隔离 iframe 策略及下载只读边界，验证未配置关闭、状态明确、访问或下载不接受。
 
 3.1 本地实现与验证：迁移 34 的私有策略、原 dataset 写门与唯一派发保留；迁移 35 增加摘要存储、事务单次消费的 ticket／短期 session、当前成员与原目标复核。独立可注册域／私有 PSL、每预览 HTTPS host、host-only HttpOnly Cookie／准确 CORS／业务 Origin 与实际请求头正文绑定已实现；可信 Runner 本地传输核验原 journal／reservation／lifecycle／实例及实际 HTTP 健康，最后授权后仅发送一次，明确 NOT_SENT／UNKNOWN／完整 FINISHED 边界。真实 HTTPS／控制和 Runner SQLite Worker／模板业务 SQLite 组合 40/40，存储全量 33/33，实际 Edge Cookie／iframe 隔离 1/1；模板另验证原写 key 与认证失效恢复保护。失败执行、源码指纹及范围见 `project/evidence/P1-07/preview-http-development-review.md`。本项勾选只对应已写明的本地实现／真实 HTTP 验证；上游候选／镜像／容器事实为显式夹具，可信平台身份查询／签发入口、页面与下载边界继续 3.2，真实容器／物理排空／T5 与产品验收不据此通过。
+
+3.2 本地实现与验证：可信 IdentityResolver 与显式 previewGateway 组合增加准确成员查询、nonce CSP 页面、空 JSON／准确 Origin 签发和实际跨站 Cookie 留存探测；缺身份、网关或原写门明确关闭。隔离 iframe 加载实际 Vite／React 模板并通过原 Runner HTTP 转发写入业务 SQLite，平台身份不转发到预览。冻结 delivery materialKey 下载使用原内容引用、实际 hash／大小及发送前成员复核，固定 inert attachment，越权统一 404，Range 明确 416；查询／打开／下载均不接受。最终入口及契约 23/23、实际 Edge 1/1，失败运行、构建／源码绑定与身份／容器边界见 `project/evidence/P1-07/preview-entry-development-review.md`。变更 7/13；企业 Cookie 登录／共享身份、实际容器、物理排空／T5 和正式 P1-07／门槛继续等待，不归档。
 
 ## 4. Two-phase acceptance and publication
 

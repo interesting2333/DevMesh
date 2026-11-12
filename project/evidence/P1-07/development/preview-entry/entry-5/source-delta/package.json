@@ -1,0 +1,66 @@
+{
+  "name": "@devmesh/root",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@11.28.5",
+  "engines": {
+    "node": ">=24.9.0 <25"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @devmesh/server dev",
+    "start": "node apps/server/dist/main.mjs",
+    "build": "pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/result-verifier --filter @devmesh/code-workspaces --filter @devmesh/a2a-adapter --filter @devmesh/agent-runtime --filter @devmesh/runner --filter @devmesh/mcp-tools --filter @devmesh/input-api --filter @devmesh/preview-gateway --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build",
+    "build:vendor": "node scripts/build-vendor.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint --deny-warnings --ignore-pattern=project/evidence/**/failed-source/** --ignore-pattern=project/evidence/**/validation-driver.mjs apps packages scripts project tests",
+    "test:smoke": "node --test --test-reporter=tap tests/foundation.test.mjs",
+    "test:contracts": "node --test --test-reporter=tap tests/contracts.test.mjs",
+    "test:storage": "node --test --test-reporter=tap tests/storage*.test.mjs",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "contracts:generate": "node scripts/contracts.mjs",
+    "contracts:check": "node scripts/contracts.mjs --check",
+    "verify:foundation": "node scripts/verify-foundation.mjs",
+    "toolchain:check": "node scripts/toolchain.mjs",
+    "vendor:verify": "node scripts/vendor.mjs",
+    "project:status": "node project/manage.mjs status",
+    "project:check": "node project/manage.mjs check",
+    "spec": "node project/openspec.mjs",
+    "check": "pnpm toolchain:check && pnpm vendor:verify && pnpm build && pnpm typecheck && pnpm lint && pnpm test:smoke && pnpm test:contracts && pnpm test:storage && pnpm test:content && pnpm test:a2a && pnpm test:runtime && pnpm test:runner && pnpm test:mcp && pnpm test:workspaces && pnpm test:input && pnpm test:preparation && pnpm test:scheduler && pnpm test:verification && pnpm contracts:check && pnpm project:check",
+    "test:content": "node --test --test-reporter=tap tests/content*.test.mjs",
+    "storage:init": "node scripts/storage.mjs init",
+    "storage:verify": "node scripts/storage.mjs verify",
+    "test:a2a": "node --test --test-reporter=tap tests/a2a*.test.mjs",
+    "test:runtime": "node --test --test-concurrency=1 --test-reporter=tap tests/runtime*.test.mjs",
+    "test:runner": "node --test --test-concurrency=1 --test-reporter=tap tests/runner*.test.mjs",
+    "runner:start": "node packages/runner/dist/main.mjs",
+    "test:mcp": "node --test --test-concurrency=1 --test-reporter=tap tests/mcp*.test.mjs",
+    "template:verify": "node scripts/verify-template.mjs",
+    "test:input": "node --test --test-concurrency=1 --test-reporter=tap tests/input*.test.mjs",
+    "test:preparation": "node --test --test-concurrency=1 --test-reporter=tap tests/preparation*.test.mjs",
+    "test:scheduler": "node --test --test-concurrency=1 --test-reporter=tap tests/scheduler*.test.mjs",
+    "test:workspaces": "node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs tests/candidate*.test.mjs",
+    "test:verification": "node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs tests/verified-findings.test.mjs tests/verified-repairs.test.mjs tests/preview-image.test.mjs tests/quality-artifact-refs.test.mjs",
+    "test:preview-browser": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/preview*.test.mjs"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "workspace:*",
+    "@deepseek-ai/cosmokit": "workspace:*",
+    "@deepseek-ai/cordis-plugin-include": "workspace:*",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6",
+    "@types/node": "24.13.1",
+    "oxlint": "1.81.0",
+    "pnpm": "11.28.5",
+    "tsdown": "0.22.2",
+    "tsx": "4.23.13",
+    "typescript": "6.0.3"
+  },
+  "optionalDependencies": {
+    "node-addon-require-builtin": "0.1.9"
+  }
+}

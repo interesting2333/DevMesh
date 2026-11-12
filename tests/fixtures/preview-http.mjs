@@ -27,7 +27,7 @@ async function tls(root) {
   certificate = {key: await readFile(key), cert: await readFile(cert)};
   return certificate;
 }
-export async function previewHttpFixture(t, {gatewayOptions = {}, transportWrap, storageWrap} = {}) {
+export async function previewHttpFixture(t, {gatewayOptions = {}, transportWrap, storageWrap, webRoot, enrollGate = true} = {}) {
   const data = await datasetFixture(t), received = [];
   let application, gateway, revokedResponse, releaseResponse;
   const waitForResponse = new Promise(resolve => {revokedResponse = resolve;});
@@ -53,7 +53,7 @@ export async function previewHttpFixture(t, {gatewayOptions = {}, transportWrap,
   const resolver = createRequire(new URL('../../packages/input-api/package.json', import.meta.url));
   await symlink(dirname(resolver.resolve('express/package.json')), join(compat, 'node_modules', 'express'), process.platform === 'win32' ? 'junction' : 'dir');
   await writeFile(join(compat, 'server', 'app.js'), stripTypeScriptTypes(await readFile(new URL('../../templates/web-crud-v1/src/server/app.ts', import.meta.url), 'utf8'), {mode: 'transform'}));
-  application = (await import(pathToFileURL(join(compat, 'server', 'app.js')).href)).application(appStore);
+  application = (await import(pathToFileURL(join(compat, 'server', 'app.js')).href)).application(appStore, webRoot);
   const store = data.layout.store, options = {enabled: true, runnerId: data.options.runnerId, controllerId: 'controller.preview.http.fixture', backendRef: effect.request.backendRef, repository: 'registry.example/devmesh-preview', capacity: {maximumJobs: 4, cpu: 4, memoryMiB: 1024}, resourceLimits: {cpu: 1, memoryMiB: 128, pids: 32, temporaryMiB: 32}};
   const driver = new ControlledContainerDriver(port), backend = new RunnerPreviewBackend(store, data.paths, data.backend, driver, options);
   let reservation = await store.request('previewReserve', {controllerId: options.controllerId, request: effect.request, requestHash: effect.requestHash, resourceLimits: options.resourceLimits, capacity: options.capacity});
@@ -81,7 +81,7 @@ export async function previewHttpFixture(t, {gatewayOptions = {}, transportWrap,
   gateway = new PreviewGateway(storageWrap ? storageWrap(storage) : storage, transportWrap ? transportWrap(transport) : transport, {enabled: true, mode: 'loopback-development', gatewayId: 'preview.gateway.https.fixture', principalId: 'preview.gateway.https.service', platformOrigin: 'https://control.devmesh.test', previewBaseOrigin: `https://apps.devmesh-app.test:${https.address().port}`, ...gatewayOptions});
   data.cleanup.push(() => gateway.close());
   await f.call('registerPreviewAccessPolicy', {principalId: 'user_1', projectId: f.p.projectId, policy: gateway.policy});
-  await f.enroll(); await f.runtime(f.p);
+  if(enrollGate)await f.enroll(); await f.runtime(f.p);
   const request = (origin, path, {method = 'GET', headers = {}, body, rawHeaders} = {}) => new Promise((resolve, reject) => {
     const url = new URL(origin), bytes = typeof body === 'string' ? Buffer.from(body) : body;
     const req = httpsRequest({hostname: url.hostname, port: url.port, path, method, ca: credentials.cert, agent: false, lookup: (_host, opts, cb) => opts.all ? cb(null, [{address: '127.0.0.1', family: 4}]) : cb(null, '127.0.0.1', 4), headers: rawHeaders ?? {...headers, ...(bytes ? {'content-length': bytes.length} : {})}}, res => {

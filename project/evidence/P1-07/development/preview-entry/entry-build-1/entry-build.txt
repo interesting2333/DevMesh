@@ -1,0 +1,61 @@
+Scope: 3 of 19 workspace projects
+packages/preview-gateway build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/input-api build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/preview-gateway build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/input-api build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/preview-gateway build: ℹ config file: D:\yms\AI\DevMesh\packages\preview-gateway\package.json 
+packages/preview-gateway build: ℹ entry: src/index.ts
+packages/preview-gateway build: ℹ target: node24
+packages/preview-gateway build: ℹ tsconfig: ..\..\tsconfig.json
+packages/preview-gateway build: ℹ Build start
+packages/input-api build: ℹ config file: D:\yms\AI\DevMesh\packages\input-api\package.json 
+packages/preview-gateway build: ℹ Cleaning 4 files
+packages/input-api build: ℹ entry: src/index.ts
+packages/input-api build: ℹ target: node24
+packages/input-api build: ℹ tsconfig: ..\..\tsconfig.json
+packages/input-api build: ℹ Build start
+packages/input-api build: ℹ Cleaning 4 files
+packages/input-api build: ℹ dist\index.mjs      35.85 kB │ gzip: 10.15 kB
+packages/input-api build: ℹ dist\index.mjs.map  59.23 kB │ gzip: 16.73 kB
+packages/input-api build: ℹ dist\index.d.mts     1.80 kB │ gzip:  0.74 kB
+packages/input-api build: ℹ 3 files, total: 96.89 kB
+packages/input-api build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/input-api build:   - rolldown-plugin-dts:generate (59%)
+packages/input-api build:   - tsdown:deps (40%)
+packages/input-api build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/input-api build: ✔ Build complete in 44781ms
+packages/input-api build: Done
+packages/platform-core build$ tsdown src/index.ts src/config.ts src/scheduler.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/platform-core build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/platform-core build: ℹ config file: D:\yms\AI\DevMesh\packages\platform-core\package.json 
+packages/platform-core build: ℹ entry: src/index.ts, src/config.ts, src/scheduler.ts
+packages/platform-core build: ℹ target: node24
+packages/platform-core build: ℹ tsconfig: ..\..\tsconfig.json
+packages/platform-core build: ℹ Build start
+packages/platform-core build: ℹ Cleaning 10 files
+packages/preview-gateway build: ℹ dist\index.mjs      17.75 kB │ gzip: 5.63 kB
+packages/preview-gateway build: ℹ dist\index.mjs.map  31.41 kB │ gzip: 9.33 kB
+packages/preview-gateway build: ℹ dist\index.d.mts     2.90 kB │ gzip: 0.96 kB
+packages/preview-gateway build: ℹ 3 files, total: 52.06 kB
+packages/preview-gateway build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/preview-gateway build:   - tsdown:deps (59%)
+packages/preview-gateway build:   - rolldown-plugin-dts:generate (40%)
+packages/preview-gateway build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/preview-gateway build: ✔ Build complete in 56880ms
+packages/preview-gateway build: Done
+packages/platform-core build: ℹ dist\index.mjs          20.71 kB │ gzip: 5.42 kB
+packages/platform-core build: ℹ dist\scheduler.mjs       4.05 kB │ gzip: 1.36 kB
+packages/platform-core build: ℹ dist\config.mjs          4.01 kB │ gzip: 1.56 kB
+packages/platform-core build: ℹ dist\index.mjs.map      35.51 kB │ gzip: 9.60 kB
+packages/platform-core build: ℹ dist\config.mjs.map      7.33 kB │ gzip: 2.65 kB
+packages/platform-core build: ℹ dist\scheduler.mjs.map   7.26 kB │ gzip: 2.59 kB
+packages/platform-core build: ℹ dist\index.d.mts         4.08 kB │ gzip: 1.23 kB
+packages/platform-core build: ℹ dist\scheduler.d.mts     1.68 kB │ gzip: 0.73 kB
+packages/platform-core build: ℹ dist\config.d.mts        0.90 kB │ gzip: 0.45 kB
+packages/platform-core build: ℹ 9 files, total: 85.53 kB
+packages/platform-core build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/platform-core build:   - rolldown-plugin-dts:generate (53%)
+packages/platform-core build:   - tsdown:deps (46%)
+packages/platform-core build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/platform-core build: ✔ Build complete in 48938ms
+packages/platform-core build: Done
