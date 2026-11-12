@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task 3.1 development: original quality findings, atomic Work completion, immutable issue history and trusted owner fix/reverification commands. Explicit seeded source/admission/Runtime evidence; no claim of a complete forward repair, production model or Linux Runner.",
+  "sourceCommit": "46d846d0212e420baffb5a169e7d041c2122cbf5",
+  "dirty": true,
+  "sourceFingerprint": "5c09dd666ae2ca91e2fa431b653f62f7fe62d19896697641515f385bfec95230",
+  "unchanged": true,
+  "startedAt": "2026-11-12T05:26:41.991Z",
+  "finishedAt": "2026-11-12T05:34:58.391Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 191862,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 22961,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 261594,
+      "output": "current-build.txt",
+      "sha256": "620bb94b5c02a33292053246aae25dbe7e286abe532127db55fbc436845b917c"
+    },
+    {
+      "name": "verified-findings",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7607,
+      "output": "verified-findings.txt",
+      "sha256": "32ff3d3a62bdffd509767360d3f60eafcacac40836892e3537bf85db46799f24"
+    },
+    {
+      "name": "work-verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7185,
+      "output": "work-verification.txt",
+      "sha256": "783bce8a4fa354893a692c00cb4005fae75f29c360d4e1ed9bcda70c436d34ae"
+    },
+    {
+      "name": "quality-journal",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4397,
+      "output": "quality-journal.txt",
+      "sha256": "a5c2314553edc5aa45e4502a90be23fd22f7cbcb58bef1528acd58edbf927b8a"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/findings-v6/current-build.txt",
+      "sha256": "620bb94b5c02a33292053246aae25dbe7e286abe532127db55fbc436845b917c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v6/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v6/quality-journal.txt",
+      "sha256": "a5c2314553edc5aa45e4502a90be23fd22f7cbcb58bef1528acd58edbf927b8a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v6/report.json",
+      "sha256": "a2f295c135926d7ed144af82b922c87d69c3736506747bfcf84b744c696a9729"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v6/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v6/verified-findings.txt",
+      "sha256": "32ff3d3a62bdffd509767360d3f60eafcacac40836892e3537bf85db46799f24"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v6/work-verification.txt",
+      "sha256": "783bce8a4fa354893a692c00cb4005fae75f29c360d4e1ed9bcda70c436d34ae"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no exact clean checkpoint or stage/product acceptance.",
+    "Original admission/Git/Runner/Runtime candidate records are explicit test DB fixtures. Migrated SQLite, independent raw report evaluator, filesystem content ACK, Work completion and issue transactions are actual implementations.",
+    "No production model, generated container execution, OIDC, Linux/runsc, or completed end-to-end forward repair claimed."
+  ]
+}

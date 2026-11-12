@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "5f40cdd00ac05bb46f7bf65c960ae062ef303183",
+  "reportSourceCommit": "b9c9811266e5547b152a8ebda6f09d0a1ab7218a",
+  "reportSourceFingerprint": "fbac0c09c9a3424749bc2f3cfd437a9fb9fe516bc31a259ff517f51492dd3f44",
+  "files": 294,
+  "mismatches": [
+    {
+      "path": "packages/result-verifier/README.md",
+      "expected": "682bb0aea5e90a1e3c69afc68824e8c9b64fd86b1888dc0d417672e289abbfe7",
+      "actual": "04177252a6dfa9e067a80df4e37285b817c47514bbdc9aff8cbbb8a9f807ee21"
+    }
+  ],
+  "matched": false,
+  "scope": "Read-only Git object byte comparison, not another test execution or clean-checkout acceptance.",
+  "applicationMatched": true,
+  "documentationNote": "The package README was updated after the successful run to describe the verified handoff. Full 294-file comparison retains this one mismatch; all application code, tests and configuration match commit 5f40cdd. No clean-checkout acceptance claimed."
+}
