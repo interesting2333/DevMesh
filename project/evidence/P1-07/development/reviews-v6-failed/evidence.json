@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "2937c34e2096b142314f52f45d1a48dac8461403",
+  "dirty": true,
+  "sourceFingerprint": "fa8664f578e0df9b22be332d16324b54d7b4c6ef690a13f31634dc01bfe5a76c",
+  "startedAt": "2026-11-12T08:16:46.307Z",
+  "finishedAt": "2026-11-12T08:16:53.393Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 2,
+      "signal": null,
+      "durationMs": 7029,
+      "output": "typecheck.txt",
+      "sha256": "c3ad1cba90cc37d0c6e0e09f91e228e1af4597ea9b6b1c900f9ba71ede7b5500"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/reviews-v6-failed/failed-source/packages/storage-sqlite/src/candidate-review-domain.ts",
+      "sha256": "572b26180c42eb0d897771af630d77a5fe79d4625e86b5d5fa5c806a93e1c34f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v6-failed/report.json",
+      "sha256": "d2d83023597d9cdffe5d2a461677ef832c57ca64c28344d64c46825ed10d31ca"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v6-failed/typecheck.txt",
+      "sha256": "c3ad1cba90cc37d0c6e0e09f91e228e1af4597ea9b6b1c900f9ba71ede7b5500"
+    }
+  ],
+  "scope": "P1-07 tasks1.1–1.3 development: exact candidate review projection and append-only human observations/rejections/corrections/withdrawals, owner permissions, current result CAS, original key recovery, stale history, Run-wide unresolved rejection blockers and transactional rollback. Rejections remain NOT_APPLIED and never dispatch implementation. Actual SQLite/HTTP material collection; original source/admission/Runtime publication are explicit release-freeze fixtures. No actual human/product acceptance, preview, dataset preparation, model or container.",
+  "limitations": [
+    "Same Codex agent implementation and review; explicit source/admission/Runtime fixtures, no real model, OIDC, container, preview health, dataset or product/stage acceptance.",
+    "Review flags describe readiness to request a later acceptance preparation only; review writes do not accept, complete pending Work or rewrite original automatic facts."
+  ],
+  "failure": "Typecheck rejected a plain database string where the current-candidate projection requires a branded Candidate ID. Parse the persisted ID with the shared contract before rechecking latest candidate size."
+}

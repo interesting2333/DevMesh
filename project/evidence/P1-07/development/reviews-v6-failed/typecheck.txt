@@ -1,0 +1,4 @@
+packages/storage-sqlite/src/candidate-review-domain.ts(79,201): error TS2322: Type 'string' is not assignable to type 'string & $brand<"candidate">'.
+  Type 'string' is not assignable to type '$brand<"candidate">'.
+[ELIFECYCLE] Command failed with exit code 2.
+$ tsc --noEmit -p tsconfig.json

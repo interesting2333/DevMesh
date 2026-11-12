@@ -9,3 +9,7 @@
 此阶段仍是后台审查准备，没有人工审查页面、实际预览、dataset 准备、T5 接受或发布消费者。正式 P1-07／阶段门槛状态不改变；D03 的待处理事实与分类历史可验证，完整产品退回→修复／新增范围→接受流程须后续组合与产品验收。
 
 reviews-v5 在当前源码指纹不变期间通过全部适用开发检查：类型、lint、当前 contracts／storage 构建、审查／退回 13/13、冻结 14/14、存储 28/28（包括各旧版本备份升级到迁移 31）、契约 18/18 与 OpenAPI。原日志／哈希见 [reviews-v5/evidence.json](./development/reviews-v5/evidence.json)。新增 5 项退回测试覆盖分类纠正与未应用状态、整个 Run 的旧候选阻塞、有理由撤回且新检查仍待审、owner／CAS／原键恢复、事务切点、内容外键和跨 Run 拒绝；没有把受控夹具当作真实人工或产品验收。
+
+后续复核补齐一个容量边界：在历史候选上撤回退回会改变整个 Run 的展示，事务还须核对最新候选的完整投影容量，不能只检查历史候选。使用相同 1 MiB 上限，超限整笔回滚。首次补充的类型检查拒绝了未解析的 DB 字符串 Candidate ID（reviews-v6-failed）；现通过共享 ID 契约解析，原错误日志与源码保留。该补充不修改原候选、质量、数据库迁移或自动事实。
+
+最终补充版本 reviews-v7 通过类型、lint、当前 contracts／storage 构建、审查／退回 13/13，源码指纹不变。与 v5 全部输入逐字节比较仅 candidate-review-domain.ts 变化；冻结、存储、契约和 OpenAPI 原通过记录按 [reused-validation.json](./development/reviews-v7/reused-validation.json) 复用，未声称重新执行全套或干净 checkout。v5 检查点固定在 `2937c34e2096b142314f52f45d1a48dac8461403`，v7 的准确源码另行绑定。

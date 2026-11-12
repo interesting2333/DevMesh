@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "originalReport": "project/evidence/P1-07/development/reviews-v5/report.json",
+  "currentReport": "project/evidence/P1-07/development/reviews-v7/report.json",
+  "changedSourceFiles": [
+    "packages/storage-sqlite/src/candidate-review-domain.ts"
+  ],
+  "reusedChecks": [
+    {
+      "name": "freeze",
+      "exitCode": 0,
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "output": "project/evidence/P1-07/development/reviews-v5/freeze.txt",
+      "sha256": "2295b6e02a657829997a8409c60449a1d37e7174b17e2c951cf5530f394a4da9"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "output": "project/evidence/P1-07/development/reviews-v5/storage.txt",
+      "sha256": "5e6e5edcca5bf6204ff9ee8a8b97cc63049419adae43397be5166d5b924a1c02"
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "output": "project/evidence/P1-07/development/reviews-v5/contracts.txt",
+      "sha256": "ee2a9f5e1c440306d2a78903691bafe8bbd9374c70be7506c691d7df5c65c361"
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "output": "project/evidence/P1-07/development/reviews-v5/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "reason": "Only candidate-review-domain changed: import the shared candidate ID parser and, on an original rejection mutation, also bound the latest candidate projection before commit. That path is exercised by the current 13/13 review/rejection tests. Frozen candidate/quality/delivery paths, migration 31 and all schema history, contracts, generated OpenAPI, those test files and their fixtures are unchanged. Original logs are reused for those unaffected checks; no new full foundation or clean checkout execution claimed."
+}

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "2937c34e2096b142314f52f45d1a48dac8461403",
+  "dirty": true,
+  "sourceFingerprint": "39ad2fcf05252d50269c8bbd8f8b50795931f0d3b70ca249f7bd9a62918fc84d",
+  "startedAt": "2026-11-12T08:17:45.989Z",
+  "finishedAt": "2026-11-12T08:18:45.397Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 10950,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 957,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 11866,
+      "output": "current-build.txt",
+      "sha256": "30d660e0d3ee08153de46facfa898bd53f5892b994ac7101865ab9602384ecde"
+    },
+    {
+      "name": "review",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 35556,
+      "output": "review.txt",
+      "sha256": "2cddfd70784aff34f1d15cda1a3dbbd8c59b1d5681b581c89eb8ba34f54ae935",
+      "tests": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/reviews-v7/current-build.txt",
+      "sha256": "30d660e0d3ee08153de46facfa898bd53f5892b994ac7101865ab9602384ecde"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v7/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v7/report.json",
+      "sha256": "d9e4f0edf97a9fe96ad88ecc2a5a30b097a388e2b2025f4329d27d86f394700a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v7/review.txt",
+      "sha256": "2cddfd70784aff34f1d15cda1a3dbbd8c59b1d5681b581c89eb8ba34f54ae935"
+    },
+    {
+      "path": "project/evidence/P1-07/development/reviews-v7/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 tasks1.1–1.3 development: exact candidate review projection and append-only human observations/rejections/corrections/withdrawals, owner permissions, current result CAS, original key recovery, stale history, Run-wide unresolved rejection blockers and transactional rollback. Rejections remain NOT_APPLIED and never dispatch implementation. Actual SQLite/HTTP material collection; original source/admission/Runtime publication are explicit release-freeze fixtures. No actual human/product acceptance, preview, dataset preparation, model or container.",
+  "limitations": [
+    "Same Codex agent implementation and review; explicit source/admission/Runtime fixtures, no real model, OIDC, container, preview health, dataset or product/stage acceptance.",
+    "Review flags describe readiness to request a later acceptance preparation only; review writes do not accept, complete pending Work or rewrite original automatic facts."
+  ]
+}

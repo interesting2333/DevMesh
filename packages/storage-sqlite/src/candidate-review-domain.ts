@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
-import {assertResourceVersion,parseContract,productOutput,planDraft,qualityPolicy} from '@devmesh/contracts';
+import {assertResourceVersion,parseContract,productOutput,planDraft,qualityPolicy,ids} from '@devmesh/contracts';
 import type {Meta,OperationResult} from './protocol.js';
 import type {createReleaseFreezeDomain} from './release-freeze-domain.js';
 import type {createPlanDomain} from './plan-domain.js';
@@ -75,7 +75,9 @@ export function createCandidateReviewDomain(db:DatabaseSync,plans:ReturnType<typ
     exec('INSERT INTO candidate_rejection_results VALUES(?,?,?,?,?,?,?,?,?,?,?)',resultId,operationId,run.project_id!,i.runId,i.candidateId,i.rejectionId,i.previousResultId,i.classification,i.state,canonical(record),createdAt);
     for(const ref of i.evidence)exec('INSERT INTO candidate_rejection_evidence VALUES(?,?,?)',resultId,ref.artifactId,ref.sha256);
     exec('INSERT INTO candidate_rejection_current VALUES(?,?,?) ON CONFLICT(rejection_id) DO UPDATE SET result_id=excluded.result_id',i.rejectionId,i.candidateId,resultId);
-    view({principalId,runId:i.runId,candidateId:i.candidateId});hooks.rejected(i.runId,operationId,i.candidateId,i.rejectionId,resultId,i.state);return {resultId};
+    view({principalId,runId:i.runId,candidateId:i.candidateId});
+    const latest=get('SELECT candidate_id FROM candidate_freezes WHERE run_id=? ORDER BY revision DESC LIMIT 1',i.runId);if(latest&&latest.candidate_id!==i.candidateId)view({principalId,runId:i.runId,candidateId:ids.candidate.parse(latest.candidate_id)});
+    hooks.rejected(i.runId,operationId,i.candidateId,i.rejectionId,resultId,i.state);return {resultId};
    },()=>{authorized(meta.principalId,i.runId,true);});return rejection(String(op.result!.resultId));
   },
   recordCandidateReview(i:CandidateReviewInput<'recordCandidateReview'>){

@@ -1,0 +1,118 @@
+TAP version 13
+# (node:24528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:24528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: open rejection blocks acceptance preparation, preserves scope correction history and never applies implementation
+ok 1 - open rejection blocks acceptance preparation, preserves scope correction history and never applies implementation
+  ---
+  duration_ms: 4174.0094
+  type: 'test'
+  ...
+# (node:24528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new candidate retains Run rejection blockers; explicit withdrawal of historical rejection cannot approve any check
+ok 2 - new candidate retains Run rejection blockers; explicit withdrawal of historical rejection cannot approve any check
+  ---
+  duration_ms: 2981.9395
+  type: 'test'
+  ...
+# (node:24528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: owner permission, operation replay and current record CAS protect rejection corrections
+ok 3 - owner permission, operation replay and current record CAS protect rejection corrections
+  ---
+  duration_ms: 2646.9298
+  type: 'test'
+  ...
+# (node:24528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: rejection identity, immutable evidence, operation and event are atomic under rollback and lost ACK
+ok 4 - rejection identity, immutable evidence, operation and event are atomic under rollback and lost ACK
+  ---
+  duration_ms: 2220.1873
+  type: 'test'
+  ...
+# (node:24528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: scope assertions require exact original item and same Run evidence; unsupported state cannot become applied
+ok 5 - scope assertions require exact original item and same Run evidence; unsupported state cannot become applied
+  ---
+  duration_ms: 2576.718
+  type: 'test'
+  ...
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: review projects every requirement acceptance and stable human checks without accepting or rewriting quality
+ok 6 - review projects every requirement acceptance and stable human checks without accepting or rewriting quality
+  ---
+  duration_ms: 3038.1056
+  type: 'test'
+  ...
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed observations append corrections and original acknowledgement recovers exactly with paginated history
+ok 7 - failed observations append corrections and original acknowledgement recovers exactly with paginated history
+  ---
+  duration_ms: 2382.975
+  type: 'test'
+  ...
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: standard version and item CAS reject concurrent overwrites, altered original keys and unknown checks
+ok 8 - standard version and item CAS reject concurrent overwrites, altered original keys and unknown checks
+  ---
+  duration_ms: 2347.0336
+  type: 'test'
+  ...
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new candidate requires fresh review while stale history and original replay retain the old observations
+ok 9 - new candidate requires fresh review while stale history and original replay retain the old observations
+  ---
+  duration_ms: 2457.1744
+  type: 'test'
+  ...
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: owner writes, members read, cross-project and revoked original replay cannot expose protected review
+ok 10 - owner writes, members read, cross-project and revoked original replay cannot expose protected review
+  ---
+  duration_ms: 2274.4985
+  type: 'test'
+  ...
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy READY rows without a formal freeze never obtain review or implicit approval
+ok 11 - legacy READY rows without a formal freeze never obtain review or implicit approval
+  ---
+  duration_ms: 1963.2734
+  type: 'test'
+  ...
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: review evidence is exact same Run content and immutable links pin original bytes against GC
+ok 12 - review evidence is exact same Run content and immutable links pin original bytes against GC
+  ---
+  duration_ms: 2268.2867
+  type: 'test'
+  ...
+# (node:40944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: result, evidence, current pointer, operation and event roll back together then original key is safe
+ok 13 - result, evidence, current pointer, operation and event roll back together then original key is safe
+  ---
+  duration_ms: 2152.4142
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 35441.1291
