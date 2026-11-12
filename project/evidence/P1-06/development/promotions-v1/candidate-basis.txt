@@ -1,0 +1,54 @@
+TAP version 13
+# (node:35588) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate qualification freezes both latest verified sources and the exact target dependency closure
+ok 1 - candidate qualification freezes both latest verified sources and the exact target dependency closure
+  ---
+  duration_ms: 195.5788
+  type: 'test'
+  ...
+# Subtest: candidate qualification rejects unarchived, superseded, blocked and old Work generations
+ok 2 - candidate qualification rejects unarchived, superseded, blocked and old Work generations
+  ---
+  duration_ms: 107.6665
+  type: 'test'
+  ...
+# Subtest: candidate qualification rechecks current membership and current Run epoch after a pause
+ok 3 - candidate qualification rechecks current membership and current Run epoch after a pause
+  ---
+  duration_ms: 155.6251
+  type: 'test'
+  ...
+# Subtest: candidate qualification never substitutes unrelated code and validates strict target requests
+ok 4 - candidate qualification never substitutes unrelated code and validates strict target requests
+  ---
+  duration_ms: 88.3913
+  type: 'test'
+  ...
+# Subtest: acknowledged code containing an unrelated predecessor cannot qualify for the current graph
+ok 5 - acknowledged code containing an unrelated predecessor cannot qualify for the current graph
+  ---
+  duration_ms: 103.1143
+  type: 'test'
+  ...
+# Subtest: nonempty interface inputs require an approved current interface source authority
+ok 6 - nonempty interface inputs require an approved current interface source authority
+  ---
+  duration_ms: 74.7449
+  type: 'test'
+  ...
+# Subtest: missing current evidence cannot qualify an otherwise acknowledged source
+ok 7 - missing current evidence cannot qualify an otherwise acknowledged source
+  ---
+  duration_ms: 112.0467
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1231.4899

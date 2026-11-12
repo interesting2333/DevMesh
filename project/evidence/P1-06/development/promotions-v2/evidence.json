@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task4 prerequisite development: exact original Work-input commit promotion with immutable original merge identity and a separate Run candidate CAS. Actual local Git/A2A admission/SQLite; source Work completion is explicit historical fixture data. No quality reports, delivery build, production model, Linux or release freeze claimed.",
+  "sourceCommit": "11851b3aec4ba71ea4775cf9932e23c3338abed1",
+  "dirty": true,
+  "sourceFingerprint": "8d6697c885f30561e7d7e672e2925db377d61ea02d2e421dff70a6ee00ea6a93",
+  "unchanged": true,
+  "startedAt": "2026-11-12T06:16:37.616Z",
+  "finishedAt": "2026-11-12T06:16:41.513Z",
+  "checks": [
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1479,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "candidate-journal",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2297,
+      "output": "candidate-journal.txt",
+      "sha256": "3341505a7ab392cca33ac389b55bf75d3f4ef09431d6287cdf1591aac1da1759"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/promotions-v2/candidate-journal.txt",
+      "sha256": "3341505a7ab392cca33ac389b55bf75d3f4ef09431d6287cdf1591aac1da1759"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v2/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v2/report.json",
+      "sha256": "b4b33b217c7d11b2c0c2b7732f00d5661066d726d36053f1cec839688b207226"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Actual migrated SQLite and real local A2A admission, Git branches, source archives and ref CAS. Source Work completion in Git fixtures is explicitly historical DB data; journal unit proofs are explicit DB fixtures.",
+    "No quality execution/report, delivery image build, release candidate freeze, production model, OIDC or Linux/runsc acceptance claimed."
+  ]
+}

@@ -1,0 +1,84 @@
+TAP version 13
+# (node:33844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate journal owns an exact subject, preserves membership checks and keeps unknown operations exclusive
+ok 1 - candidate journal owns an exact subject, preserves membership checks and keeps unknown operations exclusive
+  ---
+  duration_ms: 195.0159
+  type: 'test'
+  ...
+# Subtest: candidate steps serialize exact parents and final acknowledgement preserves both sources without accepting release
+ok 2 - candidate steps serialize exact parents and final acknowledgement preserves both sources without accepting release
+  ---
+  duration_ms: 150.2562
+  type: 'test'
+  ...
+# Subtest: a paused prepared result cannot send and can be abandoned only before its original ref was sent
+ok 3 - a paused prepared result cannot send and can be abandoned only before its original ref was sent
+  ---
+  duration_ms: 97.2319
+  type: 'test'
+  ...
+# Subtest: a sent step remains unknown across handler reconstruction and pause until original proof arrives
+ok 4 - a sent step remains unknown across handler reconstruction and pause until original proof arrives
+  ---
+  duration_ms: 112.034
+  type: 'test'
+  ...
+# Subtest: the final CAS has one sender, can record original success after pause and requires fresh qualification after resume
+ok 5 - the final CAS has one sender, can record original success after pause and requires fresh qualification after resume
+  ---
+  duration_ms: 143.5129
+  type: 'test'
+  ...
+# Subtest: an exact Work snapshot proves downstream ancestry and never moves the global Run candidate
+ok 6 - an exact Work snapshot proves downstream ancestry and never moves the global Run candidate
+  ---
+  duration_ms: 156.4834
+  type: 'test'
+  ...
+# Subtest: a computed conflict cannot become a candidate or close before durable conflict materials are acknowledged
+ok 7 - a computed conflict cannot become a candidate or close before durable conflict materials are acknowledged
+  ---
+  duration_ms: 105.4855
+  type: 'test'
+  ...
+# Subtest: a known rejected final CAS preserves its exact adapter proof and never adopts an unexpected physical head
+ok 8 - a known rejected final CAS preserves its exact adapter proof and never adopts an unexpected physical head
+  ---
+  duration_ms: 158.0542
+  type: 'test'
+  ...
+# Subtest: promotion reuses exact original manifest and steps without relabeling them as a new merge
+ok 9 - promotion reuses exact original manifest and steps without relabeling them as a new merge
+  ---
+  duration_ms: 213.7982
+  type: 'test'
+  ...
+# Subtest: a smaller dependency closure cannot be promoted as the complete final source set
+ok 10 - a smaller dependency closure cannot be promoted as the complete final source set
+  ---
+  duration_ms: 184.2248
+  type: 'test'
+  ...
+# Subtest: migration 26 preserves old journals and operation request identity
+ok 11 - migration 26 preserves old journals and operation request identity
+  ---
+  duration_ms: 106.2417
+  type: 'test'
+  ...
+# Subtest: migration 16 preserves version 15 data and the original migration history
+ok 12 - migration 16 preserves version 15 data and the original migration history
+  ---
+  duration_ms: 68.522
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2187.7146

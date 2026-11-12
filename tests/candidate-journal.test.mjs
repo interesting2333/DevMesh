@@ -111,6 +111,34 @@ test('a known rejected final CAS preserves its exact adapter proof and never ado
  assert.equal((await begin(f)).expectedHead,null);assert.equal(f.get('SELECT accepted_release_id FROM projects WHERE project_id=?',f.p.projectId).accepted_release_id,null);
 });
 
+test('promotion reuses exact original manifest and steps without relabeling them as a new merge',async t=>{
+ const f=await fixture(t),origin=await begin(f,{purpose:'work-input',workId:f.draft.works[2].workId}),done=await completeFinal(f,origin),request={...f.subject,operationId:operationId(),originOperationId:origin.operationId},r=await f.storage.request('beginCandidateIntegration',request);
+ assert.equal(r.originOperationId,origin.operationId);assert.equal(r.acknowledgedSteps,0);
+ await assert.rejects(f.storage.request('beginCandidateStep',{...original(r),ordinal:0}),{code:'CANDIDATE_PROMOTION_HAS_ORIGINAL_STEPS'});
+ const retained=await f.storage.request('getCandidateIntegrationManifest',query(origin));
+ await assert.rejects(f.storage.request('prepareCandidateIntegration',{...original(r),manifest:manifest(f.base)}),{code:'CANDIDATE_PROMOTION_MANIFEST_CHANGED'});
+ const prepared=await f.storage.request('prepareCandidateIntegration',{...original(r),manifest:retained});await f.storage.request('markCandidateIntegrationSent',original(r));
+ const result=await f.storage.request('acknowledgeCandidateIntegration',{...original(r),acknowledgement:ack(f,prepared)});assert.deepEqual(result.manifest,done.manifest);assert.equal(result.acknowledgedSteps,0);
+ assert.equal(f.get('SELECT count(*) n FROM candidate_integration_steps WHERE operation_id=?',r.operationId).n,0);
+ assert.throws(()=>f.run('UPDATE candidate_integrations SET origin_operation_id=NULL WHERE operation_id=?',r.operationId),/CANDIDATE_PROMOTION_IMMUTABLE/);
+ await assert.rejects(f.storage.request('beginCandidateIntegration',{...request,originOperationId:r.operationId}),{code:'IDEMPOTENCY_KEY_REUSED'});
+ assert.equal(f.get('SELECT accepted_release_id FROM projects WHERE project_id=?',f.p.projectId).accepted_release_id,null);assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(),[]);
+});
+
+test('a smaller dependency closure cannot be promoted as the complete final source set',async t=>{
+ const f=await fixture(t),origin=await begin(f,{purpose:'work-input',workId:f.draft.works[0].workId});assert.equal(origin.sourceCount,0);await completeFinal(f,origin);
+ await assert.rejects(begin(f,{originOperationId:origin.operationId}),{code:'CANDIDATE_PROMOTION_UNPROVEN'});
+ assert.equal(f.get('SELECT count(*) n FROM candidate_integrations').n,1);assert.equal(f.get('SELECT count(*) n FROM managed_candidate_heads').n,0);
+});
+
+test('migration 26 preserves old journals and operation request identity',()=>{
+ const db=new DatabaseSync(':memory:'),migrations=readMigrations(),storeId=randomUUID();db.exec('PRAGMA foreign_keys=ON');try{
+  applyMigrations(db,migrations,storeId,1,25);const old=db.prepare('SELECT version,name,sha256 FROM schema_migrations ORDER BY version').all();assert.equal(applyMigrations(db,migrations,storeId,1,26),26);
+  assert.deepEqual(db.prepare('SELECT version,name,sha256 FROM schema_migrations WHERE version<=25 ORDER BY version').all(),old);
+  assert.equal(db.prepare('PRAGMA table_info(candidate_integrations)').all().find(c=>c.name==='origin_operation_id').notnull,0);assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
+ }finally{db.close();}
+});
+
 test('migration 16 preserves version 15 data and the original migration history',()=>{
  const db=new DatabaseSync(':memory:'),migrations=readMigrations(),storeId=randomUUID();db.exec('PRAGMA foreign_keys=ON');try{
   applyMigrations(db,migrations,storeId,1,15);const contentHash='a'.repeat(64);db.prepare("INSERT INTO content_objects(content_hash,byte_size,storage_key,mime_type,state,created_at) VALUES(?,0,?,'text/plain','READY',?)").run(contentHash,'sha256/aa/'+contentHash,new Date().toISOString());

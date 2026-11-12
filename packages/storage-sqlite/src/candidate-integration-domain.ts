@@ -41,11 +41,23 @@ export function createCandidateIntegrationDomain(db:DatabaseSync,plans:ReturnTyp
   if(r.purpose==='run-candidate')result.push({ref:'refs/devmesh/candidates/'+r.run_id,commit:m.commit,expected:expectedHead(r)?.commit??null});return result;
  }
  function view(r:Row):CandidateIntegration{
-  const m=manifest(r);return {operationId:String(r.operation_id),projectId:String(r.project_id),runId:String(r.run_id),principalId:String(r.principal_id),purpose:r.purpose as CandidateIntegration['purpose'],workId:r.work_id as string|null,requestHash:String(r.request_hash),basisSha256:String(r.basis_sha256),expectedHead:expectedHead(r),sourceCount:frozen(r).sources.length,acknowledgedSteps:Number(get("SELECT count(*) n FROM candidate_integration_steps WHERE operation_id=? AND state='ACKNOWLEDGED'",r.operation_id!)!.n),state:r.state as CandidateIntegration['state'],manifest:m?{commit:m.commit,tree:m.tree,sha256:m.sha256}:null,updates:updates(r),acknowledgement:r.state==='ACKNOWLEDGED'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,conflictAcknowledgement:r.state==='CONFLICT'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,errorCode:r.error_code as string|null,createdAt:String(r.created_at),acknowledgedAt:r.acknowledged_at as string|null,failureProof:r.failure_json?JSON.parse(String(r.failure_json)):null};
+  const m=manifest(r);return {operationId:String(r.operation_id),projectId:String(r.project_id),runId:String(r.run_id),principalId:String(r.principal_id),purpose:r.purpose as CandidateIntegration['purpose'],workId:r.work_id as string|null,originOperationId:r.origin_operation_id as string|null,requestHash:String(r.request_hash),basisSha256:String(r.basis_sha256),expectedHead:expectedHead(r),sourceCount:frozen(r).sources.length,acknowledgedSteps:Number(get("SELECT count(*) n FROM candidate_integration_steps WHERE operation_id=? AND state='ACKNOWLEDGED'",r.operation_id!)!.n),state:r.state as CandidateIntegration['state'],manifest:m?{commit:m.commit,tree:m.tree,sha256:m.sha256}:null,updates:updates(r),acknowledgement:r.state==='ACKNOWLEDGED'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,conflictAcknowledgement:r.state==='CONFLICT'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,errorCode:r.error_code as string|null,createdAt:String(r.created_at),acknowledgedAt:r.acknowledged_at as string|null,failureProof:r.failure_json?JSON.parse(String(r.failure_json)):null};
  }
  const stepView=(r:Row):CandidateIntegrationStep=>({operationId:String(r.operation_id),ordinal:Number(r.ordinal),ours:String(r.ours),theirs:String(r.theirs),state:r.state as CandidateIntegrationStep['state'],preparation:r.preparation_json?JSON.parse(String(r.preparation_json)):null,acknowledgement:r.state==='ACKNOWLEDGED'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,conflictAcknowledgement:r.state==='CONFLICT'&&r.acknowledgement_json?JSON.parse(String(r.acknowledgement_json)):null,createdAt:String(r.created_at),acknowledgedAt:r.acknowledged_at as string|null});
  function stepBound(input:{operationId:string;principalId:string;requestHash:string;ordinal:number}){const r=bound(input),s=originalStep(input.operationId,input.ordinal)??fail('CANDIDATE_STEP_NOT_FOUND',404);return {r,s,step:stepView(s)};}
- function allAcknowledged(r:Row){const count=frozen(r).sources.length;const rows=all('SELECT * FROM candidate_integration_steps WHERE operation_id=? ORDER BY ordinal',r.operation_id!);if(rows.length!==count||rows.some((s,index)=>s.ordinal!==index||s.state!=='ACKNOWLEDGED'))fail('CANDIDATE_STEPS_UNRESOLVED');return rows;}
+ function equivalentSources(a:CandidateBasis,b:CandidateBasis){
+  const scope=(v:CandidateBasis)=>({projectId:v.projectId,runId:v.runId,runEpoch:v.runEpoch,requirementRevision:v.requirementRevision,planRevision:v.planRevision,planHash:v.planHash,planDecisionId:v.planDecisionId,baseCommit:v.baseCommit,repository:v.repository,sources:v.sources,developers:v.works.filter(w=>w.role==='developer')});
+  return same(scope(a),scope(b));
+ }
+ function retainedOrigin(r:Row){
+  const origin=required(String(r.origin_operation_id));
+  if(r.purpose!=='run-candidate'||origin.purpose!=='work-input'||origin.state!=='ACKNOWLEDGED'||origin.origin_operation_id!==null||!manifest(origin)||!origin.acknowledgement_json||!equivalentSources(frozen(r),frozen(origin)))fail('CANDIDATE_PROMOTION_UNPROVEN');
+  return origin;
+ }
+ function allAcknowledged(r:Row):Row[]{
+  if(r.origin_operation_id){if(get('SELECT 1 FROM candidate_integration_steps WHERE operation_id=?',r.operation_id!))fail('CANDIDATE_PROMOTION_UNPROVEN');return allAcknowledged(retainedOrigin(r));}
+  const count=frozen(r).sources.length,rows=all('SELECT * FROM candidate_integration_steps WHERE operation_id=? ORDER BY ordinal',r.operation_id!);if(rows.length!==count||rows.some((s,index)=>s.ordinal!==index||s.state!=='ACKNOWLEDGED'))fail('CANDIDATE_STEPS_UNRESOLVED');return rows;
+ }
  function headUnchanged(r:Row){if(r.purpose==='run-candidate'&&!same(head(String(r.run_id)),expectedHead(r)))fail('CANDIDATE_HEAD_CHANGED');}
  function qualified(input:CandidateSubject){
    const admitted=basis.freeze(input),row=get("SELECT * FROM candidate_integrations WHERE run_id=? AND basis_sha256=? AND state='ACKNOWLEDGED' ORDER BY rowid DESC LIMIT 1",input.runId,admitted.sha256);
@@ -53,13 +65,14 @@ export function createCandidateIntegrationDomain(db:DatabaseSync,plans:ReturnTyp
   }
   const handlers={
   beginCandidateIntegration(i:CandidateIntegrationInput<'beginCandidateIntegration'>){return transaction(db,()=>{
-   const requestHash=digest(canonical({principalId:i.principalId,runId:i.runId,purpose:i.purpose,workId:i.workId??null})),old=get('SELECT * FROM candidate_integrations WHERE operation_id=?',i.operationId);
+   const requestHash=digest(canonical({principalId:i.principalId,runId:i.runId,purpose:i.purpose,workId:i.workId??null,...(i.originOperationId?{originOperationId:i.originOperationId}:{})})),old=get('SELECT * FROM candidate_integrations WHERE operation_id=?',i.operationId);
    if(old){owned(i.operationId,i.principalId);if(old.request_hash!==requestHash)fail('IDEMPOTENCY_KEY_REUSED');return {...view(old),created:false};}
    const admitted=basis.freeze(i);if(Buffer.byteLength(canonical(admitted))>192*1024||admitted.sources.length>30)fail('CANDIDATE_BASIS_TOO_LARGE');
    if(get("SELECT 1 FROM candidate_integrations WHERE project_id=? AND state IN ('BUILDING','PREPARED','CAS_SENT','CONFLICT_PENDING')",admitted.projectId))fail('CANDIDATE_RECONCILIATION_REQUIRED');
    for(const table of ['operations','repo_operations','repo_file_operations','workspace_allocations','source_archives','managed_repositories'])if(get('SELECT 1 FROM '+table+' WHERE operation_id=?',i.operationId))fail('IDEMPOTENCY_KEY_REUSED');
+   if(i.originOperationId){const origin=owned(i.originOperationId,i.principalId);if(origin.purpose!=='work-input'||origin.state!=='ACKNOWLEDGED'||origin.origin_operation_id!==null||!equivalentSources(admitted,frozen(origin)))fail('CANDIDATE_PROMOTION_UNPROVEN');basis.assertCurrent(frozen(origin),i.principalId);allAcknowledged(origin);}
    const oldHead=i.purpose==='run-candidate'?head(i.runId):null;
-   exec("INSERT INTO candidate_integrations(operation_id,project_id,run_id,principal_id,purpose,work_id,request_hash,basis_sha256,basis_json,expected_head_json,state,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,'BUILDING',?)",i.operationId,admitted.projectId,i.runId,i.principalId,i.purpose,i.workId??null,requestHash,admitted.sha256,canonical(admitted),oldHead?canonical(oldHead):null,new Date().toISOString());
+   exec("INSERT INTO candidate_integrations(operation_id,project_id,run_id,principal_id,purpose,work_id,request_hash,basis_sha256,basis_json,expected_head_json,state,created_at,origin_operation_id) VALUES(?,?,?,?,?,?,?,?,?,?,'BUILDING',?,?)",i.operationId,admitted.projectId,i.runId,i.principalId,i.purpose,i.workId??null,requestHash,admitted.sha256,canonical(admitted),oldHead?canonical(oldHead):null,new Date().toISOString(),i.originOperationId??null);
    for(const [ordinal,source] of admitted.sources.entries())exec('INSERT INTO candidate_integration_sources VALUES(?,?,?)',i.operationId,ordinal,source.archiveOperationId);
    return {...view(required(i.operationId)),created:true};
   });},
@@ -68,7 +81,7 @@ export function createCandidateIntegrationDomain(db:DatabaseSync,plans:ReturnTyp
   getCandidateIntegrationManifest(i:CandidateIntegrationInput<'getCandidateIntegrationManifest'>){return manifest(owned(i.operationId,i.principalId));},
   getCandidateIntegrationStep(i:CandidateIntegrationInput<'getCandidateIntegrationStep'>){owned(i.operationId,i.principalId);const s=originalStep(i.operationId,i.ordinal);return s?stepView(s):null;},
   beginCandidateStep(i:CandidateIntegrationInput<'beginCandidateStep'>){return transaction(db,()=>{
-   const r=bound(i),old=originalStep(i.operationId,i.ordinal);if(old)return {...stepView(old),created:false};if(r.state!=='BUILDING')fail('CANDIDATE_INTEGRATION_CLOSED');current(r,i.principalId);
+   const r=bound(i),old=originalStep(i.operationId,i.ordinal);if(r.origin_operation_id)fail('CANDIDATE_PROMOTION_HAS_ORIGINAL_STEPS');if(old)return {...stepView(old),created:false};if(r.state!=='BUILDING')fail('CANDIDATE_INTEGRATION_CLOSED');current(r,i.principalId);
    const original=frozen(r),source=original.sources[i.ordinal];if(!source)fail('CANDIDATE_STEP_ORDER_INVALID');
    const earlier=all('SELECT * FROM candidate_integration_steps WHERE operation_id=? ORDER BY ordinal',i.operationId);
    if(earlier.length!==i.ordinal||earlier.some((s,index)=>s.ordinal!==index||s.state!=='ACKNOWLEDGED'))fail('CANDIDATE_STEP_ORDER_INVALID');
@@ -100,6 +113,7 @@ export function createCandidateIntegrationDomain(db:DatabaseSync,plans:ReturnTyp
   prepareCandidateIntegration(i:CandidateIntegrationInput<'prepareCandidateIntegration'>){return transaction(db,()=>{
    const r=bound(i),old=manifest(r);if(old){if(!same(old,i.manifest))fail('CANDIDATE_MANIFEST_IMMUTABLE');return view(r);}if(r.state!=='BUILDING')fail('CANDIDATE_INTEGRATION_CLOSED');
    const steps=allAcknowledged(r),last=steps.length?stepView(steps.at(-1)!).preparation!:null,commit=last?.commit??frozen(r).baseCommit,m=i.manifest,{sha256,...facts}=m;
+   if(r.origin_operation_id&&!same(manifest(retainedOrigin(r)),m))fail('CANDIDATE_PROMOTION_MANIFEST_CHANGED');
    if(m.commit!==commit||last&&m.tree!==last.tree||sha256!==digest(canonical(facts))||m.byteSize!==m.files.reduce((n,file)=>n+file.byteSize,0)||new Set(m.files.map(file=>file.path.toLowerCase())).size!==m.files.length||Buffer.byteLength(canonical(m))>192*1024)fail('CANDIDATE_MANIFEST_UNPROVEN');
    current(r,i.principalId);headUnchanged(r);exec("UPDATE candidate_integrations SET state='PREPARED',manifest_json=?,error_code=NULL WHERE operation_id=?",canonical(m),i.operationId);return view(required(i.operationId));
   });},

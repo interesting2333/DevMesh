@@ -57,7 +57,17 @@ export class LocalCandidateIntegrations {
   try{return await this.options.storage.request('acknowledgeCandidateIntegration',{...original(record),acknowledgement});}
   catch(error){const old=await this.options.storage.request('getCandidateIntegration',query(record)).catch(()=>null);if(old?.state==='ACKNOWLEDGED'&&canonical(old.acknowledgement)===canonical(acknowledgement))return old;throw error;}
  }
- async integrate(input:Request<'beginCandidateIntegration'>,signal=new AbortController().signal):Promise<CandidateIntegration>{
+  private async retainedInput(record:CandidateIntegration,provider:ControlledGit,signal:AbortSignal){
+   if(!record.originOperationId)deny('CANDIDATE_PROMOTION_UNPROVEN');
+   const input={principalId:record.principalId,operationId:record.originOperationId},origin=await this.options.storage.request('getCandidateIntegration',input),basis=await this.options.storage.request('getCandidateIntegrationBasis',input);
+   if(origin.state!=='ACKNOWLEDGED'||origin.purpose!=='work-input'||origin.originOperationId||!origin.manifest)deny('CANDIDATE_PROMOTION_UNPROVEN');
+   for(const source of basis.sources)await this.source(provider,source,signal);
+   for(const ref of origin.updates)if(ref.ref.startsWith('refs/devmesh/candidates/')||await provider.readRef(ref.ref,signal)!==ref.commit)deny('CANDIDATE_SNAPSHOT_REF_CHANGED');
+   for(let ordinal=0;ordinal<basis.sources.length;ordinal++){const step=await this.options.storage.request('getCandidateIntegrationStep',{...input,ordinal});if(!step||step.state!=='ACKNOWLEDGED')deny('CANDIDATE_PROMOTION_UNPROVEN');await this.acknowledgeStep(origin,basis,step,provider,signal);}
+   const manifest=await provider.manifest(origin.manifest.commit,signal),retained=await this.options.storage.request('getCandidateIntegrationManifest',input);
+   if(canonical(manifest)!==canonical(retained))deny('CANDIDATE_MANIFEST_CHANGED');return manifest;
+  }
+  async integrate(input:Request<'beginCandidateIntegration'>,signal=new AbortController().signal):Promise<CandidateIntegration>{
   const {created:_created,...initial}=await this.options.storage.request('beginCandidateIntegration',input);let record:CandidateIntegration=initial;if(['ACKNOWLEDGED','CONFLICT','FAILED'].includes(record.state))return record;
   const basis=await this.options.storage.request('getCandidateIntegrationBasis',query(record));let fence:AllocationFence|undefined;
   try{
@@ -66,6 +76,10 @@ export class LocalCandidateIntegrations {
    if(record.state==='CONFLICT_PENDING'){
     const ordinal=record.acknowledgedSteps,step=await this.options.storage.request('getCandidateIntegrationStep',{...query(record),ordinal});if(!step||step.state!=='CONFLICT_PENDING')deny('CANDIDATE_CONFLICT_UNPROVEN');
     return this.options.conflicts?await this.options.conflicts.reconcile({record,basis,step,repository:provider,signal}):record;
+   }
+   if(record.originOperationId&&['BUILDING','PREPARED'].includes(record.state)){
+    const manifest=await this.retainedInput(record,provider,signal);
+    record=await this.options.storage.request('prepareCandidateIntegration',{...original(record),manifest});
    }
    for(let ordinal=0;record.state==='BUILDING'&&ordinal<basis.sources.length;ordinal++){
     let step=await this.options.storage.request('getCandidateIntegrationStep',{...query(record),ordinal}),created=false;
@@ -136,6 +150,6 @@ export class LocalCandidateIntegrations {
   }
  async reconcile(input:Request<'getCandidateIntegration'>,signal=new AbortController().signal){
   const record=await this.options.storage.request('getCandidateIntegration',input);
-  return this.integrate({principalId:input.principalId,operationId:input.operationId,runId:record.runId,purpose:record.purpose,...(record.workId?{workId:record.workId}:{})},signal);
+   return this.integrate({principalId:input.principalId,operationId:input.operationId,runId:record.runId,purpose:record.purpose,...(record.workId?{workId:record.workId}:{}),...(record.originOperationId?{originOperationId:record.originOperationId}:{})},signal);
  }
 }

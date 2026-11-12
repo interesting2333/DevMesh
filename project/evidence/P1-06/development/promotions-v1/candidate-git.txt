@@ -1,0 +1,45 @@
+TAP version 13
+# (node:17280) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:17280) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual A2A-admitted archived Git branches retain immutable candidates and original operation recovery
+    # Subtest: both changes survive lost step/final ACKs and later unsubmitted developer writes
+    ok 1 - both changes survive lost step/final ACKs and later unsubmitted developer writes
+      ---
+      duration_ms: 16854.4327
+      type: 'test'
+      ...
+    # Subtest: a sent intent with missing original refs stays unknown until the original delayed Git action is observed
+    ok 2 - a sent intent with missing original refs stays unknown until the original delayed Git action is observed
+      ---
+      duration_ms: 16886.682
+      type: 'test'
+      ...
+    # Subtest: scheduler admission and an isolated verification checkout freeze the exact dependency snapshot
+    ok 3 - scheduler admission and an isolated verification checkout freeze the exact dependency snapshot
+      ---
+      duration_ms: 26240.1493
+      type: 'test'
+      ...
+    # Subtest: unique atomic refs prove a lost ACK after pause and a later global ref move without replaying writes
+    ok 4 - unique atomic refs prove a lost ACK after pause and a later global ref move without replaying writes
+      ---
+      duration_ms: 16705.5733
+      type: 'test'
+      ...
+    1..4
+ok 1 - actual A2A-admitted archived Git branches retain immutable candidates and original operation recovery
+  ---
+  duration_ms: 117328.7014
+  type: 'test'
+  ...
+1..1
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 118864.4833

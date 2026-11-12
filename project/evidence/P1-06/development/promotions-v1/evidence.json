@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task4 prerequisite development: exact original Work-input commit promotion with immutable original merge identity and a separate Run candidate CAS. Actual local Git/A2A admission/SQLite; source Work completion is explicit historical fixture data. No quality reports, delivery build, production model, Linux or release freeze claimed.",
+  "sourceCommit": "11851b3aec4ba71ea4775cf9932e23c3338abed1",
+  "dirty": true,
+  "sourceFingerprint": "034c0c2243d1e97c4a65230b745f8b0c648b307d28142d40fe54564d35c30152",
+  "unchanged": true,
+  "startedAt": "2026-11-12T06:08:57.031Z",
+  "finishedAt": "2026-11-12T06:14:37.181Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 17757,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1183,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 30850,
+      "output": "current-build.txt",
+      "sha256": "dea2f0ec3cc483c859ea0365b128d30a5e04c248a9dac50e130f79a34532ce52"
+    },
+    {
+      "name": "candidate-journal",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1960,
+      "output": "candidate-journal.txt",
+      "sha256": "d9d6be8725d6a292f9f068cf06c30e53578e3094c286d227b9b129922c5bebc2"
+    },
+    {
+      "name": "candidate-basis",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1358,
+      "output": "candidate-basis.txt",
+      "sha256": "0d18898a6b712d78808bb95913ac934deda99e02022cc535f4500a6397771770"
+    },
+    {
+      "name": "candidate-promotion-git",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 94979,
+      "output": "candidate-promotion-git.txt",
+      "sha256": "75df93e2b78cee63b23d38efb2e78cbb4b305a3a35096159b0016d48b7e1bc39"
+    },
+    {
+      "name": "candidate-git",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 119053,
+      "output": "candidate-git.txt",
+      "sha256": "53d936ea4f7bdecc5555753640bbc3fe8087a9b0d25367cd5e32c012c4c13d6d"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 72803,
+      "output": "storage.txt",
+      "sha256": "c9b9757124c58f36a827b552bc6e1f6d82a415492a178842d0f9fc7783ca41a5"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/candidate-basis.txt",
+      "sha256": "0d18898a6b712d78808bb95913ac934deda99e02022cc535f4500a6397771770"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/candidate-git.txt",
+      "sha256": "53d936ea4f7bdecc5555753640bbc3fe8087a9b0d25367cd5e32c012c4c13d6d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/candidate-journal.txt",
+      "sha256": "d9d6be8725d6a292f9f068cf06c30e53578e3094c286d227b9b129922c5bebc2"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/candidate-promotion-git.txt",
+      "sha256": "75df93e2b78cee63b23d38efb2e78cbb4b305a3a35096159b0016d48b7e1bc39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/current-build.txt",
+      "sha256": "dea2f0ec3cc483c859ea0365b128d30a5e04c248a9dac50e130f79a34532ce52"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/report.json",
+      "sha256": "6434b38d2c94f14324c9c5824f0972ed89946a4ba4ece439b34c635a40428923"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/storage.txt",
+      "sha256": "c9b9757124c58f36a827b552bc6e1f6d82a415492a178842d0f9fc7783ca41a5"
+    },
+    {
+      "path": "project/evidence/P1-06/development/promotions-v1/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Actual migrated SQLite and real local A2A admission, Git branches, source archives and ref CAS. Source Work completion in Git fixtures is explicitly historical DB data; journal unit proofs are explicit DB fixtures.",
+    "No quality execution/report, delivery image build, release candidate freeze, production model, OIDC or Linux/runsc acceptance claimed."
+  ]
+}
