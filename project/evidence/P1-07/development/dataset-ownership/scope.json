@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-11-12T20:36:29.905Z",
+  "scope": "Working-tree control-plane data ownership and logical admission verification. No actual acceptance data files, physical fencing, real containers or T5.",
+  "limitations": [
+    "Build 1 has diagnostic output only; an exact source/driver snapshot was not captured.",
+    "Build 2 inputs changed during build; its old readiness map is retained. Build 3 rebuilds storage with the final readiness guard.",
+    "Migration 1 passed before the final migration exception-restoration refactor and with the old readiness artifact. Final storage reruns these migration cases.",
+    "Main 1 includes an upstream RELEASE_DELIVERY_POLICY_CHANGED fixture failure before the concurrency controller assertions. The diagnostic fixture rerun passed and cannot prove the original cause. Main 2 is one same-input rerun of the entire affected test file; it does not erase the failed comprehensive run.",
+    "History 1 adds one standalone historical-proof migration test after the original source-stable suites. Existing runtime and test files are unchanged; final-input binding records the exact added file.",
+    "Historical acceptance sources, proof fields and PRESERVE/REPLACE metadata in the migration cases are explicit fixtures. Formal positive iteration acceptance and actual file preparation remain pending.",
+    "Tests run in the working tree; no clean-checkout or product gate acceptance is asserted."
+  ]
+}

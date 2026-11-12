@@ -1,0 +1,330 @@
+{
+  "scope": "Diagnostic instrumented fixture copies only. Additional timestamps may affect timing. No acceptance/controller validation, production or test source edits.",
+  "startedAt": "2026-11-12T20:11:44.138Z",
+  "finishedAt": "2026-11-12T20:12:35.314Z",
+  "outcome": {
+    "passed": true
+  },
+  "trace": [
+    {
+      "label": "begin",
+      "at": "2026-11-12T20:12:09.933Z"
+    },
+    {
+      "label": "permit",
+      "at": "2026-11-12T20:12:10.007Z",
+      "expiresAt": "2026-11-12T20:12:24.924Z"
+    },
+    {
+      "label": "submitted",
+      "at": "2026-11-12T20:12:11.697Z"
+    },
+    {
+      "label": "coordinator-sent",
+      "at": "2026-11-12T20:12:12.206Z"
+    },
+    {
+      "label": "tick-start",
+      "at": "2026-11-12T20:12:12.499Z"
+    },
+    {
+      "label": "running",
+      "at": "2026-11-12T20:12:14.031Z"
+    },
+    {
+      "label": "exited",
+      "at": "2026-11-12T20:12:17.519Z"
+    },
+    {
+      "label": "final",
+      "at": "2026-11-12T20:12:17.674Z",
+      "job": {
+        "jobId": "job_149a3aacab55457ebf06190f49c59179",
+        "controllerId": "controller.local",
+        "operationId": "op_7f2be3d61c76489096b83146a61162d6",
+        "requestHash": "fbc8190cd24529ec8be67b865fcff8660ac57f186f1ef36236badff5603a6666",
+        "request": {
+          "schemaVersion": "devmesh.runner-job.v1",
+          "operationId": "op_7f2be3d61c76489096b83146a61162d6",
+          "permit": {
+            "ownerKind": "workflowAttempt",
+            "runId": "run_6fba2965f00d44279b2d4896fdd2f6d8",
+            "runEpoch": 1,
+            "workId": "work_3",
+            "workEpoch": 1,
+            "attemptId": "attempt_dbb22977a3ab4f5188961c5487b8f6a9",
+            "schemaVersion": "devmesh.permit.v1",
+            "grantId": "grant_5d59fbdc404b41f2a9ad3a6c240f8fab",
+            "activationId": "activation_dea23d6b4e224c67adee34a85c3826e4",
+            "notBefore": "2026-11-12T20:12:09.924Z",
+            "expiresAt": "2026-11-12T20:12:24.924Z",
+            "resources": [
+              {
+                "kind": "workspace",
+                "resourceId": "workspace.quality",
+                "access": "write"
+              },
+              {
+                "kind": "projectRepository",
+                "resourceId": "repository.unit",
+                "access": "read"
+              }
+            ]
+          },
+          "imageDigest": "local/test@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "workspaceRef": "workspace.quality",
+          "commandSpec": {
+            "kind": "unit"
+          },
+          "resourceLimits": {
+            "cpu": 1,
+            "memoryMiB": 128,
+            "pids": 32,
+            "temporaryMiB": 32,
+            "timeoutMs": 10000
+          },
+          "networkPolicyRef": "none",
+          "outputSpec": [
+            ".artifacts/front/coverage-final.json",
+            ".artifacts/unit-results.json",
+            ".artifacts/delivery/0.bin",
+            ".artifacts/delivery/1.bin",
+            ".artifacts/delivery/2.bin",
+            ".artifacts/delivery/3.bin",
+            ".artifacts/delivery/4.bin",
+            ".artifacts/delivery/5.bin",
+            ".artifacts/delivery/6.bin",
+            ".artifacts/delivery/7.bin"
+          ]
+        },
+        "executionProfile": {
+          "runnerId": "runner.test",
+          "commandHash": "6fa49508dc173ae16d9f6e6c350ff6850de962d031eaeb7e6fbd5c93fb40f7a5"
+        },
+        "state": "EXITED",
+        "containerId": "container-job_149a3aacab55457ebf06190f49c59179",
+        "createdAt": "2026-11-12T20:12:11.461Z",
+        "startedAt": "2026-11-12T20:12:12.450Z",
+        "endedAt": "2026-11-12T20:12:17.318Z",
+        "exitCode": 0,
+        "stopRequested": false,
+        "stopEvidence": {
+          "containerId": "container-job_149a3aacab55457ebf06190f49c59179",
+          "finishedAt": "2026-11-12T20:12:14.031Z",
+          "pid": 0,
+          "state": "exited",
+          "verifiedAt": "2026-11-12T20:12:17.265Z"
+        },
+        "errorCode": null,
+        "leaseSequence": 0,
+        "lastHeartbeat": "2026-11-12T20:12:11.461Z",
+        "logCursor": 23,
+        "outputRefs": [
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/05dd1c0136461bf2043e3265037e3732e51db2eabf5d7309bcac1569afc28286-container.log",
+            "sha256": "05dd1c0136461bf2043e3265037e3732e51db2eabf5d7309bcac1569afc28286",
+            "byteSize": 23
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/82b732b7e5b55ef7b945ce3193072fc0cf1525e5f0b54e197f95ce6563ab2448-output-0",
+            "sha256": "82b732b7e5b55ef7b945ce3193072fc0cf1525e5f0b54e197f95ce6563ab2448",
+            "byteSize": 17237
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/343e193fd2a2231a698b173f18087fb22bb82091290fd18f9499358fd66c892b-output-1",
+            "sha256": "343e193fd2a2231a698b173f18087fb22bb82091290fd18f9499358fd66c892b",
+            "byteSize": 191
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/2be4acfef54b9fa7c2d5e854e3daef11ce6e633a02f8a010b6fabb50f1f2e011-output-2",
+            "sha256": "2be4acfef54b9fa7c2d5e854e3daef11ce6e633a02f8a010b6fabb50f1f2e011",
+            "byteSize": 34
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/eb8e45ca87935f1799e98082139e7f882f0562b15405cd72af0fed234e306770-output-3",
+            "sha256": "eb8e45ca87935f1799e98082139e7f882f0562b15405cd72af0fed234e306770",
+            "byteSize": 400
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/d5901b37dc81d20aa3e2fc06772621e00e949229e36c2cfeb3ab7dd929dfedf2-output-4",
+            "sha256": "d5901b37dc81d20aa3e2fc06772621e00e949229e36c2cfeb3ab7dd929dfedf2",
+            "byteSize": 345
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/3ca7a87d4fda038153715f9abadb46cdc8555e37b0e38c616552f53bb6dc6c65-output-5",
+            "sha256": "3ca7a87d4fda038153715f9abadb46cdc8555e37b0e38c616552f53bb6dc6c65",
+            "byteSize": 416
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/3646a26326ca2b04219b4bef42b2fcbc7a1563e0a47857fcdb5602373bfc714e-output-6",
+            "sha256": "3646a26326ca2b04219b4bef42b2fcbc7a1563e0a47857fcdb5602373bfc714e",
+            "byteSize": 53
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/e60ad41231789dc48165b300960286f94bd0539c488d9ab57fe70c4521da3ece-output-7",
+            "sha256": "e60ad41231789dc48165b300960286f94bd0539c488d9ab57fe70c4521da3ece",
+            "byteSize": 63
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/ebc4d94a4166b2c869e9af25690e2ba3aeb32ccf8df5b2762257b0eed948ac28-output-8",
+            "sha256": "ebc4d94a4166b2c869e9af25690e2ba3aeb32ccf8df5b2762257b0eed948ac28",
+            "byteSize": 33
+          },
+          {
+            "path": "job-outputs/job_149a3aacab55457ebf06190f49c59179/b48e9c608b3b099351d10aa3c8c94fcaa5ea7b07909a68cdbaefa6c14a5b05e1-output-9",
+            "sha256": "b48e9c608b3b099351d10aa3c8c94fcaa5ea7b07909a68cdbaefa6c14a5b05e1",
+            "byteSize": 29
+          }
+        ]
+      }
+    }
+  ],
+  "quality": {
+    "operationId": "op_fe7e2de0ac2b4473a53a0f9e9c31f38f",
+    "principalId": "user_1",
+    "projectId": "prj_881ef59031c94896a9f84f94994f40f6",
+    "runId": "run_6fba2965f00d44279b2d4896fdd2f6d8",
+    "attemptId": "attempt_dbb22977a3ab4f5188961c5487b8f6a9",
+    "allocationOperationId": "op_fcf62a28fde84ad99b3532d2a8d5d2bb",
+    "configHash": "a3a9ed559ed116080f5855ac334f1228693917f47c7ec6c4a95b3d84e293d17f",
+    "requestHash": "db1de0766ef07cec2796d3a99ef524920e2ff5ef9bf4feb5083272eb7090a033",
+    "basis": {
+      "allocationManifestSha256": "83d9493135bdc0d7479674ddb35dce3b1b1c90523190e4912e188fc8683ebfa5",
+      "allocationOperationId": "op_fcf62a28fde84ad99b3532d2a8d5d2bb",
+      "allocationRequestHash": "2a72d9f60e41db20ea1be25e01b357b9a12ea2be15393905555bc111fa8c6720",
+      "attemptId": "attempt_dbb22977a3ab4f5188961c5487b8f6a9",
+      "inputFingerprint": "e7bf9642505ae653e1fbd2acdd475bc47406cf93793246b71394daa248f2839c",
+      "inputManifest": {
+        "artifacts": [
+          {
+            "artifactId": "artifact_5eae6d87986544578812d70c17423303",
+            "sha256": "3a02755285144354f117b0b3bd2cf195fd64ce1a03946a1f87d249ccd7e2809d"
+          },
+          {
+            "artifactId": "artifact_abc82a3f338b4ea492186a50a2002d59",
+            "sha256": "7d8f402b53cc4445da986f1d98d45f8ffbad503aa3e4ccb11ddcc06bc9347e21"
+          }
+        ],
+        "checkConfigHash": "a3a9ed559ed116080f5855ac334f1228693917f47c7ec6c4a95b3d84e293d17f",
+        "codeCommit": "cccccccccccccccccccccccccccccccccccccccc",
+        "decisionIds": [
+          "decision_6e7e9253f919485a988153279935db7d"
+        ],
+        "interfaces": [],
+        "requirements": [
+          {
+            "requirementId": "requirement_01",
+            "sha256": "1cfd38c876bbdbcd7ac059447d7dbf71c8b0e67a49668a5c925c221ef1eaa3e1"
+          }
+        ],
+        "schemaVersion": "devmesh.input-manifest.v1",
+        "templateVersion": "web-crud-v1"
+      },
+      "planRevision": 1,
+      "requirementRevision": 1,
+      "runEpoch": 1,
+      "runnerId": "runner.test",
+      "sourceBasisSha256": "fa95a8cbd53a052d16d90c8a93c3cf378f6bf7d9eaa5590596cc63c6d94cdd37",
+      "sourceIntegrationOperationId": "op_062a704368744b0f9f34c12f8b6d3510",
+      "targetCommit": "cccccccccccccccccccccccccccccccccccccccc",
+      "workEpoch": 1,
+      "workId": "work_3",
+      "workRevision": 1,
+      "workspaceRef": "workspace.quality"
+    },
+    "state": "EVALUATED",
+    "qualification": "CURRENT",
+    "evaluation": {
+      "automaticStatus": "PASS",
+      "checkConfigHash": "a3a9ed559ed116080f5855ac334f1228693917f47c7ec6c4a95b3d84e293d17f",
+      "checks": [
+        {
+          "checkId": "command",
+          "codes": [],
+          "reportIds": [],
+          "status": "PASS"
+        },
+        {
+          "checkId": "check_required",
+          "codes": [],
+          "reportIds": [
+            "tests.front"
+          ],
+          "status": "PASS",
+          "tests": {
+            "failed": 0,
+            "missing": 0,
+            "passed": 1,
+            "skipped": 0
+          }
+        },
+        {
+          "checkId": "coverage",
+          "codes": [],
+          "coverage": {
+            "branches": {
+              "covered": 70,
+              "minimum": 70,
+              "status": "PASS",
+              "total": 100
+            },
+            "lines": {
+              "covered": 80,
+              "minimum": 80,
+              "status": "PASS",
+              "total": 100
+            }
+          },
+          "reportIds": [
+            "coverage.front"
+          ],
+          "status": "PASS"
+        }
+      ],
+      "reviewStatus": "NOT_REQUIRED",
+      "schemaVersion": "devmesh.quality-evaluation.v1",
+      "sourceManifestSha256": "7a21ec4b3cb81cd7b078e4c740c48a21c754a56282fd2169d8b2a5814845770b",
+      "targetCommit": "cccccccccccccccccccccccccccccccccccccccc",
+      "topologySha256": "c3e0cda652091d8df55ae6b7d72a1291d76854cb627f9a631572e209372c49dd"
+    },
+    "origins": [
+      {
+        "producerId": "front",
+        "pipelineId": "pipeline.quality",
+        "ordinal": 0,
+        "execution": {
+          "attemptId": "attempt_dbb22977a3ab4f5188961c5487b8f6a9",
+          "checkConfigHash": "a3a9ed559ed116080f5855ac334f1228693917f47c7ec6c4a95b3d84e293d17f",
+          "commandHash": "6fa49508dc173ae16d9f6e6c350ff6850de962d031eaeb7e6fbd5c93fb40f7a5",
+          "errorCode": null,
+          "exitCode": 0,
+          "finishedAt": "2026-11-12T20:12:17.318Z",
+          "imageDigest": "local/test@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "jobId": "job_149a3aacab55457ebf06190f49c59179",
+          "log": {
+            "sha256": "05dd1c0136461bf2043e3265037e3732e51db2eabf5d7309bcac1569afc28286",
+            "size": 23
+          },
+          "operationId": "op_7f2be3d61c76489096b83146a61162d6",
+          "producerId": "front",
+          "requestHash": "fbc8190cd24529ec8be67b865fcff8660ac57f186f1ef36236badff5603a6666",
+          "runnerId": "runner.test",
+          "startedAt": "2026-11-12T20:12:12.450Z",
+          "state": "EXITED",
+          "stopRequested": false,
+          "targetCommit": "cccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    ]
+  },
+  "inputsBefore": {
+    "tests/fixtures/quality-runner.mjs": "97f6ab22f621feed79a87e2e4e9ae84739b084a808c16f161644cdb341ea11c0",
+    "tests/fixtures/release-freeze.mjs": "d5a42df156a98f2161ddce5e45526689504da2563ca1481cb29f3c3fbeb92e4f",
+    "packages/storage-sqlite/src/release-delivery-domain.ts": "094520788e86c29d5338df96b748b43f58b1e4954168594c1c6e98eb0dd4db41"
+  },
+  "inputsAfter": {
+    "tests/fixtures/quality-runner.mjs": "97f6ab22f621feed79a87e2e4e9ae84739b084a808c16f161644cdb341ea11c0",
+    "tests/fixtures/release-freeze.mjs": "d5a42df156a98f2161ddce5e45526689504da2563ca1481cb29f3c3fbeb92e4f",
+    "packages/storage-sqlite/src/release-delivery-domain.ts": "094520788e86c29d5338df96b748b43f58b1e4954168594c1c6e98eb0dd4db41"
+  }
+}

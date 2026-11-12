@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Dataset preparation ownership and logical admission only; not actual physical fencing, containers or T5.",
+  "checks": [
+    {
+      "name": "storage-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T19:32:10.179Z",
+      "finishedAt": "2026-11-12T19:33:39.023Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "storage-build.txt",
+      "sha256": "6df741feb555716c364a0330eeea81cca497e1cfb3788dd18bca426ea0652b0e"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T19:33:39.035Z",
+      "finishedAt": "2026-11-12T19:36:12.158Z",
+      "exitCode": 2,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "2c8792abf7b916fc5c75dcc7eacc39ebf02d33faeef1c42d1691b356a766f81d"
+    }
+  ]
+}

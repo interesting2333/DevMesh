@@ -1,0 +1,18 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const base='.cache/p1-07/ownership-',sha=b=>createHash('sha256').update(b).digest('hex'),sql='packages/storage-sqlite/migrations/0038-datasetownership.sql',manifest='packages/storage-sqlite/migrations/manifest.json';
+const normalization=JSON.parse(readFileSync(base+'sql-normalization/normalization.json','utf8'));
+if(sha(readFileSync(sql))!==normalization.afterSha256)throw Error('Final SQL changed');
+const oldManifest=JSON.parse(readFileSync(base+'sql-normalization/manifest-before.json','utf8')),currentManifest=JSON.parse(readFileSync(manifest,'utf8'));oldManifest[37].sha256=normalization.afterSha256;if(JSON.stringify(oldManifest)!==JSON.stringify(currentManifest))throw Error('Unexpected manifest change');
+const inventory=spawnSync('rg',['--files','packages','apps','tests','scripts'],{encoding:'utf8',windowsHide:true});if(inventory.status!==0)throw Error(inventory.stderr);
+const current=Object.fromEntries(inventory.stdout.trim().split(/\r?\n/).filter(p=>/\.(ts|mjs|json|sql)$/.test(p)).map(p=>[p.replaceAll('\\','/'),sha(readFileSync(p))])),allowedSources=new Set([sql,manifest]),allowedEmitted=new Set(['packages/storage-sqlite/dist/migrations/0038-datasetownership.sql','packages/storage-sqlite/dist/migrations/manifest.json']),groups=[];
+for(const name of ['main-1','main-2','storage-1','history-1','format-tests']){
+ const root=base+name,report=JSON.parse(readFileSync(root+'/report.json','utf8')),inputs=JSON.parse(readFileSync(root+'/inputs-before.json','utf8')),emitted=JSON.parse(readFileSync(root+'/emitted-before.json','utf8'));
+ if(report.inputChanges.length||report.emittedChanges.length)throw Error('Unstable tests '+name);
+ const changes=Object.keys(inputs).filter(p=>current[p]!==inputs[p]),added=Object.keys(current).filter(p=>!(p in inputs)),artifacts=Object.keys(emitted).filter(p=>sha(readFileSync(p))!==emitted[p]);
+ if(changes.some(p=>!allowedSources.has(p))||artifacts.some(p=>!allowedEmitted.has(p))||added.some(p=>p!=='tests/storage-acceptance-proof-upgrade.test.mjs'))throw Error('Unexpected final source or artifact differences '+name);
+ if(name==='format-tests'&&(changes.length||artifacts.length||added.length||report.checks.some(c=>c.exitCode!==0)))throw Error('Final test mismatch');
+ groups.push({name,changes,added,artifacts,unchangedTypeScriptAndExecutableJavaScript:true,checks:report.checks.map(c=>({name:c.name,exitCode:c.exitCode}))});
+}
+writeFileSync(base+'normalization-final-binding.json',JSON.stringify({recordedAt:new Date().toISOString(),scope:'Supplement to the earlier final-input-binding, which records the state before the staged whitespace check found one trailing space. Final SQL removes that space and updates only its v38 checksum; TypeScript, existing tests and executable JavaScript remain byte-identical. Six final migration cases run against the final checksum, without changing inputs or artifacts during execution.',normalization,groups},null,2)+'\n');console.log(JSON.stringify({groups:groups.length,changedSqlOnly:true}));

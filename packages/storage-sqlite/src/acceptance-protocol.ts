@@ -1,5 +1,7 @@
 import {z} from 'zod';
 import {ids,opaqueKey,sha256,revision,epoch,gitCommit,previewImageIdentity,deliveryDataPlan} from '@devmesh/contracts';
+import type {DatasetView} from './preview-protocol.js';
+import type {PreviewWriteGate,previewWriteCloseRequest} from './preview-access-protocol.js';
 const meta=z.strictObject({principalId:opaqueKey,scopeId:opaqueKey,idempotencyKey:z.uuid()});
 const conditional={meta,runId:ids.run,ifMatch:z.string().optional()};
 const candidate={candidateId:ids.candidate,candidateRevision:revision,manifestHash:sha256,reviewHash:sha256,expectedAcceptedReleaseId:ids.release.nullable(),dataPlanHash:sha256};
@@ -20,6 +22,8 @@ export const acceptanceRequests={
   recordAcceptanceReplacementDecision:z.strictObject({...conditional,...candidate,decisionId:ids.decision,confirmation:z.literal('REPLACE_ACCEPTED_DATA')}),
   beginAcceptancePreparation:z.strictObject({...conditional,...candidate,policyHash:sha256}),
   getAcceptancePreparation:z.strictObject({principalId:opaqueKey,operationId:ids.operation}),
+  getAcceptanceDataset:z.strictObject(bound),
+  closeAcceptanceSourceWriteGate:z.strictObject({...bound,expectedRevision:revision,expectedFence:z.number().int().nonnegative().safe()}),
   listAcceptancePreparations:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
   markAcceptancePreparationSent:z.strictObject({...bound,expectedRevision:revision}),
   markAcceptancePreparationUnknown:z.strictObject({...bound,expectedRevision:revision,errorCode:opaqueKey}),
@@ -34,6 +38,8 @@ export interface AcceptancePreparation {
   state:'PREPARED'|'SENT'|'UNKNOWN'|'FAILED';revision:number;qualification:'CURRENT'|'STALE';errorCode:string|null;createdAt:string;updatedAt:string;
 }
 export interface AcceptanceResults {
+  getAcceptanceDataset:{dataset:DatasetView;purpose:'ACCEPTANCE';baseReleaseId:string|null;requestHash:string;gate:PreviewWriteGate};
+  closeAcceptanceSourceWriteGate:{gate:PreviewWriteGate;closeRequest:z.output<typeof previewWriteCloseRequest>;current:boolean};
   registerAcceptanceBackendPolicy:{policyHash:string;policy:z.output<typeof acceptanceBackendPolicy>};
   recordAcceptanceReplacementDecision:{decisionId:string;operationId:string};
   beginAcceptancePreparation:AcceptancePreparation;getAcceptancePreparation:AcceptancePreparation;

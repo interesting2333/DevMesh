@@ -1,0 +1,2 @@
+packages/storage-sqlite/migrations/0038-datasetownership.sql:48: trailing whitespace.
++CREATE TRIGGER acceptance_dataset_owner AFTER INSERT ON acceptance_preparations BEGIN 

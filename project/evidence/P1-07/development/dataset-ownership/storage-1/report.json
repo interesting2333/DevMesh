@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mode": "tests",
+  "scope": "Dataset preparation ownership and logical admission only; not actual physical fencing, containers or T5.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/storage*.test.mjs"
+      ],
+      "startedAt": "2026-11-12T19:47:01.945Z",
+      "finishedAt": "2026-11-12T20:06:41.978Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "cbb170bd00d6908a45968676af486f6941b6d9e590e403ea04b576ebf78dba56"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

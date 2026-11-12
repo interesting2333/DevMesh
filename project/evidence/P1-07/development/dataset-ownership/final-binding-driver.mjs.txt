@@ -1,0 +1,15 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+const list=spawnSync('rg',['--files','packages','apps','tests','scripts'],{encoding:'utf8',windowsHide:true});if(list.status!==0)throw Error(list.stderr);
+const current=Object.fromEntries(list.stdout.trim().split(/\r?\n/).filter(f=>/\.(ts|mjs|json|sql)$/.test(f)).map(f=>[f.replaceAll('\\','/'),sha(readFileSync(f))]));
+const names=['main-1','main-2','storage-1','history-1'],groups=[];
+for(const name of names){
+ const root='.cache/p1-07/ownership-'+name,r=JSON.parse(readFileSync(root+'/report.json','utf8')),inputs=JSON.parse(readFileSync(root+'/inputs-before.json','utf8')),emitted=JSON.parse(readFileSync(root+'/emitted-before.json','utf8'));
+ if(r.inputChanges.length||r.emittedChanges.length)throw Error('Run changed '+name);
+ const changed=Object.keys(inputs).filter(f=>current[f]!==inputs[f]),added=Object.keys(current).filter(f=>!(f in inputs)),changedArtifacts=Object.keys(emitted).filter(f=>sha(readFileSync(f))!==emitted[f]);
+ if(changed.length||changedArtifacts.length||added.some(f=>f!=='tests/storage-acceptance-proof-upgrade.test.mjs')||name==='history-1'&&added.length)throw Error('Unexpected final differences '+name);
+ groups.push({name,changed,added,changedArtifacts,checks:r.checks.map(c=>({name:c.name,exitCode:c.exitCode}))});
+}
+const path='.cache/p1-07/ownership-final-input-binding.json';writeFileSync(path,JSON.stringify({recordedAt:new Date().toISOString(),scope:'Verifies final existing source/test and emitted bytes against each retained run. Main 1 retains its original failure. The only added test did not alter runtime or existing tests.',groups,additionalTest:{path:'tests/storage-acceptance-proof-upgrade.test.mjs',sha256:current['tests/storage-acceptance-proof-upgrade.test.mjs']}},null,2)+'\n');console.log(path);

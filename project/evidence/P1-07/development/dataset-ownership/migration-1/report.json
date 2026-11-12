@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "mode": "migration",
+  "scope": "Dataset preparation ownership and logical admission only; not actual physical fencing, containers or T5.",
+  "checks": [
+    {
+      "name": "migration-tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "tests/storage-acceptance.test.mjs",
+        "tests/storage-dataset-ownership.test.mjs"
+      ],
+      "startedAt": "2026-11-12T19:42:12.376Z",
+      "finishedAt": "2026-11-12T19:43:10.632Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "migration-tests.txt",
+      "sha256": "bb88840365c60da677a37c6fb288cc6d339c60d9b459116129728f9c82f07362"
+    }
+  ],
+  "inputChanges": []
+}

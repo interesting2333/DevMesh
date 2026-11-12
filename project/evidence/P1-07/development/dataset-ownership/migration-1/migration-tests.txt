@@ -1,0 +1,21 @@
+(node:40424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ version 36 acceptance tables and markers roll back together and preserve version 35 state through actual retry (12440.2165ms)
+(node:40424) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ version 37 readiness rollback preserves version 36 policies and retries without changing earlier history (7266.8995ms)
+(node:20528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ v38 rebuild preserves original closed gate, uncertain write, policies and history; late failure restores schema and FK enforcement (12937.4909ms)
+✔ v38 backfills real acceptance identities with separate base/origin semantics and never inserts preview effects (5592.4248ms)
+✔ rebuild rejects an enclosing transaction and fresh databases retain enabled foreign keys (1843.9052ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55439.0594

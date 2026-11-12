@@ -6,8 +6,8 @@ import {datasetPreparationRequest,previewStartRequest,previewEffectReceipt} from
 // Minimal explicit upstream state for access-domain tests. No Runner, build,
 // candidate-freeze, image or dataset execution proof is produced here. Keep every
 // FK and CHECK enabled; do not use this fixture as acceptance/quality evidence.
-export async function previewAccessSeed(t,{endpoint={host:'127.0.0.1',port:54321},instanceId='instance.access.original'}={}){
- const f=await qualityStorageFixture(t,{pending:true,unprepared:true,...deliveryOptions()}),at=new Date().toISOString(),projectId=f.p.projectId,runId=f.p.runId,candidateId='candidate_access_fixture',datasetId='dataset_access_fixture',previewId='preview_access_fixture',principalId='preview.backend.local';
+export async function previewAccessSeed(t,{endpoint={host:'127.0.0.1',port:54321},instanceId='instance.access.original',targetVersion}={}){
+  const f=await qualityStorageFixture(t,{pending:true,unprepared:true,targetVersion,...deliveryOptions()}),at=new Date().toISOString(),projectId=f.p.projectId,runId=f.p.runId,candidateId='candidate_access_fixture',datasetId='dataset_access_fixture',previewId='preview_access_fixture',principalId='preview.backend.local';
  const operation=(id,kind)=>f.insert('operations',{operation_id:id,principal_id:'user_1',scope_id:runId,idempotency_key:id,request_hash:hash(id),kind,status:'SUCCEEDED',result_json:null,created_at:at,updated_at:at});
  const delivery=await f.storage.request('registerReleaseDeliveryPolicy',{principalId:'user_1',projectId,policy:{schemaVersion:'devmesh.delivery-policy.v1',templateVersion:f.q.policy.templateVersion,checkConfigHash:f.policy.configHash,...f.q.policy.delivery}}),deliveryId='op_access_delivery_fixture';
  f.insert('release_deliveries',{operation_id:deliveryId,principal_id:'user_1',project_id:projectId,run_id:runId,quality_operation_id:f.bound.operationId,policy_hash:delivery.policyHash,request_hash:hash('explicit unexecuted delivery'),request_json:'{}',basis_json:'{}',job_json:'{}',state:'PREPARED',image_json:null,data_plan_json:null,created_at:at});

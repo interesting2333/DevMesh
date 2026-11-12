@@ -160,6 +160,16 @@ REPLACE 必须有独立的准确确认记录，绑定候选、reviewHash、原 r
 
 `AcceptancePreparer` 为可信装配提供恢复控制器：缺后端不派发；首次唯一 grant 才 prepare，原 SENT／UNKNOWN 或丢许可 ACK 只 inspect，每个新外部动作前须通过最后授权。没有默认具体后端，也没有公共回执入口。受控证明测试仅验证 Worker 绑定、恢复及原子性，不是实际数据／fencing／容器健康验证。实际适配器、正向保留／替换和 T5 继续原范围，4.1 保持未勾选。
 
+### 19. Dataset ownership spans preview and acceptance without fabricated effects
+
+迁移 38 将原策略实表原位更名为 dataset_backend_policies，以 PREVIEW／ACCEPTANCE 区分用途；preview_backend_policies 保留筛选兼容视图及原登记语义，接受策略只从真实 acceptance_backend_policies 镜像。不可变 dataset_preparations 绑定准确 project／dataset／原 operation／requestHash／policy／用途和 baseReleaseId。预览仍由原 DATASET_PREPARE effect 登记，接受由原 acceptance preparation 登记，不伪造预览策略或 effect。
+
+接受意图同事务登记 PREPARING 的目标元数据、归属和初始 CLOSED 写门，不创建业务文件或声称准备成功。保留迁移才把旧数据登记为物理 origin；REPLACE 的 origin 为空，原接受版本仅作为 baseReleaseId 保留。接受准备数据暂无限期保留，retentionUntil 使用明确的无限期标记 9999-12-31T23:59:59.999Z，不按预览 TTL 清理。准确准备证明落库时推进 WRITE_FROZEN；未知观察不改写已固定数据身份，也不能开放写门。
+
+共用写门保留原物理名称 preview_write_gates／closures／events，外键改为通用 dataset_preparations，旧访问请求及历史保持原样。新接受目标允许 fence=revision=0 的初始 CLOSED 且没有“从 OPEN 关闭”的记录；该状态仅可用于接受用途。源数据关闭由准确接受后端／原准备授权，固定原源数据操作与 hash、expectedFence，闭门、历史和 Run 事件同事务；闭门 ACK 恢复原记录，逻辑闭门不证明后台写入已停止或物理 fencing。当前不提供开放或超时重开命令。
+
+写门采用受校验前向重建：仅带入校验和的明确 rebuild 标记迁移在事务外暂关 foreign_keys，单 writer 事务内复制旧行、重建外键／触发器并 foreign_key_check，成功或失败均恢复原 pragma；事务内调用拒绝。失败连同 schema／迁移历史／版本标记回滚。旧准备／证明只回填准确元数据，不回填新的健康、物理 fence、Release 或接受事实。实际数据适配、服务装配与 T5 继续原 4.1／4.2 范围。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

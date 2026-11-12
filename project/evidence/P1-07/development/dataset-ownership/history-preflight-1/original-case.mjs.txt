@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {readMigrations,applyMigrations} from '../packages/storage-sqlite/dist/migrations.mjs';
+import {acceptancePreparationRequest,acceptancePreparationObservation} from '../packages/storage-sqlite/dist/index.mjs';
+import {previewAccessFixture} from './fixtures/preview-access.mjs';
+import {preparedObservation} from './fixtures/acceptance-readiness.mjs';
+import {hash,canonical} from './fixtures/storage-data.mjs';
+
+test('v37 retained original proof upgrades to a frozen acceptance dataset without replacing proof or observation history',async t=>{
+  // Historical control-plane records and backend proof fields are explicit
+  // fixtures. This verifies the actual migration, not physical fencing or T5.
+  const f=await previewAccessFixture(t,{seedOptions:{targetVersion:37}}),at=new Date().toISOString(),operationId='op_historical_proof',datasetId='dataset_historical_proof';
+  const policy={schemaVersion:'devmesh.acceptance-backend.v1',backendPrincipalId:'acceptance.history.service',backendRef:'acceptance.history.backend',runnerId:'runner.history.local',templateVersion:'web-crud-v1',schemaRevision:'web-crud-v1.schema.1',initialModes:['EMPTY'],allowPreserveMigration:false,allowReplacement:false};
+  const registered=await f.call('registerAcceptanceBackendPolicy',{principalId:'user_1',projectId:f.p.projectId,policy}),image=(await f.readEffect(f.p.operationId)).request.imageIdentity;
+  const dataPlan={schemaVersion:'devmesh.data-plan.v1',runId:f.p.runId,codeCommit:image.targetCommit,requirementRevision:1,planRevision:1,templateVersion:policy.templateVersion,checkConfigHash:hash('explicit historical configuration'),strategy:'INITIAL',initialData:'EMPTY',sourceReleaseId:null,migrationRef:null,replacementDecisionId:null};
+  const request=acceptancePreparationRequest.parse({schemaVersion:'devmesh.acceptance-prepare.v1',operationId,releaseId:'release_historical_proof',projectId:f.p.projectId,runId:f.p.runId,candidateId:f.candidate.candidateId,candidateRevision:1,manifestHash:f.candidate.manifestHash,reviewHash:hash('explicit historical review'),expectedAcceptedReleaseId:null,dataPlanHash:hash(canonical(dataPlan)),runEpoch:Number(f.get('SELECT run_epoch FROM runs').run_epoch),requirementRevision:1,planRevision:1,codeCommit:image.targetCommit,image,dataPlan,policyHash:registered.policyHash,backendPrincipalId:policy.backendPrincipalId,backendRef:policy.backendRef,runnerId:policy.runnerId,source:null,target:{datasetId,storageKey:f.p.projectId+'/'+datasetId+'/app.sqlite',schemaRevision:policy.schemaRevision}}),requestHash=hash(canonical(request));
+  f.run('INSERT INTO operations VALUES(?,?,?,?,?,?,?,?,?,?)',operationId,'user_1',f.p.runId,randomUUID(),hash(operationId),'explicit-historical-proof-fixture','SUCCEEDED',null,at,at);
+  f.run("INSERT INTO acceptance_preparations VALUES(?,?,?,?,?,?,?,?,?,?,'SENT',2,NULL,?,?)",operationId,'user_1',f.p.projectId,f.p.runId,f.candidate.candidateId,registered.policyHash,request.releaseId,datasetId,requestHash,canonical(request),at,at);
+  const observation=acceptancePreparationObservation.parse(preparedObservation({operationId,requestHash,request})),proof=canonical(observation.proof),body=canonical(observation);
+  f.run('INSERT INTO acceptance_prepared_proofs VALUES(?,?,?,?,?)',operationId,requestHash,hash(proof),proof,observation.checkedAt);
+  f.run('INSERT INTO acceptance_preparation_observations VALUES(?,?,?,?,?,?)',operationId,2,1,hash(body),body,observation.checkedAt);
+  const originalProof=f.get('SELECT * FROM acceptance_prepared_proofs WHERE operation_id=?',operationId),originalObservation=f.get('SELECT * FROM acceptance_preparation_observations WHERE operation_id=?',operationId),originalPreparation=f.get('SELECT * FROM acceptance_preparations WHERE operation_id=?',operationId),migrations=readMigrations(),storeId=f.get('SELECT store_id FROM store_metadata').store_id;
+  assert.equal(f.get('SELECT count(*) n FROM datasets WHERE dataset_id=?',datasetId).n,0);
+  const cut=[...migrations.slice(0,37),{...migrations[37],sql:migrations[37].sql+'\nSELECT * FROM historical_proof_cut;'}];
+  assert.throws(()=>applyMigrations(f.db,cut,storeId),/historical_proof_cut/);assert.equal(f.get('PRAGMA user_version').user_version,37);assert.equal(f.get('PRAGMA foreign_keys').foreign_keys,1);assert.equal(f.get('SELECT count(*) n FROM datasets WHERE dataset_id=?',datasetId).n,0);assert.deepEqual(f.get('SELECT * FROM acceptance_prepared_proofs WHERE operation_id=?',operationId),originalProof);
+  assert.equal(applyMigrations(f.db,migrations,storeId),38);
+  const dataset=f.get('SELECT * FROM datasets WHERE dataset_id=?',datasetId),binding=f.get('SELECT * FROM dataset_preparations WHERE dataset_id=?',datasetId),gate=f.get('SELECT * FROM preview_write_gates WHERE dataset_id=?',datasetId);
+  assert.equal(dataset.state,'WRITE_FROZEN');assert.equal(dataset.snapshot_at,observation.proof.data.snapshotAt);assert.equal(dataset.revision,1);assert.equal(dataset.operation_id,operationId);assert.equal(dataset.source_dataset_id,null);assert.equal(dataset.source_release_id,null);assert.equal(dataset.retention_until,'9999-12-31T23:59:59.999Z');assert.equal(binding.purpose,'ACCEPTANCE');assert.equal(binding.request_hash,requestHash);assert.equal(binding.base_release_id,null);assert.equal(gate.state,'CLOSED');assert.equal(gate.fence,0);assert.equal(gate.revision,0);assert.equal(gate.dataset_operation_id,operationId);assert.equal(gate.dataset_request_hash,requestHash);assert.equal(gate.close_operation_id,null);
+  assert.deepEqual(f.get('SELECT * FROM acceptance_prepared_proofs WHERE operation_id=?',operationId),originalProof);assert.deepEqual(f.get('SELECT * FROM acceptance_preparation_observations WHERE operation_id=?',operationId),originalObservation);assert.deepEqual(f.get('SELECT * FROM acceptance_preparations WHERE operation_id=?',operationId),originalPreparation);assert.equal(f.get('SELECT count(*) n FROM preview_effects WHERE operation_id=?',operationId).n,0);assert.equal(f.get('SELECT count(*) n FROM preview_write_gate_events WHERE dataset_id=?',datasetId).n,1);assert.equal(f.get('PRAGMA foreign_keys').foreign_keys,1);assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(),[]);
+});

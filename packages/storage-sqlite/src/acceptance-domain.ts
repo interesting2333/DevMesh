@@ -10,13 +10,17 @@ import type {AcceptanceMethod,AcceptanceInput,AcceptancePreparation,AcceptancePr
 import {canonical} from './json.js';
 import {digest,transaction} from './migrations.js';
 import {StorageError} from './errors.js';
+import {previewWriteCloseRequest} from './preview-access-protocol.js';
+import type {PreviewWriteGate} from './preview-access-protocol.js';
+import type {AcceptanceResults} from './acceptance-protocol.js';
 type Row=Record<string,string|number|null>;
 interface Hooks {
   operation(meta:Meta,kind:string,payload:unknown,action:(operationId:string)=>Record<string,unknown>,authorize:()=>void):OperationResult;
   changed(runId:string,operationId:string,preparationId:string,state:AcceptancePreparation['state']):void;
   decision(runId:string,operationId:string,decisionId:string):void;
+  sourceClosed(runId:string,operationId:string,datasetId:string,fence:number):void;
 }
-const fail=(code:string,status=409):never=>{throw new StorageError(code,status,'Acceptance preparation requires exact current review, original accepted data and configured authority');};
+function fail(code:string,status=409):never{throw new StorageError(code,status,'Acceptance preparation requires exact current review, original accepted data and configured authority');}
 const json=<T>(value:unknown):T=>JSON.parse(String(value)) as T;
 export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof createPlanDomain>,freezes:Pick<ReturnType<typeof createReleaseFreezeDomain>,'getCandidate'>,reviews:Pick<ReturnType<typeof createCandidateReviewDomain>,'getReview'>,hooks:Hooks){
   const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined,all=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).all(...p) as Row[],exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p),now=()=>new Date().toISOString(),uid=(kind:string)=>kind+'_'+randomUUID().replaceAll('-','');
@@ -41,6 +45,11 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
   }
   function current(r:Row){try{const request=acceptancePreparationRequest.parse(json(r.request_json)),b=basis(String(r.principal_id),request);return canonical(b.source)===canonical(request.source)&&b.run.run_epoch===request.runEpoch;}catch(error){if(error instanceof StorageError)return false;throw error;}}
   const view=(r:Row):AcceptancePreparation=>({operationId:String(r.operation_id),projectId:String(r.project_id),runId:String(r.run_id),candidateId:String(r.candidate_id),policyHash:String(r.policy_hash),releaseId:String(r.release_id),requestHash:String(r.request_hash),request:acceptancePreparationRequest.parse(json(r.request_json)),state:r.state as AcceptancePreparation['state'],revision:Number(r.revision),qualification:current(r)?'CURRENT':'STALE',errorCode:r.error_code as string|null,createdAt:String(r.created_at),updatedAt:String(r.updated_at)});
+  function writeGate(datasetId:string):PreviewWriteGate{
+    const g=get('SELECT * FROM preview_write_gates WHERE dataset_id=?',datasetId)??fail('ACCEPTANCE_WRITE_GATE_MISSING');
+    return {datasetId,projectId:String(g.project_id),datasetOperationId:String(g.dataset_operation_id),datasetRequestHash:String(g.dataset_request_hash),state:g.state as PreviewWriteGate['state'],fence:Number(g.fence),revision:Number(g.revision),closeOperationId:g.close_operation_id as string|null,closeRequestHash:g.close_request_hash as string|null,pendingWrites:Number(get("SELECT count(*) n FROM preview_access_requests WHERE dataset_id=? AND is_write=1 AND state IN ('DISPATCHED','UNKNOWN')",datasetId)!.n),createdAt:String(g.created_at),updatedAt:String(g.updated_at)};
+  }
+  function bound(i:{principalId:string;operationId:string;requestHash:string},trusted=false){const r=scoped(i.principalId,row(i.operationId));if(trusted)backend(i.principalId,r);if(r.request_hash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');return r;}
   function history(r:Row,operationId=String(r.operation_id)){
     const snapshot={state:r.state,revision:r.revision,errorCode:r.error_code,observedAt:r.updated_at};
     exec('INSERT INTO acceptance_preparation_history VALUES(?,?,?,?)',r.operation_id!,r.revision!,canonical(snapshot),r.updated_at!);
@@ -71,6 +80,20 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
       },()=>{owner(meta.principalId,i.runId);});return view(row(String(op.result!.preparationId)));
     },
     getAcceptancePreparation(i:AcceptanceInput<'getAcceptancePreparation'>){return transaction(db,()=>view(scoped(i.principalId,row(i.operationId))));},
+    getAcceptanceDataset(i:AcceptanceInput<'getAcceptanceDataset'>):AcceptanceResults['getAcceptanceDataset']{return transaction(db,()=>{
+      const p=bound(i),d=get('SELECT d.*,p.request_hash,p.base_release_id FROM datasets d JOIN dataset_preparations p ON p.dataset_id=d.dataset_id WHERE p.operation_id=? AND p.purpose=\'ACCEPTANCE\'',i.operationId)??fail('ACCEPTANCE_DATASET_MISSING');
+      return {dataset:{datasetId:String(d.dataset_id),projectId:String(d.project_id),runId:String(d.run_id),candidateId:String(d.candidate_id),operationId:String(d.operation_id),policyHash:String(d.policy_hash),sourceDatasetId:d.source_dataset_id as string|null,sourceReleaseId:d.source_release_id as string|null,storageKey:String(d.storage_key),schemaRevision:String(d.schema_revision),state:d.state as AcceptanceResults['getAcceptanceDataset']['dataset']['state'],revision:Number(d.revision),snapshotAt:d.snapshot_at as string|null,retentionUntil:String(d.retention_until),createdAt:String(d.created_at)},purpose:'ACCEPTANCE',baseReleaseId:d.base_release_id as string|null,requestHash:String(p.request_hash),gate:writeGate(String(d.dataset_id))};
+    });},
+    closeAcceptanceSourceWriteGate(i:AcceptanceInput<'closeAcceptanceSourceWriteGate'>):AcceptanceResults['closeAcceptanceSourceWriteGate']{return transaction(db,()=>{
+      const p=bound(i,true),r=acceptancePreparationRequest.parse(json(p.request_json));if(!r.source)fail('ACCEPTANCE_SOURCE_NOT_APPLICABLE');
+      const d=get('SELECT * FROM dataset_preparations WHERE dataset_id=? AND project_id=? AND operation_id=?',r.source.datasetId,r.projectId,r.source.datasetOperationId)??fail('ACCEPTANCE_SOURCE_CHANGED');
+      const request=previewWriteCloseRequest.parse({schemaVersion:'devmesh.preview-write-close.v1',operationId:i.operationId,projectId:r.projectId,datasetId:r.source.datasetId,datasetOperationId:r.source.datasetOperationId,datasetRequestHash:d.request_hash,expectedFence:i.expectedFence}),body=canonical(request),requestHash=digest(body),old=get('SELECT * FROM preview_write_closures WHERE operation_id=?',i.operationId);
+      if(old){if(old.request_json!==body||old.request_hash!==requestHash)fail('ACCEPTANCE_SOURCE_CLOSE_CHANGED');const gate=writeGate(r.source.datasetId);return {gate,closeRequest:request,current:gate.closeOperationId===i.operationId&&gate.closeRequestHash===requestHash};}
+      if(p.revision!==i.expectedRevision||!['SENT','UNKNOWN'].includes(String(p.state)))fail('ACCEPTANCE_REVISION_CHANGED');if(!current(p))fail('ACCEPTANCE_BASIS_CHANGED');
+      const g=writeGate(r.source.datasetId);if(g.datasetOperationId!==r.source.datasetOperationId||g.datasetRequestHash!==d.request_hash||g.state!=='OPEN'||g.fence!==i.expectedFence)fail('ACCEPTANCE_SOURCE_FENCE_CHANGED');
+      const at=now();exec('INSERT INTO preview_write_closures VALUES(?,?,?,?,?)',i.operationId,g.datasetId,requestHash,body,at);exec("UPDATE preview_write_gates SET state='CLOSED',fence=fence+1,revision=revision+1,close_operation_id=?,close_request_hash=?,updated_at=? WHERE dataset_id=?",i.operationId,requestHash,at,g.datasetId);
+      const gate=writeGate(g.datasetId);exec('INSERT INTO preview_write_gate_events VALUES(?,?,?,?)',gate.datasetId,gate.revision,canonical(gate),at);hooks.sourceClosed(r.runId,i.operationId,gate.datasetId,gate.fence);return {gate,closeRequest:request,current:true};
+    });},
     listAcceptancePreparations(i:AcceptanceInput<'listAcceptancePreparations'>){return transaction(db,()=>{if(policy(i.projectId,i.policyHash).backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);const rows=all('SELECT rowid sequence,* FROM acceptance_preparations WHERE project_id=? AND policy_hash=? AND rowid>? ORDER BY rowid LIMIT ?',i.projectId,i.policyHash,i.afterSequence,i.limit+1),page=rows.slice(0,i.limit);return {items:page.map(r=>({sequence:Number(r.sequence),preparation:view(r)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};});},
     markAcceptancePreparationSent(i:AcceptanceInput<'markAcceptancePreparationSent'>){return transaction(db,()=>{const r=row(i.operationId);backend(i.principalId,r);if(r.request_hash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');if(r.state!=='PREPARED')return {dispatch:false,preparation:view(r)};if(r.revision!==i.expectedRevision)fail('ACCEPTANCE_REVISION_CHANGED');if(!current(r))fail('ACCEPTANCE_BASIS_CHANGED');if(get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')",r.project_id!))fail('ACCEPTANCE_EFFECT_UNRESOLVED');exec("UPDATE acceptance_preparations SET state='SENT',revision=revision+1,updated_at=? WHERE operation_id=?",now(),i.operationId);return {dispatch:true,preparation:history(row(i.operationId))};});},
     markAcceptancePreparationUnknown(i:AcceptanceInput<'markAcceptancePreparationUnknown'>){return transaction(db,()=>{const r=row(i.operationId);backend(i.principalId,r);if(r.request_hash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');if(r.state==='UNKNOWN'&&r.error_code===i.errorCode)return view(r);if(!['SENT','UNKNOWN'].includes(String(r.state))||r.revision!==i.expectedRevision)fail('ACCEPTANCE_REVISION_CHANGED');exec("UPDATE acceptance_preparations SET state='UNKNOWN',revision=revision+1,error_code=?,updated_at=? WHERE operation_id=?",i.errorCode,now(),i.operationId);return history(row(i.operationId));});},

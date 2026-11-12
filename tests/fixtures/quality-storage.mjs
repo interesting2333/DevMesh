@@ -11,7 +11,7 @@ const op=()=> 'op_'+randomUUID().replaceAll('-','');
 // Actual migrated handlers and local content publication. Git/Runner/A2A facts
 // below are deliberate DB fixtures; authenticated execution is tested separately.
 export async function qualityStorageFixture(t,options={}){
- const f=options.baseFixture??await candidateFixture(t,{configureDraft:options.configureDraft}),q=qualityFixture({human:options.human,targetCommit:options.targetCommit});if(!options.baseFixture){await f.complete(0);await f.complete(1);}
+  const f=options.baseFixture??await candidateFixture(t,{configureDraft:options.configureDraft,targetVersion:options.targetVersion}),q=qualityFixture({human:options.human,targetCommit:options.targetCommit});if(!options.baseFixture){await f.complete(0);await f.complete(1);}
   q.policy.checks.find(c=>c.kind==='tests').checkId='check_required';q.policy.checks.find(c=>c.kind==='tests').requiredTests[0].requirementIds=requirements().requirements.map(r=>r.id);options.configureQuality?.(q);q.reseal();
  const policy=await f.storage.request('registerQualityPolicy',{principalId:'user_1',projectId:f.p.projectId,policy:q.policy}),work=f.draft.works[options.workIndex??2],subject={principalId:'user_1',runId:f.p.runId,purpose:'work-input',workId:work.workId},basis=await f.storage.request('getCandidateSourceBasis',subject),sourceOperation=op(),now=new Date().toISOString(),commit=q.input.scope.targetCommit;
  const sourceBody={commit,tree:'e'.repeat(40),files:q.input.scope.gitManifest.map(file=>({path:file.path,mode:'100644',objectId:'a'.repeat(40),byteSize:100,sha256:file.sha256})),byteSize:100},manifest={...sourceBody,sha256:hash(canonical(sourceBody))};

@@ -1,0 +1,109 @@
+{
+  "recordedAt": "2026-11-12T20:43:00.742Z",
+  "scope": "Supplement to the earlier final-input-binding, which records the state before the staged whitespace check found one trailing space. Final SQL removes that space and updates only its v38 checksum; TypeScript, existing tests and executable JavaScript remain byte-identical. Six final migration cases run against the final checksum, without changing inputs or artifacts during execution.",
+  "normalization": {
+    "recordedAt": "2026-11-12T20:39:11.874Z",
+    "scope": "One trailing space removed from new migration 38; no SQL token, TypeScript or existing test change. Manifest updates only v38 checksum. Earlier logs used the before checksum; final migration verification is separate.",
+    "stagedCheckExitCode": 2,
+    "path": "packages/storage-sqlite/migrations/0038-datasetownership.sql",
+    "beforeSha256": "8211fa44f69eb564a1062cd12132eadfd0c47eb839131656beacf5f8180f41e4",
+    "afterSha256": "9863a4f34b4a8da430c4f58d4864649e9f8d3c2f8e1e02dbd5d9761d3bbcf5cf"
+  },
+  "groups": [
+    {
+      "name": "main-1",
+      "changes": [
+        "packages/storage-sqlite/migrations/manifest.json",
+        "packages/storage-sqlite/migrations/0038-datasetownership.sql"
+      ],
+      "added": [
+        "tests/storage-acceptance-proof-upgrade.test.mjs"
+      ],
+      "artifacts": [
+        "packages/storage-sqlite/dist/migrations/0038-datasetownership.sql",
+        "packages/storage-sqlite/dist/migrations/manifest.json"
+      ],
+      "unchangedTypeScriptAndExecutableJavaScript": true,
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 1
+        }
+      ]
+    },
+    {
+      "name": "main-2",
+      "changes": [
+        "packages/storage-sqlite/migrations/manifest.json",
+        "packages/storage-sqlite/migrations/0038-datasetownership.sql"
+      ],
+      "added": [
+        "tests/storage-acceptance-proof-upgrade.test.mjs"
+      ],
+      "artifacts": [
+        "packages/storage-sqlite/dist/migrations/0038-datasetownership.sql",
+        "packages/storage-sqlite/dist/migrations/manifest.json"
+      ],
+      "unchangedTypeScriptAndExecutableJavaScript": true,
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "name": "storage-1",
+      "changes": [
+        "packages/storage-sqlite/migrations/manifest.json",
+        "packages/storage-sqlite/migrations/0038-datasetownership.sql"
+      ],
+      "added": [
+        "tests/storage-acceptance-proof-upgrade.test.mjs"
+      ],
+      "artifacts": [
+        "packages/storage-sqlite/dist/migrations/0038-datasetownership.sql",
+        "packages/storage-sqlite/dist/migrations/manifest.json"
+      ],
+      "unchangedTypeScriptAndExecutableJavaScript": true,
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "name": "history-1",
+      "changes": [
+        "packages/storage-sqlite/migrations/0038-datasetownership.sql",
+        "packages/storage-sqlite/migrations/manifest.json"
+      ],
+      "added": [],
+      "artifacts": [
+        "packages/storage-sqlite/dist/migrations/0038-datasetownership.sql",
+        "packages/storage-sqlite/dist/migrations/manifest.json"
+      ],
+      "unchangedTypeScriptAndExecutableJavaScript": true,
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "name": "format-tests",
+      "changes": [],
+      "added": [],
+      "artifacts": [],
+      "unchangedTypeScriptAndExecutableJavaScript": true,
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 0
+        }
+      ]
+    }
+  ]
+}

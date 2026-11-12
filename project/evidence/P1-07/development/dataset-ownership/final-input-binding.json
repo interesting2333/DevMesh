@@ -1,0 +1,64 @@
+{
+  "recordedAt": "2026-11-12T20:36:27.280Z",
+  "scope": "Verifies final existing source/test and emitted bytes against each retained run. Main 1 retains its original failure. The only added test did not alter runtime or existing tests.",
+  "groups": [
+    {
+      "name": "main-1",
+      "changed": [],
+      "added": [
+        "tests/storage-acceptance-proof-upgrade.test.mjs"
+      ],
+      "changedArtifacts": [],
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 1
+        }
+      ]
+    },
+    {
+      "name": "main-2",
+      "changed": [],
+      "added": [
+        "tests/storage-acceptance-proof-upgrade.test.mjs"
+      ],
+      "changedArtifacts": [],
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "name": "storage-1",
+      "changed": [],
+      "added": [
+        "tests/storage-acceptance-proof-upgrade.test.mjs"
+      ],
+      "changedArtifacts": [],
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "name": "history-1",
+      "changed": [],
+      "added": [],
+      "changedArtifacts": [],
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 0
+        }
+      ]
+    }
+  ],
+  "additionalTest": {
+    "path": "tests/storage-acceptance-proof-upgrade.test.mjs",
+    "sha256": "4e7cf95ab3f63d0656993571f1ac7624c46d848694ca0e2a7ffff490297b9717"
+  }
+}

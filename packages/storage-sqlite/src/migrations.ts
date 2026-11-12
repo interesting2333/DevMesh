@@ -51,14 +51,26 @@ export function applyMigrations(db: DatabaseSync, migrations: readonly Migration
     if (identity?.store_id !== storeId || identity.layout_version !== layoutVersion) throw new StorageError('STORE_IDENTITY_MISMATCH', 409, 'storeId/layoutVersion does not match');
   }
   for (const migration of migrations.slice(version, targetVersion)) {
-    transaction(db, () => {
+    const rebuild=migration.sql.startsWith('-- devmesh:foreign-key-rebuild\n');
+    if(rebuild&&db.isTransaction)throw new StorageError('MIGRATION_TRANSACTION_ACTIVE',409,'A foreign-key rebuild requires an exclusive startup connection outside a transaction');
+    const foreignKeys=Number(db.prepare('PRAGMA foreign_keys').get()!.foreign_keys);
+    if(rebuild)db.exec('PRAGMA foreign_keys=OFF');
+    let failure:{error:unknown}|undefined;
+    try{transaction(db, () => {
       if (version === 0) db.exec('CREATE TABLE schema_migrations(version INTEGER PRIMARY KEY,name TEXT NOT NULL UNIQUE,sha256 TEXT NOT NULL,applied_at TEXT NOT NULL) STRICT;');
       db.exec(migration.sql);
       if (version === 0) db.prepare('INSERT INTO store_metadata VALUES(1,?,?,?)').run(storeId, layoutVersion, new Date().toISOString());
       if (db.prepare('PRAGMA foreign_key_check').get()) throw new StorageError('MIGRATION_FOREIGN_KEY_FAILURE', 409, 'Migration left invalid foreign keys');
       db.prepare('INSERT INTO schema_migrations VALUES(?,?,?,?)').run(migration.version, migration.name, migration.sha256, new Date().toISOString());
       db.exec(`PRAGMA user_version=${migration.version}`);
-    });
+    });}catch(error){failure={error};}
+    if(rebuild){
+      try{
+        db.exec(foreignKeys?'PRAGMA foreign_keys=ON':'PRAGMA foreign_keys=OFF');
+        if(Number(db.prepare('PRAGMA foreign_keys').get()!.foreign_keys)!==foreignKeys)throw new StorageError('MIGRATION_FOREIGN_KEY_RESTORE_FAILED',500,'Foreign-key enforcement was not restored');
+      }catch(error){if(failure)throw new AggregateError([failure.error,error],'Migration failed and foreign-key enforcement could not be restored');throw error;}
+    }
+    if(failure)throw failure.error;
     version = migration.version;
   }
   return version;

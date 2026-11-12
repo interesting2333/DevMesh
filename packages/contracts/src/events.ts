@@ -25,6 +25,7 @@ export const eventPayloads = {
   PreviewOperationChanged:z.strictObject({previewId:ids.preview,state:z.enum(['STARTING','READY','STOPPING','STOPPED','EXPIRED','UNKNOWN'])}),
   AcceptancePreparationChanged:z.strictObject({preparationId:ids.operation,state:z.enum(['PREPARED','SENT','UNKNOWN','FAILED'])}),
   AcceptanceReadinessObserved:z.strictObject({preparationId:ids.operation,sequence:revision,state:z.enum(['READY','UNKNOWN'])}),
+  DatasetWriteGateClosed:z.strictObject({datasetId:ids.dataset,preparationId:ids.operation,fence:revision}),
   ReleaseAccepted: z.strictObject({ candidateId: ids.candidate, releaseId: ids.release }),
   PreviewStateChanged: z.strictObject({ previewId: ids.preview, state: z.enum(['PREPARING', 'RUNNING', 'STOPPING', 'STOPPED', 'FAILED', 'OUTCOME_UNKNOWN']) }),
   ExportUpdated: z.strictObject({ exportId: ids.export, status: operationStatus }),
@@ -41,7 +42,7 @@ export const domainEvent = z.discriminatedUnion('type', [
   eventOf('PlanConfirmed'), eventOf('WorkAdmitted'), eventOf('AttemptStateChanged'), eventOf('A2ATaskObserved'),
   eventOf('ToolOperationUpdated'), eventOf('ArtifactRegistered'), eventOf('ChangeApplied'), eventOf('DecisionSaved'),
   eventOf('ControlProgress'), eventOf('ConfigurationApplied'), eventOf('CandidateUpdated'), eventOf('ReleaseAccepted'),
-  eventOf('PreviewStateChanged'), eventOf('ExportUpdated'),eventOf('IssueChanged'),eventOf('PipelineChanged'),eventOf('CandidateReviewRecorded'),eventOf('CandidateRejected'),eventOf('DatasetStateChanged'),eventOf('PreviewOperationChanged'),eventOf('AcceptancePreparationChanged'),eventOf('AcceptanceReadinessObserved'),
+  eventOf('PreviewStateChanged'), eventOf('ExportUpdated'),eventOf('IssueChanged'),eventOf('PipelineChanged'),eventOf('CandidateReviewRecorded'),eventOf('CandidateRejected'),eventOf('DatasetStateChanged'),eventOf('PreviewOperationChanged'),eventOf('AcceptancePreparationChanged'),eventOf('AcceptanceReadinessObserved'),eventOf('DatasetWriteGateClosed'),
 ]).superRefine((event, ctx) => {
   if (event.timeSource === 'observed' && event.occurredAt !== event.observedAt) ctx.addIssue({ code: 'custom', path: ['occurredAt'], message: 'Observed time must equal occurredAt when no producer time exists' });
   const payload = event.payload as Record<string, unknown>;

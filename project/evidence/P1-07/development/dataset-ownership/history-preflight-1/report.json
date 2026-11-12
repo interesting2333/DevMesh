@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mode": "tests",
+  "scope": "Dataset preparation ownership and logical admission only; not actual physical fencing, containers or T5.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        ".cache/p111-history-case.test.mjs"
+      ],
+      "startedAt": "2026-11-12T20:24:47.749Z",
+      "finishedAt": "2026-11-12T20:25:01.582Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "a67224bb8e51dce76e337e138edcc0a4c1a9bc58a4bc27ef86b79105be918d53"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

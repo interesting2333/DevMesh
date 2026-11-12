@@ -1,10 +1,14 @@
 # 接受准备、原证明与当前可用性
 
-迁移 36 保存原接受意图，迁移 37 保存不可变准备证明和追加的当前观察。私有控制面可计算准备 READY；它不是 Release 或用户已接受。尚无默认实际准备后端、Release 创建或 T5 提交命令；企业身份、物理准备／fencing、真实容器健康及发布继续实施和验证。
+迁移 36 保存原接受意图，迁移 37 保存不可变准备证明和追加的当前观察，迁移 38 统一数据策略／准备归属及逻辑写门。私有控制面可计算准备 READY；它不是 Release 或用户已接受。尚无默认实际准备后端、Release 创建或 T5 提交命令；企业身份、物理准备／fencing、真实容器健康及发布继续实施和验证。
 
 可信宿主显式调用 `registerAcceptanceBackendPolicy`；该配置入口不挂公共 HTTP／MCP。owner 的普通项目身份不能替代配置的后端主体签派发／未知观察。登记配置不证明后端实际就绪。
 
-`beginAcceptancePreparation` 使用标准 meta、Run scope 与强 If-Match，要求准确 CURRENT 候选、完整 PASS 审查、原接受指针和 dataPlanHash。服务端固定 Run 代际、镜像、原数据身份与 schema、准确策略，预留原 releaseId／新的 targetDatasetId 和派生存储键；不创建文件或数据库对象，不将预览克隆默认替换已接受数据。原键恢复返回同一原意图的当前状态，权限仍重新校验。
+`beginAcceptancePreparation` 使用标准 meta、Run scope 与强 If-Match，要求准确 CURRENT 候选、完整 PASS 审查、原接受指针和 dataPlanHash。服务端固定 Run 代际、镜像、原数据身份与 schema、准确策略，预留原 releaseId／新的 targetDatasetId 和派生存储键；同事务登记 PREPARING 元数据、真实准备归属和初始 CLOSED 逻辑门，不创建业务 SQLite 文件，不将预览克隆默认替换已接受数据。原键恢复返回同一原意图的当前状态，权限仍重新校验。
+
+`dataset_backend_policies` 区分 PREVIEW／ACCEPTANCE；原 `preview_backend_policies` 是只暴露预览策略的兼容视图。`dataset_preparations` 永久绑定准确原 operation／requestHash／dataset／项目／用途／策略与 baseReleaseId。只有 PRESERVE_MIGRATE 登记旧 dataset 为复制 origin；REPLACE 的 origin 为空，baseReleaseId 继续固定旧基线。接受准备数据暂无限期保留，retentionUntil 的 `9999-12-31T23:59:59.999Z` 是明确的无限期标记，不能按预览 TTL 清理。
+
+`getAcceptanceDataset` 是校验成员／原后端及原 hash 的私有只读查询。原后端取得派发许可后，可用 `closeAcceptanceSourceWriteGate` 关闭原请求指定的旧门，不能自行传其他来源；expectedRevision／expectedFence 防止旧依据的新动作。闭门、递增 fence、历史和 Run 事件同事务，丢 ACK 按原请求恢复；关闭不等同 HTTP 排空、数据库只读或物理 fencing。接受目标从 fence=0 初始 CLOSED，没有伪造 OPEN→CLOSED 记录；当前没有开放或自动重开命令。
 
 REPLACE 另要求 `recordAcceptanceReplacementDecision` 的明确确认，绑定当前候选、审查、原接受 release 和完整数据方案。初始方案拒绝伪造替换确认。迭代替换与迁移的实际执行／凭证验证仍未完成，不能凭该记录直接覆盖数据。
 
@@ -14,7 +18,7 @@ REPLACE 另要求 `recordAcceptanceReplacementDecision` 的明确确认，绑定
 
 `AcceptancePreparer` 需显式传入可信 `AcceptancePreparationBackend`。未配置不派发；preflight 在意图外只读检查；取得唯一派发许可才调用 prepare。SENT／UNKNOWN、许可 ACK 丢失或重开后只调用 inspect，查询原请求的对象，不能重新初始化、迁移或创建实例。适配器在每个新动作前调用最后授权，持有实际持久操作日志；该接口不是一个默认启用的生产适配器。
 
-可信后端的 READY 观察固定完整原 requestHash／候选／reviewHash／数据方案／release／Runner，目标 dataset／存储键／schema、源 release、快照 SHA／大小／完整性／迁移引用／原 journal，源逻辑关门与物理 fence、目标关闭 fence，以及准确服务 reservation／profile／实例／镜像／端点和 RELEASE_HELD claim。首次证明只写一次，后续观察不能换文件证明、fence 或实例；prepare 完成不创建控制面 dataset／Release 行。保留／替换原数据时须存在准确原关闭记录，关闭、取得物理 fence、快照和准备时间有序；原网关零在途只能作逻辑检查。
+可信后端的 READY 观察固定完整原 requestHash／候选／reviewHash／数据方案／release／Runner，目标 dataset／存储键／schema、源 release、快照 SHA／大小／完整性／迁移引用／原 journal，源逻辑关门与物理 fence、目标关闭 fence，以及准确服务 reservation／profile／实例／镜像／端点和 RELEASE_HELD claim。首次证明只写一次，同事务将原目标元数据推进 WRITE_FROZEN，后续观察不能换文件证明、fence 或实例；不创建 Release。保留／替换原数据时须存在准确原关闭记录，关闭、取得物理 fence、快照和准备时间有序；原网关零在途只能作逻辑检查。
 
 每次 inspect 返回 READY 前必须实际复核原 source／target 物理 fence 仍持有、目标写门仍关闭、Runner 原 claim 仍为 RELEASE_HELD 及原服务当前健康。新鲜观察绑定原 fence proofHash／claimHash／端点和不回退的 custodyRevision，Worker 只接受 0～30 秒健康年龄；未来时间或超时关闭当前 READY。UNKNOWN 保留原不可变证明但关闭可用性；UNKNOWN 不重置归属版本高水位。观察同时 CAS 核实开始时的 preparationRevision 与观察 sequence，二者及不可变历史和领域事件同事务；后续原准备 UNKNOWN 用持久 revision 关闭旧 READY，即使两个提交同一毫秒也不依赖时间比较。原重复 ACK 仅返回当前投影，不复活旧 READY。角色、候选或审查失效显示 STALE。
 

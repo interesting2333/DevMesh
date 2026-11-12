@@ -1,0 +1,30 @@
+import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {spawn} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const root='.cache/p1-07/ownership-diagnostic-1';
+if(process.argv[2]!=='child'){
+ if(existsSync(root))throw Error('No overwrite');mkdirSync(root,{recursive:true});writeFileSync(root+'/diagnostic-driver.mjs',readFileSync(new URL(import.meta.url)));
+ const child=spawn(process.execPath,[new URL(import.meta.url).pathname.slice(1),'child'],{windowsHide:true,stdio:'inherit',env:{...process.env,...JSON.parse(readFileSync('.cache/p107-session-env.json','utf8'))}});process.exitCode=await new Promise(r=>child.on('close',r));
+}else{
+ const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+ const files=['tests/fixtures/quality-runner.mjs','tests/fixtures/release-freeze.mjs','packages/storage-sqlite/src/release-delivery-domain.ts'];
+ const before=Object.fromEntries(files.map(f=>[f,sha(readFileSync(f))]));
+ const absolute=file=>readFileSync(file,'utf8').replace(/from '([^']+)'/g,(_all,spec)=>`from '${spec.startsWith('.')?pathToFileURL(resolve('tests/fixtures',spec)).href:spec}'`);
+ let q=absolute('tests/fixtures/quality-runner.mjs');
+ q=q.replace('async function runJob(){','async function runJob(){const trace=globalThis.ownershipDiagnosticTrace=[];const stamp=label=>trace.push({label,at:new Date().toISOString()});stamp("begin");');
+ q=q.replace('const request=sent(currentFixturePermit()),job=await runner.start(request),dispatch=', 'const request=sent(currentFixturePermit());trace.push({label:"permit",at:new Date().toISOString(),expiresAt:request.permit.expiresAt});const job=await runner.start(request);stamp("submitted");const dispatch=');
+ q=q.replace('await coordinator.process(dispatch);await manager.tick();','await coordinator.process(dispatch);stamp("coordinator-sent");await manager.tick();stamp("tick-start");');
+ q=q.replace("state==='RUNNING');const fact", "state==='RUNNING');stamp(\"running\");const fact");
+ q=q.replace("state==='EXITED');await coordinator", "state==='EXITED');stamp(\"exited\");await coordinator");
+ q=q.replace('return runner.get(job.jobId);','const final=await runner.get(job.jobId);trace.push({label:"final",at:new Date().toISOString(),job:final});return final;');
+ writeFileSync(root+'/instrumented-quality.mjs',q);
+ let f=absolute('tests/fixtures/release-freeze.mjs').replace(pathToFileURL(resolve('tests/fixtures/quality-runner.mjs')).href,pathToFileURL(resolve(root+'/instrumented-quality.mjs')).href);
+ f=f.replace('if(!options.noDelivery)await new DeliveryCollector(f.storage,f.content,f.runner).collect(deliveryInput);','try{if(!options.noDelivery)await new DeliveryCollector(f.storage,f.content,f.runner).collect(deliveryInput);}finally{globalThis.ownershipDiagnosticQuality=await f.read();}');
+ writeFileSync(root+'/instrumented-release.mjs',f);
+ const {releaseFreezeFixture}=await import(pathToFileURL(resolve(root+'/instrumented-release.mjs')).href),cleanups=[],startedAt=new Date().toISOString();
+ let outcome;try{await releaseFreezeFixture({after:fn=>cleanups.push(fn)});outcome={passed:true};}catch(e){outcome={passed:false,code:e.code,message:e.message};}
+ const record={scope:'Diagnostic instrumented fixture copies only. Additional timestamps may affect timing. No acceptance/controller validation, production or test source edits.',startedAt,finishedAt:new Date().toISOString(),outcome,trace:globalThis.ownershipDiagnosticTrace,quality:globalThis.ownershipDiagnosticQuality,inputsBefore:before,inputsAfter:Object.fromEntries(files.map(f=>[f,sha(readFileSync(f))]))};writeFileSync(root+'/diagnostic.json',JSON.stringify(record,null,2)+'\n');console.log(JSON.stringify({root,outcome}));
+ for(const cleanup of cleanups)await cleanup();if(!outcome.passed)process.exitCode=1;
+}

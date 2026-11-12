@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mode": "tests",
+  "scope": "Dataset preparation ownership and logical admission only; not actual physical fencing, containers or T5.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/storage-acceptance-proof-upgrade.test.mjs"
+      ],
+      "startedAt": "2026-11-12T20:35:54.398Z",
+      "finishedAt": "2026-11-12T20:36:07.406Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "b4743f698ba9c396647caa22c94a5885eff839bd99daaa9c6c66a9209c22b785"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

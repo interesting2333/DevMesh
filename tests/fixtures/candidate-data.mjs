@@ -8,8 +8,8 @@ import {seedHistoricalVerification} from './historical-verification.mjs';
 // These tests exercise the actual migrated schema and Worker command handlers.
 // Retained source facts are deliberately seeded DB fixtures, not Git transfer,
 // Runtime or Runner evidence. Real Git behavior has separate integration tests.
-export async function candidateFixture(t,{configureDraft}={}){
- const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON');applyMigrations(db,readMigrations(),randomUUID());t.after(()=>db.close());
+export async function candidateFixture(t,{configureDraft,targetVersion}={}){
+  const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON');const migrations=readMigrations();applyMigrations(db,migrations,randomUUID(),1,targetVersion??migrations.length);t.after(()=>db.close());
  const domain=createDomain(db),storage={async request(method,input){return domain.execute(method,input);}},p=await project(storage),draft=plan(['developer','developer','tester']),req=requirements(),[left,right,tester]=draft.works;
  for(const [index,work] of draft.works.entries()){work.inputRefs=[];work.writeScope=work.role==='developer'?['src/'+index+'.ts']:[];}
  tester.dependencies=[left,right].map(work=>({workId:work.workId,requiredOutcome:'success'}));tester.inputRefs=[left,right].map(work=>({kind:'output',workId:work.workId,outputSlot:'implementation.commit'}));tester.outputSpec=[{slot:'verification.report',schemaId:'devmesh.test-result.v1'}];tester.completionChecks=[{kind:'required-tests-pass',checkId:'check_required'}];

@@ -84,6 +84,7 @@ import {createPreviewSessionDomain} from './preview-session-domain.js';
 import {previewSessionRequests} from './preview-session-protocol.js';
 import type {PreviewSessionMethod} from './preview-session-protocol.js';
 import {createAcceptanceDomain} from './acceptance-domain.js';
+export {createAcceptanceDomain} from './acceptance-domain.js';
 import {acceptanceRequests} from './acceptance-protocol.js';
 import type {AcceptanceMethod} from './acceptance-protocol.js';
 import {createAcceptanceReadinessDomain} from './acceptance-readiness-domain.js';
@@ -148,6 +149,7 @@ export function createDomain(db: DatabaseSync) {
     operation:(...args)=>operation(...args),
     changed(runId,operationId,preparationId,state){bump(runId);event(runId,operationId,'AcceptancePreparationChanged',{preparationId,state});},
     decision(runId,operationId,decisionId){bump(runId);event(runId,operationId,'DecisionSaved',{decisionId});},
+    sourceClosed(runId,operationId,datasetId,fence){bump(runId);event(runId,operationId,'DatasetWriteGateClosed',{datasetId,preparationId:operationId,fence});},
   });
   const acceptanceReadiness=createAcceptanceReadinessDomain(db,acceptances,(runId,operationId,sequence,state)=>{bump(runId);event(runId,operationId,'AcceptanceReadinessObserved',{preparationId:operationId,sequence,state});});
   const candidateBasis=candidateIntegrations.basis;

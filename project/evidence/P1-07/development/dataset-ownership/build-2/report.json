@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Dataset preparation ownership and logical admission only; not actual physical fencing, containers or T5.",
+  "checks": [
+    {
+      "name": "contracts-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T19:38:01.401Z",
+      "finishedAt": "2026-11-12T19:39:29.403Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-build.txt",
+      "sha256": "c09651466b418058024b68e9c7c1d19927c579feb82b2943367e352830e1d91c"
+    },
+    {
+      "name": "contracts-generate",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs"
+      ],
+      "startedAt": "2026-11-12T19:39:29.415Z",
+      "finishedAt": "2026-11-12T19:39:37.074Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-generate.txt",
+      "sha256": "cb6a787855f1a36b6b04259f69dab3b5ba4236d25efaa4e9a6401c806d3d16e5"
+    },
+    {
+      "name": "storage-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T19:39:37.082Z",
+      "finishedAt": "2026-11-12T19:41:14.790Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "storage-build.txt",
+      "sha256": "0564fa1f82010327999d720d54f753ccfabd0024d712dc269c8ded6c3bcbbeaf"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T19:41:14.803Z",
+      "finishedAt": "2026-11-12T19:43:55.305Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T19:43:55.310Z",
+      "finishedAt": "2026-11-12T19:44:10.099Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "42831f467610c5eb73ca374dc97bde3d293cb9ea37e52a6d28f3e6ffd553dcab"
+    }
+  ],
+  "inputChanges": [
+    "packages/storage-sqlite/src/domain.ts",
+    "packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+    "tests/storage-dataset-ownership.test.mjs",
+    "packages/contracts/openapi.json"
+  ]
+}

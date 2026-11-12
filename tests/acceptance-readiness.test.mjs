@@ -20,7 +20,7 @@ test('immutable original proof survives reopen while current health expires and 
   const uncertain=await f.call('markAcceptancePreparationUnknown',{...f.bound(p),errorCode:'EXPLICIT_LEGACY_UNCERTAINTY'});assert.ok(uncertain.revision>p.revision);assert.equal((await ready(f,p)).reasonCode,'ACCEPTANCE_BACKEND_UNCERTAIN');
   await assert.rejects(record(f,p,{...refresh,checkedAt:new Date().toISOString()},4),{code:'ACCEPTANCE_PREPARATION_CHANGED'});assert.equal((await record(f,uncertain,{...refresh,checkedAt:new Date().toISOString()},4)).state,'READY');
   const page=await f.call('listAcceptancePreparationObservations',{...binding(f,p),limit:2});assert.deepEqual(page.items.map(i=>i.sequence),[1,2]);assert.equal(page.nextSequence,2);assert.deepEqual((await f.call('listAcceptancePreparationObservations',{...binding(f,p),afterSequence:2})).items.map(i=>i.sequence),[3,4,5]);
-  assert.equal(f.get('SELECT count(*) n FROM releases').n,0);assert.equal(f.get('SELECT count(*) n FROM datasets').n,0);assert.equal((await f.call('getRun',{runId:f.p.runId})).terminalOutcome,null);
+   assert.equal(f.get('SELECT count(*) n FROM releases').n,0);assert.equal(f.get('SELECT count(*) n FROM datasets').n,1);assert.equal(f.get('SELECT state FROM datasets').state,'WRITE_FROZEN');assert.equal((await f.call('getRun',{runId:f.p.runId})).terminalOutcome,null);
 });
 test('backend identity, exact bindings, closed durable fence kind and fresh health are required; proof cannot be replaced',{timeout:180000},async t=>{
   const f=await acceptanceFixture(t),p=await start(f),o=preparedObservation(p);

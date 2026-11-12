@@ -1,0 +1,6 @@
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+const path='.cache/p111-history-case.test.mjs';if(existsSync(path))throw Error('No overwrite');
+const source=readFileSync('.cache/p111-proof-upgrade.test.mjs','utf8').replace(/from '([^']+)'/g,(_all,spec)=>`from '${spec.startsWith('.')?pathToFileURL(resolve('tests',spec)).href:spec}'`);
+writeFileSync(path,source);console.log(path);

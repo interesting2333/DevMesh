@@ -1376,6 +1376,8 @@ ReleaseCandidate 固定：codeCommit、requirementRevision、planRevision、temp
 
 准备证明与当前可用性分别持久化。证明固定原接受请求、候选／审查／数据方案、目标数据／schema／迁移／完整性、源关门与物理 fence、目标关闭 fence 和准确 Runner 服务／RELEASE_HELD claim，首次保存后不可替换。可信后端每次观察须实际重新核实原 fence 仍持有、目标仍关闭、原服务与归属仍有效且健康；0～30 秒的新鲜健康、观察 准备版本／观察 sequence 双 CAS 和跨 UNKNOWN 不回退的归属版本共同限定当前 READY。失联／过期保留历史但关闭当前可用性，不能凭原成功回执直接提交。唯一派发许可丢 ACK 后只查询原对象；准备 READY 不创建 Release。私有协议字段或逻辑零在途本身不能替代物理隔离证据，未配置实际后端则关闭。
 
+接受与预览使用同一 dataset 台账，但策略用途和真实准备操作分别保留。接受意图登记独立 PREPARING 元数据及初始 CLOSED 逻辑门，不伪造预览 effect、不创建业务文件；准备证明落库才推进 WRITE_FROZEN。保留迁移记录物理 origin；REPLACE 仅保留原 baseReleaseId，不能声称复制了旧数据。接受准备数据无限期保留标记独立于预览 TTL。准确接受后端关闭源逻辑门须固定原操作／hash／fence；丢 ACK 恢复原闭门，不能超时重开。物理排空、Runner 服务、发布开放新门与 T5 仍是后续独立事实。
+
 该规则覆盖“用户正在向旧版本增加任务，同时点接受新版本”的竞态。准备后代码、计划或数据策略变更则原接受操作失效并重新审查；正常新增业务记录由最终冻结快照纳入，不要求每条记录变化都重新确认产品计划。
 
 准备意图先固定准确候选／reviewHash、原接受指针、镜像和数据方案，由服务端预留唯一 releaseId／新目标 datasetId。REPLACE 使用独立的准确主体确认；策略登记或 PREPARED 的持久 ACK 不证明文件、迁移、fencing 或健康已准备好。每项目仅保留一个未核实准备，只有一次派发许可；SENT／UNKNOWN 仅查原对象，不靠 TTL 重建。仅准确从未派发的意图可由当前负责人明确关闭，状态／历史／operation／事件同事务。
@@ -1565,7 +1567,9 @@ DDL 中涉及同项目／同 run 的关系使用复合外键；只验证“ID �
 | verification_results `resultId` | checkId、candidateRevision、targetCommit、status、rawReportRef、producer、createdAt | 追加事实；人工与自动分开；选用结果需同指纹 |
 | defects `defectId` | runId、requirementId、severity、reproRef、expected、actual、sourceCheck、fixRefs、verificationRefs | OPEN/FIX_PROPOSED/REVERIFYING/RESOLVED；复验通过才 RESOLVED |
 | datasets `datasetId` | projectId、originDatasetId、snapshotAt、schemaRevision、storageRef、retentionUntil | PREPARING/READY/WRITE_FROZEN/RETIRED/MISSING；原数据不能被预览写入覆盖 |
-| data_preparations `preparationId` | operationId、sourceDatasetId、writeGateToken、targetDatasetId、migrationHash、evidenceRef | FREEZING/COPYING/MIGRATING/READY/PROMOTED/FAILED/UNKNOWN；同 operation 唯一 |
+| data_preparations `preparationId` | operationId、sourceDatasetId、writeGateToken、targetDatasetId、migrationHash、evidenceRef | FREEZING/COPYING/MIGRATING/READY/PROMOTED/FAILED/UNKNOWN；同 operation 唯一；分步准备事实不等同接受 |
+| dataset_backend_policies `(projectId,policyHash)` | purpose、policyJson、registeredBy、createdAt | PREVIEW／ACCEPTANCE 用途不可变；预览兼容视图不暴露接受策略 |
+| dataset_preparations `operationId` | projectId、datasetId、requestHash、policyHash、purpose、baseReleaseId | 真实准备归属，只追加；接受不能伪造预览 effect；REPLACE 基线不等同物理 origin |
 | previews `previewId` | projectId、runId、candidateId、imageDigest、datasetId、runnerJobId、expiresAt、accessPolicy | STARTING/READY/STOPPING/STOPPED/EXPIRED/UNKNOWN；接受版本来源独立登记 |
 | replay_bundles `replayId` | owner、source、schemaVersion、cutoffSeq、integrity、manifestRef、missingRefs | VERIFYING/READONLY/REJECTED；导入 ID 不绑定在线项目权限 |
 | exports `exportId` | operationId、sourceManifestHash、format、artifactRef、error | PENDING/WORKING/READY/FAILED；接受后仍可独立失败 |

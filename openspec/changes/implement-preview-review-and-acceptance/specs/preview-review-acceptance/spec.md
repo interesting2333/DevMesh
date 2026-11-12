@@ -4,6 +4,18 @@
 
 ## ADDED Requirements
 
+### Requirement: Dataset preparation retains its actual purpose and origin
+
+The system SHALL 用不可变公共归属绑定每个 dataset 的真实准备 operation、requestHash、项目、策略及 PREVIEW／ACCEPTANCE 用途。接受准备 MUST 使用自己的原操作和策略，初始逻辑写门关闭；登记元数据不得声称业务文件或物理 fencing 已完成。REPLACE MUST 保留基线 release 且不虚构复制来源。迁移 MUST 保留旧写门、访问和历史，失败全部回滚并恢复外键检查。
+
+#### Scenario: Acceptance target has an independent original identity
+- **WHEN** 接受准备意图提交或原键恢复
+- **THEN** 目标元数据、通用归属和初始关闭门同事务保留，原预览记录不被复用，不新建预览 effect；后续未知观察不能开放该门
+
+#### Scenario: Closing the original accepted source loses its acknowledgement
+- **WHEN** 准确后端关闭原准备指定的源门，随后丢回执或重启
+- **THEN** 恢复同一闭门请求、fence 和历史；错误主体、来源或版本拒绝，逻辑闭门不作为排空或物理 fence 证明，超时不重开
+
 ### Requirement: Exact candidate review with immutable human observations
 
 The system SHALL 从准确冻结候选及原需求生成完整必要审查集合，区分原自动事实与人工结论。人工结果 MUST 绑定候选 revision／manifest、检查依据、操作者、操作、预期、观察和时间，追加保存并采用权限、幂等及当前记录 CAS。未知项、任意 N/A、用人工覆盖自动失败或对陈旧候选新批准 SHALL 被拒绝。

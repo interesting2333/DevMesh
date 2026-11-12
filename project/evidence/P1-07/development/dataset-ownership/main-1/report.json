@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "mode": "tests",
+  "scope": "Dataset preparation ownership and logical admission only; not actual physical fencing, containers or T5.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/acceptance*.test.mjs",
+        "tests/contracts.test.mjs",
+        "tests/verification-preview-intents.test.mjs",
+        "tests/verification-preview-access.test.mjs",
+        "tests/verification-datasets.test.mjs",
+        "tests/verification-preview-lifecycle.test.mjs"
+      ],
+      "startedAt": "2026-11-12T19:47:02.105Z",
+      "finishedAt": "2026-11-12T20:35:33.229Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "d6586e67146c28a3dfedaef29daa9d3266a366e02b1c99820a8573bfd5f965d2"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}
