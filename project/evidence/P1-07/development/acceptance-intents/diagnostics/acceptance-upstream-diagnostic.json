@@ -1,0 +1,241 @@
+{
+  "scope": "Actual diagnostic rerun of an in-memory instrumented copy of the release fixture. Production sources and test inputs untouched. Not acceptance intent validation.",
+  "startedAt": "2026-11-12T17:48:13.887Z",
+  "finishedAt": "2026-11-12T17:49:07.027Z",
+  "error": {
+    "code": "RELEASE_DELIVERY_POLICY_CHANGED",
+    "message": "Release delivery requires the original approved build and exact retained bytes"
+  },
+  "diagnostic": {
+    "code": "RELEASE_DELIVERY_POLICY_CHANGED",
+    "quality": {
+      "state": "EVALUATED",
+      "configHash": "a3a9ed559ed116080f5855ac334f1228693917f47c7ec6c4a95b3d84e293d17f",
+      "evaluation": {
+        "automaticStatus": "FAIL",
+        "checkConfigHash": "a3a9ed559ed116080f5855ac334f1228693917f47c7ec6c4a95b3d84e293d17f",
+        "checks": [
+          {
+            "checkId": "command",
+            "codes": [
+              "EXECUTION_FAILED"
+            ],
+            "reportIds": [],
+            "status": "FAIL"
+          },
+          {
+            "checkId": "check_required",
+            "codes": [
+              "EXECUTION_FAILED"
+            ],
+            "reportIds": [
+              "tests.front"
+            ],
+            "status": "FAIL",
+            "tests": {
+              "failed": 0,
+              "missing": 0,
+              "passed": 1,
+              "skipped": 0
+            }
+          },
+          {
+            "checkId": "coverage",
+            "codes": [
+              "EXECUTION_FAILED"
+            ],
+            "coverage": {
+              "branches": {
+                "covered": 70,
+                "minimum": 70,
+                "status": "PASS",
+                "total": 100
+              },
+              "lines": {
+                "covered": 80,
+                "minimum": 80,
+                "status": "PASS",
+                "total": 100
+              }
+            },
+            "reportIds": [
+              "coverage.front"
+            ],
+            "status": "FAIL"
+          }
+        ],
+        "reviewStatus": "NOT_REQUIRED",
+        "schemaVersion": "devmesh.quality-evaluation.v1",
+        "sourceManifestSha256": "7a21ec4b3cb81cd7b078e4c740c48a21c754a56282fd2169d8b2a5814845770b",
+        "targetCommit": "cccccccccccccccccccccccccccccccccccccccc",
+        "topologySha256": "c3e0cda652091d8df55ae6b7d72a1291d76854cb627f9a631572e209372c49dd"
+      }
+    },
+    "deliveryPolicy": {
+      "architecture": "amd64",
+      "checkConfigHash": "a3a9ed559ed116080f5855ac334f1228693917f47c7ec6c4a95b3d84e293d17f",
+      "materials": [
+        {
+          "key": "build",
+          "path": ".artifacts/delivery/0.bin"
+        },
+        {
+          "key": "image.manifest",
+          "path": ".artifacts/delivery/1.bin"
+        },
+        {
+          "key": "image.config",
+          "path": ".artifacts/delivery/2.bin"
+        },
+        {
+          "key": "data.plan",
+          "path": ".artifacts/delivery/3.bin"
+        },
+        {
+          "key": "run.instructions",
+          "path": ".artifacts/delivery/4.bin"
+        },
+        {
+          "key": "collaboration.record",
+          "path": ".artifacts/delivery/5.bin"
+        },
+        {
+          "key": "role.configuration",
+          "path": ".artifacts/delivery/6.bin"
+        },
+        {
+          "key": "image.layer.0",
+          "path": ".artifacts/delivery/7.bin"
+        }
+      ],
+      "producerId": "front",
+      "schemaVersion": "devmesh.delivery-policy.v1",
+      "templateVersion": "web-crud-v1"
+    },
+    "qualityPolicy": {
+      "business": {
+        "exclude": [],
+        "include": [
+          "src/**/*.ts"
+        ]
+      },
+      "checks": [
+        {
+          "checkId": "command",
+          "kind": "command",
+          "producerIds": [
+            "front"
+          ],
+          "reportIds": [],
+          "requiredTests": []
+        },
+        {
+          "checkId": "check_required",
+          "kind": "tests",
+          "producerIds": [
+            "front"
+          ],
+          "reportIds": [
+            "tests.front"
+          ],
+          "requiredTests": [
+            {
+              "fullName": "works",
+              "path": "tests/board.test.ts",
+              "requirementIds": [
+                "requirement_01"
+              ]
+            }
+          ]
+        },
+        {
+          "checkId": "coverage",
+          "kind": "coverage",
+          "producerIds": [
+            "front"
+          ],
+          "reportIds": [
+            "coverage.front"
+          ],
+          "requiredTests": []
+        }
+      ],
+      "delivery": {
+        "architecture": "amd64",
+        "materials": [
+          {
+            "key": "build",
+            "path": ".artifacts/delivery/0.bin"
+          },
+          {
+            "key": "image.manifest",
+            "path": ".artifacts/delivery/1.bin"
+          },
+          {
+            "key": "image.config",
+            "path": ".artifacts/delivery/2.bin"
+          },
+          {
+            "key": "data.plan",
+            "path": ".artifacts/delivery/3.bin"
+          },
+          {
+            "key": "run.instructions",
+            "path": ".artifacts/delivery/4.bin"
+          },
+          {
+            "key": "collaboration.record",
+            "path": ".artifacts/delivery/5.bin"
+          },
+          {
+            "key": "role.configuration",
+            "path": ".artifacts/delivery/6.bin"
+          },
+          {
+            "key": "image.layer.0",
+            "path": ".artifacts/delivery/7.bin"
+          }
+        ],
+        "producerId": "front"
+      },
+      "producers": [
+        {
+          "command": [
+            "node",
+            "scripts/front.mjs"
+          ],
+          "imageDigest": "local/test@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "pathPrefixes": [
+            "/workspace/repo"
+          ],
+          "producerId": "front"
+        }
+      ],
+      "reports": [
+        {
+          "format": "istanbul-v1",
+          "path": ".artifacts/front/coverage-final.json",
+          "producerId": "front",
+          "reportId": "coverage.front",
+          "sourceInclude": [
+            "src/**/*.ts"
+          ]
+        },
+        {
+          "format": "vitest-json-v1",
+          "path": ".artifacts/unit-results.json",
+          "producerId": "front",
+          "reportId": "tests.front",
+          "sourceInclude": []
+        }
+      ],
+      "schemaVersion": "devmesh.quality-policy.v1",
+      "templateVersion": "web-crud-v1",
+      "thresholds": {
+        "branches": 70,
+        "lines": 80
+      },
+      "zeroBranches": "complete-map-proves-none"
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "scope": "Diagnostic instrumentation in ignored copies only; no acceptance validation or production change.",
+  "startedAt": "2026-11-12T17:55:30.413Z",
+  "finishedAt": "2026-11-12T17:56:12.396Z",
+  "outcome": {
+    "passed": true
+  },
+  "trace": [
+    {
+      "label": "begin",
+      "at": "2026-11-12T17:55:52.318Z",
+      "job": null
+    },
+    {
+      "label": "submitted",
+      "at": "2026-11-12T17:55:53.358Z",
+      "job": {
+        "jobId": "job_2896b726480f4c6983071d846e2702a8",
+        "state": "QUEUED",
+        "createdAt": "2026-11-12T17:55:53.167Z",
+        "startedAt": null,
+        "endedAt": null,
+        "stopRequested": false,
+        "timeoutMs": 10000,
+        "notBefore": "2026-11-12T17:55:42.546Z",
+        "expiresAt": "2026-11-12T17:55:57.546Z"
+      }
+    },
+    {
+      "label": "coordinator-sent",
+      "at": "2026-11-12T17:55:53.631Z",
+      "job": {
+        "jobId": "job_2896b726480f4c6983071d846e2702a8",
+        "state": "QUEUED",
+        "createdAt": "2026-11-12T17:55:53.167Z",
+        "startedAt": null,
+        "endedAt": null,
+        "stopRequested": false,
+        "timeoutMs": 10000,
+        "notBefore": "2026-11-12T17:55:42.546Z",
+        "expiresAt": "2026-11-12T17:55:57.546Z"
+      }
+    },
+    {
+      "label": "tick-start",
+      "at": "2026-11-12T17:55:53.732Z",
+      "job": {
+        "jobId": "job_2896b726480f4c6983071d846e2702a8",
+        "state": "STARTING",
+        "createdAt": "2026-11-12T17:55:53.167Z",
+        "startedAt": "2026-11-12T17:55:53.719Z",
+        "endedAt": null,
+        "stopRequested": false,
+        "timeoutMs": 10000,
+        "notBefore": "2026-11-12T17:55:42.546Z",
+        "expiresAt": "2026-11-12T17:55:57.546Z"
+      }
+    },
+    {
+      "label": "running",
+      "at": "2026-11-12T17:55:54.296Z",
+      "job": {
+        "jobId": "job_2896b726480f4c6983071d846e2702a8",
+        "state": "RUNNING",
+        "createdAt": "2026-11-12T17:55:53.167Z",
+        "startedAt": "2026-11-12T17:55:53.719Z",
+        "endedAt": null,
+        "stopRequested": false,
+        "timeoutMs": 10000,
+        "notBefore": "2026-11-12T17:55:42.546Z",
+        "expiresAt": "2026-11-12T17:55:57.546Z"
+      }
+    },
+    {
+      "label": "exited",
+      "at": "2026-11-12T17:55:56.960Z",
+      "job": {
+        "jobId": "job_2896b726480f4c6983071d846e2702a8",
+        "state": "EXITED",
+        "createdAt": "2026-11-12T17:55:53.167Z",
+        "startedAt": "2026-11-12T17:55:53.719Z",
+        "endedAt": "2026-11-12T17:55:56.885Z",
+        "stopRequested": false,
+        "timeoutMs": 10000,
+        "notBefore": "2026-11-12T17:55:42.546Z",
+        "expiresAt": "2026-11-12T17:55:57.546Z"
+      }
+    },
+    {
+      "label": "coordinator-acked",
+      "at": "2026-11-12T17:55:57.062Z",
+      "job": {
+        "jobId": "job_2896b726480f4c6983071d846e2702a8",
+        "state": "EXITED",
+        "createdAt": "2026-11-12T17:55:53.167Z",
+        "startedAt": "2026-11-12T17:55:53.719Z",
+        "endedAt": "2026-11-12T17:55:56.885Z",
+        "stopRequested": false,
+        "timeoutMs": 10000,
+        "notBefore": "2026-11-12T17:55:42.546Z",
+        "expiresAt": "2026-11-12T17:55:57.546Z"
+      }
+    }
+  ]
+}

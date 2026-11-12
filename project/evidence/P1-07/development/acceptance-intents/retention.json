@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "retainedAt": "2026-11-12T18:06:34.312Z",
+  "scope": "Actual execution logs, command metadata, source deltas and diagnostic reruns. No runtime databases, secrets, physical fencing/readiness/T5 or clean-checkout acceptance.",
+  "files": [
+    {
+      "path": "acceptance-build-1/contracts-build.txt",
+      "sha256": "00ec22a6080b974953a2011220063cd6f87a7cc0ec9f85096148735033c24ff9"
+    },
+    {
+      "path": "acceptance-build-1/contracts-check.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "path": "acceptance-build-1/contracts-generate.txt",
+      "sha256": "cb6a787855f1a36b6b04259f69dab3b5ba4236d25efaa4e9a6401c806d3d16e5"
+    },
+    {
+      "path": "acceptance-build-1/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "acceptance-build-1/report.json",
+      "sha256": "cd60690ee61c3127b38f5db938125970fb0af8e4f47cdcec5c4faaed37bd4b22"
+    },
+    {
+      "path": "acceptance-build-1/source-map-binding.json",
+      "sha256": "821ba87f0ccbbbef32fef03989fe5c305378e96e3c9f43da7c73d08787fc5e98"
+    },
+    {
+      "path": "acceptance-build-1/storage-build.txt",
+      "sha256": "896242146993667b699f833ed759c783ef027b9fca5bec119624d613ac9dad48"
+    },
+    {
+      "path": "acceptance-build-1/typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "acceptance-1/command.json",
+      "sha256": "4c176c9d94d29fa0cd17bf70755849ac0eeb4a9b91d320120d485f3ca2277708"
+    },
+    {
+      "path": "acceptance-1/output.txt",
+      "sha256": "cc69bbd931004de732870c3e6b33fc1b4ce5a090f47a89ac7a02e486b28ec120"
+    },
+    {
+      "path": "acceptance-1/report.json",
+      "sha256": "b565d12589ef7ba985051d8edea4a1b3fcba80ad5e7501e4ce673041a5fa6ac4"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/contracts/openapi.json",
+      "sha256": "bb88fa4500404cd2a4422189c5d166a26b0b1a5292926bbbc0677275fd0f7899"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/contracts/src/events.ts",
+      "sha256": "bae7168989c832ec63dc35be0b8629f0091a1d70c3145c4be48d7882c95935df"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/ACCEPTANCE.md",
+      "sha256": "9dd9f07990e58c98fffba0e18781858533167ddf42787a36624bc6217070d4d9"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/migrations/0036-acceptanceintents.sql",
+      "sha256": "765c9197031e58e83d39fe60146f9258c0a58436b1d806e48ce70cb99097719e"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "7fb1bbd38b00a81f19c2570193eb676a3751ecf11186ab858cb37dc82761e420"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/src/acceptance-domain.ts",
+      "sha256": "bde8a6c2aff2bb931b950084d68f6d19efbf99eeced58b32f0280a7882154783"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/src/acceptance-protocol.ts",
+      "sha256": "7b61f7b06f05362dab3e7f9035424cf6c65baad772a07d31d56556af7ac4fcd2"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/src/candidate-review-domain.ts",
+      "sha256": "cefd02aa74a6707ad6d60f59c8453019aaf8d3932c2b2feed8b27a8d827a0942"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/src/domain.ts",
+      "sha256": "f107f7a4f78f4931e7cc20308e94f200f25329a7b139185993cd5bdf9eaafd04"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/src/index.ts",
+      "sha256": "20fbffa069b840f40d464ba5ed1764fc37f7ce1f3682c78ba4bbea4dca5a8693"
+    },
+    {
+      "path": "acceptance-1/source-delta/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "fc82851f25c1eaaf3e46d379d83c6de26d1bc20674d2b30a4f1895da634a24f7"
+    },
+    {
+      "path": "acceptance-1/source-delta/tests/acceptance-intents.test.mjs",
+      "sha256": "c5ccb66167bbeb307e993a1a89a1e1347e15b841ac7ba21b084746141f553e9e"
+    },
+    {
+      "path": "acceptance-1/source-delta/tests/fixtures/acceptance.mjs",
+      "sha256": "4bea730de02607c4e481e0e623f6521367c0935899cd7a36a1f559debb809434"
+    },
+    {
+      "path": "acceptance-1/source-delta/tests/storage-acceptance.test.mjs",
+      "sha256": "4ced231fccebde047e23a597dc6e7f78e2bb17a00fe3a556ff7f9d13e98200ff"
+    },
+    {
+      "path": "acceptance-2/command.json",
+      "sha256": "001cca2ea9dc030a1395f5d614ae293f48dadf895875eae8a5f0de1698fcb52b"
+    },
+    {
+      "path": "acceptance-2/output.txt",
+      "sha256": "f0006a873ad8c4b9cdbf2976c7c5c589645ce92ac8945ed38023dbe30fd73af2"
+    },
+    {
+      "path": "acceptance-2/report.json",
+      "sha256": "806083245cfe28e4f5293f18a562ea44aad3b8b3ad998c4a309f61cfe0f149ac"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/contracts/openapi.json",
+      "sha256": "bb88fa4500404cd2a4422189c5d166a26b0b1a5292926bbbc0677275fd0f7899"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/contracts/src/events.ts",
+      "sha256": "bae7168989c832ec63dc35be0b8629f0091a1d70c3145c4be48d7882c95935df"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/ACCEPTANCE.md",
+      "sha256": "9dd9f07990e58c98fffba0e18781858533167ddf42787a36624bc6217070d4d9"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/migrations/0036-acceptanceintents.sql",
+      "sha256": "765c9197031e58e83d39fe60146f9258c0a58436b1d806e48ce70cb99097719e"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "7fb1bbd38b00a81f19c2570193eb676a3751ecf11186ab858cb37dc82761e420"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/src/acceptance-domain.ts",
+      "sha256": "bde8a6c2aff2bb931b950084d68f6d19efbf99eeced58b32f0280a7882154783"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/src/acceptance-protocol.ts",
+      "sha256": "7b61f7b06f05362dab3e7f9035424cf6c65baad772a07d31d56556af7ac4fcd2"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/src/candidate-review-domain.ts",
+      "sha256": "cefd02aa74a6707ad6d60f59c8453019aaf8d3932c2b2feed8b27a8d827a0942"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/src/domain.ts",
+      "sha256": "f107f7a4f78f4931e7cc20308e94f200f25329a7b139185993cd5bdf9eaafd04"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/src/index.ts",
+      "sha256": "20fbffa069b840f40d464ba5ed1764fc37f7ce1f3682c78ba4bbea4dca5a8693"
+    },
+    {
+      "path": "acceptance-2/source-delta/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "fc82851f25c1eaaf3e46d379d83c6de26d1bc20674d2b30a4f1895da634a24f7"
+    },
+    {
+      "path": "acceptance-2/source-delta/tests/acceptance-intents.test.mjs",
+      "sha256": "c5ccb66167bbeb307e993a1a89a1e1347e15b841ac7ba21b084746141f553e9e"
+    },
+    {
+      "path": "acceptance-2/source-delta/tests/fixtures/acceptance.mjs",
+      "sha256": "4bea730de02607c4e481e0e623f6521367c0935899cd7a36a1f559debb809434"
+    },
+    {
+      "path": "acceptance-2/source-delta/tests/storage-acceptance.test.mjs",
+      "sha256": "4ced231fccebde047e23a597dc6e7f78e2bb17a00fe3a556ff7f9d13e98200ff"
+    },
+    {
+      "path": "acceptance-3/command.json",
+      "sha256": "24d90b48349a83e5ab2839f575ae446cfa0d14868452a0e208d7d51026005150"
+    },
+    {
+      "path": "acceptance-3/output.txt",
+      "sha256": "7ca48c8af8bdf3c97fd440293121c786f9485f07602cdbbbd3823c71d629333d"
+    },
+    {
+      "path": "acceptance-3/report.json",
+      "sha256": "e7456c6a3224a13d18ebc923421d9a69559d2e92e93937d0ef48634876ab3eb4"
+    },
+    {
+      "path": "acceptance-3/source-delta/package.json",
+      "sha256": "4bf8c2cf7517ba26cc49471472984d84ded12fe1786ee2484d7ce0fca03afbba"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/contracts/openapi.json",
+      "sha256": "bb88fa4500404cd2a4422189c5d166a26b0b1a5292926bbbc0677275fd0f7899"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/contracts/src/events.ts",
+      "sha256": "bae7168989c832ec63dc35be0b8629f0091a1d70c3145c4be48d7882c95935df"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/ACCEPTANCE.md",
+      "sha256": "b5bfbd3fb4e888f95504ccf2b0c4ae479ed97b05283d5b72a0f0a3c1007bc122"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/migrations/0036-acceptanceintents.sql",
+      "sha256": "765c9197031e58e83d39fe60146f9258c0a58436b1d806e48ce70cb99097719e"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "7fb1bbd38b00a81f19c2570193eb676a3751ecf11186ab858cb37dc82761e420"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/src/acceptance-domain.ts",
+      "sha256": "bde8a6c2aff2bb931b950084d68f6d19efbf99eeced58b32f0280a7882154783"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/src/acceptance-protocol.ts",
+      "sha256": "7b61f7b06f05362dab3e7f9035424cf6c65baad772a07d31d56556af7ac4fcd2"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/src/candidate-review-domain.ts",
+      "sha256": "cefd02aa74a6707ad6d60f59c8453019aaf8d3932c2b2feed8b27a8d827a0942"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/src/domain.ts",
+      "sha256": "f107f7a4f78f4931e7cc20308e94f200f25329a7b139185993cd5bdf9eaafd04"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/src/index.ts",
+      "sha256": "20fbffa069b840f40d464ba5ed1764fc37f7ce1f3682c78ba4bbea4dca5a8693"
+    },
+    {
+      "path": "acceptance-3/source-delta/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "fc82851f25c1eaaf3e46d379d83c6de26d1bc20674d2b30a4f1895da634a24f7"
+    },
+    {
+      "path": "acceptance-3/source-delta/tests/acceptance-intents.test.mjs",
+      "sha256": "b3faba6ab9fd3d0f0a56f2db135262651aba4f9eb273e9c504064a5d65141303"
+    },
+    {
+      "path": "acceptance-3/source-delta/tests/fixtures/acceptance.mjs",
+      "sha256": "4bea730de02607c4e481e0e623f6521367c0935899cd7a36a1f559debb809434"
+    },
+    {
+      "path": "acceptance-3/source-delta/tests/fixtures/quality-runner.mjs",
+      "sha256": "97f6ab22f621feed79a87e2e4e9ae84739b084a808c16f161644cdb341ea11c0"
+    },
+    {
+      "path": "acceptance-3/source-delta/tests/storage-acceptance.test.mjs",
+      "sha256": "4ced231fccebde047e23a597dc6e7f78e2bb17a00fe3a556ff7f9d13e98200ff"
+    },
+    {
+      "path": "diagnostics/acceptance-upstream-diagnostic.json",
+      "sha256": "0c86c60eb52609ec9bb93680ccd411fbac8d50b887b0fd6e653720f6b9389fee"
+    },
+    {
+      "path": "diagnostics/acceptance-upstream-diagnostic-2.json",
+      "sha256": "323a73aa6b39a0dd56cf982d478da9b88c0cb1e9bcdcc10983a5785c4e594bb7"
+    },
+    {
+      "path": "diagnostics/acceptance-upstream-timing-3.json",
+      "sha256": "7adf0f9ea9536a936527af023c59bd9d08bb2119ebf3e22acb97f1decd808d65"
+    },
+    {
+      "path": "diagnostics/p109-diagnose.mjs",
+      "sha256": "eb609a72b6b6fdc017e0d6fef84d0cd29fe09fc961bd6cec222278bef2332448"
+    },
+    {
+      "path": "diagnostics/p109-timing.mjs",
+      "sha256": "6fbd6666085d81d37a47320b322bac0068ebad1f02ae3aab35a40b246d17e397"
+    },
+    {
+      "path": "diagnostics/p109-instrumented-quality.mjs",
+      "sha256": "409b88e86c58da4935bdf38b37490ff51e47738b55da19c265b3e9a7e5b0e1b8"
+    },
+    {
+      "path": "diagnostics/p109-timed-release.mjs",
+      "sha256": "a7ef8c36049de0174da98cbcb6098f9195c30121a97408d954ee5779757f1d85"
+    },
+    {
+      "path": "source-comparisons.json",
+      "sha256": "3412ff181fa002752d0299cc83d3404d0006b8f22e1dd96102952157ddad3f28"
+    }
+  ]
+}

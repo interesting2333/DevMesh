@@ -144,6 +144,14 @@ HTTP 业务请求须绑定实际转发的方法、原路径、正文和筛选后
 
 下载从准确冻结候选的 delivery materialKey 解析原操作／hash／字节数，经内容存储权限、实际内容校验及发送前成员复核后，以 attachment／octet-stream／nosniff／sandbox 输出。调用者不能传内容 hash 或宿主路径；历史候选可只读查看，下载不修改接受指针、Run 终态或质量。下载失败只影响该次读取，不重新生成或接受。此入口不实现导出打包任务或企业登录提供者；各自按已有工作包继续。
 
+### 17. Acceptance intent precedes any readiness proof
+
+迁移 36 新增私有 acceptance_backend_policies、acceptance_data_decisions、acceptance_preparations 及不可变历史。可信宿主显式配置接受后端策略，不因已有预览后端或 owner 身份自动启用。负责人以标准原键／If-Match 固定准确 candidate revision／manifestHash／reviewHash、原接受指针、原数据来源、数据方案、镜像和 Run 代际；服务端预留 releaseId／targetDatasetId 与派生存储键，客户端不能传目标路径、健康或 READY。策略登记及意图提交不创建 dataset 文件、Release 或接受指针。
+
+REPLACE 必须有独立的准确确认记录，绑定候选、reviewHash、原 release、完整 dataPlanHash 与实际确认主体；初始方案不能伪造替换确认。原接受数据的具体内容 hash 不在关闭写门前虚构固定，目标始终为新 ID，不静默使用可写预览克隆。后续可信准备协议仍须实际关闭／排空、快照／迁移、Runner 归属与健康凭证；当前首批接口没有 READY 或提交命令，4.1 保持未勾选。
+
+原项目只能有一项未核实接受准备。只有 PREPARED 可申请一次 SENT 派发许可，并重新核实当前候选、审查、权限及原接受指针；丢派发 ACK 后不重授，SENT／UNKNOWN 只查询原 operation／requestHash／远端身份。当前 owner 可用独立命令关闭准确从未派发的 PREPARED，不能关闭 SENT／UNKNOWN 或靠 TTL 清除。状态、历史、operation 与事件同事务；历史只追加。恢复分页仅供准确策略的后端主体扫描，不开放公共 HTTP／MCP 注册或回执入口。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

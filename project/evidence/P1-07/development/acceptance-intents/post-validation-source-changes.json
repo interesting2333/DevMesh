@@ -1,0 +1,16 @@
+{
+  "recordedAt": "2026-11-12T18:06:39.943Z",
+  "scope": "Read-only final input comparison. After acceptance-3 completed, only Foundation CI step list was changed to include the already executed acceptance suite; final syntax, declared wiring and lint checked separately. No product test rerun or identical-whole-input claim.",
+  "sourceInputs": 438,
+  "unchangedInputs": 437,
+  "differences": [
+    {
+      "path": "scripts/verify-foundation.mjs",
+      "validatedSha256": "0ff974553fa3559c1dc895a93a20d08129bfc9ba753d89222f622bfc89641b88",
+      "currentSha256": "0bef85998dc5733126ecdfb18f89a62fd09473ae653b3b32ed76d6da40c2f773",
+      "baseCommit": "81fbc95c0e5eff9984e629a2140912c29e900127",
+      "baseObject": "5929880d204ecc2ffd36dd9b40634c9e86ee8190",
+      "retainedDelta": false
+    }
+  ]
+}

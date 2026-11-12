@@ -1,0 +1,66 @@
+{
+  "scope": "Read-only comparison, no rerun. Storage suite predates only the listed test/manifest repairs; do not claim identical whole-input fingerprints. Reconstruct each source from its baseCommit plus source-delta.",
+  "comparisons": [
+    {
+      "run": "acceptance-1",
+      "baseCommit": "81fbc95c0e5eff9984e629a2140912c29e900127",
+      "sourceFiles": 438,
+      "scope": "Actual acceptance intent protocol and/or storage regressions, real SQLite Worker/reopen/transaction faults. Human review, Git, OCI/container and upstream facts explicitly supplied; no external preparation, readiness, fencing, T5 or clean-checkout acceptance.",
+      "tests": {
+        "tests": 24,
+        "pass": 22,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "unchangedDuringRun": true,
+      "differentFromFinal": [
+        "package.json",
+        "packages/storage-sqlite/ACCEPTANCE.md",
+        "tests/acceptance-intents.test.mjs",
+        "tests/fixtures/quality-runner.mjs"
+      ],
+      "finalInputsAbsent": []
+    },
+    {
+      "run": "acceptance-2",
+      "baseCommit": "81fbc95c0e5eff9984e629a2140912c29e900127",
+      "sourceFiles": 438,
+      "scope": "Actual acceptance intent protocol and/or storage regressions, real SQLite Worker/reopen/transaction faults. Human review, Git, OCI/container and upstream facts explicitly supplied; no external preparation, readiness, fencing, T5 or clean-checkout acceptance.",
+      "tests": {
+        "tests": 34,
+        "pass": 34,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "unchangedDuringRun": true,
+      "differentFromFinal": [
+        "package.json",
+        "packages/storage-sqlite/ACCEPTANCE.md",
+        "tests/acceptance-intents.test.mjs",
+        "tests/fixtures/quality-runner.mjs"
+      ],
+      "finalInputsAbsent": []
+    },
+    {
+      "run": "acceptance-3",
+      "baseCommit": "81fbc95c0e5eff9984e629a2140912c29e900127",
+      "sourceFiles": 438,
+      "scope": "Actual acceptance intent protocol and/or storage regressions, real SQLite Worker/reopen/transaction faults. Human review, Git, OCI/container and upstream facts explicitly supplied; no external preparation, readiness, fencing, T5 or clean-checkout acceptance.",
+      "tests": {
+        "tests": 32,
+        "pass": 32,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "unchangedDuringRun": true,
+      "differentFromFinal": [],
+      "finalInputsAbsent": []
+    }
+  ]
+}

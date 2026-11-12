@@ -172,6 +172,14 @@ The system SHALL 在外部准备前固定候选、审查、原接受指针和数
 - **WHEN** 数据或镜像准备已经发送但响应丢失
 - **THEN** 持久状态保持待核实，查询原对象，不新建 dataset 或重跑迁移，不同时开放新旧写门
 
+#### Scenario: Intent acknowledgement reserves only the original preparation identity
+- **WHEN** 负责人按当前完整审查、候选版本、原接受指针和明确数据方案保存准备意图
+- **THEN** 固定原 operation／requestHash／releaseId／目标 datasetId，不创建数据文件、Release 或接受事实，未取得可信 fencing／完整性／健康证明前不得显示准备完成
+
+#### Scenario: Preparation dispatch acknowledgement is lost
+- **WHEN** 准备派发许可已提交但响应丢失，或原副作用仍 UNKNOWN
+- **THEN** 重开 Worker 后仍只查询原操作和目标，不再授予派发，不创建替代准备；只有准确从未派发的 PREPARED 可由当前负责人显式关闭
+
 ### Requirement: Atomic acceptance with independent publication recovery
 
 The system SHALL 在短事务重核候选、完整审查、准确原质量、准备凭证、当前接受指针和未知副作用，原子创建不可变 Release、更新接受指针、完成 Run 并保存发布意图。事务外准备和发布不得占用该事务。已提交事实 MUST 在路由或打包失败后保留，恢复只处理原发布／导出。

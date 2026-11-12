@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "scope": "Actual final CI syntax/wiring, lint and management checks. Foundation list now includes the already executed acceptance suite. No full check, remote CI, product test rerun or clean checkout.",
+  "checks": [
+    {
+      "name": "ci-syntax",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--check",
+        "scripts/verify-foundation.mjs"
+      ],
+      "startedAt": "2026-11-12T18:06:43.534Z",
+      "finishedAt": "2026-11-12T18:06:44.404Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "ci-syntax.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "ci-wiring",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        ".cache/p109-ci-check.mjs"
+      ],
+      "startedAt": "2026-11-12T18:06:44.420Z",
+      "finishedAt": "2026-11-12T18:06:45.439Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "ci-wiring.txt",
+      "sha256": "1f92a3635468e144734165de536f9fdcf531739fe8218bd182597e0180823a3e"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T18:06:45.445Z",
+      "finishedAt": "2026-11-12T18:07:03.801Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "project-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "startedAt": "2026-11-12T18:07:03.806Z",
+      "finishedAt": "2026-11-12T18:07:05.662Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "project-check.txt",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "openspec-strict",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/openspec.mjs",
+        "validate",
+        "--all",
+        "--strict",
+        "--no-interactive"
+      ],
+      "startedAt": "2026-11-12T18:07:05.667Z",
+      "finishedAt": "2026-11-12T18:07:20.992Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "openspec-strict.txt",
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "name": "design-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "design/生成完整方案.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-12T18:07:20.998Z",
+      "finishedAt": "2026-11-12T18:07:22.583Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "design-check.txt",
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "name": "diff-check",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "startedAt": "2026-11-12T18:07:22.623Z",
+      "finishedAt": "2026-11-12T18:07:24.304Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "diff-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

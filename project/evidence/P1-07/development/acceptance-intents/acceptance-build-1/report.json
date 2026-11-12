@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "scope": "Actual contracts/storage build, typecheck, lint and generated contract check for the acceptance intent foundation; no external preparation, fencing, healthy proof, T5 or clean checkout.",
+  "checks": [
+    {
+      "name": "contracts-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T17:40:40.783Z",
+      "finishedAt": "2026-11-12T17:41:48.210Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-build.txt",
+      "sha256": "00ec22a6080b974953a2011220063cd6f87a7cc0ec9f85096148735033c24ff9"
+    },
+    {
+      "name": "contracts-generate",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs"
+      ],
+      "startedAt": "2026-11-12T17:41:48.223Z",
+      "finishedAt": "2026-11-12T17:41:53.054Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-generate.txt",
+      "sha256": "cb6a787855f1a36b6b04259f69dab3b5ba4236d25efaa4e9a6401c806d3d16e5"
+    },
+    {
+      "name": "storage-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T17:41:53.060Z",
+      "finishedAt": "2026-11-12T17:43:15.915Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "storage-build.txt",
+      "sha256": "896242146993667b699f833ed759c783ef027b9fca5bec119624d613ac9dad48"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T17:43:15.920Z",
+      "finishedAt": "2026-11-12T17:45:54.924Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T17:45:54.933Z",
+      "finishedAt": "2026-11-12T17:46:13.568Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "contracts-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-12T17:46:13.574Z",
+      "finishedAt": "2026-11-12T17:46:20.728Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-check.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    }
+  ]
+}

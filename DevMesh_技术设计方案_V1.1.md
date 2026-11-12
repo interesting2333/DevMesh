@@ -1376,6 +1376,8 @@ ReleaseCandidate 固定：codeCommit、requirementRevision、planRevision、temp
 
 该规则覆盖“用户正在向旧版本增加任务，同时点接受新版本”的竞态。准备后代码、计划或数据策略变更则原接受操作失效并重新审查；正常新增业务记录由最终冻结快照纳入，不要求每条记录变化都重新确认产品计划。
 
+准备意图先固定准确候选／reviewHash、原接受指针、镜像和数据方案，由服务端预留唯一 releaseId／新目标 datasetId。REPLACE 使用独立的准确主体确认；策略登记或 PREPARED 的持久 ACK 不证明文件、迁移、fencing 或健康已准备好。每项目仅保留一个未核实准备，只有一次派发许可；SENT／UNKNOWN 仅查原对象，不靠 TTL 重建。仅准确从未派发的意图可由当前负责人明确关闭，状态／历史／operation／事件同事务。
+
 源代码接受与预览服务状态分别显示：提交成功后路由暂不可用，显示“已接受，预览恢复中”，不能说应用健康或篡改接受历史。预览到期停容器，保留代码、报告和数据按各自策略处理；到期时间未设置时明确待设置，不作永久保存承诺。
 
 预览计算资源释放区分“原实例已退出”和“原容器已移除”。从未启动的 CREATED 容器不能伪造 EXITED；受信任 Runner 必须保存原启动／停止请求、profile 和完整对象 ID，在停止归属下显式移除原容器，并以成功查询确认该 ID 消失，记录独立 REMOVED 证明及 PREVIEW_REMOVED 回执。清理观察、容量释放与历史同事务提交；命令超时、非零、inspect 找不到、未知创建结果均不足以释放。容器和独占空网络分别保存唯一派发及观察日志，丢回执后只查原 ID，不重复移除；网络清理扫描包含已释放容量的原记录。接受准备持有或已接受归属、运行中／未知对象及未登记旧对象不能被预览到期清理。清理不删除 dataset，真实 Docker／隔离与平台装配必须另行验证。
@@ -1528,6 +1530,7 @@ flowchart LR
 | artifacts、artifact_applicability | 内容哈希、生产者、SHA、候选下适用性 | 事实与可用于本次验收分离 |
 | decisions | subject、basisHash、choice、actor、operation | 同一有效依据不能保存两项相互矛盾决定 |
 | release_candidates、releases | 固定候选清单、确认版本、接受人、数据准备引用 | 一个 run 只接受一次；接受记录与项目引用必须同项目 |
+| acceptance_backend_policies、acceptance_data_decisions、acceptance_preparations／history | 显式可信准备策略、准确替换确认、固定接受依据与原外部操作 | 同项目复合归属、不可变请求／追加历史；一次派发，SENT／UNKNOWN 不替代，意图不等于 READY 或 T5 |
 
 DDL 中涉及同项目／同 run 的关系使用复合外键；只验证“ID 存在”不足以防止跨项目串用。平台接受指针故意引用 releases，不能指向普通 artifact 或未接受 candidate。
 

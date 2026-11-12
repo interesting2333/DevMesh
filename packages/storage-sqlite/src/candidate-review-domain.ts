@@ -109,5 +109,5 @@ export function createCandidateReviewDomain(db:DatabaseSync,plans:ReturnType<typ
    return {items,nextSequence:rows.length>items.length?items.at(-1)!.sequence:null};
   },
  };
- return {execute(method:CandidateReviewMethod,input:unknown):unknown{const parsed=parseContract(candidateReviewRequests[method],input),call=()=>(handlers[method] as (i:unknown)=>unknown)(parsed);return ['recordCandidateReview','recordCandidateRejection'].includes(method)?call():transaction(db,call);}};
+ return {getReview:view,execute(method:CandidateReviewMethod,input:unknown):unknown{const parsed=parseContract(candidateReviewRequests[method],input),call=()=>(handlers[method] as (i:unknown)=>unknown)(parsed);return ['recordCandidateReview','recordCandidateRejection'].includes(method)?call():transaction(db,call);}};
 }
