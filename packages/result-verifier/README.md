@@ -10,7 +10,7 @@
 4. SOURCE 字节和业务引用在内容 ACK 事务落定后，才允许 verification 工作区首次发送流水线。可信服务用 `bind` 将每个 producer 固定到原 pipeline／ordinal；必须在该 stage PENDING 时完成，之后不能改 Job。
 5. PipelineCoordinator 持续核实原 Job。`collect({principalId,operationId})` 只 GET 原 Job／operation 和输出索引；验证实际 argv 哈希、镜像、退出事实、原输出 SHA／大小，再登记日志、报告和计算结果。
 6. `PENDING` 返回明确待核实代码，保持原验证 PREPARED。未知 Job、缺报告、HTTP 不可用或字节不符均不能形成通过。已登记材料可从内容库重读；终态回执丢失只返回原 EVALUATED，不发起测试。
-7. Runtime 已发布原角色候选后，项目负责人调用 `WorkVerifier.verify({principalId,operationId,runId,attemptId,qualityOperationId})`。服务读取原候选和材料字节；Worker 从当前计划／需求／Work revision／epoch、原归档或质量操作及完成条件派生评估。Developer 无法证明的检查保留 MISSING；Tester 不能用模型 PASSED 覆盖原失败。未解决候选缺陷及缺失引用也不能变为成功，独立质量计算仍保留原结果。
+7. 本地 Runtime 将原角色候选、A2A 完成和已调度 Attempt 的 VERIFYING 状态在同一事务发布；共享 Registry 守卫核实当前 Run／Work epoch、控制门和非终态。原回执重放不会重复变更状态；暂停恢复可保留原产物，不推进已关闭的工作。项目负责人随后调用 `WorkVerifier.verify({principalId,operationId,runId,attemptId,qualityOperationId})`。服务读取原候选和材料字节；Worker 从当前计划／需求／Work revision／epoch、原归档或质量操作及完成条件派生评估。Developer 无法证明的检查保留 MISSING；Tester 不能用模型 PASSED 覆盖原失败。未解决候选缺陷及缺失引用也不能变为成功，独立质量计算仍保留原结果。
 8. Work 评估正文与 artifact 在同一内容 ACK 事务登记，随后完成事务重核依据并应用固定的 outcome／outputs／commit／evidence。PASS 可完成，Tester 的确定 findings 单独保留；必要人工项待处理时保持未完成。原键恢复只查询原证据和完成操作，不调用模型或 Runner。只读成员可查询历史，不通过该服务以负责人身份写入或重放。
 
 SOURCE 声明／登记与 stage 首次 SENT 的互斥由 SQLite 顺序保证，不依赖控制面和远端的时钟比较。原操作、依据、producer 绑定、材料 writeKey 和终态结果不可变；暂停后原历史可保留，但 qualification 变为 STALE。读取受当前项目成员权限约束，写入只允许原项目负责人。

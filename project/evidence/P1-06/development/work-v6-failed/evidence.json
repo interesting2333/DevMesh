@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 task 2.3: targeted rerun of all eight real local HTTP Runtime/authenticated MCP/Git source publication tests after the 86/94 workspace run retained eight PERMIT_EXPIRED failures under measured CPU saturation. Production expiry and fixture renewal are unchanged. Current build of changed storage and verifier packages; original 11 Work unit cases.",
+  "sourceCommit": "4e02229fab1818c9aee9f1897b31ec66c36de0d6",
+  "dirty": false,
+  "sourceFingerprint": "17bfd672de98f83b1e374ff36f9a61db7c8e6647fd6f6c5311c188de1eaa91b1",
+  "unchanged": true,
+  "startedAt": "2026-11-12T04:59:25.641Z",
+  "finishedAt": "2026-11-12T05:07:27.541Z",
+  "checks": [
+    {
+      "name": "changed-packages-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 124593,
+      "output": "changed-packages-build.txt",
+      "sha256": "50c51b1ebd107d997e08b8a85f992cf67cd3b94d9aea59fbc75fa65c3e73b83c"
+    },
+    {
+      "name": "workspace-runtime",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 356884,
+      "output": "workspace-runtime.txt",
+      "sha256": "47a3d97e82ec9a460c03dea1de64336463e5951a4331384f7366181370e05b1f"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/work-v6-failed/changed-packages-build.txt",
+      "sha256": "50c51b1ebd107d997e08b8a85f992cf67cd3b94d9aea59fbc75fa65c3e73b83c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v6-failed/report.json",
+      "sha256": "601f037093d0aebbc1b81fa17ef16d6be7fe515ac63d88666f8b4c0dffbc443b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v6-failed/workspace-runtime.txt",
+      "sha256": "47a3d97e82ec9a460c03dea1de64336463e5951a4331384f7366181370e05b1f"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; not an exact clean checkpoint or stage/product acceptance.",
+    "Tester verification unit fixtures explicitly seed original admission/Git/Runner/Runtime candidate facts while exercising real migrated SQLite, report evaluator, content publication and completion transactions.",
+    "workspace-runtime exercises actual local HTTP model-protocol fixture, Runtime, authenticated MCP, Git commit/archive and Worker publication. It proves no production model, generated container execution, OIDC, Linux or runsc.",
+    "Production source instrumentation, automatic composition, defect/forward repair and ReleaseCandidate freeze remain subsequent work."
+  ]
+}

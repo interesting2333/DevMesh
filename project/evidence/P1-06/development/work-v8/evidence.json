@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task 2.3: atomic original Runtime candidate, A2A completion and scheduled VERIFYING handoff, guarded replay/recovery and current Run/Work epochs. Nine real local HTTP/MCP/Git Runtime cases, formal Work, A2A and scheduler regressions. No production model or container execution claimed.",
+  "sourceCommit": "b9c9811266e5547b152a8ebda6f09d0a1ab7218a",
+  "dirty": true,
+  "sourceFingerprint": "fbac0c09c9a3424749bc2f3cfd437a9fb9fe516bc31a259ff517f51492dd3f44",
+  "unchanged": true,
+  "startedAt": "2026-11-12T05:18:58.809Z",
+  "finishedAt": "2026-11-12T05:22:35.412Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13107,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 942,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "changed-packages-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 10802,
+      "output": "changed-packages-build.txt",
+      "sha256": "ae958da500564cf43d1bb2b67bffbc6f3b6508d1aa971f4d7c5b92bd73dee71a"
+    },
+    {
+      "name": "workspace-runtime",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 150507,
+      "output": "workspace-runtime.txt",
+      "sha256": "1773720ef8e889efa43bdee0e7e2b629b2f008ab46b50c2941aa9b3bf407c47a"
+    },
+    {
+      "name": "work-verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 8806,
+      "output": "work-verification.txt",
+      "sha256": "c6b11b8c0291dfeedb9c5f4885f861aed80e7d8cbbda52030c22d3617bf2a81d"
+    },
+    {
+      "name": "a2a",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 11003,
+      "output": "a2a.txt",
+      "sha256": "8f1f9746051bd8b714efe1a586127dfb2bd7d48674b18c057f5e3f727e7918d1"
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 21284,
+      "output": "scheduler.txt",
+      "sha256": "af0998323f47f34c20fd4b96908818a857621d2675562f13bc7e93d71ec3794b"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/work-v8/a2a.txt",
+      "sha256": "8f1f9746051bd8b714efe1a586127dfb2bd7d48674b18c057f5e3f727e7918d1"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v8/changed-packages-build.txt",
+      "sha256": "ae958da500564cf43d1bb2b67bffbc6f3b6508d1aa971f4d7c5b92bd73dee71a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v8/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v8/report.json",
+      "sha256": "3a548cee0ac456a1ef46e09ed7d9a6c581d0c683ff9541899ec1ce727c422aad"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v8/scheduler.txt",
+      "sha256": "af0998323f47f34c20fd4b96908818a857621d2675562f13bc7e93d71ec3794b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v8/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v8/work-verification.txt",
+      "sha256": "c6b11b8c0291dfeedb9c5f4885f861aed80e7d8cbbda52030c22d3617bf2a81d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v8/workspace-runtime.txt",
+      "sha256": "1773720ef8e889efa43bdee0e7e2b629b2f008ab46b50c2941aa9b3bf407c47a"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; not an exact clean checkpoint or stage/product acceptance.",
+    "Tester verification unit fixtures explicitly seed original admission/Git/Runner/Runtime candidate facts while exercising real migrated SQLite, report evaluator, content publication and completion transactions.",
+    "workspace-runtime exercises actual local HTTP model-protocol fixture, Runtime, authenticated MCP, Git commit/archive and Worker publication. It proves no production model, generated container execution, OIDC, Linux or runsc.",
+    "Production source instrumentation, automatic composition, defect/forward repair and ReleaseCandidate freeze remain subsequent work."
+  ]
+}

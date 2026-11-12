@@ -21,10 +21,10 @@ export function createRegistryDomain(db:DatabaseSync,onAttemptState?:(runId:stri
  const control=()=>get('SELECT c.*,g.manifest_revision,g.manifest_hash FROM registry_control c JOIN registry_generations g ON g.generation_id=c.active_generation_id WHERE singleton_id=1');
  const bump=()=>exec('UPDATE registry_control SET projection_revision=projection_revision+1 WHERE singleton_id=1');
  function scheduledState(attemptId:string,state:string,prior:string[]){
-   const a=get(`SELECT a.*,r.run_epoch,r.control_gate,r.terminal_outcome FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id
-     JOIN runs r ON r.run_id=a.run_id WHERE a.attempt_id=?`,attemptId);
+   const a=get(`SELECT a.*,r.run_epoch,r.control_gate,r.terminal_outcome,w.work_epoch current_work_epoch FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id
+     JOIN runs r ON r.run_id=a.run_id JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id WHERE a.attempt_id=?`,attemptId);
    if(!a||a.ended_at!==null||!prior.includes(String(a.state)))return;
-   if(state!=='OUTCOME_UNKNOWN'&&(a.control_gate!=='OPEN'||a.admitted_run_epoch!==a.run_epoch||a.terminal_outcome!==null))return;
+   if(state!=='OUTCOME_UNKNOWN'&&(a.control_gate!=='OPEN'||a.admitted_run_epoch!==a.run_epoch||a.admitted_work_epoch!==a.current_work_epoch||a.terminal_outcome!==null))return;
    exec('UPDATE attempts SET state=? WHERE attempt_id=?',state,attemptId);
    onAttemptState?.(String(a.run_id),String(a.dispatch_operation_id),String(a.work_id),attemptId,state);
  }
@@ -143,6 +143,7 @@ export function createRegistryDomain(db:DatabaseSync,onAttemptState?:(runId:stri
   recoverAcceptedWork(){return transaction(db,()=>({reconcileCount:Number(exec("UPDATE accepted_work SET state='RECONCILE' WHERE state='ACTIVE'").changes)}));},
  };
  return {
+  markCandidateReady(attemptId:string){scheduledState(attemptId,'VERIFYING',['WORKING']);},
   freezeDispatch(attemptId:string,role:string,target:{endpointId:string;revision:number;cardHash:string;registryGenerationId:string},fingerprint:string,roleSnapshotId:string){
    const c=control();if(!c)return null; // Legacy trusted storage fixtures have no deployed Registry.
    if(c.active_generation_id!==target.registryGenerationId||!get('SELECT role FROM role_endpoint_bindings WHERE generation_id=? AND role=? AND endpoint_id=? AND endpoint_revision=?',target.registryGenerationId,role,target.endpointId,target.revision))reject('REGISTRY_BINDING_CHANGED','Requested role binding differs from active Registry');

@@ -1,0 +1,148 @@
+TAP version 13
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed Runtime allocates before real HTTP model calls, commits through MCP and requires retained source before atomic A2A completion
+not ok 1 - managed Runtime allocates before real HTTP model calls, commits through MCP and requires retained source before atomic A2A completion
+  ---
+  duration_ms: 154784.4902
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-runtime.test.mjs:35:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"state":"reconcile","code":"PERMIT_EXPIRED"}
+    + actual - expected
+    
+    + 'reconcile'
+    - 'completed'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'completed'
+  actual: 'reconcile'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-runtime.test.mjs:41:130)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival
+not ok 2 - lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival
+  ---
+  duration_ms: 103311.7215
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-runtime.test.mjs:50:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 3
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 3
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-runtime.test.mjs:54:114)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed final result journal rejects replacing its original commit
+ok 3 - managed final result journal rejects replacing its original commit
+  ---
+  duration_ms: 23332.481
+  type: 'test'
+  ...
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a lost candidate publication receipt returns the existing atomic result without new execution
+ok 4 - a lost candidate publication receipt returns the existing atomic result without new execution
+  ---
+  duration_ms: 12866.3053
+  type: 'test'
+  ...
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an invented final commit cannot enter the result journal or trigger source archival
+ok 5 - an invented final commit cannot enter the result journal or trigger source archival
+  ---
+  duration_ms: 9079.3587
+  type: 'test'
+  ...
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an interrupted preparation with no model step cannot reenter its lifecycle on a second execute call
+ok 6 - an interrupted preparation with no model step cannot reenter its lifecycle on a second execute call
+  ---
+  duration_ms: 7218.7937
+  type: 'test'
+  ...
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: formal Developer success requires original Runtime candidate and actual Git archive ACK
+not ok 7 - formal Developer success requires original Runtime candidate and actual Git archive ACK
+  ---
+  duration_ms: 12569.0669
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-runtime.test.mjs:87:1'
+  failureType: 'testCodeFailure'
+  error: 'Formal Work completion requires current original verification facts'
+  code: 'WORK_VERIFICATION_ADMISSION_CLOSED'
+  name: 'StorageError'
+  stack: |-
+    Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+    Worker.emit (node:events:508:28)
+    MessagePort.<anonymous> (node:internal/worker:332:53)
+    [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+  ...
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a Developer candidate declaring unverified checks remains VERIFYING even with an archived commit
+not ok 8 - a Developer candidate declaring unverified checks remains VERIFYING even with an archived commit
+  ---
+  duration_ms: 14500.4597
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-runtime.test.mjs:93:1'
+  failureType: 'testCodeFailure'
+  error: 'Formal Work completion requires current original verification facts'
+  code: 'WORK_VERIFICATION_ADMISSION_CLOSED'
+  name: 'StorageError'
+  stack: |-
+    Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+    Worker.emit (node:events:508:28)
+    MessagePort.<anonymous> (node:internal/worker:332:53)
+    [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 4
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 355030.4017

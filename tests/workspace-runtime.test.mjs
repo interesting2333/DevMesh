@@ -41,11 +41,11 @@ test('managed Runtime allocates before real HTTP model calls, commits through MC
  assert.equal(f.sql('SELECT count(*) n FROM workspace_allocations')[0].n,0);const result=await f.runtime.execute(f.claim);assert.equal(result.state,'completed',JSON.stringify(result));assert.equal(f.requests.length,3);
  const archive=f.sql('SELECT * FROM source_archives')[0],journal=f.sql('SELECT * FROM runtime_workspace_results')[0];assert.equal(archive.state,'ACKNOWLEDGED');assert.equal(archive.operation_id,journal.archive_operation_id);assert.equal(JSON.parse(archive.acknowledgement_json).commit,f.output().resultCommit);
  assert.deepEqual(JSON.parse(await f.content.readText('user_1',{kind:'artifact',artifactId:result.candidate.artifactId})),f.output());
- assert.equal(f.sql('SELECT state FROM accepted_work')[0].state,'FINISHED');assert.notEqual((await f.storage.request('getAttempt',{attemptId:f.p.attemptId})).state,'SUCCEEDED');assert.equal(f.backend.starts.length,0);
+ assert.equal(f.sql('SELECT state FROM accepted_work')[0].state,'FINISHED');assert.equal((await f.storage.request('getAttempt',{attemptId:f.p.attemptId})).state,'VERIFYING');assert.equal(f.backend.starts.length,0);
  assert.equal(f.sql('SELECT state FROM scheduled_dispatch_delivery')[0].state,'ACKED');
  const current=JSON.parse(f.sql('SELECT permit_json FROM execution_grants')[0].permit_json);await assert.rejects(f.client.start(f.job(current)),{status:403});
  assert.throws(()=>f.db.prepare('UPDATE runtime_workspace_results SET output_json=?').run('{}'),/RUNTIME_WORKSPACE_RESULT_IMMUTABLE/);
- assert.deepEqual(await f.runtime.reconcileWorkspaceResult(f.claim),result);assert.equal(f.requests.length,3);
+ const beforeReplay=await f.storage.request('getRun',{runId:f.p.runId});assert.deepEqual(await f.runtime.reconcileWorkspaceResult(f.claim),result);assert.equal(f.requests.length,3);assert.equal((await f.storage.request('getRun',{runId:f.p.runId})).resourceRevision,beforeReplay.resourceRevision);
 });
 test('lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival',async t=>{
  const f=await fixture(t);
@@ -61,6 +61,7 @@ test('lost original source ACK recovers after pause without a model call, commit
  const original=ControlledGit.prototype.importCommit;let transfers=0;ControlledGit.prototype.importCommit=async function(...args){transfers++;return original.apply(this,args);};t.after(()=>{ControlledGit.prototype.importCommit=original;});
  const recovered=await f.runtime.reconcileWorkspaceResult(f.claim);assert.equal(recovered.state,'completed',JSON.stringify(recovered));assert.equal(f.requests.length,3);assert.equal(transfers,0);assert.equal(f.sql('SELECT count(*) n FROM repo_operations')[0].n,1);assert.equal(f.sql('SELECT count(*) n FROM source_archives')[0].n,1);assert.equal(f.sql('SELECT status FROM execution_grants')[0].status,'REVOKED');assert.equal(f.sql('SELECT control_gate FROM runs')[0].control_gate,'PAUSING');
  assert.equal((await f.runtime.execute(f.claim)).state,'failed');assert.equal(f.requests.length,3);assert.equal(f.backend.starts.length,0);
+ assert.notEqual((await f.storage.request('getAttempt',{attemptId:f.p.attemptId})).state,'VERIFYING');
 });
 test('managed final result journal rejects replacing its original commit',async t=>{
  const f=await fixture(t,{wrap:(real,f)=>({...real,async retain(host,result,signal){const changed={...result.output,resultCommit:'f'.repeat(40)};await assert.rejects(f.storage.request('prepareRuntimeWorkspaceResult',{activationId:host.activationId,stepNo:result.stepNo,contentHash:hash(canonical(changed)),output:changed}),e=>e.code==='RUNTIME_WORKSPACE_RESULT_IMMUTABLE');return real.retain(host,result,signal);}})});
@@ -75,6 +76,15 @@ test('a lost candidate publication receipt returns the existing atomic result wi
 test('an invented final commit cannot enter the result journal or trigger source archival',async t=>{
  const f=await fixture(t,{inventCommit:true}),result=await f.runtime.execute(f.claim);assert.equal(result.state,'reconcile');assert.equal(result.code,'RUNTIME_WORKSPACE_COMMIT_UNPROVEN');assert.equal(f.requests.length,3);assert.equal(f.sql('SELECT count(*) n FROM runtime_workspace_results')[0].n,0);assert.equal(f.sql('SELECT count(*) n FROM source_archives')[0].n,0);assert.equal(f.sql('SELECT count(*) n FROM runtime_results')[0].n,0);assert.equal(f.sql('SELECT state FROM workspace_allocations')[0].state,'READY');
  assert.equal((await f.runtime.reconcileWorkspaceResult(f.claim)).code,'RUNTIME_WORKSPACE_RESULT_UNPREPARED');assert.equal(f.requests.length,3);
+});
+test('candidate publication rolls back with its verification handoff and recovers the original result',async t=>{
+ const f=await fixture(t,{scheduled:true});
+ f.db.exec("CREATE TRIGGER cut_candidate_handoff BEFORE UPDATE OF state ON attempts WHEN NEW.state='VERIFYING' BEGIN SELECT RAISE(ABORT,'handoff-cut'); END");
+ const interrupted=await f.runtime.execute(f.claim);assert.equal(interrupted.state,'reconcile',JSON.stringify(interrupted));assert.equal(f.requests.length,3,JSON.stringify(interrupted));
+ assert.equal(f.sql('SELECT count(*) n FROM runtime_results')[0].n,0);assert.equal(f.sql('SELECT protocol_state FROM a2a_tasks')[0].protocol_state,'working');assert.equal(f.sql('SELECT state FROM accepted_work')[0].state,'ACTIVE');
+ assert.equal(f.sql('SELECT state FROM source_archives')[0].state,'ACKNOWLEDGED');
+ f.db.exec('DROP TRIGGER cut_candidate_handoff');
+ const recovered=await f.runtime.reconcileWorkspaceResult(f.claim);assert.equal(recovered.state,'completed',JSON.stringify(recovered));assert.equal((await f.storage.request('getAttempt',{attemptId:f.p.attemptId})).state,'VERIFYING');assert.equal(f.requests.length,3);assert.equal(f.sql('SELECT count(*) n FROM source_archives')[0].n,1);assert.equal(f.sql('SELECT count(*) n FROM repo_operations')[0].n,1);
 });
 test('an interrupted preparation with no model step cannot reenter its lifecycle on a second execute call',async t=>{
  let preparations=0;

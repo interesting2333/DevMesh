@@ -15,7 +15,7 @@ function publicConfiguration(value:unknown,depth=0):void{
  if(Array.isArray(value)){for(const item of value)publicConfiguration(item,depth+1);return;}
  if(value&&typeof value==='object')for(const [key,item] of Object.entries(value)){if(/^(authorization|cookie|set-cookie|api[_-]?key|access[_-]?token|refresh[_-]?token|reasoning_content|thinking|chain_of_thought)$/i.test(key))reject('PRIVATE_MODEL_FIELD','Credentials and internal reasoning cannot enter configuration snapshots',422);publicConfiguration(item,depth+1);}
 }
-export function createRuntimeDomain(db:DatabaseSync){
+export function createRuntimeDomain(db:DatabaseSync,onCandidateReady?:(attemptId:string)=>void){
  const workspaces=createRuntimeWorkspaces(db);
  const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined,exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
  const required=(r:Row|undefined)=>r??reject('RESOURCE_NOT_FOUND','Requested runtime record does not exist',404);
@@ -102,7 +102,7 @@ export function createRuntimeDomain(db:DatabaseSync){
  function publish(input:RuntimeInput<'publishRuntimeResult'>,recovery=false){
    const a=activation(input.activationId),old=get('SELECT * FROM runtime_results WHERE activation_id=?',input.activationId);const output=parseContract(roleOutput,input.output),hash=digest(canonical(output));
    if(hash!==input.contentHash)reject('RESULT_HASH_MISMATCH','Candidate bytes must equal the validated output');
-   if(old){const artifact=required(get('SELECT * FROM artifacts WHERE artifact_id=?',String(old.artifact_id)));if(artifact.content_hash!==hash||old.step_no!==input.stepNo)reject('RESULT_IMMUTABLE','Candidate cannot change');return {artifactId:String(old.artifact_id),sha256:hash,schemaId:output.schemaVersion};}
+   if(old){const artifact=required(get('SELECT * FROM artifacts WHERE artifact_id=?',String(old.artifact_id)));if(artifact.content_hash!==hash||old.step_no!==input.stepNo)reject('RESULT_IMMUTABLE','Candidate cannot change');onCandidateReady?.(String(a.attempt_id));return {artifactId:String(old.artifact_id),sha256:hash,schemaId:output.schemaVersion};}
    if(a.state!=='RUNNING'&&!(recovery&&a.state==='RECONCILE'))reject('RUNTIME_NOT_RUNNING','Runtime has no active result admission');
    const h=host({endpointId:String(a.endpoint_id),taskId:String(a.task_id),workerId:String(a.worker_id),claimToken:String(a.claim_token)},recovery);if(!recovery)permit(h);const role=JSON.parse(String(h.role_snapshot_json)) as {role:string;outputSchemaId:string};
    workspaces.assertPublication(a,input.stepNo,input.contentHash,output);
@@ -115,7 +115,11 @@ export function createRuntimeDomain(db:DatabaseSync){
    // cannot leave a FINISHED activation behind an unrecoverable working Task.
    const task=JSON.parse(String(required(get('SELECT snapshot_json FROM a2a_tasks WHERE endpoint_id=? AND task_id=?',String(a.endpoint_id),String(a.task_id))).snapshot_json)) as Record<string,unknown>,time=now();
    task.status={state:'TASK_STATE_COMPLETED',timestamp:time};task.artifacts=[{artifactId:id,name:'Role candidate',parts:[{data:{artifactId:id,sha256:hash,schemaId:output.schemaVersion,sessionId:String(a.session_id)}}]}];const snapshot=canonical(task);
-   exec("UPDATE a2a_tasks SET protocol_state='completed',snapshot_json=? WHERE endpoint_id=? AND task_id=?",snapshot,String(a.endpoint_id),String(a.task_id));exec('UPDATE a2a_task_ownership SET status_revision=status_revision+1,updated_at=? WHERE endpoint_id=? AND task_id=?',time,String(a.endpoint_id),String(a.task_id));const seq=Number(required(get('SELECT status_revision FROM a2a_task_ownership WHERE endpoint_id=? AND task_id=?',String(a.endpoint_id),String(a.task_id))).status_revision);exec('INSERT INTO a2a_task_events VALUES(?,?,?,?,?)',String(a.endpoint_id),String(a.task_id),seq,snapshot,time);exec("UPDATE accepted_work SET state='FINISHED' WHERE endpoint_id=? AND task_id=?",String(a.endpoint_id),String(a.task_id));return {artifactId:id,sha256:hash,schemaId:output.schemaVersion};
+   exec("UPDATE a2a_tasks SET protocol_state='completed',snapshot_json=? WHERE endpoint_id=? AND task_id=?",snapshot,String(a.endpoint_id),String(a.task_id));exec('UPDATE a2a_task_ownership SET status_revision=status_revision+1,updated_at=? WHERE endpoint_id=? AND task_id=?',time,String(a.endpoint_id),String(a.task_id));const seq=Number(required(get('SELECT status_revision FROM a2a_task_ownership WHERE endpoint_id=? AND task_id=?',String(a.endpoint_id),String(a.task_id))).status_revision);exec('INSERT INTO a2a_task_events VALUES(?,?,?,?,?)',String(a.endpoint_id),String(a.task_id),seq,snapshot,time);exec("UPDATE accepted_work SET state='FINISHED' WHERE endpoint_id=? AND task_id=?",String(a.endpoint_id),String(a.task_id));
+   // The original candidate and its pending-verification handoff are atomic.
+   // The shared Registry guard also prevents paused recovery from reviving work.
+   onCandidateReady?.(String(h.attempt_id));
+   return {artifactId:id,sha256:hash,schemaId:output.schemaVersion};
  }
  return {execute(method:RuntimeMethod,input:unknown){const p=parseContract(runtimeRequests[method],input);return (handlers[method] as (p:unknown)=>unknown)(p);}};
 }

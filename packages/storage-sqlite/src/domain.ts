@@ -73,7 +73,7 @@ export function createDomain(db: DatabaseSync) {
   const registry = createRegistryDomain(db,(runId,operationId,workId,attemptId,state)=>{
     bump(runId);event(runId,operationId,'AttemptStateChanged',{attemptId,state},{workId,attemptId});
   });
-  const runtime = createRuntimeDomain(db);
+  const runtime = createRuntimeDomain(db,attemptId=>registry.markCandidateReady(attemptId));
   const repository=createRepoDomain(db);
   const repositoryFiles=createRepoFileDomain(db);
   const workspaces=createWorkspaceDomain(db);
