@@ -23,6 +23,8 @@ SOURCE 声明／登记与 stage 首次 SENT 的互斥由 SQLite 顺序保证，�
 
 本包提供显式服务和可信映射 provider 接口，没有默认生产映射工具链，也没有自动将模型结论作为验证。源码、报告、结果留在专用本地内容 target，数据库保存其引用和原始依据；正文不穿过 256 KiB Worker RPC。材料最多 50 项／128 MiB，单报告最多 8 MiB，SOURCE／日志最多 16 MiB。
 
+`verifyPreviewImage` 只校验交付镜像的实际内容身份：准确 manifest／config／全部 layer 原字节、压缩与未压缩哈希、源码与构建产物标签。采用 [OCI image-spec 1.1.0 manifest](https://github.com/opencontainers/image-spec/blob/v1.1.0/manifest.md) 和 [config](https://github.com/opencontainers/image-spec/blob/v1.1.0/config.md) 的有界交付格式，仅接受 Linux amd64／arm64、tar 或 gzip layer；不执行、解包或拉取镜像。最多 16 层、单层及解压后每层 64 MiB、总量 256 MiB，manifest／config 各 1 MiB。返回内容身份不代表镜像可运行，也不独立证明构建来源；原批准命令、准确固定工作区、Runner Job／输出字节的关联仍须由交付采集器核实。测试环境镜像摘要不能代替生成镜像，配置标签也不能单独作为原构建证明。该校验器尚未构成 ReleaseCandidate 冻结服务。
+
 新的 `recordVerifiedWork` 只接受已 ACK 的不可变 Work 评估及其稳定 completionKey，调用方不能自行提交 success；一般 `transitionAttempt` 不能直接进入 SUCCEEDED。历史已提交操作按原键重放，旧结果保留。测试用历史数据只在测试文件中显式种入，不向应用提供 fixture 开关。Work 评估及质量材料的外键会阻止 GC，缺失或变更的来源不能复用为当前证明。
 
 本地采集测试使用实际认证 HTTP、Runner SQLite、输出文件、PipelineCoordinator 和内容存储；执行后端写入固定报告，Git／准入与独立映射为明确夹具。正式 Tester 完成用例明确种入原 Runtime 候选等数据库事实；Developer 链路另用真实本地模型协议 HTTP 夹具、Runtime、认证 MCP、Git 提交／归档和 Worker 测试。缺陷及前向修复测试实际执行 WorkVerifier、原报告计算、内容 ACK、计划发布／确认、调度与缺陷事务，明确种入 Git／准入／Runner／Runtime 候选事实。这些用例不证明真实模型、OIDC、Linux／gVisor 执行或生产工具链。生产映射 provider、Runtime 自动组合和候选冻结继续按 OpenSpec 实施。

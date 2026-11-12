@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: preview identity uses exact OCI bytes and uncompressed layer identities
+ok 1 - preview identity uses exact OCI bytes and uncompressed layer identities
+  ---
+  duration_ms: 8.0427
+  type: 'test'
+  ...
+# Subtest: test environment digest, changed layer bytes and missing blobs cannot prove a generated image
+ok 2 - test environment digest, changed layer bytes and missing blobs cannot prove a generated image
+  ---
+  duration_ms: 1.5108
+  type: 'test'
+  ...
+# Subtest: two individually valid layer blobs cannot be reordered against the original rootfs
+ok 3 - two individually valid layer blobs cannot be reordered against the original rootfs
+  ---
+  duration_ms: 0.9524
+  type: 'test'
+  ...
+# Subtest: source, build artifact, rootfs and image platform must match independently
+ok 4 - source, build artifact, rootfs and image platform must match independently
+  ---
+  duration_ms: 2.1284
+  type: 'test'
+  ...
+# Subtest: duplicate JSON keys, unsupported media and unindexed bytes are rejected
+ok 5 - duplicate JSON keys, unsupported media and unindexed bytes are rejected
+  ---
+  duration_ms: 0.657
+  type: 'test'
+  ...
+# Subtest: compressed layers have bounded decompression and malformed gzip is rejected
+ok 6 - compressed layers have bounded decompression and malformed gzip is rejected
+  ---
+  duration_ms: 450.882
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 814.4785

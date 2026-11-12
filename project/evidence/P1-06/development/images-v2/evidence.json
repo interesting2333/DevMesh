@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task4 development: actual bounded OCI manifest/config/layer byte identity validation. Pure byte fixtures only; no original delivery build, container, production model, Linux or completed release candidate freeze claimed.",
+  "sourceCommit": "8dc4b0c5e8fa4af4308521df862b1be06d074c62",
+  "dirty": true,
+  "sourceFingerprint": "9c1d108c800d2edaba58f78b84b1424c4fe10e34105a3a385dedb7d30544a361",
+  "unchanged": true,
+  "startedAt": "2026-11-12T06:23:13.014Z",
+  "finishedAt": "2026-11-12T06:23:15.290Z",
+  "checks": [
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1246,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "preview-image",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 938,
+      "output": "preview-image.txt",
+      "sha256": "18dd65da46f384894d5abf989f9ee6876e8dc3bb33924ad17d49bb4551b2f0c7"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/images-v2/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v2/preview-image.txt",
+      "sha256": "18dd65da46f384894d5abf989f9ee6876e8dc3bb33924ad17d49bb4551b2f0c7"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v2/report.json",
+      "sha256": "2e25268a29d916026f1c715a04bcb868003cfd34bdda6d610f0edfffa66fef33"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Pure actual manifest/config/layer byte fixtures; no Docker engine, generated image build, Runner delivery provenance or runtime health verification.",
+    "Delivery collection, original approved build binding and full release candidate freeze remain separate tasks."
+  ]
+}

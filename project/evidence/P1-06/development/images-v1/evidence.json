@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task4 development: actual bounded OCI manifest/config/layer byte identity validation. Pure byte fixtures only; no original delivery build, container, production model, Linux or completed release candidate freeze claimed.",
+  "sourceCommit": "8dc4b0c5e8fa4af4308521df862b1be06d074c62",
+  "dirty": true,
+  "sourceFingerprint": "be0d1211d00e6a190df3b4447bdd17be774e710b4546a354fe0e21d8c1544bcf",
+  "unchanged": true,
+  "startedAt": "2026-11-12T06:21:43.527Z",
+  "finishedAt": "2026-11-12T06:22:40.455Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 16945,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1513,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28948,
+      "output": "current-build.txt",
+      "sha256": "efe25719a75223ab9b6a00dca9aed2cf9333dedf445f5ba6888a4488b037d890"
+    },
+    {
+      "name": "preview-image",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1108,
+      "output": "preview-image.txt",
+      "sha256": "2e2a0d24e36e378331b7034d9c42b6b0355d636c50170547da2d8ac014e6211c"
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2129,
+      "output": "contracts.txt",
+      "sha256": "a28a8a4a8f6fae17651a49c68fb8dda7e2797b4a397ced067d9061ccbfa00f5b"
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1486,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "name": "verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4670,
+      "output": "verification.txt",
+      "sha256": "047b8f038756f2034809f2640541639d65434bf75f2b97a8b0eeb483ca62b066"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/images-v1/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v1/contracts.txt",
+      "sha256": "a28a8a4a8f6fae17651a49c68fb8dda7e2797b4a397ced067d9061ccbfa00f5b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v1/current-build.txt",
+      "sha256": "efe25719a75223ab9b6a00dca9aed2cf9333dedf445f5ba6888a4488b037d890"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v1/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v1/preview-image.txt",
+      "sha256": "2e2a0d24e36e378331b7034d9c42b6b0355d636c50170547da2d8ac014e6211c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v1/report.json",
+      "sha256": "25c5e417b813af8aa7a6f82b04f2cf2222c50537e3a054bf0b01a4b999fc89cd"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v1/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/images-v1/verification.txt",
+      "sha256": "047b8f038756f2034809f2640541639d65434bf75f2b97a8b0eeb483ca62b066"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Pure actual manifest/config/layer byte fixtures; no Docker engine, generated image build, Runner delivery provenance or runtime health verification.",
+    "Delivery collection, original approved build binding and full release candidate freeze remain separate tasks."
+  ]
+}

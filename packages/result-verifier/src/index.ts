@@ -8,3 +8,5 @@ export type {QualitySourceProvider,CollectionResult} from './collector.js';
 export {WorkVerifier} from './work.js';
 export type {WorkVerificationResult} from './work.js';
 export {RepairPlanner} from './repair.js';
+export {verifyPreviewImage,previewImageLimits} from './preview-image.js';
+export type {PreviewImageInput,PreviewImageIdentity} from './preview-image.js';

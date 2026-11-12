@@ -64,6 +64,8 @@ ResultVerifier 只通过可信接口提交可复核计算；普通 MCP 仍只记
 
 人工检查待处理时，允许创建“自动检查通过、人工待完成”的可审查候选，但不把原 Work 的 READY／PENDING 记为完成。该路径仅接受非人工检查全部 PASS、原质量 automaticStatus=PASS、无候选缺陷／缺项或未知副作用的原评估；人工条目逐项显示 PENDING。后续接受必须绑定该候选的人工事实并重新核验，原自动报告和待审评估不回写为通过。
 
+交付镜像内容身份与构建来源分别核实。内容校验采用有界 OCI 1.1.0 格式，读取实际 manifest／config／layer 原字节，计算 manifest digest 及有序未压缩 diff_ids；固定源码及构建产物标签只是交叉校验，不能取代原构建 Job。仅接受 Linux amd64／arm64 与 tar／gzip layer，拒绝未支持格式、重复 JSON 键、缺失或额外 blob、哈希不符及超限解压；不拉取标签或执行镜像。Worker 还须固定批准构建 producer／原命令、准确分配的工作区、原 pipeline／Job／输出哈希及内容 ACK；缺少真实生成镜像时保持材料缺失。镜像可运行与健康检查在后续预览／接受流程验证，内容身份通过不等于它们通过。
+
 实际构建文件哈希、生成应用预览镜像 digest 和数据方案必须有各自准确源码与原生产侧来源。聚合质量 resultRef 不能当作构建文件，测试执行基镜像 digest 也不能当作生成应用镜像；缺受信任生产侧事实时保持缺失并拒绝冻结。未配置 Docker／Linux Provider 的离线开发可测试拒绝与明确的受控适配器事实，不宣称生产构建通过。
 
 ## Risks / Trade-offs

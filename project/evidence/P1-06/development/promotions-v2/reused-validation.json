@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "sourceReport": "../promotions-v1/report.json",
+  "currentReport": "report.json",
+  "changes": [
+    {
+      "path": "tests/candidate-journal.test.mjs",
+      "sha256": "86837d813d419a8669c85ad195504affa6cb786f266cdd435ffd0469316274b1"
+    }
+  ],
+  "applicationSourceUnchanged": true,
+  "reusedChecks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 17757,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 30850,
+      "output": "current-build.txt",
+      "sha256": "dea2f0ec3cc483c859ea0365b128d30a5e04c248a9dac50e130f79a34532ce52"
+    },
+    {
+      "name": "candidate-basis",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1358,
+      "output": "candidate-basis.txt",
+      "sha256": "0d18898a6b712d78808bb95913ac934deda99e02022cc535f4500a6397771770"
+    },
+    {
+      "name": "candidate-promotion-git",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 94979,
+      "output": "candidate-promotion-git.txt",
+      "sha256": "75df93e2b78cee63b23d38efb2e78cbb4b305a3a35096159b0016d48b7e1bc39"
+    },
+    {
+      "name": "candidate-git",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 119053,
+      "output": "candidate-git.txt",
+      "sha256": "53d936ea4f7bdecc5555753640bbc3fe8087a9b0d25367cd5e32c012c4c13d6d"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 72803,
+      "output": "storage.txt",
+      "sha256": "c9b9757124c58f36a827b552bc6e1f6d82a415492a178842d0f9fc7783ca41a5"
+    }
+  ],
+  "scope": "Reuses original passing checks on identical application source, not repeated executions. Only the expanded journal suite changed and was rerun."
+}
