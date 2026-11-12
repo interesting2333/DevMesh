@@ -52,3 +52,5 @@ PREVIEW 可以进入 STOPPING 或 RELEASE_HELD；只有原 HELD 可以确认 REL
 ControlledContainerDriver 提供全部网络／容器事实，健康服务器也是独立 HTTP 夹具；测试不执行 Docker，不证明物理退出、真实镜像健康或 gVisor／cgroup／quota／宿主防火墙。真实本地文件、SQLite、HTTP、定时器及 Worker 恢复实际执行。
 
 ReleaseHold／Commit 目前只是私有可信 Runner 归属握手，没有 T5 提交或完整控制面接受流程；后续 T5 必须先持有再提交接受，最后按原键确认。仍需从未启动容器／网络的显式清理证明、实际 Linux quota／network-isolation 适配器、可信平台装配与 Linux／gVisor 联调；网关、接受／发布及真实模型／OIDC／生产迁移和人工验收继续实施。缺外部资源不阻止其余本地代码与验证。
+
+源码检查点为 `bdb3711b3b238fd929e295eb7e211371a77d5303`；[checkpoint-binding](./development/watchdog-v29/checkpoint-binding.json) 的全部 401 个输入与该提交 Git 对象字节一致，绑定不等同于重新测试或干净 checkout。
