@@ -51,3 +51,5 @@ HTTP 用例实际经过 TLS server、控制 SQLite Worker、Runner SQLite Worker
 ## 继续实施
 
 3.2 的可信平台查询／签发入口、实际页面 iframe 装配、下载只读边界尚未完成。实际物理只读／排空、T5、发布 Outbox 和接受后的恢复继续实施。未配置的企业 OIDC、模型及 Linux／Docker／gVisor 联调保持缺项，不用本地 HTTP、受控容器身份、FINISHED 或零在途计数代替这些证据。
+
+源码检查点 `2b1cb5419f98b7f3cae7f2c5a347ef27ff241d41`；[checkpoint-binding](./development/preview-http/checkpoint-binding.json) 将 426 个当前输入和 910 份已保留材料逐项绑定到该提交的 Git 对象。只读绑定不等同再次运行测试、干净 checkout 或产品验收。

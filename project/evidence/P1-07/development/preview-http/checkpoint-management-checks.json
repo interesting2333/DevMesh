@@ -1,0 +1,47 @@
+{
+  "scope": "Actual management checks after read-only checkpoint binding; not another product test or clean checkout.",
+  "checks": [
+    {
+      "name": "render",
+      "exe": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "render"
+      ],
+      "startedAt": "2026-11-12T16:45:15.640Z",
+      "finishedAt": "2026-11-12T16:45:17.057Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "已更新 project/任务台账.md\n",
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1"
+    },
+    {
+      "name": "project-check",
+      "exe": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "startedAt": "2026-11-12T16:45:17.084Z",
+      "finishedAt": "2026-11-12T16:45:18.916Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "台账检查通过：36 个工作包、5 个阶段门槛；依赖无环、来源一致、基线匹配。\n此检查只验证记录结构与引用，不执行产品验收。\n",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "diff-check",
+      "exe": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "startedAt": "2026-11-12T16:45:18.920Z",
+      "finishedAt": "2026-11-12T16:45:20.814Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}
