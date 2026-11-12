@@ -29,6 +29,8 @@
 
 最终 [datasets-v16](./development/datasets-v16/evidence.json) 执行 14 项检查，源码指纹运行期间不变。134 项测试：132 通过、2 条条件跳过；没有失败／取消。全部使用 Windows x64、Node `v24.13.1`，不是干净 checkout／全仓库测试。原命令数组、实际 driver、日志 SHA 和源码指纹保存在同目录。
 
+代码检查点为 `20c2ca9f4450dafcbcc63f6f1e87a2434bbc509f`；[checkpoint-binding.json](./development/datasets-v16/checkpoint-binding.json) 核对全部 381 个输入（包含原模板）与该提交 Git 对象字节一致。此绑定仅为只读字节核对，不是再次运行测试或干净 checkout 证明。台账／OpenSpec 严格校验、设计主文生成一致性与 Git 差异格式检查均通过，它们只验证各自记录或格式。
+
 | 检查 | 结果 |
 | --- | --- |
 | 冻结离线安装、类型、Lint、当前 contracts／storage／runner／platform-core 依赖构建 | 全通过；安装使用 `--frozen-lockfile --offline --ignore-scripts` |
