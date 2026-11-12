@@ -4,6 +4,8 @@ const claim={endpointId:opaqueKey,taskId:opaqueKey,workerId:opaqueKey,claimToken
 const activation={activationId:ids.activation};
 export const runtimeRequests={
  getExecutionHost:z.strictObject(claim),
+ getRuntimeWorkspaceRecovery:z.strictObject(claim),
+ reconcileRuntimeWorkspaceResult:z.strictObject(claim),
  renewExecutionHost:z.strictObject(claim),
  getAcceptedTaskSnapshot:z.strictObject(claim),
  reconcileRuntimeTask:z.strictObject({...claim,reason:opaqueKey}),
@@ -19,14 +21,20 @@ export const runtimeRequests={
  markRuntimeToolUnknown:z.strictObject({...activation,operationId:ids.operation,errorCode:opaqueKey}),
  recoverRuntimeActivations:z.strictObject({}),
  publishRuntimeResult:z.strictObject({...activation,stepNo:revision,contentHash:sha256,output:z.record(z.string(),z.json())}),
+ prepareRuntimeWorkspaceResult:z.strictObject({...activation,stepNo:revision,contentHash:sha256,output:z.record(z.string(),z.json())}),
 };
 export type RuntimeMethod=keyof typeof runtimeRequests;
 export type RuntimeInput<M extends RuntimeMethod>=z.output<(typeof runtimeRequests)[M]>;
 export interface ExecutionHostView {principalId:string;runId:string;attemptId:string;activationId:string;grantId:string;sessionId:string|null;roleSnapshot:Record<string,unknown>;permit:Record<string,unknown>;inputManifest:Record<string,unknown>;inputFingerprint:string;work:Record<string,unknown>;requirements:Record<string,unknown>;taskSnapshot:Record<string,unknown>}
 export interface RuntimeActivationView {activationId:string;sessionId:string;state:string;tokensUsed:number;tokenLimit:number;maxSteps:number;unknownUsage:boolean;configHash:string}
 export interface RuntimeToolView {operationId:string;activationId:string;sessionId:string;stepNo:number;toolCallId:string;toolName:string;state:string;resultMessageId:string|null;argsHash:string;errorCode:string|null}
+export interface RuntimeWorkspaceResult {activationId:string;allocationOperationId:string;commitOperationId:string|null;archiveOperationId:string|null;stepNo:number;contentHash:string;output:Record<string,unknown>}
+export interface RuntimeWorkspaceRecovery {host:ExecutionHostView;config:Record<string,unknown>;result:RuntimeWorkspaceResult|null}
 export interface RuntimeResults {
  getExecutionHost:ExecutionHostView;
+ getRuntimeWorkspaceRecovery:RuntimeWorkspaceRecovery;
+ reconcileRuntimeWorkspaceResult:{artifactId:string;sha256:string;schemaId:string};
+ prepareRuntimeWorkspaceResult:RuntimeWorkspaceResult;
   renewExecutionHost:{permit:Record<string,unknown>};
  getAcceptedTaskSnapshot:Record<string,unknown>;
  reconcileRuntimeTask:{state:'RECONCILE'};

@@ -1,0 +1,71 @@
+TAP version 13
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed Runtime allocates before real HTTP model calls, commits through MCP and requires retained source before atomic A2A completion
+not ok 1 - managed Runtime allocates before real HTTP model calls, commits through MCP and requires retained source before atomic A2A completion
+  ---
+  duration_ms: 1405.2878
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-runtime.test.mjs:33:1'
+  failureType: 'testCodeFailure'
+  error: 'Scheduled fixture admission failed: null'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    prepareDispatch (file:///D:/yms/AI/DevMesh/tests/fixtures/a2a-data.mjs:42:82)
+    async sourceArchiveFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/source-archive.mjs:18:106)
+    async fixture (file:///D:/yms/AI/DevMesh/tests/workspace-runtime.test.mjs:16:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-runtime.test.mjs:34:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival
+ok 2 - lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival
+  ---
+  duration_ms: 14245.3437
+  type: 'test'
+  ...
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed final result journal rejects replacing its original commit
+ok 3 - managed final result journal rejects replacing its original commit
+  ---
+  duration_ms: 12779.6225
+  type: 'test'
+  ...
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a lost candidate publication receipt returns the existing atomic result without new execution
+ok 4 - a lost candidate publication receipt returns the existing atomic result without new execution
+  ---
+  duration_ms: 12718.3423
+  type: 'test'
+  ...
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37692) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an invented final commit cannot enter the result journal or trigger source archival
+ok 5 - an invented final commit cannot enter the result journal or trigger source archival
+  ---
+  duration_ms: 8866.3814
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 51150.5727

@@ -2,7 +2,7 @@ import { createHash,randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { parseContract,roleOutput,opaqueKey } from '@devmesh/contracts';
 import { canonical,StorageError } from '@devmesh/storage-sqlite';
-import type { SqliteStorage,ExecutionHostView,RuntimeToolView } from '@devmesh/storage-sqlite';
+import type { SqliteStorage,ExecutionHostView,RuntimeToolView,RuntimeWorkspaceResult } from '@devmesh/storage-sqlite';
 import { SessionStore } from '@devmesh/blob-store';
 import type { LocalContentStore,WriteMeta } from '@devmesh/blob-store';
 import { ModelError,checkModelRequest,estimateTokens } from './provider.js';
@@ -21,18 +21,25 @@ export interface RuntimeTool {
  query(operationId:string,host:Readonly<ExecutionHostView>,originalArgs?:unknown):Promise<ToolResult>;
 }
 export type RuntimeOutcome={state:'completed';candidate:{artifactId:string;sha256:string;schemaId:string};sessionId:string}|{state:'failed'|'reconcile';code:string};
+/** Trusted application adapter, never supplied by a model or protocol request. */
+export interface RuntimeWorkspaceLifecycle {
+ readonly config:Readonly<{schemaVersion:'devmesh.managed-runtime.v1';runnerId:string}>;
+ prepare(host:Readonly<ExecutionHostView>,signal:AbortSignal):Promise<Record<string,unknown>>;
+ retain(host:Readonly<ExecutionHostView>,result:RuntimeWorkspaceResult,signal:AbortSignal):Promise<void>;
+ reconcile(host:Readonly<ExecutionHostView>,result:RuntimeWorkspaceResult,signal:AbortSignal):Promise<void>;
+}
 export class AgentRuntime {
  readonly sessions:SessionStore;
  readonly roles:RoleRegistry;
  readonly #tools:Map<string,RuntimeTool>;
- constructor(readonly storage:SqliteStorage,readonly content:LocalContentStore,providers:ModelProvider[],tools:RuntimeTool[]=[],readonly tokenLimit=100000){
+  constructor(readonly storage:SqliteStorage,readonly content:LocalContentStore,providers:ModelProvider[],tools:RuntimeTool[]=[],readonly tokenLimit=100000,readonly workspace?:RuntimeWorkspaceLifecycle){
   if(!Number.isSafeInteger(tokenLimit)||tokenLimit<1)throw new Error('An explicit positive token budget is required');
   this.sessions=new SessionStore(content);this.roles=new RoleRegistry(providers);this.#tools=new Map();
   for(const t of tools){parseContract(opaqueKey,t.name);if(this.#tools.has(t.name))throw new Error('Duplicate tool name');this.#tools.set(t.name,Object.freeze({...t}));}
  }
  async execute(claim:ExecutionClaim,signal=new AbortController().signal):Promise<RuntimeOutcome>{
   let host:ExecutionHostView|undefined,sessionId:string|undefined,started=false,sent=false,responseSaved=false;
-  let lease:ExecutionGrantLease|undefined;
+   let lease:ExecutionGrantLease|undefined,workspacePending=false;
   try{
    if(signal.aborted)fail('RUNTIME_ABORTED');
    host=await this.storage.request('getExecutionHost',claim);
@@ -44,14 +51,17 @@ export class AgentRuntime {
    const session=await this.sessions.ensure(host.principalId,host.runId,host.attemptId);sessionId=session.sessionId;
    // An existing request may have reached the provider. Reconciliation owns resumption.
    if(session.lastStepNo)fail('RUNTIME_RESUME_REQUIRES_RECONCILIATION');
-   const frozen={provider:provider.config,role:host.roleSnapshot,promptHash:hash(prompt),toolSchemas:definitions.map(t=>({...t,effectClass:this.#tools.get(t.name)!.effectClass,connection:this.#tools.get(t.name)!.connection??null})),tokenLimit:this.tokenLimit};
+    const frozen={provider:provider.config,role:host.roleSnapshot,promptHash:hash(prompt),toolSchemas:definitions.map(t=>({...t,effectClass:this.#tools.get(t.name)!.effectClass,connection:this.#tools.get(t.name)!.connection??null})),tokenLimit:this.tokenLimit,...(this.workspace?{workspace:this.workspace.config}:{})};
    const configHash=hash(frozen);
-   await this.storage.request('beginRuntimeActivation',{...claim,activationId:host.activationId,principalId:host.principalId,sessionId,configHash,config:z.record(z.string(),z.json()).parse(frozen),maxSteps:role.maxSteps,tokenLimit:this.tokenLimit});started=true;
+    const activation=await this.storage.request('beginRuntimeActivation',{...claim,activationId:host.activationId,principalId:host.principalId,sessionId,configHash,config:z.record(z.string(),z.json()).parse(frozen),maxSteps:role.maxSteps,tokenLimit:this.tokenLimit});started=true;
+    if(activation.state!=='RUNNING')fail('RUNTIME_RESUME_REQUIRES_RECONCILIATION');
+    let workspace:Record<string,unknown>|undefined;
+    if(this.workspace){workspacePending=true;workspace=await this.workspace.prepare(host,signal);workspacePending=false;}
    const meta=():WriteMeta=>({principalId:host!.principalId,scopeId:host!.runId,idempotencyKey:randomUUID()});
    const materials:{artifactId:string;sha256:string;text:string}[]=[];
    const refs=[...(host.inputManifest.interfaces as {artifactId:string;sha256:string}[]),...(host.inputManifest.artifacts as {artifactId:string;sha256:string}[])];
    for(const ref of refs){const text=await this.content.readText(host.principalId,{kind:'artifact',artifactId:ref.artifactId});if(createHash('sha256').update(text).digest('hex')!==ref.sha256)fail('INPUT_BASIS_CHANGED');materials.push({...ref,text});}
-   await this.sessions.append(meta(),{kind:'message',sessionId,activationId:host.activationId,clientMessageId:'runtime.input.'+host.activationId,messageKind:'user'},canonical({work:host.work,requirements:host.requirements,inputManifest:host.inputManifest,materials}));
+    await this.sessions.append(meta(),{kind:'message',sessionId,activationId:host.activationId,clientMessageId:'runtime.input.'+host.activationId,messageKind:'user'},canonical({work:host.work,requirements:host.requirements,inputManifest:host.inputManifest,materials,...(workspace?{workspace}:{})}));
    for(let turn=0;turn<role.maxSteps;turn++){
     if(signal.aborted)fail('RUNTIME_ABORTED');
     const session=await this.storage.request('getSession',{principalId:host.principalId,sessionId});
@@ -103,7 +113,9 @@ export class AgentRuntime {
     let output:unknown;try{output=JSON.parse(response.content);}catch{fail('ROLE_OUTPUT_INVALID');}
     const parsed=roleOutput.safeParse(output);if(!parsed.success||parsed.data.role!==role.role)fail('ROLE_OUTPUT_INVALID');
     const body=await this.content.putJson(meta(),{kind:'content'},parsed.data);
+     if(this.workspace){workspacePending=true;const original=await this.storage.request('prepareRuntimeWorkspaceResult',{activationId:host.activationId,stepNo,contentHash:body.expectedHash,output:z.record(z.string(),z.json()).parse(parsed.data)});await this.workspace.retain(host,original,signal);}
     const candidate=await this.storage.request('publishRuntimeResult',{activationId:host.activationId,stepNo,contentHash:body.expectedHash,output:z.record(z.string(),z.json()).parse(parsed.data)});
+     workspacePending=false;
     return {state:'completed',candidate,sessionId};
    }
    return fail('MODEL_STEP_LIMIT');
@@ -112,10 +124,21 @@ export class AgentRuntime {
    if(sent&&!responseSaved&&host&&sessionId&&error instanceof ModelError&&error.outcome!=='unknown'){
     try{const session=await this.storage.request('getSession',{principalId:host.principalId,sessionId});await this.sessions.saveResponse({principalId:host.principalId,scopeId:host.runId,idempotencyKey:randomUUID()},{kind:'modelResponse',sessionId,stepNo:session.lastStepNo,activationId:host.activationId,state:'FAILED'},{error:{code,outcome:error.outcome}});responseSaved=true;sent=false;}catch{/* A durable response could not be confirmed. */}
    }
-   const unknown=sent&&!responseSaved&&(!(error instanceof ModelError)||error.outcome==='unknown')||['TOOL_OUTCOME_UNKNOWN','TOOL_RESULT_PERSISTENCE_FAILED','RUNTIME_RESUME_REQUIRES_RECONCILIATION','OUTCOME_UNKNOWN','STORAGE_CLOSED'].includes(code);
+    const unknown=workspacePending||sent&&!responseSaved&&(!(error instanceof ModelError)||error.outcome==='unknown')||['TOOL_OUTCOME_UNKNOWN','TOOL_RESULT_PERSISTENCE_FAILED','RUNTIME_RESUME_REQUIRES_RECONCILIATION','OUTCOME_UNKNOWN','STORAGE_CLOSED'].includes(code);
    if(started&&host)await this.storage.request('setRuntimeState',{activationId:host.activationId,state:unknown?'RECONCILE':'FAILED',reason:code,unknownUsage:sent&&!responseSaved||error instanceof ModelError&&error.outcome==='known-failed'}).catch(()=>{});
     return {state:unknown?'reconcile':'failed',code};
    }finally{await lease?.stop();}
+ }
+ /** Original result recovery grants no model, tool, checkout or transfer admission. */
+ async reconcileWorkspaceResult(claim:ExecutionClaim,signal=new AbortController().signal):Promise<RuntimeOutcome>{
+  try{
+   if(!this.workspace)fail('RUNTIME_WORKSPACE_NOT_CONFIGURED');
+   const recovery=await this.storage.request('getRuntimeWorkspaceRecovery',claim);
+   if(hash(recovery.config.workspace)!==hash(this.workspace!.config))fail('RUNTIME_CONFIGURATION_CHANGED');
+   if(!recovery.result)fail('RUNTIME_WORKSPACE_RESULT_UNPREPARED');
+   await this.workspace!.reconcile(recovery.host,recovery.result!,signal);
+   const candidate=await this.storage.request('reconcileRuntimeWorkspaceResult',claim);return {state:'completed',candidate,sessionId:recovery.host.sessionId!};
+  }catch(error){return {state:'reconcile',code:error instanceof StorageError||error instanceof ModelError?error.code:'RUNTIME_WORKSPACE_RECONCILIATION_REQUIRED'};}
  }
  private async saveToolResult(host:ExecutionHostView,op:RuntimeToolView,result:Exclude<ToolResult,{state:'OUTCOME_UNKNOWN'}>){
   const meta={principalId:host.principalId,scopeId:host.runId,idempotencyKey:randomUUID()};

@@ -5,6 +5,7 @@ import { StorageError } from './errors.js';
 import { canonical } from './json.js';
 import { digest,transaction } from './migrations.js';
 import { runtimeRequests } from './runtime-protocol.js';
+import {createRuntimeWorkspaces} from './runtime-workspaces.js';
 import type { RuntimeMethod,RuntimeInput,RuntimeActivationView,RuntimeToolView } from './runtime-protocol.js';
 type Row=Record<string,string|number|null>;
 const uid=(p:string)=>p+'_'+randomUUID().replaceAll('-',''),now=()=>new Date().toISOString();
@@ -15,15 +16,17 @@ function publicConfiguration(value:unknown,depth=0):void{
  if(value&&typeof value==='object')for(const [key,item] of Object.entries(value)){if(/^(authorization|cookie|set-cookie|api[_-]?key|access[_-]?token|refresh[_-]?token|reasoning_content|thinking|chain_of_thought)$/i.test(key))reject('PRIVATE_MODEL_FIELD','Credentials and internal reasoning cannot enter configuration snapshots',422);publicConfiguration(item,depth+1);}
 }
 export function createRuntimeDomain(db:DatabaseSync){
+ const workspaces=createRuntimeWorkspaces(db);
  const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined,exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
  const required=(r:Row|undefined)=>r??reject('RESOURCE_NOT_FOUND','Requested runtime record does not exist',404);
  const activation=(id:string)=>required(get('SELECT * FROM runtime_activations WHERE activation_id=?',id));
  const activationView=(r:Row):RuntimeActivationView=>({activationId:String(r.activation_id),sessionId:String(r.session_id),state:String(r.state),tokensUsed:Number(r.tokens_used),tokenLimit:Number(r.token_limit),maxSteps:Number(r.max_steps),unknownUsage:r.unknown_usage===1,configHash:String(r.config_hash)});
  const tool=(id:string,activationId:string)=>required(get('SELECT * FROM runtime_tool_calls WHERE operation_id=? AND activation_id=?',id,activationId));
  const toolView=(r:Row):RuntimeToolView=>({operationId:String(r.operation_id),activationId:String(r.activation_id),sessionId:String(r.session_id),stepNo:Number(r.step_no),toolCallId:String(r.tool_call_id),toolName:String(required(get('SELECT tool_name FROM tool_operations WHERE operation_id=?',String(r.operation_id))).tool_name),state:String(r.state),resultMessageId:r.result_message_id===null?null:String(r.result_message_id),argsHash:String(r.args_hash),errorCode:r.error_code===null?null:String(r.error_code)});
- function host(c:{endpointId:string;taskId:string;workerId:string;claimToken:string}){
+ function host(c:{endpointId:string;taskId:string;workerId:string;claimToken:string},recovery=false){
   const row=required(get('SELECT a.*,w.state accepted_state,w.activation_id,w.worker_id,w.claim_token,p.owner_id,r.run_epoch,r.control_gate,r.terminal_outcome,x.work_epoch FROM accepted_work w JOIN a2a_tasks t ON t.endpoint_id=w.endpoint_id AND t.task_id=w.task_id JOIN attempts a ON a.attempt_id=t.attempt_id JOIN runs r ON r.run_id=a.run_id JOIN projects p ON p.project_id=r.project_id JOIN works x ON x.run_id=a.run_id AND x.work_id=a.work_id WHERE w.endpoint_id=? AND w.task_id=?',c.endpointId,c.taskId));
-  if(row.accepted_state!=='ACTIVE'||row.worker_id!==c.workerId||row.claim_token!==c.claimToken)reject('EXECUTION_HOST_CLAIM_CHANGED','A durable active consumer claim is required',403);
+  if(!(recovery?['ACTIVE','RECONCILE','FINISHED'].includes(String(row.accepted_state)):row.accepted_state==='ACTIVE')||row.worker_id!==c.workerId||row.claim_token!==c.claimToken)reject('EXECUTION_HOST_CLAIM_CHANGED','A durable original consumer claim is required',403);
+  if(recovery){const member=get('SELECT m.role FROM project_members m JOIN runs r ON r.project_id=m.project_id WHERE r.run_id=? AND m.principal_id=?',String(row.run_id),String(row.owner_id));if(!member||member.role==='viewer')reject('EXECUTION_HOST_ACL_CHANGED','Current write membership is required',403);}
   if(get('SELECT cancel_requested FROM a2a_task_ownership WHERE endpoint_id=? AND task_id=?',c.endpointId,c.taskId)?.cancel_requested===1)reject('EXECUTION_CANCELED','Task cancellation closes action admission',403);
   return row;
  }
@@ -40,6 +43,10 @@ export function createRuntimeDomain(db:DatabaseSync){
   return a;
  }
  const handlers={
+  getRuntimeWorkspaceRecovery(input:RuntimeInput<'getRuntimeWorkspaceRecovery'>){return transaction(db,()=>{const h=host(input,true),a=activation(String(h.activation_id)),g=required(get('SELECT * FROM execution_grants WHERE grant_id=?',String(a.grant_id))),work=required(get('SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?',String(h.run_id),String(h.work_id),Number(h.work_revision))),task=required(get('SELECT snapshot_json FROM a2a_tasks WHERE endpoint_id=? AND task_id=?',input.endpointId,input.taskId));
+   return {host:{principalId:String(h.owner_id),runId:String(h.run_id),attemptId:String(h.attempt_id),activationId:String(h.activation_id),grantId:String(g.grant_id),sessionId:String(a.session_id),roleSnapshot:JSON.parse(String(h.role_snapshot_json)),permit:JSON.parse(String(g.permit_json)),inputManifest:JSON.parse(String(h.input_manifest_json)),inputFingerprint:String(h.input_fingerprint),work:JSON.parse(String(work.definition_json)),requirements:{},taskSnapshot:JSON.parse(String(task.snapshot_json))},config:JSON.parse(String(a.config_json)),result:workspaces.get(String(a.activation_id))};});},
+  prepareRuntimeWorkspaceResult(input:RuntimeInput<'prepareRuntimeWorkspaceResult'>){return transaction(db,()=>workspaces.prepare(assertActive(input.activationId),input.stepNo,input.contentHash,input.output));},
+  reconcileRuntimeWorkspaceResult(input:RuntimeInput<'reconcileRuntimeWorkspaceResult'>){return transaction(db,()=>{const h=host(input,true),a=activation(String(h.activation_id)),result=workspaces.get(String(h.activation_id));if(!result)reject('RUNTIME_WORKSPACE_RESULT_UNPREPARED','Only a durable original workspace result can be reconciled');if(!['RUNNING','RECONCILE','FINISHED'].includes(String(a.state)))reject('RUNTIME_ALREADY_STOPPED','Original activation does not allow historical result recovery');return publish(parseContract(runtimeRequests.publishRuntimeResult,{activationId:String(a.activation_id),stepNo:result!.stepNo,contentHash:result!.contentHash,output:result!.output}),true);});},
   getAcceptedTaskSnapshot(input:RuntimeInput<'getAcceptedTaskSnapshot'>){return transaction(db,()=>{const a=required(get('SELECT * FROM accepted_work WHERE endpoint_id=? AND task_id=?',input.endpointId,input.taskId));if(a.worker_id!==input.workerId||a.claim_token!==input.claimToken||a.state!=='ACTIVE')reject('EXECUTION_HOST_CLAIM_CHANGED','Active consumer claim required',403);return JSON.parse(String(required(get('SELECT snapshot_json FROM a2a_tasks WHERE endpoint_id=? AND task_id=?',input.endpointId,input.taskId)).snapshot_json));});},
   renewExecutionHost(input:RuntimeInput<'renewExecutionHost'>){return transaction(db,()=>{
     const h=host(input),{g,p}=permit(h);
@@ -90,12 +97,15 @@ export function createRuntimeDomain(db:DatabaseSync){
   });},
   markRuntimeToolUnknown(input:RuntimeInput<'markRuntimeToolUnknown'>){return transaction(db,()=>{const t=tool(input.operationId,input.activationId);if(['FAILED','SUCCEEDED'].includes(String(t.state)))return toolView(t);exec("UPDATE runtime_tool_calls SET state='OUTCOME_UNKNOWN',error_code=?,updated_at=? WHERE operation_id=?",input.errorCode,now(),input.operationId);exec("UPDATE operations SET status='OUTCOME_UNKNOWN',updated_at=? WHERE operation_id=?",now(),input.operationId);return toolView(tool(input.operationId,input.activationId));});},
   recoverRuntimeActivations(){return transaction(db,()=>{const tools=Number(exec("UPDATE runtime_tool_calls SET state='OUTCOME_UNKNOWN',error_code='PROCESS_INTERRUPTED',updated_at=datetime('now') WHERE state='SENT'").changes);exec("UPDATE operations SET status='OUTCOME_UNKNOWN' WHERE operation_id IN (SELECT operation_id FROM runtime_tool_calls WHERE state='OUTCOME_UNKNOWN') AND status NOT IN ('FAILED','SUCCEEDED')");const activations=Number(exec("UPDATE runtime_activations SET state='RECONCILE',reason='PROCESS_INTERRUPTED',unknown_usage=max(unknown_usage,EXISTS(SELECT 1 FROM model_steps m WHERE m.session_id=runtime_activations.session_id AND m.state='SENT')),updated_at=datetime('now') WHERE state='RUNNING'").changes);return {activations,tools};});},
-  publishRuntimeResult(input:RuntimeInput<'publishRuntimeResult'>){return transaction(db,()=>{
+  publishRuntimeResult(input:RuntimeInput<'publishRuntimeResult'>){return transaction(db,()=>publish(input));},
+ };
+ function publish(input:RuntimeInput<'publishRuntimeResult'>,recovery=false){
    const a=activation(input.activationId),old=get('SELECT * FROM runtime_results WHERE activation_id=?',input.activationId);const output=parseContract(roleOutput,input.output),hash=digest(canonical(output));
    if(hash!==input.contentHash)reject('RESULT_HASH_MISMATCH','Candidate bytes must equal the validated output');
    if(old){const artifact=required(get('SELECT * FROM artifacts WHERE artifact_id=?',String(old.artifact_id)));if(artifact.content_hash!==hash||old.step_no!==input.stepNo)reject('RESULT_IMMUTABLE','Candidate cannot change');return {artifactId:String(old.artifact_id),sha256:hash,schemaId:output.schemaVersion};}
-   if(a.state!=='RUNNING')reject('RUNTIME_NOT_RUNNING','Runtime has no active result admission');
-   const h=host({endpointId:String(a.endpoint_id),taskId:String(a.task_id),workerId:String(a.worker_id),claimToken:String(a.claim_token)});permit(h);const role=JSON.parse(String(h.role_snapshot_json)) as {role:string;outputSchemaId:string};
+   if(a.state!=='RUNNING'&&!(recovery&&a.state==='RECONCILE'))reject('RUNTIME_NOT_RUNNING','Runtime has no active result admission');
+   const h=host({endpointId:String(a.endpoint_id),taskId:String(a.task_id),workerId:String(a.worker_id),claimToken:String(a.claim_token)},recovery);if(!recovery)permit(h);const role=JSON.parse(String(h.role_snapshot_json)) as {role:string;outputSchemaId:string};
+   workspaces.assertPublication(a,input.stepNo,input.contentHash,output);
    if(output.role!==role.role||output.schemaVersion!==role.outputSchemaId)reject('RESULT_SCHEMA_MISMATCH','Candidate differs from frozen role/schema');
    const step=required(get('SELECT state FROM model_steps WHERE session_id=? AND step_no=?',String(a.session_id),input.stepNo));if(step.state!=='RESPONDED'||!get('SELECT step_no FROM runtime_model_accounting WHERE session_id=? AND step_no=?',String(a.session_id),input.stepNo))reject('MODEL_RESPONSE_NOT_DURABLE','Complete and account the final response first');
    if(get("SELECT operation_id FROM runtime_tool_calls WHERE activation_id=? AND state NOT IN ('FAILED','SUCCEEDED')",input.activationId))reject('TOOL_OUTCOME_UNKNOWN','Unresolved tools block candidate publication');
@@ -106,7 +116,6 @@ export function createRuntimeDomain(db:DatabaseSync){
    const task=JSON.parse(String(required(get('SELECT snapshot_json FROM a2a_tasks WHERE endpoint_id=? AND task_id=?',String(a.endpoint_id),String(a.task_id))).snapshot_json)) as Record<string,unknown>,time=now();
    task.status={state:'TASK_STATE_COMPLETED',timestamp:time};task.artifacts=[{artifactId:id,name:'Role candidate',parts:[{data:{artifactId:id,sha256:hash,schemaId:output.schemaVersion,sessionId:String(a.session_id)}}]}];const snapshot=canonical(task);
    exec("UPDATE a2a_tasks SET protocol_state='completed',snapshot_json=? WHERE endpoint_id=? AND task_id=?",snapshot,String(a.endpoint_id),String(a.task_id));exec('UPDATE a2a_task_ownership SET status_revision=status_revision+1,updated_at=? WHERE endpoint_id=? AND task_id=?',time,String(a.endpoint_id),String(a.task_id));const seq=Number(required(get('SELECT status_revision FROM a2a_task_ownership WHERE endpoint_id=? AND task_id=?',String(a.endpoint_id),String(a.task_id))).status_revision);exec('INSERT INTO a2a_task_events VALUES(?,?,?,?,?)',String(a.endpoint_id),String(a.task_id),seq,snapshot,time);exec("UPDATE accepted_work SET state='FINISHED' WHERE endpoint_id=? AND task_id=?",String(a.endpoint_id),String(a.task_id));return {artifactId:id,sha256:hash,schemaId:output.schemaVersion};
-  });},
- };
+ }
  return {execute(method:RuntimeMethod,input:unknown){const p=parseContract(runtimeRequests[method],input);return (handlers[method] as (p:unknown)=>unknown)(p);}};
 }

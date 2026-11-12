@@ -5,7 +5,7 @@ import { Context } from '@deepseek-ai/cordis';
 import type { ServerConfig } from './config.js';
 import type { LocalStorage, LocalContentStore, SessionStore } from '@devmesh/blob-store';
 import type { mountInternalAgents, CredentialResolver } from '@devmesh/a2a-adapter';
-import type { PreparationConsumer, RuntimeConsumer, RuntimeTool } from '@devmesh/agent-runtime';
+import type { PreparationConsumer, RuntimeConsumer, RuntimeTool,RuntimeWorkspaceLifecycle } from '@devmesh/agent-runtime';
 import type { IdentityResolver, mountInputApi } from '@devmesh/input-api';
 import type { WorkflowScheduler, WorkflowSchedulerOptions } from './scheduler.js';
 import type {WorkflowMcpOptions,WorkflowMcpServices} from '@devmesh/mcp-tools';
@@ -26,11 +26,12 @@ export interface FoundationServer {
   mcp?:WorkflowMcpServices|undefined;
 }
 
-export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];identityResolver?:IdentityResolver;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
+export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
   if(config.runtime&&(!config.storage||!config.a2a))throw new Error('Runtime requires durable storage and hosted A2A endpoints');
   if(config.inputApi&&!config.storage)throw new Error('Input API requires durable storage');
   if(options.mcp&&!config.storage)throw new Error('MCP services require durable storage');
+  if(options.workspaceLifecycle&&!config.runtime)throw new Error('Managed workspaces require an explicitly configured Runtime');
   if(options.scheduler&&(!config.runtime||!config.a2a?.identities.some(identity=>identity.principalId===options.scheduler?.callerId)))
     throw new Error('Scheduler requires configured Runtime and an internal service identity');
   const inputModule=config.inputApi?await import('@devmesh/input-api'):undefined;
@@ -136,7 +137,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
       const { DeepSeekProvider, AgentRuntime, RuntimeConsumer } = runtimeModule;
       const credentials=options.resolveCredential??a2aModule!.environmentCredentials();
       const providers=runtimeConfig.providers.map(p=>new DeepSeekProvider(p,credentials));
-      const runtime=new AgentRuntime(services.local.storage,services.content,providers,[...(options.runtimeTools??[]),...(mcp?.tools??[])],runtimeConfig.tokenLimit);
+      const runtime=new AgentRuntime(services.local.storage,services.content,providers,[...(options.runtimeTools??[]),...(mcp?.tools??[])],runtimeConfig.tokenLimit,await options.workspaceLifecycle?.(services));
       const localEndpoints=config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled);
       consumer=new RuntimeConsumer(services.local.storage,runtime,localEndpoints.map(e=>e.endpointId),'runtime.local');
       await consumer.start();

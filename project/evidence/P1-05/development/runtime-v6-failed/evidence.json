@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "Managed Runtime lifecycle through real local model-protocol/MCP/A2A/Runner HTTP, SQLite and Git; original result journal, source ACK gating and historical recovery. Scripted model fixture and ControlledBackend, no production model or actual container. No OIDC, remote identity, Linux/runsc or acceptance gates.",
+  "baseCommit": "db8c42b181ffedd43ffd06965edab38508b837ed",
+  "sourceFingerprint": "4e93b3b0485c03a0b3c1dfaf6cd36f66f984b19a1cb974f095458804ed10b62f",
+  "startedAt": "2026-11-12T01:49:34.357Z",
+  "finishedAt": "2026-11-12T01:51:08.524Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "path": ".cache/p105-runtime-v6-typecheck.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5703,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "path": ".cache/p105-runtime-v6-lint.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 593,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "path": ".cache/p105-runtime-v6-build.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12597,
+      "sha256": "9706d230bab5b177bf2521aa0d8c80ab8db1fa785e3aed4e62d67244ca67478a"
+    },
+    {
+      "name": "runtime-workspace",
+      "path": ".cache/p105-runtime-v6-runtime-workspace.txt",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 75266,
+      "sha256": "1268c1b9b43b9671e742ecd8d2ff51a2e9fe68e1a08d86b2e3a8eb7cec546a57",
+      "tests": {
+        "tests": 5,
+        "pass": 4,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/p105-runtime-v6-report.json",
+      "sha256": "79deba1823f477eae2c82fed48d26ee13b98aa6d24d872967ae6a5cb7cbf0387",
+      "byteSize": 43439
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/p105-runtime-v6-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "byteSize": 32
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/p105-runtime-v6-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061",
+      "byteSize": 61
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/p105-runtime-v6-build.txt",
+      "sha256": "9706d230bab5b177bf2521aa0d8c80ab8db1fa785e3aed4e62d67244ca67478a",
+      "byteSize": 8111
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/p105-runtime-v6-runtime-workspace.txt",
+      "sha256": "1268c1b9b43b9671e742ecd8d2ff51a2e9fe68e1a08d86b2e3a8eb7cec546a57",
+      "byteSize": 3937
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__agent-runtime__src__index.ts.txt",
+      "sha256": "f7aa4d65297d3234d2a739a3ec2b662d53f80feb28e40498a004b7c74f5adea0",
+      "byteSize": 902
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__agent-runtime__src__runtime.ts.txt",
+      "sha256": "bccb776d1a26d219d7205fc38a8efbc6f6a119a0459883c4de2bd56d2ce679a9",
+      "byteSize": 16344
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__code-workspaces__src__index.ts.txt",
+      "sha256": "8c0630bb76ef685e351b54968969c522c5f364abf7fb01fa62e48a68eab18725",
+      "byteSize": 1680
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__platform-core__src__index.ts.txt",
+      "sha256": "1f0be629c5ac3e9321d65fad9b343ea04c173de25c1a7e5c1017ba16adcc7477",
+      "byteSize": 11452
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__storage-sqlite__migrations__manifest.json.txt",
+      "sha256": "986ba7930c86cc73716c43646984b95d702ed53b8dfd023f69c2f2a14500c828",
+      "byteSize": 2891
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__storage-sqlite__src__index.ts.txt",
+      "sha256": "8f157e81ae83fc8e6f6efe32ebc34fabe839592aee9a78e89c57875e6313d850",
+      "byteSize": 7921
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__storage-sqlite__src__runtime-domain.ts.txt",
+      "sha256": "42062528a3e01810acec69d96e78e24b0cfa2c12e89327bcff167865d7d537f2",
+      "byteSize": 25453
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__storage-sqlite__src__runtime-protocol.ts.txt",
+      "sha256": "b76d5a29ec80b63ea58c5c48ef3afd313da57dccd24da5231d8301b4096f4afd",
+      "byteSize": 4428
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__storage-sqlite__src__workspace-maintenance-domain.ts.txt",
+      "sha256": "5e89355d32b5665a35cfc594791e1c6aafa1d732b651899eaeb5f2e430c69ef5",
+      "byteSize": 6397
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/tests__fixtures__a2a-data.mjs.txt",
+      "sha256": "3f412b78f852a55ebbf32648d25cdf8663b42bfafc8ef3c6b25ddb0e00101aa6",
+      "byteSize": 8717
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/tests__fixtures__source-archive.mjs.txt",
+      "sha256": "fd3da81184d3ba29212cdb8ffc27ea982db0cf20cdfa347d5ed2e81c9c585b64",
+      "byteSize": 5442
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__code-workspaces__src__runtime-lifecycle.ts.txt",
+      "sha256": "d21f05f6dfd8a82b6b375400e2649cb79d34cd6bbdabcd77e51694ee3a432539",
+      "byteSize": 4435
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/packages__storage-sqlite__src__runtime-workspaces.ts.txt",
+      "sha256": "7c87b75456f537890bb78da9eb9c70619bb261a5a03486b800c828deaee223c5",
+      "byteSize": 5684
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v6-failed/tests__workspace-runtime.test.mjs.txt",
+      "sha256": "00c383f5eb317816cbc2a9e43d00eac7897d73d09607a710d821b037f4aba5d4",
+      "byteSize": 11351
+    }
+  ],
+  "limitations": [
+    "Actual authenticated local Runner HTTP and SQLite; ControlledBackend is a fixture and runs no actual container.",
+    "No live model, OIDC, remote identity, Linux/runsc, product acceptance or stage gates.",
+    "Runtime preparation/source publication and exact final checkpoint regression remain separate pending work."
+  ]
+}

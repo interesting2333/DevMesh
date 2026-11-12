@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "Managed Runtime lifecycle through real local model-protocol/MCP/A2A/Runner HTTP, SQLite and Git; original result journal, source ACK gating and historical recovery. Scripted model fixture and ControlledBackend, no production model or actual container. No OIDC, remote identity, Linux/runsc or acceptance gates.",
+  "baseCommit": "db8c42b181ffedd43ffd06965edab38508b837ed",
+  "sourceFingerprint": "e1537ed7f243018bb72ff7f950436e05c4eeef25452c87b84cb1b8e3faebcfce",
+  "startedAt": "2026-11-12T01:35:01.886Z",
+  "finishedAt": "2026-11-12T01:38:10.153Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "path": ".cache/p105-runtime-v1-typecheck.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9891,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "path": ".cache/p105-runtime-v1-lint.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 863,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "path": ".cache/p105-runtime-v1-build.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 17162,
+      "sha256": "b8f299194a746de40e51d27f3101d5cef6a855a550ce18b8cbd8f7f52aa1d281"
+    },
+    {
+      "name": "runtime-workspace",
+      "path": ".cache/p105-runtime-v1-runtime-workspace.txt",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 160341,
+      "sha256": "5d7c4ec68140e385d4dd036fd9099a5b85dda65a54e035abc4725ac80f83ee40",
+      "tests": {
+        "tests": 3,
+        "pass": 0,
+        "fail": 3,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/p105-runtime-v1-report.json",
+      "sha256": "86e4fa3cc5661f751ddc82cd6ce003872c27af31e35df99b227ea96abac3e3e2",
+      "byteSize": 43440
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/p105-runtime-v1-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "byteSize": 32
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/p105-runtime-v1-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061",
+      "byteSize": 61
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/p105-runtime-v1-build.txt",
+      "sha256": "b8f299194a746de40e51d27f3101d5cef6a855a550ce18b8cbd8f7f52aa1d281",
+      "byteSize": 9055
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/p105-runtime-v1-runtime-workspace.txt",
+      "sha256": "5d7c4ec68140e385d4dd036fd9099a5b85dda65a54e035abc4725ac80f83ee40",
+      "byteSize": 3972
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__agent-runtime__src__index.ts.txt",
+      "sha256": "f7aa4d65297d3234d2a739a3ec2b662d53f80feb28e40498a004b7c74f5adea0",
+      "byteSize": 902
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__agent-runtime__src__runtime.ts.txt",
+      "sha256": "6d9951ec959e2f981577a93812d884530c1b342719e29155f3f18295eb048e29",
+      "byteSize": 15409
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__code-workspaces__src__index.ts.txt",
+      "sha256": "8c0630bb76ef685e351b54968969c522c5f364abf7fb01fa62e48a68eab18725",
+      "byteSize": 1680
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__platform-core__src__index.ts.txt",
+      "sha256": "1f0be629c5ac3e9321d65fad9b343ea04c173de25c1a7e5c1017ba16adcc7477",
+      "byteSize": 11452
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__storage-sqlite__migrations__manifest.json.txt",
+      "sha256": "986ba7930c86cc73716c43646984b95d702ed53b8dfd023f69c2f2a14500c828",
+      "byteSize": 2891
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__storage-sqlite__src__index.ts.txt",
+      "sha256": "8f157e81ae83fc8e6f6efe32ebc34fabe839592aee9a78e89c57875e6313d850",
+      "byteSize": 7921
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__storage-sqlite__src__runtime-domain.ts.txt",
+      "sha256": "42062528a3e01810acec69d96e78e24b0cfa2c12e89327bcff167865d7d537f2",
+      "byteSize": 25453
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__storage-sqlite__src__runtime-protocol.ts.txt",
+      "sha256": "b76d5a29ec80b63ea58c5c48ef3afd313da57dccd24da5231d8301b4096f4afd",
+      "byteSize": 4428
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/tests__fixtures__source-archive.mjs.txt",
+      "sha256": "6610a7dc9997087a47d7dc73a0a4f91514026653dad4b6b096ca00ddb962faca",
+      "byteSize": 5415
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__code-workspaces__src__runtime-lifecycle.ts.txt",
+      "sha256": "d21f05f6dfd8a82b6b375400e2649cb79d34cd6bbdabcd77e51694ee3a432539",
+      "byteSize": 4435
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/packages__storage-sqlite__src__runtime-workspaces.ts.txt",
+      "sha256": "7c87b75456f537890bb78da9eb9c70619bb261a5a03486b800c828deaee223c5",
+      "byteSize": 5684
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v1-failed/tests__workspace-runtime.test.mjs.txt",
+      "sha256": "7476b60526f165caecf1336814e06946d614bfc5ca88e897776c9b09dc4cca90",
+      "byteSize": 8286
+    }
+  ],
+  "limitations": [
+    "Actual authenticated local Runner HTTP and SQLite; ControlledBackend is a fixture and runs no actual container.",
+    "No live model, OIDC, remote identity, Linux/runsc, product acceptance or stage gates.",
+    "Runtime preparation/source publication and exact final checkpoint regression remain separate pending work."
+  ]
+}

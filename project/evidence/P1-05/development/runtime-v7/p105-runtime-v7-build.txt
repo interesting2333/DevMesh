@@ -1,0 +1,101 @@
+Scope: 5 of 17 workspace projects
+packages/storage-sqlite build$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+packages/storage-sqlite build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/storage-sqlite build: ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+packages/storage-sqlite build: ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+packages/storage-sqlite build: ℹ target: node24
+packages/storage-sqlite build: ℹ tsconfig: ..\..\tsconfig.json
+packages/storage-sqlite build: ℹ Build start
+packages/storage-sqlite build: ℹ Cleaning 40 files
+packages/storage-sqlite build: ℹ dist\index.mjs                                         7.57 kB │ gzip:   2.66 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs                                        5.29 kB │ gzip:   2.15 kB
+packages/storage-sqlite build: ℹ dist\migrations.mjs                                    0.26 kB │ gzip:   0.17 kB
+packages/storage-sqlite build: ℹ dist\domain.mjs                                        0.17 kB │ gzip:   0.14 kB
+packages/storage-sqlite build: ℹ dist\domain-U31AgBfa.mjs.map                         578.02 kB │ gzip: 122.64 kB
+packages/storage-sqlite build: ℹ dist\domain-U31AgBfa.mjs                             347.41 kB │ gzip:  70.09 kB
+packages/storage-sqlite build: ℹ dist\workspace-preservation-domain-pn1oOj0T.mjs.map   90.17 kB │ gzip:  19.89 kB
+packages/storage-sqlite build: ℹ dist\workspace-preservation-domain-pn1oOj0T.mjs       50.21 kB │ gzip:  11.28 kB
+packages/storage-sqlite build: ℹ dist\index.mjs.map                                    14.70 kB │ gzip:   4.82 kB
+packages/storage-sqlite build: ℹ dist\migrations-CmCClcp5.mjs.map                      10.73 kB │ gzip:   3.79 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs.map                                    8.45 kB │ gzip:   3.15 kB
+packages/storage-sqlite build: ℹ dist\migrations-CmCClcp5.mjs                           6.31 kB │ gzip:   2.46 kB
+packages/storage-sqlite build: ℹ dist\index.d.mts                                       5.50 kB │ gzip:   1.77 kB
+packages/storage-sqlite build: ℹ dist\migrations.d.mts                                  0.91 kB │ gzip:   0.42 kB
+packages/storage-sqlite build: ℹ dist\domain.d.mts                                      0.33 kB │ gzip:   0.23 kB
+packages/storage-sqlite build: ℹ dist\worker.d.mts                                      0.01 kB │ gzip:   0.03 kB
+packages/storage-sqlite build: ℹ dist\json-DVuD7fOc.d.mts                             219.34 kB │ gzip:  18.66 kB
+packages/storage-sqlite build: ℹ 17 files, total: 1.35 MB
+packages/storage-sqlite build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/storage-sqlite build: ✔ Build complete in 3016ms
+packages/storage-sqlite build: Done
+packages/code-workspaces build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/agent-runtime build$ tsdown src/index.ts src/config.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/code-workspaces build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/agent-runtime build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/agent-runtime build: ℹ config file: D:\yms\AI\DevMesh\packages\agent-runtime\package.json 
+packages/code-workspaces build: ℹ config file: D:\yms\AI\DevMesh\packages\code-workspaces\package.json 
+packages/agent-runtime build: ℹ entry: src/index.ts, src/config.ts
+packages/agent-runtime build: ℹ target: node24
+packages/agent-runtime build: ℹ tsconfig: ..\..\tsconfig.json
+packages/code-workspaces build: ℹ entry: src/index.ts
+packages/code-workspaces build: ℹ target: node24
+packages/code-workspaces build: ℹ tsconfig: ..\..\tsconfig.json
+packages/agent-runtime build: ℹ Build start
+packages/code-workspaces build: ℹ Build start
+packages/code-workspaces build: ℹ Cleaning 4 files
+packages/agent-runtime build: ℹ Cleaning 8 files
+packages/agent-runtime build: ℹ dist\index.mjs                36.54 kB │ gzip:  9.42 kB
+packages/agent-runtime build: ℹ dist\config.mjs                0.10 kB │ gzip:  0.09 kB
+packages/agent-runtime build: ℹ dist\index.mjs.map            59.80 kB │ gzip: 16.18 kB
+packages/agent-runtime build: ℹ dist\config-Ci7_7HOr.mjs.map  18.12 kB │ gzip:  5.77 kB
+packages/agent-runtime build: ℹ dist\config-Ci7_7HOr.mjs      10.49 kB │ gzip:  3.54 kB
+packages/agent-runtime build: ℹ dist\index.d.mts              10.25 kB │ gzip:  2.86 kB
+packages/agent-runtime build: ℹ dist\config.d.mts              1.52 kB │ gzip:  0.61 kB
+packages/agent-runtime build: ℹ 7 files, total: 136.82 kB
+packages/agent-runtime build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/agent-runtime build:   - rolldown-plugin-dts:generate (58%)
+packages/agent-runtime build:   - tsdown:deps (31%)
+packages/agent-runtime build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/agent-runtime build: ✔ Build complete in 3203ms
+packages/code-workspaces build: ℹ dist\index.mjs      119.02 kB │ gzip: 25.41 kB
+packages/code-workspaces build: ℹ dist\index.mjs.map  200.11 kB │ gzip: 44.11 kB
+packages/code-workspaces build: ℹ dist\index.d.mts     19.20 kB │ gzip:  4.70 kB
+packages/code-workspaces build: ℹ 3 files, total: 338.33 kB
+packages/code-workspaces build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/code-workspaces build: ✔ Build complete in 3238ms
+packages/agent-runtime build: Done
+packages/mcp-tools build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/code-workspaces build: Done
+packages/mcp-tools build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/mcp-tools build: ℹ config file: D:\yms\AI\DevMesh\packages\mcp-tools\package.json 
+packages/mcp-tools build: ℹ entry: src/index.ts
+packages/mcp-tools build: ℹ target: node24
+packages/mcp-tools build: ℹ tsconfig: ..\..\tsconfig.json
+packages/mcp-tools build: ℹ Build start
+packages/mcp-tools build: ℹ Cleaning 4 files
+packages/mcp-tools build: ℹ dist\index.mjs       82.89 kB │ gzip: 20.63 kB
+packages/mcp-tools build: ℹ dist\index.mjs.map  141.03 kB │ gzip: 35.34 kB
+packages/mcp-tools build: ℹ dist\index.d.mts     14.50 kB │ gzip:  3.38 kB
+packages/mcp-tools build: ℹ 3 files, total: 238.43 kB
+packages/mcp-tools build: ✔ Build complete in 2257ms
+packages/mcp-tools build: Done
+packages/platform-core build$ tsdown src/index.ts src/config.ts src/scheduler.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/platform-core build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/platform-core build: ℹ config file: D:\yms\AI\DevMesh\packages\platform-core\package.json 
+packages/platform-core build: ℹ entry: src/index.ts, src/config.ts, src/scheduler.ts
+packages/platform-core build: ℹ target: node24
+packages/platform-core build: ℹ tsconfig: ..\..\tsconfig.json
+packages/platform-core build: ℹ Build start
+packages/platform-core build: ℹ Cleaning 10 files
+packages/platform-core build: ℹ dist\index.mjs           9.72 kB │ gzip: 3.03 kB
+packages/platform-core build: ℹ dist\scheduler.mjs       4.05 kB │ gzip: 1.36 kB
+packages/platform-core build: ℹ dist\config.mjs          4.01 kB │ gzip: 1.56 kB
+packages/platform-core build: ℹ dist\index.mjs.map      17.73 kB │ gzip: 5.38 kB
+packages/platform-core build: ℹ dist\config.mjs.map      7.33 kB │ gzip: 2.65 kB
+packages/platform-core build: ℹ dist\scheduler.mjs.map   7.26 kB │ gzip: 2.59 kB
+packages/platform-core build: ℹ dist\index.d.mts         1.86 kB │ gzip: 0.68 kB
+packages/platform-core build: ℹ dist\scheduler.d.mts     1.68 kB │ gzip: 0.73 kB
+packages/platform-core build: ℹ dist\config.d.mts        0.90 kB │ gzip: 0.45 kB
+packages/platform-core build: ℹ 9 files, total: 54.55 kB
+packages/platform-core build: ✔ Build complete in 2579ms
+packages/platform-core build: Done

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "Managed Runtime lifecycle through real local model-protocol/MCP/A2A/Runner HTTP, SQLite and Git; original result journal, source ACK gating and historical recovery. Scripted model fixture and ControlledBackend, no production model or actual container. No OIDC, remote identity, Linux/runsc or acceptance gates.",
+  "baseCommit": "db8c42b181ffedd43ffd06965edab38508b837ed",
+  "sourceFingerprint": "163dac10dc627b5a1130db59637c98b9269449a54dd0014511dfb20b17f5e822",
+  "startedAt": "2026-11-12T01:51:26.922Z",
+  "finishedAt": "2026-11-12T01:53:48.866Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "path": ".cache/p105-runtime-v7-typecheck.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6982,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "path": ".cache/p105-runtime-v7-lint.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 710,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "path": ".cache/p105-runtime-v7-build.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12852,
+      "sha256": "37b0c6d0b81989dc5d3a35676924b67f2c6cee207842bcbee29545000bc8a243"
+    },
+    {
+      "name": "runtime-workspace",
+      "path": ".cache/p105-runtime-v7-runtime-workspace.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 74734,
+      "sha256": "104235ea55a2fe3fa3ffc30a00c21771bc8b3f0f16dfa9565f0f8d90e57cbafc",
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "runtime-regression",
+      "path": ".cache/p105-runtime-v7-runtime-regression.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6925,
+      "sha256": "d79c39f8d90c642aa10d70a3dd475e8654691a4843bd62783c6b3340855d2741",
+      "tests": {
+        "tests": 9,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "dynamic-mcp",
+      "path": ".cache/p105-runtime-v7-dynamic-mcp.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 20418,
+      "sha256": "d12b1bb9bab76e4871fb03df5c71d4a77d6479f7ea949ad1d60c18fa39419315",
+      "tests": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "storage",
+      "path": ".cache/p105-runtime-v7-storage.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 19313,
+      "sha256": "f74155f465a6f71a609a588b1126fbe3f238ed5aa1749427486896bc8e915352",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/runtime-v7/p105-runtime-v7-report.json",
+      "sha256": "6c55d2c878aa7c0a6cb13b2c33b9b52dfbc7118e6815661e18cd142eb4850f7c",
+      "byteSize": 44586
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v7/p105-runtime-v7-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "byteSize": 32
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v7/p105-runtime-v7-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061",
+      "byteSize": 61
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v7/p105-runtime-v7-build.txt",
+      "sha256": "37b0c6d0b81989dc5d3a35676924b67f2c6cee207842bcbee29545000bc8a243",
+      "byteSize": 8691
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v7/p105-runtime-v7-runtime-workspace.txt",
+      "sha256": "104235ea55a2fe3fa3ffc30a00c21771bc8b3f0f16dfa9565f0f8d90e57cbafc",
+      "byteSize": 3366
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v7/p105-runtime-v7-runtime-regression.txt",
+      "sha256": "d79c39f8d90c642aa10d70a3dd475e8654691a4843bd62783c6b3340855d2741",
+      "byteSize": 4427
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v7/p105-runtime-v7-dynamic-mcp.txt",
+      "sha256": "d12b1bb9bab76e4871fb03df5c71d4a77d6479f7ea949ad1d60c18fa39419315",
+      "byteSize": 1576
+    },
+    {
+      "path": "project/evidence/P1-05/development/runtime-v7/p105-runtime-v7-storage.txt",
+      "sha256": "f74155f465a6f71a609a588b1126fbe3f238ed5aa1749427486896bc8e915352",
+      "byteSize": 23575
+    }
+  ],
+  "limitations": [
+    "Actual authenticated local Runner HTTP and SQLite; ControlledBackend is a fixture and runs no actual container.",
+    "No live model, OIDC, remote identity, Linux/runsc, product acceptance or stage gates.",
+    "Runtime preparation/source publication and exact final checkpoint regression remain separate pending work."
+  ]
+}

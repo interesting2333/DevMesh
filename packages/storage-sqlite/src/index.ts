@@ -20,7 +20,7 @@ export type {CandidateBasis,CandidateSource,CandidateWorkFact} from './candidate
 export type {CandidateIntegration,CandidateIntegrationStep,CandidateRefUpdate} from './candidate-integration-protocol.js';
 export { agentManifest, endpointConfig } from './registry-protocol.js';
 export type { EndpointConfig, AgentManifest, EndpointView, RegistrySnapshot, A2ATaskRecord } from './registry-protocol.js';
-export type { ExecutionHostView,RuntimeActivationView,RuntimeToolView } from './runtime-protocol.js';
+export type { ExecutionHostView,RuntimeActivationView,RuntimeToolView,RuntimeWorkspaceResult,RuntimeWorkspaceRecovery } from './runtime-protocol.js';
 export type { AttachmentView, UploadIntake, WorkspaceView } from './input-protocol.js';
 export type {PreparationJob,UnderstandingView,PreparationContext,PreparationAttempt,PreparationTask,PreparationClaim,PreparationHost} from './preparation-protocol.js';
 export { acquireWriterLock } from './lock.js';

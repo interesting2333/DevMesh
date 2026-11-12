@@ -171,3 +171,16 @@ The system SHALL retain source commits and required uncommitted, untracked and r
 
 - **WHEN** its original owner has current project writer membership, the original execution Grant is revoked, the complete archive is acknowledged and the separate maintenance barrier is authorized
 - **THEN** the maintenance operation MAY reclaim only that original checkout without granting any new execution or source write access
+### Requirement: Managed runtime publication and original result recovery
+
+托管模式 SHALL 在模型调用前完成精确工作区分配，并在发布开发候选前保存原成功提交的源码 ACK。最终角色结果、原分配和归档操作 SHALL 先写入不可变结果日志。未知结果 MUST 保留原操作供核实。
+
+#### Scenario: Source acknowledgement gates a runtime candidate
+
+- **WHEN** 托管开发 Runtime 已保存最终模型响应
+- **THEN** Worker 只接受属于原激活、原分配和精确成功提交的结果日志，未有对应源码 ACK 不发布候选或完成 Task
+
+#### Scenario: Recovery publishes an existing result without new execution
+
+- **WHEN** 原领取者核实丢失的源码 ACK 或发布回执且当前仍为写成员
+- **THEN** 仅查询原归档并从原结果日志补录候选，不调用模型、执行工具或重新传输源码，也不恢复 Grant；已取消任务仍拒绝发布

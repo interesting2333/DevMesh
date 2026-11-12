@@ -8,6 +8,7 @@ import { ClientFactory,JsonRpcTransportFactory,DefaultAgentCardResolver } from '
 import { AgentRegistry,createRoleCard,cardHash,mountInternalAgents } from '../../packages/a2a-adapter/dist/index.mjs';
 import { contentFixture,meta } from './content-data.mjs';
 import { plan,requirements,admission } from './storage-data.mjs';
+import {WorkflowScheduler} from '../../packages/platform-core/dist/scheduler.mjs';
 
 export const serviceToken='devmesh-test-service-token-not-a-production-secret';
 export const callerId='orchestrator';
@@ -27,16 +28,23 @@ export async function prepareDispatch(f,registry,roleConfig={},options={}){
  const body=await f.content.putText(meta(),{kind:'content'},'实现任务看板');
   const receipt=await f.storage.request('createProjectWithRun',{meta:meta(),name:'A2A protocol tests',baseCommit:options.baseCommit??'b'.repeat(40),contentHash:body.expectedHash,clientMessageId:randomUUID()});
   const p=receipt.result,draft=plan(),req=requirements();
+  if(options.scheduled){const [dev,tester]=draft.works;dev.inputRefs=[];Object.assign(tester,{inputRefs:[{kind:'output',workId:dev.workId,outputSlot:dev.outputSpec[0].slot}],dependencies:[{workId:dev.workId,requiredOutcome:'success'}],outputSpec:[{slot:'verification.report',schemaId:'devmesh.test-result.v1'}],completionChecks:[{kind:'required-tests-pass',checkId:'check_required'}]});}
   if(options.writeScope)draft.works.find(w=>w.role==='developer').writeScope=[...options.writeScope];
   const content=await f.content.putJson(meta(),{kind:'content'},draft);
  const publication=await f.storage.request('publishPlan',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r1"',requirementRevision:1,planRevision:1,requirements:req,plan:draft,planContentHash:content.expectedHash});
- await f.storage.request('confirmPlan',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r2"',requirementRevision:1,planRevision:1,reviewHash:publication.result.reviewHash});
+ await f.storage.request(options.scheduled?'confirmReviewedPlan':'confirmPlan',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r2"',requirementRevision:1,planRevision:1,reviewHash:publication.result.reviewHash});
  const input=await admission(f.storage,{...p,draft,requirements:req}),target=await registry.resolveRole('developer');
   if(options.baseCommit)input.works[0].inputManifest.codeCommit=options.baseCommit;
   if(options.resources)input.works[0].resources=options.resources;
  input.works[0].endpoint={endpointId:target.config.endpointId,revision:target.config.revision,cardHash:target.config.cardHash,registryGenerationId:registry.version.generationId};
  Object.assign(input.works[0].roleSnapshot,roleConfig);
- const admitted=await f.storage.request('admitWorks',input),attemptId=admitted.result.attemptIds[0];
+ let admitted,scheduledDispatch;
+ if(options.scheduled){const work=input.works[0],scheduler=new WorkflowScheduler(f.storage,registry,credential,{callerId,planResources:async()=>({runnerId:'runner.local',runnerCapacity:2,runnerLimits:{cpu:4,memoryMiB:4096,timeoutMs:600000},reservationKey:randomUUID(),maximumAttempts:5,maximumReservedMs:3000000,templateVersion:work.inputManifest.templateVersion,checkConfigHash:work.inputManifest.checkConfigHash,roleSnapshot:work.roleSnapshot,resources:work.resources})});
+  admitted=await scheduler.tick(new AbortController().signal);if(!admitted)throw Error('Scheduled fixture admission failed: '+scheduler.lastError);
+  const [dispatch]=await f.storage.request('listScheduledDispatches',{});scheduledDispatch=dispatch;const sent=await scheduler.send(dispatch,new AbortController().signal);if(sent?.state!=='ACKED')throw Error('Scheduled fixture A2A send failed');
+ }else admitted=await f.storage.request('admitWorks',input);
+ const attemptId=admitted.result.attemptIds[0];
+ if(scheduledDispatch)return {...p,attemptId,delegation:scheduledDispatch.delegation};
  const outbox=(await f.storage.request('claimOutbox',{workerId:'test.sender',limit:50})).find(o=>o.payload.attemptId===attemptId),d=outbox.payload;
  const delegation={schemaVersion:'devmesh.work.v1',operationId:d.operationId,runId:d.runId,workId:d.workId,workRevision:d.workRevision,attemptId,endpointId:d.endpoint.endpointId,endpointRevision:d.endpoint.revision,grantId:d.permit.grantId,activationId:d.permit.activationId,runEpoch:d.permit.runEpoch,workEpoch:d.permit.workEpoch,requirementRevision:1,planRevision:1,inputManifestId:d.inputManifestId,roleSnapshotId:d.roleSnapshotId,originRole:'architect',targetRole:'developer',requestedOutputSchema:input.works[0].roleSnapshot.outputSchemaId};
  const message=Message.fromJSON({messageId:randomUUID(),role:'ROLE_USER',parts:[{data:delegation}]});

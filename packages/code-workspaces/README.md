@@ -68,3 +68,4 @@ const prepareCodeBasis = (candidate, signal) => integrations.prepareWorkInput({
 维护适配 `createLocalManagedRunnerAuthority`／`createLocalWorkspaceCleanupAuthority` 绑定显式本地服务身份、Runner 与控制面 Worker 的唯一原操作；缺省不启用。测试工具权限无需包含 repo 写工具，维护仍复核当前成员和原资源；Grant 撤销后允许 read 降权资源维护，不授予执行。详见 `development/maintenance-review.md`。
 
 `createLocalManagedBindingResolver` 可由可信应用注入 repo MCP；每次调用通过 Worker 复核原 READY 分配、成员、Runner 与项目资源，目录身份来自原分配 ACK，不缓存首次访问路径。服务启动后创建的工作区也能绑定；服务和模型请求不接受物理路径。dynamic-v1 的真实本地 MCP 2/2、原 repo MCP 11/11 与 Runner 维护 2/2 已通过，Runtime 生命周期接线仍在实施。
+托管 Runtime 可显式注入 `createLocalManagedRuntimeLifecycle`：Host 开始续租后分配；最终角色结果先写不可变原结果日志，开发候选必须有精确源码 ACK。原结果核实不执行模型／工具或重复传输，Grant 不复活。实际调度资源准入 → A2A HTTP → Runtime → 动态 MCP → Git／源码 ACK 的开发组合已通过 runtime-v7；准备中断禁止再次执行的补充边界和全量固定提交回归见后续检查点。部署顺序、恢复入口及回收条件见 [本地部署说明](../../project/evidence/P1-05/local-managed-deployment.md)。

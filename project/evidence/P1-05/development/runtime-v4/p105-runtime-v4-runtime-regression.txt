@@ -1,0 +1,91 @@
+TAP version 13
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTP loop persists request/response/tool result, freezes config and publishes only a role candidate
+ok 1 - real HTTP loop persists request/response/tool result, freezes config and publishes only a role candidate
+  ---
+  duration_ms: 1081.0283
+  type: 'test'
+  ...
+# assertRuntimeActivation: Runtime cannot admit new actions
+# markRuntimeToolSent: Query the original operation instead of executing again
+# beginRuntimeActivation: A durable original consumer claim is required
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: all complete tool arguments validate before any call can execute
+ok 2 - all complete tool arguments validate before any call can execute
+  ---
+  duration_ms: 628.0837
+  type: 'test'
+  ...
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete response commit failure prevents tool admission and retains model uncertainty
+ok 3 - complete response commit failure prevents tool admission and retains model uncertainty
+  ---
+  duration_ms: 641.1062
+  type: 'test'
+  ...
+# commitObjectWrite: disk-cut
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: result message survives final acknowledgement failure and repairs operation without query or execution
+ok 4 - result message survives final acknowledgement failure and repairs operation without query or execution
+  ---
+  duration_ms: 737.895
+  type: 'test'
+  ...
+# finishRuntimeTool: ack-cut
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unknown write only queries original operation and cannot be replayed on recovery
+ok 5 - unknown write only queries original operation and cannot be replayed on recovery
+  ---
+  duration_ms: 745.8839
+  type: 'test'
+  ...
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pause during provider response closes the next tool admission
+ok 6 - pause during provider response closes the next tool admission
+  ---
+  duration_ms: 646.4713
+  type: 'test'
+  ...
+# assertRuntimeActivation: Run control, epoch or grant changed
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: provider timeout leaves SENT and unknown cost, rather than automatically retrying
+ok 7 - provider timeout leaves SENT and unknown cost, rather than automatically retrying
+  ---
+  duration_ms: 755.1414
+  type: 'test'
+  ...
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: token reservation prevents a network call and missing provider has an explicit outcome
+ok 8 - token reservation prevents a network call and missing provider has an explicit outcome
+  ---
+  duration_ms: 629.0721
+  type: 'test'
+  ...
+# assertRuntimeActivation: Token budget exhausted or prior model cost is unknown
+# (node:30500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: A2A HTTP acceptance reaches optional consumer and returns durable candidate without business success
+ok 9 - A2A HTTP acceptance reaches optional consumer and returns durable candidate without business success
+  ---
+  duration_ms: 851.0677
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7256.5972

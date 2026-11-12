@@ -110,7 +110,7 @@ Runner 的独立维护 callback 绑定一个已认证 controllerId 和配置 run
 
 repo MCP 保留显式静态配置，同时允许部署者配置受信任异步 resolver。服务可在尚无 Attempt checkout 时启动；请求发生后才由 Worker 从原分配和仓库记录解析 workspaceRef，要求 READY、原所有者、当前项目成员、配置 Runner 和精确 workspace／projectRepository 资源。模型参数仍不包含宿主路径、Git 目录或设备 ID。
 
-动态绑定必须提供原分配持久 ACK 中的 root／Git/common directory 与设备／文件 ID，包括第一次调用也逐次核实它们；不从调用时碰巧存在的同名目录建立信任。每次从持久记录解析，不在服务内累积无限 Attempt 缓存。普通工具准入及实际 Runner fencing 继续独立执行，暂停后只有原操作核实可通过，不能产生新编辑。原有静态配置的兼容回归与启动后动态分配的真实 MCP／Runner HTTP／Git 组合正在验证。
+动态绑定必须提供原分配持久 ACK 中的 root／Git/common directory 与设备／文件 ID，包括第一次调用也逐次核实它们；不从调用时碰巧存在的同名目录建立信任。每次从持久记录解析，不在服务内累积无限 Attempt 缓存。普通工具准入及实际 Runner fencing 继续独立执行，暂停后只有原操作核实可通过，不能产生新编辑。原有静态配置回归 11/11、启动后动态分配组合 2/2 已通过（dynamic-v1），Runtime／Scheduler 整体组合 5/5 已通过 runtime-v7，最终固定提交回归单独记录。
 
 ## Risks / Trade-offs
 
@@ -122,3 +122,13 @@ repo MCP 保留显式静态配置，同时允许部署者配置受信任异步 r
 ## Migration Plan
 
 在 P1-04 已有迁移之后新增版本，保持历史 SQL／哈希。升级前备份；新后端默认不配置，不自动扫描宿主仓库。回滚应用仍保留工作区、保留 refs、归档正文、SQLite 与 ACK，不降级或覆盖无法识别的新状态。固定提交在干净 Windows checkout 冻结安装后回归；真实远程身份、Linux Runner、runsc 与 T05/T23 保留待环境验收。
+## Runtime lifecycle composition
+
+5.1 的可信适配器在 Host 租约启动和冻结配置落盘后分配工作区，模型只接收 workspaceRef、基点、清单哈希和原分配 ID。调度器只规划资源 ID，不在未领取 Host 时执行长时 checkout。默认未配置适配器时保持既有运行方式；启用托管配置必须完整注入后端，不接受请求中的物理路径。
+
+最终角色响应已保存并计费后，Worker 将精确分配、原成功 repo.commit、结果正文和固定归档操作写入不可变 Runtime 工作区结果日志。开发候选发布必须具有对应源码归档 ACK；验证角色必须使用精确验证分配与 targetCommit。候选发布与 A2A 完成仍为一个事务，均不表示质量通过或人工接受。
+
+归档结果未知或发布回执丢失时，Runtime 保持 RECONCILE。恢复接口绑定原领取者，读取原结果日志和配置，仅查询原归档操作及补录历史候选；不重新执行模型、工具、Git 提交或归档传输，不恢复过期／撤销 Grant。当前写成员资格仍须复核，已取消任务不发布。准备中断且未保存最终结果的情形保留原分配，要求已有分配核实流程，不自动重新运行模型。
+
+
+准备钩子发生未知结果后，即便尚无模型步骤也不能再次调用 execute 进入原生命周期。beginRuntimeActivation 返回 RECONCILE／终态时拒绝新准备和模型动作；原分配及结果核实仍可读取。该补充用例随最终固定提交回归执行，不能由 runtime-v7 先行证明。
