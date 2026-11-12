@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "scope": "Actual management, delta-spec, generated-design and patch checks after evidence retention. No test rerun, full Foundation, remote CI, clean checkout or product acceptance.",
+  "checks": [
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T19:15:24.284Z",
+      "finishedAt": "2026-11-12T19:15:38.900Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "96963a7395f4c7cc6272bdf801496b210ffcda8048a79ac6c15315f6054454d4"
+    }
+  ]
+}

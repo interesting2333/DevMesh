@@ -180,6 +180,22 @@ The system SHALL 在外部准备前固定候选、审查、原接受指针和数
 - **WHEN** 准备派发许可已提交但响应丢失，或原副作用仍 UNKNOWN
 - **THEN** 重开 Worker 后仍只查询原操作和目标，不再授予派发，不创建替代准备；只有准确从未派发的 PREPARED 可由当前负责人显式关闭
 
+#### Scenario: Fresh health attempts to replace the original prepared objects
+- **WHEN** 后端观察替换原数据证明、物理 fence、Runner claim／实例／端点，或非后端主体提交健康
+- **THEN** 拒绝写入，原证明保持不可变；没有实际可信后端不得从调用者字段制造准备完成
+
+#### Scenario: Health expires or custody revision regresses across uncertainty
+- **WHEN** 健康年龄超出 0～30 秒、当前 fence／归属不再持有、观察时间回退，或 UNKNOWN 后提交更小 custodyRevision
+- **THEN** 关闭或拒绝 READY，保留原证明与历史，只核实原对象；重复旧 ACK 不复活旧可用性
+
+#### Scenario: Preparation observation transaction or acknowledgement fails
+- **WHEN** 证明、观察、事件或 Run 版本写入失败，或已提交观察丢 ACK 后重开
+- **THEN** 事务全部回滚或恢复准确已提交原记录，sequence CAS 防止迟到观察覆盖，不重新执行准备或把准备 READY 当作接受
+
+#### Scenario: Original preparation changes while health is being checked
+- **WHEN** 观察核实期间原准备 revision 发生变化，或旧 READY 后原准备在同一毫秒变为 UNKNOWN
+- **THEN** 拒绝基于旧 preparationRevision 的观察提交，按持久版本关闭旧 READY；恢复须重新查询原对象，不用墙钟推断提交先后
+
 ### Requirement: Atomic acceptance with independent publication recovery
 
 The system SHALL 在短事务重核候选、完整审查、准确原质量、准备凭证、当前接受指针和未知副作用，原子创建不可变 Release、更新接受指针、完成 Run 并保存发布意图。事务外准备和发布不得占用该事务。已提交事实 MUST 在路由或打包失败后保留，恢复只处理原发布／导出。

@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "scope": "Acceptance readiness protocol/controller build and static checks; not physical fencing, actual container/HTTP health, T5 or clean-checkout acceptance.",
+  "checks": [
+    {
+      "name": "contracts-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T18:24:52.899Z",
+      "finishedAt": "2026-11-12T18:26:10.812Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-build.txt",
+      "sha256": "577c17415a0c55f3d1fdbe0191056b0d5acf1db554ac6a4457191262fbc29b25"
+    },
+    {
+      "name": "contracts-generate",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs"
+      ],
+      "startedAt": "2026-11-12T18:26:10.824Z",
+      "finishedAt": "2026-11-12T18:26:15.447Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-generate.txt",
+      "sha256": "cb6a787855f1a36b6b04259f69dab3b5ba4236d25efaa4e9a6401c806d3d16e5"
+    },
+    {
+      "name": "storage-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T18:26:15.453Z",
+      "finishedAt": "2026-11-12T18:27:41.895Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "storage-build.txt",
+      "sha256": "d1e883ebb74a6e6c8de5f03bf94fe1e386b4c64258008b36f9fdd7788c2fa7d4"
+    },
+    {
+      "name": "runner-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/runner",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T18:27:41.900Z",
+      "finishedAt": "2026-11-12T18:28:47.209Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "runner-build.txt",
+      "sha256": "f21e9719574ad30a4557ef21bd53f12ad17c63e9ab8d27179d519713656c3d2f"
+    },
+    {
+      "name": "platform-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/platform-core",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T18:28:47.214Z",
+      "finishedAt": "2026-11-12T18:30:01.544Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "platform-build.txt",
+      "sha256": "d85d7209302065d69af84010401fe4d50fdbe522c428b9cc26048393d65ea0b7"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T18:30:01.550Z",
+      "finishedAt": "2026-11-12T18:32:29.481Z",
+      "exitCode": 2,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "36f5efc2e3d570d411b1f0d3a226e43271dbdcedca5dca32bcaa8b5931db200d"
+    }
+  ]
+}

@@ -80,5 +80,5 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
     },
     listAcceptancePreparationHistory(i:AcceptanceInput<'listAcceptancePreparationHistory'>){return transaction(db,()=>{const r=scoped(i.principalId,row(i.operationId));if(r.request_hash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');const rows=all('SELECT * FROM acceptance_preparation_history WHERE operation_id=? AND sequence>? ORDER BY sequence LIMIT ?',i.operationId,i.afterSequence,i.limit+1),page=rows.slice(0,i.limit);return {items:page.map(r=>({sequence:Number(r.sequence),snapshot:json(r.snapshot_json)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};});},
   };
-  return {execute(method:AcceptanceMethod,input:unknown):unknown{const parsed=parseContract(acceptanceRequests[method],input);return (handlers[method] as (i:unknown)=>unknown)(parsed);}};
+  return {getPreparation:(i:AcceptanceInput<'getAcceptancePreparation'>)=>view(scoped(i.principalId,row(i.operationId))),execute(method:AcceptanceMethod,input:unknown):unknown{const parsed=parseContract(acceptanceRequests[method],input);return (handlers[method] as (i:unknown)=>unknown)(parsed);}};
 }

@@ -1,0 +1,1147 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-12T19:15:02.748Z",
+  "scope": "Original command, raw output, source deltas/fingerprints, build failure source and emitted storage artifacts, final source-map binding. Explicit controlled backend/fence/health statements are protocol fixtures; no physical fencing, real acceptance backend, container/HTTP health, T5, clean checkout or product acceptance.",
+  "runs": [
+    {
+      "name": "readiness-1",
+      "exitCode": 1,
+      "unchanged": true,
+      "tests": {
+        "tests": 38,
+        "pass": 37,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "readiness-2",
+      "exitCode": 0,
+      "unchanged": true,
+      "tests": {
+        "tests": 35,
+        "pass": 35,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "readiness-3",
+      "exitCode": 0,
+      "unchanged": true,
+      "tests": {
+        "tests": 33,
+        "pass": 33,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "readiness-4",
+      "exitCode": 0,
+      "unchanged": true,
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "fixture-alias-diagnostic.json",
+      "byteSize": 1682,
+      "sha256": "53c8f6bbdbdc17ce4ff37566f2e4b5e46db2917d0707c6a932c9613b14ff0235"
+    },
+    {
+      "path": "fixture-alias-impact.json",
+      "byteSize": 903,
+      "sha256": "2ea7d3ee5b667990a136b75589e777b4a423e3b7d5712635df7bd483af59cb58"
+    },
+    {
+      "path": "readiness-1/command.json",
+      "byteSize": 673,
+      "sha256": "a721cd70905a13a1e6b4c34843579717d90b9c2f03fdc77ea9d856da7272261f"
+    },
+    {
+      "path": "readiness-1/output.txt",
+      "byteSize": 16614,
+      "sha256": "c3134842bd153c36d6512954daa7e3421d9d82147cbaca53504565c544263a0e"
+    },
+    {
+      "path": "readiness-1/report.json",
+      "byteSize": 120830,
+      "sha256": "402a53f5281fd418b5363d0209fe7baa1739d49b491f701c9e9afe565bb92c18"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/contracts/openapi.json",
+      "byteSize": 527325,
+      "sha256": "e6bca87235feadc9207600eb22711b7d6f9dc525e276a70c69436181eb32a4a7"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/contracts/src/events.ts",
+      "byteSize": 5285,
+      "sha256": "b6ae5a811327062d7c94cb518ee23cd07128b79c7e5e914cc348786c81b5ea41"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/platform-core/src/acceptance-preparer.ts",
+      "byteSize": 2890,
+      "sha256": "0ec1d3f5cb5aeec7ec34368a6ea4566484218930dca8591a2eb1b181da577ad8"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/platform-core/src/index.ts",
+      "byteSize": 11919,
+      "sha256": "0605cbf01b29c73d19ce30424c323cd6fe215f24ee227753b49129e62b30b02e"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/runner/src/preview-lifecycle.ts",
+      "byteSize": 850,
+      "sha256": "3351680d2d7e5cf43b08aa19f215844fe8180aa6e275fdfd24179261287a33f8"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/ACCEPTANCE.md",
+      "byteSize": 4962,
+      "sha256": "b118ec7deb527af30dc457b6151142fd5cc30fa33a3a1a905031b9f5b107c67a"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/migrations/0037-acceptancereadiness.sql",
+      "byteSize": 1375,
+      "sha256": "851e307f909e341b1af35d1ca259d2c21dc730887b6c71f75113c0748e369386"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 5455,
+      "sha256": "2efedaa8b52aaa152c863148047039413a02bd4fef321a552ddd0cac8b5db828"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/src/acceptance-domain.ts",
+      "byteSize": 14618,
+      "sha256": "7ad08ef12ed9974df9071dcc749f8c7ac5b5ccac5b467e35575dbe630f998bb7"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "byteSize": 10159,
+      "sha256": "6bf6ca354a181107dc2fb2af7113c88049eb603b58406fe06574be9b3688395f"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/src/acceptance-readiness-protocol.ts",
+      "byteSize": 4934,
+      "sha256": "f6ece4a921841626bb996c6cdb70f56c78dd4c7a7e668ccde9539cf901b8c12f"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 51600,
+      "sha256": "e0dfe4b51f6432ffd564193cee5da06fab942d7369cc1aff3a0c83158d791a77"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/src/index.ts",
+      "byteSize": 10286,
+      "sha256": "16f277c9cdf61ea154d332e689b2468ad93a69149a7cf2b96d5e9ef4e031e42a"
+    },
+    {
+      "path": "readiness-1/source-delta/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 13183,
+      "sha256": "7f1d423ffd8f5813942c1e763df98bb3f5718b60324113a42770a2ab782f3df6"
+    },
+    {
+      "path": "readiness-1/source-delta/tests/acceptance-readiness.test.mjs",
+      "byteSize": 10691,
+      "sha256": "5fd91fad4a193e15e794e019819816dee1db8c994730912fa2ca92590e48cb69"
+    },
+    {
+      "path": "readiness-1/source-delta/tests/fixtures/acceptance-readiness.mjs",
+      "byteSize": 2987,
+      "sha256": "c6335275d649d4a73fa5ae14d47acc6dc0ef06d52d1a5dd7251c3d53a2b66270"
+    },
+    {
+      "path": "readiness-1/source-delta/tests/storage-acceptance.test.mjs",
+      "byteSize": 3903,
+      "sha256": "a44a1fd1741f8ff9a7b2841d6755fca3f06c7a11406480a9c6add525e9bdfb0a"
+    },
+    {
+      "path": "readiness-2/command.json",
+      "byteSize": 711,
+      "sha256": "168d6521303cda6ac435ce634793ee9c6077861ff65ad9ceee545c851a4bcff8"
+    },
+    {
+      "path": "readiness-2/output.txt",
+      "byteSize": 36788,
+      "sha256": "2c9fb704399af5383a0a799135f6456425ea2a9246ef7d58a52dfe745bfc5f56"
+    },
+    {
+      "path": "readiness-2/report.json",
+      "byteSize": 120868,
+      "sha256": "0a525fa385cc6135da237737dc71d586aa0db279f0d6094b1b44cdf289c6d53f"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/contracts/openapi.json",
+      "byteSize": 527325,
+      "sha256": "e6bca87235feadc9207600eb22711b7d6f9dc525e276a70c69436181eb32a4a7"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/contracts/src/events.ts",
+      "byteSize": 5285,
+      "sha256": "b6ae5a811327062d7c94cb518ee23cd07128b79c7e5e914cc348786c81b5ea41"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/platform-core/src/acceptance-preparer.ts",
+      "byteSize": 2890,
+      "sha256": "0ec1d3f5cb5aeec7ec34368a6ea4566484218930dca8591a2eb1b181da577ad8"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/platform-core/src/index.ts",
+      "byteSize": 11919,
+      "sha256": "0605cbf01b29c73d19ce30424c323cd6fe215f24ee227753b49129e62b30b02e"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/runner/src/preview-lifecycle.ts",
+      "byteSize": 850,
+      "sha256": "3351680d2d7e5cf43b08aa19f215844fe8180aa6e275fdfd24179261287a33f8"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/ACCEPTANCE.md",
+      "byteSize": 4962,
+      "sha256": "b118ec7deb527af30dc457b6151142fd5cc30fa33a3a1a905031b9f5b107c67a"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/migrations/0037-acceptancereadiness.sql",
+      "byteSize": 1375,
+      "sha256": "851e307f909e341b1af35d1ca259d2c21dc730887b6c71f75113c0748e369386"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 5455,
+      "sha256": "2efedaa8b52aaa152c863148047039413a02bd4fef321a552ddd0cac8b5db828"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/src/acceptance-domain.ts",
+      "byteSize": 14618,
+      "sha256": "7ad08ef12ed9974df9071dcc749f8c7ac5b5ccac5b467e35575dbe630f998bb7"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "byteSize": 10159,
+      "sha256": "6bf6ca354a181107dc2fb2af7113c88049eb603b58406fe06574be9b3688395f"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/src/acceptance-readiness-protocol.ts",
+      "byteSize": 4934,
+      "sha256": "f6ece4a921841626bb996c6cdb70f56c78dd4c7a7e668ccde9539cf901b8c12f"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 51600,
+      "sha256": "e0dfe4b51f6432ffd564193cee5da06fab942d7369cc1aff3a0c83158d791a77"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/src/index.ts",
+      "byteSize": 10286,
+      "sha256": "16f277c9cdf61ea154d332e689b2468ad93a69149a7cf2b96d5e9ef4e031e42a"
+    },
+    {
+      "path": "readiness-2/source-delta/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 13183,
+      "sha256": "7f1d423ffd8f5813942c1e763df98bb3f5718b60324113a42770a2ab782f3df6"
+    },
+    {
+      "path": "readiness-2/source-delta/tests/acceptance-readiness.test.mjs",
+      "byteSize": 10691,
+      "sha256": "5fd91fad4a193e15e794e019819816dee1db8c994730912fa2ca92590e48cb69"
+    },
+    {
+      "path": "readiness-2/source-delta/tests/fixtures/acceptance-readiness.mjs",
+      "byteSize": 2987,
+      "sha256": "c6335275d649d4a73fa5ae14d47acc6dc0ef06d52d1a5dd7251c3d53a2b66270"
+    },
+    {
+      "path": "readiness-2/source-delta/tests/storage-acceptance.test.mjs",
+      "byteSize": 3903,
+      "sha256": "a44a1fd1741f8ff9a7b2841d6755fca3f06c7a11406480a9c6add525e9bdfb0a"
+    },
+    {
+      "path": "readiness-3/command.json",
+      "byteSize": 562,
+      "sha256": "e7cb6d0452d7fc67c39a343349108bec6a2a5227df56d4481232a4bf48620df9"
+    },
+    {
+      "path": "readiness-3/output.txt",
+      "byteSize": 31055,
+      "sha256": "76b59bbf92f27f1263b79c540c73be35ac2a8d47f0216b606b005d70c5aa7022"
+    },
+    {
+      "path": "readiness-3/report.json",
+      "byteSize": 120719,
+      "sha256": "684accebd8f68e0fda8567ae4891277e8dd00b0832c2f7cc23385c4f73a0351d"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/contracts/openapi.json",
+      "byteSize": 527325,
+      "sha256": "e6bca87235feadc9207600eb22711b7d6f9dc525e276a70c69436181eb32a4a7"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/contracts/src/events.ts",
+      "byteSize": 5285,
+      "sha256": "b6ae5a811327062d7c94cb518ee23cd07128b79c7e5e914cc348786c81b5ea41"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/platform-core/src/acceptance-preparer.ts",
+      "byteSize": 2890,
+      "sha256": "0ec1d3f5cb5aeec7ec34368a6ea4566484218930dca8591a2eb1b181da577ad8"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/platform-core/src/index.ts",
+      "byteSize": 11919,
+      "sha256": "0605cbf01b29c73d19ce30424c323cd6fe215f24ee227753b49129e62b30b02e"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/runner/src/preview-lifecycle.ts",
+      "byteSize": 850,
+      "sha256": "3351680d2d7e5cf43b08aa19f215844fe8180aa6e275fdfd24179261287a33f8"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/ACCEPTANCE.md",
+      "byteSize": 4962,
+      "sha256": "b118ec7deb527af30dc457b6151142fd5cc30fa33a3a1a905031b9f5b107c67a"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/migrations/0037-acceptancereadiness.sql",
+      "byteSize": 1375,
+      "sha256": "851e307f909e341b1af35d1ca259d2c21dc730887b6c71f75113c0748e369386"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 5455,
+      "sha256": "2efedaa8b52aaa152c863148047039413a02bd4fef321a552ddd0cac8b5db828"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/src/acceptance-domain.ts",
+      "byteSize": 14618,
+      "sha256": "7ad08ef12ed9974df9071dcc749f8c7ac5b5ccac5b467e35575dbe630f998bb7"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "byteSize": 10159,
+      "sha256": "6bf6ca354a181107dc2fb2af7113c88049eb603b58406fe06574be9b3688395f"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/src/acceptance-readiness-protocol.ts",
+      "byteSize": 4934,
+      "sha256": "f6ece4a921841626bb996c6cdb70f56c78dd4c7a7e668ccde9539cf901b8c12f"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 51600,
+      "sha256": "e0dfe4b51f6432ffd564193cee5da06fab942d7369cc1aff3a0c83158d791a77"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/src/index.ts",
+      "byteSize": 10286,
+      "sha256": "16f277c9cdf61ea154d332e689b2468ad93a69149a7cf2b96d5e9ef4e031e42a"
+    },
+    {
+      "path": "readiness-3/source-delta/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 13183,
+      "sha256": "7f1d423ffd8f5813942c1e763df98bb3f5718b60324113a42770a2ab782f3df6"
+    },
+    {
+      "path": "readiness-3/source-delta/tests/acceptance-readiness.test.mjs",
+      "byteSize": 10691,
+      "sha256": "5fd91fad4a193e15e794e019819816dee1db8c994730912fa2ca92590e48cb69"
+    },
+    {
+      "path": "readiness-3/source-delta/tests/fixtures/acceptance-readiness.mjs",
+      "byteSize": 2987,
+      "sha256": "c6335275d649d4a73fa5ae14d47acc6dc0ef06d52d1a5dd7251c3d53a2b66270"
+    },
+    {
+      "path": "readiness-3/source-delta/tests/storage-acceptance.test.mjs",
+      "byteSize": 3903,
+      "sha256": "a44a1fd1741f8ff9a7b2841d6755fca3f06c7a11406480a9c6add525e9bdfb0a"
+    },
+    {
+      "path": "readiness-4/command.json",
+      "byteSize": 514,
+      "sha256": "09e52448294d54b54ca85a7a0fecdbe5f2a46d88a80a119a8c5ef05ef945dce9"
+    },
+    {
+      "path": "readiness-4/output.txt",
+      "byteSize": 4314,
+      "sha256": "f6443c286d8bb7099305a4b7ca10706823dbbe3c49ec4696a9b72fab6b6bdbc3"
+    },
+    {
+      "path": "readiness-4/report.json",
+      "byteSize": 120669,
+      "sha256": "b4054fb54260db15b6fcd39fbbe469713de15f4e9eeb3599a38628acd3f9a607"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/contracts/openapi.json",
+      "byteSize": 527325,
+      "sha256": "e6bca87235feadc9207600eb22711b7d6f9dc525e276a70c69436181eb32a4a7"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/contracts/src/events.ts",
+      "byteSize": 5285,
+      "sha256": "b6ae5a811327062d7c94cb518ee23cd07128b79c7e5e914cc348786c81b5ea41"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/platform-core/src/acceptance-preparer.ts",
+      "byteSize": 2890,
+      "sha256": "0ec1d3f5cb5aeec7ec34368a6ea4566484218930dca8591a2eb1b181da577ad8"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/platform-core/src/index.ts",
+      "byteSize": 11919,
+      "sha256": "0605cbf01b29c73d19ce30424c323cd6fe215f24ee227753b49129e62b30b02e"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/runner/src/preview-lifecycle.ts",
+      "byteSize": 850,
+      "sha256": "3351680d2d7e5cf43b08aa19f215844fe8180aa6e275fdfd24179261287a33f8"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/ACCEPTANCE.md",
+      "byteSize": 4962,
+      "sha256": "b118ec7deb527af30dc457b6151142fd5cc30fa33a3a1a905031b9f5b107c67a"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/migrations/0037-acceptancereadiness.sql",
+      "byteSize": 1375,
+      "sha256": "851e307f909e341b1af35d1ca259d2c21dc730887b6c71f75113c0748e369386"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 5455,
+      "sha256": "2efedaa8b52aaa152c863148047039413a02bd4fef321a552ddd0cac8b5db828"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/src/acceptance-domain.ts",
+      "byteSize": 14618,
+      "sha256": "7ad08ef12ed9974df9071dcc749f8c7ac5b5ccac5b467e35575dbe630f998bb7"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "byteSize": 10159,
+      "sha256": "6bf6ca354a181107dc2fb2af7113c88049eb603b58406fe06574be9b3688395f"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/src/acceptance-readiness-protocol.ts",
+      "byteSize": 4934,
+      "sha256": "f6ece4a921841626bb996c6cdb70f56c78dd4c7a7e668ccde9539cf901b8c12f"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 51600,
+      "sha256": "e0dfe4b51f6432ffd564193cee5da06fab942d7369cc1aff3a0c83158d791a77"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/src/index.ts",
+      "byteSize": 10286,
+      "sha256": "16f277c9cdf61ea154d332e689b2468ad93a69149a7cf2b96d5e9ef4e031e42a"
+    },
+    {
+      "path": "readiness-4/source-delta/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 13183,
+      "sha256": "7f1d423ffd8f5813942c1e763df98bb3f5718b60324113a42770a2ab782f3df6"
+    },
+    {
+      "path": "readiness-4/source-delta/tests/acceptance-readiness.test.mjs",
+      "byteSize": 10691,
+      "sha256": "5fd91fad4a193e15e794e019819816dee1db8c994730912fa2ca92590e48cb69"
+    },
+    {
+      "path": "readiness-4/source-delta/tests/fixtures/acceptance-readiness.mjs",
+      "byteSize": 2992,
+      "sha256": "1d9dad769869f55fcd0c51b01ac5f0cfc3cfccc296110b6a237e586bb81bf249"
+    },
+    {
+      "path": "readiness-4/source-delta/tests/storage-acceptance.test.mjs",
+      "byteSize": 3903,
+      "sha256": "a44a1fd1741f8ff9a7b2841d6755fca3f06c7a11406480a9c6add525e9bdfb0a"
+    },
+    {
+      "path": "readiness-build-1/contracts-build.txt",
+      "byteSize": 797,
+      "sha256": "577c17415a0c55f3d1fdbe0191056b0d5acf1db554ac6a4457191262fbc29b25"
+    },
+    {
+      "path": "readiness-build-1/contracts-generate.txt",
+      "byteSize": 42,
+      "sha256": "cb6a787855f1a36b6b04259f69dab3b5ba4236d25efaa4e9a6401c806d3d16e5"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/domain-B31IMZtD.mjs.map.txt",
+      "byteSize": 958137,
+      "sha256": "a28a9ad4a091085b4f2aca4f71d2f31575f6a3e3afcc98c9edd21b36d8016e95"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/domain-B31IMZtD.mjs.txt",
+      "byteSize": 571538,
+      "sha256": "3bc4e157ab9bdc0203f8af3e09bc4fe20eec8d304a2d48eb9cc19d20d1733443"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/domain.d.mts.txt",
+      "byteSize": 330,
+      "sha256": "6be87ccf7e5f0c4fe9b4b722bd833309813e8376fa70a5cfc2159cf0027aa74b"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/domain.mjs.txt",
+      "byteSize": 170,
+      "sha256": "4bb2f23bac2021620aa0149159a60a5e42283fae4940d42ff88915818ae0b750"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/index.d.mts.txt",
+      "byteSize": 10557,
+      "sha256": "6b03e74dbe61e06e62bf6510f641e1b70bb0d9bdd72ad49ab087d314db922759"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/index.mjs.map.txt",
+      "byteSize": 17089,
+      "sha256": "b60e12b9ee604a9711f18e0f6fec5b25b820de7e1b4ab6768f01f9c4a5cd8e48"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/index.mjs.txt",
+      "byteSize": 8467,
+      "sha256": "018e4235cffc0ea9f0393e96a4cac38deb8793cb4b27871d1f2922490a3da077"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/json-D8lgKmP2.d.mts.txt",
+      "byteSize": 340472,
+      "sha256": "fbfa2765e705b4597adf6f49e6b8d35cd4d855882dc284809bdf0e3fcb546e40"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations-CmCClcp5.mjs.map.txt",
+      "byteSize": 10735,
+      "sha256": "8f562ddc77c132a901294509d09fdb10abe3dd1ee3693009822968d67acdb900"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations-CmCClcp5.mjs.txt",
+      "byteSize": 6314,
+      "sha256": "e810ea480d18b40c3fd47f2a2fe7a0fc3656f814f0ad390ea575bd01c305bd17"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations.d.mts.txt",
+      "byteSize": 909,
+      "sha256": "234bd80fa13eb9dbb6eeac1c5f9b72f0bd704dc415ae6d4ae377c28e83b5b90e"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations.mjs.txt",
+      "byteSize": 263,
+      "sha256": "c760111f59b1a8a63a3c433505de35b2f211df85293511c1f1d4e08394fd1178"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0001-store.sql.txt",
+      "byteSize": 620,
+      "sha256": "82871f8e7b98afd7e96b5cb73cec36481c4e0db012bbce4875298d9dd06e9eea"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0002-core.sql.txt",
+      "byteSize": 15976,
+      "sha256": "f931bde2073cb7503fd48ccf31d5b44497b487a7f81fe1e52cf8dc3b5a968084"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0003-admission.sql.txt",
+      "byteSize": 4542,
+      "sha256": "75030b9665ead4d3be8495de9ef5221850e1e05a7765871556e69e7b9565fc64"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0004-sessions.sql.txt",
+      "byteSize": 8320,
+      "sha256": "6ef6f742cf22e5b97acd8ee85231916fc84ed9d38737745d14aedd6304c6f1f5"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0005-registry.sql.txt",
+      "byteSize": 5847,
+      "sha256": "4e2adc7e7376894bdac86ddeabc604d3b892a64c71fb322a3d2fac86e4b2be3e"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0006-runtime.sql.txt",
+      "byteSize": 3660,
+      "sha256": "d9568260464767556872c42314088aa6058912d0f485e76186da57137d196a3f"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0007-input.sql.txt",
+      "byteSize": 3774,
+      "sha256": "956ac99167b7a2f075e89f21781c9f378856bfce8956a278e0f96a0e277d387b"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0008-preparation.sql.txt",
+      "byteSize": 10745,
+      "sha256": "e3d51325c922e8701087f0abcf6e48b38a1263a99f2e414fe686651d791c2ede"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0009-scheduler.sql.txt",
+      "byteSize": 2538,
+      "sha256": "1834e4c79d9e004d00ce627d8e0944096b2fdc601500a2cf724f94c67345cc3d"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0010-issues.sql.txt",
+      "byteSize": 2486,
+      "sha256": "ca89103ce1dbb8d760f193883f9b2f11dd8324d2928996753f2c634383eb42ec"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0011-pipelines.sql.txt",
+      "byteSize": 2532,
+      "sha256": "6ce693ed7e93ea62cde70ad7b531396cbefb51bb75286815751c60027041ff12"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0012-repo.sql.txt",
+      "byteSize": 1447,
+      "sha256": "cd06e10fb06550981b6efee86e063893579f3edfa5dbf3066f5489cc11454ab9"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0013-workspaces.sql.txt",
+      "byteSize": 2921,
+      "sha256": "7e90d9e7dad4df35ec42a875fa23866cb8dd224917d1d04792bcef80d6c7f044"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0014-repofiles.sql.txt",
+      "byteSize": 2041,
+      "sha256": "0bf93f7aafcfd53a147fd855f685b949ddf32c7f293d5390f95324816789644a"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0015-sourcearchives.sql.txt",
+      "byteSize": 2176,
+      "sha256": "fe8bfce151ef0ffa2a5704f5a6df5a8683151317692345da369899919630a2d7"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0016-candidateintegrations.sql.txt",
+      "byteSize": 6856,
+      "sha256": "0d69c66c39dfb141a38ecb0c14173062c2353e6fd8fd07759ab80bb7adfc4fc4"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0017-candidatematerials.sql.txt",
+      "byteSize": 3615,
+      "sha256": "15b9cc5284709ff244eb126f0eb0f1d223dfb25eb09a96528d4a6d8c913baf6b"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0018-workspacepreservations.sql.txt",
+      "byteSize": 4104,
+      "sha256": "d2c38df2d1291dde574f69e355bc8cccb70b2dd406033f99c61d25083dc75e05"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0019-workspacereclamations.sql.txt",
+      "byteSize": 2641,
+      "sha256": "b83fb630f8aa153a7529f85a15934038277f10d15c86bd9a6102555e1b30b22b"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0020-runtimeworkspaces.sql.txt",
+      "byteSize": 913,
+      "sha256": "782ed2b994f14dce549adae4a7622b441096696b5bbbcaf1ffa046eb8411a8c0"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0021-qualityverifications.sql.txt",
+      "byteSize": 4247,
+      "sha256": "dbc81d956e953cceb3fe6fe9f9177e170b1554a47f651bc677649602bf2ea6a2"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0022-qualitystagebindings.sql.txt",
+      "byteSize": 725,
+      "sha256": "8145326f498b765327b43afc30a0a6752213b44a3d8b05f54d38844afc583f1d"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0023-workverifications.sql.txt",
+      "byteSize": 2440,
+      "sha256": "8bb27a5e071accb6b776e92f537965ee7a5553697d1e992471c62465e6a0cd12"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0024-verifiedfindings.sql.txt",
+      "byteSize": 1342,
+      "sha256": "430dbd37c8883582d942bf530ec6ec4422f73a07372e5aa525d89625a323609f"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0025-verifiedrepairs.sql.txt",
+      "byteSize": 3247,
+      "sha256": "1dc8a0740173e775974a84db61822f8729fd84c8c1ed77d44332b188a43bd532"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0026-candidatepromotions.sql.txt",
+      "byteSize": 918,
+      "sha256": "b6a67f29e5d4bfe3d46bb7d7cfcd40485074ccfb05f3cadeacc14b3dfb9700f6"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0027-releasedeliveries.sql.txt",
+      "byteSize": 3830,
+      "sha256": "2368d237034c2db241018e78f3b6608e37eb24866c9b9d21ca8bc371cff1b9e9"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0028-candidatefreezes.sql.txt",
+      "byteSize": 2718,
+      "sha256": "27d83127f25792c2d2c10a97f2f6bf6998e10eb4210580d25cde61cd2219f201"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0029-qualityartifactrefs.sql.txt",
+      "byteSize": 675,
+      "sha256": "5a0a672d447469e189883ce4b8c4d8b0fabb5155f263526eaa046fc316319672"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0030-candidatereviews.sql.txt",
+      "byteSize": 2054,
+      "sha256": "31a88c369d77983eb494f1b6172cdce61c9bc7131e13d5962605f8decc3f358b"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0031-candidaterejections.sql.txt",
+      "byteSize": 2158,
+      "sha256": "46be63e8e612658ca914cbd8d16259a64d6631bf6ed8a39088152cb89120307a"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0032-previewintents.sql.txt",
+      "byteSize": 6795,
+      "sha256": "e25974e2b36545c598e9c38d9411275149feb09400d1c53852dd67f1801f8e9f"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0033-previewruntime.sql.txt",
+      "byteSize": 1151,
+      "sha256": "d0021aeba62b222844b8844d1af81fc8d18dde578adbf32d82ae073ea36e7e6f"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0034-previewaccess.sql.txt",
+      "byteSize": 6472,
+      "sha256": "34c07bd4c72363c10c14c336cdea4c71887798d54d3eb7c7c34624dac493b6fc"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0035-previewsessions.sql.txt",
+      "byteSize": 5671,
+      "sha256": "0a3617a2994c4c7bd6edc904e0dd9b6bd8728b703b4351cec2351cd3c540cb2d"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0036-acceptanceintents.sql.txt",
+      "byteSize": 4000,
+      "sha256": "765c9197031e58e83d39fe60146f9258c0a58436b1d806e48ce70cb99097719e"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/0037-acceptancereadiness.sql.txt",
+      "byteSize": 1306,
+      "sha256": "2d5bd749c824438cce2eebe6cbaa1fb5b5ce0087ff4451251bc5c3f22fe04e82"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/migrations/manifest.json.txt",
+      "byteSize": 5455,
+      "sha256": "793baba4226133c9ff22069dcd45cba4a758b31b180241b25e60682c482436e1"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/preview-session-protocol-D_1EmjTb.mjs.map.txt",
+      "byteSize": 140534,
+      "sha256": "e79073bbca7511860d9a6ad0bf4e8cc7708186452d4a94c46513221411adf834"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/preview-session-protocol-D_1EmjTb.mjs.txt",
+      "byteSize": 73339,
+      "sha256": "61380f9ff588259f3e3afe391becbb593a686d86bff174cfbdc0f37276b49871"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/worker.d.mts.txt",
+      "byteSize": 11,
+      "sha256": "4f1bad288ada6326583a3e6a0a54d7627a03eac3b668adeea9dded12ac5656b8"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/worker.mjs.map.txt",
+      "byteSize": 8450,
+      "sha256": "b1cd48ca04ebc6ebff0664c3d6efa0af557478a1e4a80ca50d874c2bcb60a931"
+    },
+    {
+      "path": "readiness-build-1/emitted-storage/worker.mjs.txt",
+      "byteSize": 5293,
+      "sha256": "1cfa4e1d0547b2d64e7113b1393b958f9f8578c930497bfa3c370a1ebb2097f8"
+    },
+    {
+      "path": "readiness-build-1/platform-build.txt",
+      "byteSize": 1194,
+      "sha256": "d85d7209302065d69af84010401fe4d50fdbe522c428b9cc26048393d65ea0b7"
+    },
+    {
+      "path": "readiness-build-1/raw-artifacts.json",
+      "byteSize": 13442,
+      "sha256": "e790d67f7daafcd51e29fcd411fd057493c5dd5577e651b64e17986c62a1dd0e"
+    },
+    {
+      "path": "readiness-build-1/report.json",
+      "byteSize": 3155,
+      "sha256": "40ab2d69663d89e375d0c2db2f2c6c229386383e80607fd84a5dfcb96bedf6ea"
+    },
+    {
+      "path": "readiness-build-1/runner-build.txt",
+      "byteSize": 3372,
+      "sha256": "f21e9719574ad30a4557ef21bd53f12ad17c63e9ab8d27179d519713656c3d2f"
+    },
+    {
+      "path": "readiness-build-1/storage-build.txt",
+      "byteSize": 2495,
+      "sha256": "d1e883ebb74a6e6c8de5f03bf94fe1e386b4c64258008b36f9fdd7788c2fa7d4"
+    },
+    {
+      "path": "readiness-build-1/typecheck-source/packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "byteSize": 10047,
+      "sha256": "bfe91e1adb8c953d517a240cf4abcaf1b24f78211029b42c0835cc1a6adf2c24"
+    },
+    {
+      "path": "readiness-build-1/typecheck-source/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 13166,
+      "sha256": "7de312c25477838dfcbe96a6ef8be73f1384d9cc247858394ccef1c3471c1a9b"
+    },
+    {
+      "path": "readiness-build-1/typecheck.txt",
+      "byteSize": 3374,
+      "sha256": "36f5efc2e3d570d411b1f0d3a226e43271dbdcedca5dca32bcaa8b5931db200d"
+    },
+    {
+      "path": "readiness-build-2/contracts-check.txt",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/domain-B9pUwO5f.mjs.map.txt",
+      "byteSize": 958422,
+      "sha256": "8f98c325a3a78e5b1e8a3bac05363eb76d3701859c626b1c33e6e93103c55730"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/domain-B9pUwO5f.mjs.txt",
+      "byteSize": 571713,
+      "sha256": "bbe6581e5c6668b6b70a81738ea50318536fe8efa0b950fcffc7697896b3c1c6"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/domain.d.mts.txt",
+      "byteSize": 330,
+      "sha256": "b292e6465da0636b52e2da7580b92aacf34b9dcebf0cb5c08ebc5e36b150ec7c"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/domain.mjs.txt",
+      "byteSize": 170,
+      "sha256": "225e84d48d52f4ad935b404401b04076cdf5f9e431d03ca4659cb51e31b081f2"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/index.d.mts.txt",
+      "byteSize": 9206,
+      "sha256": "287d5ef776e85e7a547789d59cc89cb6281358e1398b4e914db4a96641788b64"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/index.mjs.map.txt",
+      "byteSize": 17089,
+      "sha256": "b60e12b9ee604a9711f18e0f6fec5b25b820de7e1b4ab6768f01f9c4a5cd8e48"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/index.mjs.txt",
+      "byteSize": 8467,
+      "sha256": "eaa563693f38ee9c204f5d29031af1f0250c428418a3db4449d75db343029610"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/json-C95MIJuO.d.mts.txt",
+      "byteSize": 342927,
+      "sha256": "d4a655889b298ca92f2abba5a9600855f63c358271c18ab3cf8501e9964a19de"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations-CmCClcp5.mjs.map.txt",
+      "byteSize": 10735,
+      "sha256": "8f562ddc77c132a901294509d09fdb10abe3dd1ee3693009822968d67acdb900"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations-CmCClcp5.mjs.txt",
+      "byteSize": 6314,
+      "sha256": "e810ea480d18b40c3fd47f2a2fe7a0fc3656f814f0ad390ea575bd01c305bd17"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations.d.mts.txt",
+      "byteSize": 909,
+      "sha256": "234bd80fa13eb9dbb6eeac1c5f9b72f0bd704dc415ae6d4ae377c28e83b5b90e"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations.mjs.txt",
+      "byteSize": 263,
+      "sha256": "c760111f59b1a8a63a3c433505de35b2f211df85293511c1f1d4e08394fd1178"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0001-store.sql.txt",
+      "byteSize": 620,
+      "sha256": "82871f8e7b98afd7e96b5cb73cec36481c4e0db012bbce4875298d9dd06e9eea"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0002-core.sql.txt",
+      "byteSize": 15976,
+      "sha256": "f931bde2073cb7503fd48ccf31d5b44497b487a7f81fe1e52cf8dc3b5a968084"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0003-admission.sql.txt",
+      "byteSize": 4542,
+      "sha256": "75030b9665ead4d3be8495de9ef5221850e1e05a7765871556e69e7b9565fc64"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0004-sessions.sql.txt",
+      "byteSize": 8320,
+      "sha256": "6ef6f742cf22e5b97acd8ee85231916fc84ed9d38737745d14aedd6304c6f1f5"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0005-registry.sql.txt",
+      "byteSize": 5847,
+      "sha256": "4e2adc7e7376894bdac86ddeabc604d3b892a64c71fb322a3d2fac86e4b2be3e"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0006-runtime.sql.txt",
+      "byteSize": 3660,
+      "sha256": "d9568260464767556872c42314088aa6058912d0f485e76186da57137d196a3f"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0007-input.sql.txt",
+      "byteSize": 3774,
+      "sha256": "956ac99167b7a2f075e89f21781c9f378856bfce8956a278e0f96a0e277d387b"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0008-preparation.sql.txt",
+      "byteSize": 10745,
+      "sha256": "e3d51325c922e8701087f0abcf6e48b38a1263a99f2e414fe686651d791c2ede"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0009-scheduler.sql.txt",
+      "byteSize": 2538,
+      "sha256": "1834e4c79d9e004d00ce627d8e0944096b2fdc601500a2cf724f94c67345cc3d"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0010-issues.sql.txt",
+      "byteSize": 2486,
+      "sha256": "ca89103ce1dbb8d760f193883f9b2f11dd8324d2928996753f2c634383eb42ec"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0011-pipelines.sql.txt",
+      "byteSize": 2532,
+      "sha256": "6ce693ed7e93ea62cde70ad7b531396cbefb51bb75286815751c60027041ff12"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0012-repo.sql.txt",
+      "byteSize": 1447,
+      "sha256": "cd06e10fb06550981b6efee86e063893579f3edfa5dbf3066f5489cc11454ab9"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0013-workspaces.sql.txt",
+      "byteSize": 2921,
+      "sha256": "7e90d9e7dad4df35ec42a875fa23866cb8dd224917d1d04792bcef80d6c7f044"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0014-repofiles.sql.txt",
+      "byteSize": 2041,
+      "sha256": "0bf93f7aafcfd53a147fd855f685b949ddf32c7f293d5390f95324816789644a"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0015-sourcearchives.sql.txt",
+      "byteSize": 2176,
+      "sha256": "fe8bfce151ef0ffa2a5704f5a6df5a8683151317692345da369899919630a2d7"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0016-candidateintegrations.sql.txt",
+      "byteSize": 6856,
+      "sha256": "0d69c66c39dfb141a38ecb0c14173062c2353e6fd8fd07759ab80bb7adfc4fc4"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0017-candidatematerials.sql.txt",
+      "byteSize": 3615,
+      "sha256": "15b9cc5284709ff244eb126f0eb0f1d223dfb25eb09a96528d4a6d8c913baf6b"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0018-workspacepreservations.sql.txt",
+      "byteSize": 4104,
+      "sha256": "d2c38df2d1291dde574f69e355bc8cccb70b2dd406033f99c61d25083dc75e05"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0019-workspacereclamations.sql.txt",
+      "byteSize": 2641,
+      "sha256": "b83fb630f8aa153a7529f85a15934038277f10d15c86bd9a6102555e1b30b22b"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0020-runtimeworkspaces.sql.txt",
+      "byteSize": 913,
+      "sha256": "782ed2b994f14dce549adae4a7622b441096696b5bbbcaf1ffa046eb8411a8c0"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0021-qualityverifications.sql.txt",
+      "byteSize": 4247,
+      "sha256": "dbc81d956e953cceb3fe6fe9f9177e170b1554a47f651bc677649602bf2ea6a2"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0022-qualitystagebindings.sql.txt",
+      "byteSize": 725,
+      "sha256": "8145326f498b765327b43afc30a0a6752213b44a3d8b05f54d38844afc583f1d"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0023-workverifications.sql.txt",
+      "byteSize": 2440,
+      "sha256": "8bb27a5e071accb6b776e92f537965ee7a5553697d1e992471c62465e6a0cd12"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0024-verifiedfindings.sql.txt",
+      "byteSize": 1342,
+      "sha256": "430dbd37c8883582d942bf530ec6ec4422f73a07372e5aa525d89625a323609f"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0025-verifiedrepairs.sql.txt",
+      "byteSize": 3247,
+      "sha256": "1dc8a0740173e775974a84db61822f8729fd84c8c1ed77d44332b188a43bd532"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0026-candidatepromotions.sql.txt",
+      "byteSize": 918,
+      "sha256": "b6a67f29e5d4bfe3d46bb7d7cfcd40485074ccfb05f3cadeacc14b3dfb9700f6"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0027-releasedeliveries.sql.txt",
+      "byteSize": 3830,
+      "sha256": "2368d237034c2db241018e78f3b6608e37eb24866c9b9d21ca8bc371cff1b9e9"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0028-candidatefreezes.sql.txt",
+      "byteSize": 2718,
+      "sha256": "27d83127f25792c2d2c10a97f2f6bf6998e10eb4210580d25cde61cd2219f201"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0029-qualityartifactrefs.sql.txt",
+      "byteSize": 675,
+      "sha256": "5a0a672d447469e189883ce4b8c4d8b0fabb5155f263526eaa046fc316319672"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0030-candidatereviews.sql.txt",
+      "byteSize": 2054,
+      "sha256": "31a88c369d77983eb494f1b6172cdce61c9bc7131e13d5962605f8decc3f358b"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0031-candidaterejections.sql.txt",
+      "byteSize": 2158,
+      "sha256": "46be63e8e612658ca914cbd8d16259a64d6631bf6ed8a39088152cb89120307a"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0032-previewintents.sql.txt",
+      "byteSize": 6795,
+      "sha256": "e25974e2b36545c598e9c38d9411275149feb09400d1c53852dd67f1801f8e9f"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0033-previewruntime.sql.txt",
+      "byteSize": 1151,
+      "sha256": "d0021aeba62b222844b8844d1af81fc8d18dde578adbf32d82ae073ea36e7e6f"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0034-previewaccess.sql.txt",
+      "byteSize": 6472,
+      "sha256": "34c07bd4c72363c10c14c336cdea4c71887798d54d3eb7c7c34624dac493b6fc"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0035-previewsessions.sql.txt",
+      "byteSize": 5671,
+      "sha256": "0a3617a2994c4c7bd6edc904e0dd9b6bd8728b703b4351cec2351cd3c540cb2d"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0036-acceptanceintents.sql.txt",
+      "byteSize": 4000,
+      "sha256": "765c9197031e58e83d39fe60146f9258c0a58436b1d806e48ce70cb99097719e"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/0037-acceptancereadiness.sql.txt",
+      "byteSize": 1306,
+      "sha256": "2d5bd749c824438cce2eebe6cbaa1fb5b5ce0087ff4451251bc5c3f22fe04e82"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/migrations/manifest.json.txt",
+      "byteSize": 5455,
+      "sha256": "793baba4226133c9ff22069dcd45cba4a758b31b180241b25e60682c482436e1"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/preview-session-protocol-DQFKJ6M9.mjs.map.txt",
+      "byteSize": 140849,
+      "sha256": "5d59a1d8eb27370cf7f14a9ca5e3d9df597d71c456ddebdd6779f2f8b5fbe458"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/preview-session-protocol-DQFKJ6M9.mjs.txt",
+      "byteSize": 73540,
+      "sha256": "6dcf562b788615882f9ce68148c6e0793d0f7b2e4dd6a9a617685db051cfee9b"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/worker.d.mts.txt",
+      "byteSize": 11,
+      "sha256": "4f1bad288ada6326583a3e6a0a54d7627a03eac3b668adeea9dded12ac5656b8"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/worker.mjs.map.txt",
+      "byteSize": 8450,
+      "sha256": "b1cd48ca04ebc6ebff0664c3d6efa0af557478a1e4a80ca50d874c2bcb60a931"
+    },
+    {
+      "path": "readiness-build-2/emitted-storage/worker.mjs.txt",
+      "byteSize": 5293,
+      "sha256": "91ceee4e28eb1175f6c7328cf21ebc4c348fd7db3f4f41c8466e41e7d8efb814"
+    },
+    {
+      "path": "readiness-build-2/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "readiness-build-2/raw-artifacts.json",
+      "byteSize": 13442,
+      "sha256": "1ca3fe1c654f8899e04dd9311d4e45ad8d269f1f0449280535b217c83764e480"
+    },
+    {
+      "path": "readiness-build-2/report.json",
+      "byteSize": 2078,
+      "sha256": "09a2214b52bc1c2faf99200be5aa65bb6440d0516a6b62f1647b9a2958598c1f"
+    },
+    {
+      "path": "readiness-build-2/storage-build.txt",
+      "byteSize": 2495,
+      "sha256": "efcbdeab635dc39278ae46e26d8eadcd492cedac5221706df0f58cac14bd8227"
+    },
+    {
+      "path": "readiness-build-2/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "readiness-build-3/contracts-check.txt",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "path": "readiness-build-3/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "readiness-build-3/platform-build.txt",
+      "byteSize": 1194,
+      "sha256": "4598eb3c55df4671e2bffa3b34feef3477003c151f390fc06d3e9ba3c7ca5f07"
+    },
+    {
+      "path": "readiness-build-3/report.json",
+      "byteSize": 2592,
+      "sha256": "0ffae2d5b7ec614f6f088a567ebfa6b30a9f190730ab58d67885989d3de021c5"
+    },
+    {
+      "path": "readiness-build-3/storage-build.txt",
+      "byteSize": 2495,
+      "sha256": "df2d30d4c38505de6ece23a240642d8fc0dc35363b4243b38a965eb7ff7ec3d7"
+    },
+    {
+      "path": "readiness-build-3/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "readiness-map-final.json",
+      "byteSize": 79516,
+      "sha256": "badc876da7683fec533dba335ff74cc222008a34afb743d55722f639829cd93f"
+    },
+    {
+      "path": "readiness-map-pretest.json",
+      "byteSize": 80786,
+      "sha256": "f2f611e6961cc5b3950db16b587277dc58b8c81eb656f92311831f80653489b6"
+    },
+    {
+      "path": "readiness-map-revision.json",
+      "byteSize": 79516,
+      "sha256": "4a266ec57892228fb5509bbaaafe6945adca907e7919b6dc0cd1573ba6921457"
+    },
+    {
+      "path": "source-comparisons.json",
+      "byteSize": 1260,
+      "sha256": "950c75bb511132a8da0e1bb4ef7d71cd3be3387df501d2ffc1f8f6cb1d8e8e6e"
+    }
+  ]
+}

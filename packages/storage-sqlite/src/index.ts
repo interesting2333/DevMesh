@@ -140,5 +140,7 @@ export {previewAccessPolicy,previewAccessHttpRequest,previewWriteCloseRequest,pr
 export type {PreviewWriteGate,PreviewAccessTarget,PreviewAccessBinding,PreviewAccessRecord} from './preview-access-protocol.js';
 export {acceptanceBackendPolicy,acceptancePreparationRequest} from './acceptance-protocol.js';
 export type {AcceptancePreparation,AcceptancePreparationRequest} from './acceptance-protocol.js';
+export {acceptanceReleaseClaim,acceptancePreparedProof,acceptancePreparationObservation} from './acceptance-readiness-protocol.js';
+export type {AcceptancePreparedProof,AcceptancePreparationObservation,AcceptancePreparationBackend,AcceptanceReadiness} from './acceptance-readiness-protocol.js';
 export {previewOrigin} from './preview-session-protocol.js';
 export type {PreviewTicket,PreviewSession} from './preview-session-protocol.js';

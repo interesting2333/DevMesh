@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "scope": "Acceptance readiness protocol/controller build and static checks; not physical fencing, actual container/HTTP health, T5 or clean-checkout acceptance.",
+  "checks": [
+    {
+      "name": "storage-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T18:37:59.587Z",
+      "finishedAt": "2026-11-12T18:39:34.472Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "storage-build.txt",
+      "sha256": "df2d30d4c38505de6ece23a240642d8fc0dc35363b4243b38a965eb7ff7ec3d7"
+    },
+    {
+      "name": "platform-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/platform-core",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T18:39:34.484Z",
+      "finishedAt": "2026-11-12T18:40:39.328Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "platform-build.txt",
+      "sha256": "4598eb3c55df4671e2bffa3b34feef3477003c151f390fc06d3e9ba3c7ca5f07"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T18:40:39.333Z",
+      "finishedAt": "2026-11-12T18:42:58.696Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T18:42:58.701Z",
+      "finishedAt": "2026-11-12T18:43:11.934Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "contracts-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-12T18:43:11.940Z",
+      "finishedAt": "2026-11-12T18:43:15.879Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-check.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    }
+  ]
+}

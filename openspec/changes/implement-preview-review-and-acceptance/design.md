@@ -148,9 +148,17 @@ HTTP 业务请求须绑定实际转发的方法、原路径、正文和筛选后
 
 迁移 36 新增私有 acceptance_backend_policies、acceptance_data_decisions、acceptance_preparations 及不可变历史。可信宿主显式配置接受后端策略，不因已有预览后端或 owner 身份自动启用。负责人以标准原键／If-Match 固定准确 candidate revision／manifestHash／reviewHash、原接受指针、原数据来源、数据方案、镜像和 Run 代际；服务端预留 releaseId／targetDatasetId 与派生存储键，客户端不能传目标路径、健康或 READY。策略登记及意图提交不创建 dataset 文件、Release 或接受指针。
 
-REPLACE 必须有独立的准确确认记录，绑定候选、reviewHash、原 release、完整 dataPlanHash 与实际确认主体；初始方案不能伪造替换确认。原接受数据的具体内容 hash 不在关闭写门前虚构固定，目标始终为新 ID，不静默使用可写预览克隆。后续可信准备协议仍须实际关闭／排空、快照／迁移、Runner 归属与健康凭证；当前首批接口没有 READY 或提交命令，4.1 保持未勾选。
+REPLACE 必须有独立的准确确认记录，绑定候选、reviewHash、原 release、完整 dataPlanHash 与实际确认主体；初始方案不能伪造替换确认。原接受数据的具体内容 hash 不在关闭写门前虚构固定，目标始终为新 ID，不静默使用可写预览克隆。后续可信准备协议仍须实际关闭／排空、快照／迁移、Runner 归属与健康凭证；迁移 36 接口本身没有 READY 或提交命令；第 18 节补充独立证明／观察协议，实际适配器及完整验证继续，4.1 保持未勾选。
 
 原项目只能有一项未核实接受准备。只有 PREPARED 可申请一次 SENT 派发许可，并重新核实当前候选、审查、权限及原接受指针；丢派发 ACK 后不重授，SENT／UNKNOWN 只查询原 operation／requestHash／远端身份。当前 owner 可用独立命令关闭准确从未派发的 PREPARED，不能关闭 SENT／UNKNOWN 或靠 TTL 清除。状态、历史、operation 与事件同事务；历史只追加。恢复分页仅供准确策略的后端主体扫描，不开放公共 HTTP／MCP 注册或回执入口。
+
+### 18. Prepared proof is immutable; availability is observed again
+
+迁移 37 把准备证明与当前健康观察分开。原 dispatch 状态继续 PREPARED／SENT／UNKNOWN／FAILED，新增只读 readiness 投影 UNPREPARED／READY／UNAVAILABLE／STALE，不凭意图 ACK 或历史健康完成接受。完整证明固定原请求／候选／审查／数据方案／目标数据与 schema、实际快照／完整性／迁移／journal、源逻辑关门／物理 fence、目标关闭 fence、准确 Runner reservation／profile 和 RELEASE_HELD claim。首次写入不可替换，后续失联保留原证明。
+
+当前观察只允许准确后端主体写入，核实同一 fence／claim／实例／端口的当前持有与健康；健康年龄须在 0～30 秒、时间不回退、custodyRevision 维持跨 UNKNOWN 的高水位。preparationRevision 与观察 sequence 双 CAS 防止核实期间准备变化及慢响应覆盖；同一毫秒内后提交的原准备 UNKNOWN 也按持久版本关闭旧 READY，不用墙钟判定提交先后。重复原观察只读恢复当前投影，不能复活旧 READY。证明／观察／Run 资源版本／事件同事务，当前依据改变或不确定写未排空拒绝 READY。源关闭记录和物理 fence 必须先于快照；物理隔离由实际适配器落实，逻辑计数不能代替。
+
+`AcceptancePreparer` 为可信装配提供恢复控制器：缺后端不派发；首次唯一 grant 才 prepare，原 SENT／UNKNOWN 或丢许可 ACK 只 inspect，每个新外部动作前须通过最后授权。没有默认具体后端，也没有公共回执入口。受控证明测试仅验证 Worker 绑定、恢复及原子性，不是实际数据／fencing／容器健康验证。实际适配器、正向保留／替换和 T5 继续原范围，4.1 保持未勾选。
 
 ## Risks / Trade-offs
 

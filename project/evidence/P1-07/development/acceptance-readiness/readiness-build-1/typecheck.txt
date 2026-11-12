@@ -1,0 +1,22 @@
+packages/mcp-tools/src/repo-files.ts(80,5): error TS2322: Type 'unknown' is not assignable to type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(82,18): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(88,7): error TS18046: 'operation' is of type 'unknown'.
+packages/mcp-tools/src/repo-files.ts(88,42): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(91,116): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(107,15): error TS2698: Spread types may only be created from object types.
+packages/mcp-tools/src/repo-files.ts(107,28): error TS2698: Spread types may only be created from object types.
+packages/mcp-tools/src/repo-files.ts(107,138): error TS18046: 'operation' is of type 'unknown'.
+packages/mcp-tools/src/repo-files.ts(113,20): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(114,15): error TS2698: Spread types may only be created from object types.
+packages/mcp-tools/src/repo-files.ts(114,28): error TS2698: Spread types may only be created from object types.
+packages/mcp-tools/src/repo-files.ts(114,44): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(115,18): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(115,32): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(116,87): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(125,373): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'RepoFileOperation'.
+packages/mcp-tools/src/repo-files.ts(125,397): error TS18046: 'operation' is of type 'unknown'.
+packages/storage-sqlite/src/acceptance-readiness-domain.ts(30,17): error TS18048: 'g' is possibly 'undefined'.
+packages/storage-sqlite/src/acceptance-readiness-domain.ts(46,174): error TS2345: Argument of type '{ schemaVersion: "devmesh.acceptance-prepared.v1"; operationId: string & $brand<"op">; requestHash: string; releaseId: string & $brand<"release">; projectId: string & $brand<...>; ... 11 more ...; preparedAt: string; } | null' is not assignable to parameter of type '{ schemaVersion: "devmesh.acceptance-prepared.v1"; operationId: string & $brand<"op">; requestHash: string; releaseId: string & $brand<"release">; projectId: string & $brand<...>; ... 11 more ...; preparedAt: string; }'.
+  Type 'null' is not assignable to type '{ schemaVersion: "devmesh.acceptance-prepared.v1"; operationId: string & $brand<"op">; requestHash: string; releaseId: string & $brand<"release">; projectId: string & $brand<...>; ... 11 more ...; preparedAt: string; }'.
+packages/storage-sqlite/src/index.ts(79,70): error TS2536: Type 'M' cannot be used to index type 'Results'.
+packages/storage-sqlite/src/index.ts(80,51): error TS2536: Type 'M' cannot be used to index type 'Results'.

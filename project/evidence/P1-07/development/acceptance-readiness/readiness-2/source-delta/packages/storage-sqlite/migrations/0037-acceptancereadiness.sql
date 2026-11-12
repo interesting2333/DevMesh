@@ -1,0 +1,16 @@
+CREATE TABLE acceptance_prepared_proofs (
+ operation_id TEXT PRIMARY KEY REFERENCES acceptance_preparations(operation_id),
+ request_hash TEXT NOT NULL,proof_hash TEXT NOT NULL,proof_json TEXT NOT NULL CHECK(json_valid(proof_json)),
+ recorded_at TEXT NOT NULL,
+ UNIQUE(operation_id,proof_hash)
+) STRICT;
+CREATE TABLE acceptance_preparation_observations (
+ operation_id TEXT NOT NULL REFERENCES acceptance_preparations(operation_id),preparation_revision INTEGER NOT NULL CHECK(preparation_revision>=0),
+ sequence INTEGER NOT NULL CHECK(sequence>0),observation_hash TEXT NOT NULL,
+ observation_json TEXT NOT NULL CHECK(json_valid(observation_json)),observed_at TEXT NOT NULL,
+ PRIMARY KEY(operation_id,sequence),UNIQUE(operation_id,observation_hash)
+) STRICT;
+CREATE TRIGGER acceptance_proof_update BEFORE UPDATE ON acceptance_prepared_proofs BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_PROOF_IMMUTABLE'); END;
+CREATE TRIGGER acceptance_proof_delete BEFORE DELETE ON acceptance_prepared_proofs BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_PROOF_IMMUTABLE'); END;
+CREATE TRIGGER acceptance_observation_update BEFORE UPDATE ON acceptance_preparation_observations BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_OBSERVATION_IMMUTABLE'); END;
+CREATE TRIGGER acceptance_observation_delete BEFORE DELETE ON acceptance_preparation_observations BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_OBSERVATION_IMMUTABLE'); END;

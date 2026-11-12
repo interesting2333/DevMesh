@@ -1,0 +1,3 @@
+$ oxlint --deny-warnings --ignore-pattern=project/evidence/**/failed-source/** --ignore-pattern=project/evidence/**/validation-driver.mjs apps packages scripts project tests
+project/evidence/P1-07/development/acceptance-readiness/readiness-build-1/typecheck-source/packages/storage-sqlite/src/protocol.ts:24:14: warning eslint(no-unused-vars): Type 'RepoFileResults' is imported but never used. help: Consider removing this import.
+[ELIFECYCLE] Command failed with exit code 1.

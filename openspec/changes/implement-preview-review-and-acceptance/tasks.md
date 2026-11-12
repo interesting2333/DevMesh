@@ -29,6 +29,8 @@
 
 4.1 当前首批范围为迁移 36 的私有后端策略、固定候选／审查／原接受指针与数据方案、独立替换确认、预留原 release／目标 dataset ID、唯一派发、UNKNOWN 原操作恢复和仅未派发关闭。实际 Worker 并发／重开／丢 ACK／事务故障、INITIAL 及权限边界通过：最终接受／契约／迁移／质量收集 32/32，存储全量 34/34；失败原输出、夹具签发时点／测试参数修正和各组源码差异见 `project/evidence/P1-07/acceptance-intent-development-review.md`。迭代保留和正向替换确认仍待后续验证。没有准备 READY、外部数据执行、fencing／健康凭证或 T5 命令；这些继续同一子项，4.1 不勾选，变更仍 7/13。
 
+4.1 本轮补充迁移 37 的不可变原准备证明、独立当前观察及显式 AcceptancePreparer：准确 data／schema／迁移／源目标 fence／Runner claim，0～30 秒健康与当前持有，跨 UNKNOWN 的归属高水位、准备版本／观察双 CAS，同毫秒后续原准备 UNKNOWN 关闭旧 READY；仅唯一许可 prepare，丢 ACK／重开只 inspect。首次综合 37/38，端点负例因测试对象别名失败，独立诊断后仅复制测试健康端点，受影响五项重跑 5/5；存储全量 35/35、Runner 归属／清理 33/33。四组各自源码指纹不变，唯一组间差异为该测试夹具，其使用范围已核实；最终构建、类型、Lint／契约及 134/134 源码映射通过。原失败、构建差异和留存范围见 `project/evidence/P1-07/acceptance-readiness-development-review.md`。回执中的物理 fence／健康是显式受控声明，没有默认实际准备后端、数据文件／Release 创建或 T5。实际接受数据／写门的共用归属、准确 Runner 服务装配、正向保留／替换与安全失败恢复继续实施，不能伪造预览策略／effect；4.1 仍不勾选，变更仍 7/13，不归档。
+
 ## 5. Composition and evidence
 
 - [ ] 5.1 将准确候选、审查、实际本地数据副本和 HTTP 预览／发布组合验证，逐项记录 D01～D08 与 T5 的实际覆盖，受控后端不代替真实构建／健康或产品验收。

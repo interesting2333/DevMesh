@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-12T19:17:34.685Z",
+  "reason": "Archived failed TypeScript was scanned as active code by the existing project lint command. Use the existing failed-source archive convention; no lint rules, original failed source or production code changed.",
+  "moves": [
+    {
+      "from": "readiness-build-1/typecheck-source/packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "to": "readiness-build-1/failed-source/packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "sha256": "bfe91e1adb8c953d517a240cf4abcaf1b24f78211029b42c0835cc1a6adf2c24"
+    },
+    {
+      "from": "readiness-build-1/typecheck-source/packages/storage-sqlite/src/protocol.ts",
+      "to": "readiness-build-1/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "7de312c25477838dfcbe96a6ef8be73f1384d9cc247858394ccef1c3471c1a9b"
+    }
+  ],
+  "initialManifest": "retention-initial.json"
+}

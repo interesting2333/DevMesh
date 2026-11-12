@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "scope": "Acceptance readiness protocol/controller build and static checks; not physical fencing, actual container/HTTP health, T5 or clean-checkout acceptance.",
+  "checks": [
+    {
+      "name": "storage-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T18:33:44.285Z",
+      "finishedAt": "2026-11-12T18:35:06.809Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "storage-build.txt",
+      "sha256": "efcbdeab635dc39278ae46e26d8eadcd492cedac5221706df0f58cac14bd8227"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T18:35:06.823Z",
+      "finishedAt": "2026-11-12T18:37:27.792Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T18:37:27.799Z",
+      "finishedAt": "2026-11-12T18:37:39.664Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "contracts-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-12T18:37:39.671Z",
+      "finishedAt": "2026-11-12T18:37:43.869Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-check.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    }
+  ]
+}

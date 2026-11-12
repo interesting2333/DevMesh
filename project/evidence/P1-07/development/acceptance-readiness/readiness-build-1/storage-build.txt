@@ -1,0 +1,34 @@
+$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 56 files
+ℹ dist\index.mjs                                    8.47 kB │ gzip:   2.89 kB
+ℹ dist\worker.mjs                                   5.29 kB │ gzip:   2.15 kB
+ℹ dist\migrations.mjs                               0.26 kB │ gzip:   0.17 kB
+ℹ dist\domain.mjs                                   0.17 kB │ gzip:   0.14 kB
+ℹ dist\domain-B31IMZtD.mjs.map                    958.14 kB │ gzip: 201.28 kB
+ℹ dist\domain-B31IMZtD.mjs                        571.54 kB │ gzip: 113.86 kB
+ℹ dist\preview-session-protocol-D_1EmjTb.mjs.map  140.53 kB │ gzip:  28.91 kB
+ℹ dist\preview-session-protocol-D_1EmjTb.mjs       73.34 kB │ gzip:  15.49 kB
+ℹ dist\index.mjs.map                               17.09 kB │ gzip:   5.32 kB
+ℹ dist\migrations-CmCClcp5.mjs.map                 10.73 kB │ gzip:   3.79 kB
+ℹ dist\worker.mjs.map                               8.45 kB │ gzip:   3.15 kB
+ℹ dist\migrations-CmCClcp5.mjs                      6.31 kB │ gzip:   2.46 kB
+ℹ dist\index.d.mts                                 10.56 kB │ gzip:   2.90 kB
+ℹ dist\migrations.d.mts                             0.91 kB │ gzip:   0.42 kB
+ℹ dist\domain.d.mts                                 0.33 kB │ gzip:   0.23 kB
+ℹ dist\worker.d.mts                                 0.01 kB │ gzip:   0.03 kB
+ℹ dist\json-D8lgKmP2.d.mts                        340.47 kB │ gzip:  32.20 kB
+ℹ 17 files, total: 2.15 MB
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (76%)
+  - tsdown:deps (17%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 67045ms

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "scope": "Independent fixture reference-alias diagnosis only; not Worker or physical backend validation",
+  "startedAt": "2026-11-12T18:56:44.290Z",
+  "finishedAt": "2026-11-12T18:56:54.071Z",
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "args": [
+    ".cache/p110-diagnostic-alias.mjs"
+  ],
+  "exitCode": 0,
+  "stdout": "{\"scope\":\"Diagnostic for fixture object aliasing only; not a Worker/protocol test\",\"sameEndpointObject\":true,\"proofPortBefore\":19081,\"proofPortAfter\":19082,\"healthPortAfter\":19082}\n",
+  "stderr": "(node:19684) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n",
+  "diagnosticSource": "import {preparedObservation} from '../tests/fixtures/acceptance-readiness.mjs';\nconst request={target:{datasetId:'dataset_fixture',storageKey:'prj_fixture/dataset_fixture/app.sqlite',schemaRevision:'schema.fixture'},dataPlan:{strategy:'INITIAL',migrationRef:null},image:{imageDigest:'sha256:'+'0'.repeat(64)},expectedAcceptedReleaseId:null};\nconst o=preparedObservation({operationId:'op_fixture',requestHash:'0'.repeat(64),request}),copy=structuredClone(o),before=copy.proof.service.endpoint.port;copy.health.endpoint.port++;\nconsole.log(JSON.stringify({scope:'Diagnostic for fixture object aliasing only; not a Worker/protocol test',sameEndpointObject:copy.health.endpoint===copy.proof.service.endpoint,proofPortBefore:before,proofPortAfter:copy.proof.service.endpoint.port,healthPortAfter:copy.health.endpoint.port}));\n",
+  "fixtureSha256": "c6335275d649d4a73fa5ae14d47acc6dc0ef06d52d1a5dd7251c3d53a2b66270"
+}

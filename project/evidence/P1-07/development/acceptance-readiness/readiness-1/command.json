@@ -1,0 +1,21 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "args": [
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tests/acceptance-readiness.test.mjs",
+    "tests/acceptance-intents.test.mjs",
+    "tests/contracts.test.mjs",
+    "tests/storage-acceptance.test.mjs",
+    "tests/verification-collector.test.mjs"
+  ],
+  "baseCommit": "e15e90de993ad03663fd5357153d83b3a607c33a",
+  "startedAt": "2026-11-12T18:43:23.812Z",
+  "pid": 19440,
+  "parentPid": 14028,
+  "environment": {
+    "TEMP": "D:\\devmesh-session-validation-362cd158-26c7-4f8c-9913-de63b84eaf22",
+    "TMP": "D:\\devmesh-session-validation-362cd158-26c7-4f8c-9913-de63b84eaf22"
+  }
+}

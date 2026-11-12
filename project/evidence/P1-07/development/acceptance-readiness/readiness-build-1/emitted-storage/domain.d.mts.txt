@@ -1,0 +1,10 @@
+import { r as Method, t as canonical } from "./json-D8lgKmP2.mjs";
+import { DatabaseSync } from "node:sqlite";
+
+//#region src/domain.d.ts
+declare function createDomain(db: DatabaseSync): {
+  execute(method: Method, input: unknown): unknown;
+};
+//#endregion
+export { canonical, createDomain };
+//# sourceMappingURL=domain.d.mts.map

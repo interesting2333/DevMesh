@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "reference": "readiness-4",
+  "runs": [
+    {
+      "name": "readiness-1",
+      "samePaths": true,
+      "differences": [
+        {
+          "path": "tests/fixtures/acceptance-readiness.mjs",
+          "runSha256": "c6335275d649d4a73fa5ae14d47acc6dc0ef06d52d1a5dd7251c3d53a2b66270",
+          "referenceSha256": "1d9dad769869f55fcd0c51b01ac5f0cfc3cfccc296110b6a237e586bb81bf249"
+        }
+      ]
+    },
+    {
+      "name": "readiness-2",
+      "samePaths": true,
+      "differences": [
+        {
+          "path": "tests/fixtures/acceptance-readiness.mjs",
+          "runSha256": "c6335275d649d4a73fa5ae14d47acc6dc0ef06d52d1a5dd7251c3d53a2b66270",
+          "referenceSha256": "1d9dad769869f55fcd0c51b01ac5f0cfc3cfccc296110b6a237e586bb81bf249"
+        }
+      ]
+    },
+    {
+      "name": "readiness-3",
+      "samePaths": true,
+      "differences": [
+        {
+          "path": "tests/fixtures/acceptance-readiness.mjs",
+          "runSha256": "c6335275d649d4a73fa5ae14d47acc6dc0ef06d52d1a5dd7251c3d53a2b66270",
+          "referenceSha256": "1d9dad769869f55fcd0c51b01ac5f0cfc3cfccc296110b6a237e586bb81bf249"
+        }
+      ]
+    },
+    {
+      "name": "readiness-4",
+      "samePaths": true,
+      "differences": []
+    }
+  ]
+}

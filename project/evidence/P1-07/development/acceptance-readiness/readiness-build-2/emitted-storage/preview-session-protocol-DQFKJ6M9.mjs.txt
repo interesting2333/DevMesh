@@ -1,0 +1,2013 @@
+import { i as digest, o as transaction, s as StorageError } from "./migrations-CmCClcp5.mjs";
+import { isAbsolute, join, relative, sep } from "node:path";
+import { createHash, randomUUID } from "node:crypto";
+import { z } from "zod";
+import { artifactRef, assertPermit, deliveryDataPlan, epoch, executionPermit, gitCommit, ids, opaqueKey, parseContract, previewImageIdentity, qualityEvaluation, qualityExecution, qualityPolicy, qualityReport, relativeFile, revision, role, sha256, timestamp, workDelegation } from "@devmesh/contracts";
+//#region src/json.ts
+function canonical(value) {
+	if (Array.isArray(value)) return "[" + value.map(canonical).join(",") + "]";
+	if (value && typeof value === "object") return "{" + Object.entries(value).filter(([, v]) => v !== void 0).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([key, v]) => JSON.stringify(key) + ":" + canonical(v)).join(",") + "}";
+	return JSON.stringify(value);
+}
+//#endregion
+//#region src/tool-protocol.ts
+const authority = { permit: executionPermit };
+const issueId = opaqueKey;
+const issueCreateArgs = z.strictObject({
+	title: z.string().trim().min(1).max(240),
+	description: z.string().min(1).max(8e3),
+	severity: z.enum([
+		"LOW",
+		"MEDIUM",
+		"HIGH",
+		"CRITICAL"
+	]),
+	evidence: artifactRef
+});
+const issueLinkArgs = z.strictObject({
+	issueId,
+	issueRevision: revision,
+	fixWorkId: ids.work
+});
+const issueVerifyArgs = z.strictObject({
+	issueId,
+	issueRevision: revision,
+	fixAttemptId: ids.attempt,
+	verificationAttemptId: ids.attempt.nullable(),
+	outcome: z.enum([
+		"PASSED",
+		"FAILED",
+		"NOT_VERIFIED"
+	]),
+	evidence: artifactRef
+});
+const toolRequests = {
+	authorizeMcpAction: z.strictObject({
+		...authority,
+		toolName: opaqueKey,
+		action: z.enum([
+			"read",
+			"write",
+			"stop"
+		])
+	}),
+	refreshMcpPermit: z.strictObject({
+		...authority,
+		toolName: opaqueKey,
+		action: z.enum([
+			"read",
+			"write",
+			"stop"
+		])
+	}),
+	createIssue: z.strictObject({
+		...authority,
+		operationId: ids.operation,
+		args: issueCreateArgs
+	}),
+	linkIssueFix: z.strictObject({
+		...authority,
+		operationId: ids.operation,
+		args: issueLinkArgs
+	}),
+	recordIssueVerification: z.strictObject({
+		...authority,
+		operationId: ids.operation,
+		args: issueVerifyArgs
+	}),
+	getIssue: z.strictObject({
+		...authority,
+		issueId,
+		afterRevision: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(20).default(20)
+	}),
+	getIssueOperation: z.strictObject({
+		...authority,
+		operationId: ids.operation
+	})
+};
+//#endregion
+//#region src/repo-protocol.ts
+const repoCommitArgs = z.strictObject({
+	workspaceRef: opaqueKey,
+	baseCommit: gitCommit,
+	message: z.string().trim().min(1).max(4e3).refine((v) => !v.includes("\0"))
+});
+const repoIntegrateArgs = z.strictObject({
+	workspaceRef: opaqueKey,
+	baseCommit: gitCommit,
+	commit: gitCommit
+});
+const repoBinding = z.strictObject({
+	workspaceRef: opaqueKey,
+	resourceId: opaqueKey,
+	projectResourceId: opaqueKey,
+	projectId: ids.project,
+	runId: ids.run,
+	attemptId: ids.attempt,
+	baseCommit: gitCommit
+});
+const prepared = z.strictObject({
+	commit: gitCommit,
+	tree: gitCommit,
+	ref: z.string().regex(/^refs\/devmesh\/[A-Za-z0-9_/-]+$/),
+	expected: gitCommit.nullable(),
+	commitBody: z.string().max(1e4).nullable()
+});
+const repoRequests = {
+	beginRepoOperation: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation,
+		toolName: z.enum(["repo.commit", "repo.integrate"]),
+		args: z.union([repoCommitArgs, repoIntegrateArgs]),
+		binding: repoBinding
+	}),
+	getRepoOperation: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation
+	}),
+	prepareRepoOperation: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation,
+		requestHash: sha256,
+		prepared
+	}),
+	finishRepoOperation: z.strictObject({
+		operationId: ids.operation,
+		requestHash: sha256,
+		state: z.enum([
+			"SUCCEEDED",
+			"CONFLICT",
+			"FAILED"
+		]),
+		result: z.record(z.string(), z.json())
+	})
+};
+//#endregion
+//#region src/workspace-protocol.ts
+const approvedDotFiles = /* @__PURE__ */ new Set([
+	".gitignore",
+	".node-version",
+	".editorconfig",
+	".gitattributes"
+]);
+const managedSourcePath = relativeFile.refine((v) => v.split("/").every((p, i, parts) => (!p.startsWith(".") || i === parts.length - 1 && approvedDotFiles.has(p)) && ![
+	"node_modules",
+	"vendor",
+	"secrets"
+].includes(p.toLowerCase()) && Array.from(p).every((c) => c.charCodeAt(0) >= 32 && c.charCodeAt(0) !== 127) && !/[. ]$/.test(p) && !/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i.test(p)) && !/\.(pem|key|p12|pfx)$/i.test(v), "Expected an approved source path");
+const sourceManifest = z.strictObject({
+	commit: gitCommit,
+	tree: gitCommit,
+	files: z.array(z.strictObject({
+		path: managedSourcePath,
+		mode: z.enum(["100644", "100755"]),
+		objectId: gitCommit,
+		byteSize: z.number().int().nonnegative().max(2 * 1024 * 1024),
+		sha256
+	})).max(2e3),
+	byteSize: z.number().int().nonnegative().max(8 * 1024 * 1024),
+	sha256
+});
+const gitDirectoryIdentity = z.strictObject({
+	root: z.string().min(1).max(2048),
+	gitDirectory: z.string().min(1).max(2048),
+	commonDirectory: z.string().min(1).max(2048),
+	rootDevice: z.string().regex(/^\d+$/),
+	rootFileId: z.string().regex(/^\d+$/),
+	gitDevice: z.string().regex(/^\d+$/),
+	gitFileId: z.string().regex(/^\d+$/)
+});
+const allocation = z.strictObject({
+	permit: executionPermit,
+	operationId: ids.operation,
+	workspaceRef: opaqueKey,
+	repositoryResourceId: opaqueKey,
+	runnerId: opaqueKey,
+	kind: z.enum(["development", "verification"]),
+	baseCommit: gitCommit
+});
+const workspaceRequests = {
+	beginManagedRepository: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		operationId: ids.operation,
+		resourceId: opaqueKey,
+		templateCommit: gitCommit
+	}),
+	completeManagedRepository: z.strictObject({
+		operationId: ids.operation,
+		requestHash: sha256,
+		identity: gitDirectoryIdentity,
+		manifest: sourceManifest
+	}),
+	getManagedRepository: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project
+	}),
+	beginWorkspaceAllocation: allocation,
+	getWorkspaceAllocation: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation
+	}),
+	getAllocationRepository: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation
+	}),
+	authorizeWorkspaceAllocation: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation
+	}),
+	completeWorkspaceAllocation: z.strictObject({
+		operationId: ids.operation,
+		requestHash: sha256,
+		identity: gitDirectoryIdentity,
+		manifest: sourceManifest
+	}),
+	markWorkspaceAllocationUncertain: z.strictObject({
+		operationId: ids.operation,
+		requestHash: sha256,
+		errorCode: opaqueKey
+	})
+};
+const approvedWorkspaceScope = z.array(relativeFile).max(2e3);
+//#endregion
+//#region src/repo-file-protocol.ts
+const fileBasis = z.strictObject({
+	workspaceRef: opaqueKey,
+	baseCommit: gitCommit,
+	path: managedSourcePath
+});
+const repoFileReadArgs = fileBasis.extend({
+	offset: z.number().int().min(0).max(2 * 1024 * 1024).default(0),
+	length: z.number().int().min(1).max(65536).default(65536)
+});
+const repoWriteFileArgs = fileBasis.extend({
+	expectedSha256: sha256.nullable(),
+	text: z.string().max(65536).refine((v) => Buffer.byteLength(v, "utf8") <= 65536 && Buffer.byteLength(JSON.stringify(v), "utf8") <= 192 * 1024 && !v.includes("\0"))
+});
+const repoDeleteFileArgs = fileBasis.extend({ expectedSha256: sha256 });
+const identity = z.strictObject({
+	path: z.string().min(1).max(4096),
+	device: z.string().regex(/^\d+$/),
+	fileId: z.string().regex(/^\d+$/)
+});
+const repoFileProof = z.strictObject({
+	directories: z.array(identity).min(2).max(128),
+	file: identity,
+	sha256,
+	byteSize: z.number().int().nonnegative().max(2 * 1024 * 1024)
+});
+const repoFileRequests = {
+	beginRepoFileOperation: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation,
+		toolName: z.enum(["repo.writeFile", "repo.deleteFile"]),
+		args: z.union([repoWriteFileArgs, repoDeleteFileArgs]),
+		binding: repoBinding
+	}),
+	getRepoFileOperation: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation
+	}),
+	prepareRepoFileOperation: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation,
+		requestHash: sha256,
+		proof: repoFileProof
+	}),
+	finishRepoFileOperation: z.strictObject({
+		operationId: ids.operation,
+		requestHash: sha256,
+		state: z.enum(["SUCCEEDED", "FAILED"]),
+		result: z.record(z.string(), z.json())
+	}),
+	confirmRepoFileCleanup: z.strictObject({
+		operationId: ids.operation,
+		requestHash: sha256
+	}),
+	assertRepoWorkspaceSettled: z.strictObject({
+		permit: executionPermit,
+		workspaceRef: opaqueKey
+	})
+};
+//#endregion
+//#region src/registry-protocol.ts
+const address = z.url().refine((value) => {
+	const u = new URL(value);
+	return ["http:", "https:"].includes(u.protocol) && !u.username && !u.password && !u.hash && !u.search;
+}, "An HTTP(S) service URL without credentials/query is required");
+const endpointConfig = z.strictObject({
+	endpointId: opaqueKey,
+	revision,
+	role: role.optional(),
+	agentKey: opaqueKey,
+	hosting: z.enum(["local", "remote"]),
+	implementationVersion: opaqueKey,
+	address,
+	cardUrl: address,
+	cardHash: sha256,
+	protocol: z.literal("1.0"),
+	sdkVersion: z.literal("1.3.0"),
+	supportedSkills: z.array(opaqueKey).min(1).max(64),
+	streaming: z.boolean(),
+	credentialRef: opaqueKey,
+	allowedCallers: z.array(opaqueKey).min(1).max(64),
+	enabled: z.boolean()
+});
+const agentManifest = z.strictObject({
+	schemaVersion: z.literal("devmesh.agent-manifest.v1"),
+	manifestRevision: opaqueKey,
+	endpoints: z.array(endpointConfig).min(1).max(100)
+}).superRefine((v, c) => {
+	const ids = /* @__PURE__ */ new Set(), roles = /* @__PURE__ */ new Set();
+	for (const e of v.endpoints) {
+		if (ids.has(e.endpointId)) c.addIssue({
+			code: "custom",
+			message: "Duplicate endpointId"
+		});
+		ids.add(e.endpointId);
+		if (e.role) {
+			if (roles.has(e.role)) c.addIssue({
+				code: "custom",
+				message: "Duplicate workflow role"
+			});
+			roles.add(e.role);
+		}
+	}
+});
+const checkResult = z.strictObject({
+	checkId: opaqueKey,
+	status: z.enum([
+		"HEALTHY",
+		"UNHEALTHY",
+		"NEEDS_REVIEW"
+	]),
+	observedCardHash: sha256.nullable(),
+	checkedAt: timestamp,
+	expiresAt: timestamp,
+	errorCode: opaqueKey.nullable()
+});
+const taskKey = {
+	callerId: opaqueKey,
+	endpointId: opaqueKey,
+	taskId: opaqueKey
+};
+const version = {
+	generationId: opaqueKey,
+	projectionRevision: revision
+};
+const jsonObject = z.record(z.string(), z.json());
+const registryRequests = {
+	getRegistrySnapshot: z.strictObject({}),
+	issueEndpointProbe: z.strictObject({ endpoint: endpointConfig }),
+	commitRegistry: z.strictObject({
+		manifest: agentManifest,
+		expectedProjectionRevision: z.number().int().nonnegative(),
+		checks: z.array(checkResult).max(100)
+	}),
+	recordEndpointCheck: checkResult,
+	setEndpointLifecycle: z.strictObject({
+		actorId: opaqueKey,
+		endpointId: opaqueKey,
+		revision,
+		lifecycle: z.enum([
+			"ACTIVE",
+			"DRAINING",
+			"RETIRED"
+		]),
+		reason: z.string().min(1).max(2e3)
+	}),
+	assertRegistryTarget: z.strictObject({
+		...version,
+		endpointId: opaqueKey,
+		revision,
+		role: role.optional(),
+		cardHash: sha256
+	}),
+	acceptA2AWork: z.strictObject({
+		callerId: opaqueKey,
+		endpointId: opaqueKey,
+		endpointRevision: revision,
+		delegation: workDelegation,
+		message: jsonObject,
+		...version
+	}),
+	getA2ATask: z.strictObject(taskKey),
+	listA2ATasks: z.strictObject({
+		callerId: opaqueKey,
+		endpointId: opaqueKey,
+		afterId: opaqueKey.optional(),
+		limit: z.number().int().min(1).max(100).default(50)
+	}),
+	listA2ATaskEvents: z.strictObject({
+		...taskKey,
+		afterSeq: z.number().int().nonnegative().default(0)
+	}),
+	cancelA2ATask: z.strictObject(taskKey),
+	claimAcceptedWork: z.strictObject({
+		endpointId: opaqueKey,
+		workerId: opaqueKey,
+		limit: z.number().int().min(1).max(10).default(1)
+	}),
+	settleAcceptedWork: z.strictObject({
+		endpointId: opaqueKey,
+		taskId: opaqueKey,
+		workerId: opaqueKey,
+		claimToken: opaqueKey,
+		state: z.enum([
+			"working",
+			"input-required",
+			"auth-required",
+			"completed",
+			"failed",
+			"canceled",
+			"rejected"
+		]),
+		snapshot: jsonObject,
+		stopVerified: z.boolean().default(false)
+	}),
+	recoverAcceptedWork: z.strictObject({})
+};
+//#endregion
+//#region src/candidate-material-protocol.ts
+const original$2 = {
+	principalId: opaqueKey,
+	operationId: ids.operation
+};
+const step = {
+	...original$2,
+	ordinal: z.number().int().min(0).max(29)
+};
+const bound$5 = {
+	...step,
+	requestHash: sha256
+};
+const file = {
+	path: managedSourcePath,
+	version: z.string().regex(/^(ours|theirs|base\.[a-f0-9]{40}|stage\.[123])$/)
+};
+const candidateMaterialDescriptor = z.discriminatedUnion("kind", [
+	z.strictObject({
+		kind: z.literal("REPORT"),
+		mergeSha256: sha256,
+		sha256,
+		byteSize: z.number().int().min(1).max(32 * 1024 * 1024)
+	}),
+	z.strictObject({
+		kind: z.literal("FILE"),
+		...file,
+		objectId: gitCommit,
+		mode: z.enum(["100644", "100755"]),
+		sha256,
+		byteSize: z.number().int().min(0).max(2 * 1024 * 1024)
+	}),
+	z.strictObject({
+		kind: z.literal("DIRECTORY"),
+		...file,
+		objectId: gitCommit
+	}),
+	z.strictObject({
+		kind: z.literal("ABSENT"),
+		...file
+	})
+]);
+function candidateMaterialKey(descriptor) {
+	return descriptor.kind === "REPORT" ? "report" : createHash("sha256").update(descriptor.version + "\0" + descriptor.path).digest("hex");
+}
+const candidateMaterialTarget = {
+	operationId: ids.operation,
+	ordinal: step.ordinal,
+	materialKey: z.union([z.literal("report"), sha256])
+};
+const candidateMaterialRequests = {
+	getCandidateMaterial: z.strictObject({
+		...original$2,
+		...candidateMaterialTarget
+	}),
+	declareCandidateMaterials: z.strictObject({
+		...bound$5,
+		materials: z.array(candidateMaterialDescriptor).min(1).max(100)
+	}),
+	listCandidateMaterials: z.strictObject({
+		...step,
+		afterKey: z.string().max(64).default(""),
+		limit: z.number().int().min(1).max(100).default(100)
+	}),
+	sealCandidateConflictMaterials: z.strictObject({
+		...bound$5,
+		materialCount: z.number().int().min(1).max(2e4),
+		manifestSha256: sha256
+	}),
+	acknowledgeCandidateConflict: z.strictObject({
+		...bound$5,
+		proof: z.strictObject({
+			repositoryIdentity: gitDirectoryIdentity,
+			reportSha256: sha256,
+			manifestSha256: sha256,
+			materialCount: z.number().int().min(1).max(2e4)
+		})
+	})
+};
+const candidateMergeReport = z.strictObject({
+	clean: z.boolean(),
+	tree: gitCommit,
+	base: gitCommit.nullable(),
+	bases: z.array(gitCommit).min(1).max(64),
+	ours: gitCommit,
+	theirs: gitCommit,
+	stages: z.array(z.strictObject({
+		path: managedSourcePath,
+		mode: z.enum(["100644", "100755"]),
+		objectId: gitCommit,
+		stage: z.union([
+			z.literal(1),
+			z.literal(2),
+			z.literal(3)
+		])
+	})).max(6e3),
+	messages: z.array(z.strictObject({
+		paths: z.array(managedSourcePath).min(1).max(2e3),
+		kind: z.string().min(1).max(256),
+		message: z.string().max(65536)
+	})).max(2e3)
+});
+const candidateReportEnvelope = z.strictObject({
+	schemaVersion: z.literal("devmesh.candidate-report.v1"),
+	merge: candidateMergeReport,
+	virtualBaseBlobs: z.array(z.strictObject({
+		objectId: gitCommit,
+		base64: z.string().max(3 * 1024 * 1024).regex(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/)
+	})).max(2e3)
+});
+//#endregion
+//#region src/workspace-domain.ts
+const time = () => (/* @__PURE__ */ new Date()).toISOString();
+function fail$2(code, status = 409) {
+	throw new StorageError(code, status, "Managed workspace action could not be applied");
+}
+function createWorkspaceDomain(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const repository = (id) => get("SELECT * FROM managed_repositories WHERE project_id=?", id) ?? fail$2("MANAGED_REPOSITORY_NOT_FOUND", 404);
+	const workspace = (operationId) => get("SELECT * FROM workspace_allocations WHERE operation_id=?", operationId) ?? fail$2("WORKSPACE_ALLOCATION_NOT_FOUND", 404);
+	function member(projectId, principalId, write = false) {
+		const m = get("SELECT role FROM project_members WHERE project_id=? AND principal_id=?", projectId, principalId);
+		if (!m || write && m.role === "viewer") fail$2("WORKSPACE_ACCESS_DENIED", 403);
+	}
+	const repoView = (r) => ({
+		projectId: String(r.project_id),
+		resourceId: String(r.resource_id),
+		operationId: String(r.operation_id),
+		requestHash: String(r.request_hash),
+		templateCommit: String(r.template_commit),
+		state: String(r.state),
+		identity: r.identity_json ? JSON.parse(String(r.identity_json)) : null,
+		manifest: r.manifest_json ? JSON.parse(String(r.manifest_json)) : null
+	});
+	const view = (r) => ({
+		workspaceRef: String(r.workspace_ref),
+		operationId: String(r.operation_id),
+		projectId: String(r.project_id),
+		runId: String(r.run_id),
+		attemptId: String(r.attempt_id),
+		activationId: String(r.activation_id),
+		grantId: String(r.grant_id),
+		runnerId: String(r.runner_id),
+		kind: r.kind,
+		baseCommit: String(r.base_commit),
+		scope: JSON.parse(String(r.scope_json)),
+		requestHash: String(r.request_hash),
+		state: String(r.state),
+		identity: r.identity_json ? JSON.parse(String(r.identity_json)) : null,
+		manifest: r.manifest_json ? JSON.parse(String(r.manifest_json)) : null,
+		errorCode: r.error_code
+	});
+	function owned(r, p) {
+		if (p.ownerKind !== "workflowAttempt" || p.runId !== r.run_id || p.attemptId !== r.attempt_id || p.activationId !== r.activation_id || p.grantId !== r.grant_id || !p.resources.some((v) => v.kind === "workspace" && v.resourceId === r.workspace_ref)) fail$2("WORKSPACE_ALLOCATION_NOT_FOUND", 404);
+		const grant = get("SELECT permit_json FROM execution_grants WHERE grant_id=?", p.grantId), current = grant ? parseContract(executionPermit, JSON.parse(String(grant.permit_json))) : null;
+		if (!current || current.ownerKind !== "workflowAttempt" || p.ownerKind !== "workflowAttempt" || current.workId !== p.workId || current.runEpoch !== p.runEpoch || current.workEpoch !== p.workEpoch) fail$2("WORKSPACE_ALLOCATION_NOT_FOUND", 404);
+		const owner = get("SELECT owner_id FROM projects WHERE project_id=?", r.project_id);
+		if (!owner) fail$2("WORKSPACE_ALLOCATION_NOT_FOUND", 404);
+		member(String(r.project_id), String(owner.owner_id));
+	}
+	function manifestValid(m, commit) {
+		const { sha256, ...basis } = m;
+		if (m.commit !== commit || sha256 !== digest(canonical(basis)) || m.byteSize !== m.files.reduce((n, f) => n + f.byteSize, 0) || new Set(m.files.map((f) => f.path.toLowerCase())).size !== m.files.length) fail$2("WORKSPACE_SOURCE_MANIFEST_INVALID");
+	}
+	function identityValid(identity) {
+		if (![
+			identity.root,
+			identity.gitDirectory,
+			identity.commonDirectory
+		].every(isAbsolute)) fail$2("WORKSPACE_IDENTITY_INVALID");
+	}
+	function overlaps(a, b) {
+		const norm = (p) => process.platform === "win32" ? p.toLowerCase() : p;
+		const inside = (parent, child) => {
+			const r = relative(norm(parent), norm(child));
+			return r === "" || r !== ".." && !r.startsWith(".." + sep) && !isAbsolute(r);
+		};
+		return inside(a, b) || inside(b, a);
+	}
+	const handlers = {
+		beginManagedRepository(i) {
+			return transaction(db, () => {
+				member(i.projectId, i.principalId, true);
+				const requestHash = digest(canonical(i)), old = get("SELECT * FROM managed_repositories WHERE project_id=? OR operation_id=? OR resource_id=?", i.projectId, i.operationId, i.resourceId);
+				if (old) {
+					if (old.request_hash !== requestHash) fail$2("IDEMPOTENCY_KEY_REUSED");
+					return {
+						...repoView(old),
+						created: false
+					};
+				}
+				if (!get("SELECT 1 FROM projects p JOIN user_tasks t ON t.project_id=p.project_id WHERE p.project_id=? AND p.accepted_release_id IS NULL AND t.kind='NEW' AND t.base_commit=?", i.projectId, i.templateCommit)) fail$2("MANAGED_REPOSITORY_BASE_CHANGED");
+				const now = time();
+				exec("INSERT INTO managed_repositories VALUES(?,?,?,?,?,'PREPARING',NULL,NULL,?,?)", i.projectId, i.resourceId, i.operationId, requestHash, i.templateCommit, now, now);
+				return {
+					...repoView(repository(i.projectId)),
+					created: true
+				};
+			});
+		},
+		completeManagedRepository(i) {
+			return transaction(db, () => {
+				const r = get("SELECT * FROM managed_repositories WHERE operation_id=?", i.operationId) ?? fail$2("MANAGED_REPOSITORY_NOT_FOUND", 404);
+				if (r.request_hash !== i.requestHash) fail$2("MANAGED_REPOSITORY_BASIS_CHANGED");
+				manifestValid(i.manifest, String(r.template_commit));
+				identityValid(i.identity);
+				if (i.identity.root !== i.identity.gitDirectory || i.identity.root !== i.identity.commonDirectory) fail$2("MANAGED_REPOSITORY_IDENTITY_INVALID");
+				if (r.state === "READY") {
+					if (r.identity_json !== canonical(i.identity) || r.manifest_json !== canonical(i.manifest)) fail$2("MANAGED_REPOSITORY_RESULT_IMMUTABLE");
+					return repoView(r);
+				}
+				exec("UPDATE managed_repositories SET state='READY',identity_json=?,manifest_json=?,updated_at=? WHERE operation_id=?", canonical(i.identity), canonical(i.manifest), time(), i.operationId);
+				return repoView(repository(String(r.project_id)));
+			});
+		},
+		getManagedRepository(i) {
+			member(i.projectId, i.principalId);
+			return repoView(repository(i.projectId));
+		},
+		beginWorkspaceAllocation(i) {
+			return transaction(db, () => {
+				const { permit: p, ...basis } = i, requestHash = digest(canonical({
+					...basis,
+					owner: {
+						runId: p.ownerKind === "workflowAttempt" ? p.runId : null,
+						attemptId: p.ownerKind === "workflowAttempt" ? p.attemptId : null,
+						activationId: p.activationId,
+						grantId: p.grantId
+					}
+				})), old = get("SELECT * FROM workspace_allocations WHERE operation_id=? OR workspace_ref=?", i.operationId, i.workspaceRef);
+				if (old) {
+					owned(old, p);
+					if (old.request_hash !== requestHash) fail$2("IDEMPOTENCY_KEY_REUSED");
+					return {
+						...view(old),
+						created: false
+					};
+				}
+				if (p.ownerKind !== "workflowAttempt") fail$2("WORKSPACE_ACCESS_DENIED", 403);
+				const h = get(`SELECT a.*,r.project_id,r.run_epoch,r.control_gate,r.terminal_outcome,w.work_epoch,w.blocked_reason,p.owner_id,g.status AS grant_status,g.permit_json
+        FROM attempts a JOIN runs r ON r.run_id=a.run_id JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id
+        JOIN projects p ON p.project_id=r.project_id JOIN execution_grants g ON g.attempt_id=a.attempt_id AND g.activation_id=? AND g.grant_id=? WHERE a.attempt_id=? AND a.run_id=?`, p.activationId, p.grantId, p.attemptId, p.runId);
+				if (!h || h.grant_status !== "ACTIVE" || h.control_gate !== "OPEN" || h.terminal_outcome !== null || h.ended_at !== null || h.blocked_reason !== null || h.run_epoch !== p.runEpoch || h.work_epoch !== p.workEpoch) fail$2("WORKSPACE_ADMISSION_CLOSED", 403);
+				member(String(h.project_id), String(h.owner_id), true);
+				const current = parseContract(executionPermit, JSON.parse(String(h.permit_json)));
+				assertPermit(p, current, {
+					kind: "workspace",
+					resourceId: i.workspaceRef,
+					access: "write"
+				}, Date.now());
+				assertPermit(p, current, {
+					kind: "projectRepository",
+					resourceId: i.repositoryResourceId,
+					access: "read"
+				}, Date.now());
+				if (i.kind === "development" && h.role !== "developer" || i.kind === "verification" && h.role !== "tester") fail$2("WORKSPACE_ROLE_DENIED", 403);
+				if (JSON.parse(String(h.input_manifest_json)).codeCommit !== i.baseCommit) fail$2("WORKSPACE_BASE_CHANGED");
+				const repo = repository(String(h.project_id));
+				if (repo.state !== "READY" || repo.resource_id !== i.repositoryResourceId) fail$2("MANAGED_REPOSITORY_UNAVAILABLE");
+				const work = get("SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", p.runId, p.workId, Number(h.work_revision)), scope = parseContract(approvedWorkspaceScope, JSON.parse(String(work?.definition_json)).writeScope), now = time();
+				if (i.kind === "development" && !scope.length) fail$2("WORKSPACE_SCOPE_EMPTY", 403);
+				exec("INSERT INTO workspace_allocations VALUES(?,?,?,?,?,?,?,?,?,?,?,?,'PREPARING',NULL,NULL,NULL,?,?)", i.workspaceRef, i.operationId, String(h.project_id), p.runId, p.attemptId, p.activationId, p.grantId, i.runnerId, i.kind, i.baseCommit, canonical(scope), requestHash, now, now);
+				return {
+					...view(workspace(i.operationId)),
+					created: true
+				};
+			});
+		},
+		getWorkspaceAllocation(i) {
+			const r = workspace(i.operationId);
+			owned(r, i.permit);
+			return view(r);
+		},
+		getAllocationRepository(i) {
+			const r = workspace(i.operationId);
+			owned(r, i.permit);
+			return repoView(repository(String(r.project_id)));
+		},
+		authorizeWorkspaceAllocation(i) {
+			return transaction(db, () => {
+				const r = workspace(i.operationId), p = i.permit;
+				owned(r, p);
+				if (p.ownerKind !== "workflowAttempt") fail$2("WORKSPACE_ACCESS_DENIED", 403);
+				const h = get(`SELECT r.run_epoch,r.control_gate,r.terminal_outcome,w.work_epoch,w.blocked_reason,a.ended_at,g.status,g.permit_json,p.owner_id
+        FROM attempts a JOIN runs r ON r.run_id=a.run_id JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id
+        JOIN projects p ON p.project_id=r.project_id JOIN execution_grants g ON g.attempt_id=a.attempt_id AND g.activation_id=? AND g.grant_id=? WHERE a.attempt_id=? AND a.run_id=?`, p.activationId, p.grantId, p.attemptId, p.runId);
+				if (!h || h.status !== "ACTIVE" || h.control_gate !== "OPEN" || h.terminal_outcome !== null || h.ended_at !== null || h.blocked_reason !== null || h.run_epoch !== p.runEpoch || h.work_epoch !== p.workEpoch) fail$2("WORKSPACE_ADMISSION_CLOSED", 403);
+				member(String(r.project_id), String(h.owner_id), true);
+				const current = parseContract(executionPermit, JSON.parse(String(h.permit_json))), repo = repository(String(r.project_id));
+				assertPermit(p, current, {
+					kind: "workspace",
+					resourceId: String(r.workspace_ref),
+					access: "write"
+				}, Date.now());
+				assertPermit(p, current, {
+					kind: "projectRepository",
+					resourceId: String(repo.resource_id),
+					access: "read"
+				}, Date.now());
+				return view(r);
+			});
+		},
+		completeWorkspaceAllocation(i) {
+			return transaction(db, () => {
+				const r = workspace(i.operationId);
+				if (r.request_hash !== i.requestHash) fail$2("WORKSPACE_ALLOCATION_BASIS_CHANGED");
+				manifestValid(i.manifest, String(r.base_commit));
+				if (r.state === "READY") {
+					if (r.identity_json !== canonical(i.identity) || r.manifest_json !== canonical(i.manifest)) fail$2("WORKSPACE_ALLOCATION_RESULT_IMMUTABLE");
+					return view(r);
+				}
+				if (!["PREPARING", "RECONCILE"].includes(String(r.state))) fail$2("WORKSPACE_ALLOCATION_CLOSED");
+				const repo = repository(String(r.project_id)), repositoryIdentity = JSON.parse(String(repo.identity_json));
+				identityValid(i.identity);
+				if (overlaps(i.identity.root, repositoryIdentity.root) || i.identity.gitDirectory !== join(i.identity.root, ".git") || i.identity.commonDirectory !== i.identity.gitDirectory) fail$2("WORKSPACE_IDENTITY_INVALID");
+				exec("UPDATE workspace_allocations SET state='READY',identity_json=?,manifest_json=?,error_code=NULL,updated_at=? WHERE operation_id=?", canonical(i.identity), canonical(i.manifest), time(), i.operationId);
+				return view(workspace(i.operationId));
+			});
+		},
+		markWorkspaceAllocationUncertain(i) {
+			return transaction(db, () => {
+				const r = workspace(i.operationId);
+				if (r.request_hash !== i.requestHash) fail$2("WORKSPACE_ALLOCATION_BASIS_CHANGED");
+				if (["PREPARING", "RECONCILE"].includes(String(r.state))) exec("UPDATE workspace_allocations SET state='RECONCILE',error_code=?,updated_at=? WHERE operation_id=?", i.errorCode, time(), i.operationId);
+				return view(workspace(i.operationId));
+			});
+		}
+	};
+	return { execute(method, input) {
+		return handlers[method](parseContract(workspaceRequests[method], input));
+	} };
+}
+//#endregion
+//#region src/tool-authority-domain.ts
+function fail$1() {
+	throw new StorageError("MCP_AUTHORITY_DENIED", 403, "Current tool authority is unavailable");
+}
+const cleanup = /* @__PURE__ */ new Set([
+	"tests.get",
+	"tests.stop",
+	"tests.by-operation",
+	"issues.get",
+	"issues.by-operation",
+	"pipeline.get",
+	"pipeline.logs",
+	"pipeline.artifacts",
+	"pipeline.stop",
+	"pipeline.by-operation",
+	"repo.by-operation",
+	"repo.fileByOperation"
+]);
+function createToolAuthorityDomain(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	function check(permit, toolName, action, workspaceMaintenance = false) {
+		if (permit.ownerKind !== "workflowAttempt") fail$1();
+		const h = get(`SELECT a.*,r.project_id,r.run_epoch,r.control_gate,r.terminal_outcome,w.work_epoch,w.blocked_reason,
+      g.status AS grant_status,g.permit_json,p.owner_id,m.role AS membership FROM attempts a JOIN runs r ON r.run_id=a.run_id
+      JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id JOIN projects p ON p.project_id=r.project_id
+      JOIN project_members m ON m.project_id=p.project_id AND m.principal_id=p.owner_id
+      JOIN execution_grants g ON g.attempt_id=a.attempt_id AND g.activation_id=? AND g.grant_id=? WHERE a.attempt_id=? AND a.run_id=?`, permit.activationId, permit.grantId, permit.attemptId, permit.runId);
+		if (!h || h.membership === "viewer") fail$1();
+		const current = parseContract(executionPermit, JSON.parse(String(h.permit_json)));
+		if (current.ownerKind !== "workflowAttempt") fail$1();
+		if ([
+			"runId",
+			"runEpoch",
+			"workId",
+			"workEpoch",
+			"attemptId",
+			"activationId",
+			"grantId"
+		].some((k) => permit[k] !== current[k])) fail$1();
+		if (permit.resources.some((r) => !current.resources.some((c) => c.kind === r.kind && c.resourceId === r.resourceId && (c.access === "write" || r.access === "read")))) fail$1();
+		const role = JSON.parse(String(h.role_snapshot_json));
+		const modelName = toolName.replaceAll(".", "_"), isCleanup = workspaceMaintenance || cleanup.has(toolName) && action !== "write";
+		if (!workspaceMaintenance && !role.allowedTools.includes(modelName) && !role.allowedTools.includes(toolName) && !(isCleanup && role.allowedTools.some((t) => t.startsWith(toolName.split(".")[0] + "_") || t.startsWith(toolName.split(".")[0] + ".")))) fail$1();
+		if (!isCleanup) {
+			if (h.grant_status !== "ACTIVE" || h.control_gate !== "OPEN" || h.terminal_outcome !== null || h.ended_at !== null || h.blocked_reason !== null || h.run_epoch !== permit.runEpoch || h.work_epoch !== permit.workEpoch) fail$1();
+			for (const resource of permit.resources) assertPermit(permit, current, resource, Date.now());
+			if (!get(`SELECT 1 FROM accepted_work w JOIN a2a_tasks t ON t.endpoint_id=w.endpoint_id AND t.task_id=w.task_id
+        JOIN a2a_task_ownership o ON o.endpoint_id=t.endpoint_id AND o.task_id=t.task_id
+        WHERE t.attempt_id=? AND w.activation_id=? AND w.state='ACTIVE' AND o.cancel_requested=0`, permit.attemptId, permit.activationId)) fail$1();
+		}
+		return {
+			principalId: String(h.owner_id),
+			projectId: String(h.project_id),
+			runId: permit.runId,
+			host: h
+		};
+	}
+	function refresh(original, toolName, action) {
+		const g = get("SELECT permit_json FROM execution_grants WHERE grant_id=?", original.grantId);
+		if (!g) fail$1();
+		const current = parseContract(executionPermit, JSON.parse(String(g.permit_json)));
+		if (original.ownerKind !== "workflowAttempt" || current.ownerKind !== "workflowAttempt" || [
+			"runId",
+			"runEpoch",
+			"workId",
+			"workEpoch",
+			"attemptId",
+			"activationId",
+			"grantId"
+		].some((k) => original[k] !== current[k])) fail$1();
+		const permit = parseContract(executionPermit, {
+			...current,
+			resources: original.resources
+		});
+		check(permit, toolName, action);
+		return permit;
+	}
+	return {
+		check,
+		refresh,
+		workspaceMaintenance: (permit) => check(permit, "repo.by-operation", "read", true)
+	};
+}
+//#endregion
+//#region src/workspace-preservation-protocol.ts
+const decimal = z.string().regex(/^\d+$/).max(32);
+const workspaceMaterialIdentity = z.strictObject({
+	device: decimal,
+	fileId: decimal
+});
+const path = z.string().min(1).max(1024);
+const mode = z.number().int().min(0).max(511);
+const workspaceMaterialEntry = z.discriminatedUnion("kind", [
+	z.strictObject({
+		kind: z.literal("FILE"),
+		path,
+		identity: workspaceMaterialIdentity,
+		mode,
+		links: z.number().int().min(1).max(8e3),
+		mtimeNs: z.string().regex(/^-?\d+$/).max(32),
+		ctimeNs: z.string().regex(/^-?\d+$/).max(32),
+		byteSize: z.number().int().min(0).max(2 * 1024 * 1024),
+		sha256
+	}),
+	z.strictObject({
+		kind: z.literal("DIRECTORY"),
+		path,
+		identity: workspaceMaterialIdentity,
+		mode
+	}),
+	z.strictObject({
+		kind: z.literal("ABSENT"),
+		path
+	}),
+	z.strictObject({
+		kind: z.literal("EXCLUDED"),
+		path,
+		reason: z.enum(["retained-git-repository", "rebuildable-node-modules"]),
+		identity: workspaceMaterialIdentity
+	})
+]);
+const workspaceMaterialSnapshot = z.strictObject({
+	schemaVersion: z.literal("devmesh.workspace-materials.v1"),
+	root: z.string().min(1).max(4096),
+	identity: workspaceMaterialIdentity,
+	entries: z.array(workspaceMaterialEntry).max(8e3),
+	byteSize: z.number().int().min(0).max(128 * 1024 * 1024),
+	sha256
+});
+const retention = z.strictObject({
+	ref: z.string().min(1).max(256),
+	commit: gitCommit,
+	manifest: sourceManifest
+});
+const workspacePreservationManifest = z.strictObject({
+	schemaVersion: z.literal("devmesh.workspace-preservation.v1"),
+	operationId: ids.operation,
+	allocationOperationId: ids.operation,
+	workspaceRef: opaqueKey,
+	basisSha256: sha256,
+	headCommit: gitCommit,
+	repositoryIdentity: gitDirectoryIdentity,
+	workspaceIdentity: gitDirectoryIdentity,
+	parentMarkerSha256: sha256,
+	retained: z.array(retention).min(1).max(65),
+	snapshot: workspaceMaterialSnapshot
+});
+const workspacePreservationTarget = {
+	operationId: ids.operation,
+	materialKey: z.string().regex(/^(manifest|[a-f0-9]{64})$/)
+};
+const original$1 = {
+	permit: executionPermit,
+	operationId: ids.operation
+};
+const bound$4 = {
+	...original$1,
+	requestHash: sha256
+};
+const ack = z.strictObject({
+	manifestSha256: sha256,
+	snapshotSha256: sha256,
+	materialCount: z.number().int().min(1).max(8001),
+	repositoryIdentity: gitDirectoryIdentity,
+	workspaceIdentity: gitDirectoryIdentity,
+	parentIdentity: workspaceMaterialIdentity
+});
+const workspacePreservationRequests = {
+	getWorkspacePreservationInputs: z.strictObject({
+		permit: executionPermit,
+		allocationOperationId: ids.operation
+	}),
+	beginWorkspacePreservation: z.strictObject({
+		...original$1,
+		allocationOperationId: ids.operation
+	}),
+	getWorkspacePreservation: z.strictObject(original$1),
+	prepareWorkspacePreservation: z.strictObject({
+		...bound$4,
+		manifest: workspacePreservationManifest
+	}),
+	listWorkspacePreservationMaterials: z.strictObject({
+		...original$1,
+		afterKey: z.string().default(""),
+		limit: z.number().int().min(1).max(100).default(100)
+	}),
+	completeWorkspacePreservation: z.strictObject({
+		...bound$4,
+		acknowledgement: ack
+	}),
+	assertWorkspacePreservationReclaimable: z.strictObject({
+		...original$1,
+		manifestSha256: sha256
+	})
+};
+//#endregion
+//#region src/workspace-preservation-domain.ts
+function fail(code, status = 409) {
+	throw new StorageError(code, status, "Complete original workspace preservation is required");
+}
+const same = (a, b) => canonical(a) === canonical(b);
+function workspacePreservationMaterialKey(path) {
+	return digest(path);
+}
+function createWorkspacePreservationDomain(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const workspaces = createWorkspaceDomain(db), authority = createToolAuthorityDomain(db);
+	const required = (id) => get("SELECT * FROM workspace_preservations WHERE operation_id=?", id) ?? fail("WORKSPACE_PRESERVATION_NOT_FOUND", 404);
+	function membership(projectId, principalId, write) {
+		const m = get("SELECT role FROM project_members WHERE project_id=? AND principal_id=?", projectId, principalId);
+		if (!m || write && m.role === "viewer") fail("WORKSPACE_PRESERVATION_NOT_FOUND", 404);
+	}
+	function owner(r, p) {
+		const h = authority.workspaceMaintenance(p);
+		membership(String(r.project_id), h.principalId, true);
+		if (h.principalId !== r.principal_id) fail("WORKSPACE_PRESERVATION_NOT_FOUND", 404);
+		if (workspaces.execute("getWorkspaceAllocation", {
+			permit: p,
+			operationId: String(r.allocation_operation_id)
+		}).workspaceRef !== r.workspace_ref) fail("WORKSPACE_PRESERVATION_NOT_FOUND", 404);
+		return r;
+	}
+	const view = (r) => ({
+		operationId: String(r.operation_id),
+		allocationOperationId: String(r.allocation_operation_id),
+		workspaceRef: String(r.workspace_ref),
+		principalId: String(r.principal_id),
+		requestHash: String(r.request_hash),
+		basisSha256: String(r.basis_hash),
+		state: r.state,
+		basis: JSON.parse(String(r.basis_json)),
+		manifest: r.manifest_json ? JSON.parse(String(r.manifest_json)) : null,
+		acknowledgement: r.acknowledgement_json ? JSON.parse(String(r.acknowledgement_json)) : null,
+		acknowledgedAt: r.acknowledged_at
+	});
+	function inputs(i) {
+		const h = authority.workspaceMaintenance(i.permit), allocation = workspaces.execute("getWorkspaceAllocation", {
+			permit: i.permit,
+			operationId: i.allocationOperationId
+		}), repository = workspaces.execute("getAllocationRepository", {
+			permit: i.permit,
+			operationId: i.allocationOperationId
+		});
+		membership(allocation.projectId, h.principalId, true);
+		if (allocation.projectId !== h.projectId || allocation.state !== "READY" || !allocation.identity || !allocation.manifest || repository.state !== "READY" || !repository.identity) fail("WORKSPACE_PRESERVATION_SOURCE_UNAVAILABLE");
+		const p = i.permit;
+		if (p.ownerKind !== "workflowAttempt" || !p.resources.some((r) => r.kind === "workspace" && r.resourceId === allocation.workspaceRef) || !p.resources.some((r) => r.kind === "projectRepository" && r.resourceId === repository.resourceId)) fail("WORKSPACE_PRESERVATION_OWNER_DENIED", 403);
+		const operations = all("SELECT * FROM repo_operations WHERE attempt_id=? ORDER BY operation_id", allocation.attemptId);
+		if (operations.some((r) => r.run_id !== allocation.runId || r.activation_id !== allocation.activationId || r.grant_id !== allocation.grantId || !["SUCCEEDED", "FAILED"].includes(String(r.state)))) fail("WORKSPACE_PRESERVATION_GIT_UNKNOWN");
+		const commits = [];
+		for (const r of operations) {
+			if (r.tool_name !== "repo.commit" || r.state !== "SUCCEEDED") continue;
+			const prepared = r.prepared_json ? JSON.parse(String(r.prepared_json)) : null, result = r.result_json ? JSON.parse(String(r.result_json)) : null, request = JSON.parse(String(r.request_json));
+			if (!prepared || result?.commit !== prepared.commit || prepared.ref !== "refs/devmesh/operations/" + r.operation_id || request.binding.workspaceRef !== allocation.workspaceRef || request.binding.baseCommit !== allocation.baseCommit) fail("WORKSPACE_PRESERVATION_SOURCE_UNPROVEN");
+			const saved = all("SELECT * FROM source_archives WHERE allocation_operation_id=? AND commit_operation_id=? AND state='ACKNOWLEDGED' ORDER BY rowid", allocation.operationId, r.operation_id).at(0);
+			commits.push({
+				operationId: String(r.operation_id),
+				requestHash: String(r.request_hash),
+				commit: prepared.commit,
+				tree: prepared.tree,
+				ref: prepared.ref,
+				archive: saved ? {
+					operationId: String(saved.operation_id),
+					manifest: JSON.parse(String(saved.manifest_json)),
+					acknowledgement: JSON.parse(String(saved.acknowledgement_json))
+				} : null
+			});
+		}
+		if (commits.length > 64) fail("WORKSPACE_PRESERVATION_TOO_MANY_COMMITS");
+		const files = all("SELECT * FROM repo_file_operations WHERE workspace_ref=? ORDER BY operation_id", allocation.workspaceRef);
+		if (files.some((r) => r.run_id !== allocation.runId || r.attempt_id !== allocation.attemptId || r.activation_id !== allocation.activationId || r.grant_id !== allocation.grantId) || files.length > 8e3) fail("WORKSPACE_PRESERVATION_OWNER_DENIED", 403);
+		return {
+			principalId: h.principalId,
+			allocation,
+			repository,
+			commits,
+			fileOperations: files.map((r) => ({
+				operationId: String(r.operation_id),
+				requestHash: String(r.request_hash),
+				state: String(r.state),
+				cleanupConfirmed: r.cleanup_confirmed === 1,
+				proof: r.prepared_json ? JSON.parse(String(r.prepared_json)) : null,
+				result: r.result_json ? JSON.parse(String(r.result_json)) : null
+			}))
+		};
+	}
+	function current(r, permit) {
+		owner(r, permit);
+		if (digest(canonical(inputs({
+			permit,
+			allocationOperationId: String(r.allocation_operation_id)
+		}))) !== r.basis_hash) fail("WORKSPACE_PRESERVATION_BASIS_CHANGED");
+	}
+	const material = (t) => get("SELECT * FROM workspace_preservation_materials WHERE operation_id=? AND material_key=?", t.operationId, t.materialKey) ?? fail("WORKSPACE_PRESERVATION_MATERIAL_NOT_FOUND", 404);
+	const materialView = (r) => ({
+		operationId: String(r.operation_id),
+		materialKey: String(r.material_key),
+		sha256: String(r.expected_hash),
+		byteSize: Number(r.byte_size),
+		writeKey: String(r.write_key),
+		contentHash: r.content_hash,
+		writeId: r.write_id
+	});
+	function contentReady(operationId) {
+		const items = all("SELECT * FROM workspace_preservation_materials WHERE operation_id=?", operationId);
+		if (!items.length || items.some((r) => !r.content_hash || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND byte_size=? AND state='READY'", r.expected_hash, r.byte_size))) fail("WORKSPACE_PRESERVATION_MATERIAL_UNAVAILABLE");
+		return items.length;
+	}
+	function validateManifest(r, m) {
+		const b = view(r).basis, a = b.allocation, repo = b.repository, { sha256, ...snapshot } = m.snapshot;
+		if (m.operationId !== r.operation_id || m.allocationOperationId !== a.operationId || m.workspaceRef !== a.workspaceRef || m.basisSha256 !== r.basis_hash || m.headCommit !== a.baseCommit || !same(m.repositoryIdentity, repo.identity) || !same(m.workspaceIdentity, a.identity) || digest(canonical(snapshot)) !== sha256 || m.snapshot.byteSize !== m.snapshot.entries.reduce((n, e) => n + (e.kind === "FILE" ? e.byteSize : 0), 0) || new Set(m.snapshot.entries.map((e) => e.path.toLowerCase())).size !== m.snapshot.entries.length || Buffer.byteLength(canonical(m)) > 8 * 1024 * 1024) fail("WORKSPACE_PRESERVATION_MANIFEST_CHANGED");
+		const expected = [{
+			ref: "refs/devmesh/workspace-preservations/" + r.operation_id + "/base",
+			commit: a.baseCommit,
+			manifest: a.manifest
+		}, ...b.commits.map((c) => {
+			if (!c.archive) fail("WORKSPACE_PRESERVATION_SOURCE_UNRETAINED");
+			return {
+				ref: c.archive.acknowledgement.archiveRef,
+				commit: c.commit,
+				manifest: c.archive.manifest
+			};
+		})];
+		if (!same(m.retained, expected)) fail("WORKSPACE_PRESERVATION_SOURCE_UNRETAINED");
+	}
+	function assertReclaimable(i) {
+		const r = owner(required(i.operationId), i.permit), record = view(r);
+		if (r.state !== "ACKNOWLEDGED" || r.manifest_hash !== i.manifestSha256) fail("WORKSPACE_PRESERVATION_ACK_REQUIRED");
+		current(r, i.permit);
+		if (record.basis.fileOperations.some((f) => !f.cleanupConfirmed || !["SUCCEEDED", "FAILED"].includes(f.state))) fail("WORKSPACE_PRESERVATION_FILE_UNKNOWN");
+		if (contentReady(i.operationId) !== record.acknowledgement.materialCount) fail("WORKSPACE_PRESERVATION_ACK_UNPROVEN");
+		return record;
+	}
+	const handlers = {
+		getWorkspacePreservationInputs(i) {
+			return inputs(i);
+		},
+		beginWorkspacePreservation(i) {
+			return transaction(db, () => {
+				const old = get("SELECT * FROM workspace_preservations WHERE operation_id=?", i.operationId);
+				if (old) {
+					owner(old, i.permit);
+					if (old.allocation_operation_id !== i.allocationOperationId) fail("IDEMPOTENCY_KEY_REUSED");
+					return {
+						...view(old),
+						created: false
+					};
+				}
+				if ([
+					"repo_operations",
+					"repo_file_operations",
+					"workspace_allocations",
+					"source_archives",
+					"candidate_integrations"
+				].some((table) => get("SELECT 1 FROM " + table + " WHERE operation_id=?", i.operationId))) fail("IDEMPOTENCY_KEY_REUSED");
+				const b = inputs(i);
+				if (b.commits.some((c) => !c.archive)) fail("WORKSPACE_PRESERVATION_SOURCE_UNRETAINED");
+				const basis = canonical(b), basisHash = digest(basis), requestHash = digest(canonical({
+					allocationOperationId: i.allocationOperationId,
+					principalId: b.principalId
+				}));
+				if (get("SELECT 1 FROM workspace_preservations WHERE workspace_ref=? AND state<>'ACKNOWLEDGED'", b.allocation.workspaceRef)) fail("WORKSPACE_PRESERVATION_RECONCILIATION_REQUIRED");
+				exec("INSERT INTO workspace_preservations(operation_id,allocation_operation_id,workspace_ref,project_id,principal_id,request_hash,basis_hash,basis_json,state,created_at) VALUES(?,?,?,?,?,?,?,?,'SENT',?)", i.operationId, i.allocationOperationId, b.allocation.workspaceRef, b.allocation.projectId, b.principalId, requestHash, basisHash, basis, (/* @__PURE__ */ new Date()).toISOString());
+				return {
+					...view(required(i.operationId)),
+					created: true
+				};
+			});
+		},
+		getWorkspacePreservation(i) {
+			return view(owner(required(i.operationId), i.permit));
+		},
+		prepareWorkspacePreservation(i) {
+			return transaction(db, () => {
+				const r = owner(required(i.operationId), i.permit);
+				if (r.request_hash !== i.requestHash) fail("WORKSPACE_PRESERVATION_REQUEST_CHANGED");
+				validateManifest(r, i.manifest);
+				const serialized = canonical(i.manifest);
+				if (r.manifest_json) {
+					if (r.manifest_json !== serialized) fail("WORKSPACE_PRESERVATION_MANIFEST_CHANGED");
+					return view(r);
+				}
+				current(r, i.permit);
+				if (r.state !== "SENT") fail("WORKSPACE_PRESERVATION_CLOSED");
+				const materials = [{
+					key: "manifest",
+					sha256: digest(serialized),
+					byteSize: Buffer.byteLength(serialized)
+				}, ...i.manifest.snapshot.entries.filter((e) => e.kind === "FILE").map((e) => ({
+					key: workspacePreservationMaterialKey(e.path),
+					sha256: e.sha256,
+					byteSize: e.byteSize
+				}))];
+				exec("UPDATE workspace_preservations SET state='PREPARED',manifest_json=?,manifest_hash=? WHERE operation_id=?", serialized, digest(serialized), i.operationId);
+				for (const item of materials) exec("INSERT INTO workspace_preservation_materials(operation_id,material_key,expected_hash,byte_size,write_key) VALUES(?,?,?,?,?)", i.operationId, item.key, item.sha256, item.byteSize, randomUUID());
+				return view(required(i.operationId));
+			});
+		},
+		listWorkspacePreservationMaterials(i) {
+			owner(required(i.operationId), i.permit);
+			return all("SELECT * FROM workspace_preservation_materials WHERE operation_id=? AND material_key>? ORDER BY material_key LIMIT ?", i.operationId, i.afterKey, i.limit).map(materialView);
+		},
+		completeWorkspacePreservation(i) {
+			return transaction(db, () => {
+				const r = owner(required(i.operationId), i.permit), record = view(r), m = record.manifest, ack = i.acknowledgement;
+				if (!m || r.request_hash !== i.requestHash || ack.manifestSha256 !== r.manifest_hash || ack.snapshotSha256 !== m.snapshot.sha256 || !same(ack.repositoryIdentity, m.repositoryIdentity) || !same(ack.workspaceIdentity, m.workspaceIdentity) || !same(ack.parentIdentity, m.snapshot.identity)) fail("WORKSPACE_PRESERVATION_ACK_UNPROVEN");
+				if (r.state === "ACKNOWLEDGED") {
+					if (!same(record.acknowledgement, ack)) fail("WORKSPACE_PRESERVATION_ACK_IMMUTABLE");
+					return record;
+				}
+				if (r.state !== "PREPARED") fail("WORKSPACE_PRESERVATION_CLOSED");
+				current(r, i.permit);
+				if (contentReady(i.operationId) !== ack.materialCount) fail("WORKSPACE_PRESERVATION_ACK_UNPROVEN");
+				exec("UPDATE workspace_preservations SET state='ACKNOWLEDGED',acknowledgement_json=?,acknowledged_at=? WHERE operation_id=?", canonical(ack), (/* @__PURE__ */ new Date()).toISOString(), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		assertWorkspacePreservationReclaimable(i) {
+			return transaction(db, () => assertReclaimable(i));
+		}
+	};
+	return {
+		assertReclaimable,
+		authorize(principalId, t) {
+			const r = required(t.operationId);
+			membership(String(r.project_id), principalId, true);
+			if (r.principal_id !== principalId) fail("WORKSPACE_PRESERVATION_NOT_FOUND", 404);
+			return material(t);
+		},
+		validateWrite(i) {
+			const r = this.authorize(i.meta.principalId, i.target);
+			if (i.meta.scopeId !== i.target.operationId || i.meta.idempotencyKey !== r.write_key || i.expectedHash !== r.expected_hash || i.expectedSize !== r.byte_size) fail("WORKSPACE_PRESERVATION_WRITE_CHANGED");
+		},
+		commit(principalId, t, hash, writeId) {
+			const r = this.authorize(principalId, t);
+			if (r.expected_hash !== hash || r.content_hash && r.write_id !== writeId) fail("WORKSPACE_PRESERVATION_WRITE_CHANGED");
+			exec("UPDATE workspace_preservation_materials SET content_hash=?,write_id=? WHERE operation_id=? AND material_key=?", hash, writeId, t.operationId, t.materialKey);
+			return {
+				operationId: t.operationId,
+				materialKey: t.materialKey,
+				contentHash: hash
+			};
+		},
+		resolve(principalId, t) {
+			const r = required(t.operationId);
+			membership(String(r.project_id), principalId, false);
+			const m = material(t);
+			if (!m.content_hash) fail("WORKSPACE_PRESERVATION_MATERIAL_UNAVAILABLE");
+			return { content_hash: m.content_hash };
+		},
+		execute(method, input) {
+			return handlers[method](parseContract(workspacePreservationRequests[method], input));
+		}
+	};
+}
+//#endregion
+//#region src/quality-protocol.ts
+const subject = {
+	operationId: ids.operation,
+	principalId: opaqueKey
+};
+const bound$3 = {
+	...subject,
+	requestHash: sha256
+};
+const qualityMaterialTarget = {
+	operationId: ids.operation,
+	materialKey: z.string().min(1).max(256).regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/)
+};
+const bytes = {
+	sha256,
+	byteSize: z.number().int().min(0).max(16 * 1024 * 1024)
+};
+const qualityMaterialDescriptor = z.discriminatedUnion("kind", [
+	z.strictObject({
+		kind: z.literal("SOURCE"),
+		...bytes,
+		sourceManifestSha256: sha256,
+		topologySha256: sha256,
+		allocationManifestSha256: sha256,
+		instrumentation: z.strictObject({
+			providerId: opaqueKey,
+			toolchainHash: sha256
+		}).optional()
+	}),
+	z.strictObject({
+		kind: z.literal("REPORT"),
+		...bytes,
+		report: qualityReport
+	}),
+	z.strictObject({
+		kind: z.literal("LOG"),
+		...bytes,
+		producerId: opaqueKey
+	}),
+	z.strictObject({
+		kind: z.literal("RESULT"),
+		...bytes,
+		evaluation: qualityEvaluation
+	})
+]);
+const qualityMaterialKey = (d) => d.kind === "SOURCE" ? "source" : d.kind === "RESULT" ? "result" : d.kind === "REPORT" ? "report." + d.report.reportId : "log." + d.producerId;
+const qualityRequests = {
+	registerQualityPolicy: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policy: qualityPolicy
+	}),
+	getQualityPolicy: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		configHash: sha256
+	}),
+	beginQualityVerification: z.strictObject({
+		...subject,
+		runId: ids.run,
+		attemptId: ids.attempt,
+		allocationOperationId: ids.operation,
+		configHash: sha256
+	}),
+	getQualityVerification: z.strictObject(subject),
+	getQualitySourceManifest: z.strictObject(bound$3),
+	bindQualityStage: z.strictObject({
+		...bound$3,
+		producerId: opaqueKey,
+		pipelineId: opaqueKey,
+		ordinal: z.number().int().min(0).max(7)
+	}),
+	listQualityStages: z.strictObject(bound$3),
+	declareQualityOrigin: z.strictObject({
+		...bound$3,
+		producerId: opaqueKey,
+		pipelineId: opaqueKey,
+		ordinal: z.number().int().min(0).max(7),
+		execution: qualityExecution
+	}),
+	declareQualityMaterial: z.strictObject({
+		...bound$3,
+		descriptor: qualityMaterialDescriptor
+	}),
+	listQualityMaterials: z.strictObject({
+		...subject,
+		afterKey: z.string().max(256).default(""),
+		limit: z.number().int().min(1).max(100).default(50)
+	}),
+	completeQualityVerification: z.strictObject(bound$3),
+	publishQualityArtifacts: z.strictObject({
+		...bound$3,
+		contentHashes: z.array(sha256).min(1).max(50)
+	})
+};
+//#endregion
+//#region src/preview-protocol.ts
+const meta = z.strictObject({
+	principalId: opaqueKey,
+	scopeId: opaqueKey,
+	idempotencyKey: z.uuid()
+});
+const read = {
+	principalId: opaqueKey,
+	runId: ids.run
+};
+const conditional$1 = {
+	meta,
+	runId: ids.run,
+	ifMatch: z.string().optional()
+};
+const bound$2 = {
+	principalId: opaqueKey,
+	operationId: ids.operation,
+	requestHash: sha256
+};
+const previewBackendPolicy = z.strictObject({
+	schemaVersion: z.literal("devmesh.preview-backend.v1"),
+	backendPrincipalId: opaqueKey,
+	backendRef: opaqueKey,
+	runnerId: opaqueKey,
+	templateVersion: opaqueKey,
+	schemaRevision: opaqueKey,
+	retentionDays: z.number().int().min(1).max(365),
+	initialModes: z.array(z.enum(["EMPTY", "DEMO"])).max(2),
+	allowSnapshots: z.boolean()
+}).refine((p) => new Set(p.initialModes).size === p.initialModes.length);
+const datasetReceipt = z.strictObject({
+	kind: z.literal("DATASET_READY"),
+	datasetId: ids.dataset,
+	storageKey: z.string().regex(/^prj_[A-Za-z0-9_-]+\/dataset_[A-Za-z0-9_-]+\/app\.sqlite$/),
+	originDatasetId: ids.dataset.nullable(),
+	schemaRevision: opaqueKey,
+	snapshotAt: timestamp,
+	sha256,
+	byteSize: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+	integrity: z.literal("ok")
+});
+const previewReceipt = z.strictObject({
+	kind: z.literal("PREVIEW_READY"),
+	previewId: ids.preview,
+	datasetId: ids.dataset,
+	imageDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+	instanceId: opaqueKey,
+	healthy: z.literal(true),
+	checkedAt: timestamp
+});
+const stopReceipt = z.strictObject({
+	kind: z.literal("PREVIEW_STOPPED"),
+	previewId: ids.preview,
+	instanceId: opaqueKey,
+	exitVerified: z.literal(true),
+	checkedAt: timestamp
+});
+const removalReceipt = z.strictObject({
+	kind: z.literal("PREVIEW_REMOVED"),
+	previewId: ids.preview,
+	instanceId: opaqueKey,
+	removalVerified: z.literal(true),
+	checkedAt: timestamp
+});
+const previewEffectReceipt = z.discriminatedUnion("kind", [
+	datasetReceipt,
+	previewReceipt,
+	stopReceipt,
+	removalReceipt
+]);
+const datasetPreparationRequest = z.strictObject({
+	schemaVersion: z.literal("devmesh.dataset-prepare.v1"),
+	operationId: ids.operation,
+	projectId: ids.project,
+	runId: ids.run,
+	candidateId: ids.candidate,
+	manifestHash: sha256,
+	policyHash: sha256,
+	backendRef: opaqueKey,
+	runnerId: opaqueKey,
+	datasetId: ids.dataset,
+	storageKey: z.string().max(512),
+	schemaRevision: opaqueKey,
+	sourceDatasetId: ids.dataset.nullable(),
+	sourceStorageKey: z.string().max(512).nullable(),
+	sourceReleaseId: ids.release.nullable(),
+	initialData: z.enum(["EMPTY", "DEMO"]).nullable(),
+	templateVersion: opaqueKey
+}).superRefine((i, c) => {
+	if (i.storageKey !== i.projectId + "/" + i.datasetId + "/app.sqlite" || i.sourceDatasetId === i.datasetId) c.addIssue({
+		code: "custom",
+		message: "Exact distinct dataset storage identities required"
+	});
+	if (i.sourceDatasetId) {
+		if (i.sourceStorageKey !== i.projectId + "/" + i.sourceDatasetId + "/app.sqlite" || !i.sourceReleaseId || i.initialData !== null) c.addIssue({
+			code: "custom",
+			message: "Exact source release and dataset required"
+		});
+	} else if (i.sourceStorageKey !== null || i.sourceReleaseId !== null || i.initialData === null) c.addIssue({
+		code: "custom",
+		message: "Explicit initial data mode required"
+	});
+});
+const previewSubject = {
+	operationId: ids.operation,
+	projectId: ids.project,
+	runId: ids.run,
+	candidateId: ids.candidate,
+	policyHash: sha256,
+	backendRef: opaqueKey,
+	runnerId: opaqueKey,
+	previewId: ids.preview,
+	datasetId: ids.dataset,
+	imageDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/)
+};
+const previewStartRequest = z.strictObject({
+	schemaVersion: z.literal("devmesh.preview-start.v1"),
+	...previewSubject,
+	manifestHash: sha256,
+	storageKey: z.string().max(512),
+	datasetOperationId: ids.operation,
+	templateVersion: opaqueKey,
+	schemaRevision: opaqueKey,
+	imageIdentity: previewImageIdentity,
+	expiresAt: timestamp
+}).superRefine((i, c) => {
+	if (i.storageKey !== i.projectId + "/" + i.datasetId + "/app.sqlite" || i.imageIdentity.imageDigest !== i.imageDigest) c.addIssue({
+		code: "custom",
+		message: "Exact dataset and image identity required"
+	});
+});
+const previewStopRequest = z.strictObject({
+	schemaVersion: z.literal("devmesh.preview-stop.v1"),
+	...previewSubject,
+	startOperationId: ids.operation,
+	startRequestHash: sha256,
+	instanceId: opaqueKey,
+	reason: z.enum(["USER", "EXPIRED"])
+});
+const previewRuntimeFact = z.strictObject({
+	previewId: ids.preview,
+	datasetId: ids.dataset,
+	imageDigest: previewSubject.imageDigest,
+	state: z.enum([
+		"HEALTHY",
+		"UNHEALTHY",
+		"CREATED",
+		"EXITED",
+		"REMOVED",
+		"UNKNOWN"
+	]),
+	instanceId: opaqueKey.nullable(),
+	endpoint: z.strictObject({
+		host: z.literal("127.0.0.1"),
+		port: z.number().int().min(1024).max(65535)
+	}).nullable(),
+	checkedAt: timestamp
+}).superRefine((i, c) => {
+	if (i.state === "UNKNOWN" !== (i.instanceId === null) || i.state === "HEALTHY" && i.endpoint === null || [
+		"EXITED",
+		"REMOVED",
+		"CREATED",
+		"UNKNOWN"
+	].includes(i.state) && i.endpoint !== null) c.addIssue({
+		code: "custom",
+		message: "A runtime fact needs exact verified instance and endpoint evidence"
+	});
+});
+const backendPage = {
+	principalId: opaqueKey,
+	projectId: ids.project,
+	policyHash: sha256,
+	afterSequence: z.number().int().nonnegative().default(0),
+	limit: z.number().int().min(1).max(100).default(20)
+};
+const previewRequests = {
+	registerPreviewBackendPolicy: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policy: previewBackendPolicy
+	}),
+	getPreviewBackendPolicy: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policyHash: sha256
+	}),
+	createPreviewDataset: z.strictObject({
+		...conditional$1,
+		candidateId: ids.candidate,
+		manifestHash: sha256,
+		policyHash: sha256
+	}),
+	getPreviewDataset: z.strictObject({
+		...read,
+		datasetId: ids.dataset
+	}),
+	createPreviewIntent: z.strictObject({
+		...conditional$1,
+		candidateId: ids.candidate,
+		manifestHash: sha256,
+		datasetId: ids.dataset,
+		expiresAt: timestamp
+	}),
+	getPreview: z.strictObject({
+		...read,
+		previewId: ids.preview
+	}),
+	stopPreviewIntent: z.strictObject({
+		meta,
+		runId: ids.run,
+		previewId: ids.preview,
+		previewRevision: revision,
+		impactReviewHash: sha256,
+		reason: z.enum(["USER", "EXPIRED"])
+	}),
+	getPreviewEffect: z.strictObject({
+		principalId: opaqueKey,
+		operationId: ids.operation
+	}),
+	listPreviewEffects: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policyHash: sha256,
+		afterSequence: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20),
+		states: z.array(z.enum([
+			"PREPARED",
+			"SENT",
+			"UNKNOWN",
+			"SUCCEEDED",
+			"FAILED"
+		])).min(1).max(5).default([
+			"PREPARED",
+			"SENT",
+			"UNKNOWN"
+		])
+	}).refine((i) => new Set(i.states).size === i.states.length),
+	markPreviewEffectSent: z.strictObject({
+		...bound$2,
+		expectedRevision: revision
+	}),
+	recordPreviewEffectObservation: z.strictObject({
+		...bound$2,
+		expectedRevision: revision,
+		observation: z.discriminatedUnion("state", [
+			z.strictObject({
+				state: z.literal("UNKNOWN"),
+				errorCode: opaqueKey
+			}),
+			z.strictObject({
+				state: z.literal("FAILED"),
+				errorCode: opaqueKey,
+				absenceVerified: z.literal(true)
+			}),
+			z.strictObject({
+				state: z.literal("SUCCEEDED"),
+				receipt: previewEffectReceipt
+			})
+		])
+	}),
+	listPreviewEffectHistory: z.strictObject({
+		...bound$2,
+		afterSequence: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	}),
+	getPreviewLifecycle: z.strictObject({
+		principalId: opaqueKey,
+		previewId: ids.preview
+	}),
+	listPreviewLifecycles: z.strictObject(backendPage),
+	verifyPreviewExecution: z.strictObject(bound$2),
+	recordPreviewRuntimeObservation: z.strictObject({
+		...bound$2,
+		expectedSequence: z.number().int().nonnegative(),
+		fact: previewRuntimeFact
+	}),
+	listPreviewRuntimeHistory: z.strictObject({
+		...bound$2,
+		afterSequence: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	}),
+	preparePreviewExpiry: z.strictObject({
+		principalId: opaqueKey,
+		previewId: ids.preview
+	})
+};
+//#endregion
+//#region src/preview-access-protocol.ts
+const previewAccessPolicy = z.strictObject({
+	schemaVersion: z.literal("devmesh.preview-access-policy.v1"),
+	gatewayId: opaqueKey,
+	gatewayPrincipalId: opaqueKey,
+	configurationHash: sha256
+});
+const gateway$1 = {
+	principalId: opaqueKey,
+	gatewayId: opaqueKey,
+	configurationHash: sha256
+};
+const target = {
+	subjectPrincipalId: opaqueKey,
+	runId: ids.run,
+	previewId: ids.preview
+};
+const original = {
+	...gateway$1,
+	accessRequestId: opaqueKey,
+	requestHash: sha256
+};
+const dataset = {
+	principalId: opaqueKey,
+	datasetOperationId: ids.operation,
+	datasetRequestHash: sha256
+};
+const requestPath = z.string().max(8192).refine((path) => path.startsWith("/") && !path.startsWith("//") && !/[\\#]/.test(path) && !/%(?:0[ad]|5c)/i.test(path) && ![...path].some((c) => c.charCodeAt(0) <= 32 || c.charCodeAt(0) === 127));
+const previewAccessHttpRequest = z.strictObject({
+	method: z.enum([
+		"GET",
+		"HEAD",
+		"POST",
+		"PUT",
+		"PATCH",
+		"DELETE"
+	]),
+	path: requestPath,
+	bodySha256: sha256,
+	headersSha256: sha256.optional()
+}).superRefine((i, c) => {
+	if (["GET", "HEAD"].includes(i.method) && i.bodySha256 !== "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855") c.addIssue({
+		code: "custom",
+		message: "Safe reads require an empty body"
+	});
+});
+const previewWriteCloseRequest = z.strictObject({
+	schemaVersion: z.literal("devmesh.preview-write-close.v1"),
+	operationId: ids.operation,
+	projectId: ids.project,
+	datasetId: ids.dataset,
+	datasetOperationId: ids.operation,
+	datasetRequestHash: sha256,
+	expectedFence: z.number().int().nonnegative().safe()
+});
+const previewAccessObservation = z.discriminatedUnion("state", [
+	z.strictObject({
+		state: z.literal("FINISHED"),
+		httpStatus: z.number().int().min(200).max(599),
+		responseSha256: sha256,
+		checkedAt: timestamp
+	}),
+	z.strictObject({
+		state: z.literal("UNKNOWN"),
+		errorCode: opaqueKey,
+		checkedAt: timestamp
+	}),
+	z.strictObject({
+		state: z.literal("NOT_SENT"),
+		errorCode: opaqueKey,
+		checkedAt: timestamp
+	})
+]);
+const previewAccessRequests = {
+	registerPreviewAccessPolicy: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policy: previewAccessPolicy
+	}),
+	enrollPreviewWriteGate: z.strictObject(dataset),
+	getPreviewWriteGate: z.strictObject(dataset),
+	closePreviewWriteGate: z.strictObject({
+		principalId: opaqueKey,
+		request: previewWriteCloseRequest,
+		requestHash: sha256
+	}),
+	resolvePreviewAccess: z.strictObject({
+		...gateway$1,
+		...target
+	}),
+	preparePreviewAccessRequest: z.strictObject({
+		...gateway$1,
+		...target,
+		accessRequestId: opaqueKey,
+		request: previewAccessHttpRequest
+	}),
+	beginPreviewAccessRequest: z.strictObject(original),
+	previewAccessRequestAuthorized: z.strictObject(original),
+	getPreviewAccessRequest: z.strictObject(original),
+	recordPreviewAccessObservation: z.strictObject({
+		...original,
+		observation: previewAccessObservation
+	}),
+	listPreviewAccessRequests: z.strictObject({
+		...gateway$1,
+		projectId: ids.project,
+		afterSequence: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	})
+};
+//#endregion
+//#region src/acceptance-protocol.ts
+const conditional = {
+	meta: z.strictObject({
+		principalId: opaqueKey,
+		scopeId: opaqueKey,
+		idempotencyKey: z.uuid()
+	}),
+	runId: ids.run,
+	ifMatch: z.string().optional()
+};
+const candidate = {
+	candidateId: ids.candidate,
+	candidateRevision: revision,
+	manifestHash: sha256,
+	reviewHash: sha256,
+	expectedAcceptedReleaseId: ids.release.nullable(),
+	dataPlanHash: sha256
+};
+const bound$1 = {
+	principalId: opaqueKey,
+	operationId: ids.operation,
+	requestHash: sha256
+};
+const acceptanceBackendPolicy = z.strictObject({
+	schemaVersion: z.literal("devmesh.acceptance-backend.v1"),
+	backendPrincipalId: opaqueKey,
+	backendRef: opaqueKey,
+	runnerId: opaqueKey,
+	templateVersion: opaqueKey,
+	schemaRevision: opaqueKey,
+	initialModes: z.array(z.enum(["EMPTY", "DEMO"])).max(2),
+	allowPreserveMigration: z.boolean(),
+	allowReplacement: z.boolean()
+}).refine((p) => new Set(p.initialModes).size === p.initialModes.length);
+const acceptancePreparationRequest = z.strictObject({
+	schemaVersion: z.literal("devmesh.acceptance-prepare.v1"),
+	operationId: ids.operation,
+	releaseId: ids.release,
+	projectId: ids.project,
+	runId: ids.run,
+	...candidate,
+	runEpoch: epoch,
+	requirementRevision: revision,
+	planRevision: revision,
+	codeCommit: gitCommit,
+	image: previewImageIdentity,
+	dataPlan: deliveryDataPlan,
+	policyHash: sha256,
+	backendPrincipalId: opaqueKey,
+	backendRef: opaqueKey,
+	runnerId: opaqueKey,
+	source: z.strictObject({
+		releaseId: ids.release,
+		datasetId: ids.dataset,
+		datasetOperationId: ids.operation,
+		storageKey: z.string().max(512),
+		schemaRevision: opaqueKey
+	}).nullable(),
+	target: z.strictObject({
+		datasetId: ids.dataset,
+		storageKey: z.string().max(512),
+		schemaRevision: opaqueKey
+	})
+}).superRefine((i, c) => {
+	if (i.image.targetCommit !== i.codeCommit || i.dataPlan.codeCommit !== i.codeCommit || i.dataPlan.runId !== i.runId || i.dataPlan.requirementRevision !== i.requirementRevision || i.dataPlan.planRevision !== i.planRevision || i.dataPlan.sourceReleaseId !== i.expectedAcceptedReleaseId || i.target.storageKey !== i.projectId + "/" + i.target.datasetId + "/app.sqlite") c.addIssue({
+		code: "custom",
+		message: "Exact candidate, data plan and derived target required"
+	});
+	if ((i.source?.releaseId ?? null) !== i.expectedAcceptedReleaseId || i.source && (i.source.datasetId === i.target.datasetId || i.source.storageKey !== i.projectId + "/" + i.source.datasetId + "/app.sqlite")) c.addIssue({
+		code: "custom",
+		message: "Exact distinct original accepted source required"
+	});
+});
+const acceptanceRequests = {
+	registerAcceptanceBackendPolicy: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policy: acceptanceBackendPolicy
+	}),
+	recordAcceptanceReplacementDecision: z.strictObject({
+		...conditional,
+		...candidate,
+		decisionId: ids.decision,
+		confirmation: z.literal("REPLACE_ACCEPTED_DATA")
+	}),
+	beginAcceptancePreparation: z.strictObject({
+		...conditional,
+		...candidate,
+		policyHash: sha256
+	}),
+	getAcceptancePreparation: z.strictObject({
+		principalId: opaqueKey,
+		operationId: ids.operation
+	}),
+	listAcceptancePreparations: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policyHash: sha256,
+		afterSequence: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	}),
+	markAcceptancePreparationSent: z.strictObject({
+		...bound$1,
+		expectedRevision: revision
+	}),
+	markAcceptancePreparationUnknown: z.strictObject({
+		...bound$1,
+		expectedRevision: revision,
+		errorCode: opaqueKey
+	}),
+	failUnsentAcceptancePreparation: z.strictObject({
+		...conditional,
+		operationId: ids.operation,
+		requestHash: sha256
+	}),
+	listAcceptancePreparationHistory: z.strictObject({
+		...bound$1,
+		afterSequence: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	})
+};
+//#endregion
+//#region src/acceptance-readiness-protocol.ts
+const acceptanceReleaseClaim = z.strictObject({
+	schemaVersion: z.literal("devmesh.preview-release-claim.v1"),
+	operationId: ids.operation,
+	releaseId: ids.release,
+	candidateId: ids.candidate,
+	manifestHash: sha256,
+	previewId: ids.preview,
+	datasetId: ids.dataset,
+	imageDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+	startOperationId: ids.operation,
+	startRequestHash: sha256,
+	instanceId: opaqueKey,
+	acceptanceRequestHash: sha256
+});
+const heldFence = z.strictObject({
+	kind: z.literal("DURABLE_WRITE_FENCE"),
+	fenceId: opaqueKey,
+	generation: z.number().int().positive().safe(),
+	proofHash: sha256,
+	heldAt: timestamp,
+	state: z.literal("HELD")
+});
+const endpoint = z.strictObject({
+	host: z.literal("127.0.0.1"),
+	port: z.number().int().min(1024).max(65535)
+});
+/** Only a trusted adapter may construct this after querying its original objects. */
+const acceptancePreparedProof = z.strictObject({
+	schemaVersion: z.literal("devmesh.acceptance-prepared.v1"),
+	operationId: ids.operation,
+	requestHash: sha256,
+	releaseId: ids.release,
+	projectId: ids.project,
+	runId: ids.run,
+	candidateId: ids.candidate,
+	manifestHash: sha256,
+	reviewHash: sha256,
+	dataPlanHash: sha256,
+	runnerId: opaqueKey,
+	backendRef: opaqueKey,
+	data: z.strictObject({
+		datasetId: ids.dataset,
+		storageKey: z.string().max(512),
+		schemaRevision: opaqueKey,
+		originDatasetId: ids.dataset.nullable(),
+		sourceReleaseId: ids.release.nullable(),
+		snapshotAt: timestamp,
+		sha256,
+		byteSize: z.number().int().positive().safe(),
+		integrity: z.literal("ok"),
+		journalHash: sha256,
+		migrationRef: artifactRef.nullable()
+	}),
+	sourceFence: z.strictObject({
+		datasetId: ids.dataset,
+		datasetOperationId: ids.operation,
+		closeOperationId: ids.operation,
+		closeRequestHash: sha256,
+		gateFence: z.number().int().positive().safe(),
+		physical: heldFence
+	}).nullable(),
+	targetFence: z.strictObject({
+		datasetId: ids.dataset,
+		physical: heldFence,
+		writeState: z.literal("CLOSED")
+	}),
+	service: z.strictObject({
+		reservationId: opaqueKey,
+		profileHash: sha256,
+		endpoint,
+		claim: acceptanceReleaseClaim,
+		claimHash: sha256,
+		custodyState: z.literal("RELEASE_HELD"),
+		custodyRevision: z.number().int().nonnegative().safe()
+	}),
+	preparedAt: timestamp
+});
+const acceptancePreparationObservation = z.discriminatedUnion("state", [z.strictObject({
+	state: z.literal("UNKNOWN"),
+	errorCode: opaqueKey,
+	checkedAt: timestamp
+}), z.strictObject({
+	state: z.literal("READY"),
+	proof: acceptancePreparedProof,
+	fences: z.strictObject({
+		sourceProofHash: sha256.nullable(),
+		targetProofHash: sha256,
+		state: z.literal("HELD"),
+		writeState: z.literal("CLOSED")
+	}),
+	health: z.strictObject({
+		instanceId: opaqueKey,
+		datasetId: ids.dataset,
+		imageDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+		endpoint,
+		claimHash: sha256,
+		custodyState: z.literal("RELEASE_HELD"),
+		custodyRevision: z.number().int().nonnegative().safe(),
+		state: z.literal("HEALTHY")
+	}),
+	checkedAt: timestamp
+})]);
+const bound = {
+	principalId: opaqueKey,
+	operationId: ids.operation,
+	requestHash: sha256
+};
+const acceptanceReadinessRequests = {
+	verifyAcceptancePreparation: z.strictObject(bound),
+	getAcceptanceReadiness: z.strictObject(bound),
+	recordAcceptancePreparationObservation: z.strictObject({
+		...bound,
+		expectedSequence: z.number().int().nonnegative().safe(),
+		observation: acceptancePreparationObservation
+	}),
+	listAcceptancePreparationObservations: z.strictObject({
+		...bound,
+		afterSequence: z.number().int().nonnegative().safe().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	})
+};
+//#endregion
+//#region src/preview-session-protocol.ts
+const previewOrigin = z.string().max(2048).refine((value) => {
+	try {
+		const u = new URL(value);
+		return ["http:", "https:"].includes(u.protocol) && u.origin === value && !u.username && !u.password && !u.hostname.endsWith(".");
+	} catch {
+		return false;
+	}
+});
+const gateway = {
+	principalId: opaqueKey,
+	gatewayId: opaqueKey,
+	configurationHash: sha256
+};
+const origins = {
+	platformOrigin: previewOrigin,
+	previewOrigin
+};
+const previewSessionRequests = {
+	issuePreviewTicket: z.strictObject({
+		...gateway,
+		...origins,
+		subjectPrincipalId: opaqueKey,
+		runId: ids.run,
+		previewId: ids.preview,
+		ticketId: opaqueKey,
+		tokenSha256: sha256,
+		expiresAt: timestamp
+	}),
+	exchangePreviewTicket: z.strictObject({
+		...gateway,
+		...origins,
+		ticketTokenSha256: sha256,
+		sessionId: opaqueKey,
+		sessionTokenSha256: sha256,
+		expiresAt: timestamp
+	}),
+	authenticatePreviewSession: z.strictObject({
+		...gateway,
+		previewOrigin,
+		tokenSha256: sha256
+	}),
+	revokePreviewSession: z.strictObject({
+		...gateway,
+		previewOrigin,
+		tokenSha256: sha256
+	})
+};
+//#endregion
+export { repoCommitArgs as $, workspacePreservationManifest as A, agentManifest as B, qualityMaterialTarget as C, workspaceMaterialEntry as D, workspacePreservationMaterialKey as E, candidateMaterialKey as F, repoFileReadArgs as G, registryRequests as H, candidateMaterialRequests as I, gitDirectoryIdentity as J, repoFileRequests as K, candidateMaterialTarget as L, workspacePreservationTarget as M, createToolAuthorityDomain as N, workspaceMaterialIdentity as O, createWorkspaceDomain as P, repoBinding as Q, candidateMergeReport as R, qualityMaterialKey as S, createWorkspacePreservationDomain as T, repoDeleteFileArgs as U, endpointConfig as V, repoFileProof as W, sourceManifest as X, managedSourcePath as Y, workspaceRequests as Z, previewEffectReceipt as _, acceptanceReadinessRequests as a, toolRequests as at, previewStartRequest as b, acceptancePreparationRequest as c, previewAccessObservation as d, repoIntegrateArgs as et, previewAccessPolicy as f, previewBackendPolicy as g, datasetPreparationRequest as h, acceptancePreparedProof as i, issueVerifyArgs as it, workspacePreservationRequests as j, workspaceMaterialSnapshot as k, acceptanceRequests as l, previewWriteCloseRequest as m, previewSessionRequests as n, issueCreateArgs as nt, acceptanceReleaseClaim as o, canonical as ot, previewAccessRequests as p, repoWriteFileArgs as q, acceptancePreparationObservation as r, issueLinkArgs as rt, acceptanceBackendPolicy as s, previewOrigin as t, repoRequests as tt, previewAccessHttpRequest as u, previewRequests as v, qualityRequests as w, previewStopRequest as x, previewRuntimeFact as y, candidateReportEnvelope as z };
+
+//# sourceMappingURL=preview-session-protocol-DQFKJ6M9.mjs.map

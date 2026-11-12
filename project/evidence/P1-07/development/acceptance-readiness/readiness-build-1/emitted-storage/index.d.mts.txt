@@ -1,0 +1,96 @@
+import { $ as previewRuntimeFact, $t as managedSourcePath, A as previewAccessHttpRequest, An as EndpointConfig, At as WorkspacePreservationManifest, B as PreviewEffectReceipt, Bn as ObjectWrite, Bt as CandidateMaterialDescriptor, C as PreviewSession, Cn as ExecutionHostView, Ct as QualityStage, D as PreviewAccessRecord, Dn as RuntimeWorkspaceResult, Dt as WorkspaceMaintenanceAuthority, E as PreviewAccessBinding, En as RuntimeWorkspaceRecovery, Et as WorkspaceReclamation, F as DatasetPreparationObservation, Fn as ContentInfo, Ft as CandidateIntegration, G as PreviewRuntimeFact, Gt as CandidateSource, H as PreviewExecutionObservation, Hn as SessionMessage, Ht as candidateMergeReport, I as DatasetPreparationRequest, In as ContentReference, It as CandidateIntegrationStep, J as PreviewStopRequest, Jt as GitDirectoryIdentity, K as PreviewRuntimeObservation, Kt as CandidateWorkFact, L as DatasetView, Ln as ContextManifest, Lt as CandidateRefUpdate, M as previewAccessPolicy, Mn as RegistrySnapshot, Mt as workspaceMaterialEntry, N as previewWriteCloseRequest, Nn as agentManifest, Nt as workspaceMaterialSnapshot, O as PreviewAccessTarget, On as A2ATaskRecord, Ot as WorkspacePreservation, P as DatasetPreparationBackend, Pn as endpointConfig, Pt as workspacePreservationManifest, Q as previewEffectReceipt, Qt as gitDirectoryIdentity, R as PreviewBackendPolicy, Rn as ModelStep, Rt as CandidateConflictAcknowledgement, S as acceptancePreparationRequest, Sn as WorkspaceView, St as QualityOrigin, T as previewOrigin, Tn as RuntimeToolView, Tt as qualityMaterialKey, U as PreviewExecutionResult, Ut as candidateReportEnvelope, V as PreviewExecutionBackend, Vn as SessionInfo, Vt as candidateMaterialKey, W as PreviewLifecycle, Wt as CandidateBasis, X as datasetPreparationRequest, Xt as SourceManifest, Y as PreviewView, Yt as ManagedRepository, Z as previewBackendPolicy, Zt as WorkspaceAllocation, _ as acceptancePreparedProof, _n as PreparationJob, _t as WorkVerification, a as OutboxView, an as PipelineDispatch, at as CandidateReviewView, b as AcceptancePreparationRequest, bn as AttachmentView, bt as QualityMaterial, c as RunView, cn as IssueOperation, ct as ReleaseCandidateRevision, d as VerifiedRepair, dn as issueLinkArgs, dt as ReleaseDeliveryBasis, en as sourceManifest, et as previewStartRequest, f as AcceptancePreparationBackend, fn as issueVerifyArgs, ft as ReleaseDeliveryMaterial, g as acceptancePreparationObservation, gn as PreparationHost, gt as WorkAssessment, h as AcceptanceReadiness, hn as PreparationContext, ht as WorkArtifactRef, i as OperationResult, in as repoIntegrateArgs, it as CandidateReviewItem, j as previewAccessObservation, jn as EndpointView, jt as WorkspacePreservationMaterial, k as PreviewWriteGate, kn as AgentManifest, kt as WorkspacePreservationInputs, l as ScheduledCandidate, ln as IssueView, lt as ReleaseCandidateSummary, m as AcceptancePreparedProof, mn as PreparationClaim, mt as VerifiedFindingView, n as AttemptView, nn as repoBinding, nt as CandidateHumanResult, o as Request, on as PipelineStageView, ot as CandidateWorkProof, p as AcceptancePreparationObservation, pn as PreparationAttempt, pt as OriginalFailure, q as PreviewStartRequest, qt as SourceArchive, r as Method, rn as repoCommitArgs, rt as CandidateRejectionResult, s as Results, sn as PipelineView, st as ReleaseCandidateManifest, t as canonical, tn as RepoOperation, tt as previewStopRequest, u as ScheduledDispatch, un as issueCreateArgs, ut as ReleaseDelivery, v as acceptanceReleaseClaim, vn as PreparationTask, vt as QualityArtifactRef, w as PreviewTicket, wn as RuntimeActivationView, wt as QualityVerification, x as acceptanceBackendPolicy, xn as UploadIntake, xt as QualityMaterialDescriptor, y as AcceptancePreparation, yn as UnderstandingView, yt as QualityBasis, z as PreviewEffect, zn as ObjectTarget, zt as CandidateMaterial } from "./json-D8lgKmP2.mjs";
+import { z } from "zod";
+import { DatabaseSync } from "node:sqlite";
+
+//#region src/errors.d.ts
+declare class StorageError extends Error {
+  readonly code: string;
+  readonly status: number;
+  readonly details: Record<string, unknown>;
+  constructor(code: string, status: number, message: string, details?: Record<string, unknown>);
+}
+//#endregion
+//#region src/repo-file-protocol.d.ts
+declare const repoFileReadArgs: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  baseCommit: z.ZodString;
+  path: z.ZodString;
+  offset: z.ZodDefault<z.ZodNumber>;
+  length: z.ZodDefault<z.ZodNumber>;
+}, z.core.$strict>;
+declare const repoWriteFileArgs: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  baseCommit: z.ZodString;
+  path: z.ZodString;
+  expectedSha256: z.ZodNullable<z.ZodString>;
+  text: z.ZodString;
+}, z.core.$strict>;
+declare const repoDeleteFileArgs: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  baseCommit: z.ZodString;
+  path: z.ZodString;
+  expectedSha256: z.ZodString;
+}, z.core.$strict>;
+declare const repoFileProof: z.ZodObject<{
+  directories: z.ZodArray<z.ZodObject<{
+    path: z.ZodString;
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>>;
+  file: z.ZodObject<{
+    path: z.ZodString;
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+}, z.core.$strict>;
+interface RepoFileOperation {
+  operationId: string;
+  toolName: 'repo.writeFile' | 'repo.deleteFile';
+  requestHash: string;
+  state: string;
+  cleanupConfirmed: boolean;
+  scope: string[];
+  request: {
+    args: z.output<typeof repoWriteFileArgs> | z.output<typeof repoDeleteFileArgs>;
+    binding: z.output<typeof repoBinding>;
+  };
+  proof: z.output<typeof repoFileProof> | null;
+  result: Record<string, unknown> | null;
+}
+//#endregion
+//#region src/lock.d.ts
+declare function acquireWriterLock(databasePath: string, recoveryToken?: string): {
+  path: string;
+  token: `${string}-${string}-${string}-${string}-${string}`;
+  release(): void;
+};
+//#endregion
+//#region src/workspace-preservation-domain.d.ts
+declare function workspacePreservationMaterialKey(path: string): string;
+//#endregion
+//#region src/index.d.ts
+interface StorageOptions {
+  databasePath: string;
+  storeId: string;
+  layoutVersion?: 1;
+  create?: boolean;
+  backupDirectory?: string;
+  recoveryToken?: string;
+  targetVersion?: number;
+  queueCapacity?: number;
+}
+declare class SqliteStorage {
+  #private;
+  readonly ready: Promise<void>;
+  constructor(options: StorageOptions);
+  request<M extends Method>(method: M, payload: Request<M>): Promise<Results[M]>;
+  close(): Promise<void>;
+  /** Deliberate emergency shutdown. In-flight writes remain OUTCOME_UNKNOWN. */
+  terminate(): Promise<void>;
+}
+declare function openStorage(options: StorageOptions): Promise<SqliteStorage>;
+//#endregion
+export { type A2ATaskRecord, type AcceptancePreparation, type AcceptancePreparationBackend, type AcceptancePreparationObservation, type AcceptancePreparationRequest, type AcceptancePreparedProof, type AcceptanceReadiness, type AgentManifest, type AttachmentView, type AttemptView, type CandidateBasis, type CandidateConflictAcknowledgement, type CandidateHumanResult, type CandidateIntegration, type CandidateIntegrationStep, type CandidateMaterial, type CandidateMaterialDescriptor, type CandidateRefUpdate, type CandidateRejectionResult, type CandidateReviewItem, type CandidateReviewView, type CandidateSource, type CandidateWorkFact, type CandidateWorkProof, type ContentInfo, type ContentReference, type ContextManifest, type DatasetPreparationBackend, type DatasetPreparationObservation, type DatasetPreparationRequest, type DatasetView, type EndpointConfig, type EndpointView, type ExecutionHostView, type GitDirectoryIdentity, type IssueOperation, type IssueView, type ManagedRepository, type Method, type ModelStep, type ObjectTarget, type ObjectWrite, type OperationResult, type OriginalFailure, type OutboxView, type PipelineDispatch, type PipelineStageView, type PipelineView, type PreparationAttempt, type PreparationClaim, type PreparationContext, type PreparationHost, type PreparationJob, type PreparationTask, type PreviewAccessBinding, type PreviewAccessRecord, type PreviewAccessTarget, type PreviewBackendPolicy, type PreviewEffect, type PreviewEffectReceipt, type PreviewExecutionBackend, type PreviewExecutionObservation, type PreviewExecutionResult, type PreviewLifecycle, type PreviewRuntimeFact, type PreviewRuntimeObservation, type PreviewSession, type PreviewStartRequest, type PreviewStopRequest, type PreviewTicket, type PreviewView, type PreviewWriteGate, type QualityArtifactRef, type QualityBasis, type QualityMaterial, type QualityMaterialDescriptor, type QualityOrigin, type QualityStage, type QualityVerification, type RegistrySnapshot, type ReleaseCandidateManifest, type ReleaseCandidateRevision, type ReleaseCandidateSummary, type ReleaseDelivery, type ReleaseDeliveryBasis, type ReleaseDeliveryMaterial, type RepoFileOperation, type RepoOperation, type Request, type Results, type RunView, type RuntimeActivationView, type RuntimeToolView, type RuntimeWorkspaceRecovery, type RuntimeWorkspaceResult, type ScheduledCandidate, type ScheduledDispatch, type SessionInfo, type SessionMessage, type SourceArchive, type SourceManifest, SqliteStorage, StorageError, StorageOptions, type UnderstandingView, type UploadIntake, type VerifiedFindingView, type VerifiedRepair, type WorkArtifactRef, type WorkAssessment, type WorkVerification, type WorkspaceAllocation, type WorkspaceMaintenanceAuthority, type WorkspacePreservation, type WorkspacePreservationInputs, type WorkspacePreservationManifest, type WorkspacePreservationMaterial, type WorkspaceReclamation, type WorkspaceView, acceptanceBackendPolicy, acceptancePreparationObservation, acceptancePreparationRequest, acceptancePreparedProof, acceptanceReleaseClaim, acquireWriterLock, agentManifest, candidateMaterialKey, candidateMergeReport, candidateReportEnvelope, canonical, datasetPreparationRequest, endpointConfig, gitDirectoryIdentity, issueCreateArgs, issueLinkArgs, issueVerifyArgs, managedSourcePath, openStorage, previewAccessHttpRequest, previewAccessObservation, previewAccessPolicy, previewBackendPolicy, previewEffectReceipt, previewOrigin, previewRuntimeFact, previewStartRequest, previewStopRequest, previewWriteCloseRequest, qualityMaterialKey, repoBinding, repoCommitArgs, repoDeleteFileArgs, repoFileProof, repoFileReadArgs, repoIntegrateArgs, repoWriteFileArgs, sourceManifest, workspaceMaterialEntry, workspaceMaterialSnapshot, workspacePreservationManifest, workspacePreservationMaterialKey };
+//# sourceMappingURL=index.d.mts.map

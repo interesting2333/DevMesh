@@ -86,6 +86,9 @@ import type {PreviewSessionMethod} from './preview-session-protocol.js';
 import {createAcceptanceDomain} from './acceptance-domain.js';
 import {acceptanceRequests} from './acceptance-protocol.js';
 import type {AcceptanceMethod} from './acceptance-protocol.js';
+import {createAcceptanceReadinessDomain} from './acceptance-readiness-domain.js';
+import {acceptanceReadinessRequests} from './acceptance-readiness-protocol.js';
+import type {AcceptanceReadinessMethod} from './acceptance-readiness-protocol.js';
 import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
@@ -146,6 +149,7 @@ export function createDomain(db: DatabaseSync) {
     changed(runId,operationId,preparationId,state){bump(runId);event(runId,operationId,'AcceptancePreparationChanged',{preparationId,state});},
     decision(runId,operationId,decisionId){bump(runId);event(runId,operationId,'DecisionSaved',{decisionId});},
   });
+  const acceptanceReadiness=createAcceptanceReadinessDomain(db,acceptances,(runId,operationId,sequence,state)=>{bump(runId);event(runId,operationId,'AcceptanceReadinessObserved',{preparationId:operationId,sequence,state});});
   const candidateBasis=candidateIntegrations.basis;
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
@@ -483,6 +487,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(acceptanceReadinessRequests,method))return acceptanceReadiness.execute(method as AcceptanceReadinessMethod,input);
     if(Object.hasOwn(previewSessionRequests,method))return previewSessions.execute(method as PreviewSessionMethod,input);
     if(Object.hasOwn(acceptanceRequests,method))return acceptances.execute(method as AcceptanceMethod,input);
     if(Object.hasOwn(previewAccessRequests,method))return previewAccess.execute(method as PreviewAccessMethod,input);

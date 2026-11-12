@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "scope": "Literal import/path usage search for the corrected test fixture; only five readiness tests consume it. No production code changed; unaffected suites were not rerun.",
+  "startedAt": "2026-11-12T19:13:01.441Z",
+  "finishedAt": "2026-11-12T19:13:03.522Z",
+  "executable": "rg",
+  "args": [
+    "-n",
+    "-F",
+    "acceptance-readiness.mjs",
+    "apps",
+    "packages",
+    "tests",
+    "scripts",
+    "templates"
+  ],
+  "exitCode": 0,
+  "stdout": "tests\\acceptance-readiness.test.mjs:5:import {binding,preparedObservation,explicitAcceptanceBackend} from './fixtures/acceptance-readiness.mjs';\n",
+  "stderr": "",
+  "fixture": {
+    "path": "tests/fixtures/acceptance-readiness.mjs",
+    "originalSha256": "c6335275d649d4a73fa5ae14d47acc6dc0ef06d52d1a5dd7251c3d53a2b66270",
+    "currentSha256": "1d9dad769869f55fcd0c51b01ac5f0cfc3cfccc296110b6a237e586bb81bf249"
+  }
+}

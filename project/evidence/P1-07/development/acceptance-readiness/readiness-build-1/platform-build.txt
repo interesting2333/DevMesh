@@ -1,0 +1,24 @@
+$ tsdown src/index.ts src/config.ts src/scheduler.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\platform-core\package.json 
+ℹ entry: src/index.ts, src/config.ts, src/scheduler.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 10 files
+ℹ dist\index.mjs          23.56 kB │ gzip:  5.78 kB
+ℹ dist\scheduler.mjs       4.05 kB │ gzip:  1.36 kB
+ℹ dist\config.mjs          4.01 kB │ gzip:  1.56 kB
+ℹ dist\index.mjs.map      40.07 kB │ gzip: 10.30 kB
+ℹ dist\config.mjs.map      7.33 kB │ gzip:  2.65 kB
+ℹ dist\scheduler.mjs.map   7.26 kB │ gzip:  2.59 kB
+ℹ dist\index.d.mts         5.07 kB │ gzip:  1.37 kB
+ℹ dist\scheduler.d.mts     1.68 kB │ gzip:  0.73 kB
+ℹ dist\config.d.mts        0.90 kB │ gzip:  0.45 kB
+ℹ 9 files, total: 93.93 kB
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (56%)
+  - tsdown:deps (44%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+✔ Build complete in 56277ms

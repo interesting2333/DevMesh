@@ -11,6 +11,18 @@ test('version 36 acceptance tables and markers roll back together and preserve v
     const rows=db.prepare('SELECT * FROM runs').all(),history=db.prepare('SELECT * FROM schema_migrations').all(),migrations=readMigrations(),bad=[...migrations.slice(0,35),{...migrations[35],sql:migrations[35].sql+'\nSELECT * FROM injected_acceptance_migration_failure;'}];
     assert.throws(()=>applyMigrations(db,bad,f.options.storeId),/injected_acceptance_migration_failure/);assert.equal(db.prepare('PRAGMA user_version').get().user_version,35);assert.deepEqual(db.prepare('SELECT * FROM schema_migrations').all(),history);assert.deepEqual(db.prepare('SELECT * FROM runs').all(),rows);
     for(const name of ['acceptance_backend_policies','acceptance_data_decisions','acceptance_preparations','acceptance_preparation_history'])assert.equal(db.prepare('SELECT name FROM sqlite_master WHERE name=?').get(name),undefined);
-    assert.equal(applyMigrations(db,migrations,f.options.storeId),36);assert.deepEqual(db.prepare('SELECT * FROM runs').all(),rows);assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);assert.equal(db.prepare('SELECT count(*) n FROM preview_sessions').get().n,0);
+    assert.equal(applyMigrations(db,migrations.slice(0,36),f.options.storeId),36);assert.deepEqual(db.prepare('SELECT * FROM runs').all(),rows);assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);assert.equal(db.prepare('SELECT count(*) n FROM preview_sessions').get().n,0);
+  }finally{db.close();}
+});
+
+test('version 37 readiness rollback preserves version 36 policies and retries without changing earlier history',async t=>{
+  const f=await fixture(t,{targetVersion:36});await f.storage.close();const db=new DatabaseSync(f.options.databasePath);db.exec('PRAGMA foreign_keys=ON');
+  try{
+    const domain=createDomain(db),p=await project({async request(method,input){return domain.execute(method,input);}},f.root);
+    domain.execute('registerAcceptanceBackendPolicy',{principalId:'user_1',projectId:p.projectId,policy:{schemaVersion:'devmesh.acceptance-backend.v1',backendPrincipalId:'migration.acceptance.service',backendRef:'migration.acceptance.backend',runnerId:'runner.unit',templateVersion:'web-crud-v1',schemaRevision:'web-crud-v1.schema.1',initialModes:['EMPTY'],allowPreserveMigration:false,allowReplacement:false}});
+    const history=db.prepare('SELECT * FROM schema_migrations').all(),policies=db.prepare('SELECT * FROM acceptance_backend_policies').all(),migrations=readMigrations(),bad=[...migrations.slice(0,36),{...migrations[36],sql:migrations[36].sql+'\nSELECT * FROM injected_readiness_migration_failure;'}];
+    assert.throws(()=>applyMigrations(db,bad,f.options.storeId),/injected_readiness_migration_failure/);assert.equal(db.prepare('PRAGMA user_version').get().user_version,36);assert.deepEqual(db.prepare('SELECT * FROM schema_migrations').all(),history);assert.deepEqual(db.prepare('SELECT * FROM acceptance_backend_policies').all(),policies);
+    for(const name of ['acceptance_prepared_proofs','acceptance_preparation_observations'])assert.equal(db.prepare('SELECT name FROM sqlite_master WHERE name=?').get(name),undefined);
+    assert.equal(applyMigrations(db,migrations,f.options.storeId),37);assert.deepEqual(db.prepare('SELECT * FROM acceptance_backend_policies').all(),policies);assert.deepEqual(db.prepare('SELECT * FROM schema_migrations WHERE version<=36').all(),history);assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
   }finally{db.close();}
 });
