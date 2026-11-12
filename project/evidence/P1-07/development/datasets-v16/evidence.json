@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "09f37e2c4c7eba04884763dbc4e442f7cd1120d8",
+  "dirty": true,
+  "sourceFingerprint": "d19a400d2baec0ef8c9b70c39589a3ac9fbb26a79bae7e0aa81c30029494c032",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T09:12:32.212Z",
+  "finishedAt": "2026-11-12T09:16:31.161Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 769,
+      "output": "frozen-install.txt",
+      "sha256": "101b7237d569f4f6668bce459956d21298af283bbd4cf7421ffe2bfc5a6768fb"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 10011,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 875,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 15021,
+      "output": "current-build.txt",
+      "sha256": "fd3e31737ebfcae566537a8228e11026e2c628a4306dce362bf1eef88fb2f2fc"
+    },
+    {
+      "name": "datasets",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 36298,
+      "output": "datasets.txt",
+      "sha256": "01d3302388395280db500ea1d2698e28a88ba6f3865213a34c1f99ac944532b7",
+      "tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 29475,
+      "output": "preview-intents.txt",
+      "sha256": "6113e323d3b6680aa2664ffb0f81485b74f950c9577e6573270dd7bec54aa240",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "smoke",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4189,
+      "output": "smoke.txt",
+      "sha256": "80b2cfc7e678d12b29f4be7a33cb0f8e63023a32a834fea51e91762dbdecf4ff",
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13395,
+      "output": "scheduler.txt",
+      "sha256": "fa9ab776db23aaf4c582a23241152229c68e3568c6e4a80a0f7ad4ba772a8028",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "review",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 43492,
+      "output": "review.txt",
+      "sha256": "b84287d58158e7024c457671459e32635a1af1061f61152131509fa148495e0e",
+      "tests": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "freeze",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 31716,
+      "output": "freeze.txt",
+      "sha256": "60bb88b7392bf0999f1fa82bb6e7215b9ecce3bd59ace841005de749d41ec107",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 34485,
+      "output": "storage.txt",
+      "sha256": "ead1dae869934ea9cf8766d6dddd0d19ce869ee27536005a7a13f1ddda9a4d8b",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "runner",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 16164,
+      "output": "runner.txt",
+      "sha256": "75fe4bbe8d938d3a78cfaeb596f4a42e47d585313bcbece92d90956e756456a1",
+      "tests": {
+        "tests": 16,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1941,
+      "output": "contracts.txt",
+      "sha256": "2c3b276792d771b8d16d7de1ef9fb3eb15a1b52d3dd6d3a35d1a833afdb6b7de",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 996,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/contracts.txt",
+      "sha256": "2c3b276792d771b8d16d7de1ef9fb3eb15a1b52d3dd6d3a35d1a833afdb6b7de"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/current-build.txt",
+      "sha256": "fd3e31737ebfcae566537a8228e11026e2c628a4306dce362bf1eef88fb2f2fc"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/datasets.txt",
+      "sha256": "01d3302388395280db500ea1d2698e28a88ba6f3865213a34c1f99ac944532b7"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/freeze.txt",
+      "sha256": "60bb88b7392bf0999f1fa82bb6e7215b9ecce3bd59ace841005de749d41ec107"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/frozen-install.txt",
+      "sha256": "101b7237d569f4f6668bce459956d21298af283bbd4cf7421ffe2bfc5a6768fb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/preview-intents.txt",
+      "sha256": "6113e323d3b6680aa2664ffb0f81485b74f950c9577e6573270dd7bec54aa240"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/report.json",
+      "sha256": "fb590b62e3efa9b5615d77995018fbe0f02b67428f9f6685355bdaad720928b3"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/review.txt",
+      "sha256": "b84287d58158e7024c457671459e32635a1af1061f61152131509fa148495e0e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/runner.txt",
+      "sha256": "75fe4bbe8d938d3a78cfaeb596f4a42e47d585313bcbece92d90956e756456a1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/scheduler.txt",
+      "sha256": "fa9ab776db23aaf4c582a23241152229c68e3568c6e4a80a0f7ad4ba772a8028"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/smoke.txt",
+      "sha256": "80b2cfc7e678d12b29f4be7a33cb0f8e63023a32a834fea51e91762dbdecf4ff"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/storage.txt",
+      "sha256": "ead1dae869934ea9cf8766d6dddd0d19ce869ee27536005a7a13f1ddda9a4d8b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/validation-driver.mjs",
+      "sha256": "62be42f0252e876c4ecf28ff20fff47be43347cf00dce20d1b7195e57a307d96"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v16/commands.json",
+      "sha256": "b101d68c4e7badd003143c4a1323479c2b82c5039744e62ad91c34619e2da171"
+    }
+  ],
+  "scope": "P1-07 task2.2: explicit local-development SQLite dataset backend with dedicated filesystem/SQLite Worker, pinned web-crud-v1 profile and unchanged real template database compatibility, EMPTY/DEMO creation, actual consistent SQLite backup, no source backwrite, immutable original file receipt and UNKNOWN recovery. Dataset controller composes the actual private Worker commands and original backend ACK/dispatch/commit-loss recovery. Source/admission/Runtime and the copy test source release identity are explicit fixtures; no T5, production migration, preview container health or product/stage acceptance.",
+  "limitations": [
+    "Same Codex agent implementation and review, not independent or human product/stage acceptance.",
+    "Actual local SQLite EMPTY/DEMO initialization and consistent backup, actual unchanged template TaskDatabase CRUD, actual file receipts and private controller/control SQLite Worker restart; original source/admission/Runtime and the test source Release identity are explicit fixtures.",
+    "The backend is explicitly configured for local-development; no automatic platform consumer, production migration, preview container health, HTTP preview gateway, T5 acceptance or publication is established.",
+    "Windows Node 24 execution does not establish Linux Docker/gVisor, power-loss durability, enterprise identity, real model or product/stage acceptance."
+  ]
+}

@@ -211,6 +211,9 @@ importers:
       '@devmesh/blob-store':
         specifier: workspace:*
         version: link:../blob-store
+      '@devmesh/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@devmesh/input-api':
         specifier: workspace:*
         version: link:../input-api

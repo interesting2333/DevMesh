@@ -2,7 +2,7 @@ import {releaseFreezeFixture} from './release-freeze.mjs';
 import {meta,hash} from './storage-data.mjs';
 export async function previewIntentFixture(t){
  const f=await releaseFreezeFixture(t),candidate=await f.freeze(),principalId='preview.backend.local';
- const policy={schemaVersion:'devmesh.preview-backend.v1',backendPrincipalId:principalId,backendRef:'sqlite.local-development.v1',runnerId:'runner.preview.local',templateVersion:candidate.manifest.delivery.record.dataPlan.templateVersion,schemaRevision:'schema.v1',retentionDays:30,initialModes:['EMPTY','DEMO'],allowSnapshots:true};
+ const policy={schemaVersion:'devmesh.preview-backend.v1',backendPrincipalId:principalId,backendRef:'sqlite.local-development.v1',runnerId:'runner.preview.local',templateVersion:candidate.manifest.delivery.record.dataPlan.templateVersion,schemaRevision:'web-crud-v1.schema.1',retentionDays:30,initialModes:['EMPTY','DEMO'],allowSnapshots:true};
  const configured=await f.storage.request('registerPreviewBackendPolicy',{principalId:'user_1',projectId:f.p.projectId,policy});
  const conditional=async()=>({meta:meta(f.p.runId),runId:f.p.runId,ifMatch:'"r'+(await f.storage.request('getRun',{runId:f.p.runId})).resourceRevision+'"',candidateId:candidate.candidateId,manifestHash:candidate.manifestHash});
  const datasetInput=async(overrides={})=>({...await conditional(),policyHash:configured.policyHash,...overrides});

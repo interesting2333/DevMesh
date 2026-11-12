@@ -4,6 +4,8 @@
 
 本记录覆盖 `implement-preview-review-and-acceptance` 的开发子项 2.1：迁移 32、私有 Worker dataset／预览意图域、可信后端原操作恢复、Runner 受控数据目录解析。它不代表正式 P1-07 开工／完成、G0／G1 通过或产品验收。P1-07 仍等待 P1-06 和 G0；同一 Codex 实施与复核，不冒充独立评审。
 
+后续子项 2.2 已实现实际本地 SQLite 数据准备，见 [数据准备开发复核](./dataset-preparation-development-review.md)。下面的能力与“尚未完成”描述保留 2.1 检查点的历史范围，当前进度以变更 tasks 和后续记录为准。
+
 真实执行：当前迁移的 SQLite 事务、实际 SQLite Worker 关闭／重新打开与恢复扫描、实际初始化的本地 Runner store、文件／目录／硬链接／Windows junction 边界、工作空间清理后数据文件保留。
 
 明确夹具：沿用 release-freeze fixture 的源码准入／Runtime 等来源事实；dataset 成功、预览健康／退出回执由受控测试直接提供；保护测试中的 Release 为显式插入。它们不是实际 SQLite 快照、容器运行、T5 接受或产品验证。实际数据适配器、预览服务和人工页面尚未实现。

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "09f37e2c4c7eba04884763dbc4e442f7cd1120d8",
+  "dirty": true,
+  "sourceFingerprint": "1214c2df08a34f269582614ad25e51ab7ba69285db2dade74591db96a3bd966c",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T09:09:30.912Z",
+  "finishedAt": "2026-11-12T09:11:34.228Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 905,
+      "output": "frozen-install.txt",
+      "sha256": "4a9aa0a7331404eb8fd13008922abe5fc267db861473932aa0eee2a40a26cdbd"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13883,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1362,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28013,
+      "output": "current-build.txt",
+      "sha256": "b923ebd4224e5809bbc45a5ca1b42c066a34c3889a977d4772367a90c87eb9d7"
+    },
+    {
+      "name": "datasets",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 44156,
+      "output": "datasets.txt",
+      "sha256": "2d53d98a7b9881a6388405e6eb1e350e1c2ec56b808ebc92cc8456416f3daf7d",
+      "tests": {
+        "tests": 9,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 34853,
+      "output": "preview-intents.txt",
+      "sha256": "00becceb5344498a06a1e6147288a6788c0ac68e001901fef803c210f0c8457a",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/datasets-v15/current-build.txt",
+      "sha256": "b923ebd4224e5809bbc45a5ca1b42c066a34c3889a977d4772367a90c87eb9d7"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v15/datasets.txt",
+      "sha256": "2d53d98a7b9881a6388405e6eb1e350e1c2ec56b808ebc92cc8456416f3daf7d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v15/frozen-install.txt",
+      "sha256": "4a9aa0a7331404eb8fd13008922abe5fc267db861473932aa0eee2a40a26cdbd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v15/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v15/preview-intents.txt",
+      "sha256": "00becceb5344498a06a1e6147288a6788c0ac68e001901fef803c210f0c8457a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v15/report.json",
+      "sha256": "12cf657bbcd41ff495fc25b778542e783c5de1e788cdc5b1d1b20696a81193d6"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v15/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 task2.2: explicit local-development SQLite dataset backend with dedicated filesystem/SQLite Worker, pinned web-crud-v1 profile and unchanged real template database compatibility, EMPTY/DEMO creation, actual consistent SQLite backup, no source backwrite, immutable original file receipt and UNKNOWN recovery. Dataset controller composes the actual private Worker commands and original backend ACK/dispatch/commit-loss recovery. Source/admission/Runtime and the copy test source release identity are explicit fixtures; no T5, production migration, preview container health or product/stage acceptance.",
+  "limitations": [
+    "Same Codex agent implementation and review, not independent or human product/stage acceptance.",
+    "Actual local SQLite EMPTY/DEMO initialization and consistent backup, actual unchanged template TaskDatabase CRUD, actual file receipts and private controller/control SQLite Worker restart; original source/admission/Runtime and the test source Release identity are explicit fixtures.",
+    "The backend is explicitly configured for local-development; no automatic platform consumer, production migration, preview container health, HTTP preview gateway, T5 acceptance or publication is established.",
+    "Windows Node 24 execution does not establish Linux Docker/gVisor, power-loss durability, enterprise identity, real model or product/stage acceptance."
+  ]
+}

@@ -9,6 +9,11 @@ const datasetReceipt=z.strictObject({kind:z.literal('DATASET_READY'),datasetId:i
 const previewReceipt=z.strictObject({kind:z.literal('PREVIEW_READY'),previewId:ids.preview,datasetId:ids.dataset,imageDigest:z.string().regex(/^sha256:[a-f0-9]{64}$/),instanceId:opaqueKey,healthy:z.literal(true),checkedAt:timestamp});
 const stopReceipt=z.strictObject({kind:z.literal('PREVIEW_STOPPED'),previewId:ids.preview,instanceId:opaqueKey,exitVerified:z.literal(true),checkedAt:timestamp});
 export const previewEffectReceipt=z.discriminatedUnion('kind',[datasetReceipt,previewReceipt,stopReceipt]);
+export const datasetPreparationRequest=z.strictObject({schemaVersion:z.literal('devmesh.dataset-prepare.v1'),operationId:ids.operation,projectId:ids.project,runId:ids.run,candidateId:ids.candidate,manifestHash:sha256,policyHash:sha256,backendRef:opaqueKey,runnerId:opaqueKey,datasetId:ids.dataset,storageKey:z.string().max(512),schemaRevision:opaqueKey,sourceDatasetId:ids.dataset.nullable(),sourceStorageKey:z.string().max(512).nullable(),sourceReleaseId:ids.release.nullable(),initialData:z.enum(['EMPTY','DEMO']).nullable(),templateVersion:opaqueKey}).superRefine((i,c)=>{
+ if(i.storageKey!==i.projectId+'/'+i.datasetId+'/app.sqlite'||i.sourceDatasetId===i.datasetId)c.addIssue({code:'custom',message:'Exact distinct dataset storage identities required'});
+ if(i.sourceDatasetId){if(i.sourceStorageKey!==i.projectId+'/'+i.sourceDatasetId+'/app.sqlite'||!i.sourceReleaseId||i.initialData!==null)c.addIssue({code:'custom',message:'Exact source release and dataset required'});}
+ else if(i.sourceStorageKey!==null||i.sourceReleaseId!==null||i.initialData===null)c.addIssue({code:'custom',message:'Explicit initial data mode required'});
+});
 export const previewRequests={
  registerPreviewBackendPolicy:z.strictObject({principalId:opaqueKey,projectId:ids.project,policy:previewBackendPolicy}),
  getPreviewBackendPolicy:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256}),
@@ -31,6 +36,14 @@ export type PreviewMethod=keyof typeof previewRequests;
 export type PreviewInput<M extends PreviewMethod>=z.output<(typeof previewRequests)[M]>;
 export type PreviewBackendPolicy=z.output<typeof previewBackendPolicy>;
 export type PreviewEffectReceipt=z.output<typeof previewEffectReceipt>;
+export type DatasetPreparationRequest=z.output<typeof datasetPreparationRequest>;
+export type DatasetPreparationObservation={state:'UNKNOWN';errorCode:string}|{state:'FAILED';errorCode:string;absenceVerified:true}|{state:'SUCCEEDED';receipt:Extract<PreviewEffectReceipt,{kind:'DATASET_READY'}>};
+export interface DatasetPreparationBackend {
+ readonly configured:boolean;
+ preflight(effect:PreviewEffect):Promise<void>;
+ prepare(effect:PreviewEffect):Promise<DatasetPreparationObservation>;
+ inspect(effect:PreviewEffect):Promise<DatasetPreparationObservation>;
+}
 export interface DatasetView {
  datasetId:string;projectId:string;runId:string;candidateId:string;operationId:string;policyHash:string;
  sourceDatasetId:string|null;sourceReleaseId:string|null;storageKey:string;schemaRevision:string;

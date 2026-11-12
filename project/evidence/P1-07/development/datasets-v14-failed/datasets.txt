@@ -1,0 +1,270 @@
+TAP version 13
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: EMPTY and DEMO create actual schema/marker compatible with the unchanged template, retained byte receipts and unique app identities
+not ok 1 - EMPTY and DEMO create actual schema/marker compatible with the unchanged template, retained byte receipts and unique app identities
+  ---
+  duration_ms: 1899.6047
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-datasets.test.mjs:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'UNKNOWN'
+    - 'SUCCEEDED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'SUCCEEDED'
+  actual: 'UNKNOWN'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-datasets.test.mjs:15:110)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: SQLite snapshot includes committed WAL data, excludes an uncommitted transaction, and later writes remain independent
+not ok 2 - SQLite snapshot includes committed WAL data, excludes an uncommitted transaction, and later writes remain independent
+  ---
+  duration_ms: 1494.9786
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-datasets.test.mjs:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'UNKNOWN'
+    - 'SUCCEEDED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'SUCCEEDED'
+  actual: 'UNKNOWN'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-datasets.test.mjs:19:97)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: duplicate and concurrent original prepares cannot initialize twice, and a restarted backend recovers the immutable receipt
+not ok 3 - duplicate and concurrent original prepares cannot initialize twice, and a restarted backend recovers the immutable receipt
+  ---
+  duration_ms: 1900.2437
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-datasets.test.mjs:24:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(results.some(r=>r.status==='fulfilled'&&r.value.state==='SUCCEEDED'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-datasets.test.mjs:25:141)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an interrupted original journal or corrupt receipt stays UNKNOWN and is never rebuilt or overwritten
+not ok 4 - an interrupted original journal or corrupt receipt stays UNKNOWN and is never rebuilt or overwritten
+  ---
+  duration_ms: 2458.7874
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-datasets.test.mjs:27:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'UNKNOWN'
+    - 'SUCCEEDED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'SUCCEEDED'
+  actual: 'UNKNOWN'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-datasets.test.mjs:29:57)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unconfigured migration, mismatched requests, unsafe receipt files and a different source schema fail closed without changing original business bytes
+not ok 5 - unconfigured migration, mismatched requests, unsafe receipt files and a different source schema fail closed without changing original business bytes
+  ---
+  duration_ms: 2134.4559
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-datasets.test.mjs:31:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Comparison {
+    +   code: 'DATASET_BACKEND_FAILURE'
+    -   code: 'DATASET_PROFILE_INTEGRITY'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'DATASET_PROFILE_INTEGRITY'
+  actual:
+  error: 'DATASET_BACKEND_FAILURE'
+  stack: |-
+    Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/runner/dist/dataset-backend--7MretZO.mjs:177:27)
+    Worker.emit (node:events:508:28)
+    MessagePort.<anonymous> (node:internal/worker:332:53)
+    [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+  operator: 'rejects'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-datasets.test.mjs:33:368)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: controller leaves an unconfigured backend PREPARED and authorizes only its configured service principal
+ok 6 - controller leaves an unconfigured backend PREPARED and authorizes only its configured service principal
+  ---
+  duration_ms: 2745.83
+  type: 'test'
+  ...
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual dataset preparation and a lost backend ACK reconcile the original file receipt without a second prepare
+not ok 7 - actual dataset preparation and a lost backend ACK reconcile the original file receipt without a second prepare
+  ---
+  duration_ms: 4730.4394
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-datasets.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open 'C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-real-dataset-Z9qccC\\runner\\datasets\\prj_934d411e93264bffb834359b80d6f254\\dataset_801481288ebe4b5fa009bb6c29c6fd7e\\receipt.json'"
+  code: 'ENOENT'
+  stack: |-
+    async open (node:internal/fs/promises:637:25)
+    async readFile (node:internal/fs/promises:1269:14)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-datasets.test.mjs:41:193)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a lost dispatch grant ACK never sends a second action or fabricates a dataset when original existence cannot be proved
+ok 8 - a lost dispatch grant ACK never sends a second action or fabricates a dataset when original existence cannot be proved
+  ---
+  duration_ms: 3916.1615
+  type: 'test'
+  ...
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost committed observation ACK survives an actual control SQLite Worker restart and does not repeat data initialization
+not ok 9 - lost committed observation ACK survives an actual control SQLite Worker restart and does not repeat data initialization
+  ---
+  duration_ms: 5832.7864
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-datasets.test.mjs:46:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'UNKNOWN'
+    - 'SUCCEEDED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'SUCCEEDED'
+  actual: 'UNKNOWN'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-datasets.test.mjs:47:1149)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 2
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28677.4434

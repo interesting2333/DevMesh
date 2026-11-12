@@ -1099,7 +1099,14 @@
         "packages/runner/src/dataset-paths.ts",
         "tests/verification-preview-intents.test.mjs",
         "tests/verification-dataset-paths.test.mjs",
-        "tests/fixtures/preview-intents.mjs"
+        "tests/fixtures/preview-intents.mjs",
+        "packages/runner/src/dataset-backend.ts",
+        "packages/runner/src/dataset-worker.ts",
+        "packages/runner/src/dataset-profile.ts",
+        "packages/runner/DATASETS.md",
+        "packages/platform-core/src/dataset-preparer.ts",
+        "tests/fixtures/datasets.mjs",
+        "tests/verification-datasets.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1123,7 +1130,12 @@
         "project/evidence/P1-07/development/previews-v12/evidence.json",
         "project/evidence/P1-07/development/previews-v13/evidence.json",
         "project/evidence/P1-07/development/previews-v13/reused-validation.json",
-        "project/evidence/P1-07/development/previews-v13/checkpoint-binding.json"
+        "project/evidence/P1-07/development/previews-v13/checkpoint-binding.json",
+        "project/evidence/P1-07/dataset-preparation-development-review.md",
+        "project/evidence/P1-07/development/datasets-v14-failed/evidence.json",
+        "project/evidence/P1-07/development/datasets-v15/evidence.json",
+        "project/evidence/P1-07/development/datasets-v16/evidence.json",
+        "project/evidence/P1-07/development/datasets-v16/commands.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1133,7 +1145,8 @@
         "2026-11-12：退回开发检查点 2937c34 与 reviews-v5 的 334 个源码输入字节一致。复核补齐历史候选撤回时同时检查最新候选投影容量的边界；类型首次拒绝未解析 Candidate ID 的失败和源码已保留（reviews-v6-failed），现使用共享 ID 契约解析。最终 reviews-v7 类型／lint／当前依赖构建／审查退回 13/13 通过，源码指纹未变化；与 v5 对比仅 candidate-review-domain.ts 变化，不受影响的冻结 14/14、存储 28/28、契约 18/18／OpenAPI 按 reused-validation.json 复用原日志，未声称重新全套或干净 checkout。其余本地开发任务继续等待实施，正式状态与真实环境缺项不变。",
         "2026-11-12：最终审查／退回开发源码固定在 ec86ff1d3a3f079f8f47d68d7e29cd3dfb1fc31c，reviews-v7 全部 334 个源码输入与 Git 对象字节一致；绑定是只读字节核对，不冒充新一轮测试或干净 checkout。",
         "2026-11-12：完成本地开发子项 2.1，迁移 32 与私有 dataset／预览持久意图、准确镜像／来源／原实例、仅一次派发许可、UNKNOWN 原对象核实、后端分页恢复扫描、原子观察／状态／事件、owner／后端主体和项目隔离；Runner 独立数据目录拒绝路径／链接／硬链接，workspace 清理不删除 dataset。v12 完整相关回归 102 项测试：101 通过、受控 Linux Docker 1 条跳过；当前 v13 类型／lint／依赖构建与新增协议／目录 14/14，通过且源码指纹不变。v13 与 v12 仅私有只读扫描协议／实现及其测试三文件不同，其他 6 项检查按 reused-validation.json 复用真实原日志，未冒充重新全套或干净 checkout。v8 SQL 占位值失败和 v10 Windows 测试清理顺序失败已保留原日志／源码并修复。成功后端回执及保护测试的 Release 为明确夹具；实际 SQLite 一致快照／数据动作日志、容器健康／到期消费者、独立 origin、T5 与发布仍待实施，不宣称产品验收。正式 P1-07／阶段门槛保持等待。",
-        "2026-11-12：dataset／预览意图开发源码固定在 35ba520f593ccab06eac1bc837e89d2d3a1ed611，previews-v13 的全部 341 个源码输入与 Git 对象字节一致；绑定只是只读字节核对，不是新一轮测试、干净 checkout 或实际快照／预览健康验收。"
+        "2026-11-12：dataset／预览意图开发源码固定在 35ba520f593ccab06eac1bc837e89d2d3a1ed611，previews-v13 的全部 341 个源码输入与 Git 对象字节一致；绑定只是只读字节核对，不是新一轮测试、干净 checkout 或实际快照／预览健康验收。",
+        "2026-11-12：完成本地开发子项 2.2，显式 local-development SQLite 适配器与独立 Worker、可信固定模板 SQL、EMPTY／DEMO 实际初始化、SQLite backup 一致快照／新应用身份、不可变原文件日志／完成证据及 DatasetPreparer 私有控制面组合恢复。真实 WAL／未提交事务隔离、原模板直接 CRUD、源／副本不回写、实际容量失败不重建、源后来不兼容时副本独立核实、准备 ACK／许可 ACK／观察提交 ACK 丢失和实际控制 Worker 重启均有测试。v14 Windows 只读句柄 fsync EPERM 的日志和失败源码已保留，仅修正本次独占临时文件的句柄；v15 新增数据 9/9、意图／目录 14/14 通过。最终 datasets-v16 冻结离线安装、类型／lint／依赖构建、数据 11、意图／目录 14、平台 smoke 10、调度 10、审查退回 13、冻结 14、存储 28、Runner 16、契约 18 及 OpenAPI 全部执行；共 134 项，132 通过、POSIX 信号／Linux Docker 条件 2 条跳过，全部源码指纹运行期间不变。来源／准入／Runtime 和快照源 Release 身份为明确夹具，不是 T5；未配置生产迁移关闭。自动平台消费者、预览容器健康／独立 HTTP origin、接受发布与真实环境／产品验收仍待后续，不改变正式 P1-07 或阶段门槛状态。"
       ]
     },
     {

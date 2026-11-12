@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "09f37e2c4c7eba04884763dbc4e442f7cd1120d8",
+  "dirty": true,
+  "sourceFingerprint": "a8b3ea19e428e347cee8ee9d322e318c8cda14172ca8533892e750564fbdf3ed",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T09:05:52.294Z",
+  "finishedAt": "2026-11-12T09:06:55.843Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1668,
+      "output": "frozen-install.txt",
+      "sha256": "142551a6ca32542ad0c2845dcfabc5b841182b398371c2fad34b0796de69f424"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 11459,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 925,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 20479,
+      "output": "current-build.txt",
+      "sha256": "b2fa758c403f09c1d88fc02ba7c868e9e52a78977de44f3bb5621987db62be05"
+    },
+    {
+      "name": "datasets",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 28787,
+      "output": "datasets.txt",
+      "sha256": "7a6246c78a31bd359d75a53fee01d75203fd99fc43ea0b0641da54a666d67f5b",
+      "tests": {
+        "tests": 9,
+        "pass": 2,
+        "fail": 7,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/current-build.txt",
+      "sha256": "b2fa758c403f09c1d88fc02ba7c868e9e52a78977de44f3bb5621987db62be05"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/datasets.txt",
+      "sha256": "7a6246c78a31bd359d75a53fee01d75203fd99fc43ea0b0641da54a666d67f5b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/platform-core/package.json",
+      "sha256": "114bb9f821b1822572f62779d36f938928a72abd3550ce26c13f9ace65f199d5"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/platform-core/src/dataset-preparer.ts",
+      "sha256": "ac21637df13f8691e130139ae3d1bc9e7520eab76ed447dd2d6d73cec1d7c956"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/platform-core/src/index.ts",
+      "sha256": "eeec3a57caa3cabbb39efb5a611daed91dd74e1a1755ad1c31ee1c2792344614"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/runner/package.json",
+      "sha256": "3bf15c92543ce1bba7dab00497e2edc9abfd8ad8ffa43e27c5790a083ae8cfe2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/runner/src/dataset-backend.ts",
+      "sha256": "11c3ea17ed3c185a558296ccfaa2c417d3d9fe9890cd3a3a9427318363797477"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/runner/src/dataset-paths.ts",
+      "sha256": "f399fb851103970b4d6d0ba838acbaefb3f288419f44afb6353855016ba04bde"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/runner/src/dataset-profile.ts",
+      "sha256": "9e8c15907c54e540503e41e103041a23fbc1aea5b56f4324dfc12deae2c160d0"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/runner/src/dataset-worker.ts",
+      "sha256": "d7b727ef232bdb569d0679afb20e780e08de7889ffad7d022dc37704a9f7f69b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/runner/src/index.ts",
+      "sha256": "cfec6211a5cb5606ab7d0d7a65658317a7e21feb6dc1f49276fcadbf4e5fddfb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "bb6e53fba4842adfe06bffed9145a7baeb45ccc5a536080da77d8e6a49be3549"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/packages/storage-sqlite/src/preview-protocol.ts",
+      "sha256": "2b419b546244569dbfc592149a3bcb51781c000f2e901c4710a17ea47fae4cc0"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/pnpm-lock.yaml",
+      "sha256": "3868b8d7cd30ae10a584bab6f3b18ba79dd811210411b91d90d3f9c8cdd1181d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/tests/fixtures/datasets.mjs",
+      "sha256": "7cd521e7d44e800af3c6adb9ce35e5adf48165b6862cc0748af35d5831f24f4f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/tests/fixtures/preview-intents.mjs",
+      "sha256": "d4ec7713ff1dbbc1b648e224be115e1cd32c88a9e54addf64f1c7b6f49c97661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/failed-source/tests/verification-datasets.test.mjs",
+      "sha256": "89fc4cb411fe5c3faed1d2329c0288cfdd0e6790cc40341a6727d95b3e7f334d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/frozen-install.txt",
+      "sha256": "142551a6ca32542ad0c2845dcfabc5b841182b398371c2fad34b0796de69f424"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/report.json",
+      "sha256": "0958ef83482273272013db9a655952be69f02240408f66fd02405e5a8940fcc8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/datasets-v14-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 task2.2: explicit local-development SQLite dataset backend with dedicated filesystem/SQLite Worker, pinned web-crud-v1 profile and unchanged real template database compatibility, EMPTY/DEMO creation, actual consistent SQLite backup, no source backwrite, immutable original file receipt and UNKNOWN recovery. Dataset controller composes the actual private Worker commands and original backend ACK/dispatch/commit-loss recovery. Source/admission/Runtime and the copy test source release identity are explicit fixtures; no T5, production migration, preview container health or product/stage acceptance.",
+  "limitations": [
+    "Same Codex agent implementation and review, not independent or human product/stage acceptance.",
+    "Actual local SQLite EMPTY/DEMO initialization and consistent backup, actual unchanged template TaskDatabase CRUD, actual file receipts and private controller/control SQLite Worker restart; original source/admission/Runtime and the test source Release identity are explicit fixtures.",
+    "The backend is explicitly configured for local-development; no automatic platform consumer, production migration, preview container health, HTTP preview gateway, T5 acceptance or publication is established.",
+    "Windows Node 24 execution does not establish Linux Docker/gVisor, power-loss durability, enterprise identity, real model or product/stage acceptance."
+  ],
+  "failure": "Type/lint/build passed. Actual preparation failed because fsync used an O_RDONLY handle on Windows (EPERM), leaving original journals/partial SQLite files without a READY receipt. Correct only the exclusively owned staging handle to O_RDWR; no source database write or integrity/security guard was relaxed. Failed logs and source snapshots retained."
+}

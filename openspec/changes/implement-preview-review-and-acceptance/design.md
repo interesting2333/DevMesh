@@ -1,6 +1,6 @@
 ## Context
 
-父工作包、动机与验收依据见 proposal.md。准确候选由 P1-06 的 candidate_freezes／release_candidates 固定，包含 Work 正式证明、当前最终 Tester 原质量、交付数据方案与实际内容预检集合。其历史正文不可变，当前资格会因来源、计划、问题或材料变化变为 STALE。当前尚无人工审查、dataset、预览运行或接受服务；核心 releases 表不能单独构成 T5 实现。
+父工作包、动机与验收依据见 proposal.md。准确候选由 P1-06 的 candidate_freezes／release_candidates 固定，包含 Work 正式证明、当前最终 Tester 原质量、交付数据方案与实际内容预检集合。其历史正文不可变，当前资格会因来源、计划、问题或材料变化变为 STALE。本变更开始时尚无人工审查、dataset、预览运行或接受服务；当前具体实施进度见 tasks.md，核心 releases 表不能单独构成 T5 实现。
 
 ## Goals / Non-Goals
 
@@ -56,7 +56,19 @@ owner 通过标准 meta／If-Match 保存准确候选上的 dataset 或 preview 
 
 首次数据只允许冻结方案声明的 EMPTY／DEMO；迭代预览始终克隆原接受 dataset，即使最终接受方案选择 REPLACE 也不提前清空旧数据。源接受指针、项目、可用状态与 schema 需准确匹配；跨 schema 的生产迁移尚未配置时关闭，不将简单复制视为迁移成功。dataset 不能同时绑定两个可写预览。停止意图使用独立 previewRevision／impactReviewHash，只有原实例可核实退出后才 STOPPED／EXPIRED；已被 Release 引用的候选／dataset 拒绝新停止和停止派发。
 
-RunnerDatasetPaths 从已初始化且身份匹配的 Runner layout 解析 `datasets/<projectId>/<datasetId>/app.sqlite` 和同目录 `operation.json`，调用者不能传任意路径；控制面、备份和 Runner 根互斥。路径组件、数据库／日志／WAL／SHM 的链接与硬链接均受检查。该目录独立于 workspaces，预览停止及工作空间清理不删除 dataset；当前只实现保留，不提前实现到期 GC。实际 SQLite 一致快照、数据文件操作恢复、真实实例健康／到期、独立 origin 与接受发布仍按后续步骤实施。
+RunnerDatasetPaths 从已初始化且身份匹配的 Runner layout 解析 `datasets/<projectId>/<datasetId>/app.sqlite` 和同目录 `operation.json`，调用者不能传任意路径；控制面、备份和 Runner 根互斥。路径组件、数据库／日志／WAL／SHM 的链接与硬链接均受检查。该目录独立于 workspaces，预览停止及工作空间清理不删除 dataset；当前只实现保留，不提前实现到期 GC。实际 SQLite 数据适配见下一节；真实实例健康／到期、独立 origin 与接受发布仍按后续步骤实施。
+
+### 8. Local SQLite preparation is a real file operation with one original journal
+
+`DatasetPreparer` 组合实际私有控制面命令与显式配置的 `LocalSqliteDatasetBackend`，不在平台启动时默认启用。未配置返回不可用且保持 PREPARED；先执行只读 preflight，再取得唯一派发许可。只有该次许可返回 dispatch=true 才执行 prepare，后续 SENT／UNKNOWN 仅 inspect。许可提交后 ACK 丢失也不重新派发；准备完成或观察提交后 ACK 丢失则读取原文件／控制记录。受限分页恢复每轮从 0 开始，无公共回执入口。
+
+适配器仅接受严格的原请求、requestHash、项目／候选／操作／dataset、策略、Runner 与 backendRef，固定支持 `web-crud-v1`／`web-crud-v1.schema.1`。首次 EMPTY／DEMO 只执行适配器内可信 SQL；其 schema 和 marker 与原模板一致。未知 schema／模板或跨 schema 迁移关闭，不能通过配置声明伪装为迁移已实现。
+
+每次文件操作由独立 Worker 完成，默认最多 2 个 Worker、128 个等待项、30 秒超时和 64 MiB 文件容量。路径解析只允许受控 ID；新增检查 `receipt.json`、`dataset.json`、writer.lock、临时数据库及其侧文件。新操作先独占创建并刷新 `operation.json`，包含原请求 hash、应用 dataset UUID 与时间；存在此日志时 prepare 只核实，永不重跑初始化／复制。只允许新建本次 `preparing.sqlite`，检查原模板 schema、身份、行数、字段与 SQLite 完整性后独占发布 `app.sqlite`；marker 与完成 receipt 各只写一次，部分文件保留 UNKNOWN，不覆盖、不自动清理。
+
+迭代快照通过只读源连接的读事务和 SQLite backup 取得一致副本，包含已提交 WAL、排除未提交写；副本换用新的应用 dataset UUID，业务记录保留，源数据不写入。副本准备成功后恢复只依赖自己的日志、receipt、marker 和实际数据库完整性，不要求源仍可用。receipt 的 SHA／字节数描述准备完成时的快照，后续合法预览写入不改写原完成证据，不能拿当前可变数据库 hash 强行替代原快照身份。
+
+日志和文件刷新在控制面事务外；Windows 使用有写权限的本次临时文件句柄执行 fsync，非 Windows 额外刷新目录。当前本地 Windows 测试不是 Linux 文件系统或突然断电验收。实际模板兼容、WAL 一致性、写入隔离、原操作并发／重启、实际配额失败及两类 ACK 丢失均单独验证；测试源 Release／源码准入仍是显式夹具，不推导 T5、真实容器或产品通过。装配和恢复说明维护于 `packages/runner/DATASETS.md`。
 
 ## Risks / Trade-offs
 

@@ -1,0 +1,127 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "steps": [
+    {
+      "name": "frozen-install",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--frozen-lockfile",
+        "--offline",
+        "--ignore-scripts"
+      ]
+    },
+    {
+      "name": "typecheck",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "typecheck"
+      ]
+    },
+    {
+      "name": "lint",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ]
+    },
+    {
+      "name": "current-build",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "-r",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "name": "datasets",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-datasets.test.mjs"
+      ]
+    },
+    {
+      "name": "preview-intents",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-intents.test.mjs",
+        "tests/verification-dataset-paths.test.mjs"
+      ]
+    },
+    {
+      "name": "smoke",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:smoke"
+      ]
+    },
+    {
+      "name": "scheduler",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:scheduler"
+      ]
+    },
+    {
+      "name": "review",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/candidate-review.test.mjs",
+        "tests/candidate-rejection.test.mjs"
+      ]
+    },
+    {
+      "name": "freeze",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-freeze.test.mjs"
+      ]
+    },
+    {
+      "name": "storage",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:storage"
+      ]
+    },
+    {
+      "name": "runner",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:runner"
+      ]
+    },
+    {
+      "name": "contracts",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:contracts"
+      ]
+    },
+    {
+      "name": "contracts-check",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "contracts:check"
+      ]
+    }
+  ],
+  "scope": "Command arrays from the exact retained driver used for this validation, not a second run."
+}

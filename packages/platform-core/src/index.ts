@@ -13,6 +13,7 @@ import type {WorkflowMcpOptions,WorkflowMcpServices} from '@devmesh/mcp-tools';
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
 export type { WorkflowSchedulerOptions } from './scheduler.js';
+export {DatasetPreparer} from './dataset-preparer.js';
 
 export interface FoundationServer {
   readonly address: Readonly<AddressInfo>;

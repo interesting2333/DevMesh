@@ -44,6 +44,22 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 - **WHEN** 工作空间被清理，或请求尝试用路径、链接、硬链接替代 dataset 数据库／日志／侧文件
 - **THEN** dataset 保留在受控 ID 决定的独立 Runner 目录，拒绝越界或链接文件，不暴露控制数据库和备份
 
+#### Scenario: Actual initialization matches the pinned template
+- **WHEN** 显式配置本地可信数据适配器，为当前冻结 INITIAL 方案准备 EMPTY 或 DEMO
+- **THEN** 创建能被原模板直接读写的实际 SQLite、独立应用身份和 marker，保存不可变原请求及完成回执；未知模板或 schema／迁移不可用
+
+#### Scenario: A snapshot observes only committed source data
+- **WHEN** 同 schema 源数据库有已提交 WAL 和尚未提交事务，随后准备隔离预览副本
+- **THEN** SQLite 一致副本包含已提交内容、排除未提交内容；源与副本之后的业务写入互不回写，副本具有新的应用身份
+
+#### Scenario: An original file preparation fails or loses an acknowledgement
+- **WHEN** 实际准备因容量等原因留下部分文件、完成后丢回执、控制面观察提交后丢回执，或服务重启
+- **THEN** 原日志只创建一次，部分文件保持 UNKNOWN 且不重建；已完成操作通过原文件证据或已提交控制记录恢复，不重复初始化／复制，源后来不可用不使已完成副本依赖源恢复
+
+#### Scenario: Dispatch permission acknowledgement is lost
+- **WHEN** 唯一派发许可已提交但调用者没收到许可，也不能证明原动作已完成
+- **THEN** 后续只核实原对象并保留 UNKNOWN，不以重试为由再次初始化，不伪造 READY 或解除未知副作用阻塞
+
 ### Requirement: Durable acceptance preparation without destructive defaults
 
 The system SHALL 在外部准备前固定候选、审查、原接受指针和数据策略，保存原操作身份。保留数据 MUST 用带 fencing 写门排空旧写入并快照最新数据，经准确迁移／完整性和服务健康验证后才准备完成；替换数据 MUST 有准确明确确认。未知结果 SHALL 查询原操作且不重复执行副作用。
