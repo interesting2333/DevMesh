@@ -134,6 +134,16 @@ ReleaseCandidate SHALL 固定代码、需求／计划／模板／检查配置版
 - **WHEN** 当前准确来源的必要自动检查和候选材料齐全，人工审查项已明确
 - **THEN** 保存不可变候选修订与逐项质量依据，人工审查和接受继续为独立后续动作
 
+#### Scenario: Delivery outputs are selected after testing
+
+- **WHEN** 调用方尝试在质量通过后删减必要材料、替换输出路径或使用新的构建作业
+- **THEN** 拒绝采集；交付必须匹配准入前冻结的质量配置清单、批准 producer 及原作业的准确输出索引／字节，恢复只使用原操作
+
+#### Scenario: A data plan changes existing accepted data
+
+- **WHEN** 交付数据方案涉及已有接受版本的数据
+- **THEN** 准确绑定原接受版本及当前代码／需求／计划／模板／配置；保留迁移需准确迁移材料，替换需该方案哈希对应的负责人明确决定，不因候选材料登记而执行迁移或移动接受指针
+
 #### Scenario: An old report is reused after code or policy changes
 
 - **WHEN** 代码、配置、需求、计划、必要集合或交付材料身份已变化

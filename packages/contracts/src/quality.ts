@@ -1,10 +1,11 @@
 import {z} from 'zod';
 import {gitCommit,ids,opaqueKey,sha256,timestamp} from './primitives.js';
+import {qualityPath,unsafeQualityPath} from './source-path.js';
+import {releaseDeliveryProfile} from './delivery.js';
+export {qualityPath} from './source-path.js';
 
 export const qualityLimits={reportBytes:8*1024*1024,files:2048,positions:200_000,tests:20_000,jsonDepth:48,jsonNodes:500_000} as const;
-const unsafePath=(v:string)=>[...v].some(c=>c.charCodeAt(0)<32||c.charCodeAt(0)===127)||v.includes('\\')||v.includes(':');
-export const qualityPath=z.string().min(1).max(512).refine(v=>!unsafePath(v)&&v.normalize('NFC')===v&&v.split('/').every(p=>p!==''&&p!=='.'&&p!=='..'&&!/[. ]$/.test(p)),'Canonical relative source path required');
-const pattern=z.string().min(1).max(512).refine(v=>!unsafePath(v)&&!v.startsWith('/')&&!v.split('/').some(p=>p==='..'||p==='.'||!p),'Relative bounded glob required');
+const pattern=z.string().min(1).max(512).refine(v=>!unsafeQualityPath(v)&&!v.startsWith('/')&&!v.split('/').some(p=>p==='..'||p==='.'||!p),'Relative bounded glob required');
 const count=z.number().int().min(0).max(Number.MAX_SAFE_INTEGER);
 export const qualityLocation=z.strictObject({start:z.strictObject({line:count.min(1),column:count}),end:z.strictObject({line:count.min(1),column:count})}).refine(v=>v.start.line<v.end.line||v.start.line===v.end.line&&v.start.column<=v.end.column,'Location must be ordered');
 export const qualityBranch=z.strictObject({type:opaqueKey,loc:qualityLocation,locations:z.array(qualityLocation.nullable()).min(1).max(128)});
@@ -13,6 +14,7 @@ export const qualityTestIdentity=z.strictObject({path:qualityPath,fullName:z.str
 export const qualityProducer=z.strictObject({producerId:opaqueKey,command:z.array(z.string().min(1).max(1024)).min(1).max(32),imageDigest:image,
   pathPrefixes:z.array(z.string().min(1).max(1024).refine(v=>!v.includes('\\')&&!v.endsWith('/')&&!v.includes('/../')&&!v.includes('/./')&&(/^[A-Za-z]:\//.test(v)||v.startsWith('/')),'Fixed absolute normalized prefix required')).max(8)});
 export const qualityPolicy=z.strictObject({schemaVersion:z.literal('devmesh.quality-policy.v1'),templateVersion:opaqueKey,
+   delivery:releaseDeliveryProfile.optional(),
   producers:z.array(qualityProducer).min(1).max(16),
   reports:z.array(z.strictObject({reportId:opaqueKey,producerId:opaqueKey,format:z.enum(['istanbul-v1','vitest-json-v1']),path:qualityPath,sourceInclude:z.array(pattern).max(32)})).min(1).max(32),
   checks:z.array(z.strictObject({checkId:opaqueKey,kind:z.enum(['command','tests','coverage','human']),producerIds:z.array(opaqueKey).max(16),reportIds:z.array(opaqueKey).max(32),requiredTests:z.array(qualityTestIdentity).max(qualityLimits.tests)})).min(1).max(64),
@@ -40,6 +42,7 @@ export const qualityPolicy=z.strictObject({schemaVersion:z.literal('devmesh.qual
   if(!v.checks.some(x=>x.kind==='coverage')||!v.checks.some(x=>x.kind==='tests'))fail('Policy requires independent test and coverage checks');
   for(const r of v.reports)if(!v.checks.some(x=>x.reportIds.includes(r.reportId)))fail('Unused required report');
   for(const p of v.producers)if(!v.checks.some(x=>x.producerIds.includes(p.producerId)))fail('Unused producer');
+   if(v.delivery&&(!producers.has(v.delivery.producerId)||!v.checks.some(x=>x.kind==='command'&&x.producerIds.includes(v.delivery!.producerId))))fail('Delivery requires an original approved command check producer');
 });
 export type QualityPolicy=z.output<typeof qualityPolicy>;
 export const qualitySourceFile=z.strictObject({path:qualityPath,sha256,lineLengths:z.array(count.max(1024*1024)).min(1).max(100_000)});

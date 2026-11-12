@@ -129,3 +129,5 @@ export type {WorkVerification,WorkAssessment,WorkArtifactRef} from './work-verif
 export type {OriginalFailure,VerifiedFindingView} from './verified-finding-protocol.js';
 export type {VerifiedRepair} from './verified-repair-protocol.js';
 export type {QualityBasis,QualityVerification,QualityOrigin,QualityMaterial,QualityMaterialDescriptor,QualityStage} from './quality-protocol.js';
+
+export type {ReleaseDelivery,ReleaseDeliveryBasis,ReleaseDeliveryMaterial} from './release-delivery-protocol.js';

@@ -46,7 +46,7 @@ export class RunnerClient {
   /** Read an original output by its recorded index; never accepts a remote path. */
   async output(jobId:string,index:number,expected:{sha256:string;byteSize:number},maximumBytes=8*1024*1024):Promise<Uint8Array>{
     ids.job.parse(jobId);
-    if(!Number.isSafeInteger(index)||index<0||index>32||!Number.isSafeInteger(maximumBytes)||maximumBytes<1||maximumBytes>16*1024*1024||!Number.isSafeInteger(expected.byteSize)||expected.byteSize<0||expected.byteSize>maximumBytes||!/^[a-f0-9]{64}$/.test(expected.sha256))throw new RunnerError('RUNNER_OUTPUT_LIMIT_INVALID',422,'not-sent');
+    if(!Number.isSafeInteger(index)||index<0||index>32||!Number.isSafeInteger(maximumBytes)||maximumBytes<1||maximumBytes>64*1024*1024||!Number.isSafeInteger(expected.byteSize)||expected.byteSize<0||expected.byteSize>maximumBytes||!/^[a-f0-9]{64}$/.test(expected.sha256))throw new RunnerError('RUNNER_OUTPUT_LIMIT_INVALID',422,'not-sent');
     let key:string|undefined;try{key=await this.credentials(this.credentialRef);}catch{throw new RunnerError('RUNNER_AUTH_UNAVAILABLE',503,'not-sent');}if(!key||key.length<16)throw new RunnerError('RUNNER_NOT_CONFIGURED',503,'not-sent');
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),this.timeoutMs);timer.unref();
     try{

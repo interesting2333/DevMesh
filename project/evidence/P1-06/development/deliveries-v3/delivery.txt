@@ -1,0 +1,120 @@
+TAP version 13
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original authenticated Job outputs become immutable delivery without another Job, process or accepted Release
+ok 1 - original authenticated Job outputs become immutable delivery without another Job, process or accepted Release
+  ---
+  duration_ms: 3247.2216
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery policy must have been pinned before Tester admission and cannot be weakened after quality PASS
+ok 2 - delivery policy must have been pinned before Tester admission and cannot be weakened after quality PASS
+  ---
+  duration_ms: 2221.0853
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost material and final ACKs recover the original operation with no additional Runner execution
+ok 3 - lost material and final ACKs recover the original operation with no additional Runner execution
+  ---
+  duration_ms: 2683.7188
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changed original Job identity and corrupted HTTP bytes never complete delivery
+ok 4 - changed original Job identity and corrupted HTTP bytes never complete delivery
+  ---
+  duration_ms: 4209.1894
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: canonical data plan must bind exact Run, revisions, commit and existing data lineage
+ok 5 - canonical data plan must bind exact Run, revisions, commit and existing data lineage
+  ---
+  duration_ms: 12531.2976
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: missing fixed output and unconfigured Runner are explicit failures
+ok 6 - missing fixed output and unconfigured Runner are explicit failures
+  ---
+  duration_ms: 4537.13
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery is owner-written, membership-rechecked on replay and protected from content GC
+ok 7 - delivery is owner-written, membership-rechecked on replay and protected from content GC
+  ---
+  duration_ms: 3647.8934
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Run changes stop an incomplete collection and preserve completed delivery as stale history
+ok 8 - Run changes stop an incomplete collection and preserve completed delivery as stale history
+  ---
+  duration_ms: 7265.9565
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: missing retained material invalidates qualification without rewriting the original READY receipt
+ok 9 - missing retained material invalidates qualification without rewriting the original READY receipt
+  ---
+  duration_ms: 4213.1108
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a late unresolved original side effect prevents delivery preparation
+ok 10 - a late unresolved original side effect prevents delivery preparation
+  ---
+  duration_ms: 2916.4928
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery keeps explicit human quality pending and does not complete the Tester
+ok 11 - delivery keeps explicit human quality pending and does not complete the Tester
+  ---
+  duration_ms: 4202.2732
+  type: 'test'
+  ...
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: existing accepted data requires an exact migration artifact or an approved replacement decision
+ok 12 - existing accepted data requires an exact migration artifact or an approved replacement decision
+  ---
+  duration_ms: 11853.2616
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 64733.8167

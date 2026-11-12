@@ -68,6 +68,9 @@ import {createVerifiedFindingDomain} from './verified-finding-domain.js';
 import {verifiedFindingRequests} from './verified-finding-protocol.js';
 import type {VerifiedFindingMethod} from './verified-finding-protocol.js';
 import {createVerifiedRepairDomain} from './verified-repair-domain.js';
+import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
+import {releaseDeliveryRequests} from './release-delivery-protocol.js';
+import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
 import {verifiedRepairRequests} from './verified-repair-protocol.js';
 import type {VerifiedRepairMethod} from './verified-repair-protocol.js';
 export { canonical } from './json.js';
@@ -99,6 +102,7 @@ export function createDomain(db: DatabaseSync) {
   const verifiedRepairs=createVerifiedRepairDomain(db);
   const candidateIntegrations=createCandidateIntegrationDomain(db,plans);
   const quality=createQualityDomain(db,candidateIntegrations);
+  const releaseDeliveries=createReleaseDeliveryDomain(db,quality);
   const workVerifications=createWorkVerificationDomain(db,quality);
   const verifiedFindings=createVerifiedFindingDomain(db,quality,candidateIntegrations,(runId,operationId,attemptId,payload)=>{
     bump(runId);event(runId,operationId,'IssueChanged',payload,{attemptId});
@@ -441,6 +445,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(releaseDeliveryRequests,method))return releaseDeliveries.execute(method as ReleaseDeliveryMethod,input);
     if(Object.hasOwn(verifiedRepairRequests,method))return verifiedRepairs.execute(method as VerifiedRepairMethod,input);
     if(Object.hasOwn(workVerificationRequests,method))return workVerifications.execute(method as WorkVerificationMethod,input);
     if(Object.hasOwn(verifiedFindingRequests,method))return verifiedFindings.execute(method as VerifiedFindingMethod,input);

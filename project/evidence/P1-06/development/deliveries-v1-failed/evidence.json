@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 task4 delivery provenance development: pinned original output policy, actual SQLite and authenticated local HTTP Runner, immutable material byte ACK and OCI identities, exact data plan. Controlled backend writes fixture build bytes; Git/admission/Runtime facts are explicit DB fixtures. No Docker image build, container health, production model, Linux or release candidate freeze claimed.",
+  "sourceCommit": "66a9cf7ae180982ff788e6659560a8e7bcd5f8a6",
+  "dirty": true,
+  "sourceFingerprint": "df90a493b358ec413125e7b5ce049e30644dd07ba2630cf5f360c03bc1519194",
+  "unchanged": true,
+  "startedAt": "2026-11-12T06:39:02.829Z",
+  "finishedAt": "2026-11-12T06:40:35.003Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 18953,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1592,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 34311,
+      "output": "current-build.txt",
+      "sha256": "37c3de65b97d117f9f78d65ddf6b0913359bcf8bef88fac2aae653d6d57b3caa"
+    },
+    {
+      "name": "delivery",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 37131,
+      "output": "delivery.txt",
+      "sha256": "862fe588a150044869ec8e3155a94066585f22f76f83711234b2f07c54d2306f"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/current-build.txt",
+      "sha256": "37c3de65b97d117f9f78d65ddf6b0913359bcf8bef88fac2aae653d6d57b3caa"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/delivery.txt",
+      "sha256": "862fe588a150044869ec8e3155a94066585f22f76f83711234b2f07c54d2306f"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/contracts/src/delivery.ts",
+      "sha256": "d368bc389225981a824c12923b09108463c773b2a4fd6cc660772505e8bf02f3"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/contracts/src/quality.ts",
+      "sha256": "5855b61710e87f5dfdbd11ed5a5f97952aea910eb3bf31dbbfb649ffaa2ea2a1"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/contracts/src/source-path.ts",
+      "sha256": "38db6503d867e93cbe863f8a13baae805357196c1ec8154b20d5a794ca4ce49d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/result-verifier/src/collector.ts",
+      "sha256": "bb6d83054f44c5c549243152bc0eb2a9a02ef5f2ca5fe0d58bd5400b0dec1361"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/result-verifier/src/delivery.ts",
+      "sha256": "c19d06464aef431f13f8d9e52f39f3ef7e8e380084d298fac66893904224010c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/result-verifier/src/index.ts",
+      "sha256": "ff449d6374c1a2c3f4be999d9c771dfbe8c1fccb1d9a9fc674732e6636b8787e"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/runner/src/client.ts",
+      "sha256": "fff289ebb79b4935a36e8bc59df4e27261418bac25aeefaa05f142c0d7b045e2"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/migrations/0027-releasedeliveries.sql",
+      "sha256": "2368d237034c2db241018e78f3b6608e37eb24866c9b9d21ca8bc371cff1b9e9"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "770f8ab32f9eb180021b3f258891827d3f873918b0b1e33c2b601705be251050"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "422e025735c7d5b325055ea4b63bd5a9ee768939ca40178a9e8fdadf31bfdde3"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "b374e7fc96edd89971cfdf1a0097b8f5372179315822d282b6ae4a9f76f85ff1"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "5d875055c64c5f71d6a11fd9149f36c599e515a4dd7edfc1b0b6b736c428f347"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/src/release-delivery-domain.ts",
+      "sha256": "53757f0665f2c6d2a5cedc3fbcef9ab1a7a94b4e4dc818857ba82462d470c8fa"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/src/release-delivery-protocol.ts",
+      "sha256": "7c690b4cca294dd26f9f10bc72673902c457db0d8bae8d415004ddf0eeb4647d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/src/session-domain.ts",
+      "sha256": "0e7f5da01c40e6ce0c5f69da6cfae5b6bcf3f882aca8b99f9a166abfae76666a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/packages/storage-sqlite/src/session-protocol.ts",
+      "sha256": "601cc31bdd81d2cac2f6f1122486678fbc691f78ff3802d88bfe3e2fb4b058df"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/tests/fixtures/delivery.mjs",
+      "sha256": "aa6da57d8356c058b74507a8cf9feff78bee3f9c339a2af7393506435511071d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/tests/fixtures/quality-runner.mjs",
+      "sha256": "0af60533184ae3d9af84b340a75a59f196231f9570c3ce5aad76059a7ed15e96"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/tests/fixtures/quality-storage.mjs",
+      "sha256": "da602b97ae60e2d4cf37ab07d4bff3557afeb1d4d7586fbab1eee944b7864881"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/tests/verification-collector.test.mjs",
+      "sha256": "7a5d93dd31d5e2e758369978e4fd2c1b8fa6983950cb59c73e6c3834649d19dd"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/failed-source/tests/verification-delivery.test.mjs",
+      "sha256": "27e6907bfab6b20595dba9ca27323f0f2cc3133b447c2e190d72fccca40c9bc7"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/report.json",
+      "sha256": "4c0c4edca75cf84439849f4264f9640bdd1e03e13784de1d9f6932d64a4a885e"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v1-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Actual SQLite/Runner persistence, authenticated local HTTP, original output files and content ACK. Controlled backend writes report/image/build fixture bytes; Git/admission/Runtime are explicit DB fixtures.",
+    "No Docker build, image execution/health, production model/OIDC/Linux/runsc, actual database migration or release candidate freeze claimed."
+  ]
+}

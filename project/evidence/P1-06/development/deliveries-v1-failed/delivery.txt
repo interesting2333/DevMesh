@@ -1,0 +1,83 @@
+TAP version 13
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original authenticated Job outputs become immutable delivery without another Job, process or accepted Release
+ok 1 - original authenticated Job outputs become immutable delivery without another Job, process or accepted Release
+  ---
+  duration_ms: 3608.3705
+  type: 'test'
+  ...
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery policy must have been pinned before Tester admission and cannot be weakened after quality PASS
+ok 2 - delivery policy must have been pinned before Tester admission and cannot be weakened after quality PASS
+  ---
+  duration_ms: 2072.8346
+  type: 'test'
+  ...
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost material and final ACKs recover the original operation with no additional Runner execution
+ok 3 - lost material and final ACKs recover the original operation with no additional Runner execution
+  ---
+  duration_ms: 3355.4413
+  type: 'test'
+  ...
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changed original Job identity and corrupted HTTP bytes never complete delivery
+ok 4 - changed original Job identity and corrupted HTTP bytes never complete delivery
+  ---
+  duration_ms: 4191.4167
+  type: 'test'
+  ...
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: canonical data plan must bind exact Run, revisions, commit and existing data lineage
+ok 5 - canonical data plan must bind exact Run, revisions, commit and existing data lineage
+  ---
+  duration_ms: 12371.4758
+  type: 'test'
+  ...
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: missing fixed output and unconfigured Runner are explicit failures
+ok 6 - missing fixed output and unconfigured Runner are explicit failures
+  ---
+  duration_ms: 5782.2462
+  type: 'test'
+  ...
+# (node:32756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery is owner-written, membership-rechecked on replay and protected from content GC
+not ok 7 - delivery is owner-written, membership-rechecked on replay and protected from content GC
+  ---
+  duration_ms: 4058.0872
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-delivery.test.mjs:45:1'
+  failureType: 'testCodeFailure'
+  error: 'table project_members has 4 columns but 3 values were supplied'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.run (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:19:78)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-delivery.test.mjs:47:4)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 6
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 36981.0852

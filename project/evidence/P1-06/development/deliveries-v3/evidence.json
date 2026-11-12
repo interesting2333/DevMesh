@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task4 delivery provenance development: pinned original output policy, actual SQLite and authenticated local HTTP Runner, immutable material byte ACK and OCI identities, exact data plan. Controlled backend writes fixture build bytes; Git/admission/Runtime facts are explicit DB fixtures. No Docker image build, container health, production model, Linux or release candidate freeze claimed.",
+  "sourceCommit": "66a9cf7ae180982ff788e6659560a8e7bcd5f8a6",
+  "dirty": true,
+  "sourceFingerprint": "161e5bd34a1cc1949103803bb78cd87a8622b1a3a03e373eb603b18671b147d2",
+  "unchanged": true,
+  "startedAt": "2026-11-12T06:46:13.500Z",
+  "finishedAt": "2026-11-12T06:48:53.049Z",
+  "checks": [
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1254,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "delivery",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 64852,
+      "output": "delivery.txt",
+      "sha256": "3a91b2b5f9ebb1ef2293c5cde9e00b97787dc4074b47aa588b67047f17486d45"
+    },
+    {
+      "name": "quality-journal",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 10003,
+      "output": "quality-journal.txt",
+      "sha256": "bcc5e08cee09fa42bf9c3bd59ea4e56cae588a3ec3a9d83158325ebc2e870787"
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2433,
+      "output": "contracts.txt",
+      "sha256": "4f269e232d72c2239cc37ce52d9741b8a3cec6de149aa0d0657a4076de2624d6"
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1713,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 79092,
+      "output": "storage.txt",
+      "sha256": "70b0085735d95251329e6e878612fa79c57d69584af8fb3214b60c55e11dc361"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v3/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v3/contracts.txt",
+      "sha256": "4f269e232d72c2239cc37ce52d9741b8a3cec6de149aa0d0657a4076de2624d6"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v3/delivery.txt",
+      "sha256": "3a91b2b5f9ebb1ef2293c5cde9e00b97787dc4074b47aa588b67047f17486d45"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v3/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v3/quality-journal.txt",
+      "sha256": "bcc5e08cee09fa42bf9c3bd59ea4e56cae588a3ec3a9d83158325ebc2e870787"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v3/report.json",
+      "sha256": "62de9c515eae78eccd661f84e44c6d129ac691878bc30073da56df4af5e3a598"
+    },
+    {
+      "path": "project/evidence/P1-06/development/deliveries-v3/storage.txt",
+      "sha256": "70b0085735d95251329e6e878612fa79c57d69584af8fb3214b60c55e11dc361"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Actual SQLite/Runner persistence, authenticated local HTTP, original output files and content ACK. Controlled backend writes report/image/build fixture bytes; Git/admission/Runtime are explicit DB fixtures.",
+    "No Docker build, image execution/health, production model/OIDC/Linux/runsc, actual database migration or release candidate freeze claimed."
+  ]
+}

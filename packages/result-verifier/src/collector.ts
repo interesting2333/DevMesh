@@ -20,7 +20,7 @@ export type CollectionResult={state:'PENDING';verification:QualityVerification;c
 function sourceMatches(scope:QualitySourceScope,manifest:SourceManifest,verification:QualityVerification){
   if(scope.targetCommit!==verification.basis.targetCommit||scope.checkConfigHash!==verification.configHash||manifest.sha256!==verification.basis.allocationManifestSha256||scope.gitManifest.length!==manifest.files.length||scope.gitManifest.some(f=>!manifest.files.some(m=>m.path===f.path&&m.sha256===f.sha256)))return reject('QUALITY_SOURCE_MANIFEST_CHANGED');
 }
-function fact(job:Job):NonNullable<QualityStage['job']>{
+export function originalRunnerFact(job:Job):NonNullable<QualityStage['job']>{
   const {jobId,operationId,requestHash,request,state,exitCode,errorCode,stopRequested,stopEvidence,containerId,startedAt,endedAt,logCursor,outputRefs}=job;
   return {jobId:ids.job.parse(jobId),operationId:ids.operation.parse(operationId),requestHash,request:request as unknown as NonNullable<QualityStage['job']>['request'],state,exitCode,errorCode,stopRequested,stopEvidence:stopEvidence as NonNullable<QualityStage['job']>['stopEvidence'],containerId,startedAt,endedAt,executionProfile:job.executionProfile??null,logCursor,outputRefs};
 }
@@ -69,7 +69,7 @@ export class QualityCollector {
       if(!retained){
         let observed:Job;try{observed=stage.job?await this.runner.get(stage.job.jobId):await this.runner.byOperation(stage.operationId);}catch(error){if(error instanceof Error&&'code' in error){codes.push(String(error.code));continue;}throw error;}
         if(!original||stage.state!=='EXITED'||observed.state!=='EXITED'){codes.push('QUALITY_ORIGIN_OUTCOME_UNKNOWN');continue;}
-        if(canonical(fact(observed))!==canonical(original))return reject('QUALITY_ORIGIN_FACT_CHANGED');original=fact(observed);
+        if(canonical(originalRunnerFact(observed))!==canonical(original))return reject('QUALITY_ORIGIN_FACT_CHANGED');original=originalRunnerFact(observed);
       }
       if(!original||stage.state!=='EXITED'||original.state!=='EXITED'||!original.executionProfile||!original.startedAt||!original.endedAt||!original.outputRefs[0]){codes.push('QUALITY_ORIGIN_INCOMPLETE');continue;}
       const log=original.outputRefs[0],execution=qualityExecution.parse({producerId:producer.producerId,attemptId:verification.attemptId,runnerId:original.executionProfile.runnerId,jobId:original.jobId,operationId:original.operationId,requestHash:original.requestHash,targetCommit:verification.basis.targetCommit,checkConfigHash:verification.configHash,commandHash:original.executionProfile.commandHash,imageDigest:original.request.imageDigest,state:original.state,exitCode:original.exitCode,errorCode:original.errorCode,stopRequested:original.stopRequested,startedAt:original.startedAt,finishedAt:original.endedAt,log:{sha256:log.sha256,size:log.byteSize}});

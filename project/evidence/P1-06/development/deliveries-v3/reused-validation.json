@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "sourceReport": "../deliveries-v2-failed/report.json",
+  "currentReport": "report.json",
+  "applicationSourceUnchanged": true,
+  "changes": [
+    {
+      "path": "tests/verification-delivery.test.mjs",
+      "sha256": "92b199e719ec1b07ae978a823dec3bf0219e9b0acaf4f7bd00fd3b6d59d0d8ae"
+    }
+  ],
+  "reusedChecks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 19430,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 34390,
+      "output": "current-build.txt",
+      "sha256": "36b8c39f54abf4ba3bcd63d077e5065a69f91dcc139ad361dd3922e342ec0e97"
+    },
+    {
+      "name": "collector",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 11154,
+      "output": "collector.txt",
+      "sha256": "afd23a31a0e88746ce2fb44d100535922591a1475d6321fb5a623c375a4a5d05"
+    },
+    {
+      "name": "preview-image",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 948,
+      "output": "preview-image.txt",
+      "sha256": "a160364542d855fee52e1996eb573721baf604a7c641a2466a92042624c3730a"
+    }
+  ],
+  "scope": "Reuse only passing checks on identical application source. v2 failed at an incorrect driver test path; that failure remains retained."
+}
