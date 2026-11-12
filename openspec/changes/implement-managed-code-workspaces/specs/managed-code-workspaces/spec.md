@@ -18,6 +18,16 @@ The system SHALL allocate an isolated workspace for the admitted Attempt from it
 - **WHEN** preparation has an unresolved result
 - **THEN** recovery SHALL inspect the original allocation and workspace identity before creating or reusing any checkout
 
+#### Scenario: An MCP service starts before an Attempt workspace is allocated
+
+- **WHEN** a trusted dynamic backend resolves a later READY allocation
+- **THEN** each tool call SHALL require its original owner, configured Runner, exact resources and persisted allocation identity without accepting model supplied host paths
+
+#### Scenario: The first dynamic tool call observes a replaced directory
+
+- **WHEN** the current directory differs from the physical identity in the original allocation acknowledgement
+- **THEN** the call SHALL be rejected without adopting that replacement as the original workspace or changing its bytes
+
 ### Requirement: Git mutations require exclusive current authority
 
 The system SHALL serialize project integration and fence workspace mutations against active or uncertain Runner jobs and editors using current host, membership, control generation and resource authority.

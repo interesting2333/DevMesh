@@ -7,18 +7,18 @@ import {z} from 'zod';
 import {canonicalRoot} from '@devmesh/blob-store';
 import {opaqueKey,relativeFile} from '@devmesh/contracts';
 import type {ExecutionPermit} from '@devmesh/contracts';
-import {canonical,repoBinding,repoCommitArgs,repoIntegrateArgs,managedSourcePath} from '@devmesh/storage-sqlite';
+import {canonical,repoBinding,repoCommitArgs,repoIntegrateArgs,managedSourcePath,gitDirectoryIdentity} from '@devmesh/storage-sqlite';
 import type {RepoOperation,SqliteStorage} from '@devmesh/storage-sqlite';
 import {ToolError} from './protocol.js';
 import type {ToolDefinition} from './protocol.js';
 import {repoFileTools} from './repo-files.js';
 
-const bindingSchema=repoBinding.extend({root:z.string().min(1),gitDirectory:z.string().min(1),commonDirectory:z.string().min(1)});
+const bindingSchema=repoBinding.extend({root:z.string().min(1),gitDirectory:z.string().min(1),commonDirectory:z.string().min(1),identity:gitDirectoryIdentity.optional()});
 export type RepoWorkspaceBinding=z.output<typeof bindingSchema>;
 export interface RepoWorkspaceLease {release():Promise<void>}
 /** The allocator must fence Runner/editors as well as other Git writers. */
 export interface RepoWorkspaceAccess {operationId:string;permit:ExecutionPermit;purpose:'read'|'write'|'reconcile'}
-export interface RepoGitOptions {storage:SqliteStorage;bindings:readonly RepoWorkspaceBinding[];scratchRoot:string;acquire:(binding:RepoWorkspaceBinding,signal:AbortSignal,access:RepoWorkspaceAccess)=>Promise<RepoWorkspaceLease>;authorizeIntegration?:(binding:RepoWorkspaceBinding,commit:string,signal:AbortSignal)=>Promise<void>}
+export interface RepoGitOptions {storage:SqliteStorage;bindings:readonly RepoWorkspaceBinding[];resolveBinding?:(workspaceRef:string,permit:ExecutionPermit)=>Promise<RepoWorkspaceBinding>;scratchRoot:string;acquire:(binding:RepoWorkspaceBinding,signal:AbortSignal,access:RepoWorkspaceAccess)=>Promise<RepoWorkspaceLease>;authorizeIntegration?:(binding:RepoWorkspaceBinding,commit:string,signal:AbortSignal)=>Promise<void>}
 const denied=(path:string)=>!managedSourcePath.safeParse(path).success;
 const within=(root:string,path:string)=>{const rel=relative(root,path);return rel!==''&&!isAbsolute(rel)&&rel!=='..'&&!rel.startsWith('..'+(process.platform==='win32'?'\\':'/'));};
 const oid=(v:string)=>{if(!/^[a-f0-9]{40}$/.test(v))throw new ToolError('MCP_GIT_OBJECT_INVALID');return v;};
@@ -33,8 +33,17 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
   // Windows may provide a legitimate short (8.3) spelling for the temp root.
   // Freeze physical identities once; later path replacement must still fail.
   const physicalBindings=new Map(bindings.map(b=>{const ready=Promise.all([realpath(b.root),realpath(b.gitDirectory),realpath(b.commonDirectory)]).then(async([root,gitDirectory,commonDirectory])=>({root,gitDirectory,commonDirectory,directories:await Promise.all([...new Set([root!,gitDirectory!,commonDirectory!])].map(async path=>{const stat=await lstat(path,{bigint:true});return {path,dev:stat.dev,ino:stat.ino};}))}));void ready.catch(()=>{});return [b.workspaceRef,ready] as const;}));
-  const binding=(ref:string)=>bindings.find(b=>b.workspaceRef===ref)??(()=>{throw new ToolError('MCP_WORKSPACE_DENIED','not-sent');})();
-  const publicBinding=(b:RepoWorkspaceBinding)=>repoBinding.parse(Object.fromEntries(Object.entries(b).filter(([k])=>!['root','gitDirectory','commonDirectory'].includes(k))));
+  async function binding(ref:string,permit:ExecutionPermit){
+    const fixed=bindings.find(b=>b.workspaceRef===ref);if(fixed)return fixed;
+    if(!options.resolveBinding)throw new ToolError('MCP_WORKSPACE_DENIED','not-sent');
+    const b=bindingSchema.parse(await options.resolveBinding(ref,permit)),identity=b.identity;
+    if(b.workspaceRef!==ref||!identity||identity.root!==b.root||identity.gitDirectory!==b.gitDirectory||identity.commonDirectory!==b.commonDirectory||identity.commonDirectory!==identity.gitDirectory)throw new ToolError('MCP_WORKSPACE_CHANGED','not-sent');
+    for(const p of [b.root,b.gitDirectory,b.commonDirectory])canonicalRoot(p);
+    // Never learn physical identity from an arbitrary directory first observed
+    // after service startup. The original allocation ACK supplies these values.
+    return b;
+  }
+  const publicBinding=(b:RepoWorkspaceBinding)=>repoBinding.parse(Object.fromEntries(Object.entries(b).filter(([k])=>!['root','gitDirectory','commonDirectory','identity'].includes(k))));
   async function acquire(b:RepoWorkspaceBinding,input:Pick<Parameters<ToolDefinition['execute']>[0],'operationId'|'permit'|'signal'>,toolName:string,purpose:RepoWorkspaceAccess['purpose']){
     // Re-read the live grant after admission and before a new Runner barrier.
     // This checks current authority; it never renews an expired Host grant.
@@ -57,7 +66,7 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
     });
   }
   async function safeRoot(b:RepoWorkspaceBinding,signal:AbortSignal){
-    const frozen=await physicalBindings.get(b.workspaceRef)!,root=await realpath(b.root);if(root!==frozen.root)throw new ToolError('MCP_WORKSPACE_CHANGED','not-sent');
+    const i=b.identity,frozen=i?{root:i.root,gitDirectory:i.gitDirectory,commonDirectory:i.commonDirectory,directories:[{path:i.root,dev:BigInt(i.rootDevice),ino:BigInt(i.rootFileId)},{path:i.gitDirectory,dev:BigInt(i.gitDevice),ino:BigInt(i.gitFileId)}]}:await physicalBindings.get(b.workspaceRef)!,root=await realpath(b.root);if(root!==frozen.root)throw new ToolError('MCP_WORKSPACE_CHANGED','not-sent');
     for(const entry of frozen.directories){const stat=await lstat(entry.path,{bigint:true});if(!stat.isDirectory()||stat.isSymbolicLink()||stat.dev!==entry.dev||stat.ino!==entry.ino)throw new ToolError('MCP_WORKSPACE_CHANGED','not-sent');}
     const [location,filters]=await Promise.all([git(root,['rev-parse','--show-toplevel','--show-object-format','--absolute-git-dir','--git-common-dir'],signal),git(root,['config','--get-regexp','^filter\\.'],signal,undefined,undefined,true)]);
     const [top,format,actualGit,common]=text(location.out).trim().split('\n');
@@ -104,7 +113,7 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
     const result={commit:p.commit,tree:p.tree,baseCommit:operation.request.binding.baseCommit,ref:p.ref};await finish(operation,'SUCCEEDED',result);return {operationId:operation.operationId,state:'SUCCEEDED',...result};
   }
   async function execute(toolName:'repo.commit'|'repo.integrate',input:Parameters<ToolDefinition['execute']>[0]){
-    const args=toolName==='repo.commit'?repoCommitArgs.parse(input.args):repoIntegrateArgs.parse(input.args),b=binding(args.workspaceRef);
+    const args=toolName==='repo.commit'?repoCommitArgs.parse(input.args):repoIntegrateArgs.parse(input.args),b=await binding(args.workspaceRef,input.permit);
     let operation=await options.storage.request('beginRepoOperation',{permit:input.permit,operationId:input.operationId,toolName,args,binding:publicBinding(b)});
     if(!operation.created)return reconcile(operation,b,input.signal);
     const key=toolName==='repo.integrate'?'project:'+b.projectId:resolve(b.root).toLowerCase();if(locks.has(key)){await finish(operation,'FAILED',{code:'MCP_GIT_WORKSPACE_BUSY'});throw new ToolError('MCP_GIT_WORKSPACE_BUSY','not-sent');}
@@ -149,13 +158,13 @@ export function repoGitTools(options:RepoGitOptions):ToolDefinition[]{
   const tools:ToolDefinition[]=[
     ...repoFileTools({options,binding,safeRoot,git,acquire}),
     {name:'repo.diff',description:'Inspect bounded changes in an authorized fenced workspace against its frozen base',schema:z.strictObject({workspaceRef:opaqueKey,baseCommit:repoCommitArgs.shape.baseCommit}),action:'read',effectClass:'READ',async execute({args,permit,signal,operationId}){
-      const b=binding(String(args.workspaceRef));if(permit.ownerKind!=='workflowAttempt'||permit.runId!==b.runId||permit.attemptId!==b.attemptId||args.baseCommit!==b.baseCommit||!permit.resources.some(r=>r.kind==='workspace'&&r.resourceId===b.resourceId))throw new ToolError('MCP_WORKSPACE_DENIED','not-sent');
+      const b=await binding(String(args.workspaceRef),permit);if(permit.ownerKind!=='workflowAttempt'||permit.runId!==b.runId||permit.attemptId!==b.attemptId||args.baseCommit!==b.baseCommit||!permit.resources.some(r=>r.kind==='workspace'&&r.resourceId===b.resourceId))throw new ToolError('MCP_WORKSPACE_DENIED','not-sent');
       const lease=await acquire(b,{operationId,permit,signal},'repo.diff','read');try{await options.storage.request('assertRepoWorkspaceSettled',{permit,workspaceRef:b.workspaceRef});const root=await safeRoot(b,signal),changed=paths((await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--name-only','-z',b.baseCommit,'--'],signal)).out),untracked=paths((await git(root,['ls-files','--others','--exclude-standard','-z','--'],signal)).out),all=[...new Set([...changed,...untracked])];if(all.length>2000||all.some(denied))throw new ToolError('MCP_GIT_PATH_DENIED','not-sent');await physical(root,all);const diff=(await git(root,['diff','--no-ext-diff','--no-textconv','--no-renames','--patch',b.baseCommit,'--'],signal)).out;if(diff.length>65536)throw new ToolError('MCP_GIT_DIFF_TOO_LARGE','not-sent');return {workspaceRef:b.workspaceRef,baseCommit:b.baseCommit,patch:text(diff),untracked};}finally{await lease.release();}
     }},
     {name:'repo.commit',description:'Commit only approved files from a fenced workspace at the frozen base',schema:repoCommitArgs,action:'write',effectClass:'IDEMPOTENT_WRITE',execute:input=>execute('repo.commit',input)},
     {name:'repo.integrate',description:'Integrate a proven commit into the Run candidate ref with a serialized base compare-and-swap',schema:repoIntegrateArgs,action:'write',effectClass:'IDEMPOTENT_WRITE',execute:input=>execute('repo.integrate',input)},
     {name:'repo.by-operation',description:'Reconcile the original Git operation without repeating its writes',schema:z.strictObject({operationId:opaqueKey}),action:'read',effectClass:'READ',async execute({args,permit,signal}){
-      const operation=await options.storage.request('getRepoOperation',{permit,operationId:String(args.operationId)}),b=binding(operation.request.binding.workspaceRef);
+      const operation=await options.storage.request('getRepoOperation',{permit,operationId:String(args.operationId)}),b=await binding(operation.request.binding.workspaceRef,permit);
       if(canonical(publicBinding(b))!==canonical(operation.request.binding))throw new ToolError('MCP_GIT_BINDING_CHANGED','unknown');return reconcile(operation,b,signal);
     }},
   ];return tools.filter(t=>t.name!=='repo.integrate'||options.authorizeIntegration!==undefined);

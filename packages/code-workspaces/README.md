@@ -66,3 +66,5 @@ const prepareCodeBasis = (candidate, signal) => integrations.prepareWorkInput({
 以上服务未自动接入默认应用启动流程。真实远程身份、跨节点执行代理、模型、Linux/runsc 及完整材料生命周期仍按各自验收范围推进；当前本地测试夹具的质量决策及无 Job fencer 不代表这些能力通过。
 
 维护适配 `createLocalManagedRunnerAuthority`／`createLocalWorkspaceCleanupAuthority` 绑定显式本地服务身份、Runner 与控制面 Worker 的唯一原操作；缺省不启用。测试工具权限无需包含 repo 写工具，维护仍复核当前成员和原资源；Grant 撤销后允许 read 降权资源维护，不授予执行。详见 `development/maintenance-review.md`。
+
+`createLocalManagedBindingResolver` 可由可信应用注入 repo MCP；每次调用通过 Worker 复核原 READY 分配、成员、Runner 与项目资源，目录身份来自原分配 ACK，不缓存首次访问路径。服务启动后创建的工作区也能绑定；服务和模型请求不接受物理路径。dynamic-v1 的真实本地 MCP 2/2、原 repo MCP 11/11 与 Runner 维护 2/2 已通过，Runtime 生命周期接线仍在实施。

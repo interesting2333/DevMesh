@@ -106,6 +106,12 @@ Runner 的独立维护 callback 绑定一个已认证 controllerId 和配置 run
 
 维护不属于模型工具，Tester 仅开放 tests 工具也能由受信任服务保存其原目录，不要求给模型增加 repo.commit。Worker 内部维护检查与普通工具白名单分开；原操作所属域、workspace 与 projectRepository 精确绑定后才可能取得屏障。Runner 的 cleanup 允许原资源降权为 read，正常执行路径仍要求当前写准入及有效租约，不允许据维护屏障发送新 Job。实际 HTTP／SQLite／Git 维护组合 2/2、屏障回归 5/5 与存储 28/28 已通过（maintenance-v4）；测试容器后端仅提供明确的受控事实，未启动实际 Docker/runsc。
 
+### Dynamic MCP bindings after admission
+
+repo MCP 保留显式静态配置，同时允许部署者配置受信任异步 resolver。服务可在尚无 Attempt checkout 时启动；请求发生后才由 Worker 从原分配和仓库记录解析 workspaceRef，要求 READY、原所有者、当前项目成员、配置 Runner 和精确 workspace／projectRepository 资源。模型参数仍不包含宿主路径、Git 目录或设备 ID。
+
+动态绑定必须提供原分配持久 ACK 中的 root／Git/common directory 与设备／文件 ID，包括第一次调用也逐次核实它们；不从调用时碰巧存在的同名目录建立信任。每次从持久记录解析，不在服务内累积无限 Attempt 缓存。普通工具准入及实际 Runner fencing 继续独立执行，暂停后只有原操作核实可通过，不能产生新编辑。原有静态配置的兼容回归与启动后动态分配的真实 MCP／Runner HTTP／Git 组合正在验证。
+
 ## Risks / Trade-offs
 
 - Git 动作和数据库不能原子提交 → 原意图、确定对象、原操作 ref、多 ref CAS、持久 ACK 分开记录；未知先核实。

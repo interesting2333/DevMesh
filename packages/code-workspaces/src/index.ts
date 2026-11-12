@@ -19,3 +19,4 @@ export type {LocalWorkspacePreservationOptions,PreservedWorkspaceLease} from './
 export {LocalWorkspaceReclamations} from './workspace-reclamations.js';
 export {verifyWorkspaceRemnants} from './workspace-remnants.js';
 export {createLocalWorkspaceCleanupAuthority,createLocalManagedRunnerAuthority} from './maintenance-authority.js';
+export {createLocalManagedBindingResolver} from './managed-bindings.js';

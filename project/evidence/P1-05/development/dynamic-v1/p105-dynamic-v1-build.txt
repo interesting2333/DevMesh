@@ -1,0 +1,64 @@
+Scope: 3 of 17 workspace projects
+packages/storage-sqlite build$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+packages/storage-sqlite build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/storage-sqlite build: ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+packages/storage-sqlite build: ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+packages/storage-sqlite build: ℹ target: node24
+packages/storage-sqlite build: ℹ tsconfig: ..\..\tsconfig.json
+packages/storage-sqlite build: ℹ Build start
+packages/storage-sqlite build: ℹ Cleaning 39 files
+packages/storage-sqlite build: ℹ dist\index.mjs                                         7.57 kB │ gzip:   2.66 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs                                        5.29 kB │ gzip:   2.15 kB
+packages/storage-sqlite build: ℹ dist\migrations.mjs                                    0.26 kB │ gzip:   0.17 kB
+packages/storage-sqlite build: ℹ dist\domain.mjs                                        0.17 kB │ gzip:   0.14 kB
+packages/storage-sqlite build: ℹ dist\domain-C1i5r5bk.mjs.map                         563.35 kB │ gzip: 119.63 kB
+packages/storage-sqlite build: ℹ dist\domain-C1i5r5bk.mjs                             338.51 kB │ gzip:  68.30 kB
+packages/storage-sqlite build: ℹ dist\workspace-preservation-domain-pn1oOj0T.mjs.map   90.17 kB │ gzip:  19.89 kB
+packages/storage-sqlite build: ℹ dist\workspace-preservation-domain-pn1oOj0T.mjs       50.21 kB │ gzip:  11.28 kB
+packages/storage-sqlite build: ℹ dist\index.mjs.map                                    14.66 kB │ gzip:   4.81 kB
+packages/storage-sqlite build: ℹ dist\migrations-CmCClcp5.mjs.map                      10.73 kB │ gzip:   3.79 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs.map                                    8.45 kB │ gzip:   3.15 kB
+packages/storage-sqlite build: ℹ dist\migrations-CmCClcp5.mjs                           6.31 kB │ gzip:   2.46 kB
+packages/storage-sqlite build: ℹ dist\index.d.mts                                       5.37 kB │ gzip:   1.75 kB
+packages/storage-sqlite build: ℹ dist\migrations.d.mts                                  0.91 kB │ gzip:   0.42 kB
+packages/storage-sqlite build: ℹ dist\domain.d.mts                                      0.33 kB │ gzip:   0.23 kB
+packages/storage-sqlite build: ℹ dist\worker.d.mts                                      0.01 kB │ gzip:   0.03 kB
+packages/storage-sqlite build: ℹ dist\json-Bjk_ORAs.d.mts                             218.06 kB │ gzip:  18.55 kB
+packages/storage-sqlite build: ℹ 17 files, total: 1.32 MB
+packages/storage-sqlite build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/storage-sqlite build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/storage-sqlite build:   - rolldown-plugin-dts:generate (73%)
+packages/storage-sqlite build:   - tsdown:deps (21%)
+packages/storage-sqlite build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/storage-sqlite build: ✔ Build complete in 5447ms
+packages/storage-sqlite build: Done
+packages/code-workspaces build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/mcp-tools build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/code-workspaces build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/mcp-tools build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/code-workspaces build: ℹ config file: D:\yms\AI\DevMesh\packages\code-workspaces\package.json 
+packages/code-workspaces build: ℹ entry: src/index.ts
+packages/code-workspaces build: ℹ target: node24
+packages/code-workspaces build: ℹ tsconfig: ..\..\tsconfig.json
+packages/code-workspaces build: ℹ Build start
+packages/mcp-tools build: ℹ config file: D:\yms\AI\DevMesh\packages\mcp-tools\package.json 
+packages/code-workspaces build: ℹ Cleaning 4 files
+packages/mcp-tools build: ℹ entry: src/index.ts
+packages/mcp-tools build: ℹ target: node24
+packages/mcp-tools build: ℹ tsconfig: ..\..\tsconfig.json
+packages/mcp-tools build: ℹ Build start
+packages/mcp-tools build: ℹ Cleaning 4 files
+packages/mcp-tools build: ℹ dist\index.mjs       82.89 kB │ gzip: 20.63 kB
+packages/mcp-tools build: ℹ dist\index.mjs.map  141.03 kB │ gzip: 35.34 kB
+packages/mcp-tools build: ℹ dist\index.d.mts     14.50 kB │ gzip:  3.38 kB
+packages/mcp-tools build: ℹ 3 files, total: 238.43 kB
+packages/mcp-tools build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/mcp-tools build: ✔ Build complete in 9659ms
+packages/code-workspaces build: ℹ dist\index.mjs      114.97 kB │ gzip: 24.58 kB
+packages/code-workspaces build: ℹ dist\index.mjs.map  193.40 kB │ gzip: 42.59 kB
+packages/code-workspaces build: ℹ dist\index.d.mts     18.27 kB │ gzip:  4.50 kB
+packages/code-workspaces build: ℹ 3 files, total: 326.64 kB
+packages/code-workspaces build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/code-workspaces build: ✔ Build complete in 10183ms
+packages/mcp-tools build: Done
+packages/code-workspaces build: Done

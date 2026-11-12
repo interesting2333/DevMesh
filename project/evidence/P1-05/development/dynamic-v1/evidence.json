@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "Dynamic post-startup managed workspace resolution with real authenticated local MCP/A2A/Runner HTTP, SQLite and Git; the first call is anchored to the original allocation identity. ControlledBackend launches no actual container. No model, OIDC, remote identity, Linux/runsc or acceptance gates.",
+  "baseCommit": "1c1e4029208dff08d0cfb425e808626429f24feb",
+  "sourceFingerprint": "29e6f280411191b32714d9327b212afd216d62838fb7db8d1ec9e4cc46382a9d",
+  "startedAt": "2026-11-12T01:18:16.690Z",
+  "finishedAt": "2026-11-12T01:21:23.119Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "path": ".cache/p105-dynamic-v1-typecheck.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 16789,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "path": ".cache/p105-dynamic-v1-lint.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2650,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "path": ".cache/p105-dynamic-v1-build.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 18069,
+      "sha256": "523f996aa1d99047c80ffb422832b0e1f4c7d37263009036553fb81df6bc2cd9"
+    },
+    {
+      "name": "dynamic-mcp",
+      "path": ".cache/p105-dynamic-v1-dynamic-mcp.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 44475,
+      "sha256": "46781ed7c76d59e42af7d3c5e9e7d8acc727d2c998b7cc84d09d11f9d90eea66",
+      "tests": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "repo-regression",
+      "path": ".cache/p105-dynamic-v1-repo-regression.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 54180,
+      "sha256": "1ec0a715676d54cf913c650703e1487e544fd2cc69a5db3fdcd736d8f94390e9",
+      "tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "maintenance-runner",
+      "path": ".cache/p105-dynamic-v1-maintenance-runner.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 50244,
+      "sha256": "568d075d3540da2b3723d40cbea0d1d1654caa89d2447b95876cc87ef0fddaa4",
+      "tests": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/dynamic-v1/p105-dynamic-v1-report.json",
+      "sha256": "cab61d0d6ebea2b9492db705d9f068656056891e1163ff2aa27957e09cad836b",
+      "byteSize": 43550
+    },
+    {
+      "path": "project/evidence/P1-05/development/dynamic-v1/p105-dynamic-v1-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "byteSize": 32
+    },
+    {
+      "path": "project/evidence/P1-05/development/dynamic-v1/p105-dynamic-v1-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061",
+      "byteSize": 61
+    },
+    {
+      "path": "project/evidence/P1-05/development/dynamic-v1/p105-dynamic-v1-build.txt",
+      "sha256": "523f996aa1d99047c80ffb422832b0e1f4c7d37263009036553fb81df6bc2cd9",
+      "byteSize": 5974
+    },
+    {
+      "path": "project/evidence/P1-05/development/dynamic-v1/p105-dynamic-v1-dynamic-mcp.txt",
+      "sha256": "46781ed7c76d59e42af7d3c5e9e7d8acc727d2c998b7cc84d09d11f9d90eea66",
+      "byteSize": 1578
+    },
+    {
+      "path": "project/evidence/P1-05/development/dynamic-v1/p105-dynamic-v1-repo-regression.txt",
+      "sha256": "1ec0a715676d54cf913c650703e1487e544fd2cc69a5db3fdcd736d8f94390e9",
+      "byteSize": 5663
+    },
+    {
+      "path": "project/evidence/P1-05/development/dynamic-v1/p105-dynamic-v1-maintenance-runner.txt",
+      "sha256": "568d075d3540da2b3723d40cbea0d1d1654caa89d2447b95876cc87ef0fddaa4",
+      "byteSize": 1648
+    }
+  ],
+  "limitations": [
+    "Actual authenticated local Runner HTTP and SQLite; ControlledBackend is a fixture and runs no actual container.",
+    "No live model, OIDC, remote identity, Linux/runsc, product acceptance or stage gates.",
+    "Runtime preparation/source publication and exact final checkpoint regression remain separate pending work."
+  ]
+}
