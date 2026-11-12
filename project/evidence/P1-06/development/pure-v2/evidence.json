@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 independent policy, raw parser and full source coverage evaluation; no SQLite verification or real Runner execution yet.",
+  "sourceCommit": "b1729eb5c8915b67054218d82e5cc9e3669f4e55",
+  "dirty": true,
+  "sourceFingerprint": "f0c82047f746c31588ff0aa9ae36176f99dd3e398c2fc5f13e0fd3af4df02916",
+  "unchanged": true,
+  "startedAt": "2026-11-12T02:19:51.547Z",
+  "finishedAt": "2026-11-12T02:20:08.482Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5972,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 674,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5603,
+      "output": "build.txt",
+      "sha256": "c57c07a0349cb499ec8aa97297bf43abc27371ffda5b21286b85aada2984b66b"
+    },
+    {
+      "name": "verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2680,
+      "output": "verification.txt",
+      "sha256": "4aa7cf62f4a29f2c885e8fbfff794dd6cb3ff100d612e422b4ba269f36bb54a2"
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1158,
+      "output": "contracts.txt",
+      "sha256": "d9c8ec0543a033d09712ac7a03f418837a4ca8295af85c5c5490f96ee44ad9d6"
+    },
+    {
+      "name": "contract-drift",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 796,
+      "output": "contract-drift.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/pure-v2/build.txt",
+      "sha256": "c57c07a0349cb499ec8aa97297bf43abc27371ffda5b21286b85aada2984b66b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v2/contract-drift.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v2/contracts.txt",
+      "sha256": "d9c8ec0543a033d09712ac7a03f418837a4ca8295af85c5c5490f96ee44ad9d6"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v2/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v2/report.json",
+      "sha256": "29a0f2fc211dbe33407e6e27fd5c240d679356b889979b20a2c5f81ed4006e81"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v2/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v2/verification.txt",
+      "sha256": "4aa7cf62f4a29f2c885e8fbfff794dd6cb3ff100d612e422b4ba269f36bb54a2"
+    }
+  ],
+  "limitations": [
+    "Development source fingerprint, not an exact clean checkpoint or product/stage gate acceptance.",
+    "Archived real template bytes exercise pinned Vitest/V8 parsing only; topology derived from that archive is an explicit regression fixture, not independent pre-execution provenance.",
+    "Other inputs and execution receipts are explicit calculation fixtures. No new Runner jobs, real model, OIDC, Docker/runsc, Linux, persistent verifier, repair workflow or candidate freeze is proven by these tests."
+  ]
+}

@@ -228,6 +228,12 @@ importers:
         specifier: 0.1.9
         version: 0.1.9
 
+  packages/result-verifier:
+    dependencies:
+      '@devmesh/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+
   packages/runner:
     dependencies:
       '@devmesh/blob-store':

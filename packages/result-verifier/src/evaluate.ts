@@ -1,0 +1,82 @@
+import {qualityPolicy,qualityExecution,qualityReport,qualityEvaluation} from '@devmesh/contracts';
+import type {QualityPolicy,QualityExecution,QualityReport,QualityEvaluation,QualitySourceScope} from '@devmesh/contracts';
+import {VerificationError,reject} from './json.js';
+import {assertQualityScope,canonical,matchesGlob,qualityPolicyHash,sha256} from './source.js';
+import {parseIstanbulReport,parseVitestReport,testIdentity} from './reports.js';
+import type {FileCoverage,ParsedTests} from './reports.js';
+
+export interface QualityReportBytes {report:QualityReport;bytes:Uint8Array}
+type Status=QualityEvaluation['checks'][number]['status'];
+type Result=QualityEvaluation['checks'][number];
+type ParsedReport={status:Status;codes:string[];coverage?:Map<string,FileCoverage>;tests?:ParsedTests};
+const overall=(statuses:Status[]):'PASS'|'FAIL'|'MISSING'|'STALE'=>statuses.includes('FAIL')?'FAIL':statuses.includes('STALE')?'STALE':statuses.includes('MISSING')?'MISSING':'PASS';
+function executionStatus(e:QualityExecution|undefined,producer:QualityPolicy['producers'][number],scope:QualitySourceScope):{status:Status;codes:string[]}{
+  if(!e)return {status:'MISSING',codes:['EXECUTION_MISSING']};
+  if(e.targetCommit!==scope.targetCommit||e.checkConfigHash!==scope.checkConfigHash||e.commandHash!==sha256(canonical(producer.command))||e.imageDigest!==producer.imageDigest)return {status:'STALE',codes:['EXECUTION_BASIS_STALE']};
+  if(e.state!=='EXITED'||e.exitCode===null||!e.startedAt||!e.finishedAt)return {status:'MISSING',codes:['EXECUTION_OUTCOME_UNKNOWN']};
+  if(Date.parse(e.finishedAt)<Date.parse(e.startedAt)||e.exitCode!==0||e.errorCode||e.stopRequested)return {status:'FAIL',codes:['EXECUTION_FAILED']};
+  return {status:'PASS',codes:[]};
+}
+function compareTopology(files:Map<string,FileCoverage>,report:QualityPolicy['reports'][number],scope:QualitySourceScope):void{
+  const expected=scope.businessFiles.filter(f=>report.sourceInclude.some(g=>matchesGlob(f.path,g))),paths=new Set(expected.map(f=>f.path));
+  if([...files.keys()].some(p=>!paths.has(p)))return reject('REPORT_SOURCE_OUTSIDE_PRODUCER');
+  for(const file of expected){const actual=files.get(file.path);if(!actual)return reject('COVERAGE_FILE_MISSING');
+    if(canonical([...actual.statements.keys()].sort())!==canonical(file.statements.map(canonical).sort())||canonical([...actual.branches.keys()].sort())!==canonical(file.branches.map(canonical).sort()))return reject('COVERAGE_TOPOLOGY_STALE');
+  }
+}
+function metric(covered:number,total:number,minimum:number,allowNA=false):{covered:number;total:number;minimum:number;status:Status}{return {covered,total,minimum,status:total===0?allowNA?'NOT_APPLICABLE':'FAIL':BigInt(covered)*100n>=BigInt(total)*BigInt(minimum)?'PASS':'FAIL'};}
+function coverageResult(check:QualityPolicy['checks'][number],policy:QualityPolicy,scope:QualitySourceScope,parsed:Map<string,ParsedReport>):Pick<Result,'coverage'|'codes'|'status'>{
+  if(!scope.businessFiles.length)return {status:'FAIL',codes:['COVERAGE_SCOPE_EMPTY']};
+  const lines=new Map<string,boolean>(),branches=new Map<string,boolean>();
+  for(const f of scope.businessFiles){for(const loc of f.statements)lines.set(f.path+'\0'+loc.start.line,false);for(const b of f.branches)for(let i=0;i<b.locations.length;i++)branches.set(f.path+'\0'+canonical(b)+'\0'+i,false);}
+  for(const id of check.reportIds)for(const f of parsed.get(id)!.coverage!.values()){
+    for(const s of f.statements.values()){const key=f.path+'\0'+s.loc.start.line;lines.set(key,lines.get(key)!||s.hit);}
+    for(const [key,b] of f.branches)for(let i=0;i<b.hits.length;i++){const id=f.path+'\0'+key+'\0'+i;branches.set(id,branches.get(id)!||b.hits[i]!);}
+  }
+  const coverage={lines:metric([...lines.values()].filter(Boolean).length,lines.size,policy.thresholds.lines),branches:metric([...branches.values()].filter(Boolean).length,branches.size,policy.thresholds.branches,policy.zeroBranches==='complete-map-proves-none')};
+  const codes=[];if(coverage.lines.status==='FAIL')codes.push(lines.size?'COVERAGE_LINES_BELOW_MINIMUM':'COVERAGE_LINES_EMPTY');if(coverage.branches.status==='FAIL')codes.push(branches.size?'COVERAGE_BRANCHES_BELOW_MINIMUM':'COVERAGE_BRANCHES_UNPROVEN');
+  return {coverage,status:codes.length?'FAIL':'PASS',codes};
+}
+export function evaluateQuality(input:{policy:unknown;scope:unknown;executions:unknown[];reports:QualityReportBytes[]}):QualityEvaluation{
+  const policy=qualityPolicy.parse(input.policy),scope=assertQualityScope(input.scope,policy),executions=new Map<string,QualityExecution>(),parsed=new Map<string,ParsedReport>();
+  if(input.executions.length>16||input.reports.length>32)return reject('VERIFICATION_INPUT_LIMIT');
+  const jobs=new Set<string>(),operations=new Set<string>();
+  for(const raw of input.executions){const e=qualityExecution.parse(raw);if(!policy.producers.some(p=>p.producerId===e.producerId))return reject('EXECUTION_PRODUCER_UNKNOWN');if(executions.has(e.producerId))return reject('EXECUTION_AMBIGUOUS');
+    const job=e.runnerId+'\0'+e.jobId,operation=e.runnerId+'\0'+e.operationId;if(jobs.has(job)||operations.has(operation))return reject('EXECUTION_JOB_REUSED');jobs.add(job);operations.add(operation);executions.set(e.producerId,e);}
+  const required=new Map(policy.reports.map(r=>[r.reportId,r]));
+  const seenOutputs=new Set<string>();
+  for(const entry of input.reports){const report=qualityReport.parse(entry.report),definition=required.get(report.reportId);if(!definition)return reject('REPORT_ID_UNKNOWN');if(parsed.has(report.reportId))return reject('REPORT_ID_AMBIGUOUS');
+    let result:ParsedReport={status:'PASS',codes:[]};
+    try{
+      if(report.execution.producerId!==definition.producerId||canonical(executions.get(definition.producerId))!==canonical(report.execution))return reject('REPORT_EXECUTION_MISMATCH');
+      const output=report.execution.runnerId+'\0'+report.execution.jobId+'\0'+report.outputPath;if(seenOutputs.has(output))return reject('REPORT_OUTPUT_REUSED');seenOutputs.add(output);
+      if(report.outputPath!==definition.path)return reject('REPORT_OUTPUT_PATH_MISMATCH');if(report.size!==entry.bytes.byteLength||sha256(entry.bytes)!==report.sha256)return reject('REPORT_BYTES_MISMATCH');
+      if(report.execution.targetCommit!==scope.targetCommit||report.execution.checkConfigHash!==qualityPolicyHash(policy))return reject('REPORT_BASIS_STALE');
+      const producer=policy.producers.find(p=>p.producerId===definition.producerId)!;
+      if(definition.format==='istanbul-v1'){result.coverage=parseIstanbulReport(entry.bytes,producer.pathPrefixes,scope.gitManifest);compareTopology(result.coverage,definition,scope);}
+      else result.tests=parseVitestReport(entry.bytes,producer.pathPrefixes);
+    }catch(error){if(!(error instanceof VerificationError))throw error;const missing=error.code==='COVERAGE_FILE_MISSING';result={status:missing?'MISSING':error.code.endsWith('_STALE')?'STALE':'FAIL',codes:[error.code]};}
+    parsed.set(report.reportId,result);
+  }
+  const checks:Result[]=policy.checks.map(check=>{
+    if(check.kind==='human')return {checkId:check.checkId,status:'PENDING',codes:['HUMAN_REVIEW_REQUIRED'],reportIds:[]};
+    const facts=check.producerIds.map(id=>executionStatus(executions.get(id),policy.producers.find(p=>p.producerId===id)!,scope));
+    const reports=check.reportIds.map(id=>parsed.get(id)??{status:'MISSING' as const,codes:['REPORT_MISSING']});
+    const prerequisites=overall([...facts,...reports].map(f=>f.status)),codes=[...new Set([...facts,...reports].flatMap(f=>f.codes))];
+    const result:Result={checkId:check.checkId,status:prerequisites,codes,reportIds:check.reportIds};if(reports.some(r=>r.status!=='PASS'))return result;
+    // Known failed execution can still provide useful original failure counts;
+    // its execution status always remains part of the final decision.
+    if(check.kind==='coverage'){const measured=coverageResult(check,policy,scope,parsed);return {...result,...measured,status:overall([prerequisites,measured.status]),codes:[...new Set([...codes,...measured.codes])]};}
+    if(check.kind==='tests'){
+      const actual:ParsedTests['cases']=new Map();let runFailed=false;
+      for(const report of reports){runFailed||=report.tests!.runFailed;for(const [id,status] of report.tests!.cases){if(actual.has(id))return {...result,status:'FAIL',codes:['TEST_IDENTITY_AMBIGUOUS']};actual.set(id,status);}}
+      const tests={passed:0,failed:0,skipped:0,missing:0};for(const s of actual.values())tests[s==='PASSED'?'passed':s==='FAILED'?'failed':'skipped']++;
+      for(const expected of check.requiredTests)if(!actual.has(testIdentity(expected.path,expected.fullName)))tests.missing++;
+      if(runFailed)codes.push('TEST_RUN_FAILED');if(tests.failed)codes.push('TEST_FAILED');if(tests.skipped)codes.push('TEST_SKIPPED');if(tests.missing)codes.push('TEST_REQUIRED_MISSING');
+      return {...result,tests,status:overall([prerequisites,runFailed||tests.failed||tests.skipped?'FAIL':tests.missing?'MISSING':'PASS']),codes};
+    }
+    return result;
+  });
+  return qualityEvaluation.parse({schemaVersion:'devmesh.quality-evaluation.v1',targetCommit:scope.targetCommit,checkConfigHash:scope.checkConfigHash,sourceManifestSha256:scope.sourceManifestSha256,topologySha256:scope.topologySha256,
+    automaticStatus:overall(checks.filter(c=>c.status!=='PENDING').map(c=>c.status)),reviewStatus:checks.some(c=>c.status==='PENDING')?'PENDING':'NOT_REQUIRED',checks});
+}

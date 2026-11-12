@@ -8,5 +8,6 @@ export * from './input.js';
 export * from './preparation.js';
 export * from './plans.js';
 export * from './pipeline.js';
+export * from './quality.js';
 export * from './events.js';
 export * from './openapi.js';

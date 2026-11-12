@@ -29,6 +29,9 @@
       "@devmesh/contracts": [
         "./packages/contracts/src/index.ts"
       ],
+      "@devmesh/result-verifier": [
+        "./packages/result-verifier/src/index.ts"
+      ],
       "@devmesh/storage-sqlite": [
         "./packages/storage-sqlite/src/index.ts"
       ],

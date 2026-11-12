@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 independent policy, raw parser and full source coverage evaluation; no SQLite verification or real Runner execution yet.",
+  "sourceCommit": "b1729eb5c8915b67054218d82e5cc9e3669f4e55",
+  "dirty": true,
+  "sourceFingerprint": "1630a541e03e7b036244f4b1b8c648d4fd6848d1a90ccada4d2a8f133c8b7cd9",
+  "unchanged": true,
+  "startedAt": "2026-11-12T02:19:18.960Z",
+  "finishedAt": "2026-11-12T02:19:26.927Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7158,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 753,
+      "output": "lint.txt",
+      "sha256": "fba85ebfb239d41ca07012b210ac8ebf6ba164f640345e2e13cbee7dd2e4486d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/lint.txt",
+      "sha256": "fba85ebfb239d41ca07012b210ac8ebf6ba164f640345e2e13cbee7dd2e4486d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/report.json",
+      "sha256": "4103b80db299b71bffbd44e06dee08acc7c728be9985a99c1375d5123d6cd498"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/packages__contracts__src__quality.ts.txt",
+      "sha256": "d9e57f446ab6792e18c57141c9671ac026fbbe49d9ecad56c58b28c2a720726d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/packages__result-verifier__src__evaluate.ts.txt",
+      "sha256": "c88734e2bf7ef697569bb673d4e454889a5d62aadbdf71a48dd11342290010a2"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/packages__result-verifier__src__index.ts.txt",
+      "sha256": "e10e0b8955e86081441c325453cb0e306e83846407957971a397ae0e7d30d977"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/packages__result-verifier__src__json.ts.txt",
+      "sha256": "766d5208ceba2793366ad25b7b158b89a9486189de9fde7f4baee47459896803"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/packages__result-verifier__src__reports.ts.txt",
+      "sha256": "76f888730c476afca5ca114bcc71cd2f2d038bed7793f69eec6acede4f8e827c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/packages__result-verifier__src__source.ts.txt",
+      "sha256": "190ebb5857f9010ef3d54df09a90a1826e10b7409e5744bfef5062ae9e15ff98"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/tests__fixtures__quality.mjs.txt",
+      "sha256": "dd737fd316ede9b7b91e036838ae2b54917a01b8af8ef5744b1b86782ef2aa9c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/pure-v1-failed/tests__verification-reports.test.mjs.txt",
+      "sha256": "ea2838770643269e7b53c4c6fb1f2dbe65b7ce8894b485ae7a24fd1fc4786f04"
+    }
+  ],
+  "limitations": [
+    "Development source fingerprint, not an exact clean checkpoint or product/stage gate acceptance.",
+    "Archived real template bytes exercise pinned Vitest/V8 parsing only; topology derived from that archive is an explicit regression fixture, not independent pre-execution provenance.",
+    "Other inputs and execution receipts are explicit calculation fixtures. No new Runner jobs, real model, OIDC, Docker/runsc, Linux, persistent verifier, repair workflow or candidate freeze is proven by these tests."
+  ]
+}
