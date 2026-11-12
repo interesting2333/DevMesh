@@ -6,7 +6,7 @@
 
 ## 2. Durable original verification and trusted collection
 
-- [ ] 2.1 增加质量策略、原验证、报告材料与结果的向前迁移和 Worker 命令；验证幂等、冻结依据、成员隔离、内容引用／GC 互斥和历史升级。
+- [x] 2.1 增加质量策略、原验证、报告材料与结果的向前迁移和 Worker 命令；验证幂等、冻结依据、成员隔离、内容引用／GC 互斥和历史升级。
 - [ ] 2.2 实现只读查询原 Runner／pipeline 的报告采集和持久内容 ACK；真实本地 HTTP 验证输出哈希／日志、失败退出、未知 Job、丢回执及不重跑。
 - [ ] 2.3 将正式 Work 完成接到可复核的原验证事实；验证模型 success／旧 IPC／陈旧源码／配置不能绕过，确定 findings 和历史兼容分别保留。
 

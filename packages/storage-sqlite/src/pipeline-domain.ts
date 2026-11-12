@@ -89,7 +89,13 @@ export function createPipelineDomain(db:DatabaseSync,changed:(runId:string,opera
     recordPipelineStage(input:PipelineInput<'recordPipelineStage'>){return transaction(db,()=>{
       const p=pipeline(input.pipelineId),s=stage(input.pipelineId,input.ordinal),j=input.job;
       if(!s.request_json||s.operation_id!==j.operationId||digest(String(s.request_json))!==j.requestHash||canonical(j.request)!==s.request_json||s.job_id!==null&&s.job_id!==j.jobId)fail('PIPELINE_JOB_BASIS_CHANGED');
-      if(s.state==='EXITED'){if(s.job_json!==canonical(j))fail('PIPELINE_STAGE_RESULT_IMMUTABLE');return view(p);}
+      if(s.state==='EXITED'){
+        const saved=JSON.parse(String(s.job_json)) as Record<string,unknown>,comparison={...j} as Record<string,unknown>;
+        // An old immutable receipt may omit later observational fields. Querying
+        // it remains idempotent, but does not backfill quality proof into history.
+        for(const field of ['executionProfile','endedAt'])if(!Object.hasOwn(saved,field))delete comparison[field];
+        if(s.job_json!==canonical(comparison))fail('PIPELINE_STAGE_RESULT_IMMUTABLE');return view(p);
+      }
       const neverDispatched=j.stopRequested&&j.containerId===null&&j.startedAt===null&&j.stopEvidence?.neverDispatched===true&&typeof j.stopEvidence.verifiedAt==='string'&&Number.isFinite(Date.parse(j.stopEvidence.verifiedAt))&&j.logCursor===0&&j.outputRefs.length===0;
       if(j.state==='EXITED'&&j.exitCode===null&&!neverDispatched)fail('PIPELINE_EXIT_UNPROVEN');
       const state=j.state==='EXITED'?'EXITED':j.state==='OUTCOME_UNKNOWN'?'UNKNOWN':'ACKED';

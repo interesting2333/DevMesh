@@ -13,6 +13,8 @@ export type RenewJob=z.output<typeof renewJob>;
 export type JobState='QUEUED'|'STARTING'|'RUNNING'|'STOPPING'|'EXITED'|'OUTCOME_UNKNOWN';
 export interface Job {
  jobId:string;controllerId:string;operationId:string;requestHash:string;request:StartJob;
+ /** Hash of the immutable approved argv; never includes the host workspace path. */
+ executionProfile?:{runnerId:string;commandHash:string}|null;
  state:JobState;containerId:string|null;createdAt:string;startedAt:string|null;endedAt:string|null;exitCode:number|null;
  stopRequested:boolean;stopEvidence:Record<string,unknown>|null;errorCode:string|null;leaseSequence:number;
  lastHeartbeat:string;logCursor:number;outputRefs:{path:string;sha256:string;byteSize:number}[];
@@ -29,7 +31,7 @@ export interface ExecutionBackend {
  stop(job:Job):Promise<ContainerFact|null>;
  logs(job:Job):Promise<Uint8Array>;
 }
-export const jobSchema=z.strictObject({jobId:ids.job,controllerId:opaqueKey,operationId:ids.operation,requestHash:sha256,request:startJob,state:z.enum(['QUEUED','STARTING','RUNNING','STOPPING','EXITED','OUTCOME_UNKNOWN']),containerId:z.string().min(1).nullable(),createdAt:timestamp,startedAt:timestamp.nullable(),endedAt:timestamp.nullable(),exitCode:z.number().int().nullable(),stopRequested:z.boolean(),stopEvidence:z.record(z.string(),z.json()).nullable(),errorCode:opaqueKey.nullable(),leaseSequence:z.number().int().nonnegative(),lastHeartbeat:timestamp,logCursor:z.number().int().nonnegative(),outputRefs:z.array(z.strictObject({path:relativeFile,sha256,byteSize:z.number().int().nonnegative()}))});
+export const jobSchema=z.strictObject({jobId:ids.job,controllerId:opaqueKey,operationId:ids.operation,requestHash:sha256,request:startJob,executionProfile:z.strictObject({runnerId:opaqueKey,commandHash:sha256}).nullable().default(null),state:z.enum(['QUEUED','STARTING','RUNNING','STOPPING','EXITED','OUTCOME_UNKNOWN']),containerId:z.string().min(1).nullable(),createdAt:timestamp,startedAt:timestamp.nullable(),endedAt:timestamp.nullable(),exitCode:z.number().int().nullable(),stopRequested:z.boolean(),stopEvidence:z.record(z.string(),z.json()).nullable(),errorCode:opaqueKey.nullable(),leaseSequence:z.number().int().nonnegative(),lastHeartbeat:timestamp,logCursor:z.number().int().nonnegative(),outputRefs:z.array(z.strictObject({path:relativeFile,sha256,byteSize:z.number().int().nonnegative()}))});
 export interface RunnerAuthority {
  /** Must check current committed grant/epochs and service caller scopes. */
  verify(controllerId:string,request:StartJob,permit:StartJob['permit']):Promise<void>;

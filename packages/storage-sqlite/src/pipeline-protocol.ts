@@ -4,6 +4,7 @@ const pipelineId=opaqueKey;
 const ordinal=z.number().int().min(0).max(7);
 const permit={permit:executionPermit};
 export const pipelineJobFact=z.strictObject({jobId:ids.job,operationId:ids.operation,requestHash:sha256,request:z.record(z.string(),z.json()),
+  executionProfile:z.strictObject({runnerId:opaqueKey,commandHash:sha256}).nullable().default(null),endedAt:timestamp.nullable().default(null),
   state:z.enum(['QUEUED','STARTING','RUNNING','STOPPING','EXITED','OUTCOME_UNKNOWN']),exitCode:z.number().int().nullable(),errorCode:opaqueKey.nullable(),stopRequested:z.boolean(),logCursor:z.number().int().nonnegative(),
   containerId:z.string().min(1).nullable(),startedAt:timestamp.nullable(),stopEvidence:z.record(z.string(),z.json()).nullable(),
   outputRefs:z.array(z.strictObject({path:relativeFile,sha256,byteSize:z.number().int().nonnegative()})).max(33)});

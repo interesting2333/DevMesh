@@ -16,6 +16,8 @@ See proposal.md。当前 `testerOutput` 只约束报告引用的 targetCommit �
 
 可信采集服务以原 pipeline/job 查询实际状态，流式读取有界 Runner 输出和日志并核实 SHA／大小。先持久验证原操作与固定输入，报告内容用专用内容 target 在登记事务内建业务外键。原字节落盘后独立解析，不从 Agent 提供的 status、百分比或 artifact 名称推导通过。请求丢回复只查原操作；SENT/未知作业不重跑。前后端报告由策略指定的生产侧与来源作业匹配，不能用重复上传同一报告充数。
 
+Runner 已持久保存每个原 Job 的批准 argv；公开事实新增由这份不可变 execution_json 推导的 commandHash 与实际 runnerId，不发送宿主工作区路径，也不从重启后的当前配置重算。PipelineCoordinator 同时保留结束时间与该原执行身份。旧 pipeline 终态字节没有这些字段时只作幂等查询比较，不把新的观察字段回填到旧记录或默认视为新的质量证明；新质量验证缺准确执行事实时保持缺失。
+
 ### Pure bounded report and coverage evaluation
 
 独立 TypeScript 包不依赖模型执行，先实现纯解析和计算，再接可信采集与 Worker。首版原格式为模板实际使用的 Istanbul/V8 JSON 及明确版本的结构化测试结果，命令／类型／构建报告仍绑定原 Runner 事实。未知格式明确失败，不自动猜测。

@@ -1,0 +1,20 @@
+TAP version 13
+# (node:28144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: authenticated Runner reports the original immutable approved argv hash across configuration changes
+ok 1 - authenticated Runner reports the original immutable approved argv hash across configuration changes
+  ---
+  duration_ms: 396.8946
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 870.0275

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {randomUUID} from 'node:crypto';
+import {randomUUID,createHash} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import {join} from 'node:path';
 import {mkdir} from 'node:fs/promises';
@@ -10,6 +10,7 @@ import {RunnerClient,RunnerPolicy,RunnerManager,RunnerMaterials,serveRunner} fro
 import {httpFixture,prepareDispatch} from './fixtures/a2a-data.mjs';
 import {fixture as runnerFixture,image,until} from './fixtures/runner.mjs';
 import {ExecutionGrantLease} from '../packages/agent-runtime/dist/index.mjs';
+import {canonical} from './fixtures/storage-data.mjs';
 
 const op=()=> 'op_'+randomUUID().replaceAll('-','');
 async function fixture(t){
@@ -56,6 +57,15 @@ test('pipeline MCP freezes independent stages and returns real Runner log/output
   const log=await f.call('pipeline.logs',{pipelineId:p.pipelineId,ordinal:0,offset:0,limit:65536});assert.equal(Buffer.from(log.data,'base64').toString(),'controlled backend log\n');
   const outputs=await f.call('pipeline.artifacts',{pipelineId:p.pipelineId});assert.equal(outputs.stages.length,2);assert.ok(outputs.stages.every(s=>s.outputs[0].sha256.length===64));
   assert.equal((await f.r.layout.store.request('inspect',{})).jobs,2);
+  const db=new DatabaseSync(join(f.local.dataRoot,'db/devmesh.sqlite'));try{
+    const receipts=db.prepare('SELECT * FROM pipeline_stages WHERE pipeline_id=? ORDER BY ordinal').all(p.pipelineId),facts=receipts.map(r=>JSON.parse(r.job_json));
+    assert.deepEqual(facts.map(j=>j.executionProfile.commandHash),[['pnpm','install','--offline'],['pnpm','build']].map(argv=>createHash('sha256').update(canonical(argv)).digest('hex')));assert.ok(facts.every(j=>j.executionProfile.runnerId==='runner.test'&&j.endedAt!==null));
+    // Explicit pre-profile historical receipt. Query can compare old fields,
+    // but cannot silently add proof to the original immutable job history.
+    const old={...facts[0]};delete old.executionProfile;delete old.endedAt;const bytes=canonical(old);db.prepare('UPDATE pipeline_stages SET job_json=? WHERE pipeline_id=? AND ordinal=0').run(bytes,p.pipelineId);
+    await f.storage.request('recordPipelineStage',{pipelineId:p.pipelineId,ordinal:0,job:facts[0]});assert.equal(db.prepare('SELECT job_json FROM pipeline_stages WHERE pipeline_id=? AND ordinal=0').get(p.pipelineId).job_json,bytes);
+    await assert.rejects(f.storage.request('recordPipelineStage',{pipelineId:p.pipelineId,ordinal:0,job:{...facts[0],exitCode:1}}),{code:'PIPELINE_STAGE_RESULT_IMMUTABLE'});
+  }finally{db.close();}
 });
 
 test('a failed stage prevents later jobs and explicit stop before dispatch starts no Runner job',async t=>{

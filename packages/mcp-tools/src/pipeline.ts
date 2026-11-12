@@ -41,10 +41,10 @@ export class PipelineCoordinator {
   readonly #stop=new AbortController();#loop:Promise<void>|undefined;lastError:string|null=null;
   constructor(readonly storage:SqliteStorage,readonly runner:RunnerClient){}
   private async record(item:PipelineDispatch,job:Job){
-    const {jobId,operationId,requestHash,request,state,exitCode,errorCode,stopRequested,stopEvidence,containerId,startedAt,logCursor,outputRefs}=job;
+    const {jobId,operationId,requestHash,request,state,exitCode,errorCode,stopRequested,stopEvidence,containerId,startedAt,endedAt,executionProfile,logCursor,outputRefs}=job;
     executionPermit.parse(request.permit);
     await this.storage.request('recordPipelineStage',{pipelineId:item.pipelineId,ordinal:item.ordinal,
-      job:{jobId,operationId,requestHash,request:z.record(z.string(),z.json()).parse(request),state,exitCode,errorCode,stopRequested,stopEvidence:z.record(z.string(),z.json()).nullable().parse(stopEvidence),containerId,startedAt,logCursor,outputRefs}});
+      job:{jobId,operationId,requestHash,request:z.record(z.string(),z.json()).parse(request),state,exitCode,errorCode,stopRequested,stopEvidence:z.record(z.string(),z.json()).nullable().parse(stopEvidence),containerId,startedAt,endedAt,executionProfile:executionProfile??null,logCursor,outputRefs}});
   }
   async process(item:PipelineDispatch){
     if(this.#stop.signal.aborted)return;

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 migration 21, immutable original verification and content references; actual local Runner execution-profile HTTP and MCP pipeline observations. Quality journal Git/Runner facts remain explicit DB fixtures.",
+  "sourceCommit": "ef4a2e379b2ca6791970fa36608ac6d8ee1bfcdc",
+  "dirty": true,
+  "sourceFingerprint": "1b074539a6354126324dfe69b1e11e4bbed89b83b480d01a8809d4afa4c16eed",
+  "unchanged": true,
+  "startedAt": "2026-11-12T02:41:17.846Z",
+  "finishedAt": "2026-11-12T02:42:07.053Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9592,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 880,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 36779,
+      "output": "build.txt",
+      "sha256": "6032adc9ba1cf053aa04f6e3a91cd6ccb8d0cdde341a5857ecd8aa359706e4cd"
+    },
+    {
+      "name": "quality-journal",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 1858,
+      "output": "quality-journal.txt",
+      "sha256": "b4328e91e0c559807a3ef083feab818809c7cbe3fe0c929549fc580a4eb25cb6"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/build.txt",
+      "sha256": "6032adc9ba1cf053aa04f6e3a91cd6ccb8d0cdde341a5857ecd8aa359706e4cd"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/quality-journal.txt",
+      "sha256": "b4328e91e0c559807a3ef083feab818809c7cbe3fe0c929549fc580a4eb25cb6"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/report.json",
+      "sha256": "42d60b2a551da57695785f57ac1c214f09434010adac6b5216f85588f4013660"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/packages__storage-sqlite__src__quality-domain.ts.txt",
+      "sha256": "cb778368abb2dfc72ce92ee9b8321979e985876168ffc7ee81a30bf0380fd9d5"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/packages__storage-sqlite__src__quality-protocol.ts.txt",
+      "sha256": "21c94a994cb548e17a3f739cdbc3ef05d7a1bd345cfba9d350dcaacaf31c74ce"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/tests__fixtures__quality-storage.mjs.txt",
+      "sha256": "e50d142e9e0f025bdc7c814839a5547f368e1073c5e05c8ac476cd54181161fd"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v1-failed/tests__verification-storage.test.mjs.txt",
+      "sha256": "d54c85f0563893f78fb8cf21ec9306c8727d15c0df9aef6230ef99bec2900363"
+    }
+  ],
+  "limitations": [
+    "Development source fingerprint, not an exact clean checkpoint or product/stage gate acceptance.",
+    "Quality journal uses explicit database Git and Runner fixtures with real SQLite and local content storage; it does not prove real Git/Runner quality collection.",
+    "Runner profile and MCP pipeline tests use actual local authenticated HTTP with a fixture execution backend, not Docker/runsc or Linux.",
+    "No real model, OIDC, complete repair workflow or candidate freeze acceptance is proven."
+  ]
+}

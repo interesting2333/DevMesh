@@ -1,0 +1,159 @@
+TAP version 13
+# (node:24916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: quality verification freezes original policy, exact candidate basis, original jobs and immutable calculation
+not ok 1 - quality verification freezes original policy, exact candidate basis, original jobs and immutable calculation
+  ---
+  duration_ms: 301.1628
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-storage.test.mjs:7:1'
+  failureType: 'testCodeFailure'
+  error: 'no such table: planned_works'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    get (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2062:32)
+    current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2095:10)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2275:10
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginQualityVerification (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2224:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2394:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:6961:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-storage.mjs:32:179)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-storage.test.mjs:8:10)
+  ...
+# Subtest: quality content registration and its business reference commit atomically and survive a lost ACK
+not ok 2 - quality content registration and its business reference commit atomically and survive a lost ACK
+  ---
+  duration_ms: 201.1232
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-storage.test.mjs:15:1'
+  failureType: 'testCodeFailure'
+  error: 'no such table: planned_works'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    get (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2062:32)
+    current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2095:10)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2275:10
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginQualityVerification (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2224:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2394:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:6961:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-storage.mjs:32:179)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-storage.test.mjs:16:10)
+  ...
+# Subtest: known failed execution remains immutable FAIL with original failure counts and cannot claim PASS
+not ok 3 - known failed execution remains immutable FAIL with original failure counts and cannot claim PASS
+  ---
+  duration_ms: 183.8652
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-storage.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: 'no such table: planned_works'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    get (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2062:32)
+    current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2095:10)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2275:10
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginQualityVerification (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2224:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2394:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:6961:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-storage.mjs:32:179)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-storage.test.mjs:23:10)
+  ...
+# Subtest: current membership guards collection and project readers see original bytes without gaining write authority
+not ok 4 - current membership guards collection and project readers see original bytes without gaining write authority
+  ---
+  duration_ms: 167.0552
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-storage.test.mjs:26:1'
+  failureType: 'testCodeFailure'
+  error: 'no such table: planned_works'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    get (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2062:32)
+    current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2095:10)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2275:10
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginQualityVerification (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2224:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2394:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:6961:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-storage.mjs:32:179)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-storage.test.mjs:27:10)
+  ...
+# Subtest: paused verification records original history as stale without resurrecting admission or changing accepted code
+not ok 5 - paused verification records original history as stale without resurrecting admission or changing accepted code
+  ---
+  duration_ms: 140.2845
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-storage.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: 'no such table: planned_works'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    get (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2062:32)
+    current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2095:10)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2275:10
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginQualityVerification (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2224:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2394:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:6961:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-storage.mjs:32:179)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-storage.test.mjs:33:10)
+  ...
+# Subtest: changed original source, job identity, missing profile or missing content cannot become current verification
+not ok 6 - changed original source, job identity, missing profile or missing content cannot become current verification
+  ---
+  duration_ms: 212.1168
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-storage.test.mjs:36:1'
+  failureType: 'testCodeFailure'
+  error: 'no such table: planned_works'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    get (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2062:32)
+    current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2095:10)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2275:10
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginQualityVerification (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2224:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2394:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:6961:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-storage.mjs:32:179)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-storage.test.mjs:37:10)
+  ...
+# Subtest: human review remains pending and known raw quality does not itself complete Work
+not ok 7 - human review remains pending and known raw quality does not itself complete Work
+  ---
+  duration_ms: 155.1591
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-storage.test.mjs:43:1'
+  failureType: 'testCodeFailure'
+  error: 'no such table: planned_works'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    get (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2062:32)
+    current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2095:10)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2275:10
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.beginQualityVerification (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2224:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:2394:27)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-DOClXDTZ.mjs:6961:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-storage.mjs:32:179)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-storage.test.mjs:44:10)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 0
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1743.2949

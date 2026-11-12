@@ -57,6 +57,9 @@ import type {WorkspaceReclamationMethod} from './workspace-reclamation-protocol.
 import {createWorkspaceMaintenanceDomain} from './workspace-maintenance-domain.js';
 import {workspaceMaintenanceRequests} from './workspace-maintenance-protocol.js';
 import type {WorkspaceMaintenanceMethod} from './workspace-maintenance-protocol.js';
+import {createQualityDomain} from './quality-domain.js';
+import {qualityRequests} from './quality-protocol.js';
+import type {QualityMethod} from './quality-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -84,6 +87,7 @@ export function createDomain(db: DatabaseSync) {
   });
   const plans = createPlanDomain(db);
   const candidateIntegrations=createCandidateIntegrationDomain(db,plans);
+  const quality=createQualityDomain(db,candidateIntegrations);
   const candidateMaterials=createCandidateMaterialDomain(db);
   const candidateBasis=candidateIntegrations.basis;
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
@@ -416,6 +420,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(qualityRequests,method))return quality.execute(method as QualityMethod,input);
     if(Object.hasOwn(workspaceMaintenanceRequests,method))return workspaceMaintenance.execute(method as WorkspaceMaintenanceMethod,input);
     if(Object.hasOwn(workspaceReclamationRequests,method))return workspaceReclamations.execute(method as WorkspaceReclamationMethod,input);
     if(Object.hasOwn(workspacePreservationRequests,method))return workspacePreservations.execute(method as WorkspacePreservationMethod,input);

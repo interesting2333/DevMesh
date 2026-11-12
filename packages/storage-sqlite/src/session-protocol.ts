@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ids, sha256, revision, epoch, opaqueKey } from '@devmesh/contracts';
 import {candidateMaterialTarget} from './candidate-material-protocol.js';
 import {workspacePreservationTarget} from './workspace-preservation-protocol.js';
+import {qualityMaterialTarget} from './quality-protocol.js';
 
 const meta = z.strictObject({ principalId: opaqueKey, scopeId: opaqueKey, idempotencyKey: z.uuid() });
 const messageKind = z.enum(['user','assistant','tool-call','tool-result','context-summary']);
@@ -9,6 +10,7 @@ const page = { afterSeq: epoch.default(0), limit: z.number().int().min(1).max(20
 export const messageRef = z.strictObject({ messageId: ids.message, seq: revision, sha256 });
 export const contextManifest = z.strictObject({ schemaVersion: z.literal('devmesh.context.v1'), sessionId: ids.session, roleSnapshotId: ids.roleSnapshot, throughMessageSeq: epoch, configHash: sha256, messages: z.array(messageRef).max(200), summaryContentHash: sha256.optional() });
 export const objectTarget = z.discriminatedUnion('kind', [
+  z.strictObject({kind:z.literal('qualityMaterial'),...qualityMaterialTarget}),
   z.strictObject({kind:z.literal('workspacePreservation'),...workspacePreservationTarget}),
   z.strictObject({kind:z.literal('candidateMaterial'),...candidateMaterialTarget}),
   z.strictObject({ kind: z.literal('content') }),
@@ -19,6 +21,7 @@ export const objectTarget = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('modelResponse'), sessionId: ids.session, stepNo: revision, activationId: ids.activation, state: z.enum(['RESPONDED','INTERRUPTED','FAILED']), providerRequestId: z.string().min(1).max(512).optional(), usage: z.strictObject({ inputTokens: epoch, outputTokens: epoch, source: z.enum(['provider','estimated']) }).optional() }),
 ]);
 export const contentReference = z.discriminatedUnion('kind', [
+  z.strictObject({kind:z.literal('qualityMaterial'),...qualityMaterialTarget}),
   z.strictObject({kind:z.literal('workspacePreservation'),...workspacePreservationTarget}),
   z.strictObject({kind:z.literal('candidateMaterial'),...candidateMaterialTarget}),
   z.strictObject({ kind: z.literal('attachment'), attachmentId: ids.attachment }),

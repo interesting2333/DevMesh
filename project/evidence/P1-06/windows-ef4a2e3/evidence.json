@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "commit": "ef4a2e379b2ca6791970fa36608ac6d8ee1bfcdc",
+  "status": "PASSED",
+  "sourceFingerprint": "cfcf52705a871107ddc2e7d06067e8ea55b263a81613bb4a7163527af2d6cde7",
+  "lockfileSha256": "7eec1f8e0d715f5ba59a930ca71f35be9865fa0291f03333029bd162175175fe",
+  "startedAt": "2026-11-12T02:23:44.891Z",
+  "finishedAt": "2026-11-12T02:35:09.856Z",
+  "checks": [
+    {
+      "name": "toolchain:check",
+      "exitCode": 0
+    },
+    {
+      "name": "vendor:verify",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "test:smoke",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "test:contracts",
+      "exitCode": 0,
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:content",
+      "exitCode": 0,
+      "tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:a2a",
+      "exitCode": 0,
+      "tests": {
+        "tests": 24,
+        "pass": 24,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:runtime",
+      "exitCode": 0,
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:runner",
+      "exitCode": 0,
+      "tests": {
+        "tests": 15,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "test:mcp",
+      "exitCode": 0,
+      "tests": {
+        "tests": 35,
+        "pass": 35,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:workspaces",
+      "exitCode": 0,
+      "tests": {
+        "tests": 92,
+        "pass": 92,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:input",
+      "exitCode": 0,
+      "tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:preparation",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:scheduler",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:verification",
+      "exitCode": 0,
+      "tests": {
+        "tests": 25,
+        "pass": 25,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts:check",
+      "exitCode": 0
+    },
+    {
+      "name": "project:check",
+      "exitCode": 0
+    },
+    {
+      "name": "openspec",
+      "exitCode": 0
+    },
+    {
+      "name": "design-consistency",
+      "exitCode": 0
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/01-toolchain-check.txt",
+      "sha256": "71f250ad98445a5917760a85c86cdb030a60196d416e9ec070af97f46e6e44be"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/02-vendor-verify.txt",
+      "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/03-build.txt",
+      "sha256": "d5613c62cb7ff83956dd710f292ff47d0c090a6e827f7bc0f9cbb6187b659af8"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/04-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/05-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/06-test-smoke.txt",
+      "sha256": "b88960a459a1e676636bda1dd79f0a221817453d6da0dbad33a99a43068ddc4b"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/07-test-contracts.txt",
+      "sha256": "91b613da00ea2cf7a3c9f047db1000f4397f9d5e51fbbd0ec7eca99551365b35"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/08-test-storage.txt",
+      "sha256": "dfb88bb43bce4af5087453614872df3c208a871bb3810cf1a0c7b6af28221997"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/09-test-content.txt",
+      "sha256": "148b2ce3687082bef0589080c33b342d2c00c92d8cd24190f2476b6a690aecfa"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/10-test-a2a.txt",
+      "sha256": "7b95d074abd010d4b4e811f0f218e4954d48bb0a8b269535f6125ce48c4fc554"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/11-test-runtime.txt",
+      "sha256": "c210bd832aacee87927b4eb6e3dd22da4f2d8d92869661e0bd37363396804019"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/12-test-runner.txt",
+      "sha256": "f6fd8d82ce1e428680e97e07a933b309e0242559579fd0d0a877d3aecc09cb5a"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/13-test-mcp.txt",
+      "sha256": "b914bcf017687b38cdf73aad72874c0debb6c136089248b52c53c1e7bf21b373"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/14-test-workspaces.txt",
+      "sha256": "b8725514e2382d5e0c7a6b610105981c7f45059e68cc0069372aaf574f7fff7d"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/15-test-input.txt",
+      "sha256": "9cdc611f1e52df368f25597f21c5e5cc33f4867f41b86e85f927a1fb0a296fe7"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/16-test-preparation.txt",
+      "sha256": "ab4001335e7b5cb40fdae20fe041b8b1c5d684c8baed05c77166ad14e146096c"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/17-test-scheduler.txt",
+      "sha256": "9f92900711454287d276d021117fde163990393a8f6d07ca89ed6aa2b4fb3d69"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/18-test-verification.txt",
+      "sha256": "aed2889e89c0b090c6a7eb183f40d49bad74b9a752503bfe7c157500c3c984b6"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/19-contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/20-project-check.txt",
+      "sha256": "a091c1dd96ef39747dc66cd5658859dd8a6a8c5e29dcbe3847ab905266df03ab"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/21-openspec.txt",
+      "sha256": "412fb404521f082ac9a2e790acbd9059ee1592fdff7dd485a2341fb1a5e3711d"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/22-design-consistency.txt",
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/checkout.txt",
+      "sha256": "cabda7b7d82b340b7c32e13c698768d0bcb3353f057341951964f79ed19e3a3f"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/clean-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/fetch.txt",
+      "sha256": "0560a791727ce10b45e8828dbfb499b0401311a7d733b619be1a038fbe0d0592"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/frozen-install.txt",
+      "sha256": "b8e3f6f2ba7ab01c1b57aece4f2bac5484a25a78f2619f2fa31f4d66406765a6"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/report.json",
+      "sha256": "16892a7199fefb8ddaf4b9dbe2d15b75eb4ea1622d787e60b2477737bd195e99"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/source.txt",
+      "sha256": "e1c54dfc430d5be17bac230759e85d60a5eacd2b8a5c1ce8d1116eb99b60892e"
+    },
+    {
+      "path": "project/evidence/P1-06/windows-ef4a2e3/verify.txt",
+      "sha256": "3c09a8e32b2610a9a9aa111400b099ece73ee4d809e02c272a56870272513500"
+    }
+  ],
+  "scope": "Exact clean Windows checkout with frozen install and all 22 applicable foundation checks, including 25 independent quality calculation tests, 92 workspace tests and migrations 1–20.",
+  "limitations": [
+    "Excludes later Runner execution-profile observations, quality migration 21, persistent verification, collection, repairs and candidate freeze.",
+    "The archived real template report is a parser reference only; its topology is not independent pre-execution provenance. Other quality input receipts are calculation fixtures.",
+    "Two environment-conditional tests skipped; no live model, OIDC, actual Docker/runsc, Linux, product or stage acceptance. Same Codex agent review."
+  ]
+}

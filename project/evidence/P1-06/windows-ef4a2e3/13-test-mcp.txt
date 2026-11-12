@@ -1,0 +1,323 @@
+TAP version 13
+# (node:33208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: five separate MCP identities execute actual actions and keep original cleanup available after pause
+ok 1 - five separate MCP identities execute actual actions and keep original cleanup available after pause
+  ---
+  duration_ms: 1102.8275
+  type: 'test'
+  ...
+# (node:33208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: composition rejects shared credentials and platform owns optional MCP startup and release
+ok 2 - composition rejects shared credentials and platform owns optional MCP startup and release
+  ---
+  duration_ms: 1009.3486
+  type: 'test'
+  ...
+# (node:34852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:34852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: docs reads pinned original bytes and searches with exact Unicode offsets and paragraph provenance
+ok 3 - docs reads pinned original bytes and searches with exact Unicode offsets and paragraph provenance
+  ---
+  duration_ms: 698.6604
+  type: 'test'
+  ...
+# (node:34852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: docs refuses ungranted documents, another run, a mixed query and source hash drift
+ok 4 - docs refuses ungranted documents, another run, a mixed query and source hash drift
+  ---
+  duration_ms: 568.3317
+  type: 'test'
+  ...
+# (node:36272) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36272) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: issues mutate through MCP with original keys, revision checks and bounded immutable history
+ok 5 - issues mutate through MCP with original keys, revision checks and bounded immutable history
+  ---
+  duration_ms: 750.0065
+  type: 'test'
+  ...
+# (node:36272) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an issue or source in another Run is not visible through a valid different host
+ok 6 - an issue or source in another Run is not visible through a valid different host
+  ---
+  duration_ms: 609.9379
+  type: 'test'
+  ...
+# (node:36272) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36272) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: paused or revoked grants cannot create issues but original results remain queryable after restart
+ok 7 - paused or revoked grants cannot create issues but original results remain queryable after restart
+  ---
+  duration_ms: 911.7074
+  type: 'test'
+  ...
+# (node:3884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a current host renews bounded leases while stale claims, expanded scopes, pause and expiry remain denied
+ok 8 - a current host renews bounded leases while stale claims, expanded scopes, pause and expiry remain denied
+  ---
+  duration_ms: 16650.0318
+  type: 'test'
+  ...
+# (node:3884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an expired persisted grant cannot be revived by its original valid worker claim
+ok 9 - an expired persisted grant cannot be revived by its original valid worker claim
+  ---
+  duration_ms: 507.0846
+  type: 'test'
+  ...
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pipeline MCP freezes independent stages and returns real Runner log/output facts
+ok 10 - pipeline MCP freezes independent stages and returns real Runner log/output facts
+  ---
+  duration_ms: 1118.3888
+  type: 'test'
+  ...
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a failed stage prevents later jobs and explicit stop before dispatch starts no Runner job
+ok 11 - a failed stage prevents later jobs and explicit stop before dispatch starts no Runner job
+  ---
+  duration_ms: 843.3952
+  type: 'test'
+  ...
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost Runner acknowledgement and process restart recover the original stage without a second start
+ok 12 - lost Runner acknowledgement and process restart recover the original stage without a second start
+  ---
+  duration_ms: 1156.6834
+  type: 'test'
+  ...
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unresolved original send keeps later stages blocked and is never replayed
+ok 13 - an unresolved original send keeps later stages blocked and is never replayed
+  ---
+  duration_ms: 743.9601
+  type: 'test'
+  ...
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost MCP creation response is repaired through the original pipeline operation
+ok 14 - lost MCP creation response is repaired through the original pipeline operation
+  ---
+  duration_ms: 757.1675
+  type: 'test'
+  ...
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an active pipeline renews its original Runner job with bounded sub-permits and increasing sequences
+ok 15 - an active pipeline renews its original Runner job with bounded sub-permits and increasing sequences
+  ---
+  duration_ms: 18396.5931
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real Git commit and project integration retain scope, base, original identity and atomic refs
+ok 16 - real Git commit and project integration retain scope, base, original identity and atomic refs
+  ---
+  duration_ms: 2777.9126
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: out of scope paths, an unexpected base, filters and symbolic links cannot become commits
+ok 17 - out of scope paths, an unexpected base, filters and symbolic links cannot become commits
+  ---
+  duration_ms: 1599.9239
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost commit acknowledgement recovers the original ref after pause and restart
+ok 18 - lost commit acknowledgement recovers the original ref after pause and restart
+  ---
+  duration_ms: 2015.1816
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a crash after ref update recovers from Git, while an unprepared original operation remains unknown
+ok 19 - a crash after ref update recovers from Git, while an unprepared original operation remains unknown
+  ---
+  duration_ms: 1813.261
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: integration recovery uses the atomic original-operation ref even after the project ref moves again
+ok 20 - integration recovery uses the atomic original-operation ref even after the project ref moves again
+  ---
+  duration_ms: 2271.715
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a replacement repository at the same workspace path cannot inherit the frozen binding
+ok 21 - a replacement repository at the same workspace path cannot inherit the frozen binding
+  ---
+  duration_ms: 1293.5245
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: MCP edits actual bytes with CAS, snapshots them, deletes by original identity and commits those changes
+ok 22 - MCP edits actual bytes with CAS, snapshots them, deletes by original identity and commits those changes
+  ---
+  duration_ms: 3256.9438
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: file CAS, write scope, hard links and sensitive paths reject without overwriting source
+ok 23 - file CAS, write scope, hard links and sensitive paths reject without overwriting source
+  ---
+  duration_ms: 1274.0491
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a file rename with lost SQLite acknowledgement reconciles exact proof after restart and pause without rewriting
+ok 24 - a file rename with lost SQLite acknowledgement reconciles exact proof after restart and pause without rewriting
+  ---
+  duration_ms: 1934.6917
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: matching current bytes cannot prove an unprepared original edit and the unknown intent blocks further mutations
+ok 25 - matching current bytes cannot prove an unprepared original edit and the unknown intent blocks further mutations
+  ---
+  duration_ms: 1052.7461
+  type: 'test'
+  ...
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: MCP editing holds the actual Runner barrier, rejects queued jobs and reconciles a paused original edit with cleanup authority
+ok 26 - MCP editing holds the actual Runner barrier, rejects queued jobs and reconciles a paused original edit with cleanup authority
+  ---
+  duration_ms: 2837.3851
+  type: 'test'
+  ...
+# (node:28268) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28268) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: A2A HTTP to durable Runtime and official MCP HTTP persists a real verified file result
+ok 27 - A2A HTTP to durable Runtime and official MCP HTTP persists a real verified file result
+  ---
+  duration_ms: 1124.6472
+  type: 'test'
+  ...
+# (node:37200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: official MCP initialize/list/call over real HTTP reads a verified snapshot and records capabilities
+ok 28 - official MCP initialize/list/call over real HTTP reads a verified snapshot and records capabilities
+  ---
+  duration_ms: 158.96
+  type: 'test'
+  ...
+# Subtest: MCP service denies anonymous, browser Origin, hostile Host and unapproved tools
+ok 29 - MCP service denies anonymous, browser Origin, hostile Host and unapproved tools
+  ---
+  duration_ms: 32.5303
+  type: 'test'
+  ...
+# Subtest: repo tool rejects hash changes, unauthorized paths and linked files without leaking host data
+ok 30 - repo tool rejects hash changes, unauthorized paths and linked files without leaking host data
+  ---
+  duration_ms: 50.7732
+  type: 'test'
+  ...
+# Subtest: connection revalidation refuses a changed signature instead of replacing its frozen snapshot
+ok 31 - connection revalidation refuses a changed signature instead of replacing its frozen snapshot
+  ---
+  duration_ms: 35.5443
+  type: 'test'
+  ...
+# (node:37200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real MCP to Runner HTTP admits one job, enforces host ownership and allows stop after write gate closes
+ok 32 - real MCP to Runner HTTP admits one job, enforces host ownership and allows stop after write gate closes
+  ---
+  duration_ms: 316.0613
+  type: 'test'
+  ...
+# (node:37200) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost MCP start reply reconciles the original operation without resending mutation
+ok 33 - lost MCP start reply reconciles the original operation without resending mutation
+  ---
+  duration_ms: 285.9095
+  type: 'test'
+  ...
+# Subtest: missing MCP credentials and deadline never trigger automatic tool call retries
+ok 34 - missing MCP credentials and deadline never trigger automatic tool call retries
+  ---
+  duration_ms: 10023.8482
+  type: 'test'
+  ...
+# Subtest: oversized MCP responses remain unknown and do not replay the original tool
+ok 35 - oversized MCP responses remain unknown and do not replay the original tool
+  ---
+  duration_ms: 29.6872
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 85251.4181
+$ node --test --test-concurrency=1 --test-reporter=tap tests/mcp*.test.mjs

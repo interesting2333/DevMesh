@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 migration 21, immutable original verification and content references; actual local Runner execution-profile HTTP and MCP pipeline observations. Quality journal Git/Runner facts remain explicit DB fixtures.",
+  "sourceCommit": "ef4a2e379b2ca6791970fa36608ac6d8ee1bfcdc",
+  "dirty": true,
+  "sourceFingerprint": "807d11e0ce090be7a453c85dc13d4434d03edd068ad81ca245890b3eec2b19f8",
+  "unchanged": true,
+  "startedAt": "2026-11-12T02:45:23.494Z",
+  "finishedAt": "2026-11-12T02:47:42.390Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7177,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 943,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 45047,
+      "output": "build.txt",
+      "sha256": "8dfda9b7656aaa0a82a0b2625ed80adce005d468f0844423dc9f82358b9af54c"
+    },
+    {
+      "name": "quality-journal",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 3210,
+      "output": "quality-journal.txt",
+      "sha256": "ee31371e81bd595d6c65d3ff776ed72b31a54c916183344a1e34d47558e7f284"
+    },
+    {
+      "name": "raw-verifier",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 3055,
+      "output": "raw-verifier.txt",
+      "sha256": "2ef347be1bcdadcf7c6871b535786d6c1cae6238a6910311e740d4d69fdfb612"
+    },
+    {
+      "name": "runner-profile",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 950,
+      "output": "runner-profile.txt",
+      "sha256": "5014b6b354b0936e47f3945622d462a86e013ee2736cfcd72306f7ebfb10424b"
+    },
+    {
+      "name": "pipeline",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 27343,
+      "output": "pipeline.txt",
+      "sha256": "1d24764131013e10f66d5b61df79bb8810f5dc0076bbac4b4da4c97fd4cfb775"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 29085,
+      "output": "storage.txt",
+      "sha256": "c008d9753b30535005705c83353681db9844d2843767c4f8f27fd12dcfcae3da"
+    },
+    {
+      "name": "content",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 18448,
+      "output": "content.txt",
+      "sha256": "a5b6acad2c24f2126bb87a1b740df780ef241d08236d0c691b926c8b95445f4b"
+    },
+    {
+      "name": "runner-upgrade",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1611,
+      "output": "runner-upgrade.txt",
+      "sha256": "e15287fee37486a214933b9784d8eb624baeb84ff9e0faa6b090124981e0c706"
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1955,
+      "output": "contracts.txt",
+      "sha256": "cae6d7da61fa6cb6cb67be83d97224a3504983601fabeb927fae711098d4cb60"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/build.txt",
+      "sha256": "8dfda9b7656aaa0a82a0b2625ed80adce005d468f0844423dc9f82358b9af54c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/content.txt",
+      "sha256": "a5b6acad2c24f2126bb87a1b740df780ef241d08236d0c691b926c8b95445f4b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/contracts.txt",
+      "sha256": "cae6d7da61fa6cb6cb67be83d97224a3504983601fabeb927fae711098d4cb60"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/pipeline.txt",
+      "sha256": "1d24764131013e10f66d5b61df79bb8810f5dc0076bbac4b4da4c97fd4cfb775"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/quality-journal.txt",
+      "sha256": "ee31371e81bd595d6c65d3ff776ed72b31a54c916183344a1e34d47558e7f284"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/raw-verifier.txt",
+      "sha256": "2ef347be1bcdadcf7c6871b535786d6c1cae6238a6910311e740d4d69fdfb612"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/report.json",
+      "sha256": "c563ebcff3796adf044a5d307504eb14779af599e0ed6434a2621264cd84328e"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/runner-profile.txt",
+      "sha256": "5014b6b354b0936e47f3945622d462a86e013ee2736cfcd72306f7ebfb10424b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/runner-upgrade.txt",
+      "sha256": "e15287fee37486a214933b9784d8eb624baeb84ff9e0faa6b090124981e0c706"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/storage.txt",
+      "sha256": "c008d9753b30535005705c83353681db9844d2843767c4f8f27fd12dcfcae3da"
+    },
+    {
+      "path": "project/evidence/P1-06/development/journal-v2/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "limitations": [
+    "Development source fingerprint, not an exact clean checkpoint or product/stage gate acceptance.",
+    "Quality journal uses explicit database Git and Runner fixtures with real SQLite and local content storage; it does not prove real Git/Runner quality collection.",
+    "Runner profile and MCP pipeline tests use actual local authenticated HTTP with a fixture execution backend, not Docker/runsc or Linux.",
+    "No real model, OIDC, complete repair workflow or candidate freeze acceptance is proven."
+  ]
+}
