@@ -1,0 +1,74 @@
+TAP version 13
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pipeline MCP freezes independent stages and returns real Runner log/output facts
+ok 1 - pipeline MCP freezes independent stages and returns real Runner log/output facts
+  ---
+  duration_ms: 1924.2105
+  type: 'test'
+  ...
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a failed stage prevents later jobs and explicit stop before dispatch starts no Runner job
+ok 2 - a failed stage prevents later jobs and explicit stop before dispatch starts no Runner job
+  ---
+  duration_ms: 1347.0476
+  type: 'test'
+  ...
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost Runner acknowledgement and process restart recover the original stage without a second start
+ok 3 - lost Runner acknowledgement and process restart recover the original stage without a second start
+  ---
+  duration_ms: 1740.0047
+  type: 'test'
+  ...
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unresolved original send keeps later stages blocked and is never replayed
+ok 4 - an unresolved original send keeps later stages blocked and is never replayed
+  ---
+  duration_ms: 1274.0863
+  type: 'test'
+  ...
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost MCP creation response is repaired through the original pipeline operation
+ok 5 - lost MCP creation response is repaired through the original pipeline operation
+  ---
+  duration_ms: 1396.3843
+  type: 'test'
+  ...
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an active pipeline renews its original Runner job with bounded sub-permits and increasing sequences
+ok 6 - an active pipeline renews its original Runner job with bounded sub-permits and increasing sequences
+  ---
+  duration_ms: 18870.128
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27391.6406

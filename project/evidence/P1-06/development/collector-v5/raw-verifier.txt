@@ -1,0 +1,162 @@
+TAP version 13
+# Subtest: frozen quality policy rejects lower thresholds, missing producers and ambiguous identities
+ok 1 - frozen quality policy rejects lower thresholds, missing producers and ambiguous identities
+  ---
+  duration_ms: 44.2896
+  type: 'test'
+  ...
+# Subtest: raw JSON rejects duplicate keys, invalid UTF-8, excessive depth and byte bounds
+ok 2 - raw JSON rejects duplicate keys, invalid UTF-8, excessive depth and byte bounds
+  ---
+  duration_ms: 4.3451
+  type: 'test'
+  ...
+# Subtest: coverage thresholds compare exact integer counts at 79/80 and 69/70
+    # Subtest: 79/70
+    ok 1 - 79/70
+      ---
+      duration_ms: 29.2233
+      type: 'test'
+      ...
+    # Subtest: 80/70
+    ok 2 - 80/70
+      ---
+      duration_ms: 17.738
+      type: 'test'
+      ...
+    # Subtest: 80/69
+    ok 3 - 80/69
+      ---
+      duration_ms: 15.5612
+      type: 'test'
+      ...
+    # Subtest: 100/100
+    ok 4 - 100/100
+      ---
+      duration_ms: 15.1623
+      type: 'test'
+      ...
+    1..4
+ok 3 - coverage thresholds compare exact integer counts at 79/80 and 69/70
+  ---
+  duration_ms: 78.5515
+  type: 'test'
+  ...
+# Subtest: a fraction that displays as 80 percent remains below the actual minimum
+ok 4 - a fraction that displays as 80 percent remains below the actual minimum
+  ---
+  duration_ms: 54.7413
+  type: 'test'
+  ...
+# Subtest: shared files use a union of source positions and accept producer-local numeric IDs
+ok 5 - shared files use a union of source positions and accept producer-local numeric IDs
+  ---
+  duration_ms: 20.119
+  type: 'test'
+  ...
+# Subtest: several statements on one line produce one coverable line
+ok 6 - several statements on one line produce one coverable line
+  ---
+  duration_ms: 24.3488
+  type: 'test'
+  ...
+# Subtest: empty business scope fails and zero branches need a frozen complete-map rule
+ok 7 - empty business scope fails and zero branches need a frozen complete-map rule
+  ---
+  duration_ms: 14.4378
+  type: 'test'
+  ...
+# Subtest: full frozen business manifest detects omitted unexecuted files and producer reports
+ok 8 - full frozen business manifest detects omitted unexecuted files and producer reports
+  ---
+  duration_ms: 50.5206
+  type: 'test'
+  ...
+# Subtest: omitted or contradictory instrumentation is stale rather than a smaller denominator
+ok 9 - omitted or contradictory instrumentation is stale rather than a smaller denominator
+  ---
+  duration_ms: 62.2629
+  type: 'test'
+  ...
+# Subtest: a model success flag and self-reported totals cannot hide failed, skipped or missing cases
+    # Subtest: failed
+    ok 1 - failed
+      ---
+      duration_ms: 23.8268
+      type: 'test'
+      ...
+    # Subtest: pending
+    ok 2 - pending
+      ---
+      duration_ms: 16.5914
+      type: 'test'
+      ...
+    # Subtest: skipped
+    ok 3 - skipped
+      ---
+      duration_ms: 16.1289
+      type: 'test'
+      ...
+    # Subtest: todo
+    ok 4 - todo
+      ---
+      duration_ms: 17.2409
+      type: 'test'
+      ...
+    1..4
+ok 10 - a model success flag and self-reported totals cannot hide failed, skipped or missing cases
+  ---
+  duration_ms: 108.3342
+  type: 'test'
+  ...
+# Subtest: unknown or duplicated test identity and malformed status fail closed
+ok 11 - unknown or duplicated test identity and malformed status fail closed
+  ---
+  duration_ms: 59.6973
+  type: 'test'
+  ...
+# Subtest: wrong SHA, policy, image or command is stale and unknown/failed execution never passes
+ok 12 - wrong SHA, policy, image or command is stale and unknown/failed execution never passes
+  ---
+  duration_ms: 144.1429
+  type: 'test'
+  ...
+# Subtest: report identity and byte hashes reject copied provenance, changed bytes and output path
+ok 13 - report identity and byte hashes reject copied provenance, changed bytes and output path
+  ---
+  duration_ms: 59.7607
+  type: 'test'
+  ...
+# Subtest: known failed jobs retain original test and coverage counts without converting failure to pass
+ok 14 - known failed jobs retain original test and coverage counts without converting failure to pass
+  ---
+  duration_ms: 25.0143
+  type: 'test'
+  ...
+# Subtest: fixed path mapping rejects traversal, unrelated absolute roots, case aliases and unknown files
+ok 15 - fixed path mapping rejects traversal, unrelated absolute roots, case aliases and unknown files
+  ---
+  duration_ms: 17.4393
+  type: 'test'
+  ...
+# Subtest: automatic PASS preserves pending human review separately
+ok 16 - automatic PASS preserves pending human review separately
+  ---
+  duration_ms: 13.4038
+  type: 'test'
+  ...
+# Subtest: archived real template Vitest/V8 reports parse with exact historical Git source, including null end columns and implicit else
+ok 17 - archived real template Vitest/V8 reports parse with exact historical Git source, including null end columns and implicit else
+  ---
+  duration_ms: 1455.143
+  type: 'test'
+  ...
+1..17
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2430.4691

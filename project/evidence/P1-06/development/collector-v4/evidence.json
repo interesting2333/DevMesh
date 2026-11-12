@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "New tests for SOURCE ACK/dispatch atomicity and Runner streamed byte budgets. Application implementation unchanged from passed collector-v3; only lint and expanded collector tests run here. Type/build/journal/parser/migration/pipeline/profile evidence remains v3.",
+  "sourceCommit": "651cbbbb5f100067576e075aa7af7903aaeece54",
+  "dirty": true,
+  "sourceFingerprint": "c53ea0c51b4136c424242d69ca1c19cbf793ab5dbea1015af80a205f9f017ac0",
+  "unchanged": true,
+  "startedAt": "2026-11-12T03:09:09.048Z",
+  "finishedAt": "2026-11-12T03:09:14.302Z",
+  "checks": [
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 591,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "quality-collector",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4638,
+      "output": "quality-collector.txt",
+      "sha256": "16f0017769e9567feedba2f3be6bc7e77e32f734540e90e8eaf7b8b01bbe0383"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/collector-v4/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v4/quality-collector.txt",
+      "sha256": "16f0017769e9567feedba2f3be6bc7e77e32f734540e90e8eaf7b8b01bbe0383"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v4/report.json",
+      "sha256": "21a266afb3dcf0e59b5607590ac3f1d9c19394b6b4dede0c2142088fa3278c4b"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; not an exact clean checkpoint or stage/product acceptance.",
+    "Git/source manifest, admission and independent instrumentation are explicit fixtures; actual local authenticated HTTP, original Job persistence, coordinator receipts, files and content publication are exercised.",
+    "Controlled backend writes fixture reports and executes no generated scripts. Production instrumentation provider, automatic Runtime composition, real model/OIDC/Linux/runsc, Work completion guard, repair and freeze are not proved."
+  ]
+}

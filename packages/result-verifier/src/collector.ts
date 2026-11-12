@@ -1,0 +1,93 @@
+import {ids,opaqueKey,sha256 as sha256Contract,qualityExecution,qualityLimits} from '@devmesh/contracts';
+import type {QualityPolicy,QualitySourceScope,QualityExecution} from '@devmesh/contracts';
+import type {SqliteStorage,QualityVerification,QualityMaterial,QualityMaterialDescriptor,QualityStage,SourceManifest,Request} from '@devmesh/storage-sqlite';
+import type {LocalContentStore} from '@devmesh/blob-store';
+import type {RunnerClient,Job} from '@devmesh/runner';
+import {assertQualityScope,canonical,qualityPolicyHash,sha256} from './source.js';
+import {VerificationError,parseSourceJson,reject} from './json.js';
+import {evaluateQuality} from './evaluate.js';
+import type {QualityReportBytes} from './evaluate.js';
+
+/** Deployment supplied trusted instrumentation; never an Agent/MCP report reader. */
+export interface QualitySourceProvider {
+  readonly providerId:string;
+  readonly toolchainHash:string;
+  prepare(input:{verification:QualityVerification;policy:QualityPolicy;manifest:SourceManifest}):Promise<QualitySourceScope>;
+}
+type Subject={principalId:string;operationId:string};
+type Bound=Subject&{requestHash:string};
+export type CollectionResult={state:'PENDING';verification:QualityVerification;codes:string[]}|{state:'EVALUATED';verification:QualityVerification};
+function sourceMatches(scope:QualitySourceScope,manifest:SourceManifest,verification:QualityVerification){
+  if(scope.targetCommit!==verification.basis.targetCommit||scope.checkConfigHash!==verification.configHash||manifest.sha256!==verification.basis.allocationManifestSha256||scope.gitManifest.length!==manifest.files.length||scope.gitManifest.some(f=>!manifest.files.some(m=>m.path===f.path&&m.sha256===f.sha256)))return reject('QUALITY_SOURCE_MANIFEST_CHANGED');
+}
+function fact(job:Job):NonNullable<QualityStage['job']>{
+  const {jobId,operationId,requestHash,request,state,exitCode,errorCode,stopRequested,stopEvidence,containerId,startedAt,endedAt,logCursor,outputRefs}=job;
+  return {jobId:ids.job.parse(jobId),operationId:ids.operation.parse(operationId),requestHash,request:request as unknown as NonNullable<QualityStage['job']>['request'],state,exitCode,errorCode,stopRequested,stopEvidence:stopEvidence as NonNullable<QualityStage['job']>['stopEvidence'],containerId,startedAt,endedAt,executionProfile:job.executionProfile??null,logCursor,outputRefs};
+}
+
+/** Explicit service. It has no start, resend, renew, stop or shell execution path. */
+export class QualityCollector {
+  constructor(readonly storage:SqliteStorage,readonly content:LocalContentStore,readonly runner:Pick<RunnerClient,'get'|'byOperation'|'output'>,readonly sourceProvider?:QualitySourceProvider){}
+  private async materials(subject:Subject){return this.storage.request('listQualityMaterials',{principalId:subject.principalId,operationId:subject.operationId,afterKey:'',limit:100});}
+  private async put(bound:Bound,descriptor:QualityMaterialDescriptor,bytes:Uint8Array){
+    if(descriptor.sha256!==sha256(bytes)||descriptor.byteSize!==bytes.byteLength)return reject('QUALITY_MATERIAL_BYTES_CHANGED');
+    const row=await this.storage.request('declareQualityMaterial',{...bound,descriptor});
+    await this.content.put({meta:{principalId:bound.principalId,scopeId:bound.operationId,idempotencyKey:row.writeKey},target:{kind:'qualityMaterial',operationId:bound.operationId,materialKey:row.materialKey},expectedHash:descriptor.sha256,expectedSize:descriptor.byteSize,mimeType:descriptor.kind==='LOG'?'text/plain; charset=utf-8':'application/json'},bytes);return row;
+  }
+  private async read(subject:Subject,row:QualityMaterial){
+    const bytes=await this.content.readBytes(subject.principalId,{kind:'qualityMaterial',operationId:subject.operationId,materialKey:row.materialKey},16*1024*1024);
+    if(bytes.byteLength!==row.descriptor.byteSize||sha256(bytes)!==row.descriptor.sha256)return reject('QUALITY_MATERIAL_BYTES_CHANGED');return bytes;
+  }
+  async prepare(input:Request<'beginQualityVerification'>):Promise<QualityVerification>{
+    const verification=await this.storage.request('beginQualityVerification',input),bound={principalId:input.principalId,operationId:input.operationId,requestHash:verification.requestHash},rows=await this.materials(bound);
+    if(rows.some(r=>r.materialKey==='source'&&r.contentHash))return verification;
+    if(!this.sourceProvider)return reject('QUALITY_SOURCE_PROVIDER_NOT_CONFIGURED');
+    opaqueKey.parse(this.sourceProvider.providerId);sha256Contract.parse(this.sourceProvider.toolchainHash);
+    if(verification.qualification!=='CURRENT')return reject('QUALITY_BASIS_STALE');
+    const {policy}=await this.storage.request('getQualityPolicy',{principalId:input.principalId,projectId:verification.projectId,configHash:verification.configHash}),manifest=await this.storage.request('getQualitySourceManifest',bound);
+    const scope=assertQualityScope(await this.sourceProvider.prepare({verification,policy,manifest}),policy);
+    if(scope.checkConfigHash!==qualityPolicyHash(policy))return reject('QUALITY_SOURCE_MANIFEST_CHANGED');sourceMatches(scope,manifest,verification);
+    const bytes=Buffer.from(canonical(scope));await this.put(bound,{kind:'SOURCE',sha256:sha256(bytes),byteSize:bytes.byteLength,allocationManifestSha256:manifest.sha256,sourceManifestSha256:scope.sourceManifestSha256,topologySha256:scope.topologySha256,instrumentation:{providerId:this.sourceProvider.providerId,toolchainHash:this.sourceProvider.toolchainHash}},bytes);
+    return this.storage.request('getQualityVerification',{principalId:bound.principalId,operationId:bound.operationId});
+  }
+  async bind(subject:Subject,binding:{producerId:string;pipelineId:string;ordinal:number}){
+    const verification=await this.storage.request('getQualityVerification',subject);return this.storage.request('bindQualityStage',{...subject,requestHash:verification.requestHash,...binding});
+  }
+  async collect(subject:Subject):Promise<CollectionResult>{
+    const verification=await this.storage.request('getQualityVerification',subject),bound={...subject,requestHash:verification.requestHash};
+    if(verification.state==='EVALUATED')return {state:'EVALUATED',verification};
+    const {policy}=await this.storage.request('getQualityPolicy',{principalId:subject.principalId,projectId:verification.projectId,configHash:verification.configHash}),rows=await this.materials(subject),byKey=new Map(rows.map(r=>[r.materialKey,r])),source=byKey.get('source');
+    if(!source?.contentHash||source.descriptor.kind!=='SOURCE'||!source.descriptor.instrumentation)return {state:'PENDING',verification,codes:['QUALITY_SOURCE_NOT_PREPARED']};
+    const scope=assertQualityScope(parseSourceJson(await this.read(subject,source)),policy);
+    sourceMatches(scope,await this.storage.request('getQualitySourceManifest',bound),verification);
+    if(scope.targetCommit!==verification.basis.targetCommit||scope.sourceManifestSha256!==source.descriptor.sourceManifestSha256||scope.topologySha256!==source.descriptor.topologySha256)return reject('QUALITY_SOURCE_MANIFEST_CHANGED');
+    const stages=await this.storage.request('listQualityStages',bound),executions:QualityExecution[]=[],reports:QualityReportBytes[]=[],codes:string[]=[];
+    for(const producer of policy.producers){
+      const stage=stages.find(s=>s.producerId===producer.producerId);if(!stage){codes.push('QUALITY_STAGE_UNBOUND');continue;}
+      const retained=byKey.get('log.'+producer.producerId)?.contentHash&&policy.reports.filter(r=>r.producerId===producer.producerId).every(r=>byKey.get('report.'+r.reportId)?.contentHash);
+      let original=stage.job;
+      if(!retained){
+        let observed:Job;try{observed=stage.job?await this.runner.get(stage.job.jobId):await this.runner.byOperation(stage.operationId);}catch(error){if(error instanceof Error&&'code' in error){codes.push(String(error.code));continue;}throw error;}
+        if(!original||stage.state!=='EXITED'||observed.state!=='EXITED'){codes.push('QUALITY_ORIGIN_OUTCOME_UNKNOWN');continue;}
+        if(canonical(fact(observed))!==canonical(original))return reject('QUALITY_ORIGIN_FACT_CHANGED');original=fact(observed);
+      }
+      if(!original||stage.state!=='EXITED'||original.state!=='EXITED'||!original.executionProfile||!original.startedAt||!original.endedAt||!original.outputRefs[0]){codes.push('QUALITY_ORIGIN_INCOMPLETE');continue;}
+      const log=original.outputRefs[0],execution=qualityExecution.parse({producerId:producer.producerId,attemptId:verification.attemptId,runnerId:original.executionProfile.runnerId,jobId:original.jobId,operationId:original.operationId,requestHash:original.requestHash,targetCommit:verification.basis.targetCommit,checkConfigHash:verification.configHash,commandHash:original.executionProfile.commandHash,imageDigest:original.request.imageDigest,state:original.state,exitCode:original.exitCode,errorCode:original.errorCode,stopRequested:original.stopRequested,startedAt:original.startedAt,finishedAt:original.endedAt,log:{sha256:log.sha256,size:log.byteSize}});
+      await this.storage.request('declareQualityOrigin',{...bound,producerId:producer.producerId,pipelineId:stage.pipelineId,ordinal:stage.ordinal,execution});executions.push(execution);
+      try{
+        const oldLog=byKey.get('log.'+producer.producerId);
+        if(oldLog?.contentHash)await this.read(subject,oldLog);else await this.put(bound,{kind:'LOG',producerId:producer.producerId,sha256:log.sha256,byteSize:log.byteSize},await this.runner.output(original.jobId,0,log,16*1024*1024));
+        const outputSpec=original.request.outputSpec;if(!Array.isArray(outputSpec))return reject('QUALITY_ORIGIN_FACT_CHANGED');
+        for(const definition of policy.reports.filter(r=>r.producerId===producer.producerId)){
+          const index=outputSpec.indexOf(definition.path),output=original.outputRefs[index+1];if(index<0||!output){codes.push('QUALITY_REPORT_MISSING');continue;}
+          const old=byKey.get('report.'+definition.reportId),bytes=old?.contentHash?await this.read(subject,old):await this.runner.output(original.jobId,index+1,output,qualityLimits.reportBytes);
+          const report={reportId:definition.reportId,execution,outputPath:definition.path,sha256:output.sha256,size:output.byteSize};
+          await this.put(bound,{kind:'REPORT',report,sha256:output.sha256,byteSize:output.byteSize},bytes);reports.push({report,bytes});
+        }
+      }catch(error){if(error instanceof Error&&'code' in error&&!(error instanceof VerificationError)){codes.push(String(error.code));continue;}throw error;}
+    }
+    if(codes.length)return {state:'PENDING',verification:await this.storage.request('getQualityVerification',subject),codes:[...new Set(codes)]};
+    const evaluation=evaluateQuality({policy,scope,executions,reports}),bytes=Buffer.from(canonical(evaluation));await this.put(bound,{kind:'RESULT',evaluation,sha256:sha256(bytes),byteSize:bytes.byteLength},bytes);
+    return {state:'EVALUATED',verification:await this.storage.request('completeQualityVerification',bound)};
+  }
+}

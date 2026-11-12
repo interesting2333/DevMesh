@@ -10,8 +10,10 @@ export function integer(value:unknown):number{if(!Number.isSafeInteger(value)||N
 
 // JSON.parse alone silently accepts duplicate object keys. Validate bounded tokens
 // first, including keys, then let the native parser create the value.
-export function parseReportJson(bytes:Uint8Array):unknown{
-  if(bytes.byteLength>qualityLimits.reportBytes)return reject('REPORT_TOO_LARGE');
+export function parseReportJson(bytes:Uint8Array):unknown{return parseBoundedJson(bytes,qualityLimits.reportBytes);}
+export function parseSourceJson(bytes:Uint8Array):unknown{return parseBoundedJson(bytes,16*1024*1024);}
+function parseBoundedJson(bytes:Uint8Array,maximumBytes:number):unknown{
+  if(bytes.byteLength>maximumBytes)return reject('REPORT_TOO_LARGE');
   let text:string;try{text=new TextDecoder('utf-8',{fatal:true}).decode(bytes);}catch{return reject('REPORT_UTF8_INVALID');}
   let i=0,nodes=0;
   const ws=()=>{while(i<text.length&&/[\x20\t\r\n]/.test(text[i]!))i++;};

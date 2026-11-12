@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 migration 22 pre-dispatch SOURCE ACK / immutable producer-stage binding and read-only original Runner output collection with actual local authenticated HTTP/SQLite/files/coordinator/content. Admission, Git source and independent instrumentation are explicit fixtures; backend does not execute business scripts.",
+  "sourceCommit": "651cbbbb5f100067576e075aa7af7903aaeece54",
+  "dirty": true,
+  "sourceFingerprint": "4b853d3c89596dec910daf2703d2f7abb69bdc3c9c77e592a2dc150ce89b68d0",
+  "unchanged": true,
+  "startedAt": "2026-11-12T03:04:28.832Z",
+  "finishedAt": "2026-11-12T03:05:12.216Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7073,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1139,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 30685,
+      "output": "build.txt",
+      "sha256": "bc68650e323ce8a5a25e231e453dfdd80ecc3c641f2b5aa80658cae43a790c0a"
+    },
+    {
+      "name": "quality-collector",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 4436,
+      "output": "quality-collector.txt",
+      "sha256": "e8f5fb2e6f4b71c3ec85d52ce8ef4e3643c3ac47c19a89dca2de57bd19eba332"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/build.txt",
+      "sha256": "bc68650e323ce8a5a25e231e453dfdd80ecc3c641f2b5aa80658cae43a790c0a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/quality-collector.txt",
+      "sha256": "e8f5fb2e6f4b71c3ec85d52ce8ef4e3643c3ac47c19a89dca2de57bd19eba332"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/report.json",
+      "sha256": "92af2ecde8ab76a3fbcde652790291e996bcd14e571aeb2306809816c7cc6122"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__result-verifier__src__collector.ts.txt",
+      "sha256": "21f32e3ea64ab7e5330a6967cc00d444412d26a3846b0694f954ffa2f8ceaf33"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__result-verifier__src__evaluate.ts.txt",
+      "sha256": "db2e2fa50d9ae21692ac1a731a24c08acb6436faecfdd37e09d191faa09f823e"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__result-verifier__src__index.ts.txt",
+      "sha256": "4a15091ab1da2ca2a083ab77f928c494fcd2f66cecde83a2fbf34d823c417e51"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__result-verifier__src__json.ts.txt",
+      "sha256": "1d76ad978bface01b1beda9d80d42add1eea46cd30fd737341916bb58b1ff72a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__result-verifier__src__reports.ts.txt",
+      "sha256": "76f888730c476afca5ca114bcc71cd2f2d038bed7793f69eec6acede4f8e827c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__result-verifier__src__source.ts.txt",
+      "sha256": "190ebb5857f9010ef3d54df09a90a1826e10b7409e5744bfef5062ae9e15ff98"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__runner__src__client.ts.txt",
+      "sha256": "17da40eb18257edca133a0a19244ba27ede58437fa55621c4ba43e2aa1a8b73e"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__storage-sqlite__src__quality-domain.ts.txt",
+      "sha256": "6633ac80171072e3c9171920ddbf9cecd279b7d0f76a5bd9aa91e383694c6c11"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/packages__storage-sqlite__src__quality-protocol.ts.txt",
+      "sha256": "fed9a50d7f3bf79f8dde7d3ca1db0ffe31e489dbb41f5a7c4a117b1acfb73e85"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/tests__fixtures__quality-storage.mjs.txt",
+      "sha256": "7016d8d2f793ab2850278d23e7f1e3eedc927085523f99cd780d78e405b9255d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/collector-v2-failed/tests__verification-collector.test.mjs.txt",
+      "sha256": "7af2a90e5d8efe8913a1b0f11fa7fb0d7b3abd2b4f8e4f8fa6058d9e6d87d23f"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; not an exact clean checkpoint or stage/product acceptance.",
+    "Git/source manifest, admission and independent instrumentation are explicit fixtures; actual local authenticated HTTP, original Job persistence, coordinator receipts, files and content publication are exercised.",
+    "Controlled backend writes fixture reports and executes no generated scripts. Production instrumentation provider, automatic Runtime composition, real model/OIDC/Linux/runsc, Work completion guard, repair and freeze are not proved."
+  ]
+}

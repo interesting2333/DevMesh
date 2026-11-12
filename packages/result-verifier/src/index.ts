@@ -3,3 +3,5 @@ export {canonical,sha256,qualityPolicyHash,freezeQualitySourceScope,assertQualit
 export {parseIstanbulReport,parseVitestReport} from './reports.js';
 export {evaluateQuality} from './evaluate.js';
 export type {QualityReportBytes} from './evaluate.js';
+export {QualityCollector} from './collector.js';
+export type {QualitySourceProvider,CollectionResult} from './collector.js';

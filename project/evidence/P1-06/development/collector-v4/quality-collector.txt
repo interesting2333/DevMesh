@@ -1,0 +1,74 @@
+TAP version 13
+# (node:34984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:34984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: collector pins source before dispatch and retains original authenticated Runner reports without starting another Job
+ok 1 - collector pins source before dispatch and retains original authenticated Runner reports without starting another Job
+  ---
+  duration_ms: 837.056
+  type: 'test'
+  ...
+# (node:34984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual failed Job and raw failed assertion remain findings rather than a passing verification
+ok 2 - actual failed Job and raw failed assertion remain findings rather than a passing verification
+  ---
+  duration_ms: 587.7366
+  type: 'test'
+  ...
+# (node:34984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unknown original stage is queried by its original operation and never resubmitted
+ok 3 - unknown original stage is queried by its original operation and never resubmitted
+  ---
+  duration_ms: 376.4914
+  type: 'test'
+  ...
+# (node:34984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost content and final verification ACKs recover original writes and result with no Runner rerun
+ok 4 - lost content and final verification ACKs recover original writes and result with no Runner rerun
+  ---
+  duration_ms: 598.6868
+  type: 'test'
+  ...
+# (node:34984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HTTP bytes that disagree with the original output hash cannot become a quality result
+ok 5 - HTTP bytes that disagree with the original output hash cannot become a quality result
+  ---
+  duration_ms: 592.5911
+  type: 'test'
+  ...
+# (node:34984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source provider is explicit and immutable stage binding cannot be replaced after original dispatch
+ok 6 - source provider is explicit and immutable stage binding cannot be replaced after original dispatch
+  ---
+  duration_ms: 435.4967
+  type: 'test'
+  ...
+# Subtest: a SOURCE publication that races an original dispatch cannot leave a content reference behind
+ok 7 - a SOURCE publication that races an original dispatch cannot leave a content reference behind
+  ---
+  duration_ms: 102.7229
+  type: 'test'
+  ...
+# (node:34984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Runner output reads enforce the original size budget before sending and bound streamed bytes
+ok 8 - Runner output reads enforce the original size budget before sending and bound streamed bytes
+  ---
+  duration_ms: 434.8328
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4573.9202

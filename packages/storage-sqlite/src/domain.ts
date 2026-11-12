@@ -84,7 +84,7 @@ export function createDomain(db: DatabaseSync) {
   const pipelines=createPipelineDomain(db,(runId,operationId,attemptId,payload)=>{
     const original=get('SELECT operation_id FROM operations WHERE operation_id=?',operationId)?.operation_id??get('SELECT dispatch_operation_id FROM attempts WHERE attempt_id=?',attemptId)!.dispatch_operation_id;
     bump(runId);event(runId,String(original),'PipelineChanged',payload,{attemptId});
-  });
+  },(attemptId,workspaceRef)=>quality.assertPipelinePrepared(attemptId,workspaceRef));
   const plans = createPlanDomain(db);
   const candidateIntegrations=createCandidateIntegrationDomain(db,plans);
   const quality=createQualityDomain(db,candidateIntegrations);

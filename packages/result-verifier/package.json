@@ -5,5 +5,5 @@
   "type": "module",
   "exports": { ".": { "types": "./dist/index.d.mts", "import": "./dist/index.mjs" } },
   "scripts": { "build": "tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean" },
-  "dependencies": { "@devmesh/contracts": "workspace:*" }
+  "dependencies": { "@devmesh/contracts": "workspace:*", "@devmesh/storage-sqlite": "workspace:*", "@devmesh/blob-store": "workspace:*", "@devmesh/runner": "workspace:*" }
 }

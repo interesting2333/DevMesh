@@ -230,9 +230,18 @@ importers:
 
   packages/result-verifier:
     dependencies:
+      '@devmesh/blob-store':
+        specifier: workspace:*
+        version: link:../blob-store
       '@devmesh/contracts':
         specifier: workspace:*
         version: link:../contracts
+      '@devmesh/runner':
+        specifier: workspace:*
+        version: link:../runner
+      '@devmesh/storage-sqlite':
+        specifier: workspace:*
+        version: link:../storage-sqlite
 
   packages/runner:
     dependencies:

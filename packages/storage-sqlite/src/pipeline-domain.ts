@@ -12,7 +12,7 @@ import {createToolAuthorityDomain} from './tool-authority-domain.js';
 type Row=Record<string,string|number|null>;
 const uid=(kind:string)=>kind+'_'+randomUUID().replaceAll('-',''),now=()=>new Date().toISOString();
 function fail(code:string,status=409):never{throw new StorageError(code,status,'Pipeline action could not be applied');}
-export function createPipelineDomain(db:DatabaseSync,changed:(runId:string,operationId:string,attemptId:string,payload:Record<string,unknown>)=>void){
+export function createPipelineDomain(db:DatabaseSync,changed:(runId:string,operationId:string,attemptId:string,payload:Record<string,unknown>)=>void,assertQualityPrepared:(attemptId:string,workspaceRef:string)=>void){
   const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined;
   const all=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).all(...p) as Row[];
   const exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
@@ -77,6 +77,7 @@ export function createPipelineDomain(db:DatabaseSync,changed:(runId:string,opera
       const p=pipeline(input.pipelineId),s=stage(input.pipelineId,input.ordinal);
       if(s.state!=='PENDING')return {send:false,request:s.request_json?JSON.parse(String(s.request_json)) as Record<string,unknown>:null};
       if(p.stop_requested===1||['SUCCEEDED','FAILED','CANCELLED','OUTCOME_UNKNOWN'].includes(String(p.state)))fail('PIPELINE_ADMISSION_CLOSED');
+      assertQualityPrepared(String(p.attempt_id),String(p.workspace_ref));
       const previous=all('SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal<?',input.pipelineId,input.ordinal);
       if(previous.some(v=>v.state!=='EXITED'||(()=>{const j=JSON.parse(String(v.job_json)) as PipelineInput<'recordPipelineStage'>['job'];return j.exitCode!==0||j.errorCode!==null||j.stopRequested;})()))fail('PIPELINE_DEPENDENCY_UNSATISFIED');
       const definition=parseContract(pipelineDefinition,JSON.parse(String(p.definition_json))),spec=definition.stages[input.ordinal];if(!spec)fail('PIPELINE_STAGE_NOT_FOUND',404);

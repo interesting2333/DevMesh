@@ -1,0 +1,173 @@
+TAP version 13
+# (node:32784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: collector pins source before dispatch and retains original authenticated Runner reports without starting another Job
+not ok 1 - collector pins source before dispatch and retains original authenticated Runner reports without starting another Job
+  ---
+  duration_ms: 829.0371
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-collector.test.mjs:29:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:2461:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:7030:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    QualityCollector.materials (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:578:23)
+    QualityCollector.prepare (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:622:19)
+    async Object.prepare (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:23:27)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:30:165)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:32784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual failed Job and raw failed assertion remain findings rather than a passing verification
+not ok 2 - actual failed Job and raw failed assertion remain findings rather than a passing verification
+  ---
+  duration_ms: 522.0324
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-collector.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:2461:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:7030:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    QualityCollector.materials (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:578:23)
+    QualityCollector.prepare (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:622:19)
+    async Object.prepare (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:23:27)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:38:41)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:32784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unknown original stage is queried by its original operation and never resubmitted
+not ok 3 - unknown original stage is queried by its original operation and never resubmitted
+  ---
+  duration_ms: 711.0987
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-collector.test.mjs:40:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:2461:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:7030:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    QualityCollector.materials (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:578:23)
+    QualityCollector.prepare (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:622:19)
+    async Object.prepare (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:23:27)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:41:27)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:32784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost content and final verification ACKs recover original writes and result with no Runner rerun
+not ok 4 - lost content and final verification ACKs recover original writes and result with no Runner rerun
+  ---
+  duration_ms: 554.6533
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-collector.test.mjs:44:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:2461:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:7030:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    QualityCollector.materials (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:578:23)
+    QualityCollector.prepare (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:622:19)
+    async Object.prepare (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:23:27)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:45:27)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:32784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HTTP bytes that disagree with the original output hash cannot become a quality result
+not ok 5 - HTTP bytes that disagree with the original output hash cannot become a quality result
+  ---
+  duration_ms: 478.9909
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-collector.test.mjs:50:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:2461:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:7030:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    QualityCollector.materials (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:578:23)
+    QualityCollector.prepare (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:622:19)
+    async Object.prepare (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:23:27)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:51:27)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:32784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source provider is explicit and immutable stage binding cannot be replaced after original dispatch
+not ok 6 - source provider is explicit and immutable stage binding cannot be replaced after original dispatch
+  ---
+  duration_ms: 514.65
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-collector.test.mjs:56:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Comparison {
+    +   code: 'SCHEMA_INVALID'
+    -   code: 'QUALITY_SOURCE_PROVIDER_NOT_CONFIGURED'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'QUALITY_SOURCE_PROVIDER_NOT_CONFIGURED'
+  actual:
+  error: '请求不符合契约。'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:2461:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cl70yzqW.mjs:7030:62)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:12:83)
+    QualityCollector.materials (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:578:23)
+    QualityCollector.prepare (file:///D:/yms/AI/DevMesh/packages/result-verifier/dist/index.mjs:622:19)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:57:91)
+    async Test.run (node:internal/test_runner/test:1110:7)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-collector.test.mjs:57:91)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 0
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4822.8701

@@ -26,6 +26,8 @@ Runner 已持久保存每个原 Job 的批准 argv；公开事实新增由这份
 
 完整位置拓扑是可信执行前输入，独立于待验证命中报告并固定 sourceManifestSha256／topologySha256；只读的批准工具链或可信预处理负责生成，模型和普通工具不能自行登记。不能从同一份命中报告推导分母后将它当作独立证明。首版解析实际模板中行尾 null 为准确源码行尾，隐式 if/else 无位置保留 null 备选身份；其他不可映射位置拒绝。已确定失败的原执行可保留原报告数量供解释，整体仍为失败；未知作业仍待核实，同一 Job 不计为两个生产侧。
 
+采集分为执行前 `prepare` 和执行后 `collect`。prepare 只接受部署注入的可信映射 provider，缺配置拒绝，核对其全量 Git 文件／内容哈希及工具链身份，并在专用 SOURCE 内容 ACK 后允许托管 verification 工作区发送流水线。SOURCE 声明／登记与 stage 首次 SENT 在 SQLite 中互斥，不依赖控制面与远端时钟一致。追加迁移 22 固定 producer 到原 pipeline／ordinal／stage operation 的绑定，首次发送前建立、之后不可换作业。collect 仅 GET 原作业／原输出索引，流式校验大小／SHA；不调用 start／renew／stop，也不执行报告中的脚本。首次缺失报告或未知查询保持 PREPARED 和明确待核实代码；原字节已登记后可从本地内容恢复，终态回执丢失只返回原结果。映射 provider 的生产工具链和 Runtime 自动组合仍须单独接入与验证，独立映射夹具不能替代它。
+
 Istanbul statement start.line 去重形成可覆盖行，同一行任一 statement 有命中即覆盖；分支身份取类型、原位置和备选路径位置，不使用各生产侧自增数字 ID。共享源码命中按身份并集，次数不重复累加分母。阈值使用整数交叉相乘，不因浮点或显示四舍五入放行。非空业务范围和有效完整映射下零分支需冻结规则及证据；空业务集合不能 N/A。
 
 ### Verification transactions and compatibility
