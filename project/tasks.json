@@ -837,7 +837,10 @@
         "project/evidence/P1-05/development/runtime-v4/evidence.json",
         "project/evidence/P1-05/development/runtime-v5-failed/evidence.json",
         "project/evidence/P1-05/development/runtime-v6-failed/evidence.json",
-        "project/evidence/P1-05/development/runtime-v7/evidence.json"
+        "project/evidence/P1-05/development/runtime-v7/evidence.json",
+        "project/evidence/P1-05/windows-1df2e80/evidence.json",
+        "project/evidence/P1-05/windows-1df2e80/report.json",
+        "project/evidence/P1-05/development/final-local-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -877,7 +880,8 @@
         "2026-11-12：同一 Codex Agent 对照固定提交 051475c 原始日志与候选／冲突测试完成 3.1～3.3 复核并勾选；归档／回收已有服务级通过证据，4.1／4.2 仍等待实际 Runner 维护授权组合，不推导父工作包或门槛完成。",
         "2026-11-12：真实本地认证 Runner HTTP／SQLite 与 Git 维护组合 2/2，保存存储 4/4、屏障 5/5、存储 28/28，通过源码和原始日志复核后勾选 4.1／4.2；运行中／停止结果未知 Job 阻止维护，Grant 撤销后的 read 降权维护不开放新 Job。5.1 应用接线及 5.2 最终固定提交回归仍待完成，未改变父工作包和门槛。",
         "2026-11-12：启动后的动态 MCP 工作区解析联调 2/2，既有 repo MCP 11/11、真实 Runner 维护 2/2 和类型／lint／构建通过；首次调用前目录替换按持久分配身份拒绝，静态绑定兼容。日志和源码指纹见 dynamic-v1；Runtime 接线和最终固定提交回归仍待完成。",
-        "2026-11-12：runtime-v7 的实际调度资源→A2A→Runtime→动态 MCP→Git／源码 ACK 五条组合及 Runtime 9/9、动态 MCP 2/2、存储 28/28 通过。结果日志、暂停后原 ACK 核实、发布丢回执恢复、成员／取消边界和已结束 Host 拒绝新 Job 已核实。另补准备中断后禁止二次进入钩子的边界，连同整体应用组合留待新的固定提交全量复核；5.1/5.2 仍未提前勾选。"
+        "2026-11-12：runtime-v7 的实际调度资源→A2A→Runtime→动态 MCP→Git／源码 ACK 五条组合及 Runtime 9/9、动态 MCP 2/2、存储 28/28 通过。结果日志、暂停后原 ACK 核实、发布丢回执恢复、成员／取消边界和已结束 Host 拒绝新 Job 已核实。另补准备中断后禁止二次进入钩子的边界，连同整体应用组合留待新的固定提交全量复核；5.1/5.2 仍未提前勾选。",
+        "2026-11-12：精确提交 1df2e80 干净 Windows checkout 冻结安装与 21 项全量检查通过，工作区 92/92、存储 28/28；包含迁移 1–20、实际本地调度／A2A／Runtime／MCP／Git／认证 Runner 维护组合和准备中断重入拒绝。同一 Codex Agent 复核原日志与来源，完成变更内 5.1/5.2 的本地适用范围；真实模型、OIDC、远程身份、Linux/runsc、T05/T23 环境验收及阶段门槛仍未通过，父工作包保持等待正式前置。"
       ]
     },
     {
@@ -898,7 +902,9 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-result-verification-and-candidate-freeze"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -906,7 +912,9 @@
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "2026-11-12：按既有连续实施授权建立固定版本验证与候选冻结变更，先推进不依赖外部环境的策略契约、原报告解析和覆盖率计算。正式前置与 G0 未完成，工作包保持 NOT_STARTED，规划材料不视为应用能力。"
+      ]
     },
     {
       "id": "P1-07",

@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "commit": "1df2e80ca4b007ca93e4b16511aa16e75a0af7aa",
+  "status": "PASSED",
+  "scope": "Exact clean Windows checkout; frozen installation and all 21 applicable foundation checks. Includes migrations 1–20, candidate/conflict materials, full preservation/reclamation, actual authenticated local Runner/MCP/A2A HTTP and managed Runtime lifecycle including interrupted preparation re-entry guard.",
+  "sourceFingerprint": "bb805c3326cab6cd3d47502e92da76b515fe1eb825412e565a64b7db16ac23c9",
+  "lockfileSha256": "34d80524e13896578e0eba0f92ef3a4539f397dd80bde2933860ac5020140340",
+  "startedAt": "2026-11-12T01:55:21.323Z",
+  "finishedAt": "2026-11-12T02:06:17.299Z",
+  "checks": [
+    {
+      "name": "toolchain:check",
+      "exitCode": 0
+    },
+    {
+      "name": "vendor:verify",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "test:smoke",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "test:contracts",
+      "exitCode": 0,
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:content",
+      "exitCode": 0,
+      "tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:a2a",
+      "exitCode": 0,
+      "tests": {
+        "tests": 24,
+        "pass": 24,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:runtime",
+      "exitCode": 0,
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:runner",
+      "exitCode": 0,
+      "tests": {
+        "tests": 15,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "test:mcp",
+      "exitCode": 0,
+      "tests": {
+        "tests": 35,
+        "pass": 35,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:workspaces",
+      "exitCode": 0,
+      "tests": {
+        "tests": 92,
+        "pass": 92,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:input",
+      "exitCode": 0,
+      "tests": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:preparation",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "test:scheduler",
+      "exitCode": 0,
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts:check",
+      "exitCode": 0
+    },
+    {
+      "name": "project:check",
+      "exitCode": 0
+    },
+    {
+      "name": "openspec",
+      "exitCode": 0
+    },
+    {
+      "name": "design-consistency",
+      "exitCode": 0
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/01-toolchain-check.txt",
+      "sha256": "71f250ad98445a5917760a85c86cdb030a60196d416e9ec070af97f46e6e44be"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/02-vendor-verify.txt",
+      "sha256": "957af7e818661fcd299b0ad846969501d3257c1a7a93e3016a9aa50321dd7409"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/03-build.txt",
+      "sha256": "88b2021817225749e0d14ac2162689f31666284ef584c192ea902bdb0e09ad12"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/04-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/05-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/06-test-smoke.txt",
+      "sha256": "3445268f6645d53d59383b7de3b43d38fd999f05feff67aaf85e1dcb85c57686"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/07-test-contracts.txt",
+      "sha256": "5cdf17e7470b738f8459ed5e2f5b35749489675c7099c0de434167ff95445e74"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/08-test-storage.txt",
+      "sha256": "523f57a2d1d1403812dca39f844b08e7fd0366a379e1cf52b1d2afd9d06431c5"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/09-test-content.txt",
+      "sha256": "17ae0e539112bf6f8764d8325eeb2757cb28e8fa99d9d271ecc04ea3f7c7522e"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/10-test-a2a.txt",
+      "sha256": "3e32f75aa1c30f95c8dc13d7a5a5e503a00ada531843481dcabc59167e4ee001"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/11-test-runtime.txt",
+      "sha256": "f874504286bfd32cdc55b95917fb2e94fe4a17db206d74ed09bc181c685cd96d"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/12-test-runner.txt",
+      "sha256": "72fc3ca973a802c7396662948ac2de71bbf237f330c22e37fecd80d37a889f9e"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/13-test-mcp.txt",
+      "sha256": "196083583888bbf6b3613f94ea7bab79fe4bacc06f23e8efe01f759e1e859d1c"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/14-test-workspaces.txt",
+      "sha256": "d62fb1db2743d2110ed302aeece74e1b66536d7cb2a7fe8da2313d0eb8c462d9"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/15-test-input.txt",
+      "sha256": "17fb05314c14f3370a4942720657a10690e6b17e6c48f2cd97939ea95017921d"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/16-test-preparation.txt",
+      "sha256": "776fb0bd724b88f54fcab864c587c373dac8d5f4ac6799b008e86aa0f5bfd27d"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/17-test-scheduler.txt",
+      "sha256": "49aa561b2df666c2b7da5f9ccaf07a8b4e0e0b6150d9cb59ccf01fda3399c8bf"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/18-contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/19-project-check.txt",
+      "sha256": "a091c1dd96ef39747dc66cd5658859dd8a6a8c5e29dcbe3847ab905266df03ab"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/20-openspec.txt",
+      "sha256": "c80536fac34082b4d9c4db27cb06645ad48fecc1bd9b788aab0767200bfa365f"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/21-design-consistency.txt",
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/checkout.txt",
+      "sha256": "80606676b547efabf3eb521dcb2553226a6b507a8d0f3d205c77d1d6802a7d47"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/clean-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/fetch.txt",
+      "sha256": "bb3d27f57b9d306f82054a517e9c75951ae447c3b16778f197c8dec0667d2517"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/frozen-install.txt",
+      "sha256": "cb255982d396dc802dc6b72d60a4cda5f484c5a953c51ba326fec0de8ca5691e"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/report.json",
+      "sha256": "c858448b1d2f34ba6f4f4fd5da98dc7d1969517404debefecd461dde782f4097"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/source.txt",
+      "sha256": "d17df56b6620e47e2f6d6516927fe5611de5f7b9829cb206e82cfbe609f26d2b"
+    },
+    {
+      "path": "project/evidence/P1-05/windows-1df2e80/verify.txt",
+      "sha256": "ff0b4fb7f03b4a797be85de4f74f106998c9131ad63c7bbe5230d4a57c6fd52a"
+    }
+  ],
+  "limitations": [
+    "Same Codex agent implementation and subsequent source/evidence review; no independent human acceptance.",
+    "Scripted HTTP model and controlled container backend are fixtures; no live model, OIDC, remote Git, actual Docker/runsc, Linux, product or stage gate acceptance.",
+    "Two target-environment conditional tests remain skipped: foundation optional runtime and actual runsc execution.",
+    "This source checkpoint excludes later P1-06 changes; old failed checkpoint evidence is retained separately."
+  ]
+}
