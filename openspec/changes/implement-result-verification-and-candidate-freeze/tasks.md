@@ -13,7 +13,7 @@
 ## 3. Findings and bounded forward repairs
 
 - [x] 3.1 衔接 defect 与原失败、复现、预期和准确证据；验证重复结果去重、失败历史不可覆盖和仅准确修复 SHA 复验可关闭。
-- [ ] 3.2 实现新修复／复验 Work 的前向规划与两轮预算；验证 findings 依赖、无回边、30 项上限、计划确认和需求／接口变化审查。
+- [x] 3.2 实现新修复／复验 Work 的前向规划与两轮预算；验证 findings 依赖、无回边、30 项上限、计划确认和需求／接口变化审查。
 
 ## 4. Release candidate revision freeze
 

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { planDraft } from './outputs.js';
-import { gitCommit, ids, opaqueKey, revision, sha256, timestamp } from './primitives.js';
+import { artifactRef,gitCommit, ids, opaqueKey, revision, sha256, timestamp } from './primitives.js';
 
 export const planIssue = z.strictObject({
   code: opaqueKey, path: z.string().min(1).max(512), workId: ids.work.optional(),
@@ -14,6 +14,12 @@ export const planReviewView = z.strictObject({
   confirmation: z.strictObject({actor:opaqueKey,operationId:ids.operation,confirmedAt:timestamp}).nullable(),
   issues: z.array(planIssue),
   topology: z.array(z.strictObject({workId:ids.work,layer:z.number().int().min(0).max(29)})).max(30),
+  carryForward:z.strictObject({sha256,round:z.number().int().min(1).max(2),sourcePlanRevision:revision,results:z.array(z.strictObject({
+    workId:ids.work,workRevision:revision,attemptId:ids.attempt,sourcePlanRevision:revision,
+    outcome:z.enum(['success','completed-with-findings']),codeCommit:gitCommit.nullable(),evidence:artifactRef,
+    checkConfigHash:sha256,templateVersion:opaqueKey,inputManifestSha256:sha256,snapshotSha256:sha256,
+    origin:z.enum(['FORMAL','HISTORICAL']),
+  })).max(30)}).optional(),
 });
 
 export type Draft = z.output<typeof planDraft>;

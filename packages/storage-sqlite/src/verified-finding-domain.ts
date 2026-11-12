@@ -10,6 +10,7 @@ import type {IssueOperation} from './tool-protocol.js';
 import type {createQualityDomain} from './quality-domain.js';
 import type {createCandidateIntegrationDomain} from './candidate-integration-domain.js';
 import type {WorkAssessment} from './work-verification-protocol.js';
+import {createPlanResults} from './plan-results.js';
 type Row=Record<string,string|number|null>;
 const json=<T>(v:unknown):T=>JSON.parse(String(v)) as T;
 const uid=(prefix:string)=>prefix+'_'+randomUUID().replaceAll('-','');
@@ -48,6 +49,12 @@ export function createVerifiedFindingDomain(db:DatabaseSync,quality:Pick<ReturnT
  }
  function active(run:Row){if(run.control_gate!=='OPEN'||run.terminal_outcome!==null)fail('VERIFIED_FINDING_ADMISSION_CLOSED');}
  function confirmedWork(run:Row,workId:string){const row=get(`SELECT v.definition_json FROM plan_works p JOIN work_revisions v ON v.run_id=p.run_id AND v.work_id=p.work_id AND v.revision=p.work_revision JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN plan_confirmations c ON c.run_id=p.run_id AND c.plan_revision=p.plan_revision AND c.requirement_revision=? WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND w.blocked_reason IS NULL`,run.current_requirement_revision!,run.run_id!,run.current_plan_revision!,workId)??fail('VERIFIED_FINDING_FIX_WORK_INVALID',422);return workRevision.parse(json(row.definition_json));}
+  function findingDependency(run:Row,work:ReturnType<typeof confirmedWork>,originalWorkId:string){
+   if(work.role!=='developer')return false;const results=createPlanResults(db);
+   for(const edge of work.dependencies){if(edge.requiredOutcome!=='completed-with-findings')continue;const result=results.resolve(String(run.run_id),Number(run.current_plan_revision),edge.workId);if(!result||result.row.role!=='tester'||result.row.outcome!=='completed-with-findings'||!get('SELECT 1 FROM verified_findings f JOIN issues i ON i.issue_id=f.issue_id WHERE i.run_id=? AND i.source_attempt_id=?',run.run_id!,result.row.attempt_id!))continue;
+    const visited=new Set<string>();function reaches(workId:string):boolean{if(workId===originalWorkId)return true;if(visited.has(workId)||visited.size>=30)return false;visited.add(workId);return confirmedWork(run,workId).dependencies.some(parent=>reaches(parent.workId));}if(reaches(edge.workId))return true;
+   }return false;
+  }
  function mutate<M extends 'linkVerifiedFindingFix'|'recordVerifiedFindingResult'>(method:M,i:VerifiedFindingInput<M>,act:(run:Row,row:Row)=>IssueOperation){return transaction(db,()=>{
   const run=member(i.principalId,i.runId,true),hash=digest(canonical({method,...i})),old=get('SELECT * FROM verified_issue_commands WHERE operation_id=?',i.operationId);
   if(old){if(old.principal_id!==i.principalId)fail('VERIFIED_FINDING_NOT_FOUND',404);if(old.request_hash!==hash)fail('IDEMPOTENCY_KEY_REUSED');return json<IssueOperation>(old.result_json);}
@@ -57,7 +64,7 @@ export function createVerifiedFindingDomain(db:DatabaseSync,quality:Pick<ReturnT
  const handlers={
   getVerifiedFinding(i:VerifiedFindingInput<'getVerifiedFinding'>){member(i.principalId,i.runId);return view(original(i.issueId,i.runId),i.afterRevision,i.limit);},
   listVerifiedFindings(i:VerifiedFindingInput<'listVerifiedFindings'>){member(i.principalId,i.runId);return all('SELECT i.*,f.failure_json,f.failure_sha256 FROM issues i JOIN verified_findings f ON f.issue_id=i.issue_id WHERE i.run_id=? AND i.issue_id>? ORDER BY i.issue_id LIMIT ?',i.runId,i.afterIssueId,i.limit).map(r=>view(r));},
-  linkVerifiedFindingFix(i:VerifiedFindingInput<'linkVerifiedFindingFix'>){return mutate('linkVerifiedFindingFix',i,(run,row)=>{const work=confirmedWork(run,i.fixWorkId),failure=json<OriginalFailure>(row.failure_json);if(work.role!=='developer'||!work.dependencies.some(e=>e.workId===failure.workId&&e.requiredOutcome==='completed-with-findings')||work.workId===failure.workId)fail('VERIFIED_FINDING_FIX_WORK_INVALID',422);exec("UPDATE issues SET revision=revision+1,state='FIX_LINKED',fix_work_id=?,updated_at=? WHERE issue_id=?",i.fixWorkId,new Date().toISOString(),i.issueId);return history(original(i.issueId,i.runId),i.operationId,'FIX_LINKED',{issueId:i.issueId,issueRevision:i.issueRevision,fixWorkId:i.fixWorkId,origin:'trusted-verification'},null,null,null);});},
+  linkVerifiedFindingFix(i:VerifiedFindingInput<'linkVerifiedFindingFix'>){return mutate('linkVerifiedFindingFix',i,(run,row)=>{const work=confirmedWork(run,i.fixWorkId),failure=json<OriginalFailure>(row.failure_json);if(!findingDependency(run,work,failure.workId)||work.workId===failure.workId)fail('VERIFIED_FINDING_FIX_WORK_INVALID',422);exec("UPDATE issues SET revision=revision+1,state='FIX_LINKED',fix_work_id=?,updated_at=? WHERE issue_id=?",i.fixWorkId,new Date().toISOString(),i.issueId);return history(original(i.issueId,i.runId),i.operationId,'FIX_LINKED',{issueId:i.issueId,issueRevision:i.issueRevision,fixWorkId:i.fixWorkId,origin:'trusted-verification'},null,null,null);});},
   recordVerifiedFindingResult(i:VerifiedFindingInput<'recordVerifiedFindingResult'>){return mutate('recordVerifiedFindingResult',i,(run,row)=>{
    const failure=json<OriginalFailure>(row.failure_json),fix=applied(i.fixAttemptId,i.runId,'developer'),verification=applied(i.verificationAttemptId,i.runId,'tester'),fixWork=confirmedWork(run,String(fix.work_id)),tester=confirmedWork(run,String(verification.work_id));
    if(row.state!=='FIX_LINKED'||row.fix_work_id!==fix.work_id||fix.work_revision!==fixWork.workRevision||verification.work_revision!==tester.workRevision||fix.outcome!=='success'||fix.state!=='SUCCEEDED'||!fix.code_commit||!verification.quality_operation_id||verification.state!==(verification.outcome==='success'?'SUCCEEDED':'FAILED')||!tester.dependencies.some(e=>e.workId===fix.work_id&&e.requiredOutcome==='success'))fail('VERIFIED_FINDING_RESULT_UNPROVEN',422);
@@ -71,5 +78,7 @@ export function createVerifiedFindingDomain(db:DatabaseSync,quality:Pick<ReturnT
    exec('UPDATE issues SET revision=revision+1,state=?,updated_at=? WHERE issue_id=?',passed?'VERIFIED':'FIX_LINKED',new Date().toISOString(),i.issueId);return history(original(i.issueId,i.runId),i.operationId,'VERIFICATION_RECORDED',value,evidence.artifactId,i.fixAttemptId,i.verificationAttemptId);
   });},
  };
- return {capture,execute(method:VerifiedFindingMethod,input:unknown):unknown{const parsed=parseContract(verifiedFindingRequests[method],input);return (handlers[method] as (i:unknown)=>unknown)(parsed);}};
+  return {capture,
+   linkApprovedRepair(run:Row,issueIds:string[],fixWorkId:string){const work=confirmedWork(run,fixWorkId);for(const issueId of issueIds){const row=original(issueId,String(run.run_id)),failure=json<OriginalFailure>(row.failure_json);if(row.state==='VERIFIED'||work.role!=='developer'||!work.dependencies.some(e=>e.workId===failure.workId&&e.requiredOutcome==='completed-with-findings'))fail('VERIFIED_FINDING_FIX_WORK_INVALID');exec("UPDATE issues SET revision=revision+1,state='FIX_LINKED',fix_work_id=?,updated_at=? WHERE issue_id=?",fixWorkId,new Date().toISOString(),issueId);history(original(issueId,String(run.run_id)),uid('op'),'FIX_LINKED',{issueId,issueRevision:row.revision,fixWorkId,origin:'confirmed-forward-repair'},null,null,null);}},
+   execute(method:VerifiedFindingMethod,input:unknown):unknown{const parsed=parseContract(verifiedFindingRequests[method],input);return (handlers[method] as (i:unknown)=>unknown)(parsed);}};
 }

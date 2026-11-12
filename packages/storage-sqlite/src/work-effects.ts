@@ -13,3 +13,8 @@ export function knownAttemptEffects(db:DatabaseSync,attemptId:string):boolean{
  ];
  return pending.every(sql=>!db.prepare(sql).get(attemptId));
 }
+/** Repair confirmation cannot admit a plan over live or unresolved old effects. */
+export function completedRunEffects(db:DatabaseSync,runId:string):boolean{
+ const attempts=db.prepare('SELECT attempt_id,ended_at FROM attempts WHERE run_id=?').all(runId) as {attempt_id:string;ended_at:string|null}[];
+ return attempts.every(a=>a.ended_at!==null&&knownAttemptEffects(db,a.attempt_id));
+}

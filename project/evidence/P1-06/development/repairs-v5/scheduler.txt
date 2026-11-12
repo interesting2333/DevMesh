@@ -1,0 +1,93 @@
+TAP version 13
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: graph validation locates a cycle, missing output and unsequenced write scopes
+ok 1 - graph validation locates a cycle, missing output and unsequenced write scopes
+  ---
+  duration_ms: 12.4942
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: plan HTTP reports missing tests and accepts only an exact authorized current review
+ok 2 - plan HTTP reports missing tests and accepts only an exact authorized current review
+  ---
+  duration_ms: 1089.9926
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: scheduler rotates between confirmed projects and needs verified predecessor output
+ok 3 - scheduler rotates between confirmed projects and needs verified predecessor output
+  ---
+  duration_ms: 816.6707
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: uncertain send keeps its original attempt and allows another project to proceed
+ok 4 - uncertain send keeps its original attempt and allows another project to proceed
+  ---
+  duration_ms: 863.1983
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: runner capacity rejects a second admission atomically and paused confirmation never dispatches
+ok 5 - runner capacity rejects a second admission atomically and paused confirmation never dispatches
+  ---
+  duration_ms: 984.8045
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: old plan remains readable and cannot be confirmed with the current resource revision
+ok 6 - old plan remains readable and cannot be confirmed with the current resource revision
+  ---
+  duration_ms: 649.5403
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unavailable Runner resources leave no admission facts and another project can proceed
+ok 7 - unavailable Runner resources leave no admission facts and another project can proceed
+  ---
+  duration_ms: 670.0341
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: restart reconciles the original dispatched work without a second HTTP send
+ok 8 - restart reconciles the original dispatched work without a second HTTP send
+  ---
+  duration_ms: 973.6675
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shutdown aborts an allocator in progress before admission
+ok 9 - shutdown aborts an allocator in progress before admission
+  ---
+  duration_ms: 564.3067
+  type: 'test'
+  ...
+# (node:35020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pause after admission but before send proves non-delivery and releases only that slot
+ok 10 - pause after admission but before send proves non-delivery and releases only that slot
+  ---
+  duration_ms: 603.2838
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7814.9622
+$ node --test --test-concurrency=1 --test-reporter=tap tests/scheduler*.test.mjs

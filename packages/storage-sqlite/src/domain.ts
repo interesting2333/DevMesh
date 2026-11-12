@@ -67,6 +67,9 @@ import {knownAttemptEffects} from './work-effects.js';
 import {createVerifiedFindingDomain} from './verified-finding-domain.js';
 import {verifiedFindingRequests} from './verified-finding-protocol.js';
 import type {VerifiedFindingMethod} from './verified-finding-protocol.js';
+import {createVerifiedRepairDomain} from './verified-repair-domain.js';
+import {verifiedRepairRequests} from './verified-repair-protocol.js';
+import type {VerifiedRepairMethod} from './verified-repair-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -93,6 +96,7 @@ export function createDomain(db: DatabaseSync) {
     bump(runId);event(runId,String(original),'PipelineChanged',payload,{attemptId});
   },(attemptId,workspaceRef)=>quality.assertPipelinePrepared(attemptId,workspaceRef));
   const plans = createPlanDomain(db);
+  const verifiedRepairs=createVerifiedRepairDomain(db);
   const candidateIntegrations=createCandidateIntegrationDomain(db,plans);
   const quality=createQualityDomain(db,candidateIntegrations);
   const workVerifications=createWorkVerificationDomain(db,quality);
@@ -204,9 +208,11 @@ export function createDomain(db: DatabaseSync) {
         const graph=plans.inspect(current,parseContract(planDraft,JSON.parse(String(plan.content_json))));
         if(graph.issues.length)throw new StorageError('PLAN_INVALID',422,'Plan checks must pass before confirmation',{issues:graph.issues.slice(0,100)});
       }
+      const repair=verifiedRepairs.assertConfirmation(input.runId,input.planRevision,input.carryForwardHash);
       insert('plan_confirmations',{run_id:input.runId,plan_revision:input.planRevision,requirement_revision:input.requirementRevision,review_hash:input.reviewHash,actor:meta.principalId,operation_id:operationId,created_at:now()});
       const decisionId=uid('decision');
-      insert('decisions',{decision_id:decisionId,run_id:input.runId,subject_id:String(input.planRevision),subject_kind:'PLAN',basis_hash:input.reviewHash,choice_json:'{"confirmed":true}',operation_id:operationId,actor_id:meta.principalId,created_at:now()});
+      insert('decisions',{decision_id:decisionId,run_id:input.runId,subject_id:String(input.planRevision),subject_kind:'PLAN',basis_hash:input.reviewHash,choice_json:canonical({confirmed:true,...(repair?{carryForwardHash:input.carryForwardHash}:{})}),operation_id:operationId,actor_id:meta.principalId,created_at:now()});
+      if(repair)verifiedFindings.linkApprovedRepair(current,repair.issueIds,repair.fixWorkId);
       insert('input_operation_resources',{operation_id:operationId,project_id:current.project_id!,run_id:input.runId});
       bump(input.runId);
       event(input.runId,operationId,'PlanConfirmed',{planRevision:input.planRevision,decisionId});
@@ -303,6 +309,7 @@ export function createDomain(db: DatabaseSync) {
     confirmPlan(input: Parsed<'confirmPlan'>) {
       return confirm(input,false);
     },
+    publishVerifiedRepair(input:Parsed<'publishVerifiedRepair'>){const {meta,...payload}=input;if(meta.scopeId!==input.runId)throw new StorageError('OPERATION_SCOPE_INVALID',422,'Invalid Run scope');return operation(meta,'PublishVerifiedRepair',payload,operationId=>verifiedRepairs.publish(meta.principalId,input.runId,input.operationId,meta.idempotencyKey,operationId,publishPlanFacts),()=>{const current=plans.authorized(meta.principalId,input.runId,true);if(current.membership!=='owner')throw new StorageError('FORBIDDEN',403,'Project owner required');});},
     confirmReviewedPlan(input: Parsed<'confirmReviewedPlan'>){return confirm(input,true);},
     getPlanReview(input:Parsed<'getPlanReview'>){return transaction(db,()=>plans.getPlanReview(input));},
     nextScheduledWork(input:Parsed<'nextScheduledWork'>){return transaction(db,()=>scheduler.next(input));},
@@ -434,6 +441,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(verifiedRepairRequests,method))return verifiedRepairs.execute(method as VerifiedRepairMethod,input);
     if(Object.hasOwn(workVerificationRequests,method))return workVerifications.execute(method as WorkVerificationMethod,input);
     if(Object.hasOwn(verifiedFindingRequests,method))return verifiedFindings.execute(method as VerifiedFindingMethod,input);
     if(Object.hasOwn(qualityRequests,method))return quality.execute(method as QualityMethod,input);

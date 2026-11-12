@@ -14,6 +14,8 @@
 8. Work 评估正文与 artifact 在同一内容 ACK 事务登记，随后完成事务重核依据并应用固定的 outcome／outputs／commit／evidence。PASS 可完成，Tester 的确定 findings 单独保留；必要人工项待处理时保持未完成。原键恢复只查询原证据和完成操作，不调用模型或 Runner。只读成员可查询历史，不通过该服务以负责人身份写入或重放。
 9. Tester 的独立、可复现原失败与 Work 完成原子生成缺陷。每个缺陷固定检查、准确 SHA／配置、原命令和执行身份、需求验收文本、原材料哈希；模型声明和基础设施故障保留原评估，不据此自动创建业务修复。
 10. 项目负责人通过私有 Worker 命令 `linkVerifiedFindingFix` 关联已确认的前向修复 Work，再以 `recordVerifiedFindingResult` 记录原复验事实。仅新的 APPLIED Developer／Tester 证明、包含原修复归档的准确合并候选、相同检查及需求依据、全部必要检查通过且无待人工项，才允许关闭原缺陷。旧 SHA、模型自报及历史兼容结果不能关闭；再次失败和待核实分别追加 FAILED／NOT_VERIFIED 历史。普通 MCP 无权改写这类缺陷。
+11. `RepairPlanner.prepare` 以原独立失败和已确认计划生成新 Developer → Tester 两个 Work，实际内容 ACK 后显式 `publish`。最多两轮、总量不超过 30 项；只允许原已批准写入范围内的实现修复。需求／接口变化、扩大范围及未知副作用拒绝自动规划。发布保留原需求版本，不自动确认或派发；新计划审查必须明确确认 `carryForwardHash`，确认事务再次检查原事实和未知副作用，并关联原缺陷。
+12. 已完成结果通过不可变沿用记录继续作为新计划的依赖，固定原 Work／输入／决定／需求与材料身份。历史结果保留 HISTORICAL 来源；新修复及复验保持原模板和配置，仍需新准确 SHA 的正式证明。第二轮只追加新节点，原失败和已完成 Work 不重置、不复活授权。
 
 SOURCE 声明／登记与 stage 首次 SENT 的互斥由 SQLite 顺序保证，不依赖控制面和远端的时钟比较。原操作、依据、producer 绑定、材料 writeKey 和终态结果不可变；暂停后原历史可保留，但 qualification 变为 STALE。读取受当前项目成员权限约束，写入只允许原项目负责人。
 
@@ -23,4 +25,4 @@ SOURCE 声明／登记与 stage 首次 SENT 的互斥由 SQLite 顺序保证，�
 
 新的 `recordVerifiedWork` 只接受已 ACK 的不可变 Work 评估及其稳定 completionKey，调用方不能自行提交 success；一般 `transitionAttempt` 不能直接进入 SUCCEEDED。历史已提交操作按原键重放，旧结果保留。测试用历史数据只在测试文件中显式种入，不向应用提供 fixture 开关。Work 评估及质量材料的外键会阻止 GC，缺失或变更的来源不能复用为当前证明。
 
-本地采集测试使用实际认证 HTTP、Runner SQLite、输出文件、PipelineCoordinator 和内容存储；执行后端写入固定报告，Git／准入与独立映射为明确夹具。正式 Tester 完成用例明确种入原 Runtime 候选等数据库事实；Developer 链路另用真实本地模型协议 HTTP 夹具、Runtime、认证 MCP、Git 提交／归档和 Worker 测试。缺陷测试实际执行 WorkVerifier、原报告计算、内容 ACK 和缺陷事务，明确种入 Git／准入／Runner／Runtime 候选事实。这些用例不证明真实模型、OIDC、Linux／gVisor 执行或生产工具链。生产映射 provider、Runtime 自动组合、前向修复规划和候选冻结继续按 OpenSpec 实施。
+本地采集测试使用实际认证 HTTP、Runner SQLite、输出文件、PipelineCoordinator 和内容存储；执行后端写入固定报告，Git／准入与独立映射为明确夹具。正式 Tester 完成用例明确种入原 Runtime 候选等数据库事实；Developer 链路另用真实本地模型协议 HTTP 夹具、Runtime、认证 MCP、Git 提交／归档和 Worker 测试。缺陷及前向修复测试实际执行 WorkVerifier、原报告计算、内容 ACK、计划发布／确认、调度与缺陷事务，明确种入 Git／准入／Runner／Runtime 候选事实。这些用例不证明真实模型、OIDC、Linux／gVisor 执行或生产工具链。生产映射 provider、Runtime 自动组合和候选冻结继续按 OpenSpec 实施。

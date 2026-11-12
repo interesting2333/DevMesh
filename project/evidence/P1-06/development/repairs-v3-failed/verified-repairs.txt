@@ -1,0 +1,69 @@
+TAP version 13
+# (node:26028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: repair publishes two forward nodes and explicit carry review without executing or confirming
+ok 1 - repair publishes two forward nodes and explicit carry review without executing or confirming
+  ---
+  duration_ms: 1101.9174
+  type: 'test'
+  ...
+# Subtest: unacknowledged or changed source cannot publish; carry changes cannot be confirmed
+ok 2 - unacknowledged or changed source cannot publish; carry changes cannot be confirmed
+  ---
+  duration_ms: 917.4058
+  type: 'test'
+  ...
+# Subtest: requirement, interface, scope changes and foreign members require explicit review
+ok 3 - requirement, interface, scope changes and foreign members require explicit review
+  ---
+  duration_ms: 1471.7905
+  type: 'test'
+  ...
+# Subtest: twenty-nine existing Works cannot append a repair pair
+ok 4 - twenty-nine existing Works cannot append a repair pair
+  ---
+  duration_ms: 965.054
+  type: 'test'
+  ...
+# Subtest: two actual forward repair publications consume the Run budget without resetting old Work
+ok 5 - two actual forward repair publications consume the Run budget without resetting old Work
+  ---
+  duration_ms: 1642.4294
+  type: 'test'
+  ...
+# Subtest: a newly planned and formally passing integrated recheck closes original failures without rewriting them
+ok 6 - a newly planned and formally passing integrated recheck closes original failures without rewriting them
+  ---
+  duration_ms: 2669.6107
+  type: 'test'
+  ...
+# Subtest: an unresolved original pipeline effect blocks forward repair preparation
+not ok 7 - an unresolved original pipeline effect blocks forward repair preparation
+  ---
+  duration_ms: 753.7917
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-repairs.test.mjs:51:1'
+  failureType: 'testCodeFailure'
+  error: "CHECK constraint failed: state IN ('QUEUED','RUNNING','SUCCEEDED','FAILED','STOPPING','CANCELLED','OUTCOME_UNKNOWN')"
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-repairs.test.mjs:52:52)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: content ACK and plan publication failures preserve original repair keys and leave no partial plan
+ok 8 - content ACK and plan publication failures preserve original repair keys and leave no partial plan
+  ---
+  duration_ms: 921.4269
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10974.3739

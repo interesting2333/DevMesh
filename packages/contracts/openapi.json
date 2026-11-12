@@ -4625,6 +4625,10 @@
                   "reviewHash": {
                     "type": "string",
                     "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "carryForwardHash": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
                   }
                 },
                 "required": [
@@ -13953,6 +13957,133 @@
               ],
               "additionalProperties": false
             }
+          },
+          "carryForward": {
+            "type": "object",
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "round": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2
+              },
+              "sourcePlanRevision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "results": {
+                "maxItems": 30,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "workId": {
+                      "type": "string",
+                      "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "workRevision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "attemptId": {
+                      "type": "string",
+                      "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "sourcePlanRevision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "outcome": {
+                      "type": "string",
+                      "enum": [
+                        "success",
+                        "completed-with-findings"
+                      ]
+                    },
+                    "codeCommit": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{40}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "evidence": {
+                      "type": "object",
+                      "properties": {
+                        "artifactId": {
+                          "type": "string",
+                          "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                        },
+                        "sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        }
+                      },
+                      "required": [
+                        "artifactId",
+                        "sha256"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "checkConfigHash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "templateVersion": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "inputManifestSha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "snapshotSha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "origin": {
+                      "type": "string",
+                      "enum": [
+                        "FORMAL",
+                        "HISTORICAL"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "workId",
+                    "workRevision",
+                    "attemptId",
+                    "sourcePlanRevision",
+                    "outcome",
+                    "codeCommit",
+                    "evidence",
+                    "checkConfigHash",
+                    "templateVersion",
+                    "inputManifestSha256",
+                    "snapshotSha256",
+                    "origin"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "sha256",
+              "round",
+              "sourcePlanRevision",
+              "results"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [
@@ -14136,6 +14267,10 @@
             "maximum": 9007199254740991
           },
           "reviewHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "carryForwardHash": {
             "type": "string",
             "pattern": "^[a-f0-9]{64}$"
           }

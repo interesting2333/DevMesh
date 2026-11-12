@@ -8,6 +8,7 @@ import type {createPlanDomain} from './plan-domain.js';
 import {sourceManifest} from './workspace-protocol.js';
 import type {GitDirectoryIdentity} from './workspace-protocol.js';
 import type {SourceArchive} from './source-archive-protocol.js';
+import {createPlanResults} from './plan-results.js';
 
 type Row=Record<string,string|number|null>;
 type Work=Draft['works'][number];
@@ -34,8 +35,10 @@ const same=(a:unknown,b:unknown)=>canonical(a)===canonical(b);
 
 /** Worker-only qualification; no filesystem I/O and no authority from a caller SHA. */
 export function createCandidateBasis(db:DatabaseSync,plans:ReturnType<typeof createPlanDomain>,resolveCandidate:(commit:string)=>CandidateProof|null){
+ const planResults=createPlanResults(db);
  const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined;
  function freeze(input:CandidateSubject):CandidateBasis {
+  const carriedDecisions=new Map<string,string>();
   const run=plans.authorized(input.principalId,input.runId,true);
   if(run.control_gate!=='OPEN'||run.terminal_outcome!==null||run.current_plan_revision===null||run.current_requirement_revision===null)fail('CANDIDATE_ADMISSION_CLOSED');
   const planRow=get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?',input.runId,run.current_plan_revision!),confirmation=get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?',input.runId,run.current_plan_revision!,run.current_requirement_revision!);
@@ -57,14 +60,11 @@ export function createCandidateBasis(db:DatabaseSync,plans:ReturnType<typeof cre
   };
   function fact(work:Work){
    const old=facts.get(work.workId);if(old)return old;
-   const row=get(`SELECT a.*,v.outcome,v.evidence_artifact_id,v.outputs_json,v.code_commit,w.work_epoch,w.blocked_reason
-    FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id JOIN verified_work_results v ON v.attempt_id=a.attempt_id
-    JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id
-    WHERE a.run_id=? AND a.work_id=? AND a.work_revision=? AND s.plan_revision=?
-    AND a.attempt_no=(SELECT MAX(n.attempt_no) FROM attempts n WHERE n.run_id=a.run_id AND n.work_id=a.work_id)`,input.runId,work.workId,work.workRevision,run.current_plan_revision!);
-   if(!row||row.role!==work.role||row.ended_at===null||row.blocked_reason!==null||row.admitted_work_epoch!==row.work_epoch||!(row.state==='SUCCEEDED'&&row.outcome==='success'||row.state==='FAILED'&&row.outcome==='completed-with-findings'&&work.role==='tester'))fail('CANDIDATE_DEPENDENCY_UNSATISFIED');
+   const qualified=planResults.resolve(input.runId,Number(run.current_plan_revision),work.workId),row=qualified?.row;
+   if(!row||row.work_revision!==work.workRevision||row.role!==work.role||row.ended_at===null||row.blocked_reason!==null||row.admitted_work_epoch!==row.current_work_epoch||!(row.state==='SUCCEEDED'&&row.outcome==='success'||row.state==='FAILED'&&row.outcome==='completed-with-findings'&&work.role==='tester'))fail('CANDIDATE_DEPENDENCY_UNSATISFIED');
+   if(qualified?.carry)carriedDecisions.set(work.workId,qualified.carry.sourcePlanDecisionId);
    const outputs=JSON.parse(String(row.outputs_json)) as CandidateWorkFact['outputs'];for(const output of outputs)ready(output.ref.artifactId,output.ref.sha256);
-   const manifest=parseContract(inputManifest,JSON.parse(String(row.input_manifest_json))),value:CandidateWorkFact={workId:work.workId,workRevision:work.workRevision,workEpoch:Number(row.work_epoch),attemptId:String(row.attempt_id),role:work.role,outcome:String(row.outcome),admittedRunEpoch:Number(row.admitted_run_epoch),codeCommit:row.code_commit as string|null,inputManifestSha256:digest(canonical(manifest)),evidence:{artifactId:String(row.evidence_artifact_id),sha256:ready(String(row.evidence_artifact_id))},outputs:ordered(outputs)};
+   const manifest=parseContract(inputManifest,JSON.parse(String(row.input_manifest_json))),value:CandidateWorkFact={workId:work.workId,workRevision:work.workRevision,workEpoch:Number(row.current_work_epoch),attemptId:String(row.attempt_id),role:work.role,outcome:String(row.outcome),admittedRunEpoch:Number(row.admitted_run_epoch),codeCommit:row.code_commit as string|null,inputManifestSha256:digest(canonical(manifest)),evidence:{artifactId:String(row.evidence_artifact_id),sha256:ready(String(row.evidence_artifact_id))},outputs:ordered(outputs)};
    facts.set(work.workId,value);manifests.set(work.workId,manifest);return value;
   }
   const included=new Set<string>(),visiting=new Set<string>();
@@ -96,7 +96,7 @@ export function createCandidateBasis(db:DatabaseSync,plans:ReturnType<typeof cre
    if(manifest.interfaces.length)fail('CANDIDATE_INTERFACE_BASIS_UNAVAILABLE');
    if(!manifest.codeCommit)fail('CANDIDATE_CODE_BASIS_UNPROVEN');
    if(!same(provenance(manifest.codeCommit),expected)||value.role==='developer'&&byWork.get(workId)?.baseCommit!==manifest.codeCommit||value.role!=='developer'&&value.codeCommit!==null&&!same(provenance(value.codeCommit),expected))fail('CANDIDATE_CODE_BASIS_CHANGED');
-   const assigned=requirements.filter(item=>work.requirementIds.includes(item.id)).map(item=>({requirementId:item.id,sha256:digest(canonical(item))}));if(!same(ordered(assigned),ordered(manifest.requirements))||!manifest.decisionIds.includes(parseContract(ids.decision,decision.decision_id)))fail('CANDIDATE_INPUT_BASIS_CHANGED');
+   const assigned=requirements.filter(item=>work.requirementIds.includes(item.id)).map(item=>({requirementId:item.id,sha256:digest(canonical(item))}));if(!same(ordered(assigned),ordered(manifest.requirements))||!manifest.decisionIds.includes(parseContract(ids.decision,carriedDecisions.get(workId)??decision.decision_id)))fail('CANDIDATE_INPUT_BASIS_CHANGED');
    const artifacts=new Map<string,{artifactId:string;sha256:string}>();
    for(const ref of work.inputRefs){const actual=ref.kind==='artifact'?ref:facts.get(ref.workId)?.outputs.find(output=>output.slot===ref.outputSlot)?.ref;if(!actual)fail('CANDIDATE_INPUT_BASIS_CHANGED');ready(actual!.artifactId,actual!.sha256);artifacts.set(actual!.artifactId,{artifactId:actual!.artifactId,sha256:actual!.sha256});}
    if(!same(ordered([...artifacts.values()]),ordered(manifest.artifacts)))fail('CANDIDATE_INPUT_BASIS_CHANGED');

@@ -8,7 +8,7 @@ export const commandBodies = {
   CreateProject: createProjectInput,
   SaveMessage: saveMessageInput,
   AnswerQuestions: answerQuestionsInput,
-  ConfirmPlan: z.strictObject({ requirementRevision: revision, reviewHash: sha256 }),
+  ConfirmPlan: z.strictObject({ requirementRevision: revision, reviewHash: sha256,carryForwardHash:sha256.optional() }),
   PlanFeedback: z.strictObject({ text: inputText, workIds: z.array(ids.work).optional() }),
   ProposeChange: z.strictObject({ proposedText: inputText, sourceMessageId: ids.message }),
   DecideChange: z.strictObject({ action: z.enum(['confirm', 'reject']), analysisId: ids.analysis, basisHash: sha256 }),

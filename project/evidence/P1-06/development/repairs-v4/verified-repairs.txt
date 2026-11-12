@@ -1,0 +1,60 @@
+TAP version 13
+# (node:38392) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: repair publishes two forward nodes and explicit carry review without executing or confirming
+ok 1 - repair publishes two forward nodes and explicit carry review without executing or confirming
+  ---
+  duration_ms: 1198.1354
+  type: 'test'
+  ...
+# Subtest: unacknowledged or changed source cannot publish; carry changes cannot be confirmed
+ok 2 - unacknowledged or changed source cannot publish; carry changes cannot be confirmed
+  ---
+  duration_ms: 726.0592
+  type: 'test'
+  ...
+# Subtest: requirement, interface, scope changes and foreign members require explicit review
+ok 3 - requirement, interface, scope changes and foreign members require explicit review
+  ---
+  duration_ms: 666.8397
+  type: 'test'
+  ...
+# Subtest: twenty-nine existing Works cannot append a repair pair
+ok 4 - twenty-nine existing Works cannot append a repair pair
+  ---
+  duration_ms: 590.9067
+  type: 'test'
+  ...
+# Subtest: two actual forward repair publications consume the Run budget without resetting old Work
+ok 5 - two actual forward repair publications consume the Run budget without resetting old Work
+  ---
+  duration_ms: 3026.0293
+  type: 'test'
+  ...
+# Subtest: a newly planned and formally passing integrated recheck closes original failures without rewriting them
+ok 6 - a newly planned and formally passing integrated recheck closes original failures without rewriting them
+  ---
+  duration_ms: 3678.7635
+  type: 'test'
+  ...
+# Subtest: an unresolved original pipeline effect blocks forward repair preparation
+ok 7 - an unresolved original pipeline effect blocks forward repair preparation
+  ---
+  duration_ms: 902.0547
+  type: 'test'
+  ...
+# Subtest: content ACK and plan publication failures preserve original repair keys and leave no partial plan
+ok 8 - content ACK and plan publication failures preserve original repair keys and leave no partial plan
+  ---
+  duration_ms: 984.6212
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12361.3103

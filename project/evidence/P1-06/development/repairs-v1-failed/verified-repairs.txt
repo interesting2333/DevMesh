@@ -1,0 +1,158 @@
+TAP version 13
+# (node:3520) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: repair publishes two forward nodes and explicit carry review without executing or confirming
+not ok 1 - repair publishes two forward nodes and explicit carry review without executing or confirming
+  ---
+  duration_ms: 964.5432
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-repairs.test.mjs:14:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Comparison {
+    +   code: 'PRECONDITION_REQUIRED'
+    -   code: 'PLAN_CARRY_REVIEW_REQUIRED'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'PLAN_CARRY_REVIEW_REQUIRED'
+  actual:
+  error: '请提供 If-Match。'
+  stack: |-
+    assertResourceVersion (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:328:32)
+    writable (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7339:3)
+    file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7567:20
+    file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7332:19
+    transaction (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    operation (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7308:10)
+    confirm (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7566:10)
+    Object.confirmReviewedPlan (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7840:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:8141:26)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-repairs.test.mjs:21:2)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# Subtest: unacknowledged or changed source cannot publish; carry changes cannot be confirmed
+not ok 2 - unacknowledged or changed source cannot publish; carry changes cannot be confirmed
+  ---
+  duration_ms: 684.8169
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-repairs.test.mjs:26:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Comparison {
+    +   code: 'PRECONDITION_REQUIRED'
+    -   code: 'PLAN_CARRY_CHANGED'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'PLAN_CARRY_CHANGED'
+  actual:
+  error: '请提供 If-Match。'
+  stack: |-
+    assertResourceVersion (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:328:32)
+    writable (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7339:3)
+    file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7567:20
+    file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7332:19
+    transaction (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    operation (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7308:10)
+    confirm (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7566:10)
+    Object.confirmReviewedPlan (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7840:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:8141:26)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-repairs.test.mjs:30:197)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: requirement, interface, scope changes and foreign members require explicit review
+ok 3 - requirement, interface, scope changes and foreign members require explicit review
+  ---
+  duration_ms: 678.1751
+  type: 'test'
+  ...
+# Subtest: twenty-nine existing Works cannot append a repair pair
+ok 4 - twenty-nine existing Works cannot append a repair pair
+  ---
+  duration_ms: 537.8375
+  type: 'test'
+  ...
+# Subtest: two actual forward repair publications consume the Run budget without resetting old Work
+not ok 5 - two actual forward repair publications consume the Run budget without resetting old Work
+  ---
+  duration_ms: 794.5645
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-repairs.test.mjs:41:1'
+  failureType: 'testCodeFailure'
+  error: '请提供 If-Match。'
+  code: 'PRECONDITION_REQUIRED'
+  name: 'ContractError'
+  stack: |-
+    assertResourceVersion (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:328:32)
+    writable (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7339:3)
+    file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7567:20
+    file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7332:19
+    transaction (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    operation (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7308:10)
+    confirm (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7566:10)
+    Object.confirmReviewedPlan (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:7840:11)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:8141:26)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+  ...
+# Subtest: content ACK and plan publication failures preserve original repair keys and leave no partial plan
+not ok 6 - content ACK and plan publication failures preserve original repair keys and leave no partial plan
+  ---
+  duration_ms: 1750.713
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-repairs.test.mjs:45:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Comparison {
+    +   code: 'METHOD_NOT_ALLOWED'
+    -   code: 'CONTENT_REFERENCED'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'CONTENT_REFERENCED'
+  actual:
+  error: 'Unsupported storage command'
+  stack: |-
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-CLDdNA_R.mjs:8139:71)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-repairs.test.mjs:48:33)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-repairs.test.mjs:48:2)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 2
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5797.0716

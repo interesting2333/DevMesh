@@ -7,6 +7,7 @@ import { digest } from './migrations.js';
 import type { Parsed, ScheduledCandidate } from './protocol.js';
 import type { createPlanDomain } from './plan-domain.js';
 import type {createCandidateIntegrationDomain} from './candidate-integration-domain.js';
+import {createPlanResults} from './plan-results.js';
 
 type Row=Record<string,string|number|null>;
 type Work=Draft['works'][number];
@@ -14,6 +15,7 @@ type Admission=Parsed<'admitScheduledWork'>;
 function reject(code:string,message:string,status=409):never{throw new StorageError(code,status,message);}
 const json=(v:unknown)=>JSON.parse(String(v)) as unknown;
 export function createSchedulerDomain(db:DatabaseSync,plans:ReturnType<typeof createPlanDomain>,candidates:ReturnType<typeof createCandidateIntegrationDomain>){
+  const planResults=createPlanResults(db);
   const get=(sql:string,...args:SQLInputValue[])=>db.prepare(sql).get(...args) as Row|undefined;
   const all=(sql:string,...args:SQLInputValue[])=>db.prepare(sql).all(...args) as Row[];
   const exec=(sql:string,...args:SQLInputValue[])=>db.prepare(sql).run(...args);
@@ -29,11 +31,7 @@ export function createSchedulerDomain(db:DatabaseSync,plans:ReturnType<typeof cr
   function dependencies(runId:string,planRevision:number,work:Work){
     const results=new Map<string,Row>();
     for(const edge of work.dependencies){
-      const result=get(`SELECT v.*,a.state FROM plan_works p JOIN attempts a ON a.run_id=p.run_id AND a.work_id=p.work_id
-        AND a.work_revision=p.work_revision JOIN scheduled_work s ON s.attempt_id=a.attempt_id AND s.plan_revision=p.plan_revision
-        JOIN verified_work_results v ON v.attempt_id=a.attempt_id WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=?
-        AND a.attempt_no=(SELECT MAX(newest.attempt_no) FROM attempts newest WHERE newest.run_id=a.run_id AND newest.work_id=a.work_id)
-        ORDER BY a.attempt_no DESC LIMIT 1`,runId,planRevision,edge.workId);
+      const result=planResults.resolve(runId,planRevision,edge.workId)?.row;
       const verified=result&&(result.state==='SUCCEEDED'&&result.outcome==='success'||result.state==='FAILED'&&result.outcome==='completed-with-findings'&&edge.requiredOutcome==='completed-with-findings');
       if(!verified||!result)return null;
       results.set(edge.workId,result);
@@ -106,6 +104,8 @@ export function createSchedulerDomain(db:DatabaseSync,plans:ReturnType<typeof cr
     if(graph.issues.length)throw new StorageError('PLAN_INVALID',422,'Plan checks no longer pass',{issues:graph.issues.slice(0,100)});
     const work=draft.works.find(w=>w.workId===input.work.workId);
     if(!work||work.workRevision!==input.work.workRevision||hasAttempt(input.runId,work))reject('WORK_BASIS_CHANGED','Original work already has an attempt or changed revision');
+    const repair=get("SELECT basis_json,plan_json FROM verified_repairs WHERE run_id=? AND published_plan_revision=? AND state='PUBLISHED'",input.runId,input.planRevision);
+    if(repair){const repairPlan=planDraft.parse(json(repair.plan_json));if(repairPlan.works.slice(-2).some(w=>w.workId===work.workId)){const basis=JSON.parse(String(repair.basis_json)) as {sourceAttemptId:string;carriedResults:{attemptId:string;checkConfigHash:string;templateVersion:string}[]},source=basis.carriedResults.find(f=>f.attemptId===basis.sourceAttemptId);if(!source||source.checkConfigHash!==input.checkConfigHash||source.templateVersion!==input.templateVersion)reject('REPAIR_POLICY_CHANGED','Repair admission must preserve the reviewed source policy and template');}}
     const dep=dependencies(input.runId,input.planRevision,work),occupied=freeRoles(input.runId);
     if(!dep)reject('DEPENDENCY_UNSATISFIED','Current predecessor has no verified outcome');
     if(occupied.size>=2||occupied.has(work.role))reject('ROLE_CAPACITY_EXHAUSTED','Run role slots are occupied');

@@ -23,10 +23,11 @@ export async function candidateFixture(t,{configureDraft}={}){
  async function complete(index,{archive=true,interfaces=[],codeBase=base,formal=false,manifestOverrides={},inputArtifacts}={}){
   const input=await admission(storage,context,[index]),work=draft.works[index],oldSources=sources.filter(source=>work.dependencies.some(edge=>edge.workId===source.workId));
   input.works[0].resources=[{kind:'workspace',resourceId:'workspace.'+index+'.'+randomUUID(),access:'write'}];
-  Object.assign(input.works[0].inputManifest,{decisionIds:[decisionId],interfaces,codeCommit:codeBase,artifacts:oldSources.length?[{artifactId:p.artifactId,sha256:get('SELECT content_hash FROM artifacts WHERE artifact_id=?',p.artifactId).content_hash}]:[]});
+   const currentDecision=get("SELECT decision_id FROM decisions WHERE run_id=? AND subject_kind='PLAN' AND subject_id=?",p.runId,String(input.planRevision)).decision_id;
+   Object.assign(input.works[0].inputManifest,{decisionIds:[currentDecision],interfaces,codeCommit:codeBase,artifacts:oldSources.length?[{artifactId:p.artifactId,sha256:get('SELECT content_hash FROM artifacts WHERE artifact_id=?',p.artifactId).content_hash}]:[]});
   Object.assign(input.works[0].inputManifest,manifestOverrides);if(inputArtifacts)input.works[0].inputManifest.artifacts=inputArtifacts;if(formal)input.works[0].roleSnapshot.outputSchemaId='devmesh.development-result.v1';
   const result=await storage.request('admitWorks',input),attemptId=result.result.attemptIds[0],a=get('SELECT * FROM attempts WHERE attempt_id=?',attemptId),grant=get('SELECT * FROM execution_grants WHERE attempt_id=?',attemptId),commit=hash(attemptId).slice(0,40),operationId='op_archive_'+index,allocationId='op_allocation_'+index,commitId='op_commit_'+index,workspaceRef=input.works[0].resources[0].resourceId;
-  insert('scheduled_work',{attempt_id:attemptId,run_id:p.runId,plan_revision:1,runner_id:'runner.unit',reservation_key:randomUUID(),caller_id:'unit.scheduler'});
+   insert('scheduled_work',{attempt_id:attemptId,run_id:p.runId,plan_revision:input.planRevision,runner_id:'runner.unit',reservation_key:randomUUID(),caller_id:'unit.scheduler'});
   for(const [expectedState,state] of [['RESERVED','SUBMITTED'],['SUBMITTED','WORKING'],['WORKING','VERIFYING']])await storage.request('transitionAttempt',{meta:meta(p.runId),runId:p.runId,attemptId,expectedState,state});
   const ref={artifactId:p.artifactId,sha256:get('SELECT content_hash FROM artifacts WHERE artifact_id=?',p.artifactId).content_hash};
   if(!formal)seedHistoricalVerification(db,{meta:meta(p.runId),runId:p.runId,attemptId,outcome:'success',evidence:ref,outputs:work.outputSpec.map(output=>({slot:output.slot,ref})),codeCommit:commit});

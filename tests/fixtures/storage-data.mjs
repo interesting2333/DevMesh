@@ -45,7 +45,7 @@ export async function planned(storage, root, roles=['developer','tester']) {
 }
 export async function admission(storage, context, indices=[0]) {
   const run=await storage.request('getRun',{runId:context.runId});
-  return {meta:meta(context.runId),runId:context.runId,ifMatch:`"r${run.resourceRevision}"`,runEpoch:run.runEpoch,planRevision:1,works:indices.map(index=>{
+  return {meta:meta(context.runId),runId:context.runId,ifMatch:`"r${run.resourceRevision}"`,runEpoch:run.runEpoch,planRevision:run.currentPlanRevision,works:indices.map(index=>{
     const work=context.draft.works[index];
     return { workId:work.workId,workRevision:1,workEpoch:1,
       inputManifest:{schemaVersion:'devmesh.input-manifest.v1',requirements:context.requirements.requirements.map(r=>({requirementId:r.id,sha256:hash(canonical(r))})),interfaces:[],artifacts:[],codeCommit:'b'.repeat(40),templateVersion:'template.v1',checkConfigHash:'c'.repeat(64),decisionIds:[]},

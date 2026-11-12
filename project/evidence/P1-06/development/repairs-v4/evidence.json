@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task 3.2 development: immutable original result carry, forward repair plan content ACK/publication, explicit carry confirmation and bounded two-round repair. Actual migrated SQLite/evaluator/content/Work handlers; source/Git/Runner/Runtime candidate facts explicitly seeded. No production model, Linux or full Runtime composition claimed.",
+  "sourceCommit": "aeb2345cdd220d00540e78a6a35a43e38f1e17ba",
+  "dirty": true,
+  "sourceFingerprint": "9fc88492b23fa70a708b709f312d499f5e13b1363f08b68a8c1c4527d8e4b972",
+  "unchanged": true,
+  "startedAt": "2026-11-12T05:45:39.078Z",
+  "finishedAt": "2026-11-12T05:49:31.476Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12671,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1206,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 29620,
+      "output": "current-build.txt",
+      "sha256": "502f051f560d84a302ece385d5a457c67b1cc3ef8aa3b88b1f1ddb88ec78d0bd"
+    },
+    {
+      "name": "verified-repairs",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12519,
+      "output": "verified-repairs.txt",
+      "sha256": "076b9c9b11711ad71b8de787e38c050bec469859efce27d7b8ee692583737aab"
+    },
+    {
+      "name": "verified-findings",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9850,
+      "output": "verified-findings.txt",
+      "sha256": "55b7e74bf39d290c9775f2970aefe48961ec94eab474a37d4d51e61658ec27c2"
+    },
+    {
+      "name": "work-verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13124,
+      "output": "work-verification.txt",
+      "sha256": "f8a05251e834e56ed5cfe20265c08eb098f39632aa7cd1985b1444069c4dc51e"
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28464,
+      "output": "scheduler.txt",
+      "sha256": "45da9eca45e602505e41e8b9d89f33e65fce5ab38f991001a30ce0b58c968aea"
+    },
+    {
+      "name": "quality-journal",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5515,
+      "output": "quality-journal.txt",
+      "sha256": "cd92338d6d720b809caad58f667d531658bfe1995b7938d0e3b52c610a8a54b7"
+    },
+    {
+      "name": "candidate-basis",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1038,
+      "output": "candidate-basis.txt",
+      "sha256": "32809ef06fa7c11038e7f8a93ef4923bb23b01cbe3d8b51d7dff056acbe12580"
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 262,
+      "output": "contracts-check.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1758,
+      "output": "contracts.txt",
+      "sha256": "93aadc011f589d7f989483d9e8e98eef4dbae92bffc180916ce07a5255ea2568"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 52397,
+      "output": "storage.txt",
+      "sha256": "291a7141896556d504c4b257e060df9d20021543ee62711b3bfbb32821c0f324"
+    },
+    {
+      "name": "input",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 44032,
+      "output": "input.txt",
+      "sha256": "b0ad1970426695c49d84710aac3e49b2cce00073177da076e19757f997b1402f"
+    },
+    {
+      "name": "preparation",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 19683,
+      "output": "preparation.txt",
+      "sha256": "841d1317041272c777d88105127639f3bd4a19d000d7c635eba254ae2756f63f"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/candidate-basis.txt",
+      "sha256": "32809ef06fa7c11038e7f8a93ef4923bb23b01cbe3d8b51d7dff056acbe12580"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/contracts-check.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/contracts.txt",
+      "sha256": "93aadc011f589d7f989483d9e8e98eef4dbae92bffc180916ce07a5255ea2568"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/current-build.txt",
+      "sha256": "502f051f560d84a302ece385d5a457c67b1cc3ef8aa3b88b1f1ddb88ec78d0bd"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/input.txt",
+      "sha256": "b0ad1970426695c49d84710aac3e49b2cce00073177da076e19757f997b1402f"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/preparation.txt",
+      "sha256": "841d1317041272c777d88105127639f3bd4a19d000d7c635eba254ae2756f63f"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/quality-journal.txt",
+      "sha256": "cd92338d6d720b809caad58f667d531658bfe1995b7938d0e3b52c610a8a54b7"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/report.json",
+      "sha256": "69b804f6436553db5b576fdd3cff98fbbcc14486c85a389ee2cd6048d6b70d06"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/scheduler.txt",
+      "sha256": "45da9eca45e602505e41e8b9d89f33e65fce5ab38f991001a30ce0b58c968aea"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/storage.txt",
+      "sha256": "291a7141896556d504c4b257e060df9d20021543ee62711b3bfbb32821c0f324"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/verified-findings.txt",
+      "sha256": "55b7e74bf39d290c9775f2970aefe48961ec94eab474a37d4d51e61658ec27c2"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/verified-repairs.txt",
+      "sha256": "076b9c9b11711ad71b8de787e38c050bec469859efce27d7b8ee692583737aab"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v4/work-verification.txt",
+      "sha256": "f8a05251e834e56ed5cfe20265c08eb098f39632aa7cd1985b1444069c4dc51e"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no exact clean checkpoint or stage/product acceptance.",
+    "Original admission/Git/Runner/Runtime candidate records are explicit test DB fixtures. Migrated SQLite, independent raw report evaluator, filesystem content ACK, Work completion and issue transactions are actual implementations.",
+    "No production model, generated container execution, OIDC, Linux/runsc, or completed end-to-end forward repair claimed."
+  ]
+}

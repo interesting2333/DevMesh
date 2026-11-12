@@ -85,6 +85,21 @@
 - **WHEN** 修复分支经过受信任源码组合后，以准确合并候选 SHA 完成复验
 - **THEN** 关闭缺陷须同时核对修复归档确实属于该候选来源、新原质量报告准确绑定该 SHA，以及新正式 Tester 验证通过；不能将单个分支 SHA 或较早报告当作复验证据
 
+#### Scenario: A repair plan is published before explicit carry confirmation
+
+- **WHEN** 负责人为已完成的原独立失败准备修复计划并取得原计划内容 ACK
+- **THEN** 发布只推进计划修订，原子登记原结果沿用，不变更需求修订或派发新 Work；review 显示原正式／历史来源和 carryForwardHash，确认必须绑定该哈希后才关联缺陷并允许调度
+
+#### Scenario: Original repair inputs or carried facts change
+
+- **WHEN** 准备后的原计划／需求／缺陷／结果变更、存在未知副作用，或确认前原 Work epoch／输入／证据已不一致
+- **THEN** 拒绝发布或确认，保留原日志与键，不重置原 Work，也不将历史报告升级为当前验证；新修复准入不得改用较弱策略或不同模板
+
+#### Scenario: Repair content or publication acknowledgment is lost
+
+- **WHEN** 原计划内容 ACK 或计划／沿用事务在中途失败，或已提交回执丢失
+- **THEN** 原稳定写入／发布键恢复原事实，中途失败全部回滚，提交后重放原回执，不重复增加计划节点、消耗轮次或自动确认
+
 #### Scenario: Original failure import or its response is interrupted
 
 - **WHEN** 原 Work 完成事务导入确定的失败检查，中途写入失败或已提交响应丢失
@@ -98,6 +113,21 @@
 ### Requirement: Candidate revisions freeze complete quality and delivery identities
 
 ReleaseCandidate SHALL 固定代码、需求／计划／模板／检查配置版本、必要检查集合、报告、构建产物、预览镜像和数据方案身份。必要检查未通过、材料缺失、存在未解决高严重缺陷或未知写操作时 MUST 不冻结可审查候选。变化 SHALL 创建新修订，不能覆盖已审查版本或直接更新项目接受指针。
+
+#### Scenario: An equivalent final source snapshot preserves the exact tested commit
+
+- **WHEN** Tester 已在准确 work-input 组合提交执行原检查，最终 run-candidate 的来源归档、计划及需求与之完全等价
+- **THEN** 受信任适配器核实原提交／refs／清单并发布同一准确 SHA，保留原合并身份；不能重新合并出新 SHA 后按 tree 相同沿用报告
+
+#### Scenario: Automatic checks are ready while candidate human review is pending
+
+- **WHEN** 原质量自动检查及原 Work 非人工项全部通过，剩余项只有明确的人工待审检查，且其他冻结条件均满足
+- **THEN** 候选逐项显示人工 PENDING，原 Work 保留 READY／PENDING 而不记为已成功；接受仍需准确候选的人工事实及再次核验
+
+#### Scenario: Build or preview identity is only a summary or a test environment image
+
+- **WHEN** 只有聚合质量结果引用、测试基镜像 digest 或缺失实际构建／镜像生产侧来源
+- **THEN** 将对应交付项保留 MISSING 并拒绝冻结，不把这些引用当成实际构建字节或生成应用镜像身份
 
 #### Scenario: A complete verified revision is frozen
 

@@ -42,6 +42,8 @@ import {workVerificationRequests} from './work-verification-protocol.js';
 import type {WorkVerificationResults} from './work-verification-protocol.js';
 import {verifiedFindingRequests} from './verified-finding-protocol.js';
 import type {VerifiedFindingResults} from './verified-finding-protocol.js';
+import {verifiedRepairRequests,verifiedRepairPublish} from './verified-repair-protocol.js';
+import type {VerifiedRepairResults} from './verified-repair-protocol.js';
 
 const meta = z.strictObject({ principalId: opaqueKey, scopeId: opaqueKey, idempotencyKey: z.uuid() });
 const conditional = { meta, runId: ids.run, ifMatch: z.string().optional() };
@@ -52,6 +54,8 @@ const resources=z.array(z.strictObject({kind:z.enum(['snapshot','workspace','pro
 const admissionWork=z.strictObject({workId:ids.work,workRevision:revision,workEpoch:epoch,inputManifest,roleSnapshot,endpoint:endpointTarget,resources});
 const verificationOutputs=z.array(z.strictObject({slot:opaqueKey,ref:artifactRef})).max(64);
 export const requests = {
+  ...verifiedRepairRequests,
+  publishVerifiedRepair:verifiedRepairPublish,
   ...verifiedFindingRequests,
   ...workVerificationRequests,
   ...qualityRequests,
@@ -75,9 +79,9 @@ export const requests = {
   registerContent: z.strictObject({ contentHash: sha256, byteSize: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER), mimeType: z.string().min(1).max(128) }),
   createProjectWithRun: z.strictObject({ meta, projectId: ids.project.optional(), name: projectName, baseCommit: gitCommit, contentHash: sha256, kind: z.enum(['NEW', 'ITERATION', 'FIX']).default('NEW'), clientMessageId: z.uuid() }),
   publishPlan: z.strictObject({ ...conditional, requirementRevision: revision, planRevision: revision, requirements: productOutput, plan: planDraft, planContentHash: sha256 }),
-  confirmPlan: z.strictObject({ ...conditional, planRevision: revision, requirementRevision: revision, reviewHash: sha256 }),
+  confirmPlan: z.strictObject({ ...conditional, planRevision: revision, requirementRevision: revision, reviewHash: sha256,carryForwardHash:sha256.optional() }),
   getPlanReview: z.strictObject({ principalId: opaqueKey, runId: ids.run, planRevision: revision.optional() }),
-  confirmReviewedPlan: z.strictObject({ ...conditional, planRevision: revision, requirementRevision: revision, reviewHash: sha256 }),
+  confirmReviewedPlan: z.strictObject({ ...conditional, planRevision: revision, requirementRevision: revision, reviewHash: sha256,carryForwardHash:sha256.optional() }),
   admitWorks: z.strictObject({ ...conditional, runEpoch: epoch, planRevision: revision, works: z.array(admissionWork).min(1).max(2) }),
   nextScheduledWork:z.strictObject({limit:z.number().int().min(1).max(100).default(24)}),
   deferScheduledWork:z.strictObject({runId:ids.run,resourceRevision:revision}),
@@ -109,10 +113,11 @@ export type OperationResult = { operationId: string; status: string; result: Rec
 export type RunView = { runId: string; projectId: string; taskId: string; resourceRevision: number; runEpoch: number; controlRevision: number; phase: string; controlGate: string; terminalOutcome: string | null; currentPlanRevision: number | null; currentRequirementRevision: number | null; eventSeq: number };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
-export interface Results extends SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceReclamationResults, WorkspaceMaintenanceResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults {
+export interface Results extends SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceReclamationResults, WorkspaceMaintenanceResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults {
   registerContent: { contentHash: string; storageKey: string };
   createProjectWithRun: OperationResult;
   publishPlan: OperationResult;
+  publishVerifiedRepair:OperationResult;
   confirmPlan: OperationResult;
   confirmReviewedPlan: OperationResult;
   getPlanReview: z.output<typeof planReviewView>;

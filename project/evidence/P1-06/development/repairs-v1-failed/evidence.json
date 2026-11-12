@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 task 3.2 development: immutable original result carry, forward repair plan content ACK/publication, explicit carry confirmation and bounded two-round repair. Actual migrated SQLite/evaluator/content/Work handlers; source/Git/Runner/Runtime candidate facts explicitly seeded. No production model, Linux or full Runtime composition claimed.",
+  "sourceCommit": "aeb2345cdd220d00540e78a6a35a43e38f1e17ba",
+  "dirty": true,
+  "sourceFingerprint": "33b1e209c76f4c0bf5ba0d04a69a8a8f4177d2a83487c7da8b9530f75c187201",
+  "unchanged": true,
+  "startedAt": "2026-11-12T05:37:29.531Z",
+  "finishedAt": "2026-11-12T05:38:22.549Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 10327,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 786,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 35853,
+      "output": "current-build.txt",
+      "sha256": "c2260a5e493f9c1fb99be2630c9ed06c52d0300bc710a14abbe4d703bbb1ed4b"
+    },
+    {
+      "name": "verified-repairs",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 5924,
+      "output": "verified-repairs.txt",
+      "sha256": "68920e890a58987a0f98a370c81d1b1248d33e18967ad0489f4d8bb3ebc4c91f"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/current-build.txt",
+      "sha256": "c2260a5e493f9c1fb99be2630c9ed06c52d0300bc710a14abbe4d703bbb1ed4b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/contracts/src/commands.ts",
+      "sha256": "e9e7f450cba0e010498fbff6760396a0264492322641e7a0ed81ea9b155f23cf"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/contracts/src/plans.ts",
+      "sha256": "ddd28f278a1530142521a9ccfc0f8f53fea579baeeeaa91ff93e03579e3b50e1"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/result-verifier/src/index.ts",
+      "sha256": "42cead12ea7622838fcc631002ba17c7e5ddfc183198ae725ca92cbb2f2a94c0"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/result-verifier/src/repair.ts",
+      "sha256": "eb9c18811344c6aabca5d9cbec702c337da33c9e36808d8f7907b9f666eb9cff"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/migrations/0025-verifiedrepairs.sql",
+      "sha256": "1dc8a0740173e775974a84db61822f8729fd84c8c1ed77d44332b188a43bd532"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "9b4b6d20c01d92d0aea61b52b1898415aaf6143b1b9a4de1814664203dbc3990"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/candidate-basis.ts",
+      "sha256": "d0e7a75be2a5dc363c55a24619629cfd824dde9308d683aa2bab3eb785599bf4"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "abaaec28e077823ddc0cf0c3d4be7857f54617542439b65e4bdf6a78b188285d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "d83b1b02b9da8b6d3fa806bd6ca7f29c3ba9655cc083c0273635a805646cfa84"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/plan-domain.ts",
+      "sha256": "8637fd99e7eb3c68adf081317fe2313860b1fe05fee7e3e09ca3f8f2433bfea9"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/plan-results.ts",
+      "sha256": "38cf5a6882f5765df3015e665ead20ccdc9306cd624cd12c1495b470db90c9e4"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "dc71f1812c5a06c52d498b5ebaaab794ce49107e2b612b180d02451b37fd4ae0"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/scheduler-domain.ts",
+      "sha256": "97fd74363cfc3a2961b320154e6b169b8e6342c6acceace8fa93d49c3be62557"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/session-domain.ts",
+      "sha256": "2aa6b43df41b51833628cbe5f4da0e88cce5f0512afa4e7fe853aae110a5a0d5"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/session-protocol.ts",
+      "sha256": "5dca790819e566d596dc63b8999fe4d563468b14792d090c21f5744b82bb9ed2"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/verified-finding-domain.ts",
+      "sha256": "d83e9451c488e4fc0236760ad04e40e0a1a1d8a99e1fe89be38893f7bb40ce32"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/verified-repair-domain.ts",
+      "sha256": "c0094c8e9bda890cff69f0c73efd6cd504f22da4bdc58df0ff8028d739d32b6d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/packages/storage-sqlite/src/verified-repair-protocol.ts",
+      "sha256": "6bcd3e89da205632397786484524dfa3340cca8ff9e4d9aa147778fc9b7700f2"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/tests/fixtures/candidate-data.mjs",
+      "sha256": "285a73789313826fe371d5a026594bb78c3579421f3542e8be26d8d19c32131c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/tests/fixtures/quality-storage.mjs",
+      "sha256": "d819ae3234f5fc7d9e7f0defc5c274519be0c740956f6adbb6a80dcbb8eddcbe"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/tests/fixtures/storage-data.mjs",
+      "sha256": "ebdbef2c080fdf1a7307dec13d3199967da86472e9c13d76107bdab8c4c357ef"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/tests/fixtures/verified-repair.mjs",
+      "sha256": "d39d7d9a5f93948eb9dd238c12407725471d0bdd96759bdaf719a2b15695d713"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/failed-source/tests/verified-repairs.test.mjs",
+      "sha256": "7b84edb15b05f57ffd945b9e0a67f7a3f841107b1352ebf9810128829964e528"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/report.json",
+      "sha256": "169d681c4855329731d2613f4c27b86e788a415943af821ea0df3adde28f832e"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v1-failed/verified-repairs.txt",
+      "sha256": "68920e890a58987a0f98a370c81d1b1248d33e18967ad0489f4d8bb3ebc4c91f"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no exact clean checkpoint or stage/product acceptance.",
+    "Original admission/Git/Runner/Runtime candidate records are explicit test DB fixtures. Migrated SQLite, independent raw report evaluator, filesystem content ACK, Work completion and issue transactions are actual implementations.",
+    "No production model, generated container execution, OIDC, Linux/runsc, or completed end-to-end forward repair claimed."
+  ]
+}
