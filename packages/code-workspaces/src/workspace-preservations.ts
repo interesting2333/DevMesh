@@ -93,10 +93,19 @@ export class LocalWorkspacePreservations {
   }finally{await fence.release();}
  }
  async reconcile(input:Request<'getWorkspacePreservation'>,signal=new AbortController().signal){const original=await this.options.storage.request('getWorkspacePreservation',input);return this.archive({...input,allocationOperationId:original.allocationOperationId},signal);}
+
+ /** Read-only complete archive proof. A reclamation caller holds its own
+  * original project/workspace cleanup barriers while using this result. */
+ async verifyArchiveProof(input:Request<'assertWorkspacePreservationReclaimable'>,signal=new AbortController().signal){
+  const record=await this.options.storage.request('assertWorkspacePreservationReclaimable',input),expected=join(await realpath(this.controlDataRoot),'repositories',record.basis.allocation.projectId,'repo.git');
+  if(record.basis.repository.identity?.root!==expected)fail('WORKSPACE_PRESERVATION_DIRECTORY_CHANGED');const project=await ControlledGit.open(expected,'bare');if(canonical(await identity(project))!==canonical(record.basis.repository.identity))fail('WORKSPACE_PRESERVATION_DIRECTORY_CHANGED');await this.receipt(record,false);this.settledRecovery(record);await this.retained(record,project,signal);if(await this.verifyContent(record,input.permit)!==record.acknowledgement!.materialCount)fail('WORKSPACE_PRESERVATION_ACK_UNPROVEN');await this.options.storage.request('assertWorkspacePreservationReclaimable',input);return record;
+ }
+ /** Read-only original checkout verification, called inside a cleanup barrier. */
+ async verifyReclaimable(input:Request<'assertWorkspacePreservationReclaimable'>,signal=new AbortController().signal){
+  const record=await this.options.storage.request('assertWorkspacePreservationReclaimable',input),physical=await this.directories(record,signal);await this.receipt(record,false);this.settledRecovery(record);if(physical.parentMarkerSha256!==record.manifest!.parentMarkerSha256)fail('WORKSPACE_PRESERVATION_DIRECTORY_CHANGED');await this.retained(record,physical.project,signal);await verifyWorkspaceMaterials(record.manifest!.snapshot,baseFiles(record.basis),signal);if(await this.verifyContent(record,input.permit)!==record.acknowledgement!.materialCount)fail('WORKSPACE_PRESERVATION_ACK_UNPROVEN');await this.options.storage.request('assertWorkspacePreservationReclaimable',input);return record;
+ }
  /** Caller retains the actual Runner barrier until isolation is complete. */
  async acquireReclaimable(input:Request<'assertWorkspacePreservationReclaimable'>,signal=new AbortController().signal):Promise<PreservedWorkspaceLease>{
-  const record=await this.options.storage.request('assertWorkspacePreservationReclaimable',input),fence=await this.acquire(record,input.permit,signal);try{
-   const physical=await this.directories(record,signal);await this.receipt(record,false);this.settledRecovery(record);if(physical.parentMarkerSha256!==record.manifest!.parentMarkerSha256)fail('WORKSPACE_PRESERVATION_DIRECTORY_CHANGED');await this.retained(record,physical.project,signal);await verifyWorkspaceMaterials(record.manifest!.snapshot,baseFiles(record.basis),signal);if(await this.verifyContent(record,input.permit)!==record.acknowledgement!.materialCount)fail('WORKSPACE_PRESERVATION_ACK_UNPROVEN');await this.options.storage.request('assertWorkspacePreservationReclaimable',input);return {record,parent:physical.parent,release:fence.release};
-  }catch(error){await fence.release();throw error;}
+  const initial=await this.options.storage.request('assertWorkspacePreservationReclaimable',input),fence=await this.acquire(initial,input.permit,signal);try{const record=await this.verifyReclaimable(input,signal);return {record,parent:record.manifest!.snapshot.root,release:fence.release};}catch(error){await fence.release();throw error;}
  }
 }

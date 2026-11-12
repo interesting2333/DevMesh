@@ -1,0 +1,81 @@
+import {createHash} from 'node:crypto';
+import {lstat,mkdir,open,readFile,realpath,rename,rm} from 'node:fs/promises';
+import {dirname,join,resolve,sep} from 'node:path';
+import {canonicalRoot} from '@devmesh/blob-store';
+import {canonical} from '@devmesh/storage-sqlite';
+import type {Request,WorkspacePreservation,WorkspaceReclamation} from '@devmesh/storage-sqlite';
+import type {AllocationFence} from './allocation.js';
+import {ControlledGit,WorkspaceError} from './git.js';
+import {LocalWorkspacePreservations} from './workspace-preservations.js';
+import {verifyWorkspaceMaterials} from './workspace-materials.js';
+import {verifyWorkspaceRemnants} from './workspace-remnants.js';
+const hash=(value:Uint8Array|string)=>createHash('sha256').update(value).digest('hex');
+function fail(code:string):never{throw new WorkspaceError(code,'unknown');}
+async function stat(path:string){try{return await lstat(path,{bigint:true});}catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')return null;throw error;}}
+async function sync(path:string){if(process.platform==='win32')return;const file=await open(path,'r');try{await file.sync();}finally{await file.close();}}
+type Permit=Request<'getWorkspacePreservation'>['permit'];
+const baseFiles=(p:WorkspacePreservation)=>[...new Set([p.basis.allocation.manifest!,...p.basis.commits.map(c=>c.archive!.manifest)].flatMap(m=>m.files.map(f=>f.path)))].sort();
+/** Exact-original local reclamation. The caller configures a trusted Runner
+ * cleanup fencer; no backend is enabled by default. */
+export class LocalWorkspaceReclamations {
+ readonly retentionMs:number;
+ constructor(readonly preservations:LocalWorkspacePreservations,options:{retentionMs?:number}={}){this.retentionMs=options.retentionMs??24*60*60*1000;if(!Number.isSafeInteger(this.retentionMs)||this.retentionMs<0||this.retentionMs>30*24*60*60*1000)fail('WORKSPACE_RECLAMATION_RETENTION_INVALID');}
+ private get storage(){return this.preservations.options.storage;}
+ private paths(record:WorkspaceReclamation){
+  const runner=this.preservations.runnerDataRoot,attempt=record.basis.preservation.basis.allocation.attemptId,source=join(runner,'workspaces',attempt),trash=join(runner,'trash',record.operationId);
+  if(record.basis.sourcePath!==source||record.basis.trashPath!==trash||resolve(source)!==source||resolve(trash)!==trash||!source.startsWith(join(runner,'workspaces')+sep)||!trash.startsWith(join(runner,'trash')+sep)||source===trash)fail('WORKSPACE_RECLAMATION_PATH_CHANGED');
+  return {runner,source,trash};
+ }
+ private async acquire(record:WorkspaceReclamation,permit:Permit,signal:AbortSignal){
+  let project:AllocationFence|undefined,workspace:AllocationFence|undefined;const p=record.basis.preservation;
+  try{project=await this.preservations.options.fencer.acquire({kind:'project',directoryRoot:this.preservations.controlDataRoot,resourceId:p.basis.repository.resourceId,operationId:record.operationId},signal);workspace=await this.preservations.options.fencer.acquire({kind:'workspace',directoryRoot:this.preservations.runnerDataRoot,resourceId:record.workspaceRef,operationId:record.operationId,permit,purpose:'cleanup'},signal);return {release:async()=>{await workspace!.release();await project!.release();}};}catch(error){if(project)await project.release();throw error;}
+ }
+ private receiptPath(record:WorkspaceReclamation,phase:string){return join(this.preservations.runnerDataRoot,'registry','workspace-reclamations',record.workspaceRef,record.operationId,phase+'.json');}
+ private receiptBytes(record:WorkspaceReclamation,phase:string){return canonical({schemaVersion:'devmesh.workspace-reclamation-receipt.v1',phase,operationId:record.operationId,requestHash:record.requestHash,workspaceRef:record.workspaceRef,preservationOperationId:record.preservationOperationId,manifestSha256:record.basis.preservation.acknowledgement!.manifestSha256,identity:record.basis.preservation.manifest!.snapshot.identity,sourcePath:record.basis.sourcePath,trashPath:record.basis.trashPath});}
+ private async receipt(record:WorkspaceReclamation,phase:string,create:boolean){
+  const path=this.receiptPath(record,phase),directory=dirname(path),bytes=this.receiptBytes(record,phase);if(create){canonicalRoot(this.preservations.runnerDataRoot);canonicalRoot(directory);await mkdir(directory,{recursive:true,mode:0o700});canonicalRoot(directory);if(!await stat(path)){const handle=await open(path,'wx',0o600);try{await handle.writeFile(bytes);await handle.sync();}finally{await handle.close();}await sync(directory);}}
+  canonicalRoot(directory);const found=await stat(path);if(!found?.isFile()||found.isSymbolicLink()||found.nlink!==1n||found.size>32768n||await readFile(path,'utf8')!==bytes)fail('WORKSPACE_RECLAMATION_RECEIPT_CHANGED');return hash(bytes);
+ }
+ private async original(record:WorkspaceReclamation,path:string){
+  const found=await stat(path),identity=record.basis.preservation.manifest!.snapshot.identity;if(!found)return false;if(!found.isDirectory()||found.isSymbolicLink()||String(found.dev)!==identity.device||String(found.ino)!==identity.fileId||await realpath(path)!==path)fail('WORKSPACE_RECLAMATION_ROOT_CHANGED');return true;
+ }
+ private async relocated(record:WorkspaceReclamation,signal:AbortSignal){
+  const {source,trash}=this.paths(record);if(await stat(source)||!await this.original(record,trash))fail('WORKSPACE_RECLAMATION_ISOLATION_UNKNOWN');const original=record.basis.preservation.manifest!.snapshot,{sha256:_sha,...facts}=original,changed={...facts,root:trash};await verifyWorkspaceMaterials({...changed,sha256:hash(canonical(changed))},baseFiles(record.basis.preservation),signal);
+  const p=record.basis.preservation,a=p.basis.allocation,workspace=await ControlledGit.open(join(trash,'repo'),'checkout'),root=await lstat(workspace.identity.root,{bigint:true}),git=await lstat(workspace.identity.gitDirectory,{bigint:true});if(String(root.dev)!==a.identity!.rootDevice||String(root.ino)!==a.identity!.rootFileId||String(git.dev)!==a.identity!.gitDevice||String(git.ino)!==a.identity!.gitFileId||await workspace.head(signal)!==a.baseCommit)fail('WORKSPACE_RECLAMATION_SOURCE_CHANGED');await workspace.verifyAttemptBranch(a.baseCommit,a.attemptId,signal);await workspace.verifyPreservationBasis(a.baseCommit,[{ref:'refs/devmesh/allocations/'+a.operationId,commit:a.baseCommit},{ref:'refs/heads/devmesh/'+a.attemptId,commit:a.baseCommit},...p.basis.commits.map(c=>({ref:c.ref,commit:c.commit}))],signal);
+ }
+ private async closed(record:WorkspaceReclamation,permit:Permit,signal:AbortSignal,verifyPhysical=false){
+  const current=await this.storage.request('assertWorkspaceReclamationReady',{permit,operationId:record.operationId});if(canonical(current.basis)!==canonical(record.basis)||current.requestHash!==record.requestHash)fail('WORKSPACE_RECLAMATION_BASIS_CHANGED');this.paths(current);
+  if(verifyPhysical)await this.preservations.verifyArchiveProof({permit,operationId:record.preservationOperationId,manifestSha256:record.basis.preservation.acknowledgement!.manifestSha256},signal);return current;
+ }
+ private async observeReply<T extends WorkspaceReclamation>(action:()=>Promise<T>,record:WorkspaceReclamation,permit:Permit,predicate:(observed:WorkspaceReclamation)=>boolean){try{return await action();}catch(error){const observed=await this.storage.request('getWorkspaceReclamation',{permit,operationId:record.operationId}).catch(()=>null);if(!observed||observed.requestHash!==record.requestHash||!predicate(observed))throw error;return observed;}}
+ async reclaim(input:Request<'beginWorkspaceReclamation'>,signal=new AbortController().signal):Promise<WorkspaceReclamation>{
+  const {created:_created,...pending}=await this.storage.request('beginWorkspaceReclamation',input);let record:WorkspaceReclamation=pending;if(record.state==='DELETED')return record;
+  const retainedSince=Math.max(Date.parse(record.createdAt),Date.parse(record.basis.preservation.acknowledgedAt??''));if(!Number.isFinite(retainedSince)||Date.now()-retainedSince<this.retentionMs)fail('WORKSPACE_RECLAMATION_RETENTION_ACTIVE');
+  const fence=await this.acquire(record,input.permit,signal);try{
+   record=await this.closed(record,input.permit,signal,true);const {source,trash}=this.paths(record),proof={permit:input.permit,operationId:record.operationId,requestHash:record.requestHash};canonicalRoot(dirname(source));
+   if(record.state==='PREPARED'){
+    await this.preservations.verifyReclaimable({permit:input.permit,operationId:record.preservationOperationId,manifestSha256:record.basis.preservation.acknowledgement!.manifestSha256},signal);
+    if(!await this.original(record,source)||await stat(trash))fail('WORKSPACE_RECLAMATION_ISOLATION_UNKNOWN');const receiptSha256=await this.receipt(record,'isolation-intent',true);
+    record=await this.observeReply(()=>this.storage.request('markWorkspaceIsolationSent',{...proof,receiptSha256}),record,input.permit,r=>r.isolationIntentSha256===receiptSha256);
+   }
+   if(record.state==='ISOLATION_SENT'){
+    if(await this.receipt(record,'isolation-intent',false)!==record.isolationIntentSha256)fail('WORKSPACE_RECLAMATION_INTENT_CHANGED');const sourceExists=await this.original(record,source),trashExists=await this.original(record,trash);if(sourceExists===trashExists)fail('WORKSPACE_RECLAMATION_ISOLATION_UNKNOWN');
+    if(sourceExists){await this.preservations.verifyReclaimable({permit:input.permit,operationId:record.preservationOperationId,manifestSha256:record.basis.preservation.acknowledgement!.manifestSha256},signal);canonicalRoot(dirname(trash));await mkdir(dirname(trash),{recursive:true,mode:0o700});canonicalRoot(dirname(trash));if(await stat(trash)||!await this.original(record,source))fail('WORKSPACE_RECLAMATION_ROOT_CHANGED');await this.closed(record,input.permit,signal);signal.throwIfAborted();await rename(source,trash);await sync(dirname(source));await sync(dirname(trash));}
+    await this.relocated(record,signal);const receiptSha256=await this.receipt(record,'isolated',true),isolation={sourceAbsent:true as const,trashIdentity:record.basis.preservation.manifest!.snapshot.identity,manifestSha256:record.basis.preservation.acknowledgement!.manifestSha256,receiptSha256};
+    record=await this.observeReply(()=>this.storage.request('acknowledgeWorkspaceIsolation',{...proof,proof:isolation}),record,input.permit,r=>canonical(r.isolationProof)===canonical(isolation));
+   }
+   if(record.state==='ISOLATED'){
+    if(await this.receipt(record,'isolated',false)!==record.isolationProof?.receiptSha256)fail('WORKSPACE_RECLAMATION_RECEIPT_CHANGED');await this.relocated(record,signal);await this.closed(record,input.permit,signal);const receiptSha256=await this.receipt(record,'delete-intent',true);
+    record=await this.observeReply(()=>this.storage.request('markWorkspaceDeletionSent',{...proof,receiptSha256}),record,input.permit,r=>r.deleteIntentSha256===receiptSha256);
+   }
+   if(record.state==='DELETE_SENT'){
+    if(await this.receipt(record,'isolated',false)!==record.isolationProof?.receiptSha256||await this.receipt(record,'delete-intent',false)!==record.deleteIntentSha256)fail('WORKSPACE_RECLAMATION_RECEIPT_CHANGED');await this.closed(record,input.permit,signal,true);canonicalRoot(dirname(trash));if(await stat(source))fail('WORKSPACE_RECLAMATION_SOURCE_REAPPEARED');
+    if(await this.original(record,trash)){await verifyWorkspaceRemnants(record.basis.preservation.manifest!.snapshot,trash,signal);if(resolve(trash)!==record.basis.trashPath||!await this.original(record,trash)||await stat(source))fail('WORKSPACE_RECLAMATION_ROOT_CHANGED');signal.throwIfAborted();await rm(trash,{recursive:true,force:false,maxRetries:0});await sync(dirname(trash));}
+    if(await stat(source)||await stat(trash))fail('WORKSPACE_RECLAMATION_DELETION_UNKNOWN');const receiptSha256=await this.receipt(record,'deleted',true),deletion={sourceAbsent:true as const,trashAbsent:true as const,receiptSha256};
+    record=await this.observeReply(()=>this.storage.request('acknowledgeWorkspaceDeletion',{...proof,proof:deletion}),record,input.permit,r=>canonical(r.deletionProof)===canonical(deletion));
+   }
+   if(record.state!=='DELETED')fail('WORKSPACE_RECLAMATION_UNRESOLVED');return record;
+  }catch(error){await this.storage.request('markWorkspaceReclamationUncertain',{permit:input.permit,operationId:record.operationId,requestHash:record.requestHash,errorCode:(error as {code?:string}).code??'WORKSPACE_RECLAMATION_EFFECT_UNKNOWN'}).catch(()=>undefined);throw error;}finally{await fence.release();}
+ }
+ async reconcile(input:Request<'getWorkspaceReclamation'>,signal=new AbortController().signal){const original=await this.storage.request('getWorkspaceReclamation',input);return this.reclaim({...input,preservationOperationId:original.preservationOperationId},signal);}
+}

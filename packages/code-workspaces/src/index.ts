@@ -15,3 +15,6 @@ export {captureWorkspaceMaterials,verifyWorkspaceMaterials} from './workspace-ma
 export type {WorkspaceMaterialEntry,WorkspaceMaterialSnapshot,CapturedWorkspaceMaterials} from './workspace-materials.js';
 export {LocalWorkspacePreservations} from './workspace-preservations.js';
 export type {LocalWorkspacePreservationOptions,PreservedWorkspaceLease} from './workspace-preservations.js';
+
+export {LocalWorkspaceReclamations} from './workspace-reclamations.js';
+export {verifyWorkspaceRemnants} from './workspace-remnants.js';

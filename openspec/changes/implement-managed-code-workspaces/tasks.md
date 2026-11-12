@@ -11,9 +11,9 @@
 
 ## 3. Candidate integration and conflict evidence
 
-- [ ] 3.1 实现串行三方候选集成、当前依赖复核、多 ref CAS 与原操作恢复；以两个同基点开发分支验证全部变更保留、接受指针保持原值、冲突和成功原操作不重复执行。
-- [ ] 3.2 保存 base／ours／theirs、冲突路径、blob 或缺失标记及内容引用；以真实冲突验证三方材料可读、哈希固定、内容发布失败不推进候选。
-- [ ] 3.3 实现固定候选 SHA 的验证 checkout 和 source manifest；验证后续开发写入不改变验证输入，质量判定仍交给 P1-06。
+- [x] 3.1 实现串行三方候选集成、当前依赖复核、多 ref CAS 与原操作恢复；以两个同基点开发分支验证全部变更保留、接受指针保持原值、冲突和成功原操作不重复执行。
+- [x] 3.2 保存 base／ours／theirs、冲突路径、blob 或缺失标记及内容引用；以真实冲突验证三方材料可读、哈希固定、内容发布失败不推进候选。
+- [x] 3.3 实现固定候选 SHA 的验证 checkout 和 source manifest；验证后续开发写入不改变验证输入，质量判定仍交给 P1-06。
 
 ## 4. Archive acknowledgement and reclamation
 

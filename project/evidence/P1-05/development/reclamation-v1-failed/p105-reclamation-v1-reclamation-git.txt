@@ -1,0 +1,145 @@
+TAP version 13
+# (node:23840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only the exact original preserved Attempt is isolated and reclaimed with durable same-operation recovery
+    # Subtest: a live execution grant cannot enter reclamation even when the fixture reports no jobs
+    ok 1 - a live execution grant cannot enter reclamation even when the fixture reports no jobs
+      ---
+      duration_ms: 11.3481
+      type: 'test'
+      ...
+    # Subtest: an unavailable Runner cleanup barrier preserves the original source directory
+    ok 2 - an unavailable Runner cleanup barrier preserves the original source directory
+      ---
+      duration_ms: 10.5404
+      type: 'test'
+      ...
+    # Subtest: lost isolation persistence is reconciled from the exact original directory and receipt
+    not ok 3 - lost isolation persistence is reconciled from the exact original directory and receipt
+      ---
+      duration_ms: 16.9303
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-reclamation-git.test.mjs:21:10'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /Isolation control write unavailable/. Input:
+        
+        'WorkspaceError: WORKSPACE_RECLAMATION_PATH_CHANGED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: 'WORKSPACE_RECLAMATION_PATH_CHANGED'
+      stack: |-
+        fail (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2381:8)
+        LocalWorkspaceReclamations.paths (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2416:263)
+        LocalWorkspaceReclamations.closed (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2534:8)
+        async LocalWorkspaceReclamations.reclaim (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2562:13)
+        async waitForActual (node:assert:646:5)
+        async strict.rejects (node:assert:769:25)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:22:250)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:21:2)
+        async Test.run (node:internal/test_runner/test:1110:7)
+      operator: 'rejects'
+      stack: |-
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:22:250)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:21:2)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+    # Subtest: a persisted deletion intent survives interruption and rejects additions, modified bytes and new external links
+    not ok 4 - a persisted deletion intent survives interruption and rejects additions, modified bytes and new external links
+      ---
+      duration_ms: 13.3207
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-reclamation-git.test.mjs:27:10'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /Delete intent reply lost/. Input:
+        
+        'WorkspaceError: WORKSPACE_RECLAMATION_PATH_CHANGED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: 'WORKSPACE_RECLAMATION_PATH_CHANGED'
+      stack: |-
+        fail (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2381:8)
+        LocalWorkspaceReclamations.paths (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2416:263)
+        LocalWorkspaceReclamations.closed (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2534:8)
+        async LocalWorkspaceReclamations.reclaim (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2562:13)
+        async waitForActual (node:assert:646:5)
+        async strict.rejects (node:assert:769:25)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:28:427)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:27:2)
+        async Test.run (node:internal/test_runner/test:1110:7)
+      operator: 'rejects'
+      stack: |-
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:28:427)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:27:2)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+    # Subtest: deletion before control ACK resumes the same fact and a lost final reply never repeats directory deletion
+    not ok 5 - deletion before control ACK resumes the same fact and a lost final reply never repeats directory deletion
+      ---
+      duration_ms: 10.3274
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-reclamation-git.test.mjs:33:10'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /Deletion ACK unavailable/. Input:
+        
+        'WorkspaceError: WORKSPACE_RECLAMATION_PATH_CHANGED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: 'WORKSPACE_RECLAMATION_PATH_CHANGED'
+      stack: |-
+        fail (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2381:8)
+        LocalWorkspaceReclamations.paths (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2416:263)
+        LocalWorkspaceReclamations.closed (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2534:8)
+        async LocalWorkspaceReclamations.reclaim (file:///D:/yms/AI/DevMesh/packages/code-workspaces/dist/index.mjs:2562:13)
+        async waitForActual (node:assert:646:5)
+        async strict.rejects (node:assert:769:25)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:34:256)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:33:2)
+        async Test.run (node:internal/test_runner/test:1110:7)
+      operator: 'rejects'
+      stack: |-
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:34:256)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-reclamation-git.test.mjs:33:2)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+    1..5
+not ok 1 - only the exact original preserved Attempt is isolated and reclaimed with durable same-operation recovery
+  ---
+  duration_ms: 13190.4241
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-reclamation-git.test.mjs:10:1'
+  failureType: 'subtestsFailed'
+  error: '3 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 6
+# suites 0
+# pass 2
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14110.9872

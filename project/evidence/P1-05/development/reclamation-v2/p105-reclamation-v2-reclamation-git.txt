@@ -1,0 +1,51 @@
+TAP version 13
+# (node:3884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:3884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only the exact original preserved Attempt is isolated and reclaimed with durable same-operation recovery
+    # Subtest: a live execution grant cannot enter reclamation even when the fixture reports no jobs
+    ok 1 - a live execution grant cannot enter reclamation even when the fixture reports no jobs
+      ---
+      duration_ms: 11.2278
+      type: 'test'
+      ...
+    # Subtest: an unavailable Runner cleanup barrier preserves the original source directory
+    ok 2 - an unavailable Runner cleanup barrier preserves the original source directory
+      ---
+      duration_ms: 8.8076
+      type: 'test'
+      ...
+    # Subtest: lost isolation persistence is reconciled from the exact original directory and receipt
+    ok 3 - lost isolation persistence is reconciled from the exact original directory and receipt
+      ---
+      duration_ms: 8449.9218
+      type: 'test'
+      ...
+    # Subtest: a persisted deletion intent survives interruption and rejects additions, modified bytes and new external links
+    ok 4 - a persisted deletion intent survives interruption and rejects additions, modified bytes and new external links
+      ---
+      duration_ms: 7398.1175
+      type: 'test'
+      ...
+    # Subtest: deletion before control ACK resumes the same fact and a lost final reply never repeats directory deletion
+    ok 5 - deletion before control ACK resumes the same fact and a lost final reply never repeats directory deletion
+      ---
+      duration_ms: 3255.3436
+      type: 'test'
+      ...
+    1..5
+ok 1 - only the exact original preserved Attempt is isolated and reclaimed with durable same-operation recovery
+  ---
+  duration_ms: 30574.3049
+  type: 'test'
+  ...
+1..1
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 31430.9557

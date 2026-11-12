@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "Migration 19 and exact-original workspace reclamation. Current closed execution admission, original complete preservation ACK, fixed Runner trash, durable isolation/deletion intent and receipts, partial deletion verification, final ACK recovery and historical replay. Actual temporary files/Git/A2A ownership fixtures use an explicitly job-free fencer; no actual Runner job, remote identity, model, OIDC, Linux/runsc or product gate acceptance. New local default retention is 24 hours from the eligible original request; destructive fixtures explicitly configure 0. Correction: resolve the configured Runner root through realpath before exact source/trash comparisons, including legitimate Windows 8.3 temporary-root aliases. Five unchanged checks reuse original passing v1 logs. Typecheck, lint, workspace build, real reclamation and the previously unexecuted full schema/storage regression are newly executed.",
+  "baseCommit": "406d5a40583a1849a68bc2ed2b68f577789ccd35",
+  "startedAt": "2026-11-12T00:50:41.740Z",
+  "finishedAt": "2026-11-12T00:51:47.242Z",
+  "sourceFingerprint": "3aa32f5bde560f3f3f44efaf8991f46a945d9637740abb431e1409dbb5e67530",
+  "previousValidation": {
+    "path": ".cache/p105-reclamation-v1-report.json",
+    "sourceFingerprint": "192bfa0bf709d0caefcd19b512a892da7904ef5d686325b312d7f54dea5033c3",
+    "changedInputs": [
+      "packages/code-workspaces/src/workspace-reclamations.ts"
+    ]
+  },
+  "checks": [
+    {
+      "name": "build-storage",
+      "exitCode": 0,
+      "reusedFrom": ".cache/p105-reclamation-v1-report.json",
+      "sourceFingerprint": "192bfa0bf709d0caefcd19b512a892da7904ef5d686325b312d7f54dea5033c3",
+      "reason": "Only local reclamation path normalization changed; storage, material capture, preservation and these passed checks are unchanged."
+    },
+    {
+      "name": "remnants",
+      "exitCode": 0,
+      "tests": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "reusedFrom": ".cache/p105-reclamation-v1-report.json",
+      "sourceFingerprint": "192bfa0bf709d0caefcd19b512a892da7904ef5d686325b312d7f54dea5033c3",
+      "reason": "Only local reclamation path normalization changed; storage, material capture, preservation and these passed checks are unchanged."
+    },
+    {
+      "name": "reclamation-storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "reusedFrom": ".cache/p105-reclamation-v1-report.json",
+      "sourceFingerprint": "192bfa0bf709d0caefcd19b512a892da7904ef5d686325b312d7f54dea5033c3",
+      "reason": "Only local reclamation path normalization changed; storage, material capture, preservation and these passed checks are unchanged."
+    },
+    {
+      "name": "preservation-storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "reusedFrom": ".cache/p105-reclamation-v1-report.json",
+      "sourceFingerprint": "192bfa0bf709d0caefcd19b512a892da7904ef5d686325b312d7f54dea5033c3",
+      "reason": "Only local reclamation path normalization changed; storage, material capture, preservation and these passed checks are unchanged."
+    },
+    {
+      "name": "preservation-git",
+      "exitCode": 0,
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "reusedFrom": ".cache/p105-reclamation-v1-report.json",
+      "sourceFingerprint": "192bfa0bf709d0caefcd19b512a892da7904ef5d686325b312d7f54dea5033c3",
+      "reason": "Only local reclamation path normalization changed; storage, material capture, preservation and these passed checks are unchanged."
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "build-workspaces",
+      "exitCode": 0
+    },
+    {
+      "name": "reclamation-git",
+      "exitCode": 0,
+      "tests": {
+        "tests": 6,
+        "pass": 6,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v2-report.json",
+      "byteSize": 45265,
+      "sha256": "3637aa91567884d77275caf12b3ffd49a89eedd83513cff8676c515e29a388a2"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v1-build-storage.txt",
+      "byteSize": 2579,
+      "sha256": "b279f48be228bcb1e13ee54cb17fa4be9dd4c6a750098789f7c3045e8b662413"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v1-remnants.txt",
+      "byteSize": 2187,
+      "sha256": "0d10fd0100203ef67679b31f1c94e249dbecbbb26a601f1ea405d4c8de73ec4f"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v1-reclamation-storage.txt",
+      "byteSize": 810,
+      "sha256": "2af7546ea6aecbd1e214e7ff5aeed8e3605420ca8d4888037769282d7fae8fa8"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v1-preservation-storage.txt",
+      "byteSize": 1323,
+      "sha256": "476bc032caf5c01e43e4d69bbaf65ee2f16b569d2d57094439c9cfe41a0c080f"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v1-preservation-git.txt",
+      "byteSize": 1955,
+      "sha256": "8f7dd2bf321e28fe09e63f4b0f84549ab1813070948fb20936c027818ab15090"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v2-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v2-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v2-build-workspaces.txt",
+      "byteSize": 545,
+      "sha256": "4c6d45bfa09e4078c0b13133fe21d57da0694dfdf455b1e91ac3426e55326600"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v2-reclamation-git.txt",
+      "byteSize": 2154,
+      "sha256": "04b1ca58d019f4c2aeac09512c4e29dab28c541ae705e7501357145598ecc2c7"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v2/p105-reclamation-v2-storage.txt",
+      "byteSize": 23052,
+      "sha256": "f4f7d1ea36fdf7fa5e7fe8fea8e19b2504902f0ad31f1506ef514164a7f9e3a5"
+    }
+  ],
+  "limitations": [
+    "Actual local Git and disposable file trees; ownership uses the A2A/SQLite fixture and the archival/reclamation fencer is explicitly job-free.",
+    "The actual authenticated Runner cleanup-authority composition is a separate task 5.1 requirement.",
+    "No live model, OIDC, remote identity, actual Docker/runsc jobs, Linux environment, product acceptance or stage gate conclusion.",
+    "Any task checkbox requires a separate behavior/evidence review, and a passing development report cannot complete the full parent work package."
+  ]
+}

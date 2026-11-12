@@ -121,3 +121,5 @@ export type {CandidateMaterial,CandidateMaterialDescriptor,CandidateConflictAckn
 export {workspacePreservationMaterialKey} from './workspace-preservation-domain.js';
 export {workspaceMaterialEntry,workspaceMaterialSnapshot,workspacePreservationManifest} from './workspace-preservation-protocol.js';
 export type {WorkspacePreservation,WorkspacePreservationManifest,WorkspacePreservationMaterial,WorkspacePreservationInputs} from './workspace-preservation-protocol.js';
+
+export type {WorkspaceReclamation} from './workspace-reclamation-protocol.js';

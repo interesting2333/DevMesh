@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "Migration 19 and exact-original workspace reclamation. Current closed execution admission, original complete preservation ACK, fixed Runner trash, durable isolation/deletion intent and receipts, partial deletion verification, final ACK recovery and historical replay. Actual temporary files/Git/A2A ownership fixtures use an explicitly job-free fencer; no actual Runner job, remote identity, model, OIDC, Linux/runsc or product gate acceptance. New local default retention is 24 hours from the eligible original request; destructive fixtures explicitly configure 0.",
+  "baseCommit": "406d5a40583a1849a68bc2ed2b68f577789ccd35",
+  "startedAt": "2026-11-12T00:47:10.914Z",
+  "finishedAt": "2026-11-12T00:48:55.409Z",
+  "sourceFingerprint": "192bfa0bf709d0caefcd19b512a892da7904ef5d686325b312d7f54dea5033c3",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "build-storage",
+      "exitCode": 0
+    },
+    {
+      "name": "build-workspaces",
+      "exitCode": 0
+    },
+    {
+      "name": "remnants",
+      "exitCode": 0,
+      "tests": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "reclamation-storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preservation-storage",
+      "exitCode": 0,
+      "tests": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preservation-git",
+      "exitCode": 0,
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "reclamation-git",
+      "exitCode": 1,
+      "tests": {
+        "tests": 6,
+        "pass": 2,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-report.json",
+      "byteSize": 42743,
+      "sha256": "66cef98bfa0e8d6dddc30ce0743294265b7b6f1be34f66c63a3778f044a57630"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-lint.txt",
+      "byteSize": 61,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-build-storage.txt",
+      "byteSize": 2579,
+      "sha256": "b279f48be228bcb1e13ee54cb17fa4be9dd4c6a750098789f7c3045e8b662413"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-build-workspaces.txt",
+      "byteSize": 734,
+      "sha256": "27369fbe03cc9393b5d170aeed2646f0e7028ee6b3909070e29dbebf7d91ad20"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-remnants.txt",
+      "byteSize": 2187,
+      "sha256": "0d10fd0100203ef67679b31f1c94e249dbecbbb26a601f1ea405d4c8de73ec4f"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-reclamation-storage.txt",
+      "byteSize": 810,
+      "sha256": "2af7546ea6aecbd1e214e7ff5aeed8e3605420ca8d4888037769282d7fae8fa8"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-preservation-storage.txt",
+      "byteSize": 1323,
+      "sha256": "476bc032caf5c01e43e4d69bbaf65ee2f16b569d2d57094439c9cfe41a0c080f"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-preservation-git.txt",
+      "byteSize": 1955,
+      "sha256": "8f7dd2bf321e28fe09e63f4b0f84549ab1813070948fb20936c027818ab15090"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/p105-reclamation-v1-reclamation-git.txt",
+      "byteSize": 7863,
+      "sha256": "a4997ec57c52333a7088ba6a4edfe734d6009b5a5dab046cc8d7ca2ab060b0d0"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__code-workspaces__src__index.ts.txt",
+      "byteSize": 1417,
+      "sha256": "6e9850423c3fdbe0034c1c787f9b7fc3478b3192ee629e03919f7aa95524d7ae"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__code-workspaces__src__workspace-preservations.ts.txt",
+      "byteSize": 18040,
+      "sha256": "1a711db199c46b110bf78d94fdb87508579cb1a32f2a5773d4c7ce9536ed1704"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__storage-sqlite__migrations__manifest.json.txt",
+      "byteSize": 2740,
+      "sha256": "8c0582cab4cdb545d463508ab01cefd155a5692fa4f92cdf85e0f2fa0edfeea9"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__storage-sqlite__src__domain.ts.txt",
+      "byteSize": 43853,
+      "sha256": "0ab906ed5a38739e61218c21c9d4ff3152970389a890a0ea7c93ebcbb5b1aff1"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__storage-sqlite__src__index.ts.txt",
+      "byteSize": 7785,
+      "sha256": "4b9ed942aa00a01c7b8dfc6948fc182687f81312a00a2be518cc08747eb98ae1"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__storage-sqlite__src__protocol.ts.txt",
+      "byteSize": 10436,
+      "sha256": "f33130a0dd7fe5f9833b880d557fb306f98625bab707bd7d0f8ecbb126438221"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__storage-sqlite__src__workspace-preservation-domain.ts.txt",
+      "byteSize": 15036,
+      "sha256": "25d55b8693b08223a907e2e025acaae5a5fb514f438eb290e542968ae3d1811f"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__code-workspaces__src__workspace-reclamations.ts.txt",
+      "byteSize": 12768,
+      "sha256": "108e882f5bf5413279b8dae25f953dfd27703ca74c3f4abe21b4f4836ab23894"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__code-workspaces__src__workspace-remnants.ts.txt",
+      "byteSize": 4632,
+      "sha256": "b2b8620aa6272e912a1bf2baabf0406af8a5449374e29ef0859cb30430b2e077"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__storage-sqlite__migrations__0019-workspacereclamations.sql.txt",
+      "byteSize": 2641,
+      "sha256": "b83fb630f8aa153a7529f85a15934038277f10d15c86bd9a6102555e1b30b22b"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__storage-sqlite__src__workspace-reclamation-domain.ts.txt",
+      "byteSize": 8444,
+      "sha256": "fcc9b2e3881ee7718d3359d8d12f286e1e4243669dd6b24bbf6dfcd585bccc95"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/packages__storage-sqlite__src__workspace-reclamation-protocol.ts.txt",
+      "byteSize": 2484,
+      "sha256": "64c2fb3b7ff5a36ef45c44c04be499b2b40e8a6970dd5d3bd10c745ac8e64eb0"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/tests__workspace-reclamation-git.test.mjs.txt",
+      "byteSize": 9744,
+      "sha256": "978ce875f2d3d411b7c7b1a880b8be6daab05c92a98e49af215feeadf6887aa0"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/tests__workspace-reclamation-storage.test.mjs.txt",
+      "byteSize": 10328,
+      "sha256": "e2de292ef612de4af36cad52c53d554ce4087818d0071360dd33f8f6bd9171cb"
+    },
+    {
+      "path": "project/evidence/P1-05/development/reclamation-v1-failed/tests__workspace-remnants.test.mjs.txt",
+      "byteSize": 4538,
+      "sha256": "4a05e6f05cc79cf587ec3c445f29c386d18637bc0624044e0c5c6a4e2079158a"
+    }
+  ],
+  "limitations": [
+    "Actual local Git and disposable file trees; ownership uses the A2A/SQLite fixture and the archival/reclamation fencer is explicitly job-free.",
+    "The actual authenticated Runner cleanup-authority composition is a separate task 5.1 requirement.",
+    "No live model, OIDC, remote identity, actual Docker/runsc jobs, Linux environment, product acceptance or stage gate conclusion.",
+    "Any task checkbox requires a separate behavior/evidence review, and a passing development report cannot complete the full parent work package."
+  ]
+}

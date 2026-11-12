@@ -1,0 +1,45 @@
+TAP version 13
+# (node:9984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:9984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual isolated Git source and complete workspace bytes require original preservation proof before reclamation
+    # Subtest: a workspace with no repo.commit retains the admitted base and all unsubmitted bytes
+    ok 1 - a workspace with no repo.commit retains the admitted base and all unsubmitted bytes
+      ---
+      duration_ms: 7533.8847
+      type: 'test'
+      ...
+    # Subtest: interrupted publication retains its original operation, every source commit and immutable material bytes
+    ok 2 - interrupted publication retains its original operation, every source commit and immutable material bytes
+      ---
+      duration_ms: 14455.8048
+      type: 'test'
+      ...
+    # Subtest: unknown refs, staged bytes, missing content and a busy Runner boundary independently block reclamation
+    ok 3 - unknown refs, staged bytes, missing content and a busy Runner boundary independently block reclamation
+      ---
+      duration_ms: 10560.4308
+      type: 'test'
+      ...
+    # Subtest: hash drift stays preserved and a lost complete ACK cannot turn unknown recovery material into deletion permission
+    ok 4 - hash drift stays preserved and a lost complete ACK cannot turn unknown recovery material into deletion permission
+      ---
+      duration_ms: 9589.1141
+      type: 'test'
+      ...
+    1..4
+ok 1 - actual isolated Git source and complete workspace bytes require original preservation proof before reclamation
+  ---
+  duration_ms: 54918.1292
+  type: 'test'
+  ...
+1..1
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 56327.3908
