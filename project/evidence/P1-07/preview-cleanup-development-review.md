@@ -56,3 +56,5 @@ ControlledContainerDriver 明确提供容器／网络及移除事实，健康服
 仍需实际 quota／network-isolation 适配器、可信平台装配、T5 必需归属握手及 Linux／gVisor 联调；预览网关、接受／发布、真实模型／OIDC／生产迁移与人工验收继续实施。缺外部资源不阻止其余本地代码与验证。
 
 保留后核对 406 个当前输入、28 份原日志、84 项材料和 47 个失败源码快照 SHA；v2～v5 SQL 与前一源码提交的 Git 对象逐字一致。Lint、台账、OpenSpec 严格校验、设计完整主文和 diff 检查通过，见 [post-retention-checks.json](./development/cleanup-v32/post-retention-checks.json)。
+
+源码检查点为 `e0aaca02e67a02eb567731f0ae72cdbe7f6e45c5`；[checkpoint-binding](./development/cleanup-v32/checkpoint-binding.json) 的全部 406 个输入与该提交 Git 对象字节一致，绑定不等同于重新测试或干净 checkout。

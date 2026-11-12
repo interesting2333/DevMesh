@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T12:45:06.633Z",
+  "checkpoint": "e0aaca02e67a02eb567731f0ae72cdbe7f6e45c5",
+  "currentSourceFiles": 406,
+  "bindings": [
+    {
+      "path": "checkpoint-binding.json",
+      "sha256": "db8ae38a55f1e3282b9e8032e36d38e62bac26784d115b9bd081db8105452f4c"
+    }
+  ],
+  "checks": [
+    {
+      "name": "checkpoint-ledger-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "exitCode": 0,
+      "output": "checkpoint-ledger-check.txt",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "checkpoint-diff-check",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "output": "checkpoint-diff-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Source bytes unchanged after checkpoint documentation, binding digest, ledger and diff checks. No application tests rerun."
+}
