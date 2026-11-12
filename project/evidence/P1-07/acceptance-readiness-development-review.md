@@ -36,6 +36,8 @@ AcceptancePreparer 只通过显式可信后端组合。缺后端保持未派发�
 
 留存后首次 Lint 扫描到了归档 `typecheck-source` 下那份旧失败 TS，因原未使用导入返回 1，原输出保留于 `post-retention`。将两份旧源码按已有 `failed-source` 约定归档，逐文件核对 SHA 未变，未改 Lint 规则或原源码；路径映射和初始清单一并保留。`post-layout-correction` 的 Lint、台账、全部 OpenSpec strict、完整方案一致性及 diff 检查均返回 0。根类型检查输入仅为 apps／packages／tests 源码，归档不属于这些输入。
 
+源码提交为 `7cc116aa5e231466b55ac2c54c1e74883bd29803`。[提交绑定](./development/acceptance-readiness/checkpoint-binding.json)核对 685 项 Git 对象；最终专项 444 个源码输入全部匹配。此只读绑定不新增测试或把较早三组改称同输入重跑。
+
 ## 未完成范围
 
 继续实际接受数据准备／原 journal、物理 fence／排空／迁移、准确 Runner 装配、正向保留／替换、T5 原子提交和独立发布／导出。现有 datasets 策略与写门准备外键仍指向 preview 专用记录；实际接受数据／服务须先完成明确的共用归属和 Runner purpose，不能伪造预览策略／effect 来绕过约束，已关闭旧门的安全恢复也须独立核实。企业身份、真实模型、Linux Docker／gVisor、硬配额和产品／门槛验收仍按真实条件保留。当前上游人工／Git／A2A 准入／镜像／容器事实及新后端证明为明确夹具；实际 SQLite／Worker／质量文件与 HTTP 不替代这些事实。没有干净 checkout、全 Foundation 或远程 CI 的执行声明，不归档本变更。

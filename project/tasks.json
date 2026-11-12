@@ -1296,7 +1296,8 @@
         "project/evidence/P1-07/development/acceptance-readiness/post-retention/report.json",
         "project/evidence/P1-07/development/acceptance-readiness/post-layout-correction/report.json",
         "project/evidence/P1-07/development/acceptance-readiness/retention-layout-correction.json",
-        "project/evidence/P1-07/development/acceptance-readiness/fixture-alias-impact.json"
+        "project/evidence/P1-07/development/acceptance-readiness/fixture-alias-impact.json",
+        "project/evidence/P1-07/development/acceptance-readiness/checkpoint-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1335,7 +1336,8 @@
         "2026-11-13：接受准备意图增量固定在 2642733ab1bc487855f7cc88e8a75922352bd14a；530项当前源码／保留证据／设计管理上下文与Git对象逐字节绑定。最终438个验证输入中437项与提交一致，唯一差异为执行后Foundation清单加入已验证的接受组，独立语法／入口检查通过并记录两版hash；不称同指纹全量重跑、干净checkout或实际准备／T5通过。变更仍7/13，继续4.1。",
         "2026-11-13：继续4.1准备证明与当前可用性：D4／D5及完整主文、实施文档、OpenSpec同步迁移37的不可变原证明和追加观察；原派发状态与readiness分开，固定数据／schema／迁移／源目标fence／Runner claim，当前观察核实原持有与0～30秒健康、sequence CAS和跨UNKNOWN归属高水位。AcceptancePreparer显式后端装配、唯一派发和只查原操作；默认实际后端关闭。受控回执不替代物理隔离／实际容器健康，不创建Release或T5。PRD／D01～D08目标不变，正向保留／替换、实际适配器和完整4.1继续实施；本条为设计影响记录，执行结果另记，正式工作包／门槛未通过。",
         "2026-11-13：继续4.1准备证明／当前观察和显式AcceptancePreparer。不可变原data／fence／Runner claim、0～30秒当前健康／持有、跨UNKNOWN归属高水位、准备版本／观察双CAS、同毫秒原准备UNKNOWN关闭旧READY；并发唯一派发、丢许可ACK只inspect、观察ACK／重开恢复、事务事件回滚和实际31秒过期均验证。原接受／契约／迁移／质量收集37/38（首次综合37/38，端点负例夹具修正后新增组5/5），存储全量35/35，Runner归属／清理33/33；各组源／产物指纹运行期间不变，构建／类型／Lint／契约通过，最终134/134源码映射匹配。早期类型错误、两项旧产物映射差异及端点负例对象别名失败均原样保留；受影响五项修正夹具后重跑通过，唯一源码差异单列，不称同指纹全量重跑。后端fence／健康是显式协议夹具，未实际准备数据、创建Release或T5；实际适配器和正向保留／替换继续，OpenSpec仍7/13，正式P1-07／门槛未完成，不归档。",
-        "2026-11-13：准备证明证据留存后，Lint扫描到旧失败TS归档并返回1；按仓库已有failed-source约定迁移两份归档，SHA逐字节不变，原错误源码／失败输出／路径映射和初始清单保留，未修改Lint规则或生产源码。最终Lint、台账、全部OpenSpec strict、完整设计与diff检查均0；根TS输入不包括project归档。源门正向组合、保留／替换及实际后端／T5仍未完成；不把字段核验当物理隔离通过。"
+        "2026-11-13：准备证明证据留存后，Lint扫描到旧失败TS归档并返回1；按仓库已有failed-source约定迁移两份归档，SHA逐字节不变，原错误源码／失败输出／路径映射和初始清单保留，未修改Lint规则或生产源码。最终Lint、台账、全部OpenSpec strict、完整设计与diff检查均0；根TS输入不包括project归档。源门正向组合、保留／替换及实际后端／T5仍未完成；不把字段核验当物理隔离通过。",
+        "2026-11-13：准备证明／当前观察增量源码固定在 7cc116aa5e231466b55ac2c54c1e74883bd29803；685 项当前源码、原始证据和设计／管理上下文与该提交Git对象逐字节绑定。最终专项快照的 444 个源码输入全部匹配；较早综合／存储／Runner组唯一差异为测试端点对象复制，原始差异和唯一消费者均留存，不称同指纹全量重跑。绑定是只读核对，不是新测试、干净checkout、物理隔离、T5或产品验收。正式状态和OpenSpec7/13不变，继续4.1实际后端／数据与写门归属。"
       ]
     },
     {
