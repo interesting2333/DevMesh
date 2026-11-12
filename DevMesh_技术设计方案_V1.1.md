@@ -1384,6 +1384,10 @@ ReleaseCandidate 固定：codeCommit、requirementRevision、planRevision、temp
 
 模板只读连接须启用 SQLite 原生 readOnly／query_only，并保留既有 journal_mode；不能只拒绝 mutate 却在启动时切换 WAL、修改验收目标文件头。只读打开／查询／关闭保持原数据文件摘要，进程锁仍仅为准入约束，不作为其他写入已隔离的证明。
 
+接受服务使用独立 ACCEPTANCE 原服务请求，固定完整接受依据、实际数据回执及原源／目标 fences，不能翻译成预览 effect。Runner v7 的独立预留、只读 profile 和 network／create／start 日志绑定准确 operation／release／dataset；动作先持久 SENT，只有一次 dispatch 才可执行，丢 ACK 只核实原对象。作业、预览与接受服务在同一个 Runner writer 核算 slot／CPU／内存，跨 controller／用途的 dataset 独占；UNKNOWN／重启继续扣除，未派发取消或准确原容器 EXITED 才释放。接受服务不进入预览到期／清理扫描。
+
+接受服务的 `devmesh.acceptance-service-claim.v1` 与旧预览 claim 分开，固定原接受 hash、原服务 requestHash、reservation／profile、release／candidate／review／dataset／image 及原实例。新鲜健康与准确归属核实后才能取得 RELEASE_HELD，原 claim／实例／端口不可替换；HELD 丢 ACK 恢复原归属，不按 TTL 解除。HELD 仅为准备阶段记录，不能视为 T5 或 RELEASE_OWNED；当前独立 Runner 日志本身不完成服务启动适配、物理数据排空或控制面完整 READY。实际后端装配、明确未提交后的撤销、T5 与发布继续按原范围实现。
+
 该规则覆盖“用户正在向旧版本增加任务，同时点接受新版本”的竞态。准备后代码、计划或数据策略变更则原接受操作失效并重新审查；正常新增业务记录由最终冻结快照纳入，不要求每条记录变化都重新确认产品计划。
 
 准备意图先固定准确候选／reviewHash、原接受指针、镜像和数据方案，由服务端预留唯一 releaseId／新目标 datasetId。REPLACE 使用独立的准确主体确认；策略登记或 PREPARED 的持久 ACK 不证明文件、迁移、fencing 或健康已准备好。每项目仅保留一个未核实准备，只有一次派发许可；SENT／UNKNOWN 仅查原对象，不靠 TTL 重建。仅准确从未派发的意图可由当前负责人明确关闭，状态／历史／operation／事件同事务。
@@ -1542,6 +1546,7 @@ flowchart LR
 | release_candidates、releases | 固定候选清单、确认版本、接受人、数据准备引用 | 一个 run 只接受一次；接受记录与项目引用必须同项目 |
 | acceptance_backend_policies、acceptance_data_decisions、acceptance_preparations／history | 显式可信准备策略、准确替换确认、固定接受依据与原外部操作 | 同项目复合归属、不可变请求／追加历史；一次派发，SENT／UNKNOWN 不替代，意图不等于 READY 或 T5 |
 | acceptance_prepared_proofs、acceptance_preparation_observations | 原 request／数据／fence／Runner claim 不可变证明；当前健康与 fence 持有的追加观察 | 配置后端主体写入；proof 首次固定，准备版本／观察 sequence 双 CAS／时间和归属高水位拒绝回退；观察／事件／Run 版本同事务，过期或 UNKNOWN 关闭当前 READY |
+| Runner acceptance_services／events、acceptance_service_profiles／actions | ACCEPTANCE 原服务请求／数据回执／fences、容量、只读 profile、唯一外部动作与原服务 claim | 独立 Runner v7；同 writer 与作业／预览共享容量、跨用途 dataset 独占；原身份／历史不可覆盖，UNKNOWN 保留占用，HELD 不表示 T5 |
 
 DDL 中涉及同项目／同 run 的关系使用复合外键；只验证“ID 存在”不足以防止跨项目串用。平台接受指针故意引用 releases，不能指向普通 artifact 或未接受 candidate。
 

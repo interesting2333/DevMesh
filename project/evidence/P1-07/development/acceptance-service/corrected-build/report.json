@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Real local Runner Worker/SQLite reservation, container journal, capacity and custody transactions; controlled infrastructure facts only. No real Docker/gVisor, physical fencing, T5 or production readiness.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T21:54:25.177Z",
+      "finishedAt": "2026-11-12T21:59:07.753Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "c6f500c1983d94d1f67007c2f46e7dd3ae8123bab62cc8c568cb6cf92a95648f"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T21:59:07.761Z",
+      "finishedAt": "2026-11-12T22:01:49.503Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T22:01:49.512Z",
+      "finishedAt": "2026-11-12T22:02:09.500Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [
+    "tests/acceptance-service-proof.test.mjs"
+  ],
+  "emittedChanges": [
+    "packages/storage-sqlite/dist/domain-D6NwreKe.mjs",
+    "packages/storage-sqlite/dist/domain-D6NwreKe.mjs.map",
+    "packages/storage-sqlite/dist/domain.mjs",
+    "packages/storage-sqlite/dist/index.mjs",
+    "packages/storage-sqlite/dist/index.mjs.map",
+    "packages/storage-sqlite/dist/preview-session-protocol-Bd4hcQnH.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-Bd4hcQnH.mjs.map",
+    "packages/storage-sqlite/dist/worker.mjs",
+    "packages/runner/dist/index.mjs",
+    "packages/runner/dist/preview-cleanup-B7BL0r2f.mjs",
+    "packages/runner/dist/preview-cleanup-B7BL0r2f.mjs.map",
+    "packages/runner/dist/worker.mjs",
+    "packages/storage-sqlite/dist/domain-D4MU3K39.mjs",
+    "packages/storage-sqlite/dist/domain-D4MU3K39.mjs.map",
+    "packages/storage-sqlite/dist/preview-session-protocol-DAXkGPs3.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-DAXkGPs3.mjs.map",
+    "packages/runner/dist/preview-cleanup-BqL6AC4x.mjs",
+    "packages/runner/dist/preview-cleanup-BqL6AC4x.mjs.map"
+  ]
+}

@@ -34,6 +34,7 @@ export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick
     }
     if(proof.targetFence.datasetId!==r.target.datasetId||proof.targetFence.physical.heldAt>proof.preparedAt||s&&s.physical.fenceId===proof.targetFence.physical.fenceId)fail('ACCEPTANCE_TARGET_FENCE_CHANGED');
     if(c.operationId!==p.operationId||c.acceptanceRequestHash!==p.requestHash||c.releaseId!==r.releaseId||c.candidateId!==r.candidateId||c.manifestHash!==r.manifestHash||c.datasetId!==r.target.datasetId||c.imageDigest!==r.image.imageDigest||hash(c)!==proof.service.claimHash)fail('ACCEPTANCE_SERVICE_PROOF_CHANGED');
+     if(c.schemaVersion==='devmesh.acceptance-service-claim.v1'&&(c.projectId!==p.projectId||c.runId!==p.runId||c.reviewHash!==r.reviewHash||c.dataPlanHash!==r.dataPlanHash||c.reservationId!==proof.service.reservationId||c.profileHash!==proof.service.profileHash))fail('ACCEPTANCE_SERVICE_PROOF_CHANGED');
     if(h.instanceId!==c.instanceId||h.datasetId!==c.datasetId||h.imageDigest!==c.imageDigest||canonical(h.endpoint)!==canonical(proof.service.endpoint)||h.claimHash!==proof.service.claimHash||h.custodyRevision<proof.service.custodyRevision)fail('ACCEPTANCE_HEALTH_PROOF_CHANGED');
     if(o.fences.sourceProofHash!==(s?.physical.proofHash??null)||o.fences.targetProofHash!==proof.targetFence.physical.proofHash)fail('ACCEPTANCE_CURRENT_FENCE_CHANGED');
     if(d.snapshotAt<p.createdAt||d.snapshotAt>proof.preparedAt||proof.preparedAt<p.createdAt||proof.preparedAt>o.checkedAt)fail('ACCEPTANCE_PROOF_TIME_INVALID');

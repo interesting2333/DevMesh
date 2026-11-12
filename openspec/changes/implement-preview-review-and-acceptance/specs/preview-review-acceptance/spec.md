@@ -4,6 +4,22 @@
 
 ## ADDED Requirements
 
+### Requirement: Acceptance services use original purpose and shared Runner admission
+
+The system SHALL 为 ACCEPTANCE 服务保存独立原请求、数据回执／fences、profile 和容器动作日志，不伪造 PREVIEW effect。作业、预览和接受服务 MUST 同事务核实全局 slot／CPU／内存与跨用途 dataset 独占。原请求及完整归属不可覆盖；UNKNOWN 不释放资源，只有从未派发取消或准确原实例 EXITED 才释放。
+
+#### Scenario: Acceptance service races with preview or job admission
+- **WHEN** 接受服务与作业／预览争抢最后容量或相同 dataset
+- **THEN** 同一个 Runner writer 至多准入预算内原对象，跨 controller 不绕过占用；重启及未知实例仍计入
+
+#### Scenario: Original service action or hold loses acknowledgement
+- **WHEN** 原服务唯一动作许可、执行或 RELEASE_HELD 提交丢 ACK
+- **THEN** 重试只查询原动作和原对象，不再次派发、不按新配置替代 profile；准确 claim 恢复同一归属，HELD 不表示 T5 或接受完成
+
+#### Scenario: Preview cleanup encounters an acceptance service
+- **WHEN** 预览到期或清理扫描与接受服务同时存在
+- **THEN** 接受服务不属于预览扫描用途；其原 release／candidate／review／数据／镜像／reservation／实例均以独立 claim 核验，不能借用预览 TTL 或停止操作
+
 ### Requirement: Dataset preparation retains its actual purpose and origin
 
 The system SHALL 用不可变公共归属绑定每个 dataset 的真实准备 operation、requestHash、项目、策略及 PREVIEW／ACCEPTANCE 用途。接受准备 MUST 使用自己的原操作和策略，初始逻辑写门关闭；登记元数据不得声称业务文件或物理 fencing 已完成。REPLACE MUST 保留基线 release 且不虚构复制来源。迁移 MUST 保留旧写门、访问和历史，失败全部回滚并恢复外键检查。

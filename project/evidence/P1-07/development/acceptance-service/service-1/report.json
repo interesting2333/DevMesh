@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Real local Runner Worker/SQLite reservation, container journal, capacity and custody transactions; controlled infrastructure facts only. No real Docker/gVisor, physical fencing, T5 or production readiness.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-acceptance-service.test.mjs",
+        "tests/acceptance-service-proof.test.mjs"
+      ],
+      "startedAt": "2026-11-12T21:59:53.552Z",
+      "finishedAt": "2026-11-12T22:09:17.205Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "745d5e7e717a10dd4cb624d79ca3d237554a8bf807da190bb2c7e0dfc7aac617"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

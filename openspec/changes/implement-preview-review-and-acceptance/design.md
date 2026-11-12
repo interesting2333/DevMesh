@@ -180,6 +180,14 @@ INITIAL／REPLACE 按原方案初始化 EMPTY／DEMO，REPLACE 不复制旧数�
 
 模板只读连接使用 SQLite 原生 readOnly 与 query_only，不切换 journal_mode、不依赖 mutate 的入口检查来防止修改数据库文件头；固定 DELETE 模式目标经模板只读打开／查询／关闭后仍保持相同文件字节。模板进程锁继续只表示进程准入，不算物理 fence；其他服务归属和实际写排空继续独立验证。
 
+### 21. Acceptance services retain their own Runner purpose and capacity
+
+接受服务以 ACCEPTANCE 原请求登记，不构造 PREVIEW_START 或预览 effect。原服务请求固定完整接受依据、原数据回执及源／目标 fences；Runner 预留固定其摘要、真实用途、原 operation／release／dataset 和资源。服务 profile 独立固定仓库、目录、只读访问、配额与唯一网络／容器名。Runner v7 前向迁移保留旧版本迁移正文及历史，不收养旧预览为接受服务。
+
+作业、预览与接受服务共用一个 writer 的 slot／CPU／内存准入；跨用途 dataset 独占，UNKNOWN 和重启均继续占用。只有从未派发可取消，派发后的资源仅在准确原容器 EXITED 观察后释放。每个 network／create／start 先持久 SENT，唯一 dispatch 才可执行；丢许可／执行 ACK 只查原名称／profile／ID，不能补发或替换。原实例、端口、观察 CAS／时间及不可变历史一并核验。
+
+接受服务使用独立 `devmesh.acceptance-service-claim.v1`，固定原接受 hash、服务 requestHash、reservation／profile、release／candidate／review／dataset／image 及原实例；原预览 claim 协议保持兼容，预览专用入口仅接受原预览 schema。只有新鲜的准确 HEALTHY 观察且没有释放容量时可推进 RELEASE_HELD；未知提交不因超时解除，预览 watchdog 不扫描或停止该用途。HELD 仅为准备归属，不表示 T5 或 RELEASE_OWNED。完整后端装配、物理容器／fencing、明确未提交后的安全撤销、T5 与发布继续原范围，4.1 仍须按完整验收判断。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

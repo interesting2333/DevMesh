@@ -13,9 +13,25 @@ import {previewReleaseClaim} from './preview-lifecycle.js';
 import type {RunnerPreviewLifecycle} from './preview-lifecycle.js';
 import {previewCleanupKind,previewCleanupObservation} from './preview-cleanup.js';
 import type {PreviewCleanupAction} from './preview-cleanup.js';
+import {acceptanceServiceClaim} from '@devmesh/storage-sqlite';
+import {reserveAcceptanceService,acceptanceServiceFact,acceptanceServiceProfile,acceptanceServiceActionKind,acceptanceServiceActionObservation} from './acceptance-service.js';
+import type {AcceptanceServiceReservation,AcceptanceServiceJournal} from './acceptance-service.js';
 const owner={controllerId:opaqueKey};
 const previewBound={...owner,reservationId:opaqueKey,requestHash:z.string().regex(/^[a-f0-9]{64}$/)};
 export const storeRequests={
+ acceptanceServiceReserve:z.strictObject({...owner,...reserveAcceptanceService.shape}),
+ acceptanceServiceGet:z.strictObject(previewBound),
+ acceptanceServiceByOperation:z.strictObject({...owner,operationId:opaqueKey}),
+ acceptanceServicePage:z.strictObject({...owner,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
+ acceptanceServiceDispatch:z.strictObject(previewBound),
+ acceptanceServiceCancel:z.strictObject(previewBound),
+ acceptanceServiceRecord:z.strictObject({...previewBound,expectedRevision:z.number().int().nonnegative().safe(),fact:acceptanceServiceFact}),
+ acceptanceServiceProfilePrepare:z.strictObject({...previewBound,profile:acceptanceServiceProfile}),
+ acceptanceServiceJournal:z.strictObject(previewBound),
+ acceptanceServiceActionBegin:z.strictObject({...previewBound,kind:acceptanceServiceActionKind}),
+ acceptanceServiceActionAuthorized:z.strictObject({...previewBound,kind:acceptanceServiceActionKind,actionRequestHash:z.string().regex(/^[a-f0-9]{64}$/)}),
+ acceptanceServiceActionObserve:z.strictObject({...previewBound,kind:acceptanceServiceActionKind,actionRequestHash:z.string().regex(/^[a-f0-9]{64}$/),observation:acceptanceServiceActionObservation}),
+ acceptanceServiceHold:z.strictObject({...previewBound,claim:acceptanceServiceClaim,claimHash:z.string().regex(/^[a-f0-9]{64}$/)}),
  previewCleanupGet:z.strictObject(previewBound),
  previewCleanupPage:z.strictObject({...owner,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
  previewCleanupActionBegin:z.strictObject({...previewBound,kind:previewCleanupKind}),
@@ -62,6 +78,12 @@ export type RunnerStoreMethod=keyof typeof storeRequests;
 export type StoreInput<M extends RunnerStoreMethod>=z.input<(typeof storeRequests)[M]>;
 export interface InternalJob {job:Job;execution:{workspacePath:string;argv:string[]};leasePermit:Job['request']['permit'];leaseRenewedAt:string}
 export interface StoreResults {
+ acceptanceServiceReserve:AcceptanceServiceReservation;acceptanceServiceGet:AcceptanceServiceReservation;acceptanceServiceByOperation:AcceptanceServiceReservation|null;
+ acceptanceServicePage:{items:{sequence:number;reservation:AcceptanceServiceReservation}[];nextSequence:number|null};
+ acceptanceServiceDispatch:{dispatch:boolean;reservation:AcceptanceServiceReservation};acceptanceServiceCancel:AcceptanceServiceReservation;acceptanceServiceRecord:AcceptanceServiceReservation;
+ acceptanceServiceProfilePrepare:AcceptanceServiceJournal;acceptanceServiceJournal:AcceptanceServiceJournal|null;
+ acceptanceServiceActionBegin:{dispatch:boolean;journal:AcceptanceServiceJournal};acceptanceServiceActionAuthorized:{allowed:boolean};acceptanceServiceActionObserve:AcceptanceServiceJournal;
+ acceptanceServiceHold:AcceptanceServiceReservation;
  previewCleanupGet:PreviewCleanupAction[];previewCleanupActionBegin:{dispatch:boolean;action:PreviewCleanupAction};previewCleanupActionAuthorized:{allowed:boolean};previewCleanupActionObserve:PreviewCleanupAction;
  previewCleanupPage:{items:{sequence:number;reservationId:string;requestHash:string}[];nextSequence:number|null};
  previewLifecycleEnroll:RunnerPreviewLifecycle;previewLifecycleGet:RunnerPreviewLifecycle|null;previewExpiryPrepare:RunnerPreviewLifecycle|null;

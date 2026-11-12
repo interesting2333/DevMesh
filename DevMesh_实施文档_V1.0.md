@@ -290,6 +290,8 @@ Runner 必须覆盖两种宿主 permit，记录稳定 operationId；并发、网
 
 P1-07 接受准备先用前向迁移保存准确候选／reviewHash、原接受指针、镜像与数据方案，服务端预留原 releaseId／新目标 datasetId；REPLACE 另有绑定完整依据与主体的明确确认。显式策略登记及 PREPARED 的持久 ACK 不证明后端、迁移或健康就绪。每项目一项未核实准备，派发 ACK 丢失／UNKNOWN 跨重启只查原操作，不能重授或替换；仅准确从未派发的意图可由当前负责人显式关闭。fencing／排空／完整性、Runner 归属／健康凭证和 T5 分步实现与验证，不能凭持久意图提前通过。
 
+接受服务另按 ACCEPTANCE 用途登记原服务请求及 Runner v7 预留／只读 profile／动作日志，固定原接受依据、数据回执和源／目标持有记录，不伪造预览 effect。作业、预览、接受服务共享同一 writer 的 slot／CPU／内存准入与跨用途 dataset 独占；UNKNOWN／重启继续计占用，只有未派发取消或准确原实例退出才释放。network／create／start 各有唯一持久派发，丢 ACK 只查原对象；独立服务 claim 绑定原接受 hash、serviceRequestHash、reservation／profile、release／candidate／review／数据方案／dataset／image／实例。HELD 只表示准备归属，不等于 T5 或 OWNED，不进入预览 TTL 清理。验证包括跨用途并发／容量／原动作恢复、观察 CAS／归属不可替换、事件故障原子回滚与旧迁移保留；实际 Driver、物理 fencing、完整 READY／安全撤销及 T5／发布分别验证，不能由日志测试替代。
+
 原准备证明与当前可用性分开验证：不可变 proof 固定原数据／schema／迁移／完整性、源与目标物理 fence 和准确 Runner RELEASE_HELD claim；当前观察重新核实原 fence 持有／目标关闭及同实例健康，0～30 秒时效、准备版本／观察 sequence 双 CAS 和跨 UNKNOWN 的归属高水位阻止旧状态复活。默认实际后端关闭，控制器只有首次唯一许可可 prepare，之后只 inspect；事务故障须证明 proof／观察／Run 版本／事件一起回滚。受控字段测试不算物理排空、真实容器健康或 T5 通过，正向保留／替换、实际适配器及发布仍须独立执行。
 
 数据归属增量须验证通用策略台账的 PREVIEW／ACCEPTANCE 区分、真实原准备 operation／requestHash、REPLACE 基线与复制 origin 分离、接受目标初始关闭及 proof 落库后的 WRITE_FROZEN。迁移 38 重建写门外键必须保持旧关闭门、未知写请求和历史原样；注入晚期故障后 schema、行、版本、迁移历史及外键 pragma 全部恢复。新元数据不证明业务文件、迁移、物理 fence 或 Release 已完成；源闭门与事件故障回滚、准确后端权限、丢 ACK 原记录恢复须单独验证。

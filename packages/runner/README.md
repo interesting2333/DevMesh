@@ -2,6 +2,8 @@
 
 `@devmesh/runner` 是独立 Node.js/TypeScript 服务，作业登记使用自己的 SQLite Worker；不共享控制面数据库文件。`openRunnerStorage` 明确检查 Runner／控制面／备份目录互不重叠、布局标记、实例 ID、单写者锁及显式初始化。已有未知目录、缺失数据库、链接路径不会被自动收编或重建。
 
+接受服务的私有原请求、容量与容器日志见 [ACCEPTANCE-SERVICES.md](./ACCEPTANCE-SERVICES.md)。该用途与预览分别登记，共享 Runner 全局资源；日志与 RELEASE_HELD 不表示实际容器已启动或接受已完成。
+
 ```text
 runner/
   runner-layout.json

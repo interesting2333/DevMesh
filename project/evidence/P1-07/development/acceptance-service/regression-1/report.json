@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Real local Runner Worker/SQLite reservation, container journal, capacity and custody transactions; controlled infrastructure facts only. No real Docker/gVisor, physical fencing, T5 or production readiness.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-preview-capacity.test.mjs",
+        "tests/runner-upgrade.test.mjs"
+      ],
+      "startedAt": "2026-11-12T22:05:31.683Z",
+      "finishedAt": "2026-11-12T22:07:47.700Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "e48db44c5d7684539605b64d8bcef23c69de6ffd45a5596ef0a72f97d2948c1a"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

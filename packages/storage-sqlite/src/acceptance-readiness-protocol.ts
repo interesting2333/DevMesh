@@ -2,7 +2,9 @@ import {z} from 'zod';
 import {ids,opaqueKey,sha256,timestamp,artifactRef} from '@devmesh/contracts';
 import type {AcceptancePreparation} from './acceptance-protocol.js';
 
-export const acceptanceReleaseClaim=z.strictObject({schemaVersion:z.literal('devmesh.preview-release-claim.v1'),operationId:ids.operation,releaseId:ids.release,candidateId:ids.candidate,manifestHash:sha256,previewId:ids.preview,datasetId:ids.dataset,imageDigest:z.string().regex(/^sha256:[a-f0-9]{64}$/),startOperationId:ids.operation,startRequestHash:sha256,instanceId:opaqueKey,acceptanceRequestHash:sha256});
+export const previewAcceptanceReleaseClaim=z.strictObject({schemaVersion:z.literal('devmesh.preview-release-claim.v1'),operationId:ids.operation,releaseId:ids.release,candidateId:ids.candidate,manifestHash:sha256,previewId:ids.preview,datasetId:ids.dataset,imageDigest:z.string().regex(/^sha256:[a-f0-9]{64}$/),startOperationId:ids.operation,startRequestHash:sha256,instanceId:opaqueKey,acceptanceRequestHash:sha256});
+export const acceptanceServiceClaim=z.strictObject({schemaVersion:z.literal('devmesh.acceptance-service-claim.v1'),purpose:z.literal('ACCEPTANCE'),operationId:ids.operation,acceptanceRequestHash:sha256,releaseId:ids.release,projectId:ids.project,runId:ids.run,candidateId:ids.candidate,manifestHash:sha256,reviewHash:sha256,dataPlanHash:sha256,datasetId:ids.dataset,imageDigest:z.string().regex(/^sha256:[a-f0-9]{64}$/),reservationId:opaqueKey,profileHash:sha256,serviceRequestHash:sha256,instanceId:opaqueKey});
+export const acceptanceReleaseClaim=z.discriminatedUnion('schemaVersion',[previewAcceptanceReleaseClaim,acceptanceServiceClaim]);
 const heldFence=z.strictObject({kind:z.literal('DURABLE_WRITE_FENCE'),fenceId:opaqueKey,generation:z.number().int().positive().safe(),proofHash:sha256,heldAt:timestamp,state:z.literal('HELD')});
 const endpoint=z.strictObject({host:z.literal('127.0.0.1'),port:z.number().int().min(1024).max(65535)});
 /** Only a trusted adapter may construct this after querying its original objects. */

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "mode": "migration",
+  "scope": "Real local Runner Worker/SQLite reservation, container journal, capacity and custody transactions; controlled infrastructure facts only. No real Docker/gVisor, physical fencing, T5 or production readiness.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "--test-name-pattern",
+        "v[1-7].*(?:upgrade|preserves)",
+        "tests/runner-preview-cleanup.test.mjs",
+        "tests/runner-preview-watchdog.test.mjs"
+      ],
+      "startedAt": "2026-11-12T22:06:35.546Z",
+      "finishedAt": "2026-11-12T22:09:02.259Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "e893ea1bbdc75c98c1dea7d3131eac6bafef5c658caf22014751974c4c11e50f"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

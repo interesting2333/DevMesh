@@ -37,6 +37,8 @@
 
 4.1 本轮增加 ACCEPTANCE v2 原 journal／物理 custody 记录和实际 SQLite 数据文件组件，INITIAL／REPLACE 的 EMPTY／DEMO、受限可信同 schema 保留快照、WAL 已提交状态／独立 UUID、文件摘要和原对象恢复；缺适配器、授权变化、fence 换代、超时与半成品不重派。模板只读原生连接修正后保持准备文件字节。最终数据／预览副本／原归属 24/24、模板单元／HTTP 24/24，构建／类型／Lint 和 137/137 映射通过。首轮失败批次主动中止、测试文件重名及恢复、各组捕获范围与原日志见 `project/evidence/P1-07/acceptance-data-development-review.md`。物理 custody 和接受依据／镜像仍为明确受控夹具，没有真实物理排空、准确接受服务／完整 READY、Release、T5 或发布；4.1 与 7/13、正式状态／门槛不变。
 
+4.1 本轮增加独立 ACCEPTANCE 服务原请求、Runner v7 容量预留／只读 profile／原 network-create-start 日志及 RELEASE_HELD claim，不构造 PreviewEffect。作业／预览／接受服务同 writer 核算全局容量与跨用途 dataset 独占；UNKNOWN 保留占用，原动作丢 ACK 不重派，准确观察 CAS／实例／端口与历史原子回滚。新服务 claim 在控制面核实 reservation／profile／原接受及审查；旧预览入口明确旧 schema。验证 service-1 12/12、regression-1 15/15、migrations-1 2/2，构建／类型／Lint、140 份源码映射及 5 份历史迁移正文匹配；初轮类型失败、追加 JS 用例的构建输入差异和迁移专项范围见 `project/evidence/P1-07/acceptance-service-development-review.md`。实际 Driver／物理容器与 fence、完整服务组合／READY、安全撤销、T5 和发布未完成，不勾选完整 4.1 或关闭工作包／门槛。
+
 ## 5. Composition and evidence
 
 - [ ] 5.1 将准确候选、审查、实际本地数据副本和 HTTP 预览／发布组合验证，逐项记录 D01～D08 与 T5 的实际覆盖，受控后端不代替真实构建／健康或产品验收。

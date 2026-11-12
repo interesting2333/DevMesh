@@ -18,6 +18,8 @@ export {LocalSqliteDatasetBackend} from './dataset-backend.js';
 export {LocalSqliteAcceptanceDatasetBackend} from './acceptance-dataset-backend.js';
 export type {AcceptanceDatasetOptions,AcceptanceDatasetAuthority,AcceptanceDatasetObservation} from './acceptance-dataset-backend.js';
 export type {AcceptanceDatasetFences} from './dataset-journal.js';
+export {acceptanceServiceRequest,acceptanceServiceProfile,acceptanceServiceReservation,acceptanceServiceFact,acceptanceServiceNames} from './acceptance-service.js';
+export type {AcceptanceServiceRequest,AcceptanceServiceProfile,AcceptanceServiceReservation,AcceptanceServiceFact,AcceptanceServiceJournal,AcceptanceServiceAction} from './acceptance-service.js';
 export {probePreviewHealth} from './preview-health.js';
 export {runnerCapacity,previewResourceLimits,previewReservationSchema} from './preview-reservation.js';
 export {RunnerPreviewBackend} from './preview-backend.js';
