@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task 3.2 development: immutable original result carry, forward repair plan content ACK/publication, explicit carry confirmation and bounded two-round repair. Actual migrated SQLite/evaluator/content/Work handlers; source/Git/Runner/Runtime candidate facts explicitly seeded. No production model, Linux or full Runtime composition claimed.",
+  "sourceCommit": "64d5a9d6f81c993bea8a93b1e2beff532e8be73e",
+  "dirty": true,
+  "sourceFingerprint": "210ae4a9c6e7ca093c37eef90c72fbb3044883559ff571907303f3b6fb650051",
+  "unchanged": true,
+  "startedAt": "2026-11-12T06:00:33.136Z",
+  "finishedAt": "2026-11-12T06:05:52.034Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 17169,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1382,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 29373,
+      "output": "current-build.txt",
+      "sha256": "7a2901e019cf476098b52c9f6da404c7c12f6ff7ca0193dd6238334d762ab217"
+    },
+    {
+      "name": "verified-repairs",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13898,
+      "output": "verified-repairs.txt",
+      "sha256": "83dcfa399c7a8234737262c81176acdb3497ef6183a05d3ee58aeed455a95713"
+    },
+    {
+      "name": "workspace-runtime",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 256794,
+      "output": "workspace-runtime.txt",
+      "sha256": "cffa06fbea8f7173979a81047fe0f7efe502721555dcc80c83d414e4b3ddee97"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/repairs-v6/current-build.txt",
+      "sha256": "7a2901e019cf476098b52c9f6da404c7c12f6ff7ca0193dd6238334d762ab217"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v6/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v6/report.json",
+      "sha256": "6e07dbb9e90ec9dea295c80983aa55fe07e9d5cb34a78c70fd27d847ae9001ea"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v6/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v6/verified-repairs.txt",
+      "sha256": "83dcfa399c7a8234737262c81176acdb3497ef6183a05d3ee58aeed455a95713"
+    },
+    {
+      "path": "project/evidence/P1-06/development/repairs-v6/workspace-runtime.txt",
+      "sha256": "cffa06fbea8f7173979a81047fe0f7efe502721555dcc80c83d414e4b3ddee97"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no exact clean checkpoint or stage/product acceptance.",
+    "Original admission/Git/Runner/Runtime candidate records are explicit test DB fixtures. Migrated SQLite, independent raw report evaluator, filesystem content ACK, Work completion and issue transactions are actual implementations.",
+    "No production model, generated container execution, OIDC, Linux/runsc, or completed end-to-end forward repair claimed."
+  ]
+}

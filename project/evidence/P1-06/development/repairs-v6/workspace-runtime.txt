@@ -1,0 +1,102 @@
+TAP version 13
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed Runtime allocates before real HTTP model calls, commits through MCP and requires retained source before atomic A2A completion
+ok 1 - managed Runtime allocates before real HTTP model calls, commits through MCP and requires retained source before atomic A2A completion
+  ---
+  duration_ms: 30406.2419
+  type: 'test'
+  ...
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival
+ok 2 - lost original source ACK recovers after pause without a model call, commit replay, transfer replay or Grant revival
+  ---
+  duration_ms: 33329.1979
+  type: 'test'
+  ...
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed final result journal rejects replacing its original commit
+ok 3 - managed final result journal rejects replacing its original commit
+  ---
+  duration_ms: 29431.1043
+  type: 'test'
+  ...
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a lost candidate publication receipt returns the existing atomic result without new execution
+ok 4 - a lost candidate publication receipt returns the existing atomic result without new execution
+  ---
+  duration_ms: 30323.1792
+  type: 'test'
+  ...
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an invented final commit cannot enter the result journal or trigger source archival
+ok 5 - an invented final commit cannot enter the result journal or trigger source archival
+  ---
+  duration_ms: 23489.3317
+  type: 'test'
+  ...
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate publication rolls back with its verification handoff and recovers the original result
+ok 6 - candidate publication rolls back with its verification handoff and recovers the original result
+  ---
+  duration_ms: 29634.8371
+  type: 'test'
+  ...
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an interrupted preparation with no model step cannot reenter its lifecycle on a second execute call
+ok 7 - an interrupted preparation with no model step cannot reenter its lifecycle on a second execute call
+  ---
+  duration_ms: 18068.4362
+  type: 'test'
+  ...
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: formal Developer success requires original Runtime candidate and actual Git archive ACK
+ok 8 - formal Developer success requires original Runtime candidate and actual Git archive ACK
+  ---
+  duration_ms: 30575.1265
+  type: 'test'
+  ...
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a Developer candidate declaring unverified checks remains VERIFYING even with an archived commit
+ok 9 - a Developer candidate declaring unverified checks remains VERIFYING even with an archived commit
+  ---
+  duration_ms: 29650.0384
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 256585.2024

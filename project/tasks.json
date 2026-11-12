@@ -946,7 +946,13 @@
         "packages/storage-sqlite/src/verified-finding-domain.ts",
         "packages/storage-sqlite/src/verified-finding-protocol.ts",
         "tests/verified-findings.test.mjs",
-        "tests/fixtures/verified-repair.mjs"
+        "tests/fixtures/verified-repair.mjs",
+        "packages/storage-sqlite/migrations/0025-verifiedrepairs.sql",
+        "packages/storage-sqlite/src/plan-results.ts",
+        "packages/storage-sqlite/src/verified-repair-domain.ts",
+        "packages/storage-sqlite/src/verified-repair-protocol.ts",
+        "packages/result-verifier/src/repair.ts",
+        "tests/verified-repairs.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-06/development/pure-v1-failed/evidence.json",
@@ -979,7 +985,14 @@
         "project/evidence/P1-06/development/findings-v4-failed/evidence.json",
         "project/evidence/P1-06/development/findings-v5/evidence.json",
         "project/evidence/P1-06/development/findings-v6/evidence.json",
-        "project/evidence/P1-06/development/findings-v6/checkpoint-binding.json"
+        "project/evidence/P1-06/development/findings-v6/checkpoint-binding.json",
+        "project/evidence/P1-06/repairs-development-review.md",
+        "project/evidence/P1-06/development/repairs-v1-failed/evidence.json",
+        "project/evidence/P1-06/development/repairs-v3-failed/evidence.json",
+        "project/evidence/P1-06/development/repairs-v4/evidence.json",
+        "project/evidence/P1-06/development/repairs-v5/evidence.json",
+        "project/evidence/P1-06/development/repairs-v6/evidence.json",
+        "project/evidence/P1-06/development/repairs-v6/checkpoint-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -992,7 +1005,8 @@
         "2026-11-12 后续：候选未解决缺陷／preview 引用和验证服务负责人身份补充已合入 4e02229，隔离开发检查 v5 的类型、lint、依赖构建和 11 个 Work 用例通过。v4 原工作区回归已结束：94 项中 86 通过、8 项 Runtime 失败，多项明确 PERMIT_EXPIRED；当时本机 CPU 观测 100%，Git／准备耗时显著增长，不能据此声称新增真实 Runtime 完成路径已通过。失败原报告、日志及与 6414720 的全部 294 个源码文件字节对照均保存，正在保留生产过期规则的独立进程中复查。隔离目录另推进迁移 24／原失败与缺陷历史，10 个针对性用例刚通过，相关 Work／质量回归仍在执行，未合入也未计为 3.1 完成。2.3、父工作包与 G0～G4 仍按实际未通过状态保留。",
         "2026-11-12：5f40cdd 修复本地 Runtime 候选／A2A 完成与 VERIFYING 的同事务衔接，Run／Work epoch 和暂停守卫共用 Registry。work-v8 的类型、lint、构建、9 个真实本地 HTTP／认证 MCP／Git Runtime 用例、11 个 Work 用例、A2A 和调度回归全部通过；v6 状态衔接失败、v7 准备期中断及此前失败保留。完成子任务 2.3，完整固定提交回归与自动组合仍按 5.1／5.2 执行。",
         "2026-11-12：46d846d 合入迁移 24、独立原失败派生缺陷、不可变失败／复验历史、负责人私有修复关联和准确新合并 SHA 关闭条件。10 个缺陷、11 个 Work、10 个质量存储用例通过；隔离 MCP 旧构建导致采集拒绝的失败保留，重建当前 MCP 后采集 8/8、存储／迁移／崩溃 28/28、MCP 缺陷 3/3 和流水线 6/6 通过。依据开发复核完成 3.1；正在实现前向修复计划、明确结果沿用、新计划确认和两轮预算。3.2／冻结／完整联调未完成，正式 P1-06 与阶段状态不变。",
-        "2026-11-12：46d846d 主目录合并后，findings-v6 的类型、lint、当前存储／验证构建、缺陷 10/10、Work 11/11 和质量存储 10/10 再次通过且源码指纹不变。全部源码字节与该提交匹配，作为合并开发检查，不替代后续干净 checkout 或工作包验收。"
+        "2026-11-12：46d846d 主目录合并后，findings-v6 的类型、lint、当前存储／验证构建、缺陷 10/10、Work 11/11 和质量存储 10/10 再次通过且源码指纹不变。全部源码字节与该提交匹配，作为合并开发检查，不替代后续干净 checkout 或工作包验收。",
+        "2026-11-12：64d5a9d 合入迁移 25 与前向修复规划／内容 ACK／计划发布／明确沿用确认，完成子任务 3.2。最多两轮、总计 30 项，只在已批准范围内追加修复／复验 Work；需求和接口变化明确拒绝自动规划。repairs-v4 共 132 个相关测试通过；增加发布后迟到未知副作用的确认守卫后，v5 共 57 个定向测试通过。合入后 repairs-v6 的类型、lint、当前依赖构建、9 个修复和 9 个真实本地 HTTP／MCP／Git Runtime 用例通过，305 个源码指纹全部匹配 64d5a9d。原失败日志保留；候选冻结、最终组合及干净 checkout 回归仍待任务 4／5，正式状态及阶段门槛不变。"
       ]
     },
     {
