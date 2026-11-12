@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "sourceReport": "../images-v1/report.json",
+  "currentReport": "report.json",
+  "changes": [
+    {
+      "path": "tests/preview-image.test.mjs",
+      "sha256": "979166612c73ea752a6c636ee0f99364a23cbbc2cf5aff201fac4be41c8ef79d"
+    }
+  ],
+  "applicationSourceUnchanged": true,
+  "reusedChecks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 16945,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28948,
+      "output": "current-build.txt",
+      "sha256": "efe25719a75223ab9b6a00dca9aed2cf9333dedf445f5ba6888a4488b037d890"
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2129,
+      "output": "contracts.txt",
+      "sha256": "a28a8a4a8f6fae17651a49c68fb8dda7e2797b4a397ced067d9061ccbfa00f5b"
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1486,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "name": "verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4670,
+      "output": "verification.txt",
+      "sha256": "047b8f038756f2034809f2640541639d65434bf75f2b97a8b0eeb483ca62b066"
+    }
+  ],
+  "scope": "Original passing checks on unchanged application source, not repeated executions."
+}
