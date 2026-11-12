@@ -9,6 +9,7 @@ import {mountInputApi} from '../packages/input-api/dist/index.mjs';
 import {scheduledWorkClient} from '../packages/a2a-adapter/dist/index.mjs';
 import {callerId,credential,httpFixture,serviceToken} from './fixtures/a2a-data.mjs';
 import {meta,plan,requirements} from './fixtures/storage-data.mjs';
+import {seedHistoricalVerification} from './fixtures/historical-verification.mjs';
 
 const timeout={timeout:120000},baseCommit='a'.repeat(40);
 function draft({valid=true}={}){
@@ -108,7 +109,7 @@ test('scheduler rotates between confirmed projects and needs verified predecesso
   assert.equal((await f.storage.request('getAttempt',{attemptId:aAttempt})).state,'VERIFYING');
   assert.deepEqual(await f.storage.request('nextScheduledWork',{}),[]);
   const evidence=f.sql('SELECT artifact_id,content_hash FROM artifacts WHERE artifact_id=?',a.artifactId)[0],ref={artifactId:evidence.artifact_id,sha256:evidence.content_hash};
-  await f.storage.request('recordVerifiedWork',{meta:meta(a.runId),runId:a.runId,attemptId:aAttempt,outcome:'success',evidence:ref,
+  seedHistoricalVerification(join(f.local.dataRoot,'db/devmesh.sqlite'),{meta:meta(a.runId),runId:a.runId,attemptId:aAttempt,outcome:'success',evidence:ref,
     outputs:[{slot:'implementation.commit',ref}],codeCommit:'c'.repeat(40)});
   const eligible=(await f.storage.request('nextScheduledWork',{}))[0];assert.equal(eligible.runId,a.runId);assert.equal(eligible.work.role,'tester');
   const third=await s.tick(f.signal);assert.equal(third.result.runId,a.runId);

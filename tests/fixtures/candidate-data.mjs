@@ -3,6 +3,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {createDomain} from '../../packages/storage-sqlite/dist/domain.mjs';
 import {applyMigrations,readMigrations} from '../../packages/storage-sqlite/dist/migrations.mjs';
 import {admission,canonical,content,hash,meta,plan,project,requirements} from './storage-data.mjs';
+import {seedHistoricalVerification} from './historical-verification.mjs';
 
 // These tests exercise the actual migrated schema and Worker command handlers.
 // Retained source facts are deliberately seeded DB fixtures, not Git transfer,
@@ -27,7 +28,7 @@ export async function candidateFixture(t,{configureDraft}={}){
   insert('scheduled_work',{attempt_id:attemptId,run_id:p.runId,plan_revision:1,runner_id:'runner.unit',reservation_key:randomUUID(),caller_id:'unit.scheduler'});
   for(const [expectedState,state] of [['RESERVED','SUBMITTED'],['SUBMITTED','WORKING'],['WORKING','VERIFYING']])await storage.request('transitionAttempt',{meta:meta(p.runId),runId:p.runId,attemptId,expectedState,state});
   const ref={artifactId:p.artifactId,sha256:get('SELECT content_hash FROM artifacts WHERE artifact_id=?',p.artifactId).content_hash};
-  await storage.request('recordVerifiedWork',{meta:meta(p.runId),runId:p.runId,attemptId,outcome:'success',evidence:ref,outputs:work.outputSpec.map(output=>({slot:output.slot,ref})),codeCommit:commit});
+  seedHistoricalVerification(db,{meta:meta(p.runId),runId:p.runId,attemptId,outcome:'success',evidence:ref,outputs:work.outputSpec.map(output=>({slot:output.slot,ref})),codeCommit:commit});
   if(archive){
    const scope=canonical(work.writeScope),manifest=emptyManifest(commit),allocation={operationId:allocationId,workspaceRef,projectId:p.projectId,runId:p.runId,attemptId,activationId:grant.activation_id,grantId:grant.grant_id,runnerId:'runner.unit',kind:'development',baseCommit:codeBase,scope:work.writeScope,requestHash:hash('allocation'),state:'READY',identity,manifest:emptyManifest(codeBase),errorCode:null},repository={projectId:p.projectId,resourceId:'repository.unit',identity,state:'READY'},prepared={commit,tree:manifest.tree,ref:'refs/devmesh/operations/'+commitId,expected:null,commitBody:'DB fixture only'},original={allocation,repository,commitOperation:{operationId:commitId,prepared}},ack={commit,tree:manifest.tree,manifestSha256:manifest.sha256,repositoryIdentity:identity,archiveRef:'refs/devmesh/source-archives/'+operationId,sourceRef:'refs/devmesh/sources/'+commit};
    insert('workspace_allocations',{workspace_ref:workspaceRef,operation_id:allocationId,project_id:p.projectId,run_id:p.runId,attempt_id:attemptId,activation_id:grant.activation_id,grant_id:grant.grant_id,runner_id:'runner.unit',kind:'development',base_commit:codeBase,scope_json:scope,request_hash:hash('allocation'),state:'READY',identity_json:canonical(identity),manifest_json:canonical(emptyManifest(codeBase)),created_at:time,updated_at:time});

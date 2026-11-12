@@ -42,6 +42,25 @@
 - **WHEN** 完整源码映射证明分支总量为零且冻结规则允许
 - **THEN** 保存 NOT_APPLICABLE 规则和证据；没有规则或证据时不以 100% 放行
 
+### Requirement: Formal Work completion applies immutable verification facts
+
+新的正式 Work 完成 SHALL 固定原 Runtime 候选、准确输入依据、当前计划／需求／Work revision 与 epoch、源归档或原质量验证，以及完成条件计算结果。证据字节与 artifact 引用 MUST 在同一内容 ACK 事务保存，完成事务 SHALL 重新核对依据，并仅应用派生的 outcome、outputs、codeCommit 和证据。必要人工项待定、固定源码检查无法证明或未知副作用时 MUST 不发布成功。
+
+#### Scenario: A caller attempts a legacy success shortcut
+
+- **WHEN** 新调用仅提供 success 和普通 artifact，或通过一般状态转换请求 SUCCEEDED
+- **THEN** 拒绝完成，保留 VERIFYING；原模型状态不能替代已 ACK 的不可变 Work 评估
+
+#### Scenario: A committed historical operation is replayed
+
+- **WHEN** 历史完成操作按原主体、原键和原请求重放
+- **THEN** 返回原回执并保留原终态；使用新键的完成请求仍须经过当前验证，不提供生产 fixture 开关
+
+#### Scenario: Evidence or completion acknowledgment is lost
+
+- **WHEN** 原证据登记或完成事务已提交但响应丢失
+- **THEN** 使用原 writeKey、artifact、completionKey 和评估恢复；不重新执行模型、测试 Job 或覆盖原失败
+
 ### Requirement: Verification preserves findings and bounds automatic repair
 
 失败 SHALL 保存复现输入、预期、准确源码与报告引用；修复 SHALL 使用新的 Work、显式 completed-with-findings 依赖及新的精确 SHA 复验，不把原失败改为通过。自动修复 MUST 不超过两轮，不产生回边、超过 30 项的 DAG 或未确认的需求／接口决定。
@@ -55,6 +74,16 @@
 
 - **WHEN** 已自动修复两轮、需改变确认需求／接口或会超过 DAG 上限
 - **THEN** 保留失败和修复建议，等待明确决定，不自动继续或降低质量门槛
+
+#### Scenario: A forward repair plan retains unchanged completed work
+
+- **WHEN** 修复计划追加新节点，已完成 Work 的定义、epoch、需求／接口／策略与准确输入仍可复核
+- **THEN** 显式记录原计划、原结果与新计划的沿用关系并等待新计划确认；原 findings 只满足修复入口，新的代码必须取得新复验，不沿用旧测试通过
+
+#### Scenario: Verification tests an integrated fix candidate
+
+- **WHEN** 修复分支经过受信任源码组合后，以准确合并候选 SHA 完成复验
+- **THEN** 关闭缺陷须同时核对修复归档确实属于该候选来源、新原质量报告准确绑定该 SHA，以及新正式 Tester 验证通过；不能将单个分支 SHA 或较早报告当作复验证据
 
 ### Requirement: Candidate revisions freeze complete quality and delivery identities
 

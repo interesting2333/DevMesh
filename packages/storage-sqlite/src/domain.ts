@@ -60,6 +60,10 @@ import type {WorkspaceMaintenanceMethod} from './workspace-maintenance-protocol.
 import {createQualityDomain} from './quality-domain.js';
 import {qualityRequests} from './quality-protocol.js';
 import type {QualityMethod} from './quality-protocol.js';
+import {createWorkVerificationDomain} from './work-verification-domain.js';
+import {workVerificationRequests} from './work-verification-protocol.js';
+import type {WorkVerificationMethod} from './work-verification-protocol.js';
+import {knownAttemptEffects} from './work-effects.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -88,6 +92,7 @@ export function createDomain(db: DatabaseSync) {
   const plans = createPlanDomain(db);
   const candidateIntegrations=createCandidateIntegrationDomain(db,plans);
   const quality=createQualityDomain(db,candidateIntegrations);
+  const workVerifications=createWorkVerificationDomain(db,quality);
   const candidateMaterials=createCandidateMaterialDomain(db);
   const candidateBasis=candidateIntegrations.basis;
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
@@ -204,8 +209,7 @@ export function createDomain(db: DatabaseSync) {
     },()=>{plans.authorized(meta.principalId,input.runId,true);});
   }
   function knownEffects(attemptId: string) {
-    return !get("SELECT o.operation_id FROM tool_operations t JOIN operations o ON o.operation_id=t.operation_id WHERE t.attempt_id=? AND o.status NOT IN ('SUCCEEDED','FAILED')", attemptId)
-      && !get("SELECT j.job_id FROM runner_jobs j JOIN tool_operations t ON t.operation_id=j.operation_id WHERE t.attempt_id=? AND j.state<>'EXITED'", attemptId);
+    return knownAttemptEffects(db,attemptId);
   }
   function evidence(ref: { artifactId: string; sha256: string } | undefined, runId: string) {
     if (!ref || !get("SELECT artifact_id FROM artifacts WHERE artifact_id=? AND run_id=? AND content_hash=? AND state='READY'", ref.artifactId, runId, ref.sha256)) throw new StorageError('RECONCILIATION_EVIDENCE_REQUIRED', 409, 'A persisted evidence artifact belonging to the Run is required');
@@ -325,12 +329,14 @@ export function createDomain(db: DatabaseSync) {
         const current=run(input.runId);
         if(current.terminal_outcome!==null||current.control_gate!=='OPEN')throw new StorageError('ADMISSION_CLOSED',409,'Run does not accept a verification result');
         if(!knownEffects(input.attemptId))throw new StorageError('OUTCOME_UNKNOWN',409,'Original effects must be known before verification');
+        const verification=workVerifications.assertCompletion(input);
         const {a,workId}=scheduler.verify(input);
         if(a.admitted_run_epoch!==current.run_epoch)throw new StorageError('WORK_BASIS_CHANGED',409,'Verification belongs to an older Run epoch');
         const state=input.outcome==='success'?'SUCCEEDED':'FAILED';
         exec('UPDATE attempts SET state=?,ended_at=? WHERE attempt_id=?',state,now(),input.attemptId);
         exec('DELETE FROM role_slots WHERE attempt_id=?',input.attemptId);
         exec("UPDATE execution_grants SET status='REVOKED' WHERE attempt_id=?",input.attemptId);
+        workVerifications.applied(String(verification.operation_id));
         bump(input.runId);
         event(input.runId,operationId,'AttemptStateChanged',{attemptId:input.attemptId,state},{workId,attemptId:input.attemptId});
         return {attemptId:input.attemptId,state,revision:Number(run(input.runId).resource_revision)};
@@ -345,6 +351,7 @@ export function createDomain(db: DatabaseSync) {
     transitionAttempt(input: Parsed<'transitionAttempt'>) {
       const { meta, ...payload } = input;
       return operation(meta, 'TransitionAttempt', payload, operationId => {
+        if(input.state==='SUCCEEDED')throw new StorageError('WORK_VERIFICATION_REQUIRED',409,'Successful Work must be completed through its immutable verification');
         const attempt = required(get('SELECT * FROM attempts WHERE attempt_id=? AND run_id=?', input.attemptId, input.runId));
         const current = run(input.runId);
         if (attempt.ended_at !== null || current.terminal_outcome !== null || attempt.state !== input.expectedState) throw new StorageError('ATTEMPT_STATE_CONFLICT', 409, 'Attempt ended or expected state changed');
@@ -352,7 +359,7 @@ export function createDomain(db: DatabaseSync) {
         if (!transitions[String(attempt.state)]?.includes(input.state)) throw new StorageError('ATTEMPT_TRANSITION_INVALID', 409, 'Illegal state transition');
         if (input.state === 'WORKING' && (current.control_gate !== 'OPEN' || current.run_epoch !== attempt.admitted_run_epoch || get('SELECT work_epoch FROM works WHERE run_id=? AND work_id=?', input.runId, String(attempt.work_id))?.work_epoch !== attempt.admitted_work_epoch || !get("SELECT grant_id FROM execution_grants WHERE attempt_id=? AND status='ACTIVE' AND expires_at>?", input.attemptId, now()))) throw new StorageError('ADMISSION_CLOSED', 409, 'Cannot resume work under a revoked or expired grant/epoch');
         const terminal = ['SUCCEEDED','FAILED','INTERRUPTED','CANCELLED'].includes(input.state);
-        if (attempt.state === 'OUTCOME_UNKNOWN' || input.state === 'SUCCEEDED') evidence(input.evidenceRef, input.runId);
+        if (attempt.state === 'OUTCOME_UNKNOWN') evidence(input.evidenceRef, input.runId);
         if (terminal && !knownEffects(input.attemptId)) throw new StorageError('EFFECT_OUTCOME_UNKNOWN', 409, 'Original tool/job effects must be reconciled');
         exec('UPDATE attempts SET state=?,ended_at=? WHERE attempt_id=?', input.state, terminal ? now() : null, input.attemptId);
         if (terminal) {
@@ -420,6 +427,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(workVerificationRequests,method))return workVerifications.execute(method as WorkVerificationMethod,input);
     if(Object.hasOwn(qualityRequests,method))return quality.execute(method as QualityMethod,input);
     if(Object.hasOwn(workspaceMaintenanceRequests,method))return workspaceMaintenance.execute(method as WorkspaceMaintenanceMethod,input);
     if(Object.hasOwn(workspaceReclamationRequests,method))return workspaceReclamations.execute(method as WorkspaceReclamationMethod,input);

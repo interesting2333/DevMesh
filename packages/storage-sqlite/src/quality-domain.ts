@@ -26,7 +26,10 @@ export function createQualityDomain(db:DatabaseSync,candidates?:Pick<ReturnType<
    JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id JOIN plan_works pw ON pw.run_id=a.run_id AND pw.work_id=a.work_id AND pw.plan_revision=r.current_plan_revision
   WHERE a.attempt_id=? AND a.work_revision=? AND a.admitted_work_epoch=? AND a.input_fingerprint=? AND w.work_epoch=? AND w.blocked_reason IS NULL
   AND pw.work_revision=a.work_revision AND r.run_epoch=? AND r.current_plan_revision=? AND s.plan_revision=r.current_plan_revision AND r.current_requirement_revision=? AND r.control_gate='OPEN' AND r.terminal_outcome IS NULL
-   AND a.state IN ('WORKING','VERIFYING','SUCCEEDED')`,b.attemptId,b.workRevision,b.workEpoch,b.inputFingerprint,b.workEpoch,b.runEpoch,b.planRevision,b.requirementRevision);
+    AND (a.state IN ('WORKING','VERIFYING','SUCCEEDED') OR (a.state='FAILED' AND EXISTS(
+     SELECT 1 FROM work_verifications wv JOIN verified_work_results vr ON vr.attempt_id=wv.attempt_id
+     WHERE wv.attempt_id=a.attempt_id AND wv.quality_operation_id=? AND wv.state='APPLIED' AND vr.outcome='completed-with-findings')))
+    `,b.attemptId,b.workRevision,b.workEpoch,b.inputFingerprint,b.workEpoch,b.runEpoch,b.planRevision,b.requirementRevision,v.operation_id!);
   if(!valid)return false;try{const snapshot=source(v);return snapshot.operationId===b.sourceIntegrationOperationId&&snapshot.basisSha256===b.sourceBasisSha256&&snapshot.manifest?.commit===b.targetCommit&&snapshot.manifest.sha256===b.allocationManifestSha256;}catch(error){if(error instanceof StorageError)return false;throw error;}
  }
  const origins=(id:string):QualityOrigin[]=>all('SELECT * FROM quality_origins WHERE operation_id=? ORDER BY producer_id',id).map(o=>({producerId:String(o.producer_id),pipelineId:String(o.pipeline_id),ordinal:Number(o.ordinal),execution:json(o.execution_json)}));
@@ -130,6 +133,10 @@ export function createQualityDomain(db:DatabaseSync,candidates?:Pick<ReturnType<
    const rows=all("SELECT * FROM quality_verifications WHERE attempt_id=? AND allocation_operation_id=? AND state='PREPARED'",attemptId,allocation.operation_id!);
    const prepared=rows.filter(v=>{if(!current(v))return false;try{preparedSource(v);return true;}catch(error){if(error instanceof StorageError)return false;throw error;}});if(!prepared.length)fail('QUALITY_SOURCE_NOT_PREPARED');
    if(!prepared.some(v=>policy(v).producers.every(p=>get('SELECT 1 FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?',v.operation_id!,p.producerId))))fail('QUALITY_STAGE_BINDING_INVALID');
+  },
+  completionFacts(operationId:string,principalId:string,attemptId:string){
+   const v=owned(operationId,principalId,true);if(v.attempt_id!==attemptId||v.state!=='EVALUATED'||!current(v))fail('QUALITY_BASIS_STALE');preparedSource(v);completeMaterials(v);const result=material({operationId,materialKey:'result'});ready(result);const evaluation=json<QualityEvaluation>(v.evaluation_json);resultFacts(v,evaluation);
+   return {verification:view(v),policy:policy(v),materials:all('SELECT * FROM quality_materials WHERE operation_id=? ORDER BY material_key',operationId).map(materialView)};
   },
   authorize(principalId:string,target:Target){owned(target.operationId,principalId,true);return material(target);},
   validateWrite(i:{meta:{principalId:string;scopeId:string;idempotencyKey:string};target:Target;expectedHash:string;expectedSize:number}){const r=this.authorize(i.meta.principalId,i.target);if(i.meta.scopeId!==i.target.operationId||i.meta.idempotencyKey!==r.write_key||i.expectedHash!==r.expected_hash||i.expectedSize!==r.byte_size)fail('QUALITY_MATERIAL_WRITE_CHANGED');},

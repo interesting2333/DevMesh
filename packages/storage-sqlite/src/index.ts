@@ -125,4 +125,5 @@ export type {WorkspacePreservation,WorkspacePreservationManifest,WorkspacePreser
 export type {WorkspaceMaintenanceAuthority} from './workspace-maintenance-protocol.js';
 export type {WorkspaceReclamation} from './workspace-reclamation-protocol.js';
 export {qualityMaterialKey} from './quality-protocol.js';
+export type {WorkVerification,WorkAssessment,WorkArtifactRef} from './work-verification-protocol.js';
 export type {QualityBasis,QualityVerification,QualityOrigin,QualityMaterial,QualityMaterialDescriptor,QualityStage} from './quality-protocol.js';

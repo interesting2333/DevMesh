@@ -5,3 +5,5 @@ export {evaluateQuality} from './evaluate.js';
 export type {QualityReportBytes} from './evaluate.js';
 export {QualityCollector} from './collector.js';
 export type {QualitySourceProvider,CollectionResult} from './collector.js';
+export {WorkVerifier} from './work.js';
+export type {WorkVerificationResult} from './work.js';

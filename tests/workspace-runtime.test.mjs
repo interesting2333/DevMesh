@@ -8,6 +8,8 @@ import {AgentRuntime,DeepSeekProvider} from '../packages/agent-runtime/dist/inde
 import {createLocalManagedRuntimeLifecycle,ControlledGit} from '../packages/code-workspaces/dist/index.mjs';
 import {managedRunnerFixture} from './fixtures/managed-runner.mjs';
 import {meta,canonical} from './fixtures/storage-data.mjs';
+import {WorkVerifier} from '../packages/result-verifier/dist/index.mjs';
+import {archiveOp} from './fixtures/source-archive.mjs';
 const hash=s=>createHash('sha256').update(s).digest('hex');
 const allowedTools=['repo_writeFile','repo_commit','repo_by-operation'];
 const capabilities={revision:'managed.local.v1',contextTokens:32768,maxOutputTokens:4096,toolCalls:true,structuredOutput:'json-object',tokenCounting:'utf8-conservative-v1',reasoningMode:'disabled',verification:'DECLARED'};
@@ -21,7 +23,7 @@ async function fixture(t,options={}){
   const args={workspaceRef:'workspace_01',baseCommit:f.base};
   if(requests.length===1)res.end(JSON.stringify(answer('',[{id:'write_1',name:'repo_writeFile',args:{...args,path:'src/board.ts',expectedSha256:hash('export const count = 0;\n'),text:'export const count = 7;\n'}}])));
   else if(requests.length===2){assert.equal(JSON.parse(request.messages.at(-1).content).state,'SUCCEEDED');res.end(JSON.stringify(answer('',[{id:'commit_1',name:'repo_commit',args:{...args,message:'Managed Runtime candidate'}}])));}
-  else {const result=JSON.parse(request.messages.at(-1).content);assert.equal(result.state,'SUCCEEDED');output={schemaVersion:'devmesh.development-result.v1',role:'developer',baseCommit:f.base,resultCommit:options.inventCommit?'f'.repeat(40):result.value.result.commit,changedFiles:['src/board.ts'],checkRefs:[],unverified:['Local HTTP fixture; no production model or container'],handoffProposal:null};res.end(JSON.stringify(answer(JSON.stringify(output))));}
+  else {const result=JSON.parse(request.messages.at(-1).content);assert.equal(result.state,'SUCCEEDED');output={schemaVersion:'devmesh.development-result.v1',role:'developer',baseCommit:f.base,resultCommit:options.inventCommit?'f'.repeat(40):result.value.result.commit,changedFiles:['src/board.ts'],checkRefs:[],unverified:options.unverified??['Local HTTP fixture; no production model or container'],handoffProposal:null};res.end(JSON.stringify(answer(JSON.stringify(output))));}
  }catch(e){t.diagnostic(e.stack);res.statusCode=500;res.end('{}');}});
  t.after(async()=>{server.closeAllConnections();await new Promise(r=>server.close(r));});await new Promise(r=>server.listen(0,'127.0.0.1',r));
  const provider=new DeepSeekProvider({providerId:'test.provider',endpoint:'http://127.0.0.1:'+server.address().port,model:'test.model',credentialRef:'fixture.model',capabilities,requestTimeoutMs:30000},async()=>'local-protocol-fixture');
@@ -80,4 +82,15 @@ test('an interrupted preparation with no model step cannot reenter its lifecycle
  assert.equal((await f.runtime.execute(f.claim)).state,'reconcile');assert.equal(f.requests.length,0);assert.equal(f.sql('SELECT state FROM workspace_allocations')[0].state,'READY');assert.equal(f.sql('SELECT state FROM runtime_activations')[0].state,'RECONCILE');
  assert.equal((await f.runtime.execute(f.claim)).code,'RUNTIME_RESUME_REQUIRES_RECONCILIATION');assert.equal(preparations,1);assert.equal(f.requests.length,0);assert.equal(f.sql('SELECT count(*) n FROM workspace_allocations')[0].n,1);
  assert.equal((await f.runtime.reconcileWorkspaceResult(f.claim)).code,'RUNTIME_WORKSPACE_RESULT_UNPREPARED');assert.equal(preparations,1);
+});
+
+test('formal Developer success requires original Runtime candidate and actual Git archive ACK',async t=>{
+ const f=await fixture(t,{scheduled:true,unverified:[]}),candidate=await f.runtime.execute(f.claim);assert.equal(candidate.state,'completed');
+ const verifier=new WorkVerifier(f.storage,f.content),subject={principalId:'user_1',operationId:archiveOp(),runId:f.p.runId,attemptId:f.p.attemptId},result=await verifier.verify(subject);
+ assert.equal(result.verification.state,'APPLIED');assert.equal(result.verification.evaluation.automaticStatus,'PASS');assert.equal(result.verification.evaluation.codeCommit,f.output().resultCommit);assert.equal(result.completion.result.state,'SUCCEEDED');
+ assert.equal(f.requests.length,3);assert.equal(f.backend.starts.length,0);assert.equal(f.sql('SELECT count(*) n FROM source_archives')[0].n,1);assert.equal(f.sql('SELECT count(*) n FROM repo_operations')[0].n,1);assert.deepEqual(await verifier.verify(subject),result);
+});
+test('a Developer candidate declaring unverified checks remains VERIFYING even with an archived commit',async t=>{
+ const f=await fixture(t,{scheduled:true}),candidate=await f.runtime.execute(f.claim);assert.equal(candidate.state,'completed');
+ const result=await new WorkVerifier(f.storage,f.content).verify({principalId:'user_1',operationId:archiveOp(),runId:f.p.runId,attemptId:f.p.attemptId});assert.equal(result.verification.state,'READY');assert.equal(result.verification.evaluation.automaticStatus,'MISSING');assert.equal(result.completion,null);assert.equal((await f.storage.request('getAttempt',{attemptId:f.p.attemptId})).state,'VERIFYING');assert.equal(f.requests.length,3);assert.equal(f.backend.starts.length,0);
 });

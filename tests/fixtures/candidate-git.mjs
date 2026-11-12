@@ -10,9 +10,10 @@ import {httpFixture,callerId,credential} from './a2a-data.mjs';
 import {WorkflowScheduler} from '../../packages/platform-core/dist/scheduler.mjs';
 import {meta,plan,requirements} from './storage-data.mjs';
 import {archiveGit,archiveOp} from './source-archive.mjs';
+import {seedHistoricalVerification} from './historical-verification.mjs';
 
 // Actual HTTP A2A admission/Host lease, SQLite Worker, isolated Git checkout,
-// repo tool and source transfer. Verification is an explicit fixture decision;
+// repo tool and source transfer. Work completion is a historical DB fixture;
 // the fencer is job-free and this does not claim a model, Runner job or P1-06.
 export async function candidateGitFixture(t,{initial={'src/left.ts':'export const left = 0;\n','src/right.ts':'export const right = 0;\n'},scopes=[['src/left.ts'],['src/right.ts']]}={}){
  const cleanup=[];t.after(async()=>{for(const fn of cleanup.toReversed())await fn();});const f=await httpFixture({after:fn=>cleanup.push(fn)}),root=join(f.root,'template-source');await mkdir(root);
@@ -40,7 +41,7 @@ export async function candidateGitFixture(t,{initial={'src/left.ts':'export cons
   const archive=await new LocalSourceArchives(options).archive({permit,operationId:archiveOp(),allocationOperationId,commitOperationId});assert.equal(archive.state,'ACKNOWLEDGED');
   const task=await f.storage.request('getA2ATask',{callerId,endpointId:key.endpointId,taskId:key.taskId});await f.storage.request('settleAcceptedWork',{...key,state:'completed',snapshot:{...task.snapshot,status:{state:'TASK_STATE_COMPLETED',timestamp:new Date().toISOString()}}});
   const artifact=sql('SELECT artifact_id,content_hash FROM artifacts WHERE artifact_id=?',p.artifactId)[0],ref={artifactId:artifact.artifact_id,sha256:artifact.content_hash},work=draft.works.find(work=>work.workId===attempt.workId);
-  await f.storage.request('recordVerifiedWork',{meta:meta(p.runId),runId:p.runId,attemptId,outcome:'success',evidence:ref,outputs:work.outputSpec.map(output=>({slot:output.slot,ref})),codeCommit:archive.manifest.commit});await lease.stop();
+  seedHistoricalVerification(join(f.local.dataRoot,'db/devmesh.sqlite'),{meta:meta(p.runId),runId:p.runId,attemptId,outcome:'success',evidence:ref,outputs:work.outputSpec.map(output=>({slot:output.slot,ref})),codeCommit:archive.manifest.commit});await lease.stop();
   const result={attemptId,binding,archive,commit:archive.manifest.commit,workId:attempt.workId};sources.push(result);return result;
  }
  const service=(storage=f.storage,extra={})=>new LocalCandidateIntegrations({...options,...extra,storage});

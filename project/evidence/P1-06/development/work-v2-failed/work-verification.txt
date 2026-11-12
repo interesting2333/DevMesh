@@ -1,0 +1,156 @@
+TAP version 13
+# (node:30240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new completion cannot trust legacy IPC success or direct successful state transition
+not ok 1 - new completion cannot trust legacy IPC success or direct successful state transition
+  ---
+  duration_ms: 320.024
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:13:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:14:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# Subtest: original candidate plus passing raw reports produces one content ACK and atomically applied success
+not ok 2 - original candidate plus passing raw reports produces one content ACK and atomically applied success
+  ---
+  duration_ms: 274.1179
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:23:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:24:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: model PASSED cannot overwrite original failed Job and reports; known failure completes with findings
+not ok 3 - model PASSED cannot overwrite original failed Job and reports; known failure completes with findings
+  ---
+  duration_ms: 279.3944
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:33:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: candidate evidence from another report and pending human checks cannot become automatic success
+not ok 4 - candidate evidence from another report and pending human checks cannot become automatic success
+  ---
+  duration_ms: 307.5186
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:39:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: proof basis and completion payload are immutable; code/config changes and unknown original writes stay blocked
+not ok 5 - proof basis and completion payload are immutable; code/config changes and unknown original writes stay blocked
+  ---
+  duration_ms: 271.0426
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:43:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:44:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: missing candidate bytes or retained report bytes blocks completion before any final decision
+not ok 6 - missing candidate bytes or retained report bytes blocks completion before any final decision
+  ---
+  duration_ms: 227.5627
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:52:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:53:52)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: lost content/final receipts recover original keys, artifact and completion without new verification work
+not ok 7 - lost content/final receipts recover original keys, artifact and completion without new verification work
+  ---
+  duration_ms: 217.195
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:55:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:56:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: a failed content ACK transaction leaves neither verification artifact nor half reference
+not ok 8 - a failed content ACK transaction leaves neither verification artifact nor half reference
+  ---
+  duration_ms: 213.9569
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:62:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:63:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: only current owner can create/apply verification; members may inspect retained history after pause
+not ok 9 - only current owner can create/apply verification; members may inspect retained history after pause
+  ---
+  duration_ms: 236.685
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\work-verification.test.mjs:68:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'role_snapshot_id')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    workVerificationFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/work-verification.mjs:11:212)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/work-verification.test.mjs:69:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 0
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2594.6167
