@@ -80,7 +80,15 @@ RunnerDatasetPaths 从已初始化且身份匹配的 Runner layout 解析 `datas
 
 `PreviewLifecycleManager` 使用私有生命周期扫描，覆盖已成功启动的持续健康和待核实原操作，恢复每轮从 0 开始。首次派发前 preflight，取得唯一许可后由后端在实际动作前再次调用 `verifyPreviewExecution`；停止清理始终复核 Release 归属。许可 ACK 丢失、动作 ACK 丢失或观察提交 ACK 丢失均不能获取第二次执行许可。未派发但已过期的启动意图可以明确关闭；已知原实例的未接受预览到期生成独立、幂等的停止操作。原实例尚未知时继续核实，不按名称替代新建，不伪造停止。
 
-Runner 的健康检查只允许后端从原容器事实取得的 `127.0.0.1` 高位端口，固定 GET `/api/health`，不携带平台身份、不跟随重定向；限制响应大小、结构及超时。真实 HTTP 测试仅证明这段请求边界。当前此节控制面和恢复器可用受控容器事实验证；Docker／gVisor 实例适配、与作业统一容量预留、独立 Runner 到期 watchdog 和容器内模板监听配置尚待继续实施，子项 2.3 保持未完成，不把受控事实称为真实镜像运行。
+Runner 的健康检查只允许后端从原容器事实取得的 `127.0.0.1` 高位端口，固定 GET `/api/health`，不携带平台身份、不跟随重定向；限制响应大小、结构及超时。真实 HTTP 测试仅证明这段请求边界。当前此节控制面和恢复器可用受控容器事实验证，统一持久容量准入见下一节；Docker／gVisor 实例适配、独立 Runner 到期 watchdog 和容器内模板监听配置尚待继续实施，子项 2.3 保持未完成，不把受控事实称为真实镜像运行。
+
+### 10. Preview reservations share the Runner admission transaction
+
+Runner 前向迁移 v3 为预览保存独立于短租约作业的持久容量预留，绑定原启动 requestHash、完整请求、controller、project、dataset 和固定资源。私有 Worker 同一事务累计所有未退出作业及未释放预览的 slot／CPU／内存；UNKNOWN、停止中和重启后的预留继续扣除。所有准入使用同一显式容量配置，同一 Worker 不接受彼此矛盾的容量值；重启后的较低预算只关闭新准入，不自动释放原占用。
+
+预留成功不是执行许可或健康证明。Runner 原派发位只允许一次 RESERVED→DISPATCHED；丢回执后的重试不再次授权执行。只有从未派发的预留可以明确取消；已派发预留必须由未来可信容器适配器提供准确原实例 EXITED 才释放。原实例、首次端口及 CAS／观察时间不可被慢响应替代，UNKNOWN 不清空身份或退还资源；同一 Runner 上跨 controller 也不能同时为同一 preview／dataset 建立可写预留。
+
+此步骤仅实现并测试真实 Runner SQLite 迁移、持久预留、统一作业准入和事实核验，不新增公共 HTTP／MCP 准入或回执入口。资源字段来自未来显式可信容器策略，不由普通用户／模型任意指定；实际 cgroup、磁盘配额、容器动作日志与独立 watchdog 仍由 2.3 后续实现和验证。
 
 ## Risks / Trade-offs
 

@@ -1,0 +1,259 @@
+TAP version 13
+# (node:36512) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: built Runner CLI starts with execution disabled and disposes HTTP/Worker without Docker
+ok 1 - built Runner CLI starts with execution disabled and disposes HTTP/Worker without Docker
+  ---
+  duration_ms: 1222.1786
+  type: 'test'
+  ...
+# (node:22488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:22488) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: SIGKILL of real manager/SQLite Worker recovers original job without execution replay or output cleanup
+ok 2 - SIGKILL of real manager/SQLite Worker recovers original job without execution replay or output cleanup
+  ---
+  duration_ms: 1539.9115
+  type: 'test'
+  ...
+# (node:22476) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:22476) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: authenticated Runner reports the original immutable approved argv hash across configuration changes
+ok 3 - authenticated Runner reports the original immutable approved argv hash across configuration changes
+  ---
+  duration_ms: 455.4227
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: reservation schema, exact original request and configured Runner boundary are closed
+ok 4 - reservation schema, exact original request and configured Runner boundary are closed
+  ---
+  duration_ms: 370.399
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: concurrent reserve and lost dispatch ACK recover the same original reservation exactly once
+ok 5 - concurrent reserve and lost dispatch ACK recover the same original reservation exactly once
+  ---
+  duration_ms: 563.7977
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: one transaction shares global slots between jobs and unknown previews across controllers
+ok 6 - one transaction shares global slots between jobs and unknown previews across controllers
+  ---
+  duration_ms: 382.8588
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: preview CPU and memory separately reduce the remaining job budget
+    # Subtest: cpu
+    ok 1 - cpu
+      ---
+      duration_ms: 301.2363
+      type: 'test'
+      ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: memory
+    ok 2 - memory
+      ---
+      duration_ms: 305.844
+      type: 'test'
+      ...
+    1..2
+ok 7 - preview CPU and memory separately reduce the remaining job budget
+  ---
+  duration_ms: 608.1453
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: concurrent job and preview admission cannot overbook the final slot
+ok 8 - concurrent job and preview admission cannot overbook the final slot
+  ---
+  duration_ms: 279.3062
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the Runner rejects inconsistent admission budgets and exclusive dataset reuse
+ok 9 - the Runner rejects inconsistent admission budgets and exclusive dataset reuse
+  ---
+  duration_ms: 281.8464
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: runtime CAS, time, original instance and endpoint pins protect held capacity until exact exit
+ok 10 - runtime CAS, time, original instance and endpoint pins protect held capacity until exact exit
+  ---
+  duration_ms: 270.7977
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only never-dispatched cancellation releases a reservation; expiry does not release a dispatched one
+ok 11 - only never-dispatched cancellation releases a reservation; expiry does not release a dispatched one
+  ---
+  duration_ms: 2477.8121
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Worker reopen retains held resources and pages only original controller live reservations
+ok 12 - Worker reopen retains held resources and pages only original controller live reservations
+  ---
+  duration_ms: 539.4008
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed history insertion rolls back state and capacity release; immutable SQL protects originals
+ok 13 - failed history insertion rolls back state and capacity release; immutable SQL protects originals
+  ---
+  duration_ms: 268.702
+  type: 'test'
+  ...
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:9548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v2 upgrade preserves original migration fingerprint and queued jobs; v3 drift is rejected
+ok 14 - v2 upgrade preserves original migration fingerprint and queued jobs; v3 drift is rejected
+  ---
+  duration_ms: 816.0013
+  type: 'test'
+  ...
+# (node:36772) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36772) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36772) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36772) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Runner v1 upgrades transactionally to v3 without changing original jobs and rejects a changed v2 migration fingerprint
+ok 15 - Runner v1 upgrades transactionally to v3 without changing original jobs and rejects a changed v2 migration fingerprint
+  ---
+  duration_ms: 856.7653
+  type: 'test'
+  ...
+# Retained dedicated upgrade evidence: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-runner-upgrade-19tYzH
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: job protocol rejects caller shell arguments, mixed owners, invalid images and unsafe outputs
+ok 16 - job protocol rejects caller shell arguments, mixed owners, invalid images and unsafe outputs
+  ---
+  duration_ms: 16.059
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: workspace policy binds current owner, allowed digest, command and resource scope
+ok 17 - workspace policy binds current owner, allowed digest, command and resource scope
+  ---
+  duration_ms: 487.9365
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: independent Worker atomically deduplicates operations, scopes queries and rolls back invalid exit
+ok 18 - independent Worker atomically deduplicates operations, scopes queries and rolls back invalid exit
+  ---
+  duration_ms: 362.8055
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: capacity holds unknown jobs, limits one workspace and two jobs per run
+ok 19 - capacity holds unknown jobs, limits one workspace and two jobs per run
+  ---
+  duration_ms: 465.8037
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTP bearer identities, idempotency, cancellation and retained outputs
+ok 20 - real HTTP bearer identities, idempotency, cancellation and retained outputs
+  ---
+  duration_ms: 611.5329
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost start response queries original container and never starts it twice
+ok 21 - lost start response queries original container and never starts it twice
+  ---
+  duration_ms: 414.9396
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lease watchdog stops without controller requests; an unknown stop retains capacity
+ok 22 - lease watchdog stops without controller requests; an unknown stop retains capacity
+  ---
+  duration_ms: 5458.814
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: renewals preserve owner, enforce sequence and current authority, and stop cannot be undone
+ok 23 - renewals preserve owner, enforce sequence and current authority, and stop cannot be undone
+  ---
+  duration_ms: 539.7163
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: configured roots are separate, unknown data is not adopted and terminal facts cannot regress
+ok 24 - configured roots are separate, unknown data is not adopted and terminal facts cannot regress
+  ---
+  duration_ms: 437.3049
+  type: 'test'
+  ...
+# (node:34316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: restart reads original job records without replaying create/start
+ok 25 - restart reads original job records without replaying create/start
+  ---
+  duration_ms: 390.0925
+  type: 'test'
+  ...
+# Subtest: Docker provider stays disabled without quota/runtime and exposes only bounded arguments
+ok 26 - Docker provider stays disabled without quota/runtime and exposes only bounded arguments
+  ---
+  duration_ms: 0.8862
+  type: 'test'
+  ...
+# Subtest: Linux Docker adapter validates original labels and maps verified stop facts with a controlled CLI
+ok 27 - Linux Docker adapter validates original labels and maps verified stop facts with a controlled CLI # SKIP
+  ---
+  duration_ms: 0.0628
+  type: 'test'
+  ...
+1..27
+# tests 29
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 23665.0965
+$ node --test --test-concurrency=1 --test-reporter=tap tests/runner*.test.mjs

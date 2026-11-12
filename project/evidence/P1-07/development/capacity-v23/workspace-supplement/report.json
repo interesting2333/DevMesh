@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceFingerprint": "b019e25407401cb18dc4ea8860d3a772da65a5fcd28d0846156e0e85744cf218",
+  "sourceFiles": 390,
+  "unchanged": true,
+  "checks": [
+    {
+      "name": "current-workspace-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/code-workspaces",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5624,
+      "output": "current-workspace-build.txt",
+      "sha256": "5d4db1f237b474b0a96198fa3345e7b70501315ca37fa25cc1bd4ca9580ea00c"
+    },
+    {
+      "name": "workspace-fencing",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/workspace-fencing.test.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4406,
+      "output": "workspace-fencing.txt",
+      "sha256": "7dc9f73e67d0d645a0c7d4ed28721007a2984dbde6e49815b8b4132e89e25263",
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "scope": "Targeted actual workspace-fence HTTP, durable Runner state and filesystem/Git barrier regression after Runner v3. The ControlledBackend supplies job container facts. No actual Docker or Linux isolation acceptance."
+}

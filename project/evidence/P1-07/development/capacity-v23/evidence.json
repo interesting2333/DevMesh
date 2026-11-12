@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "eea684103d9db1df2251f9091d805ad774a7e34d",
+  "dirty": true,
+  "sourceFingerprint": "b019e25407401cb18dc4ea8860d3a772da65a5fcd28d0846156e0e85744cf218",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T10:07:45.518Z",
+  "finishedAt": "2026-11-12T10:11:58.448Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1526,
+      "output": "frozen-install.txt",
+      "sha256": "0a0c2056ea9b8e3ca67a54f21546757ff0df7fb73db47834e12caa91373680d4"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 19923,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1398,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26156,
+      "output": "current-build.txt",
+      "sha256": "50c00fab3fe417593a589c6035cebabb4b3308426e8536eebf7823d606ff5b29"
+    },
+    {
+      "name": "capacity",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9631,
+      "output": "capacity.txt",
+      "sha256": "ce25c8f2d8587b2677749e195c6c3aefb02595f4038b899d83960500988c9904",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "runner",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 24536,
+      "output": "runner.txt",
+      "sha256": "cd454750249e63f4e5113b0e3fde443c8976558eac1c66bb62a0988cb2e557e5",
+      "tests": {
+        "tests": 29,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "lifecycle",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 50056,
+      "output": "lifecycle.txt",
+      "sha256": "565ae2791e2592ba4382e15173ad9b2c8c812525378ae561068fb403be3ea01c",
+      "tests": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "datasets",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 58448,
+      "output": "datasets.txt",
+      "sha256": "6497c1f835d15f3b17591dc7225b753df5132ec33a17431091d5aeff44151081",
+      "tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 42071,
+      "output": "preview-intents.txt",
+      "sha256": "97f19dcd305c79e32d1d493603d2bcda95ef8c781471a36717374840ecc247c5",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 10987,
+      "output": "scheduler.txt",
+      "sha256": "1a995fec2c5d1cf43e4004b025edbaa6bfe5edf4f6c16475063b1177c63057fd",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "smoke",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4660,
+      "output": "smoke.txt",
+      "sha256": "baf8ca3cb3b2876839e5c544b304c011daf4cd82396fb90a4610357b6277b191",
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1859,
+      "output": "contracts.txt",
+      "sha256": "d3fb3eeba2d5ba542a116b37569bcf1fcff4ac3a3cae6d1c4a5c3c2925ecc13b",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1414,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/capacity.txt",
+      "sha256": "ce25c8f2d8587b2677749e195c6c3aefb02595f4038b899d83960500988c9904"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/contracts.txt",
+      "sha256": "d3fb3eeba2d5ba542a116b37569bcf1fcff4ac3a3cae6d1c4a5c3c2925ecc13b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/current-build.txt",
+      "sha256": "50c00fab3fe417593a589c6035cebabb4b3308426e8536eebf7823d606ff5b29"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/datasets.txt",
+      "sha256": "6497c1f835d15f3b17591dc7225b753df5132ec33a17431091d5aeff44151081"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/frozen-install.txt",
+      "sha256": "0a0c2056ea9b8e3ca67a54f21546757ff0df7fb73db47834e12caa91373680d4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/lifecycle.txt",
+      "sha256": "565ae2791e2592ba4382e15173ad9b2c8c812525378ae561068fb403be3ea01c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/preview-intents.txt",
+      "sha256": "97f19dcd305c79e32d1d493603d2bcda95ef8c781471a36717374840ecc247c5"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/report.json",
+      "sha256": "176034fe0923f496b1f469aad322b4cd3ce2e4600893a555e6717e4c0cdf32b1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/runner.txt",
+      "sha256": "cd454750249e63f4e5113b0e3fde443c8976558eac1c66bb62a0988cb2e557e5"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/scheduler.txt",
+      "sha256": "1a995fec2c5d1cf43e4004b025edbaa6bfe5edf4f6c16475063b1177c63057fd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/smoke.txt",
+      "sha256": "baf8ca3cb3b2876839e5c544b304c011daf4cd82396fb90a4610357b6277b191"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/validation-driver.mjs",
+      "sha256": "5c33a87ee00e5a16700d31fa0f06da2c68b205ce361f04ebf4827bde9ee5095f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/commands.json",
+      "sha256": "fdfafa845697663a1dbe8371da9e3dafac61060dd137e9e877ddf5652bdadd02"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/workspace-supplement/current-workspace-build.txt",
+      "sha256": "5d4db1f237b474b0a96198fa3345e7b70501315ca37fa25cc1bd4ca9580ea00c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/workspace-supplement/workspace-fencing.txt",
+      "sha256": "7dc9f73e67d0d645a0c7d4ed28721007a2984dbde6e49815b8b4132e89e25263"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/workspace-supplement/report.json",
+      "sha256": "b36bf8a1fe23787f83ce20480d08d12f3b41b0f153ad80ab5e482b7d6ceac3a1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v23/workspace-supplement/validation-driver.mjs",
+      "sha256": "7d6634d10565401a21ab716eb81893453965243e20464d1c09945b7f0cba8da0"
+    }
+  ],
+  "scope": "P1-07 task2.3 partial: actual Runner SQLite v1/v2 to v3 migration and private durable preview reservations; original dispatch bit, CAS facts and exact identity, cancellation only before dispatch, UNKNOWN retains resources, one transaction counts jobs plus previews against one explicit slot/CPU/memory budget. Container and image facts in reservation tests are fixtures, not Docker execution, physical exit or cgroup proof. No production preview adapter, independent preview expiry watchdog, gateway or T5 is claimed; full2.3 remains unchecked.",
+  "limitations": [
+    "Partial task2.3 remains unchecked; same Codex implementation/review, not independent/human or stage acceptance.",
+    "Actual Runner SQLite, private Worker transactions, concurrent admission, original dispatch/CAS and actual close/reopen. Original image/health/exit facts are explicit test values; no physical container exit or real image execution.",
+    "Capacity reservations enforce admission only, not cgroups or physical disk quota. Private API is not a public user/model registration or receipt endpoint.",
+    "Production preview execution adapter, durable container create/start/stop journal, independent Runner preview expiry watchdog, trusted platform composition and container listener/network profile remain to implement.",
+    "No real Linux Docker/gVisor, model, enterprise OIDC, production migration, preview gateway, T5, publication or product acceptance."
+  ],
+  "workspaceSupplement": {
+    "report": "project/evidence/P1-07/development/capacity-v23/workspace-supplement/report.json",
+    "checks": [
+      {
+        "name": "current-workspace-build",
+        "executable": "D:\\Environments\\nodejs\\node.exe",
+        "args": [
+          "node_modules/pnpm/bin/pnpm.cjs",
+          "--filter",
+          "@devmesh/code-workspaces",
+          "run",
+          "build"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 5624,
+        "output": "current-workspace-build.txt",
+        "sha256": "5d4db1f237b474b0a96198fa3345e7b70501315ca37fa25cc1bd4ca9580ea00c"
+      },
+      {
+        "name": "workspace-fencing",
+        "executable": "D:\\Environments\\nodejs\\node.exe",
+        "args": [
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter=tap",
+          "tests/workspace-fencing.test.mjs"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "durationMs": 4406,
+        "output": "workspace-fencing.txt",
+        "sha256": "7dc9f73e67d0d645a0c7d4ed28721007a2984dbde6e49815b8b4132e89e25263",
+        "tests": {
+          "tests": 5,
+          "pass": 5,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0
+        }
+      }
+    ],
+    "scope": "Targeted actual workspace-fence HTTP, durable Runner state and filesystem/Git barrier regression after Runner v3. The ControlledBackend supplies job container facts. No actual Docker or Linux isolation acceptance."
+  }
+}

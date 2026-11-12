@@ -1,0 +1,154 @@
+TAP version 13
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: reservation schema, exact original request and configured Runner boundary are closed
+ok 1 - reservation schema, exact original request and configured Runner boundary are closed
+  ---
+  duration_ms: 557.6484
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: concurrent reserve and lost dispatch ACK recover the same original reservation exactly once
+ok 2 - concurrent reserve and lost dispatch ACK recover the same original reservation exactly once
+  ---
+  duration_ms: 702.352
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: one transaction shares global slots between jobs and unknown previews across controllers
+ok 3 - one transaction shares global slots between jobs and unknown previews across controllers
+  ---
+  duration_ms: 339.1851
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: preview CPU and memory separately reduce the remaining job budget
+    # Subtest: cpu
+    ok 1 - cpu
+      ---
+      duration_ms: 302.5736
+      type: 'test'
+      ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: memory
+    ok 2 - memory
+      ---
+      duration_ms: 429.7559
+      type: 'test'
+      ...
+    1..2
+ok 4 - preview CPU and memory separately reduce the remaining job budget
+  ---
+  duration_ms: 733.7023
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: concurrent job and preview admission cannot overbook the final slot
+ok 5 - concurrent job and preview admission cannot overbook the final slot
+  ---
+  duration_ms: 479.0396
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the Runner rejects inconsistent admission budgets and exclusive dataset reuse
+ok 6 - the Runner rejects inconsistent admission budgets and exclusive dataset reuse
+  ---
+  duration_ms: 563.469
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: runtime CAS, time, original instance and endpoint pins protect held capacity until exact exit
+ok 7 - runtime CAS, time, original instance and endpoint pins protect held capacity until exact exit
+  ---
+  duration_ms: 533.4633
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only never-dispatched cancellation releases a reservation; expiry does not release a dispatched one
+not ok 8 - only never-dispatched cancellation releases a reservation; expiry does not release a dispatched one
+  ---
+  duration_ms: 2692.3836
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\runner-preview-capacity.test.mjs:86:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    2 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/runner-preview-capacity.test.mjs:89:161)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Worker reopen retains held resources and pages only original controller live reservations
+ok 9 - Worker reopen retains held resources and pages only original controller live reservations
+  ---
+  duration_ms: 877.6512
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed history insertion rolls back state and capacity release; immutable SQL protects originals
+ok 10 - failed history insertion rolls back state and capacity release; immutable SQL protects originals
+  ---
+  duration_ms: 366.241
+  type: 'test'
+  ...
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v2 upgrade preserves original migration fingerprint and queued jobs; v3 drift is rejected
+ok 11 - v2 upgrade preserves original migration fingerprint and queued jobs; v3 drift is rejected
+  ---
+  duration_ms: 1075.9385
+  type: 'test'
+  ...
+# (node:24392) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:24392) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:24392) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:24392) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Runner v1 upgrades transactionally to v3 without changing original jobs and rejects a changed v2 migration fingerprint
+ok 12 - Runner v1 upgrades transactionally to v3 without changing original jobs and rejects a changed v2 migration fingerprint
+  ---
+  duration_ms: 917.3683
+  type: 'test'
+  ...
+# Retained dedicated upgrade evidence: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\devmesh-runner-upgrade-OqqI7c
+1..12
+# tests 14
+# suites 0
+# pass 13
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11678.1847

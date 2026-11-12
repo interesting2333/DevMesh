@@ -52,6 +52,14 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 - **WHEN** 原实例已核实且预览到期，或到期时原实例仍未知
 - **THEN** 只对已核实的原未接受实例建立一个持久停止操作并核实退出；未知实例继续查询，已接受版本／数据不被停止，不把意图或超时当作已退出
 
+#### Scenario: Jobs and previews compete for one Runner capacity
+- **WHEN** 作业或预览申请资源，且 Runner 上已有运行中、停止中、失联或重启恢复的原占用
+- **THEN** 在同一事务核实全局 slot／CPU／内存，任何主体不能绕过原占用；UNKNOWN 不释放资源，已派发预览仅在准确原实例退出核实后释放
+
+#### Scenario: A reservation acknowledgement or dispatch acknowledgement is lost
+- **WHEN** Runner 预留或唯一派发位已提交但 ACK 丢失，随后重试或重启
+- **THEN** 原操作返回同一不可替换预留，派发位不再次给出执行许可；未派发取消可以释放，已派发未知预留继续保留并只查询原对象
+
 #### Scenario: Dataset directory survives workspace cleanup
 - **WHEN** 工作空间被清理，或请求尝试用路径、链接、硬链接替代 dataset 数据库／日志／侧文件
 - **THEN** dataset 保留在受控 ID 决定的独立 Runner 目录，拒绝越界或链接文件，不暴露控制数据库和备份

@@ -16,6 +16,8 @@ export {RunnerDatasetPaths} from './dataset-paths.js';
 export type {RunnerDatasetPathOptions} from './dataset-paths.js';
 export {LocalSqliteDatasetBackend} from './dataset-backend.js';
 export {probePreviewHealth} from './preview-health.js';
+export {runnerCapacity,previewResourceLimits,previewReservationSchema} from './preview-reservation.js';
+export type {RunnerCapacity,PreviewResourceLimits,PreviewReservation,RunnerCapacityUsage} from './preview-reservation.js';
 export type {LocalSqliteDatasetOptions} from './dataset-backend.js';
 export {webCrudDatasetProfile} from './dataset-profile.js';
 export { serveRunner } from './server.js';

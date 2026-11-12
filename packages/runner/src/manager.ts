@@ -21,7 +21,7 @@ export class RunnerManager {
  }
  private time(permit:StartJob['permit']){const now=Date.now(),from=Date.parse(permit.notBefore),until=Date.parse(permit.expiresAt);if(from>now||until<=now||until-from>15000)throw new RunnerError('RUNNER_LEASE_INVALID',403);return Math.min(15000,until-now);}
  private async verify(controllerId:string,request:StartJob,permit=request.permit){this.time(permit);try{await this.authority.verify(controllerId,request,permit);}catch{throw new RunnerError('RUNNER_AUTHORITY_DENIED',403);}this.time(permit);}
- async start(){if(this.#timer||this.#closed)throw new RunnerError('RUNNER_ALREADY_STARTED',409);if(this.backend.configured)await this.backend.probe();for(const row of await this.store.request('active',{})){
+ async start(){if(this.#timer||this.#closed)throw new RunnerError('RUNNER_ALREADY_STARTED',409);await this.store.request('capacityConfigure',{maximumJobs:this.options.maximumJobs??4,cpu:this.policy.config.maximumCpu,memoryMiB:this.policy.config.maximumMemoryMiB});if(this.backend.configured)await this.backend.probe();for(const row of await this.store.request('active',{})){
    try{await this.verify(row.job.controllerId,row.job.request,row.leasePermit);this.watch(row);}catch{await this.store.request('stop',{controllerId:row.job.controllerId,jobId:row.job.jobId});this.background(this.stopOriginal(row.job));}
   }this.#timer=setInterval(()=>{if(!this.#tick)this.#tick=this.tick().catch(e=>this.report(e)).finally(()=>{this.#tick=undefined;});},this.options.pollIntervalMs??100);this.#timer.unref();}
  private report(error:unknown){this.options.onError?.(error instanceof RunnerError?error.code:'RUNNER_INTERNAL_ERROR');}

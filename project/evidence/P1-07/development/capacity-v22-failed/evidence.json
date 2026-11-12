@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "eea684103d9db1df2251f9091d805ad774a7e34d",
+  "dirty": true,
+  "sourceFingerprint": "b42b4c523d4b20a7c89324c6a807b423264537adff7c00e59f73b32f6530ccc6",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T10:05:39.395Z",
+  "finishedAt": "2026-11-12T10:06:28.601Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1029,
+      "output": "frozen-install.txt",
+      "sha256": "c16a609aa57c65f9a8d7badd3345c7027c06ce714b18a12c3e79b68365996f67"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12016,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1288,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 22828,
+      "output": "current-build.txt",
+      "sha256": "58f4b655fbc3c7ed2a60b47727980d368eb34bd1c0c8c8bd94036334b5c0883a"
+    },
+    {
+      "name": "capacity",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 11815,
+      "output": "capacity.txt",
+      "sha256": "69dcefa08996300e8ef68812e54fa22adb4a35b8388a10bb925f4cb5aa3eaf7e",
+      "tests": {
+        "tests": 14,
+        "pass": 13,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/capacity.txt",
+      "sha256": "69dcefa08996300e8ef68812e54fa22adb4a35b8388a10bb925f4cb5aa3eaf7e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/current-build.txt",
+      "sha256": "58f4b655fbc3c7ed2a60b47727980d368eb34bd1c0c8c8bd94036334b5c0883a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/packages/runner/src/capacity-domain.ts",
+      "sha256": "f8daf678542305c122bb927105c580a1220c3b091aef2d93133f28cf98d30163"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/packages/runner/src/fence-domain.ts",
+      "sha256": "adf30d0d097aeafd3fad3c90fcf200d94ff2fbf9ccfaa1da157442366cdc6cf8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/packages/runner/src/index.ts",
+      "sha256": "194a7bc0ab9972eab2c110b659dd70d97e9a0a8b25abc17cfff66b942f5d9fb7"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/packages/runner/src/manager.ts",
+      "sha256": "b3dd3b85c8035349bec8784e6ff13ce57275577f2f08d77813964ccb3141d72a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/packages/runner/src/preview-reservation.ts",
+      "sha256": "5aaed7d9cbd76d652110f4d6a1092b45005aeae0bcae3e6d3e5387e9b3e93323"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/packages/runner/src/store-protocol.ts",
+      "sha256": "2ea553657a51eeaf45e3696c9cea3e814e710793092717a6d0f8ecc2fae986b9"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/packages/runner/src/worker.ts",
+      "sha256": "b4a1822f1ec3f6494dde2d16a72e7096ec4cdb961fdbbfebc96e986fed422ba6"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/tests/runner-preview-capacity.test.mjs",
+      "sha256": "c5a12be82d7473c583a274ee9a2810b61f6ee68e29e2b15a4e9cc020d24a2624"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/failed-source/tests/runner-upgrade.test.mjs",
+      "sha256": "f3c1c8df69a9d0d1f2c77c8f059faf9bd6f0dd3568765fbcb59b38fef29d6654"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/frozen-install.txt",
+      "sha256": "c16a609aa57c65f9a8d7badd3345c7027c06ce714b18a12c3e79b68365996f67"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/report.json",
+      "sha256": "8fbd92d52e9fac077f10052e3f7835076dcc42abf8edc3c38589660ef03d562d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/validation-driver.mjs",
+      "sha256": "5c33a87ee00e5a16700d31fa0f06da2c68b205ce361f04ebf4827bde9ee5095f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/capacity-v22-failed/commands.json",
+      "sha256": "fdfafa845697663a1dbe8371da9e3dafac61060dd137e9e877ddf5652bdadd02"
+    }
+  ],
+  "scope": "P1-07 task2.3 partial: actual Runner SQLite v1/v2 to v3 migration and private durable preview reservations; original dispatch bit, CAS facts and exact identity, cancellation only before dispatch, UNKNOWN retains resources, one transaction counts jobs plus previews against one explicit slot/CPU/memory budget. Container and image facts in reservation tests are fixtures, not Docker execution, physical exit or cgroup proof. No production preview adapter, independent preview expiry watchdog, gateway or T5 is claimed; full2.3 remains unchecked.",
+  "limitations": [
+    "Partial task2.3 remains unchecked; same Codex implementation/review, not independent/human or stage acceptance.",
+    "Actual Runner SQLite, private Worker transactions, concurrent admission, original dispatch/CAS and actual close/reopen. Original image/health/exit facts are explicit test values; no physical container exit or real image execution.",
+    "Capacity reservations enforce admission only, not cgroups or physical disk quota. Private API is not a public user/model registration or receipt endpoint.",
+    "Production preview execution adapter, durable container create/start/stop journal, independent Runner preview expiry watchdog, trusted platform composition and container listener/network profile remain to implement.",
+    "No real Linux Docker/gVisor, model, enterprise OIDC, production migration, preview gateway, T5, publication or product acceptance."
+  ],
+  "failure": "13/14 capacity and migration checks passed; one expiry test expected one held preview while it had deliberately created two (dispatched plus unsent). The actual expiry behavior retained both as required. Correct the assertion before explicitly cancelling the never-dispatched reservation; preserve this original failing source and log."
+}
