@@ -65,6 +65,17 @@ describe('dataset and durable CRUD', () => {
     expect(() => writable.mutate({ kind: 'create', key: randomUUID(), input: { ...input, title: '' } })).toThrow();
     expect(writable.list().tasks).toEqual([]);
   });
+  it('preserves prepared DELETE-mode database bytes across read-only open, list and close', () => {
+    const path = root(); TaskDatabase.initialize(path);
+    const sqlitePath = join(path, 'app.sqlite'), connection = new DatabaseSync(sqlitePath);
+    try { connection.exec('PRAGMA journal_mode=DELETE;'); } finally { connection.close(); }
+    const original = readFileSync(sqlitePath), reader = new TaskDatabase(path, true); stores.push(reader);
+    expect(reader.list()).toEqual({ tasks: [], readOnly: true });
+    expect(() => reader.mutate({ kind: 'create', key: randomUUID(), input })).toThrow('READ_ONLY');
+    expect(readFileSync(sqlitePath)).toEqual(original); reader.close();
+    expect(readFileSync(sqlitePath)).toEqual(original);
+    expect(existsSync(sqlitePath + '-wal')).toBe(false);
+  });
   it('rejects linked, reserved, relative and unknown data paths', () => {
     expect(() => canonicalDataset('relative')).toThrow('DATA_ROOT_REQUIRED');
     expect(() => canonicalDataset(resolve('/'))).toThrow('DATA_ROOT_REQUIRED');

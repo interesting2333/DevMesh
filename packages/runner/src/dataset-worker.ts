@@ -11,6 +11,7 @@ import {RunnerDatasetPaths} from './dataset-paths.js';
 import {localSqliteDatasetOptions,validateDatasetEffect} from './dataset-backend.js';
 import {webCrudDatasetMarker,validateDatasetProfile,initializeDatasetProfile} from './dataset-profile.js';
 import {RunnerError} from './protocol.js';
+import {readDatasetJournal,validateStoredDataset} from './dataset-journal.js';
 const port=parentPort;if(!port)throw Error('Dataset filesystem and SQLite actions require their dedicated Worker');
 const journalSchema=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-operation.v1'),request:datasetPreparationRequest,requestHash:sha256,appDatasetId:z.uuid(),createdAt:timestamp});
 const receiptSchema=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-receipt.v1'),operationId:ids.operation,requestHash:sha256,receipt:previewEffectReceipt});
@@ -39,9 +40,9 @@ async function main(){
  }
  function source(){
   if(!request.sourceDatasetId)return null;
-  const p=paths.resolve({projectId:request.projectId,datasetId:request.sourceDatasetId}),j=journalSchema.parse(readJson(p.journalPath));
-  if(j.request.projectId!==request.projectId||j.request.datasetId!==request.sourceDatasetId||j.request.storageKey!==request.sourceStorageKey||j.request.schemaRevision!==request.schemaRevision||j.request.templateVersion!==request.templateVersion||j.request.runnerId!==options.runnerId||j.request.backendRef!==options.backendRef||j.requestHash!==createHash('sha256').update(canonical(j.request)).digest('hex'))throw new RunnerError('DATASET_SOURCE_CHANGED',409);
-  verifiedReceipt(p,j);return {p,j};
+   const p=paths.resolve({projectId:request.projectId,datasetId:request.sourceDatasetId}),j=readDatasetJournal(p);
+   if(j.projectId!==request.projectId||j.datasetId!==request.sourceDatasetId||j.storageKey!==request.sourceStorageKey||j.schemaRevision!==request.schemaRevision||j.templateVersion!==request.templateVersion||j.runnerId!==options.runnerId||(j.purpose==='PREVIEW'?j.backendRef!==options.backendRef:j.releaseId!==request.sourceReleaseId))throw new RunnerError('DATASET_SOURCE_CHANGED',409);
+   validateStoredDataset(p,j,options.maximumBytes);return {p,j};
  }
  if(action==='inspect')return inspect();
  const existing=paths.resolve(request);

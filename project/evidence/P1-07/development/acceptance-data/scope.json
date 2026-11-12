@@ -1,0 +1,14 @@
+{
+  "recordedAt": "2026-11-12T21:33:08.741Z",
+  "scope": "Working-tree actual local acceptance data files and native readonly template verification. Acceptance basis, OCI identity and authority/fence facts are explicitly controlled fixtures.",
+  "limitations": [
+    "No real durable physical fence, writer drain, Linux container, gVisor, quota/network provider, enterprise identity or target-filesystem power-loss drill.",
+    "The adapter reconstruction test reuses the controlled in-memory authority; it does not demonstrate physical-authority restart durability.",
+    "MATERIALIZED is data evidence only, not a full READY proof, actual service health, Release, T5, publication or export.",
+    "Only trusted declarative COPY_SAME_SCHEMA for the pinned template is implemented; arbitrary SQL/scripts and schema upgrades remain unavailable.",
+    "Build 1 and interrupted files-1 inputs omit templates; files-2 and template-1 include the final template source. No retroactive initial template fingerprint is asserted.",
+    "Files-1 was deliberately interrupted after diagnosed readonly header failures; its exit code and partial output are retained and it is not counted as a completed suite.",
+    "A temporary test filename collision is corrected by restoring the exact HEAD blob and using a distinct file; files-2 runs both cases.",
+    "No root pnpm check pipeline, real browser suite, clean checkout, independent review or product gate acceptance is claimed."
+  ]
+}

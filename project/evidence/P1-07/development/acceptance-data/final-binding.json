@@ -1,0 +1,54 @@
+{
+  "recordedAt": "2026-11-12T21:31:57.219Z",
+  "scope": "Final working-tree inputs and emitted JS binding, not clean checkout or physical isolation evidence.",
+  "groups": [
+    {
+      "name": "files-2",
+      "checks": [
+        {
+          "name": "tests",
+          "exitCode": 0
+        }
+      ],
+      "changedInputs": [],
+      "changedEmitted": []
+    },
+    {
+      "name": "template-1",
+      "checks": [
+        {
+          "name": "template-typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "template-test",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "changedInputs": [],
+      "changedEmitted": []
+    }
+  ],
+  "originalBuild": {
+    "changedExistingInputs": [
+      "tests/acceptance-datasets.test.mjs"
+    ],
+    "changedRuntimeOrEmittedInputs": [],
+    "limitations": [
+      "Original build and interrupted files-1 fingerprints did not include templates.",
+      "Build 1 saw temporary replacement test content; the original test is restored and included in files-2.",
+      "New independent file tests and the template readonly source/test were added or changed after Build 1. Template-1 checks the final template; files-2 binds the full final source set."
+    ]
+  },
+  "originalTest": {
+    "path": "tests/acceptance-datasets.test.mjs",
+    "sha256": "57d595c9c4bccb13e93936ac26fa9c3c906cdfd0f1e5faa39d30c2feb6bdb49f",
+    "matchesHEAD": true
+  },
+  "mapMatches": 137,
+  "mapEntries": 137
+}

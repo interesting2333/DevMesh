@@ -1,0 +1,255 @@
+TAP version 13
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual acceptance EMPTY/DEMO files retain exact purpose, raw hashes and distinct template identities under controlled custody
+not ok 1 - actual acceptance EMPTY/DEMO files retain exact purpose, raw hashes and distinct template identities under controlled custody
+  ---
+  duration_ms: 61222.0572
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-datasets.test.mjs:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   errorCode: 'ACCEPTANCE_DATA_BYTES_CHANGED',
+    +   state: 'UNKNOWN'
+    -   receipt: {
+    -     data: {
+    -       byteSize: 24576,
+    -       datasetId: 'dataset_66f83dd0c786443686e8734a4e87dc83',
+    -       integrity: 'ok',
+    -       journalHash: '8fb4c7979bafae5a6018601f906971de03d5d292d2c324ac8a6fbdbe257fa1eb',
+    -       migrationRef: null,
+    -       originDatasetId: null,
+    -       schemaRevision: 'web-crud-v1.schema.1',
+    -       sha256: 'f7330295a04092f16309b8b140968442889e7877d23cb7ad084ea51b720376cd',
+    -       snapshotAt: '2026-11-12T21:04:04.143Z',
+    -       sourceReleaseId: null,
+    -       storageKey: 'prj_dataset/dataset_66f83dd0c786443686e8734a4e87dc83/app.sqlite'
+    -     },
+    -     fencesHash: '25008d5af097a1be58db892044bb5ceb4cb3dac9fb6954ae943f0248550a30d2',
+    -     operationId: 'op_768f24fe0aaf4169970af7abb1c973a1',
+    -     purpose: 'ACCEPTANCE',
+    -     requestHash: 'e62631a17cbd59b9e9de9a5bf670066836a84e4d62d7ae7a0f8648d53feae50f',
+    -     schemaVersion: 'devmesh.local-dataset-receipt.v2'
+    -   },
+    -   state: 'MATERIALIZED'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    state: 'MATERIALIZED'
+    receipt:
+      schemaVersion: 'devmesh.local-dataset-receipt.v2'
+      purpose: 'ACCEPTANCE'
+      operationId: 'op_768f24fe0aaf4169970af7abb1c973a1'
+      requestHash: 'e62631a17cbd59b9e9de9a5bf670066836a84e4d62d7ae7a0f8648d53feae50f'
+      fencesHash: '25008d5af097a1be58db892044bb5ceb4cb3dac9fb6954ae943f0248550a30d2'
+      data:
+        datasetId: 'dataset_66f83dd0c786443686e8734a4e87dc83'
+        storageKey: 'prj_dataset/dataset_66f83dd0c786443686e8734a4e87dc83/app.sqlite'
+        schemaRevision: 'web-crud-v1.schema.1'
+        originDatasetId: ~
+        sourceReleaseId: ~
+        snapshotAt: '2026-11-12T21:04:04.143Z'
+        sha256: 'f7330295a04092f16309b8b140968442889e7877d23cb7ad084ea51b720376cd'
+        byteSize: 24576
+        integrity: 'ok'
+        journalHash: '8fb4c7979bafae5a6018601f906971de03d5d292d2c324ac8a6fbdbe257fa1eb'
+        migrationRef: ~
+  actual:
+    state: 'UNKNOWN'
+    errorCode: 'ACCEPTANCE_DATA_BYTES_CHANGED'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-datasets.test.mjs:18:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: missing physical authority, missing dispatch grant and changed immutable inputs do not create original files
+ok 2 - missing physical authority, missing dispatch grant and changed immutable inputs do not create original files
+  ---
+  duration_ms: 14664.2463
+  type: 'test'
+  ...
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: duplicate concurrent dispatch and a restarted adapter query the same receipt without reacquiring custody or overwriting bytes
+ok 3 - duplicate concurrent dispatch and a restarted adapter query the same receipt without reacquiring custody or overwriting bytes
+  ---
+  duration_ms: 40055.2152
+  type: 'test'
+  ...
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: preserve copies real committed WAL state under controlled authority, excludes uncommitted state and keeps source UUID distinct
+not ok 4 - preserve copies real committed WAL state under controlled authority, excludes uncommitted state and keeps source UUID distinct
+  ---
+  duration_ms: 60155.221
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-datasets.test.mjs:29:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   errorCode: 'ACCEPTANCE_DATA_BYTES_CHANGED',
+    +   state: 'UNKNOWN'
+    -   receipt: {
+    -     data: {
+    -       byteSize: 24576,
+    -       datasetId: 'dataset_9e09795c52e047b9ad286fdbb53499be',
+    -       integrity: 'ok',
+    -       journalHash: 'b2210c23873c302de48446e990a6fafd03c3767557ff801b4a183c987e440c68',
+    -       migrationRef: {
+    -         artifactId: 'artifact_controlled_copy_plan',
+    -         sha256: 'f4cc6b61ccf9a6e65954bc106da6e810cde62491879b542b5e824d9dad74ff2c'
+    -       },
+    -       originDatasetId: 'dataset_6db56f825f2d4e16b6c89a70747e8228',
+    -       schemaRevision: 'web-crud-v1.schema.1',
+    -       sha256: '81a58ecc96e227e596f68c44a0da849d4fe93feb53cd71888bcd71705cc45068',
+    -       snapshotAt: '2026-11-12T21:06:09.841Z',
+    -       sourceReleaseId: 'release_79e4824f9dd94215ab8658cf891985cb',
+    -       storageKey: 'prj_dataset/dataset_9e09795c52e047b9ad286fdbb53499be/app.sqlite'
+    -     },
+    -     fencesHash: 'f99e8cb923edd831f172615cabe3539e23fbd499fe5cc3563cd67307d7791258',
+    -     operationId: 'op_8dd3e08d758648ada33a55b4fdb25598',
+    -     purpose: 'ACCEPTANCE',
+    -     requestHash: '5f72d5b9adf196360c9b8c912c656f5d6e77e99d3682ff4304e45bfcbb60ab92',
+    -     schemaVersion: 'devmesh.local-dataset-receipt.v2'
+    -   },
+    -   state: 'MATERIALIZED'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    state: 'MATERIALIZED'
+    receipt:
+      schemaVersion: 'devmesh.local-dataset-receipt.v2'
+      purpose: 'ACCEPTANCE'
+      operationId: 'op_8dd3e08d758648ada33a55b4fdb25598'
+      requestHash: '5f72d5b9adf196360c9b8c912c656f5d6e77e99d3682ff4304e45bfcbb60ab92'
+      fencesHash: 'f99e8cb923edd831f172615cabe3539e23fbd499fe5cc3563cd67307d7791258'
+      data:
+        datasetId: 'dataset_9e09795c52e047b9ad286fdbb53499be'
+        storageKey: 'prj_dataset/dataset_9e09795c52e047b9ad286fdbb53499be/app.sqlite'
+        schemaRevision: 'web-crud-v1.schema.1'
+        originDatasetId: 'dataset_6db56f825f2d4e16b6c89a70747e8228'
+        sourceReleaseId: 'release_79e4824f9dd94215ab8658cf891985cb'
+        snapshotAt: '2026-11-12T21:06:09.841Z'
+        sha256: '81a58ecc96e227e596f68c44a0da849d4fe93feb53cd71888bcd71705cc45068'
+        byteSize: 24576
+        integrity: 'ok'
+        journalHash: 'b2210c23873c302de48446e990a6fafd03c3767557ff801b4a183c987e440c68'
+        migrationRef:
+          artifactId: 'artifact_controlled_copy_plan'
+          sha256: 'f4cc6b61ccf9a6e65954bc106da6e810cde62491879b542b5e824d9dad74ff2c'
+  actual:
+    state: 'UNKNOWN'
+    errorCode: 'ACCEPTANCE_DATA_BYTES_CHANGED'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-datasets.test.mjs:32:198)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: REPLACE initializes a distinct dataset, retains base Release and controlled source custody, and preserves original business bytes
+ok 5 - REPLACE initializes a distinct dataset, retains base Release and controlled source custody, and preserves original business bytes
+  ---
+  duration_ms: 53218.2185
+  type: 'test'
+  ...
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: preview can snapshot an ACCEPTANCE v2 source after legitimate business writes without reusing its initial data hash
+ok 6 - preview can snapshot an ACCEPTANCE v2 source after legitimate business writes without reusing its initial data hash
+  ---
+  duration_ms: 57567.3389
+  type: 'test'
+  ...
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: migration bytes require exact original hash, explicit operator trust and bounded declarative same-schema content
+ok 7 - migration bytes require exact original hash, explicit operator trust and bounded declarative same-schema content
+  ---
+  duration_ms: 57097.9118
+  type: 'test'
+  ...
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:2864) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)

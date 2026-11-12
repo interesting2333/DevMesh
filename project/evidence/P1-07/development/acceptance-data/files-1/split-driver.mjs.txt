@@ -1,0 +1,5 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+const original='tests/acceptance-datasets.test.mjs',added='tests/acceptance-dataset-files.test.mjs',bytes=readFileSync(original),prior=execFileSync('git',['show','HEAD:'+original],{windowsHide:true});
+writeFileSync('.cache/p1-07/acceptance-data-replaced-test-before-split.mjs.txt',bytes,{flag:'wx'});
+writeFileSync(added,bytes,{flag:'wx'});writeFileSync(original,prior);console.log(JSON.stringify({preserved:original,added}));

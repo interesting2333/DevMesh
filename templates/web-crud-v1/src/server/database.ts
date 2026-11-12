@@ -32,8 +32,10 @@ export class TaskDatabase {
     this.release = lockDataset(dataset.root);
     let opened: DatabaseSync | undefined;
     try {
-      this.database = opened = new DatabaseSync(join(dataset.root, 'app.sqlite'));
-      this.database.exec('PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=1000;');
+      this.database = opened = new DatabaseSync(join(dataset.root, 'app.sqlite'), { readOnly });
+      this.database.exec(readOnly
+        ? 'PRAGMA query_only=ON; PRAGMA busy_timeout=1000;'
+        : 'PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=1000;');
       const version = this.database.prepare('PRAGMA user_version').get() as { user_version: number };
       const identity = this.database.prepare('SELECT dataset_id FROM dataset_identity WHERE singleton=1').get() as { dataset_id: string } | undefined;
       const integrity = this.database.prepare('PRAGMA quick_check').get() as { quick_check: string };

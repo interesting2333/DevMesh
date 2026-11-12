@@ -1378,6 +1378,12 @@ ReleaseCandidate 固定：codeCommit、requirementRevision、planRevision、temp
 
 接受与预览使用同一 dataset 台账，但策略用途和真实准备操作分别保留。接受意图登记独立 PREPARING 元数据及初始 CLOSED 逻辑门，不伪造预览 effect、不创建业务文件；准备证明落库才推进 WRITE_FROZEN。保留迁移记录物理 origin；REPLACE 仅保留原 baseReleaseId，不能声称复制了旧数据。接受准备数据无限期保留标记独立于预览 TTL。准确接受后端关闭源逻辑门须固定原操作／hash／fence；丢 ACK 恢复原闭门，不能超时重开。物理排空、Runner 服务、发布开放新门与 T5 仍是后续独立事实。
 
+实际接受数据准备使用独立 ACCEPTANCE v2 journal，固定原接受请求、releaseId、目标 dataset 和应用 UUID；原 journal 排他创建后才可取得物理 custody。可信适配器须真实排除源／目标的全部写入及已准入处理，逻辑 CLOSED、零计数或本地进程锁都不够。适配器没有默认实现，缺配置不派发；新建前、取得 custody 前和快照后发布前均复核当前授权，持有证明记录后不可换代。工作线程超时或任何步骤中断保留原文件，恢复只核实原 journal／custody／receipt，不重新取得 fence、不重建数据、不补发迁移。
+
+首版固定 web-crud-v1 同 schema 复制：PRESERVE_MIGRATE 的原 migrationRef 必须读取到准确材料字节、匹配 SHA-256 且在操作者可信摘要清单中，内容须是受限 COPY_SAME_SCHEMA 声明；任意 SQL／脚本和跨 schema 升级继续关闭。SQLite 一致备份包含快照时已提交 WAL，不复制未提交状态；新副本替换应用 UUID并执行固定 profile／完整性／容量检查。INITIAL／经原决定确认的 REPLACE 按 EMPTY／DEMO 新建，REPLACE 仍需原源 custody，但 origin 为 null。落盘回执绑定实际文件 hash／大小、原 journal／custody 文件摘要与迁移引用；目标未开放前恢复须核实相同文件字节。数据 MATERIALIZED 只是一项准备证据，不能直接视为完整 READY、服务健康、Release 或 T5。
+
+模板只读连接须启用 SQLite 原生 readOnly／query_only，并保留既有 journal_mode；不能只拒绝 mutate 却在启动时切换 WAL、修改验收目标文件头。只读打开／查询／关闭保持原数据文件摘要，进程锁仍仅为准入约束，不作为其他写入已隔离的证明。
+
 该规则覆盖“用户正在向旧版本增加任务，同时点接受新版本”的竞态。准备后代码、计划或数据策略变更则原接受操作失效并重新审查；正常新增业务记录由最终冻结快照纳入，不要求每条记录变化都重新确认产品计划。
 
 准备意图先固定准确候选／reviewHash、原接受指针、镜像和数据方案，由服务端预留唯一 releaseId／新目标 datasetId。REPLACE 使用独立的准确主体确认；策略登记或 PREPARED 的持久 ACK 不证明文件、迁移、fencing 或健康已准备好。每项目仅保留一个未核实准备，只有一次派发许可；SENT／UNKNOWN 仅查原对象，不靠 TTL 重建。仅准确从未派发的意图可由当前负责人明确关闭，状态／历史／operation／事件同事务。
@@ -1461,7 +1467,7 @@ flowchart LR
   registry/runner.sqlite           本地 job、操作去重与停止证据
   workspaces/<attemptId>/           工作流尝试的隔离 checkout
   invocations/<invocationAttemptId>/ 单 Agent 尝试工作区
-  datasets/<datasetId>/             应用业务数据，独立保留
+  datasets/<projectId>/<datasetId>/ 应用业务数据及原准备日志，独立保留
   job-outputs/<jobId>/              待归档日志块与成果
 <storage.backupRoot>/<backupId>/    一致性备份集合和 manifest
 ```
@@ -1581,6 +1587,10 @@ DDL 中涉及同项目／同 run 的关系使用复合外键；只验证“ID �
 | audit_entries `auditId` | actor、projectId、action、operationId、decisionId、time、redactedDetails | 追加；授权拒绝与有效业务操作分开统计 |
 
 模型步骤采用数据库索引 + 内容文件；不同时维护一份可独立修改的 JSONL 状态权威。可输出 JSONL 作为调试／导出格式，但恢复只依赖提交过的索引与对应内容文件。
+
+实际接受 dataset 在 Runner 的受控根目录按 `datasets/<projectId>/<datasetId>/` 派生路径，节点身份和 control／runner／backup 根目录分离校验后使用；请求不能指定宿主路径。`operation.json` 的 ACCEPTANCE v2 原请求、`fences.json` 的原物理持有记录、`receipt.json` 的 v2 数据回执及 `dataset.json` 的应用 UUID 均排他写入，不覆盖不明文件；`preparing.sqlite` 仅属原操作，完成固定检查和最终授权／custody 复核后排他发布为 `app.sqlite`。中断半成品保留，不能按目录年龄删除或把重试解释成新初始化。
+
+预览 v1 与接受 v2 的持久日志用途分别校验，接受源还须匹配原 releaseId／datasetOperationId。后续正常业务写会改变已接受源文件，因此作为复制源时核实原 journal／receipt 身份、marker 和当前 schema／完整性／配额，不强制等于初始准备时的文件 hash；新接受目标在尚未开放写入的恢复阶段则必须匹配原 hash／大小并拒绝非空 WAL／rollback journal。来源校验不代表源已物理冻结，最终 custody 仍由可信适配器核实。
 
 #### 14.3.1 注册版本、代际与绑定
 
@@ -1793,7 +1803,13 @@ BEGIN IMMEDIATE → 校验当前 run、控制门、必要确认、依赖、预�
     stderr/000001.log
     reports/                       待上传的测试、覆盖、构建等原始结果
     save-manifest.json             本作业需归档的文件、哈希和实际保存结果
-  datasets/<datasetId>/            生成应用业务数据及其 DB/WAL，独立保留
+  datasets/<projectId>/<datasetId>/ 生成应用业务数据，独立保留
+    app.sqlite                     业务数据库及其 SQLite 管理的 WAL/SHM
+    dataset.json                   固定模板与独立应用 UUID
+    operation.json                 原准备请求；PREVIEW v1 或 ACCEPTANCE v2
+    fences.json                    ACCEPTANCE 原物理持有记录
+    receipt.json                   对应用途的不可变原准备回执
+    preparing.sqlite               原操作的未完成文件，恢复不重新执行
   cache/                           已批准软件源的可重建依赖缓存
   logs/runner/                     Runner 管理服务诊断日志
   locks/

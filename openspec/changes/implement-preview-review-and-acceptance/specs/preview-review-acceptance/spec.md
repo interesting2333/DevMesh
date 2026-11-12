@@ -208,6 +208,32 @@ The system SHALL 在外部准备前固定候选、审查、原接受指针和数
 - **WHEN** 观察核实期间原准备 revision 发生变化，或旧 READY 后原准备在同一毫秒变为 UNKNOWN
 - **THEN** 拒绝基于旧 preparationRevision 的观察提交，按持久版本关闭旧 READY；恢复须重新查询原对象，不用墙钟推断提交先后
 
+### Requirement: Actual acceptance data retains original purpose and physical custody
+
+The baseline template's read-only connection SHALL use SQLite read-only access without changing journal mode. Opening, listing and closing a read-only prepared DELETE-mode target SHALL preserve its original database bytes. This connection policy SHALL NOT be treated as proof that other writers are physically excluded.
+
+The system SHALL 使用原接受请求准备实际数据文件并持久绑定 ACCEPTANCE 用途、原 operation／requestHash、数据身份和 journal。新动作 MUST 先通过当前授权及显式可信物理隔离适配器，恢复 MUST 只核实原 fence 与原文件，数据阶段证据 SHALL NOT 被当作完整准备或接受完成。
+
+#### Scenario: Actual acceptance initialization or replacement completes
+- **WHEN** 已明确授权的原 INITIAL 或 REPLACE 方案在准确源／目标 fence 下准备 EMPTY／DEMO
+- **THEN** 保存实际 SQLite／独立应用身份／原数据回执，REPLACE 不复制旧业务数据，原 sourceReleaseId 仅保留基线，不生成预览 effect 或 Release
+
+#### Scenario: Preserved data requires an exact trusted migration
+- **WHEN** 原 PRESERVE_MIGRATE 请求指定准确迁移材料，或材料缺失／摘要不符／计划不受信任
+- **THEN** 只允许从原已 fenced 源取得一致副本并执行明确配置的可信计划；缺配置、材料变化和任意 SQL／脚本保持关闭，不回写源数据
+
+#### Scenario: Original data initialization is interrupted or its acknowledgement is lost
+- **WHEN** 数据 journal 已保存而初始化／发布中断，或实际完成回执丢失后组件重启
+- **THEN** 只检查原 journal／fence／文件；部分对象保持 UNKNOWN、不重建或重跑迁移，完成对象按原 SHA／大小／完整性和原 fence 恢复
+
+#### Scenario: Current authority or physical custody disappears
+- **WHEN** 发布文件前授权变化，或当前源／目标 fence 与原持有证明不同，或未配置实际隔离适配器
+- **THEN** 不发布新的数据证明、不伪造物理 fence 或健康；已存在对象保留供原操作核实，不重新 acquire 替代 fence
+
+#### Scenario: Read-only template inspects a prepared target
+- **WHEN** 模板只读打开、列出数据并关闭已准备的 DELETE-mode 数据库
+- **THEN** 使用原生只读连接、拒绝业务变更且保持原文件摘要，不切换到 WAL 或声称其他写入已排空
+
 ### Requirement: Atomic acceptance with independent publication recovery
 
 The system SHALL 在短事务重核候选、完整审查、准确原质量、准备凭证、当前接受指针和未知副作用，原子创建不可变 Release、更新接受指针、完成 Run 并保存发布意图。事务外准备和发布不得占用该事务。已提交事实 MUST 在路由或打包失败后保留，恢复只处理原发布／导出。

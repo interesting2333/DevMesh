@@ -170,6 +170,16 @@ REPLACE 必须有独立的准确确认记录，绑定候选、reviewHash、原 r
 
 写门采用受校验前向重建：仅带入校验和的明确 rebuild 标记迁移在事务外暂关 foreign_keys，单 writer 事务内复制旧行、重建外键／触发器并 foreign_key_check，成功或失败均恢复原 pragma；事务内调用拒绝。失败连同 schema／迁移历史／版本标记回滚。旧准备／证明只回填准确元数据，不回填新的健康、物理 fence、Release 或接受事实。实际数据适配、服务装配与 T5 继续原 4.1／4.2 范围。
 
+### 20. Actual acceptance data uses its own journal and verified custody
+
+接受数据组件直接消费原 acceptance preparation，不翻译为 PreviewEffect。本地 SQLite v2 journal 固定 ACCEPTANCE 用途、完整原 request／hash 和独立 appDatasetId；源／目标实际 fence 的原证明另存不可变记录，完成回执绑定实际 SQLite SHA／大小／完整性、snapshotAt 与 journalHash。它只返回数据阶段证据，不生成服务健康、完整 prepared proof、Release 或 T5。
+
+物理隔离通过显式可信 authority 装配：preflight 只读检查，唯一 journal 的胜出者才 acquire 原 fence，新建原 journal 前、取得 fence 前及快照／发布阶段重新检查当前授权；复制后发布前再次 inspect 原 fence 和授权。恢复只 inspect 原 fence／日志／文件，不能 acquire、重新初始化或重跑迁移。没有实际 authority 时派发关闭，接口字段或逻辑门不能产生物理隔离证明。真实 Linux／隔离适配器继续单列缺项。
+
+INITIAL／REPLACE 按原方案初始化 EMPTY／DEMO，REPLACE 不复制旧数据且保留旧 sourceReleaseId；PRESERVE_MIGRATE 使用最新受 fence 保护的 SQLite 一致副本及独立应用身份。迁移必须读取准确 artifactRef 的实际字节、核对 SHA 并匹配操作方配置的可信摘要；首个内置执行计划仅允许已固定 web-crud 同 schema 的一致复制，不执行模型 SQL／任意脚本，其他迁移缺配置即关闭。v1 预览与 v2 接受的原 journal 共用受限读取／归属核验，后续预览可读取准确接受数据源，不伪造原用途。接受目标检查严格复核原字节；作为已接受业务源复制时允许合法后续业务写入，但仍复核准确原操作、marker／schema／项目和 Runner。
+
+模板只读连接使用 SQLite 原生 readOnly 与 query_only，不切换 journal_mode、不依赖 mutate 的入口检查来防止修改数据库文件头；固定 DELETE 模式目标经模板只读打开／查询／关闭后仍保持相同文件字节。模板进程锁继续只表示进程准入，不算物理 fence；其他服务归属和实际写排空继续独立验证。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

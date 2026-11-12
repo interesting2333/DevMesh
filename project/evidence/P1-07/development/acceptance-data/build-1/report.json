@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual local acceptance data files, controlled authority and synthetic acceptance basis only; no real durable physical isolation, service/Release readiness or T5.",
+  "checks": [
+    {
+      "name": "runner-build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/runner",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T21:00:45.817Z",
+      "finishedAt": "2026-11-12T21:01:53.635Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "runner-build.txt",
+      "sha256": "229d23b70eb8f2330c21e2344a6ebfd002a123f7d56f64d3a5ad20eb0f2c682d"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T21:01:53.643Z",
+      "finishedAt": "2026-11-12T21:04:38.326Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T21:04:38.332Z",
+      "finishedAt": "2026-11-12T21:04:52.582Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/runner/dist/dataset-backend--7MretZO.mjs",
+    "packages/runner/dist/dataset-backend--7MretZO.mjs.map",
+    "packages/runner/dist/dataset-worker.mjs",
+    "packages/runner/dist/dataset-worker.mjs.map",
+    "packages/runner/dist/index.mjs",
+    "packages/runner/dist/index.mjs.map",
+    "packages/runner/dist/acceptance-dataset-backend-D16j656x.mjs",
+    "packages/runner/dist/acceptance-dataset-backend-D16j656x.mjs.map",
+    "packages/runner/dist/acceptance-dataset-worker.mjs",
+    "packages/runner/dist/acceptance-dataset-worker.mjs.map",
+    "packages/runner/dist/dataset-journal-D-lx4giS.mjs",
+    "packages/runner/dist/dataset-journal-D-lx4giS.mjs.map"
+  ]
+}

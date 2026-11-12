@@ -15,7 +15,7 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "1815281109d2105fc69fd12ea52bb6106dcf3b3e4954107db43cf5294f061a98"
+      "sha256": "99441bd93428bb41b1cdabaceb9a0e673f65f9fe5e02efb4ca8ec01ab3a874fe"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
@@ -23,7 +23,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "81962dbecae85f1be462ca7fb733d55018c5bfcaa44de866678ff83b6abe1523"
+      "sha256": "6624ea7deca0e8b717cce1b378f4114a63a330c9e1815e369c71ebb683d16b63"
     }
   ],
   "gates": [
@@ -1195,7 +1195,14 @@
         "packages/storage-sqlite/migrations/0038-datasetownership.sql",
         "tests/storage-dataset-ownership.test.mjs",
         "tests/acceptance-datasets.test.mjs",
-        "tests/storage-acceptance-proof-upgrade.test.mjs"
+        "tests/storage-acceptance-proof-upgrade.test.mjs",
+        "packages/runner/src/acceptance-dataset-backend.ts",
+        "packages/runner/src/acceptance-dataset-worker.ts",
+        "packages/runner/src/dataset-journal.ts",
+        "tests/acceptance-dataset-files.test.mjs",
+        "tests/fixtures/acceptance-datasets.mjs",
+        "templates/web-crud-v1/src/server/database.ts",
+        "templates/web-crud-v1/tests/database.test.ts"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1302,7 +1309,8 @@
         "project/evidence/P1-07/development/acceptance-readiness/retention-layout-correction.json",
         "project/evidence/P1-07/development/acceptance-readiness/fixture-alias-impact.json",
         "project/evidence/P1-07/development/acceptance-readiness/checkpoint-binding.json",
-        "project/evidence/P1-07/dataset-ownership-development-review.md"
+        "project/evidence/P1-07/dataset-ownership-development-review.md",
+        "project/evidence/P1-07/acceptance-data-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -1345,7 +1353,8 @@
         "2026-11-13：准备证明／当前观察增量源码固定在 7cc116aa5e231466b55ac2c54c1e74883bd29803；685 项当前源码、原始证据和设计／管理上下文与该提交Git对象逐字节绑定。最终专项快照的 444 个源码输入全部匹配；较早综合／存储／Runner组唯一差异为测试端点对象复制，原始差异和唯一消费者均留存，不称同指纹全量重跑。绑定是只读核对，不是新测试、干净checkout、物理隔离、T5或产品验收。正式状态和OpenSpec7/13不变，继续4.1实际后端／数据与写门归属。",
         "2026-11-13：4.1 数据归属设计影响评估：迁移38统一真实数据策略／原准备归属，PREVIEW与ACCEPTANCE用途分开，预览兼容接口保留；接受意图同事务登记PREPARING目标元数据和初始CLOSED逻辑门，REPLACE基线与复制origin分离，准确proof才推进WRITE_FROZEN。写门外键前向重建保留旧门／请求／历史，校验失败回滚并恢复外键pragma；原接受后端的源逻辑关门使用原操作／hash和fence，不代表物理排空。D4／D5、完整设计、实施文档与OpenSpec同步；PRD／D01～D08目标不变。实际文件适配、Runner装配、正向保留／替换和T5继续，执行结果另记，7/13及正式工作包／门槛状态不变。",
         "2026-11-13：数据归属开发复核：迁移38区分PREVIEW／ACCEPTANCE真实策略和原准备归属，接受元数据／初始CLOSED逻辑门与意图同事务，原proof推进WRITE_FROZEN，源闭门按原操作／hash／fence恢复；没有实际接受数据文件／物理fence／服务装配或T5。存储全量38/38、旧proof历史升级1/1通过；综合80/81含一项未进入控制器断言的上游交付夹具失败，根因未确认，同输入readiness整文件复跑5/5通过，原失败及独立诊断保留。最终构建／类型／Lint／契约和134/134映射通过，各组源输入及产物绑定见dataset-ownership-development-review.md。复核为同一Codex Agent的本地开发复核，正式P1-07仍等待P1-06／G0，4.1及变更7/13不变，不归档。",
-        "2026-11-13：提交前已暂存检查补获新SQL一处尾随空格，删除后仅更新迁移38校验和；原1～37、TypeScript／既有测试／可执行JS不变。最终校验和重建、类型／Lint／契约及迁移专项6/6通过；前轮综合／存储与旧proof日志按原校验和保留，补充绑定、首次暂存失败和最终post-3校验见dataset-ownership开发证据。修正检查覆盖缺口，不更改4.1／正式工作包和门槛状态。"
+        "2026-11-13：提交前已暂存检查补获新SQL一处尾随空格，删除后仅更新迁移38校验和；原1～37、TypeScript／既有测试／可执行JS不变。最终校验和重建、类型／Lint／契约及迁移专项6/6通过；前轮综合／存储与旧proof日志按原校验和保留，补充绑定、首次暂存失败和最终post-3校验见dataset-ownership开发证据。修正检查覆盖缺口，不更改4.1／正式工作包和门槛状态。",
+        "2026-11-13：接受数据文件增量：独立ACCEPTANCE v2 journal与原custody，实际SQLite初始化／REPLACE新数据／可信固定同schema保留快照；缺实际authority保持关闭，超时／授权／凭据变化及半成品恢复不重新acquire／初始化。修正模板只读切换WAL导致文件头变化，使用原生只读连接。数据／既有预览副本／原归属24/24、模板单元／HTTP24/24及类型／构建／Lint／137份映射通过。初次诊断失败批次主动中止，原日志与碰撞测试文件恢复记录保留；正式物理fence／服务／T5未完成，正式P1-07仍等待P1-06／G0，变更7/13和4.1未勾选。范围／同Agent开发复核见acceptance-data-development-review.md。"
       ]
     },
     {

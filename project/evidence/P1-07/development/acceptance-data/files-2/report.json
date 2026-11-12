@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Actual local acceptance data files, controlled authority and synthetic acceptance basis only; no real durable physical isolation, service/Release readiness or T5.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/acceptance-dataset-files.test.mjs",
+        "tests/verification-datasets.test.mjs",
+        "tests/acceptance-datasets.test.mjs"
+      ],
+      "startedAt": "2026-11-12T21:10:45.837Z",
+      "finishedAt": "2026-11-12T21:31:19.616Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "1dc90d4c9ebd75c14fadcc78e6745ac239beb616c2236baf96f700cce8305207"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

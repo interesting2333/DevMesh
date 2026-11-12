@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "mode": "template",
+  "scope": "Actual local acceptance data files, controlled authority and synthetic acceptance basis only; no real durable physical isolation, service/Release readiness or T5.",
+  "checks": [
+    {
+      "name": "template-typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--dir",
+        "templates/web-crud-v1",
+        "run",
+        "typecheck"
+      ],
+      "startedAt": "2026-11-12T21:10:45.805Z",
+      "finishedAt": "2026-11-12T21:11:54.159Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "template-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "template-test",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--dir",
+        "templates/web-crud-v1",
+        "run",
+        "test"
+      ],
+      "startedAt": "2026-11-12T21:11:54.169Z",
+      "finishedAt": "2026-11-12T21:17:29.951Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "template-test.txt",
+      "sha256": "03b4456a1209639f3f3f1c3b43a771a4fa652bc4a9f052e964496e8d669cbddb"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T21:17:29.960Z",
+      "finishedAt": "2026-11-12T21:17:44.870Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

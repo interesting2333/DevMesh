@@ -1,0 +1,15 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const sha=b=>createHash('sha256').update(b).digest('hex'),base='.cache/p1-07/acceptance-data-',groups=[];
+for(const name of ['files-2','template-1']){
+ const root=base+name,r=JSON.parse(readFileSync(root+'/report.json','utf8')),inputs=JSON.parse(readFileSync(root+'/inputs-after.json','utf8')),emitted=JSON.parse(readFileSync(root+'/emitted-after.json','utf8'));
+ if(!r.checks.length||r.checks.some(c=>c.exitCode!==0)||r.inputChanges.length||r.emittedChanges.length)throw Error('Failed or unstable '+name);
+ const changedInputs=Object.keys(inputs).filter(f=>sha(readFileSync(f))!==inputs[f]),changedEmitted=Object.keys(emitted).filter(f=>sha(readFileSync(f))!==emitted[f]);if(changedInputs.length||changedEmitted.length)throw Error('Final inputs changed '+name);
+ groups.push({name,checks:r.checks.map(c=>({name:c.name,exitCode:c.exitCode})),changedInputs,changedEmitted});
+}
+const build=base+'build-1',r=JSON.parse(readFileSync(build+'/report.json','utf8')),inputs=JSON.parse(readFileSync(build+'/inputs-after.json','utf8')),emitted=JSON.parse(readFileSync(build+'/emitted-after.json','utf8')),changed=Object.keys(inputs).filter(f=>sha(readFileSync(f))!==inputs[f]);
+if(r.checks.length!==3||r.checks.some(c=>c.exitCode!==0)||r.inputChanges.length||changed.length!==1||changed[0]!=='tests/acceptance-datasets.test.mjs'||Object.keys(emitted).some(f=>sha(readFileSync(f))!==emitted[f]))throw Error('Unexpected original build differences');
+const original=execFileSync('git',['show','HEAD:tests/acceptance-datasets.test.mjs'],{windowsHide:true});if(!readFileSync('tests/acceptance-datasets.test.mjs').equals(original))throw Error('Original test was not restored exactly');
+const maps=JSON.parse(readFileSync(base+'all-map.json','utf8'));if(maps.mismatches.length||!maps.entries.length)throw Error('Source-map mismatch');
+writeFileSync(base+'final-binding.json',JSON.stringify({recordedAt:new Date().toISOString(),scope:'Final working-tree inputs and emitted JS binding, not clean checkout or physical isolation evidence.',groups,originalBuild:{changedExistingInputs:changed,changedRuntimeOrEmittedInputs:[],limitations:['Original build and interrupted files-1 fingerprints did not include templates.','Build 1 saw temporary replacement test content; the original test is restored and included in files-2.','New independent file tests and the template readonly source/test were added or changed after Build 1. Template-1 checks the final template; files-2 binds the full final source set.']},originalTest:{path:'tests/acceptance-datasets.test.mjs',sha256:sha(original),matchesHEAD:true},mapMatches:maps.matches,mapEntries:maps.entries.length},null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({groups:groups.map(g=>g.name),restoredOriginal:true,mapMatches:maps.matches}));

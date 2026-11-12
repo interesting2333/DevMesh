@@ -1,0 +1,13 @@
+import {execFileSync,spawnSync} from 'node:child_process';
+import {readFileSync,writeFileSync} from 'node:fs';
+const root='.cache/p1-07/acceptance-data-files-1',log=readFileSync(root+'/tests.txt','utf8');
+if(!log.includes('ACCEPTANCE_DATA_BYTES_CHANGED')||!log.includes('not ok 1')||!log.includes('not ok 4'))throw Error('Expected diagnosed failure missing');
+const query="Get-CimInstance Win32_Process -Filter \"Name = 'node.exe'\" | Select-Object ProcessId,ParentProcessId,CommandLine | ConvertTo-Json -Compress";
+const ps=JSON.parse(execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-Command',query],{encoding:'utf8',windowsHide:true}));
+const drivers=ps.filter(p=>p.CommandLine?.includes('.cache/p112-check.mjs files-1 test'));
+if(drivers.length!==1)throw Error('Unique owned driver required');
+const children=ps.filter(p=>p.ParentProcessId===drivers[0].ProcessId&&p.CommandLine?.includes('--test-concurrency=1')&&p.CommandLine.includes('tests/acceptance-datasets.test.mjs')&&p.CommandLine.includes('tests/verification-datasets.test.mjs'));
+if(children.length!==1)throw Error('Unique exact owned test child required');
+const child=children[0],intent={recordedAt:new Date().toISOString(),driverPid:drivers[0].ProcessId,testPid:child.ProcessId,reason:'Stop the diagnosed failed batch before repairing the template readonly connection and restoring the colliding test filename; retain raw partial output and rerun the complete final group. No completed full-suite result is asserted.'};
+writeFileSync(root+'/interruption.json',JSON.stringify(intent,null,2)+'\n',{flag:'wx'});
+const r=spawnSync('taskkill.exe',['/PID',String(child.ProcessId),'/T','/F'],{encoding:'utf8',windowsHide:true});writeFileSync(root+'/interruption.txt',r.stdout+r.stderr,{flag:'wx'});console.log(JSON.stringify({testPid:child.ProcessId,status:r.status}));if(r.status!==0)process.exitCode=1;
