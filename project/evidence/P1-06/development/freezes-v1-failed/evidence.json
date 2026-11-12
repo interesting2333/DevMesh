@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 tasks4.1/4.2 development: immutable current release candidate with exact original quality/delivery/formal Work proofs, manual pending, rollback and replay. Actual local SQLite, authenticated HTTP Runner and material collection; source Git/admission/Runtime publication are explicit DB fixtures. No full task5.1 Git/Runtime composition or stage acceptance claimed.",
+  "sourceCommit": "ec56c9592b396ab787c3fbd7ef90220699c11d9f",
+  "dirty": true,
+  "sourceFingerprint": "0caa59bb613525ec983c22db751157c1cf159683dff1bbbb637d698ec91549e5",
+  "unchanged": true,
+  "startedAt": "2026-11-12T07:03:42.615Z",
+  "finishedAt": "2026-11-12T07:05:32.654Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 107497,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 856,
+      "output": "lint.txt",
+      "sha256": "43877405bb8db91272c53f408ea486b0b485b000d5d2d6adcb5f64b6c4b7f5f1"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/result-verifier/README.md",
+      "sha256": "e611ebebc8218e0434a1835d9c1ef45fd0e5ed8b4bb6511d241843f0221af0d3"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/storage-sqlite/migrations/0028-candidatefreezes.sql",
+      "sha256": "27d83127f25792c2d2c10a97f2f6bf6998e10eb4210580d25cde61cd2219f201"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "e364c29e797648b3769c4f0aadf1f7fab843aa4ae5122f11ee357a527cef5e24"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "5d86210e99c743d8ef7d92cd203e7841a05541f89fd37bbf6cdc93b2b97ec5d7"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "66a9f3e49e37759b11a1b5a0e8aab25066cb8a998ce49300b40f7f094a1db35d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "d5316b491554987767a79955989eb494da3f66859299d4e5203716f5b0b962b4"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/storage-sqlite/src/release-freeze-domain.ts",
+      "sha256": "44b57fd527b177fc327cdd78c1303ff69128c2da2d78752d453abe39e77c8d6b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/storage-sqlite/src/release-freeze-protocol.ts",
+      "sha256": "dd21d32c32f62d7b09a6c1243704d4584a3b328854598a57d968c308adcd82ac"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/packages/storage-sqlite/src/work-verification-domain.ts",
+      "sha256": "523cb4d3df7fca4b3335dd27530681ced7662bd7a1182648b3cc80ca2daa318e"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/tests/fixtures/release-freeze.mjs",
+      "sha256": "e21eb99f8823c84a892019b8b6bf3b75de91280e9b189abbe21343f28ee3b738"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/tests/fixtures/work-verification.mjs",
+      "sha256": "192854169c34a57139f5bb56e5187e0256d6071196dd9247c9fe258bbca16b12"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/failed-source/tests/verification-freeze.test.mjs",
+      "sha256": "b2aa58b82b20d34b8b1e974f8cd5f7ed6fe80fc48f1d39349e8413c59c35024a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/lint.txt",
+      "sha256": "43877405bb8db91272c53f408ea486b0b485b000d5d2d6adcb5f64b6c4b7f5f1"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/report.json",
+      "sha256": "145887d68fb507ff86ac9ec3fcdd75ae65c23f423df1d6a09230f677fe8a44e6"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v1-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Actual SQLite, authenticated local HTTP Runner, output files, original quality/delivery collection, filesystem content ACK and formal Work verification. Source Git/admission/Runtime publication are explicit DB fixtures.",
+    "No full task5.1 Git/Runtime repair composition, Docker build, image execution/health, production model/OIDC/Linux/runsc, data migration or accepted Release claimed."
+  ]
+}

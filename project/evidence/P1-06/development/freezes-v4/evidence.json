@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 tasks4.1/4.2 development: immutable current release candidate with exact original quality/delivery/formal Work proofs, manual pending, rollback and replay. Actual local SQLite, authenticated HTTP Runner and material collection; source Git/admission/Runtime publication are explicit DB fixtures. No full task5.1 Git/Runtime composition or stage acceptance claimed.",
+  "sourceCommit": "ec56c9592b396ab787c3fbd7ef90220699c11d9f",
+  "dirty": true,
+  "sourceFingerprint": "229c26f4dd23a5d1260419e1f7ecac50006909c32d66e64d0f4ff457034ebc0f",
+  "unchanged": true,
+  "startedAt": "2026-11-12T07:13:59.945Z",
+  "finishedAt": "2026-11-12T07:15:23.299Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6459,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 646,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 17820,
+      "output": "current-build.txt",
+      "sha256": "631f332237038267577e4604e6208c90e0c9d684001d29c1ba7b118e8b5faccc"
+    },
+    {
+      "name": "freeze",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26474,
+      "output": "freeze.txt",
+      "sha256": "dffe8d02d0b7081741433d456710004204854423c95b4a834b63eb12c857c5f5"
+    },
+    {
+      "name": "work-verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5015,
+      "output": "work-verification.txt",
+      "sha256": "8dce9c62dea48d492142f59dbae5b005c95450e0f726e2372d3f73bf7c41a939"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26108,
+      "output": "storage.txt",
+      "sha256": "cc920c7b3bf7f701dd01dcf95c93851f0cb95b73f3877c65a43a1443fead12e7"
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 771,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/freezes-v4/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v4/current-build.txt",
+      "sha256": "631f332237038267577e4604e6208c90e0c9d684001d29c1ba7b118e8b5faccc"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v4/freeze.txt",
+      "sha256": "dffe8d02d0b7081741433d456710004204854423c95b4a834b63eb12c857c5f5"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v4/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v4/report.json",
+      "sha256": "e01d9ed75a468cd1c4c3b14b1ce08cf73762d8370e1e31fc2bb811a1c3fc8ba8"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v4/storage.txt",
+      "sha256": "cc920c7b3bf7f701dd01dcf95c93851f0cb95b73f3877c65a43a1443fead12e7"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v4/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v4/work-verification.txt",
+      "sha256": "8dce9c62dea48d492142f59dbae5b005c95450e0f726e2372d3f73bf7c41a939"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Actual SQLite, authenticated local HTTP Runner, output files, original quality/delivery collection, filesystem content ACK and formal Work verification. Source Git/admission/Runtime publication are explicit DB fixtures.",
+    "No full task5.1 Git/Runtime repair composition, Docker build, image execution/health, production model/OIDC/Linux/runsc, data migration or accepted Release claimed."
+  ]
+}

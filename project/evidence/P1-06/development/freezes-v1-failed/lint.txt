@@ -1,0 +1,3 @@
+tests/verification-freeze.test.mjs:33:64: warning eslint(no-unused-vars): Variable 'v' is declared but never used. Unused variables should start with a '_'. help: Consider removing this declaration.
+[ELIFECYCLE] Command failed with exit code 1.
+$ oxlint --deny-warnings apps packages scripts project tests

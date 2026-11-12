@@ -68,6 +68,9 @@ import {createVerifiedFindingDomain} from './verified-finding-domain.js';
 import {verifiedFindingRequests} from './verified-finding-protocol.js';
 import type {VerifiedFindingMethod} from './verified-finding-protocol.js';
 import {createVerifiedRepairDomain} from './verified-repair-domain.js';
+import {createReleaseFreezeDomain} from './release-freeze-domain.js';
+import {releaseFreezeRequests} from './release-freeze-protocol.js';
+import type {ReleaseFreezeMethod} from './release-freeze-protocol.js';
 import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
@@ -104,6 +107,10 @@ export function createDomain(db: DatabaseSync) {
   const quality=createQualityDomain(db,candidateIntegrations);
   const releaseDeliveries=createReleaseDeliveryDomain(db,quality);
   const workVerifications=createWorkVerificationDomain(db,quality);
+  const releaseFreezes=createReleaseFreezeDomain(db,plans,candidateIntegrations,releaseDeliveries,workVerifications,quality,{
+    operation:(...args)=>operation(...args),
+    changed(runId,operationId,candidateId){exec("UPDATE runs SET phase='REVIEW' WHERE run_id=?",runId);bump(runId);event(runId,operationId,'CandidateUpdated',{candidateId,state:'READY'});},
+  });
   const verifiedFindings=createVerifiedFindingDomain(db,quality,candidateIntegrations,(runId,operationId,attemptId,payload)=>{
     bump(runId);event(runId,operationId,'IssueChanged',payload,{attemptId});
   });
@@ -445,6 +452,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(releaseFreezeRequests,method))return releaseFreezes.execute(method as ReleaseFreezeMethod,input);
     if(Object.hasOwn(releaseDeliveryRequests,method))return releaseDeliveries.execute(method as ReleaseDeliveryMethod,input);
     if(Object.hasOwn(verifiedRepairRequests,method))return verifiedRepairs.execute(method as VerifiedRepairMethod,input);
     if(Object.hasOwn(workVerificationRequests,method))return workVerifications.execute(method as WorkVerificationMethod,input);

@@ -1,0 +1,121 @@
+TAP version 13
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete current formal proofs freeze immutable candidate and review event without changing acceptance
+ok 1 - complete current formal proofs freeze immutable candidate and review event without changing acceptance
+  ---
+  duration_ms: 2243.0807
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: manual checks stay pending in candidate and Tester while automatic checks pass
+ok 2 - manual checks stay pending in candidate and Tester while automatic checks pass
+  ---
+  duration_ms: 1456.1429
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: history cannot become formal proof and missing delivery cannot produce a candidate
+ok 3 - history cannot become formal proof and missing delivery cannot produce a candidate
+  ---
+  duration_ms: 2386.267
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unresolved high findings and unknown original writes prevent freezing with no partial candidate
+ok 4 - unresolved high findings and unknown original writes prevent freezing with no partial candidate
+  ---
+  duration_ms: 2563.2512
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new freeze creates new revision and never copies manual approval; history remains readable
+ok 5 - new freeze creates new revision and never copies manual approval; history remains readable
+  ---
+  duration_ms: 1428.6733
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate journal, content links, event and operation roll back together then original key recovers
+ok 6 - candidate journal, content links, event and operation roll back together then original key recovers
+  ---
+  duration_ms: 1415.8348
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: owner writes and replay recheck membership while current members may inspect stale history
+ok 7 - owner writes and replay recheck membership while current members may inspect stale history
+  ---
+  duration_ms: 1299.6464
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changed source head, material availability and original key arguments invalidate current qualification
+not ok 8 - changed source head, material availability and original key arguments invalidate current qualification
+  ---
+  duration_ms: 1372.3012
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_HEAD_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.run (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:19:91)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-freeze.test.mjs:33:192)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost freeze response returns the exact original candidate revision and event
+ok 9 - lost freeze response returns the exact original candidate revision and event
+  ---
+  duration_ms: 1314.3845
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: human pending cannot hide a failed automatic Work condition
+ok 10 - human pending cannot hide a failed automatic Work condition
+  ---
+  duration_ms: 1235.7667
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new candidate SHA cannot reuse old passing quality even when source tree matches
+ok 11 - new candidate SHA cannot reuse old passing quality even when source tree matches
+  ---
+  duration_ms: 1398.6606
+  type: 'test'
+  ...
+# (node:21420) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: freeze requires the current resource version before it creates a journal or event
+ok 12 - freeze requires the current resource version before it creates a journal or event
+  ---
+  duration_ms: 1572.5619
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20826.1326

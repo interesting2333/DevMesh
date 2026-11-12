@@ -148,3 +148,18 @@ ReleaseCandidate SHALL 固定代码、需求／计划／模板／检查配置版
 
 - **WHEN** 代码、配置、需求、计划、必要集合或交付材料身份已变化
 - **THEN** 旧报告保留为历史并标过期，不覆盖候选或据此自动接受
+
+#### Scenario: Candidate freeze is interrupted or its acknowledgment is lost
+
+- **WHEN** 候选、证明引用、操作回执或事件写入中途失败，或提交后响应丢失
+- **THEN** 中途失败整体回滚；原 meta 重放返回同一候选修订与原事件，不重复冻结、采集或执行，且重放仍核对当前主体权限
+
+#### Scenario: A new candidate revision supersedes a prior review target
+
+- **WHEN** 当前来源再次冻结为新的 candidateRevision
+- **THEN** 新修订具有独立身份和待审条目，旧正文保留且当前资格失效，不继承旧候选人工决定；摘要列表和完整详情分别有界查询
+
+#### Scenario: A material file is missing or the basis changes during preflight
+
+- **WHEN** 数据库仍保存材料 READY 元数据，但实际文件缺失／损坏，或实际字节预检后当前来源／计划／内容发生变化
+- **THEN** 拒绝新的冻结并保留原事实；最终事务核对同一 basisHash 与已读内容所属 Run／可用状态，不能仅凭旧 READY 标记放行

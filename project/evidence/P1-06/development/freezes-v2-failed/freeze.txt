@@ -1,0 +1,281 @@
+TAP version 13
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete current formal proofs freeze immutable candidate and review event without changing acceptance
+not ok 1 - complete current formal proofs freeze immutable candidate and review event without changing acceptance
+  ---
+  duration_ms: 2759.9028
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:7:1'
+  failureType: 'testCodeFailure'
+  error: 'cannot start a transaction within a transaction'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    Object.freeze (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:34:130)
+  ...
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: manual checks stay pending in candidate and Tester while automatic checks pass
+not ok 2 - manual checks stay pending in candidate and Tester while automatic checks pass
+  ---
+  duration_ms: 1926.5041
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:12:1'
+  failureType: 'testCodeFailure'
+  error: 'cannot start a transaction within a transaction'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    Object.freeze (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:34:130)
+  ...
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: history cannot become formal proof and missing delivery cannot produce a candidate
+not ok 3 - history cannot become formal proof and missing delivery cannot produce a candidate
+  ---
+  duration_ms: 1505.0478
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:15:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Comparison {
+    +   code: 'ERR_SQLITE_ERROR'
+    -   code: 'RELEASE_CANDIDATE_WORK_UNVERIFIED'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'RELEASE_CANDIDATE_WORK_UNVERIFIED'
+  actual:
+  error: 'cannot start a transaction within a transaction'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    Object.freeze (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:34:130)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-freeze.test.mjs:16:67)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unresolved high findings and unknown original writes prevent freezing with no partial candidate
+not ok 4 - unresolved high findings and unknown original writes prevent freezing with no partial candidate
+  ---
+  duration_ms: 1974.617
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      Comparison {
+    +   code: 'ERR_SQLITE_ERROR'
+    -   code: 'RELEASE_CANDIDATE_FINDING_UNRESOLVED'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'RELEASE_CANDIDATE_FINDING_UNRESOLVED'
+  actual:
+  error: 'cannot start a transaction within a transaction'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    Object.freeze (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:34:130)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-freeze.test.mjs:19:390)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new freeze creates new revision and never copies manual approval; history remains readable
+not ok 5 - new freeze creates new revision and never copies manual approval; history remains readable
+  ---
+  duration_ms: 2513.995
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: 'cannot start a transaction within a transaction'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    Object.freeze (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:34:130)
+  ...
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate journal, content links, event and operation roll back together then original key recovers
+not ok 6 - candidate journal, content links, event and operation roll back together then original key recovers
+  ---
+  duration_ms: 1712.9949
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /freeze-cut/. Input:
+    
+    'Error: cannot start a transaction within a transaction'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'cannot start a transaction within a transaction'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    Object.freeze (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:34:130)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-freeze.test.mjs:26:253)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: owner writes and replay recheck membership while current members may inspect stale history
+not ok 7 - owner writes and replay recheck membership while current members may inspect stale history
+  ---
+  duration_ms: 1501.4305
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:28:1'
+  failureType: 'testCodeFailure'
+  error: 'cannot start a transaction within a transaction'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    Object.freeze (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:34:130)
+  ...
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changed source head, material availability and original key arguments invalidate current qualification
+not ok 8 - changed source head, material availability and original key arguments invalidate current qualification
+  ---
+  duration_ms: 1656.2453
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: 'cannot start a transaction within a transaction'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    Object.freeze (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:34:130)
+  ...
+# (node:20116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost freeze response returns the exact original candidate revision and event
+not ok 9 - lost freeze response returns the exact original candidate revision and event
+  ---
+  duration_ms: 2023.5858
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\verification-freeze.test.mjs:36:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /lost original freeze response/. Input:
+    
+    'Error: cannot start a transaction within a transaction'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'cannot start a transaction within a transaction'
+  stack: |-
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:59:5)
+    operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7943:10)
+    Object.operation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7873:27)
+    Object.freezeReleaseCandidate (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7772:21)
+    file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7829:27
+    transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-CmCClcp5.mjs:61:17)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:7827:10)
+    Object.execute (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-Cfs9rrX9.mjs:8754:75)
+    Object.request (file:///D:/yms/AI/DevMesh/tests/fixtures/candidate-data.mjs:13:83)
+    f.storage.request (file:///D:/yms/AI/DevMesh/tests/verification-freeze.test.mjs:37:178)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/verification-freeze.test.mjs:37:316)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 0
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19080.0979

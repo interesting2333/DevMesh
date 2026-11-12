@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 tasks4.1/4.2 development: immutable current release candidate with exact original quality/delivery/formal Work proofs, manual pending, rollback and replay. Actual local SQLite, authenticated HTTP Runner and material collection; source Git/admission/Runtime publication are explicit DB fixtures. No full task5.1 Git/Runtime composition or stage acceptance claimed.",
+  "sourceCommit": "ec56c9592b396ab787c3fbd7ef90220699c11d9f",
+  "dirty": true,
+  "sourceFingerprint": "d6ddd43bf31fb0902167f85773b4b212eb6a2f59bc28408792d5452d02d84a37",
+  "unchanged": true,
+  "startedAt": "2026-11-12T07:19:33.537Z",
+  "finishedAt": "2026-11-12T07:20:25.292Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6916,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 658,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 19870,
+      "output": "current-build.txt",
+      "sha256": "91ab41777103d8256cc5824722af6a74c3deb638405c5eb27633438d00099a97"
+    },
+    {
+      "name": "freeze",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 24247,
+      "output": "freeze.txt",
+      "sha256": "425bd78d4ccf1ca24f3841404bb92c5b5a4b680b5b25ec0519152a6c59b90c8b"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/freezes-v5/current-build.txt",
+      "sha256": "91ab41777103d8256cc5824722af6a74c3deb638405c5eb27633438d00099a97"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v5/freeze.txt",
+      "sha256": "425bd78d4ccf1ca24f3841404bb92c5b5a4b680b5b25ec0519152a6c59b90c8b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v5/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v5/report.json",
+      "sha256": "a29ab1fd8e9fdcd025ca40f476988ca3996c8de6b6b7631a4a5e46258dc01c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/freezes-v5/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or stage/product acceptance.",
+    "Actual SQLite, authenticated local HTTP Runner, output files, original quality/delivery collection, filesystem content ACK and formal Work verification. Source Git/admission/Runtime publication are explicit DB fixtures.",
+    "No full task5.1 Git/Runtime repair composition, Docker build, image execution/health, production model/OIDC/Linux/runsc, data migration or accepted Release claimed."
+  ]
+}

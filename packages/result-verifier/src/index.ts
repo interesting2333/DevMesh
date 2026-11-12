@@ -11,3 +11,4 @@ export {RepairPlanner} from './repair.js';
 export {verifyPreviewImage,previewImageLimits} from './preview-image.js';
 export type {PreviewImageInput,PreviewImageIdentity} from './preview-image.js';
 export {DeliveryCollector} from './delivery.js';
+export {CandidateFreezer} from './freeze.js';

@@ -1,0 +1,130 @@
+TAP version 13
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete current formal proofs freeze immutable candidate and review event without changing acceptance
+ok 1 - complete current formal proofs freeze immutable candidate and review event without changing acceptance
+  ---
+  duration_ms: 2063.8536
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: manual checks stay pending in candidate and Tester while automatic checks pass
+ok 2 - manual checks stay pending in candidate and Tester while automatic checks pass
+  ---
+  duration_ms: 1584.062
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: history cannot become formal proof and missing delivery cannot produce a candidate
+ok 3 - history cannot become formal proof and missing delivery cannot produce a candidate
+  ---
+  duration_ms: 2033.876
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unresolved high findings and unknown original writes prevent freezing with no partial candidate
+ok 4 - unresolved high findings and unknown original writes prevent freezing with no partial candidate
+  ---
+  duration_ms: 2736.7759
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new freeze creates new revision and never copies manual approval; history remains readable
+ok 5 - new freeze creates new revision and never copies manual approval; history remains readable
+  ---
+  duration_ms: 1573.313
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate journal, content links, event and operation roll back together then original key recovers
+ok 6 - candidate journal, content links, event and operation roll back together then original key recovers
+  ---
+  duration_ms: 1572.694
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: owner writes and replay recheck membership while current members may inspect stale history
+ok 7 - owner writes and replay recheck membership while current members may inspect stale history
+  ---
+  duration_ms: 1412.2124
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changed source head, material availability and original key arguments invalidate current qualification
+ok 8 - changed source head, material availability and original key arguments invalidate current qualification
+  ---
+  duration_ms: 2691.2778
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost freeze response returns the exact original candidate revision and event
+ok 9 - lost freeze response returns the exact original candidate revision and event
+  ---
+  duration_ms: 1365.9224
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: human pending cannot hide a failed automatic Work condition
+ok 10 - human pending cannot hide a failed automatic Work condition
+  ---
+  duration_ms: 1140.5681
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new candidate SHA cannot reuse old passing quality even when source tree matches
+ok 11 - new candidate SHA cannot reuse old passing quality even when source tree matches
+  ---
+  duration_ms: 1357.325
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: freeze requires the current resource version before it creates a journal or event
+ok 12 - freeze requires the current resource version before it creates a journal or event
+  ---
+  duration_ms: 1328.3684
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual missing file cannot be frozen from a stale READY database flag
+ok 13 - actual missing file cannot be frozen from a stale READY database flag
+  ---
+  duration_ms: 1240.3878
+  type: 'test'
+  ...
+# (node:23596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: basis changed during actual content reads rejects the final transaction
+ok 14 - basis changed during actual content reads rejects the final transaction
+  ---
+  duration_ms: 1226.5989
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 24157.7696

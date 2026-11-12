@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "from": "project/evidence/P1-06/development/freezes-v4/report.json",
+  "to": "project/evidence/P1-06/development/freezes-v5/report.json",
+  "changedFiles": [
+    "packages/result-verifier/README.md",
+    "packages/storage-sqlite/src/release-freeze-domain.ts"
+  ],
+  "reusedChecks": [
+    {
+      "name": "work-verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5015,
+      "output": "work-verification.txt",
+      "sha256": "8dce9c62dea48d492142f59dbae5b005c95450e0f726e2372d3f73bf7c41a939"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26108,
+      "output": "storage.txt",
+      "sha256": "cc920c7b3bf7f701dd01dcf95c93851f0cb95b73f3877c65a43a1443fead12e7"
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 771,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "reason": "Only combined frozen-detail size guard and README changed; final v5 rebuild and 14 freeze scenarios cover the changed handler. Work verification, schema/migrations and OpenAPI inputs are identical. These checks ran on v4, not rerun on v5.",
+  "limitations": [
+    "Development source fingerprint, not clean-checkout or product/stage acceptance."
+  ]
+}
