@@ -1,0 +1,798 @@
+TAP version 13
+# Subtest: preview identity uses exact OCI bytes and uncompressed layer identities
+ok 1 - preview identity uses exact OCI bytes and uncompressed layer identities
+  ---
+  duration_ms: 6.3681
+  type: 'test'
+  ...
+# Subtest: test environment digest, changed layer bytes and missing blobs cannot prove a generated image
+ok 2 - test environment digest, changed layer bytes and missing blobs cannot prove a generated image
+  ---
+  duration_ms: 1.159
+  type: 'test'
+  ...
+# Subtest: two individually valid layer blobs cannot be reordered against the original rootfs
+ok 3 - two individually valid layer blobs cannot be reordered against the original rootfs
+  ---
+  duration_ms: 0.6927
+  type: 'test'
+  ...
+# Subtest: source, build artifact, rootfs and image platform must match independently
+ok 4 - source, build artifact, rootfs and image platform must match independently
+  ---
+  duration_ms: 1.8093
+  type: 'test'
+  ...
+# Subtest: duplicate JSON keys, unsupported media and unindexed bytes are rejected
+ok 5 - duplicate JSON keys, unsupported media and unindexed bytes are rejected
+  ---
+  duration_ms: 0.5968
+  type: 'test'
+  ...
+# Subtest: compressed layers have bounded decompression and malformed gzip is rejected
+ok 6 - compressed layers have bounded decompression and malformed gzip is rejected
+  ---
+  duration_ms: 313.7313
+  type: 'test'
+  ...
+# (node:39660) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39660) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original evaluated reports publish stable artifacts with exact bytes and source without another Job
+ok 7 - original evaluated reports publish stable artifacts with exact bytes and source without another Job
+  ---
+  duration_ms: 1231.7487
+  type: 'test'
+  ...
+# (node:39660) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed original reports can be referenced without rewriting failure as success
+ok 8 - failed original reports can be referenced without rewriting failure as success
+  ---
+  duration_ms: 898.0909
+  type: 'test'
+  ...
+# (node:39660) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: artifact publication is atomic and a lost original ACK returns the same references
+ok 9 - artifact publication is atomic and a lost original ACK returns the same references
+  ---
+  duration_ms: 757.8022
+  type: 'test'
+  ...
+# (node:39660) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39660) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unavailable actual report bytes, stale basis and altered proof set cannot publish new artifacts
+ok 10 - unavailable actual report bytes, stale basis and altered proof set cannot publish new artifacts
+  ---
+  duration_ms: 1296.26
+  type: 'test'
+  ...
+# (node:39660) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original owner permission is checked again on reference publication and replay
+ok 11 - original owner permission is checked again on reference publication and replay
+  ---
+  duration_ms: 646.1818
+  type: 'test'
+  ...
+# (node:30492) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30492) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: collector pins source before dispatch and retains original authenticated Runner reports without starting another Job
+ok 12 - collector pins source before dispatch and retains original authenticated Runner reports without starting another Job
+  ---
+  duration_ms: 822.3014
+  type: 'test'
+  ...
+# (node:30492) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual failed Job and raw failed assertion remain findings rather than a passing verification
+ok 13 - actual failed Job and raw failed assertion remain findings rather than a passing verification
+  ---
+  duration_ms: 621.728
+  type: 'test'
+  ...
+# (node:30492) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unknown original stage is queried by its original operation and never resubmitted
+ok 14 - unknown original stage is queried by its original operation and never resubmitted
+  ---
+  duration_ms: 395.0513
+  type: 'test'
+  ...
+# (node:30492) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost content and final verification ACKs recover original writes and result with no Runner rerun
+ok 15 - lost content and final verification ACKs recover original writes and result with no Runner rerun
+  ---
+  duration_ms: 632.6516
+  type: 'test'
+  ...
+# (node:30492) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HTTP bytes that disagree with the original output hash cannot become a quality result
+ok 16 - HTTP bytes that disagree with the original output hash cannot become a quality result
+  ---
+  duration_ms: 623.0562
+  type: 'test'
+  ...
+# (node:30492) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source provider is explicit and immutable stage binding cannot be replaced after original dispatch
+ok 17 - source provider is explicit and immutable stage binding cannot be replaced after original dispatch
+  ---
+  duration_ms: 555.001
+  type: 'test'
+  ...
+# Subtest: a SOURCE publication that races an original dispatch cannot leave a content reference behind
+ok 18 - a SOURCE publication that races an original dispatch cannot leave a content reference behind
+  ---
+  duration_ms: 140.0159
+  type: 'test'
+  ...
+# (node:30492) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Runner output reads enforce the original size budget before sending and bound streamed bytes
+ok 19 - Runner output reads enforce the original size budget before sending and bound streamed bytes
+  ---
+  duration_ms: 574.3677
+  type: 'test'
+  ...
+# (node:8544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual scheduled A2A Runtime Git HTTP chain preserves original failure then repairs, reverifies and freezes the exact commit
+ok 20 - actual scheduled A2A Runtime Git HTTP chain preserves original failure then repairs, reverifies and freezes the exact commit
+  ---
+  duration_ms: 64870.5206
+  type: 'test'
+  ...
+# Actual local protocols/Git/content/transactions; scripted model HTTP and controlled report/image bytes, no production model/OIDC/Docker/Linux/runsc or product acceptance.
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original authenticated Job outputs become immutable delivery without another Job, process or accepted Release
+ok 21 - original authenticated Job outputs become immutable delivery without another Job, process or accepted Release
+  ---
+  duration_ms: 2230.3055
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery policy must have been pinned before Tester admission and cannot be weakened after quality PASS
+ok 22 - delivery policy must have been pinned before Tester admission and cannot be weakened after quality PASS
+  ---
+  duration_ms: 1100.5525
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost material and final ACKs recover the original operation with no additional Runner execution
+ok 23 - lost material and final ACKs recover the original operation with no additional Runner execution
+  ---
+  duration_ms: 1043.7209
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changed original Job identity and corrupted HTTP bytes never complete delivery
+ok 24 - changed original Job identity and corrupted HTTP bytes never complete delivery
+  ---
+  duration_ms: 1027.0809
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: canonical data plan must bind exact Run, revisions, commit and existing data lineage
+ok 25 - canonical data plan must bind exact Run, revisions, commit and existing data lineage
+  ---
+  duration_ms: 3424.1301
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: missing fixed output and unconfigured Runner are explicit failures
+ok 26 - missing fixed output and unconfigured Runner are explicit failures
+  ---
+  duration_ms: 1577.6623
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery is owner-written, membership-rechecked on replay and protected from content GC
+ok 27 - delivery is owner-written, membership-rechecked on replay and protected from content GC
+  ---
+  duration_ms: 1010.9469
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Run changes stop an incomplete collection and preserve completed delivery as stale history
+ok 28 - Run changes stop an incomplete collection and preserve completed delivery as stale history
+  ---
+  duration_ms: 1691.4286
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: missing retained material invalidates qualification without rewriting the original READY receipt
+ok 29 - missing retained material invalidates qualification without rewriting the original READY receipt
+  ---
+  duration_ms: 1003.781
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a late unresolved original side effect prevents delivery preparation
+ok 30 - a late unresolved original side effect prevents delivery preparation
+  ---
+  duration_ms: 713.9548
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery keeps explicit human quality pending and does not complete the Tester
+ok 31 - delivery keeps explicit human quality pending and does not complete the Tester
+  ---
+  duration_ms: 992.9259
+  type: 'test'
+  ...
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: existing accepted data requires an exact migration artifact or an approved replacement decision
+ok 32 - existing accepted data requires an exact migration artifact or an approved replacement decision
+  ---
+  duration_ms: 3042.8588
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete current formal proofs freeze immutable candidate and review event without changing acceptance
+ok 33 - complete current formal proofs freeze immutable candidate and review event without changing acceptance
+  ---
+  duration_ms: 1969.5602
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: manual checks stay pending in candidate and Tester while automatic checks pass
+ok 34 - manual checks stay pending in candidate and Tester while automatic checks pass
+  ---
+  duration_ms: 1511.0805
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: history cannot become formal proof and missing delivery cannot produce a candidate
+ok 35 - history cannot become formal proof and missing delivery cannot produce a candidate
+  ---
+  duration_ms: 2171.0296
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unresolved high findings and unknown original writes prevent freezing with no partial candidate
+ok 36 - unresolved high findings and unknown original writes prevent freezing with no partial candidate
+  ---
+  duration_ms: 3147.1759
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new freeze creates new revision and never copies manual approval; history remains readable
+ok 37 - new freeze creates new revision and never copies manual approval; history remains readable
+  ---
+  duration_ms: 2133.8002
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate journal, content links, event and operation roll back together then original key recovers
+ok 38 - candidate journal, content links, event and operation roll back together then original key recovers
+  ---
+  duration_ms: 1965.4016
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: owner writes and replay recheck membership while current members may inspect stale history
+ok 39 - owner writes and replay recheck membership while current members may inspect stale history
+  ---
+  duration_ms: 1577.3987
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changed source head, material availability and original key arguments invalidate current qualification
+ok 40 - changed source head, material availability and original key arguments invalidate current qualification
+  ---
+  duration_ms: 2958.2424
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost freeze response returns the exact original candidate revision and event
+ok 41 - lost freeze response returns the exact original candidate revision and event
+  ---
+  duration_ms: 1519.4723
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: human pending cannot hide a failed automatic Work condition
+ok 42 - human pending cannot hide a failed automatic Work condition
+  ---
+  duration_ms: 1275.9967
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new candidate SHA cannot reuse old passing quality even when source tree matches
+ok 43 - new candidate SHA cannot reuse old passing quality even when source tree matches
+  ---
+  duration_ms: 1542.4809
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: freeze requires the current resource version before it creates a journal or event
+ok 44 - freeze requires the current resource version before it creates a journal or event
+  ---
+  duration_ms: 1409.2709
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual missing file cannot be frozen from a stale READY database flag
+ok 45 - actual missing file cannot be frozen from a stale READY database flag
+  ---
+  duration_ms: 1420.8441
+  type: 'test'
+  ...
+# (node:26912) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: basis changed during actual content reads rejects the final transaction
+ok 46 - basis changed during actual content reads rejects the final transaction
+  ---
+  duration_ms: 1403.5903
+  type: 'test'
+  ...
+# Subtest: frozen quality policy rejects lower thresholds, missing producers and ambiguous identities
+ok 47 - frozen quality policy rejects lower thresholds, missing producers and ambiguous identities
+  ---
+  duration_ms: 49.8869
+  type: 'test'
+  ...
+# Subtest: raw JSON rejects duplicate keys, invalid UTF-8, excessive depth and byte bounds
+ok 48 - raw JSON rejects duplicate keys, invalid UTF-8, excessive depth and byte bounds
+  ---
+  duration_ms: 5.8221
+  type: 'test'
+  ...
+# Subtest: coverage thresholds compare exact integer counts at 79/80 and 69/70
+    # Subtest: 79/70
+    ok 1 - 79/70
+      ---
+      duration_ms: 34.3973
+      type: 'test'
+      ...
+    # Subtest: 80/70
+    ok 2 - 80/70
+      ---
+      duration_ms: 20.9866
+      type: 'test'
+      ...
+    # Subtest: 80/69
+    ok 3 - 80/69
+      ---
+      duration_ms: 18.1925
+      type: 'test'
+      ...
+    # Subtest: 100/100
+    ok 4 - 100/100
+      ---
+      duration_ms: 18.2012
+      type: 'test'
+      ...
+    1..4
+ok 49 - coverage thresholds compare exact integer counts at 79/80 and 69/70
+  ---
+  duration_ms: 92.8198
+  type: 'test'
+  ...
+# Subtest: a fraction that displays as 80 percent remains below the actual minimum
+ok 50 - a fraction that displays as 80 percent remains below the actual minimum
+  ---
+  duration_ms: 58.4273
+  type: 'test'
+  ...
+# Subtest: shared files use a union of source positions and accept producer-local numeric IDs
+ok 51 - shared files use a union of source positions and accept producer-local numeric IDs
+  ---
+  duration_ms: 20.6708
+  type: 'test'
+  ...
+# Subtest: several statements on one line produce one coverable line
+ok 52 - several statements on one line produce one coverable line
+  ---
+  duration_ms: 22.19
+  type: 'test'
+  ...
+# Subtest: empty business scope fails and zero branches need a frozen complete-map rule
+ok 53 - empty business scope fails and zero branches need a frozen complete-map rule
+  ---
+  duration_ms: 15.9372
+  type: 'test'
+  ...
+# Subtest: full frozen business manifest detects omitted unexecuted files and producer reports
+ok 54 - full frozen business manifest detects omitted unexecuted files and producer reports
+  ---
+  duration_ms: 62.6208
+  type: 'test'
+  ...
+# Subtest: omitted or contradictory instrumentation is stale rather than a smaller denominator
+ok 55 - omitted or contradictory instrumentation is stale rather than a smaller denominator
+  ---
+  duration_ms: 55.8575
+  type: 'test'
+  ...
+# Subtest: a model success flag and self-reported totals cannot hide failed, skipped or missing cases
+    # Subtest: failed
+    ok 1 - failed
+      ---
+      duration_ms: 17.0163
+      type: 'test'
+      ...
+    # Subtest: pending
+    ok 2 - pending
+      ---
+      duration_ms: 17.6064
+      type: 'test'
+      ...
+    # Subtest: skipped
+    ok 3 - skipped
+      ---
+      duration_ms: 15.1306
+      type: 'test'
+      ...
+    # Subtest: todo
+    ok 4 - todo
+      ---
+      duration_ms: 14.7745
+      type: 'test'
+      ...
+    1..4
+ok 56 - a model success flag and self-reported totals cannot hide failed, skipped or missing cases
+  ---
+  duration_ms: 94.5378
+  type: 'test'
+  ...
+# Subtest: unknown or duplicated test identity and malformed status fail closed
+ok 57 - unknown or duplicated test identity and malformed status fail closed
+  ---
+  duration_ms: 45.7717
+  type: 'test'
+  ...
+# Subtest: wrong SHA, policy, image or command is stale and unknown/failed execution never passes
+ok 58 - wrong SHA, policy, image or command is stale and unknown/failed execution never passes
+  ---
+  duration_ms: 149.8866
+  type: 'test'
+  ...
+# Subtest: report identity and byte hashes reject copied provenance, changed bytes and output path
+ok 59 - report identity and byte hashes reject copied provenance, changed bytes and output path
+  ---
+  duration_ms: 58.5656
+  type: 'test'
+  ...
+# Subtest: known failed jobs retain original test and coverage counts without converting failure to pass
+ok 60 - known failed jobs retain original test and coverage counts without converting failure to pass
+  ---
+  duration_ms: 24.6084
+  type: 'test'
+  ...
+# Subtest: fixed path mapping rejects traversal, unrelated absolute roots, case aliases and unknown files
+ok 61 - fixed path mapping rejects traversal, unrelated absolute roots, case aliases and unknown files
+  ---
+  duration_ms: 17.8399
+  type: 'test'
+  ...
+# Subtest: automatic PASS preserves pending human review separately
+ok 62 - automatic PASS preserves pending human review separately
+  ---
+  duration_ms: 13.7448
+  type: 'test'
+  ...
+# Subtest: archived real template Vitest/V8 reports parse with exact historical Git source, including null end columns and implicit else
+ok 63 - archived real template Vitest/V8 reports parse with exact historical Git source, including null end columns and implicit else
+  ---
+  duration_ms: 1593.3941
+  type: 'test'
+  ...
+# (node:40232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: quality verification freezes original policy, exact candidate basis, original jobs and immutable calculation
+ok 64 - quality verification freezes original policy, exact candidate basis, original jobs and immutable calculation
+  ---
+  duration_ms: 354.4715
+  type: 'test'
+  ...
+# Subtest: quality content registration and its business reference commit atomically and survive a lost ACK
+ok 65 - quality content registration and its business reference commit atomically and survive a lost ACK
+  ---
+  duration_ms: 261.0978
+  type: 'test'
+  ...
+# Subtest: known failed execution remains immutable FAIL with original failure counts and cannot claim PASS
+ok 66 - known failed execution remains immutable FAIL with original failure counts and cannot claim PASS
+  ---
+  duration_ms: 505.3093
+  type: 'test'
+  ...
+# Subtest: current membership guards collection and project readers see original bytes without gaining write authority
+ok 67 - current membership guards collection and project readers see original bytes without gaining write authority
+  ---
+  duration_ms: 150.5017
+  type: 'test'
+  ...
+# Subtest: paused verification records original history as stale without resurrecting admission or changing accepted code
+ok 68 - paused verification records original history as stale without resurrecting admission or changing accepted code
+  ---
+  duration_ms: 314.261
+  type: 'test'
+  ...
+# Subtest: changed original source, job identity, missing profile or missing content cannot become current verification
+ok 69 - changed original source, job identity, missing profile or missing content cannot become current verification
+  ---
+  duration_ms: 657.5837
+  type: 'test'
+  ...
+# Subtest: human review remains pending and known raw quality does not itself complete Work
+ok 70 - human review remains pending and known raw quality does not itself complete Work
+  ---
+  duration_ms: 302.2773
+  type: 'test'
+  ...
+# Subtest: a deletion reservation cannot acquire a quality reference and active publication cannot be collected
+ok 71 - a deletion reservation cannot acquire a quality reference and active publication cannot be collected
+  ---
+  duration_ms: 228.6019
+  type: 'test'
+  ...
+# Subtest: unknown original effects block completion and changed terminal Job facts cannot be reused
+ok 72 - unknown original effects block completion and changed terminal Job facts cannot be reused
+  ---
+  duration_ms: 302.4105
+  type: 'test'
+  ...
+# Subtest: durable calculation rejects rounded coverage, lowered thresholds and fabricated required test counts
+ok 73 - durable calculation rejects rounded coverage, lowered thresholds and fabricated required test counts
+  ---
+  duration_ms: 267.2459
+  type: 'test'
+  ...
+# (node:33472) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: formal failed Work atomically derives original findings and replay preserves exact failures
+ok 74 - formal failed Work atomically derives original findings and replay preserves exact failures
+  ---
+  duration_ms: 563.1125
+  type: 'test'
+  ...
+# Subtest: model-only findings and missing preview do not become independently verified repair inputs
+ok 75 - model-only findings and missing preview do not become independently verified repair inputs
+  ---
+  duration_ms: 416.6581
+  type: 'test'
+  ...
+# Subtest: finding insertion fault rolls formal completion back and original retry creates one batch
+ok 76 - finding insertion fault rolls formal completion back and original retry creates one batch
+  ---
+  duration_ms: 442.2616
+  type: 'test'
+  ...
+# Subtest: trusted fix link requires the confirmed forward findings edge and original command receipt is stable
+ok 77 - trusted fix link requires the confirmed forward findings edge and original command receipt is stable
+  ---
+  duration_ms: 395.7037
+  type: 'test'
+  ...
+# Subtest: members can read original finding history after pause but cannot mutate or impersonate an owner
+ok 78 - members can read original finding history after pause but cannot mutate or impersonate an owner
+  ---
+  duration_ms: 384.6017
+  type: 'test'
+  ...
+# Subtest: exact integrated candidate containing the formally verified fix can close the original finding
+ok 79 - exact integrated candidate containing the formally verified fix can close the original finding
+  ---
+  duration_ms: 773.303
+  type: 'test'
+  ...
+# Subtest: a passing report on the original pre-fix SHA cannot close a finding
+ok 80 - a passing report on the original pre-fix SHA cannot close a finding
+  ---
+  duration_ms: 701.3596
+  type: 'test'
+  ...
+# Subtest: a new exact failed recheck remains a separate immutable failure and cannot close the original
+ok 81 - a new exact failed recheck remains a separate immutable failure and cannot close the original
+  ---
+  duration_ms: 737.7168
+  type: 'test'
+  ...
+# Subtest: a stopped or infrastructure-error execution does not become a trusted automatic business repair
+ok 82 - a stopped or infrastructure-error execution does not become a trusted automatic business repair
+  ---
+  duration_ms: 395.5565
+  type: 'test'
+  ...
+# Subtest: a new model-only finding preserves NOT_VERIFIED instead of inventing an independent failed recheck
+ok 83 - a new model-only finding preserves NOT_VERIFIED instead of inventing an independent failed recheck
+  ---
+  duration_ms: 746.9626
+  type: 'test'
+  ...
+# (node:25668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: repair publishes two forward nodes and explicit carry review without executing or confirming
+ok 84 - repair publishes two forward nodes and explicit carry review without executing or confirming
+  ---
+  duration_ms: 584.7947
+  type: 'test'
+  ...
+# Subtest: unacknowledged or changed source cannot publish; carry changes cannot be confirmed
+ok 85 - unacknowledged or changed source cannot publish; carry changes cannot be confirmed
+  ---
+  duration_ms: 439.7997
+  type: 'test'
+  ...
+# Subtest: requirement, interface, scope changes and foreign members require explicit review
+ok 86 - requirement, interface, scope changes and foreign members require explicit review
+  ---
+  duration_ms: 418.6056
+  type: 'test'
+  ...
+# Subtest: twenty-nine existing Works cannot append a repair pair
+ok 87 - twenty-nine existing Works cannot append a repair pair
+  ---
+  duration_ms: 412.7304
+  type: 'test'
+  ...
+# Subtest: two actual forward repair publications consume the Run budget without resetting old Work
+ok 88 - two actual forward repair publications consume the Run budget without resetting old Work
+  ---
+  duration_ms: 936.9056
+  type: 'test'
+  ...
+# Subtest: a newly planned and formally passing integrated recheck closes original failures without rewriting them
+ok 89 - a newly planned and formally passing integrated recheck closes original failures without rewriting them
+  ---
+  duration_ms: 826.7091
+  type: 'test'
+  ...
+# Subtest: an unresolved original pipeline effect blocks forward repair preparation
+ok 90 - an unresolved original pipeline effect blocks forward repair preparation
+  ---
+  duration_ms: 357.606
+  type: 'test'
+  ...
+# Subtest: a late unknown effect after plan publication blocks confirmation and issue linking
+ok 91 - a late unknown effect after plan publication blocks confirmation and issue linking
+  ---
+  duration_ms: 454.6698
+  type: 'test'
+  ...
+# Subtest: content ACK and plan publication failures preserve original repair keys and leave no partial plan
+ok 92 - content ACK and plan publication failures preserve original repair keys and leave no partial plan
+  ---
+  duration_ms: 444.3514
+  type: 'test'
+  ...
+# (node:10152) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new completion cannot trust legacy IPC success or direct successful state transition
+ok 93 - new completion cannot trust legacy IPC success or direct successful state transition
+  ---
+  duration_ms: 363.9902
+  type: 'test'
+  ...
+# Subtest: original candidate plus passing raw reports produces one content ACK and atomically applied success
+ok 94 - original candidate plus passing raw reports produces one content ACK and atomically applied success
+  ---
+  duration_ms: 399.3919
+  type: 'test'
+  ...
+# Subtest: model PASSED cannot overwrite original failed Job and reports; known failure completes with findings
+ok 95 - model PASSED cannot overwrite original failed Job and reports; known failure completes with findings
+  ---
+  duration_ms: 410.5389
+  type: 'test'
+  ...
+# Subtest: candidate evidence from another report and pending human checks cannot become automatic success
+ok 96 - candidate evidence from another report and pending human checks cannot become automatic success
+  ---
+  duration_ms: 758.0484
+  type: 'test'
+  ...
+# Subtest: passing raw checks cannot hide a declared unresolved finding or an unavailable preview artifact
+ok 97 - passing raw checks cannot hide a declared unresolved finding or an unavailable preview artifact
+  ---
+  duration_ms: 756.6596
+  type: 'test'
+  ...
+# Subtest: a read-only member cannot make WorkVerifier read or replay as the original owner
+ok 98 - a read-only member cannot make WorkVerifier read or replay as the original owner
+  ---
+  duration_ms: 298.2427
+  type: 'test'
+  ...
+# Subtest: proof basis and completion payload are immutable; code/config changes and unknown original writes stay blocked
+ok 99 - proof basis and completion payload are immutable; code/config changes and unknown original writes stay blocked
+  ---
+  duration_ms: 343.7876
+  type: 'test'
+  ...
+# Subtest: missing candidate bytes or retained report bytes blocks completion before any final decision
+ok 100 - missing candidate bytes or retained report bytes blocks completion before any final decision
+  ---
+  duration_ms: 600.7314
+  type: 'test'
+  ...
+# Subtest: lost content/final receipts recover original keys, artifact and completion without new verification work
+ok 101 - lost content/final receipts recover original keys, artifact and completion without new verification work
+  ---
+  duration_ms: 485.7071
+  type: 'test'
+  ...
+# Subtest: a failed content ACK transaction leaves neither verification artifact nor half reference
+ok 102 - a failed content ACK transaction leaves neither verification artifact nor half reference
+  ---
+  duration_ms: 391.5798
+  type: 'test'
+  ...
+# Subtest: only current owner can create/apply verification; members may inspect retained history after pause
+ok 103 - only current owner can create/apply verification; members may inspect retained history after pause
+  ---
+  duration_ms: 385.1817
+  type: 'test'
+  ...
+1..103
+# tests 111
+# suites 0
+# pass 111
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 145816.7838
+$ node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs tests/verified-findings.test.mjs tests/verified-repairs.test.mjs tests/preview-image.test.mjs tests/quality-artifact-refs.test.mjs

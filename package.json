@@ -14,7 +14,7 @@
     "build": "pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/result-verifier --filter @devmesh/code-workspaces --filter @devmesh/a2a-adapter --filter @devmesh/agent-runtime --filter @devmesh/runner --filter @devmesh/mcp-tools --filter @devmesh/input-api --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build",
     "build:vendor": "node scripts/build-vendor.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lint": "oxlint --deny-warnings apps packages scripts project tests",
+    "lint": "oxlint --deny-warnings --ignore-pattern=project/evidence/**/failed-source/** apps packages scripts project tests",
     "test:smoke": "node --test --test-reporter=tap tests/foundation.test.mjs",
     "test:contracts": "node --test --test-reporter=tap tests/contracts.test.mjs",
     "test:storage": "node --test --test-reporter=tap tests/storage*.test.mjs",
@@ -41,7 +41,7 @@
     "test:preparation": "node --test --test-concurrency=1 --test-reporter=tap tests/preparation*.test.mjs",
     "test:scheduler": "node --test --test-concurrency=1 --test-reporter=tap tests/scheduler*.test.mjs",
     "test:workspaces": "node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs tests/candidate*.test.mjs",
-    "test:verification": "node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs tests/verified-findings.test.mjs tests/verified-repairs.test.mjs tests/preview-image.test.mjs"
+    "test:verification": "node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs tests/verified-findings.test.mjs tests/verified-repairs.test.mjs tests/preview-image.test.mjs tests/quality-artifact-refs.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

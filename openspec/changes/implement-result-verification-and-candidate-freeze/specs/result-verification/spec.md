@@ -4,6 +4,13 @@
 
 ## ADDED Requirements
 
+### Requirement: Original evaluated reports have trusted artifact references
+The platform SHALL publish stable artifact references for retained original REPORT and RESULT materials through an explicit owner service that reads and verifies their bytes. Publication SHALL atomically bind the original quality operation, material key, content hash, Run, Attempt and input fingerprint, preserve original failed evaluations, and recheck owner permission on replay. Unpublished stale verification, incomplete content sets, unavailable bytes and Agent-supplied report bindings SHALL NOT create trusted references.
+
+#### Scenario: Original report reference publication loses its acknowledgment
+- **WHEN** original evaluated report and result artifacts commit but the reply is lost
+- **THEN** recovery returns the same artifact identities and immutable material bindings without another Runner Job or alteration of the evaluation
+
 ### Requirement: Reports prove their exact execution and source
 
 验证 SHALL 绑定原 Attempt、固定代码 SHA、检查配置哈希、原作业与输出字节哈希，保留命令、退出码、时间、执行环境和日志。原报告缺失、未 READY、源码／配置不符、来源作业未知或非正常结束时 MUST 不发布通过。

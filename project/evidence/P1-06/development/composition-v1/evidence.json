@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task5.1 development composition: actual local scheduled A2A/Runtime/model-protocol HTTP fixture/MCP/Git/Runner HTTP/content/verification/failure-repair-reverification/exact source promotion/delivery/freeze. Scripted model and controlled raw report/OCI bytes, no container or production toolchain execution; no product/stage acceptance.",
+  "sourceCommit": "6ed4a4fb0581a0407d3faf3136e2996f894029f8",
+  "dirty": true,
+  "sourceFingerprint": "8fe20fed169147fa11de7958a0b5e6fb3acd2ba216c1450c3ac09864a18d3908",
+  "unchanged": true,
+  "startedAt": "2026-11-12T07:32:33.865Z",
+  "finishedAt": "2026-11-12T07:36:08.731Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6843,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 618,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28538,
+      "output": "current-build.txt",
+      "sha256": "1127957257540ea6fe22de5aa9348fd4da5a2ebabb60b32203c3c5e077d72f60"
+    },
+    {
+      "name": "verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 146472,
+      "output": "verification.txt",
+      "sha256": "036fbe49c2642b03bff99c37a16fc3283cb9a2082cd015d96d677166c22dbcc2"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 31077,
+      "output": "storage.txt",
+      "sha256": "780f65beccb191e4cbab97a42ec5aa5480e125458dd1c89a95177163a792a6c7"
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1238,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/composition-v1/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/composition-v1/current-build.txt",
+      "sha256": "1127957257540ea6fe22de5aa9348fd4da5a2ebabb60b32203c3c5e077d72f60"
+    },
+    {
+      "path": "project/evidence/P1-06/development/composition-v1/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/composition-v1/report.json",
+      "sha256": "7802171ecd51782764288a22f89371e8bcb2c4fe7c6fc27f58ba94afb039ff9f"
+    },
+    {
+      "path": "project/evidence/P1-06/development/composition-v1/storage.txt",
+      "sha256": "780f65beccb191e4cbab97a42ec5aa5480e125458dd1c89a95177163a792a6c7"
+    },
+    {
+      "path": "project/evidence/P1-06/development/composition-v1/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/composition-v1/verification.txt",
+      "sha256": "036fbe49c2642b03bff99c37a16fc3283cb9a2082cd015d96d677166c22dbcc2"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no clean-checkout or product/stage acceptance.",
+    "The new composition uses actual scheduled A2A/Runtime/MCP/Git/Runner HTTP/content/quality/delivery/freeze interfaces in one Run without seeding DB admission, completion or source facts. Other suites retain their explicit fixture scopes.",
+    "Model responses are scripted HTTP fixtures and execution backend writes controlled raw reports/build/OCI bytes. Independent mapping supports fixed single-export fixture syntax only. No production model/OIDC/container/Docker build/Linux/runsc/health/data migration or accepted Release claimed."
+  ]
+}

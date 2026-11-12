@@ -10,6 +10,8 @@
 4. SOURCE 字节和业务引用在内容 ACK 事务落定后，才允许 verification 工作区首次发送流水线。可信服务用 `bind` 将每个 producer 固定到原 pipeline／ordinal；必须在该 stage PENDING 时完成，之后不能改 Job。
 5. PipelineCoordinator 持续核实原 Job。`collect({principalId,operationId})` 只 GET 原 Job／operation 和输出索引；验证实际 argv 哈希、镜像、退出事实、原输出 SHA／大小，再登记日志、报告和计算结果。
 6. `PENDING` 返回明确待核实代码，保持原验证 PREPARED。未知 Job、缺报告、HTTP 不可用或字节不符均不能形成通过。已登记材料可从内容库重读；终态回执丢失只返回原 EVALUATED，不发起测试。
+
+   原验证 EVALUATED 后，可信负责人服务可调用 `QualityCollector.references`。实际重读原 REPORT／RESULT 字节，再原子发布稳定 artifact 引用，供 Tester 的结构化候选使用；失败报告同样可引用，原失败不变。SOURCE／日志不作为候选报告发布。迁移 29 保存不可变的原材料对应关系，引用继承准确 Run／Attempt／输入指纹；成员权限在发布与重放时重新检查，未发布过的陈旧验证不能新建引用。普通 MCP 不能自行绑定质量报告。
 7. 本地 Runtime 将原角色候选、A2A 完成和已调度 Attempt 的 VERIFYING 状态在同一事务发布；共享 Registry 守卫核实当前 Run／Work epoch、控制门和非终态。原回执重放不会重复变更状态；暂停恢复可保留原产物，不推进已关闭的工作。项目负责人随后调用 `WorkVerifier.verify({principalId,operationId,runId,attemptId,qualityOperationId})`。服务读取原候选和材料字节；Worker 从当前计划／需求／Work revision／epoch、原归档或质量操作及完成条件派生评估。Developer 无法证明的检查保留 MISSING；Tester 不能用模型 PASSED 覆盖原失败。未解决候选缺陷及缺失引用也不能变为成功，独立质量计算仍保留原结果。
 8. Work 评估正文与 artifact 在同一内容 ACK 事务登记，随后完成事务重核依据并应用固定的 outcome／outputs／commit／evidence。PASS 可完成，Tester 的确定 findings 单独保留；必要人工项待处理时保持未完成。原键恢复只查询原证据和完成操作，不调用模型或 Runner。只读成员可查询历史，不通过该服务以负责人身份写入或重放。
 9. Tester 的独立、可复现原失败与 Work 完成原子生成缺陷。每个缺陷固定检查、准确 SHA／配置、原命令和执行身份、需求验收文本、原材料哈希；模型声明和基础设施故障保留原评估，不据此自动创建业务修复。
@@ -32,3 +34,5 @@ SOURCE 声明／登记与 stage 首次 SENT 的互斥由 SQLite 顺序保证，�
 新的 `recordVerifiedWork` 只接受已 ACK 的不可变 Work 评估及其稳定 completionKey，调用方不能自行提交 success；一般 `transitionAttempt` 不能直接进入 SUCCEEDED。历史已提交操作按原键重放，旧结果保留。测试用历史数据只在测试文件中显式种入，不向应用提供 fixture 开关。Work 评估及质量材料的外键会阻止 GC，缺失或变更的来源不能复用为当前证明。
 
 本地采集测试使用实际认证 HTTP、Runner SQLite、输出文件、PipelineCoordinator 和内容存储；执行后端写入固定报告和交付字节，Git／准入与独立映射为明确夹具，不是实际 Docker 镜像构建。正式 Tester 完成用例明确种入原 Runtime 候选等数据库事实；Developer 链路另用真实本地模型协议 HTTP 夹具、Runtime、认证 MCP、Git 提交／归档和 Worker 测试。缺陷及前向修复测试实际执行 WorkVerifier、原报告计算、内容 ACK、计划发布／确认、调度与缺陷事务，明确种入 Git／准入／Runner／Runtime 候选事实。这些用例不证明真实模型、OIDC、Linux／gVisor 执行或生产工具链。生产映射 provider、Runtime 自动组合及候选冻结的完整链路继续按 OpenSpec 实施。
+
+`tests/verification-composition.test.mjs` 将服务显式接到同一个 Run：计划确认、Scheduler、A2A HTTP、Runtime、本地模型协议 HTTP 夹具、认证 MCP、隔离 Git 提交／归档／合并、Runner HTTP、原报告及 artifact 发布、失败缺陷、前向修复计划与沿用确认、新修复／复验、准确已测试提交晋升、交付与冻结。准入／完成／源码／Runtime／质量／候选事实均经实际接口生成，不写测试 DB 事实。独立映射只支持本用例固定的单行 export 语法并核对实际 Git blob；后端写入受控报告／镜像字节，未执行容器或真实测试／构建工具链。部署默认仍需显式配置这些服务及可信工具链，该用例不代表真实模型、Docker/runsc 或产品验收。

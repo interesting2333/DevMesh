@@ -53,6 +53,15 @@ export class QualityCollector {
   async bind(subject:Subject,binding:{producerId:string;pipelineId:string;ordinal:number}){
     const verification=await this.storage.request('getQualityVerification',subject);return this.storage.request('bindQualityStage',{...subject,requestHash:verification.requestHash,...binding});
   }
+  /** Publish original report/result references after reading their retained bytes.
+   * This private owner service never uploads Agent-supplied report identities. */
+  async references(subject:Subject){
+    const verification=await this.storage.request('getQualityVerification',subject);
+    if(verification.state!=='EVALUATED')return reject('QUALITY_NOT_EVALUATED');
+    const rows=(await this.materials(subject)).filter(r=>['REPORT','RESULT'].includes(r.descriptor.kind));
+    for(const row of rows)await this.read(subject,row);
+    return this.storage.request('publishQualityArtifacts',{...subject,requestHash:verification.requestHash,contentHashes:[...new Set(rows.map(r=>r.contentHash!))].sort()});
+  }
   async collect(subject:Subject):Promise<CollectionResult>{
     const verification=await this.storage.request('getQualityVerification',subject),bound={...subject,requestHash:verification.requestHash};
     if(verification.state==='EVALUATED')return {state:'EVALUATED',verification};

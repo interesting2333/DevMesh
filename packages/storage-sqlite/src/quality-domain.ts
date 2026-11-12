@@ -85,6 +85,19 @@ export function createQualityDomain(db:DatabaseSync,candidates?:Pick<ReturnType<
    exec("INSERT INTO quality_verifications VALUES(?,?,?,?,?,?,?,?,?,'PREPARED',NULL,?,NULL)",i.operationId,i.principalId,r.project_id!,i.runId,i.attemptId,i.allocationOperationId,i.configHash,requestHash,canonical(basis),new Date().toISOString());const v=verification(i.operationId);if(!current(v))fail('QUALITY_BASIS_STALE');return view(v);
   });},
   getQualityVerification(i:QualityInput<'getQualityVerification'>){return view(owned(i.operationId,i.principalId));},
+  publishQualityArtifacts(i:QualityInput<'publishQualityArtifacts'>){return transaction(db,()=>{
+   const v=bound(i),rows=all("SELECT * FROM quality_materials WHERE operation_id=? AND kind IN ('REPORT','RESULT') ORDER BY material_key",i.operationId),hashes=[...new Set(rows.map(r=>String(r.content_hash)))].sort();
+   if(v.state!=='EVALUATED'||canonical(hashes)!==canonical(i.contentHashes)||rows.length!==policy(v).reports.length+1)fail('QUALITY_ARTIFACT_CONTENT_CHANGED');
+   const old=all('SELECT * FROM quality_artifact_refs WHERE operation_id=? ORDER BY material_key',i.operationId);
+   if(!old.length&&!current(v))fail('QUALITY_BASIS_STALE');
+   if(old.length&&old.length!==rows.length)fail('QUALITY_ARTIFACT_CONTENT_CHANGED');
+   for(const r of rows){ready(r);const prior=old.find(p=>p.material_key===r.material_key);if(prior){if(prior.content_hash!==r.content_hash||!get("SELECT 1 FROM artifacts WHERE artifact_id=? AND content_hash=? AND project_id=? AND run_id=? AND attempt_id=? AND state='READY'",prior.artifact_id!,r.content_hash!,v.project_id!,v.run_id!,v.attempt_id!))fail('QUALITY_ARTIFACT_CONTENT_CHANGED');continue;}
+    const id='artifact_'+digest('quality-artifact\0'+i.operationId+'\0'+String(r.material_key)),object=get('SELECT * FROM content_objects WHERE content_hash=?',r.content_hash!)!,basis=json<QualityBasis>(v.basis_json);
+    exec("INSERT INTO artifacts VALUES(?,?,?,?,?,?,?,?,'READY',?,NULL,?)",id,v.project_id!,v.run_id!,v.attempt_id!,'quality-'+String(r.kind).toLowerCase(),r.content_hash!,object.byte_size!,object.storage_key!,basis.inputFingerprint,new Date().toISOString());
+    exec('INSERT INTO quality_artifact_refs VALUES(?,?,?,?)',i.operationId,r.material_key!,id,r.content_hash!);
+   }
+   return all('SELECT * FROM quality_artifact_refs WHERE operation_id=? ORDER BY material_key',i.operationId).map(r=>({materialKey:String(r.material_key),artifactId:String(r.artifact_id),sha256:String(r.content_hash),targetCommit:json<QualityBasis>(v.basis_json).targetCommit}));
+  });},
   getQualitySourceManifest(i:QualityInput<'getQualitySourceManifest'>){const v=bound(i);return sourceManifest.parse(json(get('SELECT manifest_json FROM workspace_allocations WHERE operation_id=?',v.allocation_operation_id!)!.manifest_json));},
   bindQualityStage(i:QualityInput<'bindQualityStage'>){return transaction(db,()=>{
    const v=bound(i),old=get('SELECT * FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?',i.operationId,i.producerId);

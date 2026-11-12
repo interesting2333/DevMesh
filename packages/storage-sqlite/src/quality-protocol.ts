@@ -27,6 +27,7 @@ export const qualityRequests={
  declareQualityMaterial:z.strictObject({...bound,descriptor:qualityMaterialDescriptor}),
  listQualityMaterials:z.strictObject({...subject,afterKey:z.string().max(256).default(''),limit:z.number().int().min(1).max(100).default(50)}),
  completeQualityVerification:z.strictObject(bound),
+  publishQualityArtifacts:z.strictObject({...bound,contentHashes:z.array(sha256).min(1).max(50)}),
 };
 export type QualityMethod=keyof typeof qualityRequests;
 export type QualityInput<M extends QualityMethod>=z.output<(typeof qualityRequests)[M]>;
@@ -35,9 +36,11 @@ export interface QualityOrigin {producerId:string;pipelineId:string;ordinal:numb
 export interface QualityVerification {operationId:string;principalId:string;projectId:string;runId:string;attemptId:string;allocationOperationId:string;configHash:string;requestHash:string;basis:QualityBasis;state:'PREPARED'|'EVALUATED';qualification:'CURRENT'|'STALE';evaluation:QualityEvaluation|null;origins:QualityOrigin[]}
 export interface QualityMaterial {operationId:string;materialKey:string;descriptor:QualityMaterialDescriptor;writeKey:string;contentHash:string|null;writeId:string|null}
 export interface QualityStage {producerId:string;pipelineId:string;ordinal:number;operationId:string;state:string;job:PipelineInput<'recordPipelineStage'>['job']|null}
+export interface QualityArtifactRef {materialKey:string;artifactId:string;sha256:string;targetCommit:string}
 export interface QualityResults {
  registerQualityPolicy:{configHash:string;policy:QualityPolicy};getQualityPolicy:{configHash:string;policy:QualityPolicy};
  beginQualityVerification:QualityVerification;getQualityVerification:QualityVerification;declareQualityOrigin:QualityOrigin;
   getQualitySourceManifest:SourceManifest;bindQualityStage:QualityStage;listQualityStages:QualityStage[];
  declareQualityMaterial:QualityMaterial;listQualityMaterials:QualityMaterial[];completeQualityVerification:QualityVerification;
+  publishQualityArtifacts:QualityArtifactRef[];
 }
