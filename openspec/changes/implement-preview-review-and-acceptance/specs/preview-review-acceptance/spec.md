@@ -60,6 +60,14 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 - **WHEN** Runner 预留或唯一派发位已提交但 ACK 丢失，随后重试或重启
 - **THEN** 原操作返回同一不可替换预留，派发位不再次给出执行许可；未派发取消可以释放，已派发未知预留继续保留并只查询原对象
 
+#### Scenario: A container action loses its acknowledgement
+- **WHEN** 原 network／create／start／stop 动作的派发位或执行 ACK 丢失，或者 Runner 重启
+- **THEN** 只检查原持久名称、profile、labels 与实例，不重发原动作；不同镜像、目录、网络或实例不能替代原对象，未核实退出继续占用资源
+
+#### Scenario: Generated application tries to change preparation evidence
+- **WHEN** 预览容器写业务数据库，或试图改写同目录准备日志、完成回执和应用身份 marker
+- **THEN** 数据库及 WAL 在独立 dataset 内按配额可写，原日志／回执／marker 的只读挂载受到核验，不开放平台目录、备份、socket 或凭据
+
 #### Scenario: Dataset directory survives workspace cleanup
 - **WHEN** 工作空间被清理，或请求尝试用路径、链接、硬链接替代 dataset 数据库／日志／侧文件
 - **THEN** dataset 保留在受控 ID 决定的独立 Runner 目录，拒绝越界或链接文件，不暴露控制数据库和备份

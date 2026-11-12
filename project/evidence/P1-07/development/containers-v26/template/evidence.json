@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "68eb5cb9834d81a3d7f486f54f4cdc10f690e5cf",
+  "dirty": true,
+  "sourceFingerprint": "89801e93c9f2ff4d65d2b42fbaf3b3bc723a65cdd0957e7a6cea3a097f1bc251",
+  "startedAt": "2026-11-12T11:19:01.620Z",
+  "finishedAt": "2026-11-12T11:19:47.652Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "durationMs": 950,
+      "output": "frozen-install.txt",
+      "sha256": "cc141a73f1768a89821cf5a64376e54da43cfaeac8dee1b4ddd7084715fba90c"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "durationMs": 4507,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "build-server",
+      "exitCode": 0,
+      "durationMs": 2211,
+      "output": "build-server.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "build-web",
+      "exitCode": 0,
+      "durationMs": 3405,
+      "output": "build-web.txt",
+      "sha256": "82721f047405da4bf933c7cd2fe16051d27427a5a57588585d9debbc42a25cd1"
+    },
+    {
+      "name": "unit-coverage",
+      "exitCode": 0,
+      "durationMs": 22928,
+      "output": "unit-coverage.txt",
+      "sha256": "d31e26c817a28e7bf62a814d4f09387fc3a80cf74ca164852e5d0bd9774af9b8"
+    },
+    {
+      "name": "browser",
+      "exitCode": 0,
+      "durationMs": 12008,
+      "output": "browser.txt",
+      "sha256": "3bf9e39744d318099ada59ec5239a9a8b9fbb39de8097a99904258c41e89e698"
+    }
+  ],
+  "unitTests": {
+    "total": 20,
+    "passed": 20,
+    "failed": 0,
+    "pending": 0
+  },
+  "browserTests": {
+    "startTime": "2026-11-12T11:19:36.972Z",
+    "duration": 10577.727,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browserAnnotations": [
+    {
+      "type": "browser-version",
+      "description": "158.0.8127.18"
+    }
+  ],
+  "coverage": {
+    "lines": {
+      "total": 321,
+      "covered": 298,
+      "skipped": 0,
+      "pct": 92.83
+    },
+    "statements": {
+      "total": 471,
+      "covered": 423,
+      "skipped": 0,
+      "pct": 89.8
+    },
+    "functions": {
+      "total": 97,
+      "covered": 87,
+      "skipped": 0,
+      "pct": 89.69
+    },
+    "branches": {
+      "total": 275,
+      "covered": 238,
+      "skipped": 0,
+      "pct": 86.54
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/browser.txt",
+      "sha256": "3bf9e39744d318099ada59ec5239a9a8b9fbb39de8097a99904258c41e89e698"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/build-server.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/build-web.txt",
+      "sha256": "82721f047405da4bf933c7cd2fe16051d27427a5a57588585d9debbc42a25cd1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/frozen-install.txt",
+      "sha256": "cc141a73f1768a89821cf5a64376e54da43cfaeac8dee1b4ddd7084715fba90c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/report.json",
+      "sha256": "fdafd17fbd062d3fd316ac6df259e9bfca77ce4311bf3393e9bf85a14a37b503"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/unit-coverage.txt",
+      "sha256": "d31e26c817a28e7bf62a814d4f09387fc3a80cf74ca164852e5d0bd9774af9b8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/validation-driver.mjs",
+      "sha256": "ed30b6d468445b8541f993097cedf2e028d488fc059be164834a6250ee9410ed"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/unit-results.json",
+      "sha256": "d172c1aaea01f4a7c7fb3ae884685d168a4424007f5c8fae2b4c623fbe994661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/coverage-summary.json",
+      "sha256": "badce7652de132b7eae61ab5fd0979fcbdbe32809cdccca234b98ff151423e09"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/browser-results.json",
+      "sha256": "b3f67262356ca3d2451581a1c0d4d4b5270f00d73693d0576ba67f87a7ef2151"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/template/commands.json",
+      "sha256": "8a6a2256839a1b15a726255a3c784f06d389a104ad5aad6666bbde3a48367259"
+    }
+  ],
+  "scope": "Actual first-party template type/build, SQLite/Worker/HTTP/CLI/DOM unit coverage and Chromium browser tests; includes explicit 0.0.0.0 listener, default loopback and invalid host rejection. No generated untrusted application executes on the control host. No real container, Linux/gVisor, physical mount, quota or firewall validation."
+}

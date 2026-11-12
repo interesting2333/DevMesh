@@ -7,8 +7,15 @@ import type {WorkspaceFence,WorkspaceBinding} from './workspace-fence.js';
 import {previewRuntimeFact} from '@devmesh/storage-sqlite';
 import {reservePreview,runnerCapacity} from './preview-reservation.js';
 import type {PreviewReservation,RunnerCapacity,RunnerCapacityUsage} from './preview-reservation.js';
+import {previewContainerProfile,previewContainerActionRequest,previewContainerAction,previewContainerObservation} from './preview-container.js';
+import type {PreviewContainerJournal} from './preview-container.js';
 const owner={controllerId:opaqueKey};
+const previewBound={...owner,reservationId:opaqueKey,requestHash:z.string().regex(/^[a-f0-9]{64}$/)};
 export const storeRequests={
+ previewContainerPrepare:z.strictObject({...previewBound,profile:previewContainerProfile}),
+ previewContainerGet:z.strictObject(previewBound),
+ previewContainerActionBegin:z.strictObject({...previewBound,action:previewContainerActionRequest}),
+ previewContainerActionObserve:z.strictObject({...previewBound,kind:previewContainerAction,actionRequestHash:z.string().regex(/^[a-f0-9]{64}$/),observation:previewContainerObservation}),
  capacityConfigure:runnerCapacity,
  capacityUsage:z.strictObject({}),
  previewReserve:z.strictObject({...owner,...reservePreview.shape}),
@@ -39,6 +46,8 @@ export type RunnerStoreMethod=keyof typeof storeRequests;
 export type StoreInput<M extends RunnerStoreMethod>=z.input<(typeof storeRequests)[M]>;
 export interface InternalJob {job:Job;execution:{workspacePath:string;argv:string[]};leasePermit:Job['request']['permit'];leaseRenewedAt:string}
 export interface StoreResults {
+ previewContainerPrepare:PreviewContainerJournal;previewContainerGet:PreviewContainerJournal|null;
+ previewContainerActionBegin:{dispatch:boolean;journal:PreviewContainerJournal};previewContainerActionObserve:PreviewContainerJournal;
  capacityConfigure:RunnerCapacity;
  capacityUsage:{capacity:RunnerCapacity|null;usage:RunnerCapacityUsage};
  previewReserve:PreviewReservation;previewReservationGet:PreviewReservation;previewReservationByOperation:PreviewReservation|null;

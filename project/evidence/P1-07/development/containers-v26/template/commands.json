@@ -1,0 +1,61 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "cwd": "D:/yms/AI/DevMesh/templates/web-crud-v1",
+  "entry": {
+    "executable": "D:\\Environments\\nodejs\\node.exe",
+    "args": [
+      "scripts/verify-template.mjs",
+      ".cache/p1-07/containers-template-v26"
+    ]
+  },
+  "steps": [
+    {
+      "name": "frozen-install",
+      "args": [
+        "D:/yms/AI/DevMesh/node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--frozen-lockfile"
+      ]
+    },
+    {
+      "name": "typecheck",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ]
+    },
+    {
+      "name": "build-server",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.server.json"
+      ]
+    },
+    {
+      "name": "build-web",
+      "args": [
+        "node_modules/vite/bin/vite.js",
+        "build"
+      ]
+    },
+    {
+      "name": "unit-coverage",
+      "args": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--coverage"
+      ]
+    },
+    {
+      "name": "browser",
+      "args": [
+        "node_modules/@playwright/test/cli.js",
+        "test"
+      ]
+    }
+  ],
+  "scope": "Exact template verification command arrays; no second execution."
+}

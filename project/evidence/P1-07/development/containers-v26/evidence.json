@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "68eb5cb9834d81a3d7f486f54f4cdc10f690e5cf",
+  "dirty": true,
+  "sourceFingerprint": "082d35511f7d9cb27646bd1d869daa9c722b0ec11e90aaa4e35246ee1b27de82",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T11:18:51.393Z",
+  "finishedAt": "2026-11-12T11:23:54.321Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1248,
+      "output": "frozen-install.txt",
+      "sha256": "f18b032dbf472717e305ef7ce48910aacedaae1c778c996bd8558a9bd3b8ec26"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13686,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1173,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 27362,
+      "output": "current-build.txt",
+      "sha256": "b49a493e52946c0b5db123494ca43a485a676f82d50451eefab488b177ec8cf4"
+    },
+    {
+      "name": "containers",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 43646,
+      "output": "containers.txt",
+      "sha256": "b69e3a17705afac86e07cb0f17e07ca661db4f26370fee447e411d0b40f97987",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "capacity",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9584,
+      "output": "capacity.txt",
+      "sha256": "54289562bbf175f355e93bbbac9a81d7f0bb006944f19a326faff4ce668705c9",
+      "tests": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "runner",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 61205,
+      "output": "runner.txt",
+      "sha256": "0a5afe07da2297fb79d1a61c0d84a83cc8ebe8bf50447951a801dd0a26861f56",
+      "tests": {
+        "tests": 44,
+        "pass": 43,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "lifecycle",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 47138,
+      "output": "lifecycle.txt",
+      "sha256": "9bd590609affb277cf1e274c0be5daa7a8297a4ee813772a7bdcf50a5fdd8682",
+      "tests": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "datasets",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 43589,
+      "output": "datasets.txt",
+      "sha256": "cbe1317b2fb43409095cc76b3407941c09e3e3ed1d46cb50160eea7300614a3c",
+      "tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28799,
+      "output": "preview-intents.txt",
+      "sha256": "4d2b2237dde25a71695dbaf71025b99dc746d66832624e06352a522f4d6a346c",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "workspace-fencing",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5481,
+      "output": "workspace-fencing.txt",
+      "sha256": "0aea88079d4c557c0674a6d7eaafcbaf25e624c4b906d2e7f65dbb3d18e4a97d",
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 10821,
+      "output": "scheduler.txt",
+      "sha256": "943ecec3f6bff4009b2470e145d0c74677fbffd8fdd960d35e58a58e9cb7b4ac",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "smoke",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5288,
+      "output": "smoke.txt",
+      "sha256": "bffcfc3ede51888f357efea6102c655dd81a56f1644d47490ec90dc88b25e555",
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2691,
+      "output": "contracts.txt",
+      "sha256": "be542c641157f24b4c1163d18d75719ffad909840d3c24df48b6e050bfbcaaa2",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1052,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/capacity.txt",
+      "sha256": "54289562bbf175f355e93bbbac9a81d7f0bb006944f19a326faff4ce668705c9"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/containers.txt",
+      "sha256": "b69e3a17705afac86e07cb0f17e07ca661db4f26370fee447e411d0b40f97987"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/contracts.txt",
+      "sha256": "be542c641157f24b4c1163d18d75719ffad909840d3c24df48b6e050bfbcaaa2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/current-build.txt",
+      "sha256": "b49a493e52946c0b5db123494ca43a485a676f82d50451eefab488b177ec8cf4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/datasets.txt",
+      "sha256": "cbe1317b2fb43409095cc76b3407941c09e3e3ed1d46cb50160eea7300614a3c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/frozen-install.txt",
+      "sha256": "f18b032dbf472717e305ef7ce48910aacedaae1c778c996bd8558a9bd3b8ec26"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/lifecycle.txt",
+      "sha256": "9bd590609affb277cf1e274c0be5daa7a8297a4ee813772a7bdcf50a5fdd8682"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/preview-intents.txt",
+      "sha256": "4d2b2237dde25a71695dbaf71025b99dc746d66832624e06352a522f4d6a346c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/report.json",
+      "sha256": "f15e0d5dac7a6b2b593a12140ea3d87fd8e821f4125b2585dc28fa0bfd6e0a27"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/runner.txt",
+      "sha256": "0a5afe07da2297fb79d1a61c0d84a83cc8ebe8bf50447951a801dd0a26861f56"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/scheduler.txt",
+      "sha256": "943ecec3f6bff4009b2470e145d0c74677fbffd8fdd960d35e58a58e9cb7b4ac"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/smoke.txt",
+      "sha256": "bffcfc3ede51888f357efea6102c655dd81a56f1644d47490ec90dc88b25e555"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/workspace-fencing.txt",
+      "sha256": "0aea88079d4c557c0674a6d7eaafcbaf25e624c4b906d2e7f65dbb3d18e4a97d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/validation-driver.mjs",
+      "sha256": "cd473cacb73dccf65bd5f3818f224b64197fd2840975b84423c56e5fb3303363"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v26/commands.json",
+      "sha256": "8823dc09ee37b39309681692188822637f0116748912c2d3f83f1cfd6765fcb5"
+    }
+  ],
+  "scope": "P1-07 partial task2.3: Runner v4 original container profile and NETWORK_CREATE/CREATE/START/STOP journal, immutable original dispatch and verified-object binding; explicit RunnerPreviewBackend composition with actual local SQLite dataset and bounded HTTP health. Docker argument and strict image/network/container verification use explicit input facts, while a ControlledContainerDriver supplies network/container effects for journal recovery tests and executes no Docker. No physical image execution/exit, hard quota, host firewall, gVisor or production preview composition/watchdog is proved; full2.3 remains unchecked.",
+  "limitations": [
+    "Partial task2.3 remains unchecked; same Codex implementation/review, not independent/human or stage acceptance.",
+    "Actual Runner/control SQLite Workers, durable original action transactions, rollback, close/reopen, dataset preparation and bounded HTTP probes execute locally. ControlledContainerDriver supplies all network/container facts, executes no Docker and probes a separate fixture HTTP server.",
+    "Docker argument and strict image/network/container checks execute on explicit input facts; the Linux CLI execution path, physical image execution/exit, hard directory quota and host firewall are not exercised on Windows. Driver remains closed without actual Linux and explicit quota/network-isolation dependencies.",
+    "No independent Runner preview expiry watchdog, explicit never-started container cleanup/removal, production platform assembly or real Linux Docker/gVisor evidence.",
+    "No real model, enterprise OIDC, production migration, preview gateway, T5, publication or product acceptance."
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "68eb5cb9834d81a3d7f486f54f4cdc10f690e5cf",
+  "dirty": true,
+  "sourceFingerprint": "f2e6d962dbca6cdcb4f4477d2748ee8a2fb5c5752604d3948d6015240a982101",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T11:12:39.547Z",
+  "finishedAt": "2026-11-12T11:15:20.727Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1995,
+      "output": "frozen-install.txt",
+      "sha256": "dadb89cdb6976fa1deb9f43ba712c0e25e952b33c030c3bb93329fa431e167e1"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26603,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1619,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 37768,
+      "output": "current-build.txt",
+      "sha256": "1b2982074462fbc767a6c8463b48cfca817b11a84b6126cedf0c928818bd649c"
+    },
+    {
+      "name": "containers",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 92826,
+      "output": "containers.txt",
+      "sha256": "8754723a3a295cee7127655993dbd1d82ee69acb198feb676d68664a63d3b2e4",
+      "tests": {
+        "tests": 14,
+        "pass": 13,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/containers.txt",
+      "sha256": "8754723a3a295cee7127655993dbd1d82ee69acb198feb676d68664a63d3b2e4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/current-build.txt",
+      "sha256": "1b2982074462fbc767a6c8463b48cfca817b11a84b6126cedf0c928818bd649c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/capacity-domain.ts",
+      "sha256": "b45877fe31f68c4b8622a6a43740b404db4aa6ec3ab2c5cebde8a451ae71c4d7"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/container-domain.ts",
+      "sha256": "97a25037ca966275b2d2f0ee1a3e83c1afb8abb29591d5c7caf058b17c1212fa"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/fence-domain.ts",
+      "sha256": "8f2d4f32072e166dd6d6f08fa4ba5579262bee13f0c65a654864e43e13ab35b6"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/index.ts",
+      "sha256": "ad0832712dc6ab419a72559ffbb22be52ecffaa0ddf33c70ad8c10a8da8e6c8d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/preview-backend.ts",
+      "sha256": "09f6983b6cbe3778cab5ff1438f5f39d969d54cd5c85c71f57842e13fc1ceb23"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/preview-container.ts",
+      "sha256": "8fa86d87af4ba4c0ba6eec64a49b2426837f8bc7f3755afbed928eb25d7bd35c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/preview-docker.ts",
+      "sha256": "4930b6d07b31f181276bc3b31480cd1fb82dd8e834a460115cfa871e58c1e2c2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/store-protocol.ts",
+      "sha256": "887034464db7eb17f780543d03513a4712bc0019f7fe33ee1f890a146914358d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/packages/runner/src/worker.ts",
+      "sha256": "e49be9c9c667e770c559388211349d0aefa6540069a81fdaf21a3de9a8f4d858"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/templates/web-crud-v1/src/server/main.ts",
+      "sha256": "40f09eb03599ce0097102ec877f97329a3b4b264c5f14cd746c15c2012460a9b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/templates/web-crud-v1/src/server/service.ts",
+      "sha256": "58155f0f0842033bb6ff07ae7d04bb048a109c7ecf361f3691f6e05d60bbc8de"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/templates/web-crud-v1/template.json",
+      "sha256": "96d8f9080afa513f0aa16a7b4fb36edb66e1f47b8a3c23fbfdac1bace413cbaf"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/templates/web-crud-v1/tests/cli.test.ts",
+      "sha256": "ce13b73dc84190db75e89c5546cb1074f5b6e82229ebcf59f222ad307dee99c2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/templates/web-crud-v1/tests/http.test.ts",
+      "sha256": "349c842edae3e52c40a038954b834ca3ad285eed89f599d306a72216053f1284"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/tests/fixtures/preview-container.mjs",
+      "sha256": "dbc23b55ce3e363ab3960ab1c7390d808cafe1a2db2d3a16d30b0c6eeb5fd899"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/tests/runner-preview-capacity.test.mjs",
+      "sha256": "823a93b50d215b58fd9b1b6742841f89d757273360a0241140bcb1b0b71c3461"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/tests/runner-preview-container.test.mjs",
+      "sha256": "42a93dd3c6e606c9dfa6045609cf135d135ecb36892e4dbc8b6576217e16b259"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/failed-source/tests/runner-upgrade.test.mjs",
+      "sha256": "06b3f0404b7360dfe3b1a5bbb1cf14744da9d73fab3c3814ff7c2df02850ec9b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/frozen-install.txt",
+      "sha256": "dadb89cdb6976fa1deb9f43ba712c0e25e952b33c030c3bb93329fa431e167e1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/report.json",
+      "sha256": "e61d1825b17d95b9fc1133646f49b3e5fb3ee7661b900e614dd5ed523de6e2eb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/validation-driver.mjs",
+      "sha256": "14b3274dc38315cfe36ad2c8d9ecdc60fa9275c2960b0f561ec0d7db56c28ba2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/containers-v25-failed/commands.json",
+      "sha256": "c975e39bcf8a901d69efcd4a4e86ae4c7309ebfb5fb7062a16c226f0a39362e9"
+    }
+  ],
+  "scope": "P1-07 partial task2.3: Runner v4 original container profile and NETWORK_CREATE/CREATE/START/STOP journal, immutable original dispatch and verified-object binding; explicit RunnerPreviewBackend composition with actual local SQLite dataset and bounded HTTP health. Docker argument and strict image/network/container verification use explicit input facts, while a ControlledContainerDriver supplies network/container effects for journal recovery tests and executes no Docker. No physical image execution/exit, hard quota, host firewall, gVisor or production preview composition/watchdog is proved; full2.3 remains unchecked.",
+  "limitations": [
+    "Partial task2.3 remains unchecked; same Codex implementation/review, not independent/human or stage acceptance.",
+    "Actual Runner/control SQLite Workers, durable original action transactions, rollback, close/reopen, dataset preparation and bounded HTTP probes execute locally. ControlledContainerDriver supplies all network/container facts, executes no Docker and probes a separate fixture HTTP server.",
+    "Docker argument and strict image/network/container checks execute on explicit input facts; the Linux CLI execution path, physical image execution/exit, hard directory quota and host firewall are not exercised on Windows. Driver remains closed without actual Linux and explicit quota/network-isolation dependencies.",
+    "No independent Runner preview expiry watchdog, explicit never-started container cleanup/removal, production platform assembly or real Linux Docker/gVisor evidence.",
+    "No real model, enterprise OIDC, production migration, preview gateway, T5, publication or product acceptance."
+  ],
+  "failure": "Platform composition test incorrectly read the start operationId from the returned preview when advancing STOP. The separate stopOperationId must be used. Preserve the original failing source/log; fix only the test operation reference, never the original dispatch/recovery guards."
+}

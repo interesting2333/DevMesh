@@ -10,6 +10,6 @@
     "preview": ["node", "dist/server/main.js", "serve"]
   },
   "coverage": { "include": ["src/**/*.{ts,tsx}"], "minimumLines": 80, "minimumBranches": 70 },
-  "environment": ["APP_DATA_ROOT", "APP_PORT", "APP_READ_ONLY"],
+  "environment": ["APP_DATA_ROOT", "APP_PORT", "APP_HOST", "APP_READ_ONLY"],
   "shutdown": { "signal": "SIGTERM", "graceMs": 10000, "descendantStopAuthority": "Runner" }
 }

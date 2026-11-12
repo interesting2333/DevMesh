@@ -90,6 +90,14 @@ Runner 前向迁移 v3 为预览保存独立于短租约作业的持久容量预
 
 此步骤仅实现并测试真实 Runner SQLite 迁移、持久预留、统一作业准入和事实核验，不新增公共 HTTP／MCP 准入或回执入口。资源字段来自未来显式可信容器策略，不由普通用户／模型任意指定；实际 cgroup、磁盘配额、容器动作日志与独立 watchdog 仍由 2.3 后续实现和验证。
 
+### 11. Container actions have a durable Runner journal
+
+在容量预留之外，Runner v4 固定原启动请求、完整容器 profile 和唯一 network／container 名。每个 NETWORK_CREATE／CREATE／START／STOP 动作先提交不可替换 SENT 记录，只有明确收到该次 dispatch=true 才允许外部调用；每一步重新核实当前控制面授权。ACK 丢失或进程重启只查询原名称及 labels，不重发原动作、不按新的配置替代原镜像／目录／网络。物理观察与原对象绑定同事务提交，启动成功和当前健康保持分离。
+
+每个预览使用独立的 internal bridge，不共享可互访的生成应用网络。Docker 适配固定 runsc、非 root、只读根、cap-drop、资源上限、无重启、loopback 单端口与原 OCI manifest／config／层；inspect 复核完整 profile 和原网络／镜像／挂载。dataset 目录保留现有布局，数据库／WAL 可写，但 operation.json、receipt.json、dataset.json 分别覆盖只读挂载，原准备日志不能被生成代码覆盖。真实硬配额和可写目录权限必须由可信配置的适配器落实，缺失则关闭。
+
+容器内模板显式支持受控 APP_HOST=0.0.0.0，默认仍 loopback；宿主端口仅绑定 127.0.0.1。CLI／镜像解析可使用明确测试输入验证，不能据此宣称物理容器健康。已创建但从未启动的清理不能伪造 EXITED；独立 watchdog、原对象明确清理证明和可信平台装配继续与完整 2.3 一起实施，未验证的 Linux 条件单列。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

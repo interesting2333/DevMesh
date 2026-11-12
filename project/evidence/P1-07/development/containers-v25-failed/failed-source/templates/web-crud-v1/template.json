@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "templateId": "web-crud-v1", "revision": "1.0.0",
+  "runtime": { "node": "24.13.1", "pnpm": "11.28.5", "platform": "linux", "sandbox": "runsc", "imageDigest": null, "imageStatus": "PENDING_TARGET_VALIDATION" },
+  "capabilities": ["react-web", "same-origin-api", "sqlite-dataset", "task-crud", "optimistic-concurrency", "idempotent-writes"],
+  "dataset": { "kind": "web-crud-dataset", "schemaVersion": 1, "rootEnvironment": "APP_DATA_ROOT", "initialize": ["node", "dist/server/main.js", "init"], "database": "app.sqlite", "sharesControlDatabase": false },
+  "checks": {
+    "install": ["pnpm", "install", "--frozen-lockfile", "--offline"],
+    "build": ["pnpm", "build"], "unit": ["pnpm", "test"], "e2e": ["pnpm", "test:e2e"],
+    "preview": ["node", "dist/server/main.js", "serve"]
+  },
+  "coverage": { "include": ["src/**/*.{ts,tsx}"], "minimumLines": 80, "minimumBranches": 70 },
+  "environment": ["APP_DATA_ROOT", "APP_PORT", "APP_HOST", "APP_READ_ONLY"],
+  "shutdown": { "signal": "SIGTERM", "graceMs": 10000, "descendantStopAuthority": "Runner" }
+}

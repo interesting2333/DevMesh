@@ -21,6 +21,7 @@ it('validates CLI configuration without accepting an implicit dataset', async ()
   await expect(main(['wrong'], { APP_DATA_ROOT: '/unused' })).rejects.toThrow('USE_INIT_OR_SERVE');
   await expect(main(['serve'], { APP_DATA_ROOT: '/unused', APP_READ_ONLY: 'yes' })).rejects.toThrow('INVALID_READ_ONLY');
   await expect(main(['serve'], { APP_DATA_ROOT: '/unused', APP_PORT: '0' })).rejects.toThrow('INVALID_PORT');
+  for (const host of ['localhost', '::', 'example.com', '', ' 0.0.0.0']) await expect(main(['serve'], { APP_DATA_ROOT: '/unused', APP_HOST: host })).rejects.toThrow('INVALID_HOST');
   const failed = await cli(['serve'], { APP_DATA_ROOT: '' });
   expect(await failed.exited).toBe(1);
   expect(failed.output()).toContain('APP_START_FAILED');

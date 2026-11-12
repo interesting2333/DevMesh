@@ -24,6 +24,7 @@ const headers = () => ({ 'content-type': 'application/json', 'idempotency-key': 
 afterEach(async () => { for (const service of services.splice(0)) await service.close(); for (const parent of parents.splice(0)) rmSync(parent, { recursive: true, force: true }); });
 it('serves real HTTP through the SQLite Worker, persists on restart, and rejects stale and malformed writes', async () => {
   const { root, service } = await fixture();
+  expect(service.host).toBe('127.0.0.1');
   expect((await fetch(service.url + '/api/health')).status).toBe(200);
   const createHeaders = headers();
   const create = () => fetch(service.url + '/api/tasks', { method: 'POST', headers: createHeaders, body: JSON.stringify(input) });
@@ -48,6 +49,16 @@ it('serves real HTTP through the SQLite Worker, persists on restart, and rejects
   expect((await (await fetch(restarted.url + '/api/tasks')).json()).tasks[0].status).toBe('done');
   expect((await fetch(restarted.url + '/api/tasks/' + task.id, { method: 'DELETE', headers: { ...headers(), 'if-match': '"2"' } })).status).toBe(200);
   expect((await (await fetch(restarted.url + '/api/tasks')).json()).tasks).toEqual([]);
+});
+it('serves the container listener through its actual SQLite Worker when explicitly enabled', async () => {
+  await expect(Reflect.apply(startService, null, [{ root: '/unused', host: 'example.com' }])).rejects.toThrow('INVALID_HOST');
+  const parent = mkdtempSync(join(tmpdir(), 'devmesh-template-listener-')); parents.push(parent);
+  const root = join(parent, 'dataset'); TaskDatabase.initialize(root);
+  const service = await startService({ root, port: 0, host: '0.0.0.0', workerScript }); services.push(service);
+  expect(service.host).toBe('0.0.0.0');
+  expect(await (await fetch(service.url + '/api/health')).json()).toEqual({ status: 'ready' });
+  const response = await fetch(service.url + '/api/tasks', { method: 'POST', headers: headers(), body: JSON.stringify(input) });
+  expect(response.status).toBe(201);
 });
 it('denies foreign Origin, hostile Host and read-only mutations', async () => {
   const { service } = await fixture(true);

@@ -10,6 +10,7 @@ import { storeRequests } from './store-protocol.js';
 import type { InternalJob,RunnerStoreMethod } from './store-protocol.js';
 import {createRunnerFenceDomain} from './fence-domain.js';
 import {createRunnerCapacityDomain} from './capacity-domain.js';
+import {createPreviewContainerDomain} from './container-domain.js';
 const port=parentPort;if(!port)throw Error('Runner store requires its Worker');
 const time=()=>new Date().toISOString(),digest=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
 type Row=Record<string,string|number|null>;
@@ -28,15 +29,17 @@ try{
  CREATE TRIGGER immutable_job_identity BEFORE UPDATE ON jobs WHEN NEW.job_id<>OLD.job_id OR NEW.controller_id<>OLD.controller_id OR NEW.operation_id<>OLD.operation_id OR NEW.request_hash<>OLD.request_hash OR NEW.request_json<>OLD.request_json OR NEW.execution_json<>OLD.execution_json OR NEW.owner_key<>OLD.owner_key BEGIN SELECT RAISE(ABORT,'JOB_IDENTITY_IMMUTABLE'); END;
  CREATE TRIGGER immutable_job_terminal BEFORE UPDATE ON jobs WHEN OLD.state='EXITED' BEGIN SELECT RAISE(ABORT,'JOB_TERMINAL_IMMUTABLE'); END;
  PRAGMA user_version=1;`);exec('INSERT INTO runner_identity VALUES(1,?,1)',options.runnerId);});}
- const identity=get('SELECT * FROM runner_identity WHERE singleton=1');if(identity?.runner_id!==options.runnerId||![1,2,3].includes(Number(identity.version))||Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0])!==identity.version)throw new RunnerError('RUNNER_STORE_IDENTITY_MISMATCH',409);
+ const identity=get('SELECT * FROM runner_identity WHERE singleton=1');if(identity?.runner_id!==options.runnerId||![1,2,3,4].includes(Number(identity.version))||Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0])!==identity.version)throw new RunnerError('RUNNER_STORE_IDENTITY_MISMATCH',409);
  const fences=createRunnerFenceDomain(db);
   const capacity=createRunnerCapacityDomain(db,options.runnerId);
+  const containers=createPreviewContainerDomain(db);
  const row=(id:string)=>required(get('SELECT * FROM jobs WHERE job_id=?',id));
  const owned=(controller:string,id:string)=>{const r=row(id);if(r.controller_id!==controller)throw new RunnerError('JOB_NOT_FOUND',404);return r;};
  const view=(r:Row):Job=>({jobId:String(r.job_id),controllerId:String(r.controller_id),operationId:String(r.operation_id),requestHash:String(r.request_hash),request:JSON.parse(String(r.request_json)),executionProfile:{runnerId:options.runnerId,commandHash:digest(JSON.parse(String(r.execution_json)).argv)},state:r.state as Job['state'],containerId:r.container_id as string|null,createdAt:String(r.created_at),startedAt:r.started_at as string|null,endedAt:r.ended_at as string|null,exitCode:r.exit_code as number|null,stopRequested:r.stop_requested===1,stopEvidence:r.stop_evidence?JSON.parse(String(r.stop_evidence)):null,errorCode:r.error_code as string|null,leaseSequence:Number(r.lease_sequence),lastHeartbeat:String(r.lease_renewed_at),logCursor:Number(r.log_cursor),outputRefs:JSON.parse(String(r.outputs_json))});
  const internal=(r:Row):InternalJob=>({job:view(r),execution:JSON.parse(String(r.execution_json)),leasePermit:JSON.parse(String(r.lease_permit_json)),leaseRenewedAt:String(r.lease_renewed_at)});
  const event=(r:Row)=>{const seq=Number(get('SELECT max(sequence) n FROM job_events WHERE job_id=?',String(r.job_id))?.n??0)+1;exec('INSERT INTO job_events VALUES(?,?,?,?)',String(r.job_id),seq,canonical(view(r)),time());};
  const methods={
+    previewContainerPrepare:containers.previewContainerPrepare,previewContainerGet:containers.previewContainerGet,previewContainerActionBegin:containers.previewContainerActionBegin,previewContainerActionObserve:containers.previewContainerActionObserve,
     capacityConfigure:capacity.capacityConfigure,capacityUsage:capacity.capacityUsage,previewReserve:capacity.previewReserve,previewReservationGet:capacity.previewReservationGet,previewReservationByOperation:capacity.previewReservationByOperation,previewReservationPage:capacity.previewReservationPage,previewReservationDispatch:capacity.previewReservationDispatch,previewReservationCancel:capacity.previewReservationCancel,previewReservationRecord:capacity.previewReservationRecord,
    fenceAcquire:fences.fenceAcquire,fenceGet:fences.fenceGet,fenceByOperation:fences.fenceByOperation,fenceActive:fences.fenceActive,fenceRelease:fences.fenceRelease,workspaceBinding:fences.workspaceBinding,
   register(i:{controllerId:string;request:StartJob;execution:{workspacePath:string;argv:string[]}}){return tx(()=>{const old=get('SELECT * FROM jobs WHERE controller_id=? AND operation_id=?',i.controllerId,i.request.operationId),hash=digest(i.request);if(old){if(old.request_hash!==hash)throw new RunnerError('IDEMPOTENCY_KEY_REUSED',409);return view(old);}fences.assertAvailable(i.execution.workspacePath);if(Number(get("SELECT count(*) n FROM jobs WHERE state='QUEUED'")?.n??0)>=100)throw new RunnerError('RUNNER_QUEUE_FULL',429);const id='job_'+randomUUID().replaceAll('-',''),now=time();exec("INSERT INTO jobs(job_id,controller_id,operation_id,request_hash,request_json,execution_json,owner_key,state,created_at,stop_requested,lease_sequence,lease_hash,lease_permit_json,lease_renewed_at) VALUES(?,?,?,?,?,?,?,'QUEUED',?,0,0,?,?,?)",id,i.controllerId,i.request.operationId,hash,canonical(i.request),canonical(i.execution),ownerKey(i.request.permit),now,digest(i.request.permit),canonical(i.request.permit),now);const r=row(id);event(r);return view(r);});},
@@ -57,7 +60,7 @@ try{
    exec('UPDATE jobs SET state=?,container_id=coalesce(container_id,?),ended_at=?,exit_code=?,stop_evidence=?,error_code=?,log_cursor=?,outputs_json=? WHERE job_id=?',i.state,i.containerId,i.state==='EXITED'?time():null,i.exitCode,i.evidence?canonical(i.evidence):r.stop_evidence??null,i.errorCode,i.materials?.logCursor??Number(r.log_cursor),i.materials?canonical(i.materials.outputRefs):String(r.outputs_json),i.jobId);
    const changed=row(i.jobId);event(changed);return view(changed);
   });},
-  inspect(){return {version:3,runnerId:options.runnerId,jobs:Number(get('SELECT count(*) n FROM jobs')?.n??0),foreignKeyErrors:db!.prepare('PRAGMA foreign_key_check').all()};},
+  inspect(){return {version:4,runnerId:options.runnerId,jobs:Number(get('SELECT count(*) n FROM jobs')?.n??0),foreignKeyErrors:db!.prepare('PRAGMA foreign_key_check').all()};},
  };
  port.on('message',(m:{id:number;method:string;input:unknown})=>{try{if(m.method==='close'){db!.exec('PRAGMA wal_checkpoint(TRUNCATE)');db!.close();port.close();return;}if(!Object.hasOwn(storeRequests,m.method))throw new RunnerError('RUNNER_STORE_METHOD_INVALID',422);const method=m.method as RunnerStoreMethod,input=storeRequests[method].parse(m.input),value=(methods[method] as (input:unknown)=>unknown)(input);port.postMessage({id:m.id,value});}catch(error){port.postMessage({id:m.id,error:{code:error instanceof RunnerError?error.code:error instanceof ZodError?'RUNNER_REQUEST_INVALID':'RUNNER_STORE_FAILURE',status:error instanceof RunnerError?error.status:error instanceof ZodError?422:500}});}});
  port.postMessage({id:0});

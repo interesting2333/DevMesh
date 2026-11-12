@@ -10,7 +10,7 @@
 - [x] 2.2 实现可信 dataset 准备接口和首次空／演示、隔离快照适配，验证实际 SQLite 一致副本、源数据不回写、失败和 ACK 丢失不重建；真实生产迁移未配置时关闭。
 - [ ] 2.3 实现准确镜像／dataset 预览启动、健康／停止／到期核实，验证原实例绑定、未知不替代、停止未接受预览不影响旧 release／dataset；真实容器另留缺项。
 
-2.3 当前开发范围：持续健康持久观察、原启动／停止／到期的私有控制面恢复器及受限 loopback HTTP 检查已完成本地验证；Runner v3 新增持久预览预留，与原作业在同一 SQLite 事务累计 slot／CPU／内存，UNKNOWN 保留容量，只有未派发取消或准确原实例 EXITED 才释放。迁移、并发准入、唯一派发位／丢回执、身份／CAS、重开和回滚均有实际 SQLite 测试。实际 Docker／gVisor 后端、容器动作日志、独立 Runner 到期 watchdog 和可信平台装配尚待实施；完整子项不提前勾选，受控容器事实不是实际镜像健康或物理退出证据。
+2.3 当前开发范围：持续健康持久观察、原启动／停止／到期的私有控制面恢复器及受限 loopback HTTP 检查已完成本地验证；Runner v3 持久预览预留与原作业统一累计 slot／CPU／内存，UNKNOWN 保留容量，只有未派发取消或准确原实例 EXITED 才释放。Runner v4 新增不可变原 profile／NETWORK_CREATE／CREATE／START／STOP 日志、唯一派发许可、原对象核验和显式 RunnerPreviewBackend 组合；Docker Driver 代码固定 OCI／config／层、独占网络、只读准备元数据挂载及沙箱／资源策略，缺真实 Linux／硬配额／宿主网络隔离适配器保持关闭。迁移失败回滚、历史保留、控制面组合、ACK 丢失仅查原对象及实际 dataset 保留有本地测试，模板显式容器监听另有 HTTP／SQLite／浏览器验证。真实 Docker CLI／gVisor 联调、实际 quota／network-isolation 适配器、从未启动容器的显式清理／移除、独立 Runner 到期 watchdog 和可信平台装配尚待完成；完整子项不提前勾选，受控容器事实不是实际镜像健康或物理退出证据。
 
 ## 3. Separate preview access
 

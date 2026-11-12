@@ -15,7 +15,7 @@ node dist/server/main.js init
 node dist/server/main.js serve
 ```
 
-`init` 仅对不存在或空的数据目录执行一次。后续直接 `serve`；缺失数据库、未知目录、不同模板标记、文件链接、第二写者和身份不一致均拒绝启动。默认 `127.0.0.1:4317`，`APP_PORT` 为 1–65535；`APP_READ_ONLY=true` 禁止业务写入。没有隐式开发数据库、平台凭据、通配 CORS 或公网监听。只允许 loopback Host 和同源 Origin，未来接入预览网关时须另行落实入口授权和代理边界。
+`init` 仅对不存在或空的数据目录执行一次。后续直接 `serve`；缺失数据库、未知目录、不同模板标记、文件链接、第二写者和身份不一致均拒绝启动。默认 `127.0.0.1:4317`，`APP_PORT` 为 1–65535；`APP_READ_ONLY=true` 禁止业务写入。`APP_HOST` 仅允许 `127.0.0.1`（默认）或显式 `0.0.0.0`；后者供可信 Runner 在隔离容器内监听，并将宿主端口限制在 loopback。普通本地运行保留默认值。没有隐式开发数据库、平台凭据或通配 CORS；HTTP 仍只接受 loopback Host 和同源 Origin，预览网关的入口授权和代理边界另行实施。模板监听配置不代表容器隔离或公网访问已验收。
 
 Linux 收到 SIGTERM／SIGINT 后停止受理、排空 HTTP、关闭 Worker 并释放 dataset 锁；HTTP 最多等待 10 秒。Windows 本地 Ctrl+C 走 SIGINT；可信 Node 父进程也可通过 IPC 发送 `{ "type": "shutdown" }`。Windows `kill('SIGTERM')` 的强制终止不等同于优雅退出。真实 Runner 仍负责整组进程／容器的后代停止与事实确认。
 

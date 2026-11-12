@@ -7,10 +7,12 @@ export async function main(args: string[], environment: NodeJS.ProcessEnv = proc
   if (args[0] === 'init') { const { TaskDatabase } = await import('./database.js'); TaskDatabase.initialize(root); console.log('DATASET_INITIALIZED'); return; }
   if (args[0] !== 'serve') throw new Error('USE_INIT_OR_SERVE');
   if (environment.APP_READ_ONLY && !['true', 'false'].includes(environment.APP_READ_ONLY)) throw new Error('INVALID_READ_ONLY');
+  const host = environment.APP_HOST ?? '127.0.0.1';
+  if (host !== '127.0.0.1' && host !== '0.0.0.0') throw new Error('INVALID_HOST');
   const port = Number(environment.APP_PORT ?? '4317');
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('INVALID_PORT');
   const { startService } = await import('./service.js');
-  const service = await startService({ root, port, readOnly: environment.APP_READ_ONLY === 'true', webRoot: fileURLToPath(new URL('../web/', import.meta.url)) });
+  const service = await startService({ root, port, host, readOnly: environment.APP_READ_ONLY === 'true', webRoot: fileURLToPath(new URL('../web/', import.meta.url)) });
   console.log(`APP_READY ${service.url}`);
   let stopping = false;
   const stop = () => {
