@@ -67,3 +67,7 @@ The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增
 #### Scenario: User corrects rejection classification
 - **WHEN** 用户把系统建议的新增需求改为原范围问题，或反向纠正
 - **THEN** 追加保存纠正及依据，原分类保留，后续流程使用明确当前分类且不隐式应用未确认变更
+
+#### Scenario: A new candidate cannot hide an unresolved rejection
+- **WHEN** Run 中仍有 OPEN 退回时冻结新候选，或负责人明确撤回原历史候选的退回
+- **THEN** 新候选继续展示待处理项并阻止接受准备；有理由撤回追加保留历史，只解除该项，不批准质量或人工检查

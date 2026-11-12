@@ -120,6 +120,7 @@ export function createDomain(db: DatabaseSync) {
   const candidateReviews=createCandidateReviewDomain(db,plans,releaseFreezes,{
     operation:(...args)=>operation(...args),
     changed(runId,operationId,candidateId,resultId){bump(runId);event(runId,operationId,'CandidateReviewRecorded',{candidateId,resultId});},
+    rejected(runId,operationId,candidateId,rejectionId,resultId,state){bump(runId);event(runId,operationId,'CandidateRejected',{candidateId,rejectionId,resultId,state});},
   });
   const candidateMaterials=createCandidateMaterialDomain(db);
   const candidateBasis=candidateIntegrations.basis;

@@ -5,7 +5,7 @@ import type {Meta,OperationResult} from './protocol.js';
 import type {createReleaseFreezeDomain} from './release-freeze-domain.js';
 import type {createPlanDomain} from './plan-domain.js';
 import {candidateReviewRequests} from './candidate-review-protocol.js';
-import type {CandidateReviewMethod,CandidateReviewInput,CandidateReviewItem,CandidateHumanResult,CandidateReviewView} from './candidate-review-protocol.js';
+import type {CandidateReviewMethod,CandidateReviewInput,CandidateReviewItem,CandidateHumanResult,CandidateReviewView,CandidateRejectionResult} from './candidate-review-protocol.js';
 import {canonical} from './json.js';
 import {digest,transaction} from './migrations.js';
 import {StorageError} from './errors.js';
@@ -13,6 +13,7 @@ type Row=Record<string,string|number|null>;
 interface Hooks {
  operation(meta:Meta,kind:string,payload:unknown,action:(operationId:string)=>Record<string,unknown>,authorize:()=>void):OperationResult;
  changed(runId:string,operationId:string,candidateId:string,resultId:string):void;
+ rejected(runId:string,operationId:string,candidateId:string,rejectionId:string,resultId:string,state:'OPEN'|'WITHDRAWN'):void;
 }
 function fail(code:string,status=409):never{throw new StorageError(code,status,'Review requires an exact current candidate and explicit observations');}
 const json=<T>(v:unknown):T=>JSON.parse(String(v)) as T;
@@ -44,17 +45,39 @@ export function createCandidateReviewDomain(db:DatabaseSync,plans:ReturnType<typ
   return {run,candidate,items,automaticChecks};
  }
  const result=(id:string)=>json<CandidateHumanResult>((get('SELECT result_json FROM candidate_review_results WHERE result_id=?',id)??fail('CANDIDATE_REVIEW_NOT_FOUND',404)).result_json);
+ const rejection=(id:string)=>json<CandidateRejectionResult>((get('SELECT result_json FROM candidate_rejection_results WHERE result_id=?',id)??fail('CANDIDATE_REJECTION_NOT_FOUND',404)).result_json);
  function view(i:CandidateReviewInput<'getCandidateReview'>):CandidateReviewView {
   const d=definitions(i),saved=new Map(all('SELECT item_id,result_id FROM candidate_review_current WHERE candidate_id=?',i.candidateId).map(r=>[String(r.item_id),String(r.result_id)]));
   const items=d.items.map(item=>{const r=saved.has(item.itemId)?result(saved.get(item.itemId)!):null;const available=!r||r.evidence.every(ref=>!!get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.content_hash=? AND a.project_id=? AND a.run_id=? AND a.state='READY' AND c.state='READY'",ref.artifactId,ref.sha256,d.candidate.projectId,i.runId));return {...item,status:d.candidate.qualification==='STALE'||r&&(!available||r.item.itemHash!==item.itemHash)?'STALE' as const:r?.verdict??'MISSING' as const,result:r};});
   const humanStatus=items.some(i=>i.status==='STALE')?'STALE':items.some(i=>i.status==='FAIL')?'FAIL':items.some(i=>i.status==='MISSING')?'MISSING':'PASS';
-  const basis={candidateId:i.candidateId,candidateRevision:d.candidate.revision,manifestHash:d.candidate.manifestHash,qualification:d.candidate.qualification,items:items.map(({itemId,itemHash,status,result})=>({itemId,itemHash,status,resultId:result?.resultId??null})),automaticChecks:d.automaticChecks};
+  const rejections=all('SELECT c.result_id FROM candidate_rejection_current c JOIN candidate_rejection_results r ON r.result_id=c.result_id WHERE r.run_id=? ORDER BY c.rejection_id',i.runId).map(r=>rejection(String(r.result_id)));if(rejections.length>100)fail('CANDIDATE_REVIEW_LIMIT');
+  const rejectionStatus=rejections.some(r=>r.state==='OPEN')?'OPEN':'NONE';
+  const basis={candidateId:i.candidateId,candidateRevision:d.candidate.revision,manifestHash:d.candidate.manifestHash,qualification:d.candidate.qualification,items:items.map(({itemId,itemHash,status,result})=>({itemId,itemHash,status,resultId:result?.resultId??null})),automaticChecks:d.automaticChecks,rejections:rejections.map(r=>({candidateId:r.candidateId,rejectionId:r.rejectionId,resultId:r.resultId,classification:r.classification,state:r.state}))};
   const canRecord=d.candidate.qualification==='CURRENT'&&d.run.terminal_outcome===null&&d.run.phase==='REVIEW'&&d.run.control_gate==='OPEN'&&d.run.membership==='owner';
-  const value:CandidateReviewView={...basis,resourceRevision:Number(d.run.resource_revision),automaticStatus:'PASS',humanStatus,reviewHash:digest(canonical(basis)),items,automaticChecks:d.automaticChecks,canRecord,canPrepareAcceptance:canRecord&&humanStatus==='PASS'};
+  const value:CandidateReviewView={...basis,resourceRevision:Number(d.run.resource_revision),automaticStatus:'PASS',humanStatus,reviewHash:digest(canonical(basis)),items,automaticChecks:d.automaticChecks,rejections,rejectionStatus,canRecord,canPrepareAcceptance:canRecord&&humanStatus==='PASS'&&rejectionStatus==='NONE'};
   if(Buffer.byteLength(canonical(value))>1024*1024)fail('CANDIDATE_REVIEW_LIMIT');return value;
  }
  const handlers={
   getCandidateReview:view,
+  recordCandidateRejection(i:CandidateReviewInput<'recordCandidateRejection'>){
+   if(i.meta.scopeId!==i.runId)fail('OPERATION_SCOPE_INVALID',422);const {meta,ifMatch:_match,...payload}=i;
+   const op=hooks.operation(meta,'RecordCandidateRejection',payload,operationId=>{
+    const principalId=meta.principalId,run=authorized(principalId,i.runId,true);assertResourceVersion(i.ifMatch,Number(run.resource_revision));const v=view({principalId,runId:i.runId,candidateId:i.candidateId}),previous=get('SELECT candidate_id,result_id FROM candidate_rejection_current WHERE rejection_id=?',i.rejectionId);
+    if(previous&&previous.candidate_id!==i.candidateId)fail('CANDIDATE_REJECTION_NOT_FOUND',404);
+    if((previous?.result_id??null)!==i.previousResultId)fail('CANDIDATE_REVIEW_CONFLICT');
+    if(run.terminal_outcome!==null||run.phase!=='REVIEW'||run.control_gate!=='OPEN'||v.manifestHash!==i.manifestHash||i.state==='OPEN'&&!v.canRecord)fail('CANDIDATE_REVIEW_STALE');
+    if(i.state==='WITHDRAWN'&&!previous)fail('CANDIDATE_REJECTION_INVALID',422);
+    const item=i.itemId?v.items.find(item=>item.itemId===i.itemId):null;
+    if(Boolean(i.itemId)!==Boolean(i.itemHash)||i.itemId&&(!item||item.itemHash!==i.itemHash)||i.classification==='IN_SCOPE_DEFECT'&&!item)fail('CANDIDATE_REVIEW_ITEM_CHANGED');
+    if(new Set(i.evidence.map(r=>r.artifactId)).size!==i.evidence.length)fail('CANDIDATE_REVIEW_EVIDENCE_INVALID',422);
+    for(const ref of i.evidence)if(!get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.project_id=? AND a.run_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'",ref.artifactId,run.project_id!,i.runId,ref.sha256))fail('CANDIDATE_REVIEW_EVIDENCE_INVALID');
+    const definition=item?(({status:_status,result:_result,...definition})=>definition)(item):null,resultId='rejection_result_'+randomUUID().replaceAll('-',''),createdAt=new Date().toISOString(),record:CandidateRejectionResult={resultId,operationId,candidateId:i.candidateId,candidateRevision:v.candidateRevision,manifestHash:v.manifestHash,rejectionId:i.rejectionId,previousResultId:i.previousResultId,classification:i.classification,state:i.state,item:definition,description:i.description,reason:i.reason,evidence:i.evidence,principalId,createdAt,nextAction:i.state==='WITHDRAWN'?'NONE':i.classification==='IN_SCOPE_DEFECT'?'REPAIR_REVIEW_REQUIRED':'CHANGE_REVIEW_REQUIRED',applicationState:'NOT_APPLIED'};
+    exec('INSERT INTO candidate_rejection_results VALUES(?,?,?,?,?,?,?,?,?,?,?)',resultId,operationId,run.project_id!,i.runId,i.candidateId,i.rejectionId,i.previousResultId,i.classification,i.state,canonical(record),createdAt);
+    for(const ref of i.evidence)exec('INSERT INTO candidate_rejection_evidence VALUES(?,?,?)',resultId,ref.artifactId,ref.sha256);
+    exec('INSERT INTO candidate_rejection_current VALUES(?,?,?) ON CONFLICT(rejection_id) DO UPDATE SET result_id=excluded.result_id',i.rejectionId,i.candidateId,resultId);
+    view({principalId,runId:i.runId,candidateId:i.candidateId});hooks.rejected(i.runId,operationId,i.candidateId,i.rejectionId,resultId,i.state);return {resultId};
+   },()=>{authorized(meta.principalId,i.runId,true);});return rejection(String(op.result!.resultId));
+  },
   recordCandidateReview(i:CandidateReviewInput<'recordCandidateReview'>){
    if(i.meta.scopeId!==i.runId)fail('OPERATION_SCOPE_INVALID',422);
    const {meta,ifMatch:_match,...payload}=i;
@@ -78,6 +101,11 @@ export function createCandidateReviewDomain(db:DatabaseSync,plans:ReturnType<typ
    for(const row of rows.slice(0,i.limit)){const item={sequence:Number(row.sequence),result:result(String(row.result_id))},length=Buffer.byteLength(canonical(item));if(size+length>1024*1024)break;items.push(item);size+=length;}
    return {items,nextSequence:rows.length>items.length?items.at(-1)!.sequence:null};
   },
+  listCandidateRejectionHistory(i:CandidateReviewInput<'listCandidateRejectionHistory'>){
+   authorized(i.principalId,i.runId);freezes.getCandidate({principalId:i.principalId,runId:i.runId,candidateId:i.candidateId});const rows=all('SELECT rowid sequence,result_id FROM candidate_rejection_results WHERE candidate_id=? AND rowid>? AND (? IS NULL OR rejection_id=?) ORDER BY rowid LIMIT ?',i.candidateId,i.afterSequence,i.rejectionId??null,i.rejectionId??null,i.limit+1),items:{sequence:number;result:CandidateRejectionResult}[]=[];let size=0;
+   for(const row of rows.slice(0,i.limit)){const item={sequence:Number(row.sequence),result:rejection(String(row.result_id))},length=Buffer.byteLength(canonical(item));if(size+length>1024*1024)break;items.push(item);size+=length;}
+   return {items,nextSequence:rows.length>items.length?items.at(-1)!.sequence:null};
+  },
  };
- return {execute(method:CandidateReviewMethod,input:unknown):unknown{const parsed=parseContract(candidateReviewRequests[method],input),call=()=>(handlers[method] as (i:unknown)=>unknown)(parsed);return method==='recordCandidateReview'?call():transaction(db,call);}};
+ return {execute(method:CandidateReviewMethod,input:unknown):unknown{const parsed=parseContract(candidateReviewRequests[method],input),call=()=>(handlers[method] as (i:unknown)=>unknown)(parsed);return ['recordCandidateReview','recordCandidateRejection'].includes(method)?call():transaction(db,call);}};
 }

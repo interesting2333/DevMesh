@@ -20,6 +20,7 @@ export const eventPayloads = {
   ConfigurationApplied: z.strictObject({ configurationRef: artifactRef }),
   CandidateUpdated: z.strictObject({ candidateId: ids.candidate, state: z.enum(['PREPARING', 'READY', 'BLOCKED', 'SUPERSEDED']) }),
   CandidateReviewRecorded:z.strictObject({candidateId:ids.candidate,resultId:opaqueKey}),
+  CandidateRejected:z.strictObject({candidateId:ids.candidate,rejectionId:opaqueKey,resultId:opaqueKey,state:z.enum(['OPEN','WITHDRAWN'])}),
   ReleaseAccepted: z.strictObject({ candidateId: ids.candidate, releaseId: ids.release }),
   PreviewStateChanged: z.strictObject({ previewId: ids.preview, state: z.enum(['PREPARING', 'RUNNING', 'STOPPING', 'STOPPED', 'FAILED', 'OUTCOME_UNKNOWN']) }),
   ExportUpdated: z.strictObject({ exportId: ids.export, status: operationStatus }),
@@ -36,7 +37,7 @@ export const domainEvent = z.discriminatedUnion('type', [
   eventOf('PlanConfirmed'), eventOf('WorkAdmitted'), eventOf('AttemptStateChanged'), eventOf('A2ATaskObserved'),
   eventOf('ToolOperationUpdated'), eventOf('ArtifactRegistered'), eventOf('ChangeApplied'), eventOf('DecisionSaved'),
   eventOf('ControlProgress'), eventOf('ConfigurationApplied'), eventOf('CandidateUpdated'), eventOf('ReleaseAccepted'),
-  eventOf('PreviewStateChanged'), eventOf('ExportUpdated'),eventOf('IssueChanged'),eventOf('PipelineChanged'),eventOf('CandidateReviewRecorded'),
+  eventOf('PreviewStateChanged'), eventOf('ExportUpdated'),eventOf('IssueChanged'),eventOf('PipelineChanged'),eventOf('CandidateReviewRecorded'),eventOf('CandidateRejected'),
 ]).superRefine((event, ctx) => {
   if (event.timeSource === 'observed' && event.occurredAt !== event.observedAt) ctx.addIssue({ code: 'custom', path: ['occurredAt'], message: 'Observed time must equal occurredAt when no producer time exists' });
   const payload = event.payload as Record<string, unknown>;
