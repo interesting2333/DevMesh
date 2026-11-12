@@ -52,6 +52,8 @@ Runtime 观察使用外部 I/O 前取得的 sequence CAS 与观察时间，旧�
 
 归档证据生成后再次执行 Lint、台账检查、OpenSpec 严格校验、设计主文一致性与差异格式检查，全部通过；见 [post-retention-checks.json](./development/lifecycle-v21/post-retention-checks.json)。同时核实 386 个当前源码输入、41 份原日志、76 项保留材料和 26 个失败源码快照的 SHA 一致。记录／格式检查不替代应用或产品验收。
 
+开发代码检查点为 `8a87baafa3f90759f4a3e60de70b93fad6886bb7`；[checkpoint-binding.json](./development/lifecycle-v21/checkpoint-binding.json) 核对全部 386 个源码／模板输入与该提交 Git 对象字节一致。绑定仅为只读核对，不是再次测试或干净 checkout。2.3 仍保持未完成。
+
 新增生命周期测试的实际范围包括：完整镜像与数据准备绑定、无后端默认关闭、30 秒健康过期、失联／恢复不替代实例、启动 ACK／派发 ACK／观察提交 ACK 丢失、停止未知只查原对象、实际 SQLite 保留、到期幂等停止、Release 归属及最后授权、CAS／时间／原子回滚／复合外键、控制 Worker 重开，以及真实控制定时器。上游和容器事实的 fixture 边界如前所述。
 
 ## 继续实施
