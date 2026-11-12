@@ -40,7 +40,9 @@ CREATED 且从未启动的容器不能伪称 EXITED。当前停止对此继续�
 
 [模板验证](./development/containers-v26/template/evidence.json) 单独执行第一方模板的冻结安装、类型、前后端构建、完整单元覆盖和 Chromium 浏览器测试：20/20 单元、2/2 浏览器通过，浏览器版本见原报告。覆盖分母保留全部 src，行覆盖 92.83%、分支 86.54%。包含实际 SQLite Worker／HTTP 的显式 0.0.0.0 监听与默认 loopback／错误配置检查。主回归与模板合计 150 项不同测试，148 通过、2 条条件跳过；不重复计算 Runner 子集。
 
-原始证据保留后，核对当前源码／模板、日志、保留材料和失败源码 SHA，并检查 Lint、台账、OpenSpec、设计主文与 diff，结果记录在 [post-retention-checks.json](./development/containers-v26/post-retention-checks.json)。Git 源码检查点绑定另存；只读字节核对不等同于再次测试或干净 checkout。
+原始证据保留后，核对 396 个当前源码／模板输入、26 份原日志、56 项保留材料及 18 个失败源码快照 SHA，并检查 Lint、台账、OpenSpec、设计主文与 diff，全部通过，见 [post-retention-checks.json](./development/containers-v26/post-retention-checks.json)。
+
+源码检查点为 `599fb13f9ff05d14bfbf7074054ddd9ba5466143`；[主回归绑定](./development/containers-v26/checkpoint-binding.json) 的全部 396 个输入及[模板绑定](./development/containers-v26/template/checkpoint-binding.json) 的全部 33 个输入均与该提交 Git 对象字节一致。只读字节核对不等同于再次测试或干净 checkout。
 
 ## 尚未证明的能力
 

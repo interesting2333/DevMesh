@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T11:27:07.424Z",
+  "checkpoint": "599fb13f9ff05d14bfbf7074054ddd9ba5466143",
+  "currentSourceFiles": 396,
+  "bindings": [
+    {
+      "path": "checkpoint-binding.json",
+      "sha256": "43a5521ecc83ebbe6b7e91fa9bada8e425cc919e340ca08f269b948d350dbf50"
+    },
+    {
+      "path": "template/checkpoint-binding.json",
+      "sha256": "85e55f6b691747342b8b47987e2e49b721be140722f0299634bf9e1f73f26d3d"
+    }
+  ],
+  "checks": [
+    {
+      "name": "checkpoint-ledger-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "exitCode": 0,
+      "output": "checkpoint-ledger-check.txt",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "checkpoint-diff-check",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "output": "checkpoint-diff-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Source bytes unchanged after checkpoint documentation, Git-object binding digests, ledger and diff checks; no application tests rerun."
+}

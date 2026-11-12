@@ -1180,7 +1180,9 @@
         "project/evidence/P1-07/development/containers-v25-failed/evidence.json",
         "project/evidence/P1-07/development/containers-v26/evidence.json",
         "project/evidence/P1-07/development/containers-v26/commands.json",
-        "project/evidence/P1-07/development/containers-v26/template/evidence.json"
+        "project/evidence/P1-07/development/containers-v26/template/evidence.json",
+        "project/evidence/P1-07/development/containers-v26/checkpoint-binding.json",
+        "project/evidence/P1-07/development/containers-v26/template/checkpoint-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1197,7 +1199,8 @@
         "2026-11-12：预览生命周期控制面部分的开发源码固定在 8a87baafa3f90759f4a3e60de70b93fad6886bb7，lifecycle-v21 全部 386 个源码／模板输入与 Git 对象字节一致。此绑定仅为只读核对，完整 2.3 仍未勾选，不冒充实际镜像／容器健康、干净 checkout 或产品／阶段验收。",
         "2026-11-12：继续开发子项 2.3 的 Runner 持久容量部分，前向迁移 v3 保持原 v2 指纹／作业／workspace fence，新增私有预览预留与不可变历史。作业 claim 和预览 reserve 在同一 Worker 事务累计全主体 slot／CPU／内存，统一显式预算，UNKNOWN／已派发到期继续占用；只有未派发取消或准确原实例 EXITED 才释放。原请求完整 hash／固定资源、跨 controller 的 preview／可写 dataset 互斥、一次派发位和丢回执不重复许可、实例／端口固定、revision／时间 CAS、重开保留、历史失败原子回滚均验证。capacity-v22 13/14，一处测试把两份实际占用误预期为一份；原失败源码／日志保留并修正断言，没有放宽守卫。最终 v23 安装／类型／Lint／构建／OpenAPI 均通过；主回归 122 次执行含重复子集 14，去重 108 项（106 通过、POSIX／Linux 两条条件跳过）；另补当前 code-workspaces 构建和工作区互斥 5/5，合计去重 113 项（111 通过、2 条跳过），全部源码指纹不变。真实 Runner SQLite／Worker／并发与文件系统／HTTP 实际执行，镜像／容器健康／EXITED 仍为明确测试事实，非物理退出、容器或 cgroup／磁盘配额证据。预览生产容器后端／动作日志、独立 watchdog、模板容器监听／网络和平台装配继续实施，完整 2.3 保持未勾选，正式 P1-07 与阶段门槛保持等待。",
         "2026-11-12：Runner 预览容量部分开发源码固定在 fb90480a5e8778890aff2ce3619619566471e671，capacity-v23 全部 390 个源码／模板输入与 Git 对象字节一致；该绑定是只读核对，不是新一轮测试或干净 checkout，完整 2.3／正式 P1-07 与阶段验收仍未完成。",
-        "2026-11-12：继续开发子项 2.3 的预览容器执行部分：Runner v4 前向迁移保留原 v2／v3 指纹、作业／fence／预留／历史，新增不可变原容器 profile 和 NETWORK_CREATE／CREATE／START／STOP 日志，每动作原完整请求／hash／operation 及唯一派发位，原网络／容器首次绑定与观察同事务。RunnerPreviewBackend 显式组合实际 dataset 和平台生命周期控制器；派发／执行／提交 ACK 丢失后只查原对象，不续发下一动作。Docker Driver 代码固定 OCI config／层／源码构建标记、每预览独占网络、loopback 端口、runsc／非 root／只读根／资源和只读准备元数据覆盖挂载，缺真实 Linux／硬配额／宿主隔离适配器保持关闭；模板显式容器监听默认仍为 loopback。实际 SQLite 迁移失败回滚／重试、历史保留、Worker 终止重开、原动作回滚／不可变、控制面组合和业务数据保留均验证。containers-v25 的组合测试误把启动 operationId 当停止操作，13/14，原失败日志／源码保留；仅修正为 stopOperationId。最终 v26 安装／类型／Lint／构建及 OpenAPI 通过，主回归 157 次执行（去除 Runner 子集重复后 128 项：126 通过、2 条 POSIX／Linux 条件跳过）；模板另有 20 项真实单元／HTTP／SQLite 测试和 2 项 Chromium 浏览器测试，行覆盖 92.83%／分支 86.54%，源码指纹均未漂移。容器／网络事实来自 ControlledContainerDriver、健康来自独立 HTTP 夹具，不是实际 Docker CLI、物理退出、gVisor／cgroup／硬配额／防火墙证据。独立 Runner 到期 watchdog、从未启动容器显式清理／移除、真实配额／网络适配器、可信平台默认装配及后续网关／T5／发布继续实施，完整 2.3 未勾选，正式 P1-07／阶段门槛保持等待。"
+        "2026-11-12：继续开发子项 2.3 的预览容器执行部分：Runner v4 前向迁移保留原 v2／v3 指纹、作业／fence／预留／历史，新增不可变原容器 profile 和 NETWORK_CREATE／CREATE／START／STOP 日志，每动作原完整请求／hash／operation 及唯一派发位，原网络／容器首次绑定与观察同事务。RunnerPreviewBackend 显式组合实际 dataset 和平台生命周期控制器；派发／执行／提交 ACK 丢失后只查原对象，不续发下一动作。Docker Driver 代码固定 OCI config／层／源码构建标记、每预览独占网络、loopback 端口、runsc／非 root／只读根／资源和只读准备元数据覆盖挂载，缺真实 Linux／硬配额／宿主隔离适配器保持关闭；模板显式容器监听默认仍为 loopback。实际 SQLite 迁移失败回滚／重试、历史保留、Worker 终止重开、原动作回滚／不可变、控制面组合和业务数据保留均验证。containers-v25 的组合测试误把启动 operationId 当停止操作，13/14，原失败日志／源码保留；仅修正为 stopOperationId。最终 v26 安装／类型／Lint／构建及 OpenAPI 通过，主回归 157 次执行（去除 Runner 子集重复后 128 项：126 通过、2 条 POSIX／Linux 条件跳过）；模板另有 20 项真实单元／HTTP／SQLite 测试和 2 项 Chromium 浏览器测试，行覆盖 92.83%／分支 86.54%，源码指纹均未漂移。容器／网络事实来自 ControlledContainerDriver、健康来自独立 HTTP 夹具，不是实际 Docker CLI、物理退出、gVisor／cgroup／硬配额／防火墙证据。独立 Runner 到期 watchdog、从未启动容器显式清理／移除、真实配额／网络适配器、可信平台默认装配及后续网关／T5／发布继续实施，完整 2.3 未勾选，正式 P1-07／阶段门槛保持等待。",
+        "2026-11-12：预览容器执行部分源码固定在 599fb13f9ff05d14bfbf7074054ddd9ba5466143，containers-v26 主回归全部 396 个源码／模板输入及模板独立验证全部 33 个输入与该 Git 对象字节一致。绑定仅为只读核对，不是新一轮测试、干净 checkout 或实际 Docker／gVisor 验收；完整 2.3／正式 P1-07 和阶段门槛仍未完成。"
       ]
     },
     {
