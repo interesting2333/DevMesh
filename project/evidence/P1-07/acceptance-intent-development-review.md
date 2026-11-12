@@ -36,3 +36,5 @@ REPLACE 的独立确认代码绑定原候选、审查、已接受 release 和 da
 ## 后续范围
 
 在同一准备身份上继续实现实际数据准备与原对象查询、物理关闭／排空／迁移和可信完整性、准确 Runner 归属／健康凭证，然后实现 T5 与独立发布／导出恢复。企业身份、真实模型、Linux Docker／gVisor、硬配额／宿主隔离及产品／阶段验收继续保留条件。当前人工结论、源 Git／A2A 准入、镜像／容器事实是明确夹具；实际 SQLite／Worker／文件／HTTP 验证不替代这些事实。
+
+源码检查点 `2642733ab1bc487855f7cc88e8a75922352bd14a`；[checkpoint-binding](./development/acceptance-intents/checkpoint-binding.json) 将当前源码、证据和设计／管理上下文共 530 项绑定到该提交 Git 对象。438 个执行输入中 437 项匹配，唯一 CI 清单差异已逐 hash 说明；绑定只读，不代替重新执行或正式验收。

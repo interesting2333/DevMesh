@@ -1182,7 +1182,10 @@
         "packages/storage-sqlite/ACCEPTANCE.md",
         "tests/acceptance-intents.test.mjs",
         "tests/fixtures/acceptance.mjs",
-        "tests/storage-acceptance.test.mjs"
+        "tests/storage-acceptance.test.mjs",
+        "2642733ab1bc487855f7cc88e8a75922352bd14a",
+        "package.json",
+        "scripts/verify-foundation.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1279,7 +1282,8 @@
         "project/evidence/P1-07/development/preview-entry/checkpoint-binding.json",
         "project/evidence/P1-07/acceptance-intent-development-review.md",
         "project/evidence/P1-07/development/acceptance-intents/retention.json",
-        "project/evidence/P1-07/development/acceptance-intents/source-comparisons.json"
+        "project/evidence/P1-07/development/acceptance-intents/source-comparisons.json",
+        "project/evidence/P1-07/development/acceptance-intents/checkpoint-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1314,7 +1318,8 @@
         "2026-11-13：完成 OpenSpec 3.2 本地平台预览查询／nonce CSP 页面／用途票据及实际 Cookie 留存探测、冻结材料只读下载，变更7/13。最终契约与入口23/23、实际Edge／真实React表单／业务SQLite写入1/1，接受指针与Run终态不变；缺身份／网关／写门关闭，越权404，Range416，发送前撤权阻止下载。五次真实执行含三次失败全部保留，最终入口与浏览器输入一致；最初42项中的旧输入／网关20项成功单列，不冒充最终同指纹全量回归。两次构建、类型／Lint／OpenAPI均通过，六依赖包129项源码map绑定一致。源Git／镜像／容器身份和身份解析仍为明确夹具，无企业身份／实际容器／物理排空／T5或干净checkout验收；正式P1-07／门槛继续等待，4.1起继续。",
         "2026-11-13：平台预览入口与冻结材料下载固定在 ec889aa72bedc247da4cf244c90ffbc4df25ef68；431个最终输入及保留材料／设计管理上下文共572项与Git对象逐字节一致。只读绑定不是新一轮测试或干净checkout，7/13及正式工作包／阶段门槛状态保持上述实际范围。",
         "2026-11-13：4.1 首批接受准备意图设计影响评估：D4／D5及完整主文、实施文档与OpenSpec同步迁移36的私有策略／准确替换确认／固定原接受依据、服务端原release／新dataset身份、一次派发与UNKNOWN保留、仅未派发关闭。只保存意图而不创建文件／Release，不声称READY、实际fencing／健康或T5；现有PRD及D01～D08要求不变，真实执行结果另记，4.1和正式工作包／门槛仍未完成。",
-        "2026-11-13：继续4.1首批私有接受意图：固定CURRENT候选／完整审查／原接受指针／数据方案，预留原release与新dataset身份，后端唯一派发和UNKNOWN保留，只有未派发可显式关闭；无READY、外部数据执行、fencing／健康凭证或T5。实际Worker并发／重开／丢ACK／事务故障、INITIAL及权限边界通过，迭代保留与正向替换确认仍待后续。初次24项22通过2失败（上游质量拦截、历史测试多传字段），原输出保留；修正显式无Runtime心跳授权夹具的签发时点及测试参数，生产租约／超时／失败守卫不变。最终协议／契约／迁移／质量收集32/32，存储全量34/34；各自源指纹稳定，差异单列，不称同指纹全量重跑。构建／类型／Lint／OpenAPI通过，131项TS map绑定一致。OpenSpec仍7/13，完整4.1、正式P1-07和门槛未完成；继续原准备／物理证明与T5，不归档。"
+        "2026-11-13：继续4.1首批私有接受意图：固定CURRENT候选／完整审查／原接受指针／数据方案，预留原release与新dataset身份，后端唯一派发和UNKNOWN保留，只有未派发可显式关闭；无READY、外部数据执行、fencing／健康凭证或T5。实际Worker并发／重开／丢ACK／事务故障、INITIAL及权限边界通过，迭代保留与正向替换确认仍待后续。初次24项22通过2失败（上游质量拦截、历史测试多传字段），原输出保留；修正显式无Runtime心跳授权夹具的签发时点及测试参数，生产租约／超时／失败守卫不变。最终协议／契约／迁移／质量收集32/32，存储全量34/34；各自源指纹稳定，差异单列，不称同指纹全量重跑。构建／类型／Lint／OpenAPI通过，131项TS map绑定一致。OpenSpec仍7/13，完整4.1、正式P1-07和门槛未完成；继续原准备／物理证明与T5，不归档。",
+        "2026-11-13：接受准备意图增量固定在 2642733ab1bc487855f7cc88e8a75922352bd14a；530项当前源码／保留证据／设计管理上下文与Git对象逐字节绑定。最终438个验证输入中437项与提交一致，唯一差异为执行后Foundation清单加入已验证的接受组，独立语法／入口检查通过并记录两版hash；不称同指纹全量重跑、干净checkout或实际准备／T5通过。变更仍7/13，继续4.1。"
       ]
     },
     {
