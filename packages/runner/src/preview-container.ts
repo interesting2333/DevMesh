@@ -31,4 +31,8 @@ export interface PreviewContainerDriver {
  create(profile:PreviewContainerProfile,request:PreviewStartRequest,networkId:string,authorize:()=>Promise<boolean>):Promise<PreviewContainerFact|null>;
  start(profile:PreviewContainerProfile,request:PreviewStartRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>):Promise<PreviewContainerFact|null>;
  stop(profile:PreviewContainerProfile,request:PreviewStartRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>):Promise<PreviewContainerFact|null>;
+  containerAbsent(containerId:string):Promise<boolean>;
+  networkAbsent(networkId:string):Promise<boolean>;
+  removeContainer(profile:PreviewContainerProfile,request:PreviewStartRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>):Promise<void>;
+  removeNetwork(profile:PreviewContainerProfile,request:PreviewStartRequest,networkId:string,authorize:()=>Promise<boolean>):Promise<void>;
 }

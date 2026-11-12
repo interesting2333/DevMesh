@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T12:44:09.615Z",
+  "sourceFingerprint": "1a7adfe3d641222396ac37df884bd0b7105948e019ed67264a2fc5116c9fbc68",
+  "currentSourceFiles": 406,
+  "retainedOriginalLogs": 28,
+  "retainedMaterials": 84,
+  "failedSources": 47,
+  "historicalMigrations": [
+    {
+      "version": 2,
+      "path": "packages/runner/src/fence-domain.ts",
+      "originalCommit": "dce2ef50eee667e280c1088158a7621638e285d2",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570",
+      "unchanged": true
+    },
+    {
+      "version": 3,
+      "path": "packages/runner/src/capacity-domain.ts",
+      "originalCommit": "dce2ef50eee667e280c1088158a7621638e285d2",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638",
+      "unchanged": true
+    },
+    {
+      "version": 4,
+      "path": "packages/runner/src/container-domain.ts",
+      "originalCommit": "dce2ef50eee667e280c1088158a7621638e285d2",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95",
+      "unchanged": true
+    },
+    {
+      "version": 5,
+      "path": "packages/runner/src/preview-lifecycle-domain.ts",
+      "originalCommit": "dce2ef50eee667e280c1088158a7621638e285d2",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3",
+      "unchanged": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "post-retention-lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ],
+      "exitCode": 0,
+      "output": "post-retention-lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "ledger-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "exitCode": 0,
+      "output": "ledger-check.txt",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "openspec-strict",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/openspec.mjs",
+        "validate",
+        "implement-preview-review-and-acceptance",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "output": "openspec-strict.txt",
+      "sha256": "ed8d29910f804e54fa78ff4d30cef5b8c4be5d5876e52f48491c9f7754ac808b"
+    },
+    {
+      "name": "design-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "design/生成完整方案.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "output": "design-check.txt",
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "name": "diff-check",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "output": "diff-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Readonly current source/log/material SHA and historical v2-v5 SQL comparison against prior Git objects; post-retention lint/ledger/spec/design/diff checks. No new application tests or clean-checkout acceptance."
+}

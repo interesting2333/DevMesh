@@ -10,7 +10,7 @@
 - [x] 2.2 实现可信 dataset 准备接口和首次空／演示、隔离快照适配，验证实际 SQLite 一致副本、源数据不回写、失败和 ACK 丢失不重建；真实生产迁移未配置时关闭。
 - [ ] 2.3 实现准确镜像／dataset 预览启动、健康／停止／到期核实，验证原实例绑定、未知不替代、停止未接受预览不影响旧 release／dataset；真实容器另留缺项。
 
-2.3 当前开发范围：持续健康持久观察、原启动／停止／到期的私有控制面恢复器及受限 loopback HTTP 检查已完成本地验证；Runner v3 持久预览预留与原作业统一累计 slot／CPU／内存，UNKNOWN 保留容量，只有未派发取消或准确原实例 EXITED 才释放。Runner v4 新增不可变原 profile／NETWORK_CREATE／CREATE／START／STOP 日志、唯一派发许可、原对象核验和显式 RunnerPreviewBackend 组合；Docker Driver 代码固定 OCI／config／层、独占网络、只读准备元数据挂载及沙箱／资源策略，缺真实 Linux／硬配额／宿主网络隔离适配器保持关闭。Runner v5 增加持久归属和独立到期 watchdog，私有 ReleaseHold／Commit 与 STOP 在同一 writer 互斥；HELD／OWNED 不因 TTL 失去保护，旧未登记预览只查询，观察到的时钟回拨锁存到期。新用例实际执行本地定时器、Worker 重启、归属与 STOP 并发、事务回滚及历史升级，网络／容器事实仍明确受控。原控制面组合和实际 dataset 保留已有本地验证，模板显式容器监听另有 HTTP／SQLite／浏览器验证。真实 Docker CLI／gVisor 联调、实际 quota／network-isolation 适配器、从未启动容器的显式清理／移除、可信平台装配及 T5 必需归属握手仍待完成；完整子项不提前勾选，受控容器事实不是实际镜像健康或物理退出证据。
+2.3 当前开发范围：持续健康持久观察、原启动／停止／到期的私有控制面恢复器及受限 loopback HTTP 检查已完成本地验证；Runner v3 持久预览预留与原作业统一累计 slot／CPU／内存，UNKNOWN 保留容量，只有未派发取消、准确原实例 EXITED 或独立 REMOVED 证明才释放。Runner v4 新增不可变原 profile／NETWORK_CREATE／CREATE／START／STOP 日志、唯一派发许可、原对象核验和显式 RunnerPreviewBackend 组合；Docker Driver 代码固定 OCI／config／层、独占网络、只读准备元数据挂载及沙箱／资源策略，缺真实 Linux／硬配额／宿主网络隔离适配器保持关闭。Runner v5 增加持久归属和独立到期 watchdog，私有 ReleaseHold／Commit 与 STOP 在同一 writer 互斥；HELD／OWNED 不因 TTL 失去保护，旧未登记预览只查询，观察到的时钟回拨锁存到期。新用例实际执行本地定时器、Worker 重启、归属与 STOP 并发、事务回滚及历史升级，网络／容器事实仍明确受控。原控制面组合和实际 dataset 保留已有本地验证，模板显式容器监听另有 HTTP／SQLite／浏览器验证。Runner v6 新增独立 REMOVED／PREVIEW_REMOVED、原容器／网络唯一清理日志、准确 ID 消失观察与容量历史同事务、包含已释放预留的清理恢复扫描，前向迁移不改旧迁移正文；HELD／OWNED、未知创建无原 ID 和 dataset 继续保护。真实 Docker CLI／gVisor 启动／退出／移除联调、实际 quota／network-isolation 适配器、可信平台装配及 T5 必需归属握手仍待完成；完整子项不提前勾选，受控容器事实不是实际镜像健康或物理退出证据。
 
 ## 3. Separate preview access
 

@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "dce2ef50eee667e280c1088158a7621638e285d2",
+  "dirty": true,
+  "sourceFingerprint": "066ac0e81ab08cbebb08223849adee6ce09010418dfc619edfe3c32ff241ad03",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T12:28:14.833Z",
+  "finishedAt": "2026-11-12T12:29:39.410Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 927,
+      "output": "frozen-install.txt",
+      "sha256": "8662070ec7b0f34a2c4fc6927d0ce0fe950cf7c4abb5fc9ad01044361f61d09b"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12616,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 979,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 30020,
+      "output": "current-build.txt",
+      "sha256": "e81f9966360057c07740fc445d853400a04b22fcc1e98b85cdaa6bfd5472b0aa"
+    },
+    {
+      "name": "cleanup",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 39505,
+      "output": "cleanup.txt",
+      "sha256": "2f7567d545347dff3dc389d59676e693a764a4e29b11bb9fe940ec96fb160540",
+      "tests": {
+        "tests": 14,
+        "pass": 13,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/cleanup.txt",
+      "sha256": "2f7567d545347dff3dc389d59676e693a764a4e29b11bb9fe940ec96fb160540"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/current-build.txt",
+      "sha256": "e81f9966360057c07740fc445d853400a04b22fcc1e98b85cdaa6bfd5472b0aa"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/capacity-domain.ts",
+      "sha256": "664f9e574a5da95b4563a361c5fb3dcc7b9280e811aada5301a0b34fde4d05e0"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/cleanup-domain.ts",
+      "sha256": "e0b1d0af9ed68c3384ba7e093d9481bc7ea451ccb4615c384cffa229f60bc3e4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/cleanup-migration.ts",
+      "sha256": "d18a64dd3fcdcb50d326e0f4f485f222b11253f70d405473cd31c38f3c57ca4c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/container-domain.ts",
+      "sha256": "1a01e0db9b9fd07cf505d0a5a912f3bda2d824941a1e61a235964c57d9f7b912"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/fence-domain.ts",
+      "sha256": "70062c00a271231d669d6a2e2f8b55558ebce37acb187b340071bd22983cda2a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/index.ts",
+      "sha256": "a07e13405f23716749201bb9d0bb63400436f6649f476d6358b7c02294d31d42"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/preview-backend.ts",
+      "sha256": "933fc6bb84332b910ae14c5637b1e66eb6706bfa530d7c6be486964ae37c4ed3"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/preview-cleanup.ts",
+      "sha256": "d3fed9fbb74f2d62ad955560c9a61c1188a4f670317a1a5172aad55ee25a01eb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/preview-container.ts",
+      "sha256": "b1da43d1091d7b99a51801efdddcf02fed10a74693ef45edba136f3bbca33117"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/preview-docker.ts",
+      "sha256": "30735c88be374c32b7f68c468f6262af9ec42c8bdecac0258a9a1ca4861174a6"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "1b27c3dc6be1fa96f25aac53ac921f2641424557ad1cfc45eb07a273849b58d2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/preview-reservation.ts",
+      "sha256": "41d7c1f50b15e661362be2acc668e6cdd4154d15a72598b5fdbb6b054295cc34"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/preview-watchdog.ts",
+      "sha256": "ff476e8cf44fd4c4773605d854451fab83ff520d3c5a66af2bc5c0a07de4464f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/store-protocol.ts",
+      "sha256": "f1273760323f079e8fda34500969eecb280025bd431c483640fe17da2ff4e1a1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/runner/src/worker.ts",
+      "sha256": "72a65daee1d19f058e0597471d7bbe78fe4696a78521bcd28d1f62a1eab46721"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/storage-sqlite/src/preview-domain.ts",
+      "sha256": "2c0ce8a0e1ab4b5df2a39a48b05ac3ba23e300655302fe2220a5a45a130eee10"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/packages/storage-sqlite/src/preview-protocol.ts",
+      "sha256": "84e38f9c8af70698e6933a32112600d3305c14a16f1916d17d51a7411526c04f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/tests/fixtures/preview-container.mjs",
+      "sha256": "ad3ce0236ba8906aaaf7a64af04c7d4d250fea458ec83debcfc10813c2800e9d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/tests/fixtures/runner-version.mjs",
+      "sha256": "42706f6190ce8f4f252b457dcaa7ff85d27c7b5066601c15c47d5953c94664dd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/tests/runner-preview-capacity.test.mjs",
+      "sha256": "078a5b6ff57a3f38cb84db527617f6617feb2fcfe985f8447eeb7a14427622d9"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/tests/runner-preview-cleanup.test.mjs",
+      "sha256": "da9adacea187cec235b91a586188722e58a3544a0f377561eedc15f61f1f9c8a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "sha256": "d6903c75d67ff20df4887f9aa0c55cfb04548fd23c5719035d55c9f5f1ab8eb0"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/failed-source/tests/runner-upgrade.test.mjs",
+      "sha256": "d93431846cb471863293ebed2f513c79e5d7ff46ac14fcbd7b054e68d1492152"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/frozen-install.txt",
+      "sha256": "8662070ec7b0f34a2c4fc6927d0ce0fe950cf7c4abb5fc9ad01044361f61d09b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/report.json",
+      "sha256": "7e70e46e8f86c6ff7767ebc28655bcbcbc6f0f242f960ddca71b4deb48c45c8a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/validation-driver.mjs",
+      "sha256": "d857c6fa2f8c1364f9e0b5769ed0e880647ec2fdf0a400ef6f6bc2274329d609"
+    },
+    {
+      "path": "project/evidence/P1-07/development/cleanup-v30-failed/commands.json",
+      "sha256": "f8e50bfe65baaa094bbf2becc261d9bfef3d25611578eb3afe3d0d06cb47dda5"
+    }
+  ],
+  "scope": "P1-07 partial2.3: Runner v6 original container and network cleanup journal, separate REMOVED absence proof, atomic capacity release, released-reservation cleanup recovery and forward migration. Real SQLite/Workers/files/control composition; ControlledContainerDriver supplies container/network facts. No actual Docker physical removal, Linux hard quota/firewall adapters, production composition, T5 or stage acceptance. Full2.3 remains unchecked.",
+  "limitations": [
+    "Partial task2.3 remains unchecked; same Codex implementation/review, no independent/human, product or stage acceptance.",
+    "Actual Runner/control SQLite/Workers, local datasets, HTTP, timers, transaction rollback, original ACK recovery, terminate/reopen and forward migration are exercised. Container/network facts and HTTP health application are explicit fixtures, no Docker execution, physical removal or exit evidence.",
+    "ReleaseHold/Commit are private trusted Runner custody calls, not a T5 transaction, public acceptance API or completed production composition. HELD/OWNED never expire into cleanup permission.",
+    "No trusted Linux quota/firewall adapters, production composition or actual Linux Docker/gVisor validation. No real model/OIDC, preview gateway, T5, publication, production migration or product acceptance."
+  ],
+  "failure": "See exact original log and retained failed source snapshot."
+}

@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "31fc12c35e9aecb51ed9f91d90fcefe60ccc81c6afd433e65cf6a7f63922d708"
+      "sha256": "a9ad7e5cdba0fc01eab28000fab6e294702b3646c5e0444b65fd29190c1cc6f8"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "b651ed089b1583e983fdb3e75c44a5cf10eb239f0474b0d2c3db40976240a030"
+      "sha256": "1aa509101db72f18b1f01933d3d803e70153c331014d647465a656d9d6e462c3"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "101e597b575421aa6f42a7b39508f3db959159cb26f29688ae9aa20c381f37a5"
+      "sha256": "0c44604715a93b3cb823d09862cbdb6d2f64a98aa9f2137717c5f7073f70a6d0"
     }
   ],
   "gates": [
@@ -1137,7 +1137,12 @@
         "packages/runner/src/preview-lifecycle-domain.ts",
         "packages/runner/src/preview-watchdog.ts",
         "packages/runner/src/index.ts",
-        "tests/runner-preview-watchdog.test.mjs"
+        "tests/runner-preview-watchdog.test.mjs",
+        "packages/runner/src/cleanup-domain.ts",
+        "packages/runner/src/cleanup-migration.ts",
+        "packages/runner/src/preview-cleanup.ts",
+        "tests/fixtures/runner-version.mjs",
+        "tests/runner-preview-cleanup.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1194,7 +1199,13 @@
         "project/evidence/P1-07/development/watchdog-v28-failed/evidence.json",
         "project/evidence/P1-07/development/watchdog-v29/evidence.json",
         "project/evidence/P1-07/development/watchdog-v29/commands.json",
-        "project/evidence/P1-07/development/watchdog-v29/checkpoint-binding.json"
+        "project/evidence/P1-07/development/watchdog-v29/checkpoint-binding.json",
+        "project/evidence/P1-07/preview-cleanup-development-review.md",
+        "project/evidence/P1-07/development/cleanup-v30-failed/evidence.json",
+        "project/evidence/P1-07/development/cleanup-v31-failed/evidence.json",
+        "project/evidence/P1-07/development/cleanup-v32/evidence.json",
+        "project/evidence/P1-07/development/cleanup-v32/commands.json",
+        "project/evidence/P1-07/development/cleanup-v32/post-retention-checks.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1214,7 +1225,9 @@
         "2026-11-12：继续开发子项 2.3 的预览容器执行部分：Runner v4 前向迁移保留原 v2／v3 指纹、作业／fence／预留／历史，新增不可变原容器 profile 和 NETWORK_CREATE／CREATE／START／STOP 日志，每动作原完整请求／hash／operation 及唯一派发位，原网络／容器首次绑定与观察同事务。RunnerPreviewBackend 显式组合实际 dataset 和平台生命周期控制器；派发／执行／提交 ACK 丢失后只查原对象，不续发下一动作。Docker Driver 代码固定 OCI config／层／源码构建标记、每预览独占网络、loopback 端口、runsc／非 root／只读根／资源和只读准备元数据覆盖挂载，缺真实 Linux／硬配额／宿主隔离适配器保持关闭；模板显式容器监听默认仍为 loopback。实际 SQLite 迁移失败回滚／重试、历史保留、Worker 终止重开、原动作回滚／不可变、控制面组合和业务数据保留均验证。containers-v25 的组合测试误把启动 operationId 当停止操作，13/14，原失败日志／源码保留；仅修正为 stopOperationId。最终 v26 安装／类型／Lint／构建及 OpenAPI 通过，主回归 157 次执行（去除 Runner 子集重复后 128 项：126 通过、2 条 POSIX／Linux 条件跳过）；模板另有 20 项真实单元／HTTP／SQLite 测试和 2 项 Chromium 浏览器测试，行覆盖 92.83%／分支 86.54%，源码指纹均未漂移。容器／网络事实来自 ControlledContainerDriver、健康来自独立 HTTP 夹具，不是实际 Docker CLI、物理退出、gVisor／cgroup／硬配额／防火墙证据。独立 Runner 到期 watchdog、从未启动容器显式清理／移除、真实配额／网络适配器、可信平台默认装配及后续网关／T5／发布继续实施，完整 2.3 未勾选，正式 P1-07／阶段门槛保持等待。",
         "2026-11-12：预览容器执行部分源码固定在 599fb13f9ff05d14bfbf7074054ddd9ba5466143，containers-v26 主回归全部 396 个源码／模板输入及模板独立验证全部 33 个输入与该 Git 对象字节一致。绑定仅为只读核对，不是新一轮测试、干净 checkout 或实际 Docker／gVisor 验收；完整 2.3／正式 P1-07 和阶段门槛仍未完成。",
         "2026-11-12：继续开发子项 2.3：Runner v5 前向迁移保存持久 PREVIEW／STOPPING／RELEASE_HELD／RELEASE_OWNED 与不可变历史，hold 与原 STOP 派发同 writer 互斥，准确 subject／原启动／接受请求固定，HELD／OWNED 不因 TTL 失去保护；旧已派发对象不收养。Runner 独立 watchdog 不依赖控制数据库，原到期 STOP 唯一派发、UNKNOWN 仅查原对象，关闭与最后授权、分页隔离、时钟单调／高水位／持久锁存和外层事务回滚后 Worker 记忆均实现。v27 新增及容器／容量 43 项通过；v28 定时器夹具 3 秒 TTL 短于实际启动，15 项中 14 通过，原失败日志／15 个源码快照保留，仅调整测试期限和宽限，生产守卫不变。最终 v29 安装／类型／Lint／构建／OpenAPI 通过，187 次测试执行去重 143 项：141 通过、2 条条件跳过，全部 401 个输入指纹未漂移。实际 Runner SQLite／Worker／文件／HTTP／定时器、历史 v1～v4 升级 v5／失败回滚和原日志保留有证据；网络／容器由明确 Driver 夹具提供，无真实 Docker 或物理退出证明。私有归属握手不等于 T5；显式移除、Linux quota／防火墙适配器、可信装配、网关／T5／发布及真实环境继续实施，完整 2.3 不勾选，正式 P1-07／门槛保持等待。",
-        "2026-11-12：Runner 独立到期与 Release 归属增量源码固定在 bdb3711b3b238fd929e295eb7e211371a77d5303，watchdog-v29 全部 401 个源码／模板输入与该提交 Git 对象字节一致。只读绑定不等同再次测试、干净 checkout、真实 Docker／T5 或产品／阶段验收；完整 2.3 和正式 P1-07 仍未完成。"
+        "2026-11-12：Runner 独立到期与 Release 归属增量源码固定在 bdb3711b3b238fd929e295eb7e211371a77d5303，watchdog-v29 全部 401 个源码／模板输入与该提交 Git 对象字节一致。只读绑定不等同再次测试、干净 checkout、真实 Docker／T5 或产品／阶段验收；完整 2.3 和正式 P1-07 仍未完成。",
+        "2026-11-12：原容器／网络清理协议设计影响评估：技术专题 D4 及完整主文、实施文档 P1-07、D07 验收同步增加独立 REMOVED／PREVIEW_REMOVED、原 ID 消失证明、容量与历史原子提交、唯一移除日志和已释放预留网络恢复；普通作业真实退出要求、未知创建占用、接受归属及 dataset 保留不变。基线按实际字节更新，代码与回归结果另记；本次同步不代表正式工作包或阶段完成。",
+        "2026-11-12：继续开发子项 2.3：Runner v6 独立 REMOVED／PREVIEW_REMOVED、原容器／独占网络清理日志和已释放预留清理扫描；每动作唯一派发，ACK 丢失仅查准确原 ID，容器消失观察与容量／历史原子提交。HELD／OWNED、未登记旧预览、运行中／未知对象和 dataset 保持保护。v2～v5 SQL 不改写，实际迁移失败回滚／重试及旧行／子表／历史保留。v30 14 项中 13 通过，测试幂等键过短；v31 18 项中 17 通过，新增 UNKNOWN 测试误传非空 instanceId；原失败日志／源码保留，契约不放宽。最终 v32 安装／类型／Lint／构建／OpenAPI 和 18 项检查通过，251 次测试执行去重 189 项：187 通过、2 条条件跳过，全部 406 个输入指纹不变。真实 Runner Worker／控制 SQLite 处理器／控制 Worker 重开、dataset CRUD、定时器与原 ACK 恢复有证据；网络／容器移除事实由明确 Driver 夹具提供，无实际 Docker／物理移除或 Linux 隔离证据。真实适配器、可信装配、网关／T5／发布及真实环境继续实施，完整 2.3 不勾选，正式 P1-07／门槛保持等待。"
       ]
     },
     {

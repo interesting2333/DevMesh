@@ -8,7 +8,8 @@ export const previewBackendPolicy=z.strictObject({schemaVersion:z.literal('devme
 const datasetReceipt=z.strictObject({kind:z.literal('DATASET_READY'),datasetId:ids.dataset,storageKey:z.string().regex(/^prj_[A-Za-z0-9_-]+\/dataset_[A-Za-z0-9_-]+\/app\.sqlite$/),originDatasetId:ids.dataset.nullable(),schemaRevision:opaqueKey,snapshotAt:timestamp,sha256,byteSize:z.number().int().positive().max(Number.MAX_SAFE_INTEGER),integrity:z.literal('ok')});
 const previewReceipt=z.strictObject({kind:z.literal('PREVIEW_READY'),previewId:ids.preview,datasetId:ids.dataset,imageDigest:z.string().regex(/^sha256:[a-f0-9]{64}$/),instanceId:opaqueKey,healthy:z.literal(true),checkedAt:timestamp});
 const stopReceipt=z.strictObject({kind:z.literal('PREVIEW_STOPPED'),previewId:ids.preview,instanceId:opaqueKey,exitVerified:z.literal(true),checkedAt:timestamp});
-export const previewEffectReceipt=z.discriminatedUnion('kind',[datasetReceipt,previewReceipt,stopReceipt]);
+const removalReceipt=z.strictObject({kind:z.literal('PREVIEW_REMOVED'),previewId:ids.preview,instanceId:opaqueKey,removalVerified:z.literal(true),checkedAt:timestamp});
+export const previewEffectReceipt=z.discriminatedUnion('kind',[datasetReceipt,previewReceipt,stopReceipt,removalReceipt]);
 export const datasetPreparationRequest=z.strictObject({schemaVersion:z.literal('devmesh.dataset-prepare.v1'),operationId:ids.operation,projectId:ids.project,runId:ids.run,candidateId:ids.candidate,manifestHash:sha256,policyHash:sha256,backendRef:opaqueKey,runnerId:opaqueKey,datasetId:ids.dataset,storageKey:z.string().max(512),schemaRevision:opaqueKey,sourceDatasetId:ids.dataset.nullable(),sourceStorageKey:z.string().max(512).nullable(),sourceReleaseId:ids.release.nullable(),initialData:z.enum(['EMPTY','DEMO']).nullable(),templateVersion:opaqueKey}).superRefine((i,c)=>{
  if(i.storageKey!==i.projectId+'/'+i.datasetId+'/app.sqlite'||i.sourceDatasetId===i.datasetId)c.addIssue({code:'custom',message:'Exact distinct dataset storage identities required'});
  if(i.sourceDatasetId){if(i.sourceStorageKey!==i.projectId+'/'+i.sourceDatasetId+'/app.sqlite'||!i.sourceReleaseId||i.initialData!==null)c.addIssue({code:'custom',message:'Exact source release and dataset required'});}
@@ -17,8 +18,8 @@ export const datasetPreparationRequest=z.strictObject({schemaVersion:z.literal('
 const previewSubject={operationId:ids.operation,projectId:ids.project,runId:ids.run,candidateId:ids.candidate,policyHash:sha256,backendRef:opaqueKey,runnerId:opaqueKey,previewId:ids.preview,datasetId:ids.dataset,imageDigest:z.string().regex(/^sha256:[a-f0-9]{64}$/)};
 export const previewStartRequest=z.strictObject({schemaVersion:z.literal('devmesh.preview-start.v1'),...previewSubject,manifestHash:sha256,storageKey:z.string().max(512),datasetOperationId:ids.operation,templateVersion:opaqueKey,schemaRevision:opaqueKey,imageIdentity:previewImageIdentity,expiresAt:timestamp}).superRefine((i,c)=>{if(i.storageKey!==i.projectId+'/'+i.datasetId+'/app.sqlite'||i.imageIdentity.imageDigest!==i.imageDigest)c.addIssue({code:'custom',message:'Exact dataset and image identity required'});});
 export const previewStopRequest=z.strictObject({schemaVersion:z.literal('devmesh.preview-stop.v1'),...previewSubject,startOperationId:ids.operation,startRequestHash:sha256,instanceId:opaqueKey,reason:z.enum(['USER','EXPIRED'])});
-export const previewRuntimeFact=z.strictObject({previewId:ids.preview,datasetId:ids.dataset,imageDigest:previewSubject.imageDigest,state:z.enum(['HEALTHY','UNHEALTHY','CREATED','EXITED','UNKNOWN']),instanceId:opaqueKey.nullable(),endpoint:z.strictObject({host:z.literal('127.0.0.1'),port:z.number().int().min(1024).max(65535)}).nullable(),checkedAt:timestamp}).superRefine((i,c)=>{
- if((i.state==='UNKNOWN')!==(i.instanceId===null)||i.state==='HEALTHY'&&i.endpoint===null||['EXITED','CREATED','UNKNOWN'].includes(i.state)&&i.endpoint!==null)c.addIssue({code:'custom',message:'A runtime fact needs exact verified instance and endpoint evidence'});
+export const previewRuntimeFact=z.strictObject({previewId:ids.preview,datasetId:ids.dataset,imageDigest:previewSubject.imageDigest,state:z.enum(['HEALTHY','UNHEALTHY','CREATED','EXITED','REMOVED','UNKNOWN']),instanceId:opaqueKey.nullable(),endpoint:z.strictObject({host:z.literal('127.0.0.1'),port:z.number().int().min(1024).max(65535)}).nullable(),checkedAt:timestamp}).superRefine((i,c)=>{
+  if((i.state==='UNKNOWN')!==(i.instanceId===null)||i.state==='HEALTHY'&&i.endpoint===null||['EXITED','REMOVED','CREATED','UNKNOWN'].includes(i.state)&&i.endpoint!==null)c.addIssue({code:'custom',message:'A runtime fact needs exact verified instance and endpoint evidence'});
 });
 const backendPage={principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)};
 export const previewRequests={
@@ -54,7 +55,7 @@ export type PreviewStartRequest=z.output<typeof previewStartRequest>;
 export type PreviewStopRequest=z.output<typeof previewStopRequest>;
 export type PreviewRuntimeFact=z.output<typeof previewRuntimeFact>;
 export interface PreviewRuntimeObservation {sequence:number;fact:PreviewRuntimeFact;observedAt:string}
-export type PreviewExecutionObservation={state:'UNKNOWN';errorCode:string}|{state:'FAILED';errorCode:string;absenceVerified:true}|{state:'SUCCEEDED';receipt:Extract<PreviewEffectReceipt,{kind:'PREVIEW_READY'|'PREVIEW_STOPPED'}>};
+export type PreviewExecutionObservation={state:'UNKNOWN';errorCode:string}|{state:'FAILED';errorCode:string;absenceVerified:true}|{state:'SUCCEEDED';receipt:Extract<PreviewEffectReceipt,{kind:'PREVIEW_READY'|'PREVIEW_STOPPED'|'PREVIEW_REMOVED'}>};
 export interface PreviewExecutionResult {observation:PreviewExecutionObservation;fact:PreviewRuntimeFact}
 export interface PreviewExecutionBackend {
  readonly configured:boolean;

@@ -121,11 +121,12 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
     if((last?.sequence??0)!==i.expectedSequence)fail('PREVIEW_RUNTIME_REVISION_CHANGED');
     if(fact.previewId!==p.preview_id||fact.datasetId!==p.dataset_id||fact.imageDigest!==p.image_digest||p.instance_id!==null&&fact.instanceId!==null&&p.instance_id!==fact.instanceId)fail('PREVIEW_RUNTIME_IDENTITY_CHANGED');
     if(fact.checkedAt<String(start.created_at)||fact.checkedAt>now()||last&&fact.checkedAt<last.fact.checkedAt)fail('PREVIEW_RUNTIME_TIME_INVALID');
-    if((start.state==='FAILED'||['STOPPED','EXPIRED'].includes(String(p.state)))&&!['EXITED','UNKNOWN'].includes(fact.state))fail('PREVIEW_RUNTIME_TERMINAL');
+    if((start.state==='FAILED'||['STOPPED','EXPIRED'].includes(String(p.state)))&&!['EXITED','REMOVED','UNKNOWN'].includes(fact.state))fail('PREVIEW_RUNTIME_TERMINAL');
+     if(!['REMOVED','UNKNOWN'].includes(fact.state)&&get("SELECT 1 FROM preview_runtime_observations WHERE preview_id=? AND json_extract(fact_json,'$.state')='REMOVED' LIMIT 1",p.preview_id!))fail('PREVIEW_RUNTIME_TERMINAL');
     const pinned=get("SELECT fact_json FROM preview_runtime_observations WHERE preview_id=? AND json_extract(fact_json,'$.endpoint') IS NOT NULL ORDER BY sequence LIMIT 1",p.preview_id!);
     if(pinned&&fact.endpoint!==null&&canonical(json<PreviewRuntimeFact>(pinned.fact_json).endpoint)!==canonical(fact.endpoint))fail('PREVIEW_RUNTIME_ENDPOINT_CHANGED');
     const stop=get("SELECT 1 FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",p.preview_id!);
-    const next:PreviewView['state']=['STOPPED','EXPIRED'].includes(String(p.state))?p.state as PreviewView['state']:stop?'STOPPING':fact.state==='EXITED'?(String(p.expires_at)<=now()?'EXPIRED':'STOPPED'):fact.state==='HEALTHY'?(start.state==='SUCCEEDED'?'READY':'STARTING'):'UNKNOWN';
+    const next:PreviewView['state']=['STOPPED','EXPIRED'].includes(String(p.state))?p.state as PreviewView['state']:stop?'STOPPING':['EXITED','REMOVED'].includes(fact.state)?(String(p.expires_at)<=now()?'EXPIRED':'STOPPED'):fact.state==='HEALTHY'?(start.state==='SUCCEEDED'?'READY':'STARTING'):'UNKNOWN';
     const sequence=(last?.sequence??0)+1,observedAt=now();exec('INSERT INTO preview_runtime_observations VALUES(?,?,?,?,?,?,?)',p.preview_id!,sequence,start.operation_id!,start.request_hash!,body,fact.checkedAt,observedAt);
     if(next!==p.state||p.instance_id===null&&fact.instanceId!==null){exec('UPDATE previews SET state=?,instance_id=coalesce(instance_id,?),revision=revision+1 WHERE preview_id=?',next,fact.instanceId,p.preview_id!);hooks.changed(String(p.run_id),String(start.operation_id),{previewId:String(p.preview_id),state:next});}
     return {sequence,fact,observedAt};
@@ -180,8 +181,8 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
       const runtime=latestRuntime(String(r.preview_id));if(runtime?.fact.state!=='HEALTHY'||runtime.fact.instanceId!==receipt.instanceId||runtime.fact.checkedAt!==receipt.checkedAt||Date.now()-Date.parse(receipt.checkedAt)>30000||get("SELECT 1 FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",r.preview_id!))fail('PREVIEW_HEALTH_NOT_VERIFIED');
      exec("UPDATE previews SET state='READY',revision=revision+1,instance_id=? WHERE preview_id=?",receipt.instanceId,r.preview_id!);
     }else{
-     if(receipt.kind!=='PREVIEW_STOPPED'||receipt.previewId!==r.preview_id||receipt.instanceId!==p!.instance_id||receipt.checkedAt<String(r.created_at)||receipt.checkedAt>now())fail('PREVIEW_RECEIPT_CHANGED');
-      const runtime=latestRuntime(String(r.preview_id));if(runtime?.fact.state!=='EXITED'||runtime.fact.instanceId!==receipt.instanceId||runtime.fact.checkedAt!==receipt.checkedAt)fail('PREVIEW_EXIT_NOT_VERIFIED');
+     if((receipt.kind!=='PREVIEW_STOPPED'&&receipt.kind!=='PREVIEW_REMOVED')||receipt.previewId!==r.preview_id||receipt.instanceId!==p!.instance_id||receipt.checkedAt<String(r.created_at)||receipt.checkedAt>now())fail('PREVIEW_RECEIPT_CHANGED');
+      const runtime=latestRuntime(String(r.preview_id));if(runtime?.fact.state!==(receipt.kind==='PREVIEW_REMOVED'?'REMOVED':'EXITED')||runtime.fact.instanceId!==receipt.instanceId||runtime.fact.checkedAt!==receipt.checkedAt)fail('PREVIEW_EXIT_NOT_VERIFIED');
      const request=json<{reason:string}>(r.request_json);exec('UPDATE previews SET state=?,revision=revision+1 WHERE preview_id=?',request.reason==='EXPIRED'?'EXPIRED':'STOPPED',r.preview_id!);
     }
    }else if(r.kind==='DATASET_PREPARE'){

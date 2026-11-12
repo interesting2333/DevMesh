@@ -32,7 +32,7 @@ export function createRunnerCapacityDomain(db:DatabaseSync,runnerId:string){
  const tx=<T>(body:()=>T):T=>{db.exec('BEGIN IMMEDIATE');try{const value=body();db.exec('COMMIT');return value;}catch(error){db.exec('ROLLBACK');throw error;}};
  const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);
  if(version===2)tx(()=>{db.exec(migration);exec('INSERT INTO runner_schema_history VALUES(3,?,?)',hash(migration),new Date().toISOString());});
-  else if(![3,4,5].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
+  else if(![3,4,5,6].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
   if(get('SELECT sha256 FROM runner_schema_history WHERE version=3')?.sha256!==hash(migration)||get('SELECT version FROM runner_identity WHERE singleton=1')?.version!==(version===2?3:version))fail('RUNNER_MIGRATION_DRIFT');
  let capacity:RunnerCapacity|null=null;
  const configure=(input:RunnerCapacity):RunnerCapacity=>{const parsed=runnerCapacity.parse(input);if(capacity&&canonical(capacity)!==canonical(parsed))fail('RUNNER_CAPACITY_CONFIG_CHANGED');return capacity??=(Object.freeze(parsed));};
@@ -48,6 +48,7 @@ export function createRunnerCapacityDomain(db:DatabaseSync,runnerId:string){
  const event=(r:Row)=>exec('INSERT INTO preview_reservation_events VALUES(?,?,?,?)',String(r.reservation_id),Number(r.revision),canonical(view(r)),String(r.updated_at));
  const changed=(r:Row)=>{const current=owned(String(r.controller_id),String(r.reservation_id));event(current);return view(current);};
  return {
+  recordRemoved(i:{controllerId:string;reservationId:string;requestHash:string},checkedAt:string){const r=bound(i);if(r.released_at!==null)return;if(r.instance_id===null||r.state==='RESERVED')fail('PREVIEW_CLEANUP_ORIGINAL_UNKNOWN');const request=JSON.parse(String(r.request_json)),fact={previewId:request.previewId,datasetId:request.datasetId,imageDigest:request.imageDigest,state:'REMOVED',instanceId:r.instance_id,endpoint:null,checkedAt},at=new Date().toISOString();exec("UPDATE preview_reservations SET state='REMOVED',revision=revision+1,fact_json=?,updated_at=?,released_at=? WHERE reservation_id=?",canonical(fact),at,at,i.reservationId);changed(r);},
   fits,
   capacityConfigure:configure,
   capacityUsage(){return {capacity,usage:usage()};},
@@ -68,11 +69,11 @@ export function createRunnerCapacityDomain(db:DatabaseSync,runnerId:string){
    previewReservationDispatch(i:StoreInput<'previewReservationDispatch'>){return tx(()=>{const r=bound(i);if(r.state!=='RESERVED')return {dispatch:false,reservation:view(r)};const life=get('SELECT state,expired_at FROM preview_lifecycles WHERE reservation_id=?',i.reservationId);if(life&&(life.state!=='PREVIEW'||life.expired_at!==null))fail('PREVIEW_EXPIRY_CLAIMED');if(Date.parse(JSON.parse(String(r.request_json)).expiresAt)<=Date.now())fail('PREVIEW_RESERVATION_EXPIRED');exec("UPDATE preview_reservations SET state='DISPATCHED',revision=revision+1,updated_at=? WHERE reservation_id=?",new Date().toISOString(),i.reservationId);return {dispatch:true,reservation:changed(r)};});},
   previewReservationCancel(i:StoreInput<'previewReservationCancel'>){return tx(()=>{const r=bound(i);if(r.state==='CANCELLED')return view(r);if(r.state!=='RESERVED')fail('PREVIEW_RESERVATION_DISPATCHED');const now=new Date().toISOString();exec("UPDATE preview_reservations SET state='CANCELLED',revision=revision+1,updated_at=?,released_at=? WHERE reservation_id=?",now,now,i.reservationId);return changed(r);});},
   previewReservationRecord(i:StoreInput<'previewReservationRecord'>){return tx(()=>{
-   const r=bound(i),request=JSON.parse(String(r.request_json)),f=i.fact;
+   const r=bound(i),request=JSON.parse(String(r.request_json)),f=i.fact;if(f.state==='REMOVED')fail('PREVIEW_REMOVAL_PROOF_REQUIRED');
    if(f.previewId!==request.previewId||f.datasetId!==request.datasetId||f.imageDigest!==request.imageDigest)fail('PREVIEW_RESERVATION_IDENTITY_MISMATCH');
    if(r.fact_json===canonical(f))return view(r);
    if(r.revision!==i.expectedRevision)fail('PREVIEW_RESERVATION_REVISION_CONFLICT');
-   if(['RESERVED','CANCELLED','EXITED'].includes(String(r.state)))fail('PREVIEW_RESERVATION_NOT_OBSERVABLE');
+   if(['RESERVED','CANCELLED','EXITED','REMOVED'].includes(String(r.state)))fail('PREVIEW_RESERVATION_NOT_OBSERVABLE');
    const at=Date.parse(f.checkedAt),previous=r.fact_json?JSON.parse(String(r.fact_json)):null;
    if(at>Date.now()||at<Date.parse(String(r.created_at))||previous&&at<Date.parse(previous.checkedAt))fail('PREVIEW_RESERVATION_OBSERVATION_STALE');
    if(r.instance_id!==null&&f.instanceId!==null&&r.instance_id!==f.instanceId)fail('PREVIEW_RESERVATION_IDENTITY_MISMATCH');

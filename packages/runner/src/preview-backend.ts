@@ -32,6 +32,8 @@ export class RunnerPreviewBackend implements PreviewExecutionBackend {
  #result(effect:PreviewEffect,fact:PreviewRuntimeFact):PreviewExecutionResult{
   if(effect.kind==='PREVIEW_START'&&fact.state==='HEALTHY')return {fact,observation:{state:'SUCCEEDED',receipt:{kind:'PREVIEW_READY',previewId:fact.previewId,datasetId:fact.datasetId,imageDigest:fact.imageDigest,instanceId:fact.instanceId!,healthy:true,checkedAt:fact.checkedAt}}};
   if(effect.kind==='PREVIEW_STOP'&&fact.state==='EXITED')return {fact,observation:{state:'SUCCEEDED',receipt:{kind:'PREVIEW_STOPPED',previewId:fact.previewId,instanceId:fact.instanceId!,exitVerified:true,checkedAt:fact.checkedAt}}};
+   if(effect.kind==='PREVIEW_STOP'&&fact.state==='REMOVED')return {fact,observation:{state:'SUCCEEDED',receipt:{kind:'PREVIEW_REMOVED',previewId:fact.previewId,instanceId:fact.instanceId!,removalVerified:true,checkedAt:fact.checkedAt}}};
+   if(effect.kind==='PREVIEW_START'&&fact.state==='REMOVED')return {fact,observation:{state:'FAILED',errorCode:'PREVIEW_ORIGINAL_REMOVED',absenceVerified:true}};
   if(effect.kind==='PREVIEW_START'&&fact.state==='EXITED')return {fact,observation:{state:'FAILED',errorCode:'PREVIEW_ORIGINAL_EXITED',absenceVerified:true}};
   return {fact,observation:{state:'UNKNOWN',errorCode:'PREVIEW_ORIGINAL_UNVERIFIED'}};
  }
@@ -39,6 +41,9 @@ export class RunnerPreviewBackend implements PreviewExecutionBackend {
  async #observe(r:PreviewReservation,j:PreviewContainerJournal,kind:PreviewContainerAction,f:PreviewContainerFact|string){const action=j.actions.find(a=>a.kind===kind);if(!action||action.state==='OBSERVED')return j;const state=typeof f==='string'?'CREATED':f.state==='exited'?'EXITED':f.state==='running'?'RUNNING':f.state==='created'?'CREATED':null;if(!state||kind==='START'&&state==='CREATED'||kind==='STOP'&&state!=='EXITED')return j;return this.store.request('previewContainerActionObserve',{...bound(r),kind,actionRequestHash:action.requestHash,observation:{objectId:typeof f==='string'?f:f.containerId,state,checkedAt:new Date().toISOString()}});}
  async inspect(effect:PreviewEffect):Promise<PreviewExecutionResult>{
    this.#enabled();const request=this.#request(effect),r=await this.#reservation(request);if(!r)return this.#unknown(effect);
+    let removal=(await this.store.request('previewCleanupGet',bound(r))).find(a=>a.request.kind==='CONTAINER_REMOVE');
+    if(removal?.state==='SENT'&&await this.driver.containerAbsent(removal.request.containerId))removal=await this.store.request('previewCleanupActionObserve',{...bound(r),kind:'CONTAINER_REMOVE',actionRequestHash:removal.requestHash,observation:{objectId:removal.request.containerId,absenceVerified:true,checkedAt:new Date().toISOString()}});
+    if(removal?.state==='OBSERVED')return this.#result(effect,previewRuntimeFact.parse({previewId:r.request.previewId,datasetId:r.request.datasetId,imageDigest:r.request.imageDigest,state:'REMOVED',instanceId:removal.request.containerId,endpoint:null,checkedAt:new Date().toISOString()}));
    if(r.state==='CANCELLED'&&effect.kind==='PREVIEW_START')return {...this.#unknown(effect),observation:{state:'FAILED',errorCode:'PREVIEW_CANCELLED_WITHOUT_DISPATCH',absenceVerified:true}};
    let j=await this.store.request('previewContainerGet',bound(r));if(!j)return this.#unknown(effect);
   const networkId=await this.driver.network(j.profile,r.request);if(!networkId)return this.#unknown(effect);if(j.networkId!==null&&j.networkId!==networkId)throw new RunnerError('PREVIEW_CONTAINER_IDENTITY_CHANGED',409);
@@ -47,12 +52,13 @@ export class RunnerPreviewBackend implements PreviewExecutionBackend {
   j=await this.#observe(r,j,'START',f);await this.#observe(r,j,'STOP',f);
   const healthy=f.state==='running'&&f.endpoint?await probePreviewHealth(f.endpoint):false;
   const fact=previewRuntimeFact.parse({previewId:r.request.previewId,datasetId:r.request.datasetId,imageDigest:r.request.imageDigest,state:f.state==='running'?healthy?'HEALTHY':'UNHEALTHY':f.state==='created'?'CREATED':f.state==='exited'?'EXITED':'UNKNOWN',instanceId:f.state==='unknown'?null:f.containerId,endpoint:f.state==='running'?f.endpoint:null,checkedAt:new Date().toISOString()});
-  if(!['EXITED','CANCELLED'].includes(r.state))await this.store.request('previewReservationRecord',{...bound(r),expectedRevision:r.revision,fact});return this.#result(effect,fact);
+   if(!['EXITED','CANCELLED','REMOVED'].includes(r.state))await this.store.request('previewReservationRecord',{...bound(r),expectedRevision:r.revision,fact});return this.#result(effect,fact);
  }
  async execute(effect:PreviewEffect,datasetEffect:PreviewEffect,authorize:()=>Promise<boolean>):Promise<PreviewExecutionResult>{
   await this.preflight(effect,datasetEffect);if(effect.state!=='SENT')throw new RunnerError('PREVIEW_DISPATCH_GRANT_REQUIRED',409);const request=this.#request(effect);
   if(request.schemaVersion==='devmesh.preview-stop.v1'){
    const r=(await this.#reservation(request))!,j=await this.store.request('previewContainerGet',bound(r));if(!j?.networkId||!j.containerId||!await authorize())return this.inspect(effect);
+    if((await this.store.request('previewCleanupGet',bound(r))).some(a=>a.request.kind==='CONTAINER_REMOVE'))return this.inspect(effect);
    const before=await this.driver.inspect(j.profile,r.request,j.networkId,j.containerId);if(before?.state==='exited')return this.inspect(effect);
    if(!await authorize())return this.inspect(effect);const grant=await this.store.request('previewContainerActionBegin',{...bound(r),action:{kind:'STOP',requestHash:effect.requestHash,request}});if(!grant.dispatch||!await authorize())return this.inspect(effect);
     await this.driver.stop(j.profile,r.request,j.networkId,j.containerId,async()=>await authorize()&&(await this.store.request('previewLifecycleActionAuthorized',{...bound(r),kind:'STOP',actionRequestHash:effect.requestHash})).allowed);return this.inspect(effect);
@@ -75,6 +81,22 @@ export class RunnerPreviewBackend implements PreviewExecutionBackend {
   }
   return this.inspect(effect);
  }
+  /** Original-ID removal. Existing SENT actions only query, including after restart. */
+  async cleanupReservation(reservationId:string,isOpen:()=>boolean=()=>true){
+   this.#enabled();const r=await this.store.request('previewReservationGet',{controllerId:this.options.controllerId,reservationId:opaqueKey.parse(reservationId)}),life=await this.store.request('previewLifecycleGet',bound(r));if(!life||life.state!=='STOPPING'||!isOpen())return {state:life?.state??'UNENROLLED'};
+   const j=await this.store.request('previewContainerGet',bound(r));if(!j?.containerId||!j.networkId||!j.actions.some(a=>a.kind==='STOP'))return {state:'UNKNOWN'};
+   for(const kind of ['CONTAINER_REMOVE','NETWORK_REMOVE'] as const){
+    if(!isOpen())return {state:'UNKNOWN'};let action=(await this.store.request('previewCleanupGet',bound(r))).find(a=>a.request.kind===kind);if(action?.state==='OBSERVED')continue;
+    const id=kind==='CONTAINER_REMOVE'?j.containerId:j.networkId,absent=()=>kind==='CONTAINER_REMOVE'?this.driver.containerAbsent(id):this.driver.networkAbsent(id);let gone=await absent();
+    if(!action){
+     if(kind==='CONTAINER_REMOVE'&&!gone){const original=await this.driver.inspect(j.profile,r.request,j.networkId,j.containerId);if(!original||!['created','exited'].includes(original.state))return {state:'UNKNOWN'};}
+     if(!isOpen())return {state:'UNKNOWN'};const grant=await this.store.request('previewCleanupActionBegin',{...bound(r),kind});action=grant.action;
+     if(grant.dispatch&&!gone){const actionRequestHash=action.requestHash,authorize=async()=>isOpen()&&(await this.store.request('previewCleanupActionAuthorized',{...bound(r),kind,actionRequestHash})).allowed;if(kind==='CONTAINER_REMOVE')await this.driver.removeContainer(j.profile,r.request,j.networkId,j.containerId,authorize);else await this.driver.removeNetwork(j.profile,r.request,j.networkId,authorize);gone=await absent();}
+    }
+    if(!gone)return {state:'UNKNOWN'};if(action.state!=='OBSERVED')await this.store.request('previewCleanupActionObserve',{...bound(r),kind,actionRequestHash:action.requestHash,observation:{objectId:id,absenceVerified:true,checkedAt:new Date().toISOString()}});
+   }
+   return {state:(await this.store.request('previewReservationGet',{controllerId:this.options.controllerId,reservationId})).state};
+  }
   /** Runner-only expiry path; never depends on a control database connection. */
   async expireReservation(reservationId:string,isOpen:()=>boolean=()=>true){
    this.#enabled();let r=await this.store.request('previewReservationGet',{controllerId:this.options.controllerId,reservationId:opaqueKey.parse(reservationId)});

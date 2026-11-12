@@ -11,9 +11,16 @@ import {previewContainerProfile,previewContainerActionRequest,previewContainerAc
 import type {PreviewContainerJournal} from './preview-container.js';
 import {previewReleaseClaim} from './preview-lifecycle.js';
 import type {RunnerPreviewLifecycle} from './preview-lifecycle.js';
+import {previewCleanupKind,previewCleanupObservation} from './preview-cleanup.js';
+import type {PreviewCleanupAction} from './preview-cleanup.js';
 const owner={controllerId:opaqueKey};
 const previewBound={...owner,reservationId:opaqueKey,requestHash:z.string().regex(/^[a-f0-9]{64}$/)};
 export const storeRequests={
+ previewCleanupGet:z.strictObject(previewBound),
+ previewCleanupPage:z.strictObject({...owner,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
+ previewCleanupActionBegin:z.strictObject({...previewBound,kind:previewCleanupKind}),
+ previewCleanupActionAuthorized:z.strictObject({...previewBound,kind:previewCleanupKind,actionRequestHash:z.string().regex(/^[a-f0-9]{64}$/)}),
+ previewCleanupActionObserve:z.strictObject({...previewBound,kind:previewCleanupKind,actionRequestHash:z.string().regex(/^[a-f0-9]{64}$/),observation:previewCleanupObservation}),
  previewLifecycleEnroll:z.strictObject(previewBound),
  previewLifecycleGet:z.strictObject(previewBound),
  previewExpiryPrepare:z.strictObject(previewBound),
@@ -55,6 +62,8 @@ export type RunnerStoreMethod=keyof typeof storeRequests;
 export type StoreInput<M extends RunnerStoreMethod>=z.input<(typeof storeRequests)[M]>;
 export interface InternalJob {job:Job;execution:{workspacePath:string;argv:string[]};leasePermit:Job['request']['permit'];leaseRenewedAt:string}
 export interface StoreResults {
+ previewCleanupGet:PreviewCleanupAction[];previewCleanupActionBegin:{dispatch:boolean;action:PreviewCleanupAction};previewCleanupActionAuthorized:{allowed:boolean};previewCleanupActionObserve:PreviewCleanupAction;
+ previewCleanupPage:{items:{sequence:number;reservationId:string;requestHash:string}[];nextSequence:number|null};
  previewLifecycleEnroll:RunnerPreviewLifecycle;previewLifecycleGet:RunnerPreviewLifecycle|null;previewExpiryPrepare:RunnerPreviewLifecycle|null;
  previewExpiryAuthorized:{allowed:boolean};previewLifecycleActionAuthorized:{allowed:boolean};previewReleaseHold:RunnerPreviewLifecycle;previewReleaseCommit:RunnerPreviewLifecycle;
  previewContainerPrepare:PreviewContainerJournal;previewContainerGet:PreviewContainerJournal|null;

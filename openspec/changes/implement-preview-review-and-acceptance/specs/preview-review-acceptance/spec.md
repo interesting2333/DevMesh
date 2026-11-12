@@ -50,11 +50,11 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 
 #### Scenario: An unaccepted preview expires during recovery
 - **WHEN** 原实例已核实且预览到期，或到期时原实例仍未知
-- **THEN** 只对已核实的原未接受实例建立一个持久停止操作并核实退出；未知实例继续查询，已接受版本／数据不被停止，不把意图或超时当作已退出
+- **THEN** 只对已核实的原未接受实例建立一个持久停止操作并核实退出或独立 REMOVED 证明；未知实例继续查询，已接受版本／数据不被停止，不把意图或超时当作已退出
 
 #### Scenario: Jobs and previews compete for one Runner capacity
 - **WHEN** 作业或预览申请资源，且 Runner 上已有运行中、停止中、失联或重启恢复的原占用
-- **THEN** 在同一事务核实全局 slot／CPU／内存，任何主体不能绕过原占用；UNKNOWN 不释放资源，已派发预览仅在准确原实例退出核实后释放
+- **THEN** 在同一事务核实全局 slot／CPU／内存，任何主体不能绕过原占用；UNKNOWN 不释放资源，已派发预览仅在准确原实例退出或独立原 ID 消失证明核实后释放
 
 #### Scenario: A reservation acknowledgement or dispatch acknowledgement is lost
 - **WHEN** Runner 预留或唯一派发位已提交但 ACK 丢失，随后重试或重启
@@ -62,7 +62,7 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 
 #### Scenario: A container action loses its acknowledgement
 - **WHEN** 原 network／create／start／stop 动作的派发位或执行 ACK 丢失，或者 Runner 重启
-- **THEN** 只检查原持久名称、profile、labels 与实例，不重发原动作；不同镜像、目录、网络或实例不能替代原对象，未核实退出继续占用资源
+- **THEN** 只检查原持久名称、profile、labels 与实例，不重发原动作；不同镜像、目录、网络或实例不能替代原对象，未核实退出且没有独立 REMOVED 证明继续占用资源
 
 #### Scenario: Generated application tries to change preparation evidence
 - **WHEN** 预览容器写业务数据库，或试图改写同目录准备日志、完成回执和应用身份 marker
@@ -70,7 +70,7 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 
 #### Scenario: Control plane disconnects before original preview expiry
 - **WHEN** 平台无法连接，Runner 自己保存的原未接受预览到期
-- **THEN** Runner 独立扫描原归属和期限；未派发预留可以取消，已核实原实例只持久派发一次到期 STOP；未知动作不重发，未核实退出不释放容量或删除 dataset
+- **THEN** Runner 独立扫描原归属和期限；未派发预留可以取消，已核实原实例只持久派发一次到期 STOP；未知动作不重发，未核实退出且没有独立 REMOVED 证明不释放容量，清理不删除 dataset
 
 #### Scenario: Release preparation competes with automatic or explicit stop
 - **WHEN** 接受准备尝试持有准确健康原实例，同时原停止或到期处理正在开始
@@ -83,6 +83,14 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 #### Scenario: Dataset directory survives workspace cleanup
 - **WHEN** 工作空间被清理，或请求尝试用路径、链接、硬链接替代 dataset 数据库／日志／侧文件
 - **THEN** dataset 保留在受控 ID 决定的独立 Runner 目录，拒绝越界或链接文件，不暴露控制数据库和备份
+
+#### Scenario: A never-started original container is removed
+- **WHEN** 原停止已持久锁定、准确原容器仍为 CREATED，随后受信任后端执行非强制移除并成功核实原 ID 消失
+- **THEN** 保存独立 REMOVED／PREVIEW_REMOVED 证据，原观察、容量释放及历史同事务提交，不伪造 EXITED、不删除 dataset；原创建尚未知且无准确 ID 时继续占用
+
+#### Scenario: Original removal acknowledgement is lost
+- **WHEN** 原容器或原独占网络的移除许可／执行／观察提交丢 ACK，或者 Runner 重启
+- **THEN** 只按原完整 ID 核实，不重复发送移除；网络清理包含已释放容量的原记录，只有原容器已移除且原网络为空才允许移除网络，HELD／OWNED 和其他对象不受影响
 
 #### Scenario: Actual initialization matches the pinned template
 - **WHEN** 显式配置本地可信数据适配器，为当前冻结 INITIAL 方案准备 EMPTY 或 DEMO

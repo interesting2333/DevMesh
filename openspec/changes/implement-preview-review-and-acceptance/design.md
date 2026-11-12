@@ -54,7 +54,7 @@ owner 通过标准 meta／If-Match 保存准确候选上的 dataset 或 preview 
 
 后端重启可按显式 project／policyHash 使用受限分页扫描原 PREPARED／SENT／UNKNOWN 操作；只有配置的原后端主体可扫描。游标按不可删除原行的位置排序，每轮恢复扫描从 0 开始，不把它当作状态变化流；找回 SENT／UNKNOWN 只查询原 remoteKey，不申请第二次执行许可。实际调度消费者仍由后续适配器实现。
 
-首次数据只允许冻结方案声明的 EMPTY／DEMO；迭代预览始终克隆原接受 dataset，即使最终接受方案选择 REPLACE 也不提前清空旧数据。源接受指针、项目、可用状态与 schema 需准确匹配；跨 schema 的生产迁移尚未配置时关闭，不将简单复制视为迁移成功。dataset 不能同时绑定两个可写预览。停止意图使用独立 previewRevision／impactReviewHash，只有原实例可核实退出后才 STOPPED／EXPIRED；已被 Release 引用的候选／dataset 拒绝新停止和停止派发。
+首次数据只允许冻结方案声明的 EMPTY／DEMO；迭代预览始终克隆原接受 dataset，即使最终接受方案选择 REPLACE 也不提前清空旧数据。源接受指针、项目、可用状态与 schema 需准确匹配；跨 schema 的生产迁移尚未配置时关闭，不将简单复制视为迁移成功。dataset 不能同时绑定两个可写预览。停止意图使用独立 previewRevision／impactReviewHash，只有原实例可核实退出或取得独立 REMOVED 证明后才 STOPPED／EXPIRED；已被 Release 引用的候选／dataset 拒绝新停止和停止派发。
 
 RunnerDatasetPaths 从已初始化且身份匹配的 Runner layout 解析 `datasets/<projectId>/<datasetId>/app.sqlite` 和同目录 `operation.json`，调用者不能传任意路径；控制面、备份和 Runner 根互斥。路径组件、数据库／日志／WAL／SHM 的链接与硬链接均受检查。该目录独立于 workspaces，预览停止及工作空间清理不删除 dataset；当前只实现保留，不提前实现到期 GC。实际 SQLite 数据适配见下一节；真实实例健康／到期、独立 origin 与接受发布仍按后续步骤实施。
 
@@ -80,13 +80,13 @@ RunnerDatasetPaths 从已初始化且身份匹配的 Runner layout 解析 `datas
 
 `PreviewLifecycleManager` 使用私有生命周期扫描，覆盖已成功启动的持续健康和待核实原操作，恢复每轮从 0 开始。首次派发前 preflight，取得唯一许可后由后端在实际动作前再次调用 `verifyPreviewExecution`；停止清理始终复核 Release 归属。许可 ACK 丢失、动作 ACK 丢失或观察提交 ACK 丢失均不能获取第二次执行许可。未派发但已过期的启动意图可以明确关闭；已知原实例的未接受预览到期生成独立、幂等的停止操作。原实例尚未知时继续核实，不按名称替代新建，不伪造停止。
 
-Runner 的健康检查只允许后端从原容器事实取得的 `127.0.0.1` 高位端口，固定 GET `/api/health`，不携带平台身份、不跟随重定向；限制响应大小、结构及超时。真实 HTTP 测试仅证明这段请求边界。当前此节控制面和恢复器可用受控容器事实验证，统一持久容量准入见下一节；Docker／gVisor 实例适配、独立 Runner 到期 watchdog 和容器内模板监听配置尚待继续实施，子项 2.3 保持未完成，不把受控事实称为真实镜像运行。
+Runner 的健康检查只允许后端从原容器事实取得的 `127.0.0.1` 高位端口，固定 GET `/api/health`，不携带平台身份、不跟随重定向；限制响应大小、结构及超时。真实 HTTP 测试仅证明这段请求边界。当前此节控制面和恢复器可用受控容器事实验证，统一持久容量准入见下一节；实例适配／watchdog／模板监听代码见 11～13；真实 Docker／gVisor、硬配额／宿主隔离与可信平台装配尚待继续实施，子项 2.3 保持未完成，不把受控事实称为真实镜像运行。
 
 ### 10. Preview reservations share the Runner admission transaction
 
 Runner 前向迁移 v3 为预览保存独立于短租约作业的持久容量预留，绑定原启动 requestHash、完整请求、controller、project、dataset 和固定资源。私有 Worker 同一事务累计所有未退出作业及未释放预览的 slot／CPU／内存；UNKNOWN、停止中和重启后的预留继续扣除。所有准入使用同一显式容量配置，同一 Worker 不接受彼此矛盾的容量值；重启后的较低预算只关闭新准入，不自动释放原占用。
 
-预留成功不是执行许可或健康证明。Runner 原派发位只允许一次 RESERVED→DISPATCHED；丢回执后的重试不再次授权执行。只有从未派发的预留可以明确取消；已派发预留必须由未来可信容器适配器提供准确原实例 EXITED 才释放。原实例、首次端口及 CAS／观察时间不可被慢响应替代，UNKNOWN 不清空身份或退还资源；同一 Runner 上跨 controller 也不能同时为同一 preview／dataset 建立可写预留。
+预留成功不是执行许可或健康证明。Runner 原派发位只允许一次 RESERVED→DISPATCHED；丢回执后的重试不再次授权执行。只有从未派发的预留可以明确取消；已派发预留必须由可信后端提供准确原实例 EXITED，或按第 13 节记录独立 REMOVED 证明才释放。原实例、首次端口及 CAS／观察时间不可被慢响应替代，UNKNOWN 不清空身份或退还资源；同一 Runner 上跨 controller 也不能同时为同一 preview／dataset 建立可写预留。
 
 容量增量本身只实现真实 Runner SQLite 迁移、持久预留、统一作业准入和事实核验，不新增公共 HTTP／MCP 准入或回执入口。资源字段来自显式可信容器策略，不由普通用户／模型任意指定；原容器动作日志及独立 watchdog 见后续 11／12，实际 cgroup 与磁盘配额仍需目标环境验证。
 
@@ -96,15 +96,23 @@ Runner 前向迁移 v3 为预览保存独立于短租约作业的持久容量预
 
 每个预览使用独立的 internal bridge，不共享可互访的生成应用网络。Docker 适配固定 runsc、非 root、只读根、cap-drop、资源上限、无重启、loopback 单端口与原 OCI manifest／config／层；inspect 复核完整 profile 和原网络／镜像／挂载。dataset 目录保留现有布局，数据库／WAL 可写，但 operation.json、receipt.json、dataset.json 分别覆盖只读挂载，原准备日志不能被生成代码覆盖。真实硬配额和可写目录权限必须由可信配置的适配器落实，缺失则关闭。
 
-容器内模板显式支持受控 APP_HOST=0.0.0.0，默认仍 loopback；宿主端口仅绑定 127.0.0.1。CLI／镜像解析可使用明确测试输入验证，不能据此宣称物理容器健康。已创建但从未启动的清理不能伪造 EXITED；独立 watchdog 见下节，原对象明确清理证明和可信平台装配继续与完整 2.3 一起实施，未验证的 Linux 条件单列。
+容器内模板显式支持受控 APP_HOST=0.0.0.0，默认仍 loopback；宿主端口仅绑定 127.0.0.1。CLI／镜像解析可使用明确测试输入验证，不能据此宣称物理容器健康。已创建但从未启动的清理不能伪造 EXITED；独立 watchdog 和原对象明确清理证明见下节及 13；可信平台装配继续与完整 2.3 一起实施，未验证的 Linux 条件单列。
 
 ### 12. Runner expiry and Release custody are mutually exclusive
 
 Runner v5 为新预留显式登记持久归属：PREVIEW、STOPPING、RELEASE_HELD、RELEASE_OWNED。原请求与登记不可替换，状态变化保存不可变历史。只在 RESERVED、尚无容器动作时登记；v4 旧对象不凭当前配置自动收养。停止动作获得派发许可时，在同一 writer 事务将归属推进 STOPPING；接受准备必须先取得准确原实例的 RELEASE_HELD，二者互斥。HELD／OWNED 均禁止预览到期和普通预览停止；未确认接受结果的 HELD 不因超时自动退回 PREVIEW。未来 T5 必须先持有该 Runner 凭据并在准确原接受提交后确认 OWNED；该私有握手本身不实现或证明 T5。
 
-独立 Runner watchdog 只依赖 Runner store／可信 Driver，按原 controller 有界分页扫描、每轮从零开始。到期先持久锁定原停止意图，已派发或 UNKNOWN 只查原对象，不重发停止；原 CREATED 继续持有资源，不能为清理伪造 EXITED。未派发预留可明确取消，准确原实例 EXITED 才释放已派发占用。网络／容器移除及从未启动对象的清理证明另行补齐，完整 2.3 保持未完成。
+独立 Runner watchdog 只依赖 Runner store／可信 Driver，按原 controller 有界分页扫描、每轮从零开始。到期先持久锁定原停止意图，已派发或 UNKNOWN 只查原对象，不重发停止；原 CREATED 在独立移除证明完成前继续持有资源，不能为清理伪造 EXITED。未派发预留可明确取消；准确原实例 EXITED 或第 13 节独立 REMOVED 证明才释放已派发占用。网络／容器移除及从未启动对象的清理证明见第 13 节，完整 2.3 保持未完成。
 
 到期判断同时使用 Worker 内单调时钟和原墙上时钟截止时间；观察到期在当前 Worker 锁存，外层事务回滚也不撤销该观察，成功提交后持久锁存跨重启保留。每次成功检查更新持久墙上时钟高水位，重启发现时间回退则关闭继续执行并按到期处理；不会用短时作业租约延长预览。单调时钟不能跨主机重启证明未被观察到的时钟变化，目标 Runner 仍须可信时间。定时器关闭等待在途工作结束，失联、单对象失败或丢回执不阻塞其余对象的扫描。
+
+### 13. Removal has its own proof and forward migration
+
+Runner v6 为准确原容器增加 REMOVED，区别于进程 EXITED；PREVIEW_REMOVED 回执必须对应同次原实例 REMOVED 观察。按 SQLite 的事务重建流程扩充预留 CHECK，逐字保留原行／索引／触发器及外键，核实后恢复 foreign_keys；不修改 v2～v5 迁移正文。新清理日志固定原 profile、启动 hash、STOP hash、容器／网络 ID，每个移除只有一次 SENT／dispatch，观察与未释放容量的 REMOVED／历史同事务提交。
+
+仅 STOPPING 且有准确原 STOP／容器／网络绑定才可清理。先核实原容器为 CREATED 或 EXITED，立即复核授权后按准确 ID 执行不带 force／volumes 的 rm，再用成功的 Docker 原 ID 列表查询证明消失；命令非零、超时或 inspect 找不到不直接当作已移除。ACK 丢失只查原 ID，不重发；创建结果尚未知且没有已核实 ID 的对象继续持有资源，不能凭空列表释放可能仍在创建的实例。dataset 不移除。
+
+准确原容器消失后才能移除原独占空网络。Runner watchdog 另扫已停止但清理未完成的原记录，包含已 EXITED／REMOVED 释放容量的对象，网络移除丢 ACK 后仍可恢复，不因活动预留扫描排除它而遗失。HELD／OWNED、未登记旧对象及运行中／未知容器都不会被清理；每步最后授权和原对象校验保留。Windows 的受控 Driver 事实不构成实际 Docker 移除或 Linux 隔离验收。
 
 ## Risks / Trade-offs
 

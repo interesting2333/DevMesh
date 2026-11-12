@@ -1,0 +1,165 @@
+{
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "steps": [
+    {
+      "name": "frozen-install",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--frozen-lockfile",
+        "--offline",
+        "--ignore-scripts"
+      ]
+    },
+    {
+      "name": "typecheck",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "typecheck"
+      ]
+    },
+    {
+      "name": "lint",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ]
+    },
+    {
+      "name": "current-build",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/code-workspaces",
+        "-r",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "name": "cleanup",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-preview-cleanup.test.mjs"
+      ]
+    },
+    {
+      "name": "watchdog",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-preview-watchdog.test.mjs"
+      ]
+    },
+    {
+      "name": "containers",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-preview-container.test.mjs"
+      ]
+    },
+    {
+      "name": "capacity",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-preview-capacity.test.mjs",
+        "tests/runner-upgrade.test.mjs"
+      ]
+    },
+    {
+      "name": "runner",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:runner"
+      ]
+    },
+    {
+      "name": "lifecycle",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-lifecycle.test.mjs"
+      ]
+    },
+    {
+      "name": "datasets",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-datasets.test.mjs"
+      ]
+    },
+    {
+      "name": "preview-intents",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/verification-preview-intents.test.mjs",
+        "tests/verification-dataset-paths.test.mjs"
+      ]
+    },
+    {
+      "name": "workspace-fencing",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/workspace-fencing.test.mjs"
+      ]
+    },
+    {
+      "name": "scheduler",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:scheduler"
+      ]
+    },
+    {
+      "name": "smoke",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:smoke"
+      ]
+    },
+    {
+      "name": "storage",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:storage"
+      ]
+    },
+    {
+      "name": "contracts",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "test:contracts"
+      ]
+    },
+    {
+      "name": "contracts-check",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "contracts:check"
+      ]
+    }
+  ],
+  "scope": "Exact validation command arrays, not another execution."
+}

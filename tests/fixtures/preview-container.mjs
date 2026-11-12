@@ -8,7 +8,7 @@ import {datasetFixture,datasetEffect} from './datasets.mjs';
 export const hash=v=>createHash('sha256').update(typeof v==='string'?v:canonical(v)).digest('hex');
 export const imageIdentity={schemaVersion:'devmesh.preview-image-identity.v1',imageDigest:'sha256:'+'c'.repeat(64),configDigest:'sha256:'+'e'.repeat(64),targetCommit:'a'.repeat(40),buildArtifactHash:'f'.repeat(64),os:'linux',architecture:'amd64',layers:[{digest:'sha256:'+'1'.repeat(64),diffId:'sha256:'+'2'.repeat(64),byteSize:1024,expandedByteSize:1024}]};
 export class ControlledContainerDriver {
- configured=true;networks=new Map();containers=new Map();calls=[];failAfter=null;unknownStop=false;prepareFails=false;beforeStart;beforeStop;
+ configured=true;networks=new Map();containers=new Map();calls=[];failAfter=null;unknownStop=false;unknownRemoval=null;prepareFails=false;beforeStart;beforeStop;beforeRemove;beforeRemoveNetwork;
  constructor(port){this.port=port;}
  async probe(){}
  async prepare(){if(this.prepareFails)throw Error('explicit quota fixture failure');}
@@ -19,6 +19,10 @@ export class ControlledContainerDriver {
  async create(p,_r,networkId,authorize){if(!await authorize())throw Error('explicit authority denied');this.calls.push('CREATE');const f={containerId:hash(p.reservationId+':container'),networkId,state:'created',pid:0,exitCode:null,endpoint:null};this.containers.set(p.containerName,f);this.#lost('CREATE');return structuredClone(f);}
  async start(p,_r,_networkId,_containerId,authorize){await this.beforeStart?.();if(!await authorize())throw Error('explicit authority denied');this.calls.push('START');const f=this.containers.get(p.containerName);Object.assign(f,{state:'running',pid:123,endpoint:{host:'127.0.0.1',port:this.port}});this.#lost('START');return structuredClone(f);}
  async stop(p,_r,_networkId,_containerId,authorize){const f=this.containers.get(p.containerName);if(['created','exited'].includes(f.state))return structuredClone(f);await this.beforeStop?.();if(!await authorize())throw Error('explicit authority denied');this.calls.push('STOP');if(!this.unknownStop&&f.state==='running')Object.assign(f,{state:'exited',pid:0,exitCode:143,endpoint:null});this.#lost('STOP');return structuredClone(f);}
+ async containerAbsent(id){this.calls.push('query-container-absence');return ![...this.containers.values()].some(f=>f.containerId===id);}
+ async networkAbsent(id){this.calls.push('query-network-absence');return ![...this.networks.values()].includes(id);}
+ async removeContainer(p,r,networkId,id,authorize){const f=await this.inspect(p,r,networkId,id);if(!f||!['created','exited'].includes(f.state))throw Error('explicit original container is not stopped');await this.beforeRemove?.();if(!await authorize())throw Error('explicit authority denied');this.calls.push('CONTAINER_REMOVE');if(this.unknownRemoval!=='CONTAINER_REMOVE')this.containers.delete(p.containerName);this.#lost('CONTAINER_REMOVE');}
+ async removeNetwork(p,_r,id,authorize){if(this.networks.get(p.networkName)!==id||[...this.containers.values()].some(f=>f.networkId===id))throw Error('explicit original network is busy');await this.beforeRemoveNetwork?.();if(!await authorize())throw Error('explicit authority denied');this.calls.push('NETWORK_REMOVE');if(this.unknownRemoval!=='NETWORK_REMOVE')this.networks.delete(p.networkName);this.#lost('NETWORK_REMOVE');}
 }
 export async function containerFixture(t){
  const data=await datasetFixture(t),original=datasetEffect(),ready=await data.prepare(original),dataset={...original,state:'SUCCEEDED',receipt:ready.receipt};
