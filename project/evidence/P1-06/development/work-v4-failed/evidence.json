@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 formal Work verification migration 23, immutable content evidence and completion guard. Local real SQLite/content/handlers; source/admission/Runtime candidate facts in unit fixtures are explicitly seeded, not production model/Linux Runner proof.",
+  "sourceCommit": "c330c2c70d3867534ab108b4fe40fee0c9f1c448",
+  "dirty": true,
+  "sourceFingerprint": "4a626f30c0fefe8aaa348cbb417b62485ad6e85de7cc790d8c87a918fc8254a2",
+  "unchanged": true,
+  "startedAt": "2026-11-12T03:36:33.724Z",
+  "finishedAt": "2026-11-12T04:49:27.063Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6089,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 631,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 24130,
+      "output": "build.txt",
+      "sha256": "b42a74211bd689cee1b7fed1999a4c6363c4b751e831063d4c2bd87905aacc99"
+    },
+    {
+      "name": "work-verification",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4170,
+      "output": "work-verification.txt",
+      "sha256": "fe59fca9d332d6794aa2e2c00725b6c1eccbaa6759a2e217893ea2c3d3138b77"
+    },
+    {
+      "name": "quality-journal",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2840,
+      "output": "quality-journal.txt",
+      "sha256": "04e90cdac0eb312109b66a2c328c24ec842c1f619bc2a9dcd0e6f93a830943a7"
+    },
+    {
+      "name": "quality-collector",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4696,
+      "output": "quality-collector.txt",
+      "sha256": "3e88484707f4417dee44f512cd94440981632f5f29d32e969c16a3e51cfc9809"
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5637,
+      "output": "scheduler.txt",
+      "sha256": "2daa7b61a80109527fffb3ee9ce4d37dc77e38b9675ad02df71f0255aa9ead23"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 20330,
+      "output": "storage.txt",
+      "sha256": "974afaa40204fb572b763db5cddd37011f9c9f131d643f4ac352e23dbab194b8"
+    },
+    {
+      "name": "managed-workspaces",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 4303774,
+      "output": "managed-workspaces.txt",
+      "sha256": "dbdc2a01a0643186d6378bd0e3460d88c07e4045896f661058daef3cc9be15d3"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/build.txt",
+      "sha256": "b42a74211bd689cee1b7fed1999a4c6363c4b751e831063d4c2bd87905aacc99"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/managed-workspaces.txt",
+      "sha256": "dbdc2a01a0643186d6378bd0e3460d88c07e4045896f661058daef3cc9be15d3"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/quality-collector.txt",
+      "sha256": "3e88484707f4417dee44f512cd94440981632f5f29d32e969c16a3e51cfc9809"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/quality-journal.txt",
+      "sha256": "04e90cdac0eb312109b66a2c328c24ec842c1f619bc2a9dcd0e6f93a830943a7"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/report.json",
+      "sha256": "17fe84048d7f9db39dc91d388627564e15154b0dd13bf12019efefe4d31da8ce"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/scheduler.txt",
+      "sha256": "2daa7b61a80109527fffb3ee9ce4d37dc77e38b9675ad02df71f0255aa9ead23"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/storage.txt",
+      "sha256": "974afaa40204fb572b763db5cddd37011f9c9f131d643f4ac352e23dbab194b8"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/work-v4-failed/work-verification.txt",
+      "sha256": "fe59fca9d332d6794aa2e2c00725b6c1eccbaa6759a2e217893ea2c3d3138b77"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; not an exact clean checkpoint or stage/product acceptance.",
+    "Tester verification unit fixtures explicitly seed original admission/Git/Runner/Runtime candidate facts while exercising real migrated SQLite, report evaluator, content publication and completion transactions.",
+    "workspace-runtime exercises actual local HTTP model-protocol fixture, Runtime, authenticated MCP, Git commit/archive and Worker publication. It proves no production model, generated container execution, OIDC, Linux or runsc.",
+    "Production source instrumentation, automatic composition, defect/forward repair and ReleaseCandidate freeze remain subsequent work."
+  ]
+}

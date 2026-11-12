@@ -960,7 +960,10 @@
         "project/evidence/P1-06/development/collector-review.md",
         "project/evidence/P1-06/development/work-v1-failed/evidence.json",
         "project/evidence/P1-06/development/work-v2-failed/evidence.json",
-        "project/evidence/P1-06/development/work-v3-failed/evidence.json"
+        "project/evidence/P1-06/development/work-v3-failed/evidence.json",
+        "project/evidence/P1-06/development/work-v4-failed/evidence.json",
+        "project/evidence/P1-06/development/work-v4-failed/checkpoint-binding.json",
+        "project/evidence/P1-06/development/work-v5/evidence.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -969,7 +972,8 @@
         "2026-11-12：质量计算提交 ef4a2e3 在独立干净 Windows checkout 冻结安装及全部 22 项适用回归通过，验证器 25/25、工作区 92/92，原日志、源码和锁文件哈希已保留。该检查点不含随后编写的执行身份补充和迁移 21，不据此完成持久验证、修复／候选冻结、完整 P1-06 或阶段门槛。",
         "2026-11-12：迁移 21 和私有原验证／材料命令开发验证通过，原操作与依据不可变、当前成员隔离、事务回滚／原 writeId 恢复、GC 删除与引用互斥、未知 Job／写副作用和覆盖阈值拒绝均有实际 SQLite／内容库用例（10/10）。Runner 命令身份与 MCP 流水线使用真实本地认证 HTTP，执行后端为夹具；11 项开发检查通过且源码指纹不变，首轮表名错误失败另存。依据 journal-review 完成子任务 2.1；采集服务、可信执行前来源组合、正式完成、修复和冻结仍待实施，父工作包／门槛不变。",
         "2026-11-12：原报告只读采集服务和迁移 22 开发验证通过：执行前 SOURCE 内容 ACK／全量 Git 哈希与工具链身份、必要生产侧绑定后才发送、真实本地认证 HTTP 原输出／日志、失败和未知 Job、内容／最终 ACK 丢失恢复、哈希／流式大小拒绝均有证据（采集 8/8、质量存储 10/10、纯计算 25/25；完整九项检查通过且源码指纹不变）。首轮严格参数和第二轮测试列名失败均另存；独立映射、Git／准入和执行后端仍为明确夹具，生产 provider 与 Runtime 自动组合留待 5.1。完成子任务 2.2，不据此声称正式 Work、修复、候选冻结或外部环境验收。",
-        "2026-11-12：正式 Work 验证与迁移 23 开发检查点已保存。新完成必须绑定原 Runtime 候选、准确来源／质量操作、当前 Work 依据和同事务 ACK 的评估 artifact；旧 success IPC 与直接 SUCCEEDED 入口拒绝。历史测试仅显式种入旧数据库事实，不提供生产绕过。当前开发验证的类型、lint、完整构建、完成验证 9/9、质量存储 10/10、采集 8/8、调度和存储已通过，整批工作区回归仍在原固定源码上执行，新增 Runtime/Git 完成用例最终结果尚待核实。类型分支和两个夹具断言失败及原源码分别保留；2.3 未勾选，父工作包和门槛状态不变。后续修正使用隔离 checkout，避免改动正在验证的源码。"
+        "2026-11-12：正式 Work 验证与迁移 23 开发检查点已保存。新完成必须绑定原 Runtime 候选、准确来源／质量操作、当前 Work 依据和同事务 ACK 的评估 artifact；旧 success IPC 与直接 SUCCEEDED 入口拒绝。历史测试仅显式种入旧数据库事实，不提供生产绕过。当前开发验证的类型、lint、完整构建、完成验证 9/9、质量存储 10/10、采集 8/8、调度和存储已通过，整批工作区回归仍在原固定源码上执行，新增 Runtime/Git 完成用例最终结果尚待核实。类型分支和两个夹具断言失败及原源码分别保留；2.3 未勾选，父工作包和门槛状态不变。后续修正使用隔离 checkout，避免改动正在验证的源码。",
+        "2026-11-12 后续：候选未解决缺陷／preview 引用和验证服务负责人身份补充已合入 4e02229，隔离开发检查 v5 的类型、lint、依赖构建和 11 个 Work 用例通过。v4 原工作区回归已结束：94 项中 86 通过、8 项 Runtime 失败，多项明确 PERMIT_EXPIRED；当时本机 CPU 观测 100%，Git／准备耗时显著增长，不能据此声称新增真实 Runtime 完成路径已通过。失败原报告、日志及与 6414720 的全部 294 个源码文件字节对照均保存，正在保留生产过期规则的独立进程中复查。隔离目录另推进迁移 24／原失败与缺陷历史，10 个针对性用例刚通过，相关 Work／质量回归仍在执行，未合入也未计为 3.1 完成。2.3、父工作包与 G0～G4 仍按实际未通过状态保留。"
       ]
     },
     {

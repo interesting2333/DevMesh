@@ -1,0 +1,66 @@
+TAP version 13
+# (node:22760) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new completion cannot trust legacy IPC success or direct successful state transition
+ok 1 - new completion cannot trust legacy IPC success or direct successful state transition
+  ---
+  duration_ms: 366.6233
+  type: 'test'
+  ...
+# Subtest: original candidate plus passing raw reports produces one content ACK and atomically applied success
+ok 2 - original candidate plus passing raw reports produces one content ACK and atomically applied success
+  ---
+  duration_ms: 460.838
+  type: 'test'
+  ...
+# Subtest: model PASSED cannot overwrite original failed Job and reports; known failure completes with findings
+ok 3 - model PASSED cannot overwrite original failed Job and reports; known failure completes with findings
+  ---
+  duration_ms: 455.132
+  type: 'test'
+  ...
+# Subtest: candidate evidence from another report and pending human checks cannot become automatic success
+ok 4 - candidate evidence from another report and pending human checks cannot become automatic success
+  ---
+  duration_ms: 689.1499
+  type: 'test'
+  ...
+# Subtest: proof basis and completion payload are immutable; code/config changes and unknown original writes stay blocked
+ok 5 - proof basis and completion payload are immutable; code/config changes and unknown original writes stay blocked
+  ---
+  duration_ms: 301.6405
+  type: 'test'
+  ...
+# Subtest: missing candidate bytes or retained report bytes blocks completion before any final decision
+ok 6 - missing candidate bytes or retained report bytes blocks completion before any final decision
+  ---
+  duration_ms: 528.1374
+  type: 'test'
+  ...
+# Subtest: lost content/final receipts recover original keys, artifact and completion without new verification work
+ok 7 - lost content/final receipts recover original keys, artifact and completion without new verification work
+  ---
+  duration_ms: 408.1043
+  type: 'test'
+  ...
+# Subtest: a failed content ACK transaction leaves neither verification artifact nor half reference
+ok 8 - a failed content ACK transaction leaves neither verification artifact nor half reference
+  ---
+  duration_ms: 334.9553
+  type: 'test'
+  ...
+# Subtest: only current owner can create/apply verification; members may inspect retained history after pause
+ok 9 - only current owner can create/apply verification; members may inspect retained history after pause
+  ---
+  duration_ms: 321.5039
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4094.9499
