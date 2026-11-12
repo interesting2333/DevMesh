@@ -198,6 +198,12 @@ export class ControlledGit {
     return commit;
   }
 
+  async verifyPreservationBasis(base:string,expectedRefs:readonly {ref:string;commit:string}[],signal?:AbortSignal){
+    sha(base);for(const item of expectedRefs){if(item.ref.startsWith('refs/heads/devmesh/'))attemptRef(item.ref.slice('refs/heads/devmesh/'.length));else ref(item.ref);sha(item.commit);}if(this.identity.kind!=='checkout'||expectedRefs.length>66||new Set(expectedRefs.map(item=>item.ref)).size!==expectedRefs.length)deny('GIT_PRESERVATION_BASIS_INVALID');await this.validate(signal);
+    const listed=decode((await this.call(['for-each-ref','--format=%(refname)%00%(objectname)%00%(symref)'],signal,undefined,256*1024)).out).split('\n').filter(Boolean).map(line=>{const [name,commit,symbolic,...extra]=line.replace(/\r$/,'').split('\0');if(!name||!commit||symbolic!==''||extra.length)deny('GIT_PRESERVATION_REF_INVALID');sha(commit);return {ref:name,commit};});
+    const order=(a:{ref:string},b:{ref:string})=>a.ref<b.ref?-1:a.ref>b.ref?1:0;if(canonical(listed.sort(order))!==canonical([...expectedRefs].sort(order)))deny('GIT_PRESERVATION_UNRETAINED_REF');
+    const index=await this.call(['diff-index','--cached','--quiet',base,'--'],signal,undefined,undefined,true);if(index.code!==0)deny('GIT_PRESERVATION_INDEX_CHANGED');
+  }
   async readRef(name:string,signal?:AbortSignal){ref(name);await this.validate(signal);const r=await this.call(['rev-parse','--verify',name],signal,undefined,undefined,true);return r.code===0?sha(decode(r.out).trim()):null;}
   async head(signal?:AbortSignal){await this.validate(signal);const r=await this.call(['rev-parse','--verify','HEAD'],signal,undefined,undefined,true);return r.code===0?sha(decode(r.out).trim()):null;}
   async updateRefs(updates:readonly GitRefUpdate[],signal?:AbortSignal){

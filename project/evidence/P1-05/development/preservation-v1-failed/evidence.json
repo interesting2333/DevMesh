@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "Migration 18, complete original workspace-material preservation, atomic content references, current cleanup authority, retained Git bases/commits, original publication/ACK recovery and pre-reclamation guards. Real Git/A2A source fixture uses an explicit job-free fencer; no actual Runner job, isolation/deletion, live model, OIDC, remote Git, Linux/runsc or product gate acceptance.",
+  "baseCommit": "051475c65d3194cf949411bfbd00dadeb8e5fd57",
+  "startedAt": "2026-11-11T23:34:20.706Z",
+  "finishedAt": "2026-11-11T23:38:31.509Z",
+  "sourceFingerprint": "d21f18076c386567875be7c862a6c1f51baeff51d860e0caa45743153fe22610",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 2
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/p105-preservation-v1-report.json",
+      "byteSize": 38501,
+      "sha256": "65058fff4dd5385391ad2f7e6ba41659a67e47aa77a29e76e7cb123365152945"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/p105-preservation-v1-typecheck.txt",
+      "byteSize": 287,
+      "sha256": "9492cd58b919b8d7ab89ef7cd1bf0ea4880714dfd57f0b0e49e7764b6c50e90c"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__code-workspaces__src__git.ts.txt",
+      "byteSize": 22634,
+      "sha256": "72957bd647943889b45c8eb436d82f059ec567ec9a0d49c75fb02ee595889558"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__code-workspaces__src__index.ts.txt",
+      "byteSize": 1279,
+      "sha256": "0dba7159cea26558104e6e3de1676ce345afc18a459491ea1146c0d6b7e0ad6e"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__migrations__manifest.json.txt",
+      "byteSize": 2585,
+      "sha256": "d5ce18065e2a9c8bcb61ea55f01ba080862cf2c51273cf9682c2d549c71d178e"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__src__domain.ts.txt",
+      "byteSize": 43394,
+      "sha256": "46b4561e7e3f5d91a8b5b522a50d6b9de895baaaa17d37c208a6079afe9b8d66"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__src__index.ts.txt",
+      "byteSize": 7705,
+      "sha256": "38274a8351e79e3028d58f59ada25efff08ceeadfc7a5144dbb92791c26fdf82"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__src__protocol.ts.txt",
+      "byteSize": 10204,
+      "sha256": "f687f646c7b9a10064ea17e5a264a22b03e382deb8ebb6475ff3f14911beea3c"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__src__session-domain.ts.txt",
+      "byteSize": 27120,
+      "sha256": "59b78efc760aa0a0c8e2db93c6af9d205f55e34ee5c8c08dde7ccbf31c01b77b"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__src__session-protocol.ts.txt",
+      "byteSize": 7141,
+      "sha256": "7b98efd3133561ba11b401b7c59985cc6c03078489a1e9c119c7e6ecd27db582"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__code-workspaces__src__workspace-materials.ts.txt",
+      "byteSize": 8684,
+      "sha256": "2b8022fd32d373deada99501e81ed6b6aeab8b1b2d58efd31e7b995d7f5e5b13"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__code-workspaces__src__workspace-preservations.ts.txt",
+      "byteSize": 16548,
+      "sha256": "c1aa03f231bb5338c1171d425f246ca90caab6dc62a60a915cd8a63c4dbe4b32"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__migrations__0018-workspacepreservations.sql.txt",
+      "byteSize": 4104,
+      "sha256": "d2c38df2d1291dde574f69e355bc8cccb70b2dd406033f99c61d25083dc75e05"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__src__workspace-preservation-domain.ts.txt",
+      "byteSize": 14905,
+      "sha256": "1811123063612498573abe3e51879a7483dbe67a91837afdbf185bab9b475ea3"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/packages__storage-sqlite__src__workspace-preservation-protocol.ts.txt",
+      "byteSize": 5034,
+      "sha256": "7ba4419afb9d6df85db9d514a490cce88451a032567fb411c4db0ff2ae37c92a"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/tests__workspace-material-capture.test.mjs.txt",
+      "byteSize": 6537,
+      "sha256": "d1a1a57fa7c2a4830c4555acd82f9ca30d81ea37fa3992153346256692d8bd14"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/tests__workspace-preservation-git.test.mjs.txt",
+      "byteSize": 8863,
+      "sha256": "250a477c56f6c80a84e235008617d365b0ca1ace3c947499489eeabcce37848e"
+    },
+    {
+      "path": "project/evidence/P1-05/development/preservation-v1-failed/tests__workspace-preservation-storage.test.mjs.txt",
+      "byteSize": 10596,
+      "sha256": "e6f455c36674d9d9ee67e1be99ca14d4195948b7c8fb0a25d587dbfb0abbf26f"
+    }
+  ],
+  "limitations": [
+    "Explicit real local files and Git/A2A source fixtures; source ownership and the no-job fixture fencer are scoped independently.",
+    "No actual Runner job, remote identity, live model, OIDC, Linux/runsc, physical isolation/deletion or product gate acceptance.",
+    "Task 4.1 completion requires a separate behavior/evidence review; 4.2, 5.x and full parent work-package acceptance remain pending."
+  ]
+}

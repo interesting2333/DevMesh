@@ -1,0 +1,33 @@
+import {constants} from 'node:fs';
+                                         
+import {lstat,open,readdir,realpath} from 'node:fs/promises';
+import {isAbsolute,join} from 'node:path';
+import {createHash} from 'node:crypto';
+import {canonical} from '../packages/storage-sqlite/dist/index.mjs';
+import {WorkspaceError} from '../packages/code-workspaces/dist/index.mjs';
+                                                                        
+const hash=(bytes                  )=>createHash('sha256').update(bytes).digest('hex');
+function fail(code       )      {throw new WorkspaceError(code,'unknown');}
+function stable(a            ,b            ){return a.dev===b.dev&&a.ino===b.ino&&a.size===b.size&&a.mode===b.mode&&a.nlink===b.nlink&&a.mtimeNs===b.mtimeNs&&a.ctimeNs===b.ctimeNs;}
+/** Read-only verification of leftovers after an already proven DELETE_SENT.
+ * Missing original entries are allowed; additions, replacements, changed bytes,
+ * new external links and an unproven root are rejected. The caller still needs
+ * the original archive ACK, isolation/delete receipts, current cleanup authority
+ * and the actual Runner barrier. This function never authorizes or performs rm. */
+export async function verifyWorkspaceRemnants(snapshot                          ,root       ,signal            ){
+ const {sha256,...facts}=snapshot;if(hash(canonical(facts))!==sha256||!isAbsolute(root)||await realpath(root)!==root)fail('WORKSPACE_RECLAMATION_ROOT_CHANGED');const top=await lstat(root,{bigint:true});if(!top.isDirectory()||top.isSymbolicLink()||String(top.dev)!==snapshot.identity.device||String(top.ino)!==snapshot.identity.fileId)fail('WORKSPACE_RECLAMATION_ROOT_CHANGED');
+ const expected=new Map(snapshot.entries.map(entry=>[entry.path,entry])),groups=new Map                                    (),directories=new Map                    ();let count=0,byteSize=0;
+ if(expected.size!==snapshot.entries.length)fail('WORKSPACE_RECLAMATION_MANIFEST_CHANGED');
+ async function visit(directory       ,prefix       ){
+  signal.throwIfAborted();const before=await lstat(directory,{bigint:true});if(!before.isDirectory()||before.isSymbolicLink()||!prefix&&!stable(before,top))fail('WORKSPACE_RECLAMATION_ROOT_CHANGED');directories.set(directory,before);const names=(await readdir(directory)).sort();
+  for(const name of names){signal.throwIfAborted();const path=prefix?prefix+'/'+name:name,e=expected.get(path);if(!e||e.kind==='ABSENT')fail('WORKSPACE_RECLAMATION_MATERIAL_UNKNOWN');const absolute=join(directory,name),stat=await lstat(absolute,{bigint:true});if(stat.isSymbolicLink()||String(stat.dev)!==e.identity.device||String(stat.ino)!==e.identity.fileId)fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');count++;
+   if(e.kind==='EXCLUDED'){if(!stat.isDirectory()||await realpath(absolute)!==absolute)fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');continue;}
+   if(e.kind==='DIRECTORY'){if(!stat.isDirectory()||Number(stat.mode&0o777n)!==e.mode)fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');await visit(absolute,path);continue;}
+   if(!stat.isFile()||Number(stat.mode&0o777n)!==e.mode||Number(stat.size)!==e.byteSize||String(stat.mtimeNs)!==e.mtimeNs||stat.nlink<1n||stat.nlink>BigInt(e.links))fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');
+   const handle=await open(absolute,constants.O_RDONLY|constants.O_NOFOLLOW);try{const first=await handle.stat({bigint:true});if(!stable(first,stat))fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');const bytes=await handle.readFile();if(bytes.length!==e.byteSize||hash(bytes)!==e.sha256||!stable(await handle.stat({bigint:true}),first))fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');}finally{await handle.close();}
+   if(!stable(await lstat(absolute,{bigint:true}),stat))fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');const key=String(stat.dev)+':'+String(stat.ino),group=groups.get(key)??{links:Number(stat.nlink),count:0};if(group.links!==Number(stat.nlink))fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');group.count++;groups.set(key,group);byteSize+=Number(stat.size);
+  }
+  if(!stable(await lstat(directory,{bigint:true}),before)||canonical((await readdir(directory)).sort())!==canonical(names))fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');
+ }
+ await visit(root,'');for(const group of groups.values())if(group.count!==group.links)fail('WORKSPACE_RECLAMATION_EXTERNAL_HARDLINK');for(const [path,before] of directories)if(!stable(await lstat(path,{bigint:true}),before))fail('WORKSPACE_RECLAMATION_MATERIAL_CHANGED');if(count>snapshot.entries.length||byteSize>snapshot.byteSize)fail('WORKSPACE_RECLAMATION_MANIFEST_CHANGED');return {remainingEntries:count,remainingBytes:byteSize};
+}

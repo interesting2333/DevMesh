@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: captures ignored, untracked and deleted tracked materials without treating absence as an empty file
+ok 1 - captures ignored, untracked and deleted tracked materials without treating absence as an empty file
+  ---
+  duration_ms: 8700.8176
+  type: 'test'
+  ...
+# Subtest: captures every internal hardlink and recovery copy
+ok 2 - captures every internal hardlink and recovery copy
+  ---
+  duration_ms: 910.288
+  type: 'test'
+  ...
+# Subtest: external hardlinks deny a complete snapshot and preserve both files
+ok 3 - external hardlinks deny a complete snapshot and preserve both files
+  ---
+  duration_ms: 918.4875
+  type: 'test'
+  ...
+# Subtest: directory junctions cannot expose files outside the original owned attempt
+ok 4 - directory junctions cannot expose files outside the original owned attempt
+  ---
+  duration_ms: 699.4015
+  type: 'test'
+  ...
+# Subtest: explicit rebuildable exclusions cannot hide tracked or recovery material
+ok 5 - explicit rebuildable exclusions cannot hide tracked or recovery material
+  ---
+  duration_ms: 728.1808
+  type: 'test'
+  ...
+# Subtest: new files and hash drift invalidate the exact original snapshot
+ok 6 - new files and hash drift invalidate the exact original snapshot
+  ---
+  duration_ms: 1359.0489
+  type: 'test'
+  ...
+# Subtest: secrets and unsupported large bytes deny completion without removing source material
+ok 7 - secrets and unsupported large bytes deny completion without removing source material
+  ---
+  duration_ms: 926.567
+  type: 'test'
+  ...
+# Subtest: invalid and ambiguous base paths never become missing markers
+ok 8 - invalid and ambiguous base paths never become missing markers
+  ---
+  duration_ms: 1048.2957
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 31663.9057

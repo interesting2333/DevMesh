@@ -1,0 +1,88 @@
+import {createHash} from 'node:crypto';
+import {constants} from 'node:fs';
+import {lstat,open,readdir,realpath} from 'node:fs/promises';
+                                         
+import {isAbsolute,join,relative,sep} from 'node:path';
+import {canonical} from '@devmesh/storage-sqlite';
+import {WorkspaceError} from '../packages/code-workspaces/dist/git.js';
+
+const hash=(bytes                  )=>createHash('sha256').update(bytes).digest('hex');
+const integer=/^\d+$/;
+                                                               
+                                   
+                                                                      
+                                                                                                                                          
+                             
+                                                                                                                      
+                                            
+                                                                                      
+                                                                
+ 
+                                                                                                                 
+function fail(code       )      {throw new WorkspaceError(code,'unknown');}
+function id(stat            )                 {return {device:String(stat.dev),fileId:String(stat.ino)};}
+function same(a            ,b            ){return a.dev===b.dev&&a.ino===b.ino&&a.mode===b.mode&&a.nlink===b.nlink&&a.size===b.size&&a.mtimeNs===b.mtimeNs&&a.ctimeNs===b.ctimeNs;}
+function safe(path       ){
+ if(!path||path.length>1024||path.split('/').some(part=>!part||part==='.'||part==='..'||/[\u0000-\u001f\u007f<>:"\\|?*]/.test(part)||/[ .]$/.test(part)||/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part)))fail('WORKSPACE_MATERIAL_PATH_DENIED');
+}
+function secret(path       ){return path.split('/').some(part=>/^\.env(?:\.|$)/i.test(part)&&!/^\.env\.(example|sample|template)$/i.test(part)||/^(id_rsa|id_ed25519|credentials(?:\.json)?|\.npmrc|\.netrc)$/i.test(part)||/\.(pem|p12|pfx|key)$/i.test(part));}
+function inside(root       ,path       ){const r=relative(root,path);return r===''||r!=='..'&&!r.startsWith('..'+sep)&&!isAbsolute(r);}
+
+/** Read-only capture. The caller must hold the original workspace's actual
+ * Runner/editor fence. This scan alone is never an archive or deletion ACK.
+ * All regular files are captured, including Git-ignored and recovery bytes.
+ * The only exclusions are owned Git storage and rebuildable node_modules. */
+export async function captureWorkspaceMaterials(input                                          ,signal            )                                    {
+ if(!isAbsolute(input.root)||await realpath(input.root)!==input.root)fail('WORKSPACE_MATERIAL_ROOT_CHANGED');
+ const rootBefore=await lstat(input.root,{bigint:true});if(!rootBefore.isDirectory()||rootBefore.isSymbolicLink())fail('WORKSPACE_MATERIAL_ROOT_CHANGED');
+ const entries                         =[],bytes=new Map               (),seen=new Set        (),groups=new Map                                      (),directories=new Map                    ();let byteSize=0;
+ function add(entry                       ){safe(entry.path);const folded=entry.path.toLowerCase();if(seen.has(folded))fail('WORKSPACE_MATERIAL_PATH_COLLISION');seen.add(folded);entries.push(entry);if(entries.length>8000)fail('WORKSPACE_MATERIALS_TOO_LARGE');}
+ async function walk(directory       ,prefix       ){
+  signal.throwIfAborted();const before=await lstat(directory,{bigint:true});if(!before.isDirectory()||before.isSymbolicLink()||!inside(input.root,await realpath(directory)))fail('WORKSPACE_MATERIAL_ROOT_CHANGED');directories.set(directory,before);
+  const names=(await readdir(directory)).sort();for(const name of names){
+   signal.throwIfAborted();const path=prefix?prefix+'/'+name:name;safe(path);const absolute=join(directory,name),stat=await lstat(absolute,{bigint:true});
+   if(stat.isSymbolicLink())fail('WORKSPACE_MATERIAL_LINK_DENIED');
+   if(path==='repo/.git'){
+    if(!stat.isDirectory()||await realpath(absolute)!==absolute)fail('WORKSPACE_MATERIAL_GIT_CHANGED');add({kind:'EXCLUDED',path,reason:'retained-git-repository',identity:id(stat)});continue;
+   }
+   // node_modules is rebuildable only in the source tree, never in the private
+   // file-recovery sidecar or arbitrary attempt-parent material.
+   if(path.startsWith('repo/')&&name==='node_modules'&&stat.isDirectory()){
+    if(await realpath(absolute)!==absolute)fail('WORKSPACE_MATERIAL_LINK_DENIED');add({kind:'EXCLUDED',path,reason:'rebuildable-node-modules',identity:id(stat)});continue;
+   }
+   if(secret(path))fail('WORKSPACE_MATERIAL_SECRET_PATH');
+   if(stat.isDirectory()){add({kind:'DIRECTORY',path,identity:id(stat),mode:Number(stat.mode&0o777n)});await walk(absolute,path);continue;}
+   if(!stat.isFile()||stat.size>2n*1024n*1024n||stat.nlink<1n||stat.nlink>8000n)fail('WORKSPACE_MATERIAL_FILE_DENIED');
+   byteSize+=Number(stat.size);if(byteSize>128*1024*1024)fail('WORKSPACE_MATERIALS_TOO_LARGE');
+   const handle=await open(absolute,constants.O_RDONLY|constants.O_NOFOLLOW);let value       ;
+   try{const first=await handle.stat({bigint:true});if(!same(first,stat))fail('WORKSPACE_MATERIAL_CHANGED');value=await handle.readFile();if(value.length!==Number(stat.size)||!same(await handle.stat({bigint:true}),stat))fail('WORKSPACE_MATERIAL_CHANGED');}finally{await handle.close();}
+   if(!same(await lstat(absolute,{bigint:true}),stat))fail('WORKSPACE_MATERIAL_CHANGED');
+   const key=String(stat.dev)+':'+String(stat.ino),group=groups.get(key)??{links:Number(stat.nlink),paths:[]};if(group.links!==Number(stat.nlink))fail('WORKSPACE_MATERIAL_LINK_DENIED');group.paths.push(path);groups.set(key,group);
+   add({kind:'FILE',path,identity:id(stat),mode:Number(stat.mode&0o777n),links:Number(stat.nlink),mtimeNs:String(stat.mtimeNs),ctimeNs:String(stat.ctimeNs),byteSize:value.length,sha256:hash(value)});bytes.set(path,value);
+  }
+  if(!same(await lstat(directory,{bigint:true}),before)||canonical((await readdir(directory)).sort())!==canonical(names))fail('WORKSPACE_MATERIAL_CHANGED');
+ }
+ await walk(input.root,'');
+ // Internal recovery receipts may intentionally share an inode. Every link
+ // must be represented; a link outside the owned tree blocks preservation.
+ for(const group of groups.values())if(group.paths.length!==group.links)fail('WORKSPACE_MATERIAL_EXTERNAL_HARDLINK');
+ const excluded=entries.filter(e=>e.kind==='EXCLUDED').map(e=>e.path),byPath=new Map(entries.map(entry=>[entry.path,entry]));
+ if(new Set(input.baseFiles.map(path=>path.toLowerCase())).size!==input.baseFiles.length)fail('WORKSPACE_MATERIAL_PATH_COLLISION');
+ for(const base of input.baseFiles){safe(base);const path='repo/'+base;if(excluded.some(parent=>path===parent||path.startsWith(parent+'/')))fail('WORKSPACE_MATERIAL_TRACKED_EXCLUSION');if(!byPath.has(path)){
+   // A base file can be absent because an ancestor is now a regular file.
+   // Preserve its absence without trying to traverse the obstructing file.
+   const parts=path.split('/');let absent=false;for(let i=1;i<=parts.length;i++){const prefix=parts.slice(0,i).join('/'),entry=byPath.get(prefix);if(!entry||i<parts.length&&entry.kind!=='DIRECTORY'){absent=true;break;}}
+   if(!absent)fail('WORKSPACE_MATERIAL_CHANGED');add({kind:'ABSENT',path});
+  }}
+ for(const [directory,before] of directories)if(!same(await lstat(directory,{bigint:true}),before))fail('WORKSPACE_MATERIAL_CHANGED');
+ if(!same(await lstat(input.root,{bigint:true}),rootBefore)||await realpath(input.root)!==input.root)fail('WORKSPACE_MATERIAL_ROOT_CHANGED');
+ entries.sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0);const facts={schemaVersion:'devmesh.workspace-materials.v1'         ,root:input.root,identity:id(rootBefore),entries,byteSize};
+ if(Buffer.byteLength(canonical(facts))>8*1024*1024)fail('WORKSPACE_MATERIALS_TOO_LARGE');return {snapshot:{...facts,sha256:hash(canonical(facts))},bytes};
+}
+
+/** Verifies the complete original snapshot, including identities, missing
+ * markers, recovery files, ignored files and new additions under the fence. */
+export async function verifyWorkspaceMaterials(snapshot                          ,baseFiles                  ,signal            ){
+ if(!integer.test(snapshot.identity.device)||!integer.test(snapshot.identity.fileId))fail('WORKSPACE_MATERIAL_ROOT_CHANGED');
+ const current=await captureWorkspaceMaterials({root:snapshot.root,baseFiles},signal);if(canonical(current.snapshot)!==canonical(snapshot))fail('WORKSPACE_MATERIAL_CHANGED');return current;
+}

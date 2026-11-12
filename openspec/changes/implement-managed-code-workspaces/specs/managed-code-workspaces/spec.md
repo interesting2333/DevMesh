@@ -116,3 +116,48 @@ The system SHALL retain source commits and required uncommitted, untracked and r
 
 - **WHEN** reclamation is requested
 - **THEN** it SHALL be refused and the original materials SHALL remain available for reconciliation
+
+#### Scenario: A failed developer produced no source commit
+
+- **WHEN** its original workspace is preserved
+- **THEN** the exact admitted base and all required current, untracked, ignored and recovery material SHALL be retained without requiring or inventing a successful development commit
+
+#### Scenario: A workspace contains additional Git references or a changed index
+
+- **WHEN** those source bytes lack the original controlled retention proof
+- **THEN** complete archival and reclamation SHALL be rejected rather than excluding the only copies as Git metadata
+
+#### Scenario: A complete acknowledgement reply is lost
+
+- **WHEN** original retained refs, immutable material hashes and the committed complete archive record can be verified
+- **THEN** recovery SHALL recover that original ACK and Runner receipt without replaying a Git mutation or allocating a replacement operation
+
+#### Scenario: Recovery files have been saved but their owner is unknown
+
+- **WHEN** reclamation is requested while an original file operation or private recovery directory remains unverified
+- **THEN** saved bytes SHALL remain readable and SHALL NOT authorize reclamation or resurrect execution authority
+
+#### Scenario: A live Host has no current Runner jobs
+
+- **WHEN** its original execution Grant still permits future job admission
+- **THEN** destructive reclamation SHALL be refused even when source and file materials are fully acknowledged
+
+#### Scenario: The isolation acknowledgement is interrupted
+
+- **WHEN** the original directory has moved into its unique operation trash path but the control record has not acknowledged that move
+- **THEN** recovery SHALL verify the original physical identity, frozen materials and Runner receipt before recording that same isolation fact
+
+#### Scenario: Deletion is interrupted after removing some original entries
+
+- **WHEN** the original delete intent and isolation receipts remain verifiable
+- **THEN** recovery MAY finish removal only after verifying every remaining entry against the frozen original identity and material set, and SHALL preserve unknown additions, modified bytes, replacements and new external links
+
+#### Scenario: A completed reclamation path is reused
+
+- **WHEN** a retry observes the original durable DELETED fact while a later directory occupies its former path
+- **THEN** the retry SHALL return the original fact without deleting that later directory
+
+#### Scenario: A verification checkout has only read execution access
+
+- **WHEN** its original owner has current project writer membership, the original execution Grant is revoked, the complete archive is acknowledged and the separate maintenance barrier is authorized
+- **THEN** the maintenance operation MAY reclaim only that original checkout without granting any new execution or source write access

@@ -1,0 +1,4 @@
+$ tsc --noEmit -p tsconfig.json
+packages/storage-sqlite/src/workspace-preservation-domain.ts(38,100): error TS2322: Type 'string' is not assignable to type 'string & $brand<"op">'.
+  Type 'string' is not assignable to type '$brand<"op">'.
+[ELIFECYCLE] Command failed with exit code 2.

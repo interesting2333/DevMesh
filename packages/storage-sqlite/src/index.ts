@@ -117,3 +117,7 @@ export async function openStorage(options: StorageOptions): Promise<SqliteStorag
 
 export {candidateMaterialKey,candidateMergeReport,candidateReportEnvelope} from './candidate-material-protocol.js';
 export type {CandidateMaterial,CandidateMaterialDescriptor,CandidateConflictAcknowledgement} from './candidate-material-protocol.js';
+
+export {workspacePreservationMaterialKey} from './workspace-preservation-domain.js';
+export {workspaceMaterialEntry,workspaceMaterialSnapshot,workspacePreservationManifest} from './workspace-preservation-protocol.js';
+export type {WorkspacePreservation,WorkspacePreservationManifest,WorkspacePreservationMaterial,WorkspacePreservationInputs} from './workspace-preservation-protocol.js';

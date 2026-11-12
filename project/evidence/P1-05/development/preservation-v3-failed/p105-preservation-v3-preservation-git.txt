@@ -1,0 +1,40 @@
+TAP version 13
+# (node:27596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:27596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual isolated Git source and complete workspace bytes require original preservation proof before reclamation
+    # Subtest: a workspace with no repo.commit retains the admitted base and all unsubmitted bytes
+    ok 1 - a workspace with no repo.commit retains the admitted base and all unsubmitted bytes
+      ---
+      duration_ms: 115818.3715
+      type: 'test'
+      ...
+    1..1
+not ok 1 - actual isolated Git source and complete workspace bytes require original preservation proof before reclamation
+  ---
+  duration_ms: 319526.6091
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-preservation-git.test.mjs:11:1'
+  failureType: 'testCodeFailure'
+  error: 'MCP_GIT_WRITE_SCOPE_DENIED'
+  code: 'MCP_GIT_WRITE_SCOPE_DENIED'
+  stack: |-
+    scoped (file:///D:/yms/AI/DevMesh/packages/mcp-tools/dist/index.mjs:1776:141)
+    writeTree (file:///D:/yms/AI/DevMesh/packages/mcp-tools/dist/index.mjs:1833:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async execute (file:///D:/yms/AI/DevMesh/packages/mcp-tools/dist/index.mjs:1947:18)
+    async Object.commit (file:///D:/yms/AI/DevMesh/tests/fixtures/source-archive.mjs:29:174)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-preservation-git.test.mjs:17:18)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 364588.3374

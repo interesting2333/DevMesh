@@ -10,3 +10,8 @@ export {LocalCandidateIntegrations} from './candidate-integrations.js';
 export type {LocalCandidateIntegrationOptions} from './candidate-integrations.js';
 export {LocalCandidateConflicts} from './candidate-conflicts.js';
 export type {CandidateConflictContext,CandidateMerge} from './candidate-integrations.js';
+
+export {captureWorkspaceMaterials,verifyWorkspaceMaterials} from './workspace-materials.js';
+export type {WorkspaceMaterialEntry,WorkspaceMaterialSnapshot,CapturedWorkspaceMaterials} from './workspace-materials.js';
+export {LocalWorkspacePreservations} from './workspace-preservations.js';
+export type {LocalWorkspacePreservationOptions,PreservedWorkspaceLease} from './workspace-preservations.js';

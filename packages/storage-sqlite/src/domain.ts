@@ -48,6 +48,9 @@ import type {RepoFileMethod} from './repo-file-protocol.js';
 import {createSourceArchiveDomain} from './source-archive-domain.js';
 import {sourceArchiveRequests} from './source-archive-protocol.js';
 import type {SourceArchiveMethod} from './source-archive-protocol.js';
+import {createWorkspacePreservationDomain} from './workspace-preservation-domain.js';
+import {workspacePreservationRequests} from './workspace-preservation-protocol.js';
+import type {WorkspacePreservationMethod} from './workspace-preservation-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -62,6 +65,7 @@ export function createDomain(db: DatabaseSync) {
   const repositoryFiles=createRepoFileDomain(db);
   const workspaces=createWorkspaceDomain(db);
   const sourceArchives=createSourceArchiveDomain(db);
+  const workspacePreservations=createWorkspacePreservationDomain(db);
   const sessions = createSessionDomain(db);
   const tools=createToolDomain(db,(runId,operationId,attemptId,payload)=>{
     bump(runId);event(runId,operationId,'IssueChanged',payload,{attemptId});
@@ -404,6 +408,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(workspacePreservationRequests,method))return workspacePreservations.execute(method as WorkspacePreservationMethod,input);
     if(Object.hasOwn(candidateMaterialRequests,method))return candidateMaterials.execute(method as CandidateMaterialMethod,input);
     if(Object.hasOwn(candidateIntegrationRequests,method))return candidateIntegrations.execute(method as CandidateIntegrationMethod,input);
     if(Object.hasOwn(sourceArchiveRequests,method))return sourceArchives.execute(method as SourceArchiveMethod,input);

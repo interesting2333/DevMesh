@@ -8,6 +8,7 @@ import { sessionRequests } from './session-protocol.js';
 import type { SessionMethod, SessionInput, ObjectWrite, ObjectTarget, SessionInfo, SessionMessage, ContentInfo, ModelStep, ContentReference } from './session-protocol.js';
 
 import {createCandidateMaterialDomain} from './candidate-material-domain.js';
+import {createWorkspacePreservationDomain} from './workspace-preservation-domain.js';
 
 type Row = Record<string, string | number | null>;
 const uid = (prefix: string) => `${prefix}_${randomUUID().replaceAll('-', '')}`;
@@ -16,6 +17,7 @@ const reject = (code: string, message: string, status = 409): never => { throw n
 
 export function createSessionDomain(db: DatabaseSync) {
   const candidateMaterials=createCandidateMaterialDomain(db);
+  const workspacePreservations=createWorkspacePreservationDomain(db);
   const get = (sql: string, ...args: SQLInputValue[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: SQLInputValue[]) => db.prepare(sql).all(...args) as Row[];
   const exec = (sql: string, ...args: SQLInputValue[]) => db.prepare(sql).run(...args);
@@ -37,12 +39,14 @@ export function createSessionDomain(db: DatabaseSync) {
   const write = (principalId: string, writeId: string) => {
     const row = required(get('SELECT w.*,o.result_json FROM object_write_operations w JOIN operations o ON o.operation_id=w.operation_id WHERE write_id=?', writeId));
     if (row.owner_id !== principalId) reject('FORBIDDEN', 'Write belongs to another principal', 403);
+    if(row.purpose==='workspacePreservation')workspacePreservations.authorize(principalId,JSON.parse(String(row.target_json)));
     if(row.purpose==='candidateMaterial')candidateMaterials.authorize(principalId,JSON.parse(String(row.target_json)));
     return row;
   };
   const writeView = (r: Row): ObjectWrite => ({ writeId: String(r.write_id), operationId: String(r.operation_id), ownerId: String(r.owner_id), expectedHash: String(r.expected_hash), expectedSize: Number(r.expected_size), mimeType: String(r.mime_type), target: JSON.parse(String(r.target_json)), stagingKey: String(r.staging_key), state: String(r.state), result: r.result_json ? JSON.parse(String(r.result_json)) : null });
   function targetSession(principalId: string, target: ObjectTarget): Row | undefined {
     if (target.kind === 'content' || target.kind === 'attachment') return;
+    if(target.kind==='workspacePreservation'){workspacePreservations.authorize(principalId,target);return;}
     if(target.kind==='candidateMaterial'){candidateMaterials.authorize(principalId,target);return;}
     return session(principalId, target.kind === 'context' ? target.manifest.sessionId : target.sessionId);
   }
@@ -64,6 +68,7 @@ export function createSessionDomain(db: DatabaseSync) {
   }
   function commitTarget(principalId: string, target: ObjectTarget, hash: string, row: Row): Record<string, unknown> {
     if (target.kind === 'content') return { contentHash: hash };
+    if(target.kind==='workspacePreservation')return workspacePreservations.commit(principalId,target,hash,String(row.write_id));
     if(target.kind==='candidateMaterial')return candidateMaterials.commit(principalId,target,hash,String(row.write_id));
     if (target.kind === 'attachment') {
       const old = get('SELECT * FROM attachments WHERE owner_id=? AND client_attachment_id=?', principalId, target.clientAttachmentId);
@@ -113,7 +118,8 @@ export function createSessionDomain(db: DatabaseSync) {
   }
   function resolveReference(principalId: string, ref: ContentReference): Row {
     let row: Row;
-    if(ref.kind==='candidateMaterial'){row=candidateMaterials.resolve(principalId,ref);
+    if(ref.kind==='workspacePreservation'){row=workspacePreservations.resolve(principalId,ref);
+    }else if(ref.kind==='candidateMaterial'){row=candidateMaterials.resolve(principalId,ref);
     } else if (ref.kind === 'attachment') {
       row = required(get("SELECT content_hash,owner_id FROM attachments WHERE attachment_id=? AND state='READY'", ref.attachmentId));
       if (row.owner_id !== principalId && !get('SELECT 1 FROM input_message_attachments a JOIN input_messages m ON m.message_id=a.message_id JOIN project_members p ON p.project_id=m.project_id WHERE a.attachment_id=? AND p.principal_id=?',ref.attachmentId,principalId)) reject('FORBIDDEN', 'Attachment belongs to another principal', 403);
@@ -151,6 +157,7 @@ export function createSessionDomain(db: DatabaseSync) {
     beginObjectWrite(input: SessionInput<'beginObjectWrite'>) {
       return transaction(db, () => {
         targetSession(input.meta.principalId, input.target);
+        if(input.target.kind==='workspacePreservation')workspacePreservations.validateWrite({...input,target:input.target});
         if(input.target.kind==='candidateMaterial')candidateMaterials.validateWrite({...input,target:input.target});
         const { meta, ...payload } = input, requestHash = digest(canonical({ kind: 'WriteObject', payload }));
         const old = get('SELECT operation_id,request_hash FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?', meta.principalId, meta.scopeId, meta.idempotencyKey);

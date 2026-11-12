@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "status": "PREFLIGHT_PASSED",
+  "scope": "Read-only original-root and frozen-manifest verification of actual leftovers after fixture directory isolation and partial deletion. Runs .cache draft TypeScript with adjusted imports. No applied reclaimer, durable delete ACK, actual Runner fencing or product acceptance.",
+  "startedAt": "2026-11-11T23:50:43.849Z",
+  "finishedAt": "2026-11-11T23:52:08.158Z",
+  "tests": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/remnant-preflight-v1/p105-workspace-remnants.ts.txt",
+      "byteSize": 4580,
+      "sha256": "5f9bebd787ed564b588108d11ba939db74a1e6fa4bed3b2e5f12dbecd0fd592a"
+    },
+    {
+      "path": "project/evidence/P1-05/development/remnant-preflight-v1/p105-workspace-remnants.test.mjs.txt",
+      "byteSize": 4526,
+      "sha256": "b8caf24c39fef07e119fac015be2c7f6a0ff5a9058f016fb01a18078602cda64"
+    },
+    {
+      "path": "project/evidence/P1-05/development/remnant-preflight-v1/p105-workspace-remnants-runtime.mjs.txt",
+      "byteSize": 4632,
+      "sha256": "f81a06d8fc10a04bfe8b0fdcaa6b09e8dc9f2ad9e593af0da26eb9162cf414d0"
+    },
+    {
+      "path": "project/evidence/P1-05/development/remnant-preflight-v1/p105-material-capture-runtime.mjs.txt",
+      "byteSize": 8667,
+      "sha256": "6279f98d7694426c77b6fee3d065fe58d52f90206905f7fea4d2d406cdb49697"
+    },
+    {
+      "path": "project/evidence/P1-05/development/remnant-preflight-v1/p105-remnant-preflight-v1-test.txt",
+      "byteSize": 2202,
+      "sha256": "096eacfd72c5da60c9454eddd85f973ecee46386b35d43fe8233dbf66669721b"
+    },
+    {
+      "path": "project/evidence/P1-05/development/remnant-preflight-v1/p105-remnant-preflight-v1-report.json",
+      "byteSize": 1303,
+      "sha256": "7fdcfaacb8d1a2925c9c5d57072bc1375e23db973c3a2b18ffa156e85ee2ef7e"
+    }
+  ],
+  "limitations": [
+    "Draft .cache verifier and adjusted runtime only; application source was not modified.",
+    "Actual isolation fixtures and partial filesystem deletion were exercised, but no applied reclamation service, durable delete ACK, actual Runner fencing or product acceptance was executed."
+  ]
+}

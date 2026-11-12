@@ -1,0 +1,33 @@
+{
+  "scope": "Read-only workspace material capture primitive preflight from .cache draft TypeScript; actual filesystem bytes, hardlinks and junctions. No application source changed; no durable archive ACK, Runner fencing, reclamation or product acceptance is asserted.",
+  "startedAt": "2026-11-11T23:07:52.940Z",
+  "finishedAt": "2026-11-11T23:07:57.768Z",
+  "status": "FAILED",
+  "sourceFiles": [
+    {
+      "path": ".cache/p105-workspace-materials.ts",
+      "sha256": "46c8292eb33eeb8711a5a1ce5858a58b1ed98da28c351f0b5c91ce7fb501a6ac"
+    },
+    {
+      "path": ".cache/p105-material-capture.test.mjs",
+      "sha256": "b4d29e5897bbd58a4f1745f7c9f31241f5ece93d2c9227392717fc588fc9fbf8"
+    },
+    {
+      "path": ".cache/p105-material-capture-runtime.mjs",
+      "sha256": "821aa1b55efee709eb991c103d43ded9818f1469843734a89e158f3562967ed4"
+    }
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "log": {
+    "path": ".cache/p105-material-capture-v1-test.txt",
+    "sha256": "8404732ba5e698c69e59336cd41ec26732341c9f3cbf760974f8d7162b158c9f"
+  },
+  "tests": {
+    "tests": 1,
+    "pass": 0,
+    "fail": 1,
+    "cancelled": 0,
+    "skipped": 0
+  }
+}

@@ -1,0 +1,39 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,mkdir,writeFile,readFile,link,symlink,rm,realpath} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {captureWorkspaceMaterials,verifyWorkspaceMaterials} from '../packages/code-workspaces/dist/index.mjs';
+const signal=new AbortController().signal;
+async function fixture(t){const root=await realpath(await mkdtemp(join(tmpdir(),'devmesh-material-capture-')));t.after(()=>rm(root,{recursive:true,force:true}));await mkdir(join(root,'repo'));await mkdir(join(root,'repo','.git'));await writeFile(join(root,'code-directory.json'),'owned-marker');return root;}
+test('captures ignored, untracked and deleted tracked materials without treating absence as an empty file',async t=>{
+ const root=await fixture(t);await writeFile(join(root,'repo','.gitignore'),'ignored.txt\n');await writeFile(join(root,'repo','ignored.txt'),'ignored bytes');await writeFile(join(root,'repo','empty.txt'),'');await mkdir(join(root,'tmp'));await writeFile(join(root,'tmp','compiler.log'),'real output');
+ const result=await captureWorkspaceMaterials({root,baseFiles:['deleted.txt','empty.txt']},signal),entries=new Map(result.snapshot.entries.map(e=>[e.path,e]));
+ assert.equal(entries.get('repo/deleted.txt').kind,'ABSENT');assert.equal(entries.get('repo/empty.txt').kind,'FILE');assert.equal(entries.get('repo/empty.txt').byteSize,0);assert.equal(result.bytes.get('repo/ignored.txt').toString(),'ignored bytes');assert.equal(result.bytes.get('tmp/compiler.log').toString(),'real output');assert.equal(entries.get('repo/.git').reason,'retained-git-repository');
+ assert.deepEqual((await verifyWorkspaceMaterials(result.snapshot,['deleted.txt','empty.txt'],signal)).snapshot,result.snapshot);
+});
+test('captures every internal hardlink and recovery copy',async t=>{
+ const root=await fixture(t);await mkdir(join(root,'.devmesh-file-operations'));await writeFile(join(root,'repo','current.txt'),'new');await link(join(root,'repo','current.txt'),join(root,'.devmesh-file-operations','receipt'));await writeFile(join(root,'.devmesh-file-operations','previous'),'old');
+ const result=await captureWorkspaceMaterials({root,baseFiles:[]},signal),a=result.snapshot.entries.find(e=>e.path==='repo/current.txt'),b=result.snapshot.entries.find(e=>e.path==='.devmesh-file-operations/receipt');assert.equal(a.links,2);assert.deepEqual(a.identity,b.identity);assert.equal(result.bytes.get('.devmesh-file-operations/previous').toString(),'old');assert.equal(result.bytes.get('.devmesh-file-operations/receipt').toString(),'new');
+});
+test('external hardlinks deny a complete snapshot and preserve both files',async t=>{
+ const root=await fixture(t),outside=await realpath(await mkdtemp(join(tmpdir(),'devmesh-material-outside-')));t.after(()=>rm(outside,{recursive:true,force:true}));await writeFile(join(outside,'protected'),'external');await link(join(outside,'protected'),join(root,'repo','linked'));
+ await assert.rejects(captureWorkspaceMaterials({root,baseFiles:[]},signal),{code:'WORKSPACE_MATERIAL_EXTERNAL_HARDLINK'});assert.equal(await readFile(join(outside,'protected'),'utf8'),'external');assert.equal(await readFile(join(root,'repo','linked'),'utf8'),'external');
+});
+test('directory junctions cannot expose files outside the original owned attempt',async t=>{
+ const root=await fixture(t),outside=await realpath(await mkdtemp(join(tmpdir(),'devmesh-material-junction-')));t.after(()=>rm(outside,{recursive:true,force:true}));await writeFile(join(outside,'protected'),'external');await symlink(outside,join(root,'repo','linked'),process.platform==='win32'?'junction':'dir');
+ await assert.rejects(captureWorkspaceMaterials({root,baseFiles:[]},signal),{code:'WORKSPACE_MATERIAL_LINK_DENIED'});assert.equal(await readFile(join(outside,'protected'),'utf8'),'external');
+});
+test('explicit rebuildable exclusions cannot hide tracked or recovery material',async t=>{
+ const root=await fixture(t);await mkdir(join(root,'repo','node_modules'));await writeFile(join(root,'repo','node_modules','generated.js'),'rebuildable');await mkdir(join(root,'.devmesh-file-operations'));await mkdir(join(root,'.devmesh-file-operations','node_modules'));await writeFile(join(root,'.devmesh-file-operations','node_modules','previous'),'required recovery');
+ const result=await captureWorkspaceMaterials({root,baseFiles:[]},signal);assert.equal(result.snapshot.entries.find(e=>e.path==='repo/node_modules').reason,'rebuildable-node-modules');assert.equal(result.bytes.get('.devmesh-file-operations/node_modules/previous').toString(),'required recovery');await assert.rejects(captureWorkspaceMaterials({root,baseFiles:['node_modules/generated.js']},signal),{code:'WORKSPACE_MATERIAL_TRACKED_EXCLUSION'});
+});
+test('new files and hash drift invalidate the exact original snapshot',async t=>{
+ const root=await fixture(t);await writeFile(join(root,'repo','file'),'old');const first=await captureWorkspaceMaterials({root,baseFiles:['file']},signal);await writeFile(join(root,'repo','file'),'new');await assert.rejects(verifyWorkspaceMaterials(first.snapshot,['file'],signal),{code:'WORKSPACE_MATERIAL_CHANGED'});const second=await captureWorkspaceMaterials({root,baseFiles:['file']},signal);await writeFile(join(root,'repo','added'),'added');await assert.rejects(verifyWorkspaceMaterials(second.snapshot,['file'],signal),{code:'WORKSPACE_MATERIAL_CHANGED'});
+});
+test('secrets and unsupported large bytes deny completion without removing source material',async t=>{
+ const root=await fixture(t);await writeFile(join(root,'repo','.env.local'),'private-fixture');await assert.rejects(captureWorkspaceMaterials({root,baseFiles:[]},signal),{code:'WORKSPACE_MATERIAL_SECRET_PATH'});assert.equal(await readFile(join(root,'repo','.env.local'),'utf8'),'private-fixture');await rm(join(root,'repo','.env.local'));await writeFile(join(root,'repo','oversized'),Buffer.alloc(2*1024*1024+1));await assert.rejects(captureWorkspaceMaterials({root,baseFiles:[]},signal),{code:'WORKSPACE_MATERIAL_FILE_DENIED'});assert.equal((await readFile(join(root,'repo','oversized'))).length,2*1024*1024+1);
+});
+test('invalid and ambiguous base paths never become missing markers',async t=>{
+ const root=await fixture(t);await assert.rejects(captureWorkspaceMaterials({root,baseFiles:['../protected']},signal),{code:'WORKSPACE_MATERIAL_PATH_DENIED'});await assert.rejects(captureWorkspaceMaterials({root,baseFiles:['Name','name']},signal),{code:'WORKSPACE_MATERIAL_PATH_COLLISION'});
+});

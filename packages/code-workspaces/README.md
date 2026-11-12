@@ -12,7 +12,8 @@
 | `LocalSourceArchives` | 核实原分配／repo.commit、父起点、范围和内容；传输并保留原操作／源码 refs 后提交 ACK | 实际分离仓库归档 4/4；`development/source-v2` |
 | `LocalCandidateIntegrations` | 按当前来源顺序合并、固定双父提交、一次发送、多 ref CAS；保留原操作并核实丢失 ACK | 实际 A2A／Scheduler／Host／Git 来源联调 4/4；`development/git-service-v2` |
 | `LocalCandidateConflicts`、Work 专属输入快照及验证分配组合 | 原报告及虚拟基点字节、原子内容引用、文件／目录／缺失版本、精确依赖快照准入 | 代码已编写；类型／lint／构建、材料 3/3、候选日志及资格 16/16、存储 28/28、内容 20/20、调度 10/10 已通过；真实输入用例取消收尾首次失败，已修复夹具待重跑，完整冲突待执行 |
-| 完整材料归档与回收 | 未提交／未跟踪／恢复材料、完整保存清单与持久 ACK、原目录隔离及删除核实 | 尚未完成；源码 ACK 不授权回收 |
+| `LocalWorkspacePreservations` | 未提交／未跟踪／忽略／恢复材料、全部已知源码及 base 保留、原子内容引用、完整 ACK 与独立 Runner receipt、回收前检查 | 已通过材料扫描 8/8、保存存储 4/4 和真实 Git 5/5 的开发验证；检查复用及原始报告见 preservation-v4，实际 Runner 组合及工作包验收另行验证 |
+| 原目录隔离及删除核实 | 仅原目录隔离到 Runner trash，按原操作核实删除 | 尚未实现；源码 ACK 或保存成功均不能跳过实际回收屏障 |
 
 证据目录以仓库根 `project/evidence/P1-05/` 为准。任务状态以 OpenSpec 和项目台账为准；局部通过不等于完整 P1-05、T05/T23 或产品验收。
 
@@ -24,6 +25,8 @@
 - 独立 checkout：`<runnerDataRoot>/workspaces/<attemptId>/repo`。
 - 文件操作恢复材料：Attempt 父目录中的 `.devmesh-file-operations/`；源码 ACK 不包含这些材料。
 - 冲突报告／文件：现有内容存储 `artifacts/sha256/<前两位>/<哈希>`，暂存使用 `staging/objects/`。
+- 完整保存材料及清单：沿用上述内容存储，以原保存 operation 与材料键建立独立业务引用。
+- Runner 完整保存 receipt：`<runnerDataRoot>/registry/workspace-preservations/<workspaceRef>/<operationId>/receipt.json`，位于待回收 Attempt 之外。
 
 `ControlledGit` 每次动作核实 root、Git/common directory 及设备／文件 ID。源码只允许批准的普通文件，拒绝链接、敏感路径、外部 filter／merge helper、alternates 和越界大小；源码清单最多 192 KiB。传输使用受控 pack，目的仓库重新验证 commit、tree、大小和 SHA-256。固定 `core.fsync=all`、`core.fsyncMethod=fsync`；软件检查没有验证底层存储掉电行为。
 

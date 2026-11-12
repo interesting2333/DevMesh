@@ -1,0 +1,60 @@
+TAP version 13
+# (node:32904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a relocated original directory can verify the exact subset remaining after interrupted deletion
+ok 1 - a relocated original directory can verify the exact subset remaining after interrupted deletion
+  ---
+  duration_ms: 5500.116
+  type: 'test'
+  ...
+# Subtest: an original internal hardlink may lose one preserved name during partial deletion
+ok 2 - an original internal hardlink may lose one preserved name during partial deletion
+  ---
+  duration_ms: 4508.3821
+  type: 'test'
+  ...
+# Subtest: new material after the frozen delete intent is preserved and blocks further reclamation
+ok 3 - new material after the frozen delete intent is preserved and blocks further reclamation
+  ---
+  duration_ms: 5701.5961
+  type: 'test'
+  ...
+# Subtest: modified original bytes block reclamation even under the original filename and inode
+ok 4 - modified original bytes block reclamation even under the original filename and inode
+  ---
+  duration_ms: 10828.0126
+  type: 'test'
+  ...
+# Subtest: a replacement trash root cannot inherit the original deletion decision
+ok 5 - a replacement trash root cannot inherit the original deletion decision
+  ---
+  duration_ms: 8581.9372
+  type: 'test'
+  ...
+# Subtest: an external link replacing a deleted original name is not mistaken for valid reduced link count
+ok 6 - an external link replacing a deleted original name is not mistaken for valid reduced link count
+  ---
+  duration_ms: 3321.0537
+  type: 'test'
+  ...
+# Subtest: the original root can remain empty after all original children were removed
+ok 7 - the original root can remain empty after all original children were removed
+  ---
+  duration_ms: 1266.3364
+  type: 'test'
+  ...
+# Subtest: a newly created formerly absent tracked file is not part of the deletion manifest
+ok 8 - a newly created formerly absent tracked file is not part of the deletion manifest
+  ---
+  duration_ms: 1347.4193
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 77902.47

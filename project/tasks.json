@@ -755,7 +755,15 @@
         "packages/storage-sqlite/src/scheduler-domain.ts",
         "packages/platform-core/src/scheduler.ts",
         "tests/candidate-material.test.mjs",
-        "tests/candidate-conflict-git.test.mjs"
+        "tests/candidate-conflict-git.test.mjs",
+        "packages/code-workspaces/src/workspace-materials.ts",
+        "packages/code-workspaces/src/workspace-preservations.ts",
+        "packages/storage-sqlite/src/workspace-preservation-protocol.ts",
+        "packages/storage-sqlite/src/workspace-preservation-domain.ts",
+        "packages/storage-sqlite/migrations/0018-workspacepreservations.sql",
+        "tests/workspace-material-capture.test.mjs",
+        "tests/workspace-preservation-storage.test.mjs",
+        "tests/workspace-preservation-git.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-05/离线实施进展.md",
@@ -781,7 +789,13 @@
         "project/evidence/P1-04/windows-c9c1474-incomplete/evidence.json",
         "project/evidence/P1-04/windows-c9c1474-incomplete/report.json",
         "project/evidence/P1-05/development/workspace-fixture-repair-v1/evidence.json",
-        "project/evidence/P1-05/development/materials-v1-failed/evidence.json"
+        "project/evidence/P1-05/development/materials-v1-failed/evidence.json",
+        "project/evidence/P1-05/development/material-capture-preflight-v2/evidence.json",
+        "project/evidence/P1-05/development/preservation-v1-failed/evidence.json",
+        "project/evidence/P1-05/development/remnant-preflight-v1/evidence.json",
+        "project/evidence/P1-05/development/preservation-v2-failed/evidence.json",
+        "project/evidence/P1-05/development/preservation-v3-failed/evidence.json",
+        "project/evidence/P1-05/development/preservation-v4/evidence.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -806,7 +820,14 @@
         "2026-11-12：c9c1474 独立干净 Windows checkout 冻结安装全量回归未通过：前 13 项通过，其中 MCP 35/35；workspace 29/31，真实子进程持锁用例返回 RUNNER_FORBIDDEN、未归属目录用例准备时返回 REGISTRY_PROJECTION_STALE，后 7 项未执行。原报告和日志 SHA-256 保留于 windows-c9c1474-incomplete，正在区分子进程启动捕获许可／长 Git 夹具导致的投影过期与实际实现问题；不放宽生产授权或登记全量通过。",
         "2026-11-12：c9c1474 两处失败的测试准备修复在 .cache 专项实际通过 2/2（含 lint）：子进程模块加载就绪后才序列化当前十五秒许可；实际 Agent Card 探测制造旧投影并验证拒绝，准备新准入前刷新投影。生产授权不变。原主目录处于冲突材料验证源码冻结，修复尚未复制到主测试文件，固定提交全量仍未通过；原始证据见 P1-05 development/workspace-fixture-repair-v1。",
         "2026-11-12：冲突材料／固定验证输入 v1 开发验证 FAILED，实际检查及用例数见 project/evidence/P1-05/development/materials-v1-failed/evidence.json；原始日志、源码指纹和范围限制已保留。源码完整归档／回收、真实环境及最终固定提交验收仍未完成。",
-        "2026-11-12：materials-v1 在十项类型／构建／材料／日志／存储／内容／调度检查通过后，真实 Git 验证输入用例因取消收尾缺少 stopVerified 被拒绝；原始 FAILED 报告及当时源码已保留。现已先断言该夹具 Host 未启动工具、Runner Job 且屏障已释放，再提交已知空副作用的停止证据，待固定提交重跑。c9c1474 的两项工作区夹具修复已按专项 2/2 原字节应用到主测试，不放宽十五秒许可或 Registry 过期拒绝。"
+        "2026-11-12：materials-v1 在十项类型／构建／材料／日志／存储／内容／调度检查通过后，真实 Git 验证输入用例因取消收尾缺少 stopVerified 被拒绝；原始 FAILED 报告及当时源码已保留。现已先断言该夹具 Host 未启动工具、Runner Job 且屏障已释放，再提交已知空副作用的停止证据，待固定提交重跑。c9c1474 的两项工作区夹具修复已按专项 2/2 原字节应用到主测试，不放宽十五秒许可或 Registry 过期拒绝。",
+        "2026-11-12：在固定检查点 051475c65d3194cf949411bfbd00dadeb8e5fd57 的独立干净 checkout 回归期间，继续编写迁移 18 与完整工作区材料保存：原子业务内容引用、固定 base 和全部原提交保留、原清单／ACK／Runner receipt、Git 额外 ref／暂存区及未知恢复材料回收拒绝。目录扫描 .cache 草案预检 8/8，应用层代码与真实 Git 保存验证正在执行；4.1、4.2 保持未完成。",
+        "2026-11-12：完整工作区材料保存 v1 开发验证实际结果 FAILED，原始报告、源码指纹及适用范围见 project/evidence/P1-05/development/preservation-v1-failed/evidence.json；不代表目录隔离／删除、Runner 环境或阶段验收通过。",
+        "2026-11-12：任务 4.2 的隔离后残余材料校验草案预检 8/8 通过，覆盖真实目录移动、部分删除、后加文件、原文件变化、外部硬链接和根目录替换拒绝。仅 .cache 草案及调整导入的运行版本，不能视为应用回收服务、持久删除 ACK、真实 Runner 或阶段验收完成。",
+        "2026-11-12：完整工作区材料保存 v2 开发验证实际结果 FAILED，原始报告、源码指纹及适用范围见 project/evidence/P1-05/development/preservation-v2-failed/evidence.json；不代表目录隔离／删除、Runner 环境或阶段验收通过。",
+        "2026-11-12：完整工作区材料保存 v3 开发验证实际结果 FAILED，原始报告、源码指纹及适用范围见 project/evidence/P1-05/development/preservation-v3-failed/evidence.json；不代表目录隔离／删除、Runner 环境或阶段验收通过。",
+        "2026-11-12：完整工作区材料保存 v4 开发验证实际结果 PASSED，原始报告、源码指纹及适用范围见 project/evidence/P1-05/development/preservation-v4/evidence.json；不代表目录隔离／删除、Runner 环境或阶段验收通过。",
+        "2026-11-12：完整保存 v4 的真实 Git 5/5 开发验证已保留并复核，包含无提交 base 保存、原写入续接、丢 ACK 及回收前拒绝边界。复用检查逐项标注来源；实际 Runner 组合、目录隔离／删除、整体工作包及阶段验收保持待完成。"
       ]
     },
     {

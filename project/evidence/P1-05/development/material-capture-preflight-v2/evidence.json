@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "status": "PREFLIGHT_PASSED",
+  "scope": "Read-only workspace material capture primitive preflight from .cache draft TypeScript; actual filesystem bytes, hardlinks and junctions. No application source changed; no durable archive ACK, Runner fencing, reclamation or product acceptance is asserted.",
+  "startedAt": "2026-11-11T23:09:52.270Z",
+  "finishedAt": "2026-11-11T23:10:25.500Z",
+  "tests": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/p105-workspace-materials.ts.txt",
+      "byteSize": 8615,
+      "sha256": "46c8292eb33eeb8711a5a1ce5858a58b1ed98da28c351f0b5c91ce7fb501a6ac"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/p105-material-capture.test.mjs.txt",
+      "byteSize": 6530,
+      "sha256": "b4d29e5897bbd58a4f1745f7c9f31241f5ece93d2c9227392717fc588fc9fbf8"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/p105-material-capture-runtime.mjs.txt",
+      "byteSize": 8667,
+      "sha256": "6279f98d7694426c77b6fee3d065fe58d52f90206905f7fea4d2d406cdb49697"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/p105-material-capture-v2-test.txt",
+      "byteSize": 1828,
+      "sha256": "f91e0e531a48384c44d4dc000e547145bae7f781b920b3f7fbcc31bd02705e0a"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/p105-material-capture-v2-report.json",
+      "byteSize": 1146,
+      "sha256": "bc89d96fbb7c80e97f7bffc8390e10596a43d98fa781464006fd3b965fe0ba91"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/original-failed-p105-material-capture-v1-report.json",
+      "byteSize": 1146,
+      "sha256": "ed637393346fe61af60dc358fbaff4b9bd763f5fc2a8fcaf06a521a2e5c4a815"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/original-failed-p105-material-capture-v1-test.txt",
+      "byteSize": 1550,
+      "sha256": "8404732ba5e698c69e59336cd41ec26732341c9f3cbf760974f8d7162b158c9f"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/original-failed-p105-workspace-materials.ts.txt",
+      "byteSize": 8615,
+      "sha256": "46c8292eb33eeb8711a5a1ce5858a58b1ed98da28c351f0b5c91ce7fb501a6ac"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/original-failed-p105-material-capture.test.mjs.txt",
+      "byteSize": 6530,
+      "sha256": "b4d29e5897bbd58a4f1745f7c9f31241f5ece93d2c9227392717fc588fc9fbf8"
+    },
+    {
+      "path": "project/evidence/P1-05/development/material-capture-preflight-v2/original-failed-p105-material-capture-runtime.mjs.txt",
+      "byteSize": 8646,
+      "sha256": "821aa1b55efee709eb991c103d43ded9818f1469843734a89e158f3562967ed4"
+    }
+  ],
+  "limitations": [
+    "These are .cache draft bytes and a generated import-adjusted runtime, not validation of the applied application code.",
+    "The first harness import failure is retained separately here.",
+    "Durable archive ACK, actual Runner fencing, isolation, deletion and gate/product acceptance were not executed by this preflight."
+  ]
+}
