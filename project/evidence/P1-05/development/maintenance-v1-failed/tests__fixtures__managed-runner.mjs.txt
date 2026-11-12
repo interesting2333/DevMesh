@@ -1,0 +1,20 @@
+import {randomUUID} from 'node:crypto';
+import {LocalRunnerWorkspaceFencer,createLocalManagedRunnerAuthority} from '../../packages/code-workspaces/dist/index.mjs';
+import {openRunnerStorage,RunnerPolicy,RunnerManager,RunnerMaterials,serveRunner,RunnerClient} from '../../packages/runner/dist/index.mjs';
+import {ControlledBackend,image} from './runner.mjs';
+import {sourceArchiveFixture,archiveOp} from './source-archive.mjs';
+
+/** Real authenticated HTTP/SQLite management and filesystem/Git fencing.
+ * ControlledBackend records container facts; it launches no actual container. */
+export function managedRunnerFixture(t,options={}){
+ return sourceArchiveFixture(t,{...options,async setup({f,cleanup}){
+  const runnerId='runner.local',controllerId='controller.managed',credentialRef='fixture.managed',secret=randomUUID();
+  const layout=await openRunnerStorage({dataRoot:f.options.runnerDataRoot,controlDataRoot:f.local.dataRoot,backupRoot:f.options.backupRoot,runnerId,initialize:true});cleanup.push(()=>layout.close());
+  const policy=new RunnerPolicy({runnerId,dataRoot:layout.dataRoot,imageDigests:[image],commands:{build:['node','scripts/build.mjs']},maximumCpu:4,maximumMemoryMiB:1024,maximumTemporaryMiB:64,workspaces:{}});
+  const authority=createLocalManagedRunnerAuthority({mode:'local-development',storage:f.storage,runnerId,controllerId}),backend=new ControlledBackend(),manager=new RunnerManager(layout.store,policy,backend,authority,new RunnerMaterials(layout.dataRoot),{pollIntervalMs:600000});await manager.start();cleanup.push(()=>manager.close());
+  const http=await serveRunner(manager,{identities:[{controllerId,credentialRef}],credentials:async ref=>ref===credentialRef?secret:undefined});cleanup.push(()=>http.close());
+  const client=new RunnerClient('http://127.0.0.1:'+http.address.port,credentialRef,async()=>secret),fencer=new LocalRunnerWorkspaceFencer({mode:'local-development',runner:client,controlDataRoot:f.local.dataRoot,runnerDataRoot:layout.dataRoot,backupRoot:f.options.backupRoot});
+  const job=permit=>({schemaVersion:'devmesh.runner-job.v1',operationId:archiveOp(),permit:structuredClone(permit),imageDigest:image,workspaceRef:'workspace_01',commandSpec:{kind:'build'},resourceLimits:{cpu:1,memoryMiB:128,pids:32,temporaryMiB:32,timeoutMs:60000},networkPolicyRef:'none',outputSpec:[]});
+  return {layout,policy,authority,backend,manager,http,client,fencer,job};
+ }});
+}

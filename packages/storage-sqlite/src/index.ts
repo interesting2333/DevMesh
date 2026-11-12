@@ -122,4 +122,5 @@ export {workspacePreservationMaterialKey} from './workspace-preservation-domain.
 export {workspaceMaterialEntry,workspaceMaterialSnapshot,workspacePreservationManifest} from './workspace-preservation-protocol.js';
 export type {WorkspacePreservation,WorkspacePreservationManifest,WorkspacePreservationMaterial,WorkspacePreservationInputs} from './workspace-preservation-protocol.js';
 
+export type {WorkspaceMaintenanceAuthority} from './workspace-maintenance-protocol.js';
 export type {WorkspaceReclamation} from './workspace-reclamation-protocol.js';

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "Original managed workspace maintenance authority with real local authenticated A2A/Runner HTTP, SQLite and disposable Git. ControlledBackend launches no actual container. No model, OIDC, remote identity, Linux/runsc or acceptance gates.",
+  "baseCommit": "a35c6a9123fcfc89757b5adad24422c80863df14",
+  "sourceFingerprint": "65123457d3e6dc8d7d5a23177aaf202cf629d83a63cb5e5d1e5c0f8ae5034e5a",
+  "startedAt": "2026-11-12T01:07:47.422Z",
+  "finishedAt": "2026-11-12T01:09:33.348Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "path": ".cache/p105-maintenance-v3-typecheck.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7743,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "path": ".cache/p105-maintenance-v3-lint.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 806,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "path": ".cache/p105-maintenance-v3-build.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 11677,
+      "sha256": "c867bad016caa1783aebf3d60f74222ab0cc281bb838b0718cb92d04f22a58cd"
+    },
+    {
+      "name": "maintenance-runner",
+      "path": ".cache/p105-maintenance-v3-maintenance-runner.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 40155,
+      "sha256": "6a6766e282463b5c587ee4ed51946c1cae5e5b7d0829a782eaf7ea3703450047",
+      "tests": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preservation-storage",
+      "path": ".cache/p105-maintenance-v3-preservation-storage.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1777,
+      "sha256": "8608ca21fa8e3e757c8ab77ae1f0a0ec92e13fff3c9e2836a7f6b7fa8f44b2ff",
+      "tests": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "fencing",
+      "path": ".cache/p105-maintenance-v3-fencing.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4284,
+      "sha256": "84d08884469e7ccb1aafd242cbfc710c8c712c4ef4b5eee1eac99414ac0040e9",
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "storage",
+      "path": ".cache/p105-maintenance-v3-storage.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 39472,
+      "sha256": "dc964461854f3f9582fa0011930e3c0b0329f03854fade7002929fe47592cdf0",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v3/p105-maintenance-v3-report.json",
+      "sha256": "448dbd6dd029690ea0fd267315b7ecaaec981ac23ef1e532978fdcaa82988dd1",
+      "byteSize": 43578
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v3/p105-maintenance-v3-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "byteSize": 32
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v3/p105-maintenance-v3-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061",
+      "byteSize": 61
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v3/p105-maintenance-v3-build.txt",
+      "sha256": "c867bad016caa1783aebf3d60f74222ab0cc281bb838b0718cb92d04f22a58cd",
+      "byteSize": 8640
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v3/p105-maintenance-v3-maintenance-runner.txt",
+      "sha256": "6a6766e282463b5c587ee4ed51946c1cae5e5b7d0829a782eaf7ea3703450047",
+      "byteSize": 1647
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v3/p105-maintenance-v3-preservation-storage.txt",
+      "sha256": "8608ca21fa8e3e757c8ab77ae1f0a0ec92e13fff3c9e2836a7f6b7fa8f44b2ff",
+      "byteSize": 1321
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v3/p105-maintenance-v3-fencing.txt",
+      "sha256": "84d08884469e7ccb1aafd242cbfc710c8c712c4ef4b5eee1eac99414ac0040e9",
+      "byteSize": 2714
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v3/p105-maintenance-v3-storage.txt",
+      "sha256": "dc964461854f3f9582fa0011930e3c0b0329f03854fade7002929fe47592cdf0",
+      "byteSize": 23054
+    }
+  ],
+  "limitations": [
+    "Actual authenticated local Runner HTTP and SQLite; ControlledBackend is a fixture and runs no actual container.",
+    "No live model, OIDC, remote identity, Linux/runsc, product acceptance or stage gates.",
+    "Overall application composition and exact final checkpoint regression are separate pending work."
+  ]
+}

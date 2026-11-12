@@ -5,28 +5,29 @@ import {randomUUID} from 'node:crypto';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
-import {ControlledGit,LocalManagedWorkspaces,LocalSourceArchives} from '../../packages/code-workspaces/dist/index.mjs';
+import {ControlledGit,LocalManagedWorkspaces,LocalSourceArchives,createLocalRepoAcquire} from '../../packages/code-workspaces/dist/index.mjs';
 import {repoGitTools} from '../../packages/mcp-tools/dist/index.mjs';
 import {ExecutionGrantLease} from '../../packages/agent-runtime/dist/index.mjs';
 import {httpFixture,prepareDispatch} from './a2a-data.mjs';
 const exec=promisify(execFile),nullFile=process.platform==='win32'?'NUL':'/dev/null';
 export const archiveOp=()=> 'op_'+randomUUID().replaceAll('-','');
 export const archiveGit=async(root,...args)=>(await exec('git',['-c','core.fsmonitor=false','-c','core.autocrlf=false','-c','core.hooksPath='+nullFile,...args],{cwd:root,windowsHide:true,encoding:'utf8',env:{...process.env,GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:nullFile}})).stdout.trim();
-export async function sourceArchiveFixture(t){
+export async function sourceArchiveFixture(t,custom={}){
  const cleanup=[];t.after(async()=>{for(const fn of cleanup.toReversed())await fn();});const f=await httpFixture({after:fn=>cleanup.push(fn)}),root=join(f.root,'template-source');await mkdir(join(root,'src'),{recursive:true});await writeFile(join(root,'src/board.ts'),'export const count = 0;\n');await writeFile(join(root,'README.md'),'Source boundary\n');
  await archiveGit(root,'init','--quiet');await archiveGit(root,'config','user.name','Source fixture');await archiveGit(root,'config','user.email','source@localhost');await archiveGit(root,'add','.');await archiveGit(root,'commit','--quiet','--no-gpg-sign','-m','Initial');
- const base=await archiveGit(root,'rev-parse','HEAD'),source=await ControlledGit.open(root,'checkout'),p=await prepareDispatch(f,f.registry,{allowedTools:['repo_commit','repo_by-operation']},{baseCommit:base,resources:[{kind:'workspace',resourceId:'workspace_01',access:'write'},{kind:'projectRepository',resourceId:'repository_01',access:'read'}]});
+ const base=await archiveGit(root,'rev-parse','HEAD'),source=await ControlledGit.open(root,'checkout'),p=await prepareDispatch(f,f.registry,{allowedTools:custom.allowedTools??['repo_commit','repo_by-operation']},{baseCommit:base,resources:[{kind:'workspace',resourceId:'workspace_01',access:'write'},{kind:'projectRepository',resourceId:'repository_01',access:'read'}]});
  const sql=(query,...params)=>{const db=new DatabaseSync(join(f.local.dataRoot,'db/devmesh.sqlite'));try{return db.prepare(query).all(...params);}finally{db.close();}},permit=JSON.parse(sql('SELECT permit_json FROM execution_grants WHERE attempt_id=?',p.attemptId)[0].permit_json);
  await f.storage.request('acceptA2AWork',p.request);const [claim]=await f.storage.request('claimAcceptedWork',{endpointId:'builtin.developer',workerId:'source.fixture'}),{endpointId,taskId,workerId,claimToken}=claim;
- const lease=new ExecutionGrantLease(f.storage,{endpointId,taskId,workerId,claimToken},value=>Object.assign(permit,value));await lease.start();cleanup.push(()=>lease.stop());await mkdir(f.options.runnerDataRoot,{recursive:true});
+ const lease=new ExecutionGrantLease(f.storage,{endpointId,taskId,workerId,claimToken},value=>Object.assign(permit,value));await lease.start();cleanup.push(()=>lease.stop());
+ const managed=await custom.setup?.({f,p,permit,cleanup});await mkdir(f.options.runnerDataRoot,{recursive:true});
  // Explicit job-free fixture fencing. Production Runner fencing is covered by
  // workspace-fencing and MCP integration tests, not claimed by this adapter.
- const held=new Set(),fencer={async acquire(input){const key=input.kind+':'+input.resourceId;assert.equal(held.has(key),false);held.add(key);return {async release(){assert.equal(held.delete(key),true);}};}};
+ const held=new Set(),fencer=managed?.fencer??{async acquire(input){const key=input.kind+':'+input.resourceId;assert.equal(held.has(key),false);held.add(key);return {async release(){assert.equal(held.delete(key),true);}};}};
  const options={mode:'local-development',storage:f.storage,controlDataRoot:f.local.dataRoot,runnerDataRoot:f.options.runnerDataRoot,backupRoot:f.options.backupRoot,fencer},allocator=new LocalManagedWorkspaces({...options,runnerId:'runner.local',templates:new Map([[base,source]])});
  const repository=await allocator.ensureRepository({principalId:'user_1',projectId:p.projectId,operationId:archiveOp(),resourceId:'repository_01',templateCommit:base}),allocationOperationId=archiveOp(),allocation=await allocator.allocate({permit,operationId:allocationOperationId,workspaceRef:'workspace_01',repositoryResourceId:'repository_01',runnerId:'runner.local',kind:'development',baseCommit:base});
  const binding={workspaceRef:'workspace_01',resourceId:'workspace_01',projectResourceId:'repository_01',projectId:p.projectId,runId:p.runId,attemptId:p.attemptId,baseCommit:base,root:allocation.record.identity.root,gitDirectory:allocation.record.identity.gitDirectory,commonDirectory:allocation.record.identity.commonDirectory};
- const commitTool=repoGitTools({storage:f.storage,bindings:[binding],scratchRoot:join(f.root,'git-scratch'),acquire:async()=>fencer.acquire({kind:'workspace',resourceId:'workspace_01'})}).find(t=>t.name==='repo.commit');
+ const repoTools=repoGitTools({storage:f.storage,bindings:[binding],scratchRoot:join(f.root,'git-scratch'),acquire:managed?createLocalRepoAcquire(fencer):async()=>fencer.acquire({kind:'workspace',resourceId:'workspace_01'})}),commitTool=repoTools.find(t=>t.name==='repo.commit');
  async function commit(message='Source archive fixture'){await writeFile(join(binding.root,'src/board.ts'),'export const count = 1;\n');const operationId=archiveOp(),result=await commitTool.execute({operationId,permit,args:{workspaceRef:binding.workspaceRef,baseCommit:base,message},signal:new AbortController().signal});return {operationId,result};}
  const service=storage=>new LocalSourceArchives({...options,storage});
- return {...f,p,permit,sql,lease,base,binding,repository,allocation,held,options,commit,service,input:commitOperationId=>({permit,operationId:archiveOp(),allocationOperationId,commitOperationId})};
+ return {...f,p,permit,sql,lease,base,binding,repository,allocation,held,options,commit,repoTools,service,input:commitOperationId=>({permit,operationId:archiveOp(),allocationOperationId,commitOperationId}),...managed};
 }

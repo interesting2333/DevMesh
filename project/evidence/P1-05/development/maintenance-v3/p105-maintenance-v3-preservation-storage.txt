@@ -1,0 +1,36 @@
+TAP version 13
+# (node:6468) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: workspace preservation atomically registers content and its immutable business reference
+ok 1 - workspace preservation atomically registers content and its immutable business reference
+  ---
+  duration_ms: 236.7348
+  type: 'test'
+  ...
+# Subtest: failed original publication cannot produce an ACK and resumes its exact original write
+ok 2 - failed original publication cannot produce an ACK and resumes its exact original write
+  ---
+  duration_ms: 157.2891
+  type: 'test'
+  ...
+# Subtest: saved recovery bytes cannot convert unresolved original file operations into reclamation authority
+ok 3 - saved recovery bytes cannot convert unresolved original file operations into reclamation authority
+  ---
+  duration_ms: 135.4294
+  type: 'test'
+  ...
+# Subtest: preserved material writes require original target bytes and current ACL while project members can read
+ok 4 - preserved material writes require original target bytes and current ACL while project members can read
+  ---
+  duration_ms: 114.1095
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1410.329

@@ -29,7 +29,9 @@ export class RunnerPolicy {
  }
   private async workspacePath(permit:StartJob['permit'],w:WorkspaceBinding,cleanup=false){
    if(w.ownerKind!==permit.ownerKind||w.attemptId!==attemptKey(permit))throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);
-   permit=parseContract(executionPermit,permit);if(cleanup){if(!permit.resources.some(r=>r.kind==='workspace'&&r.resourceId===w.resourceId&&r.access==='write'))throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);}else {try{assertPermit(permit,permit,{kind:'workspace',resourceId:w.resourceId,access:'write'},Date.now());}catch{throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);}}
+   // Cleanup has independent authenticated original-operation authority. A read
+   // execution resource may be maintained, without admitting new writes or jobs.
+   permit=parseContract(executionPermit,permit);if(cleanup){if(!permit.resources.some(r=>r.kind==='workspace'&&r.resourceId===w.resourceId))throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);}else {try{assertPermit(permit,permit,{kind:'workspace',resourceId:w.resourceId,access:'write'},Date.now());}catch{throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);}}
    canonicalRoot(this.config.dataRoot);const root=await realpath(this.config.dataRoot),path=resolve(root,w.relativePath),expected=(permit.ownerKind==='workflowAttempt'?'workspaces/':'invocations/')+attemptKey(permit)+(w.sourceDirectory==='repo'?'/repo':'');
    if(w.relativePath.replaceAll('\\','/')!==expected||!path.startsWith(root+sep)||['\0','\r','\n',','].some(c=>path.includes(c)))throw new RunnerError('RUNNER_WORKSPACE_DENIED',403);
    canonicalRoot(path);return {root,path};

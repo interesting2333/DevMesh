@@ -38,5 +38,8 @@ export function createRepoFileDomain(db:DatabaseSync){
   confirmRepoFileCleanup(i:RepoFileInput<'confirmRepoFileCleanup'>){return transaction(db,()=>{const r=required(i.operationId);if(r.request_hash!==i.requestHash||r.state!=='SUCCEEDED')fail('REPO_FILE_CLEANUP_DENIED');exec('UPDATE repo_file_operations SET cleanup_confirmed=1 WHERE operation_id=?',i.operationId);return view(required(i.operationId));});},
   assertRepoWorkspaceSettled(i:RepoFileInput<'assertRepoWorkspaceSettled'>){return transaction(db,()=>{authority.check(i.permit,'repo.by-operation','read');assertRepoFilesSettled(db,i.workspaceRef);return {settled:true as const};});},
  };
- return {execute(method:RepoFileMethod,input:unknown){return (handlers[method] as (i:unknown)=>unknown)(parseContract(repoFileRequests[method],input));}};
+ return {
+  getOriginal(permit:ExecutionPermit,operationId:string){return view(owned(required(operationId),permit));},
+  execute(method:RepoFileMethod,input:unknown){return (handlers[method] as (i:unknown)=>unknown)(parseContract(repoFileRequests[method],input));},
+ };
 }

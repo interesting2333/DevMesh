@@ -39,5 +39,9 @@ export function createRepoDomain(db:DatabaseSync){
     prepareRepoOperation(i:RepoInput<'prepareRepoOperation'>){return transaction(db,()=>{const r=owned(required(i.operationId),i.permit);authority.check(i.permit,String(r.tool_name),'write');if(r.request_hash!==i.requestHash)fail('REPO_OPERATION_BASIS_CHANGED');if(r.prepared_json){if(r.prepared_json!==canonical(i.prepared))fail('REPO_OPERATION_BASIS_CHANGED');return view(r);}if(r.state!=='SENT')fail('REPO_OPERATION_CLOSED');exec("UPDATE repo_operations SET state='PREPARED',prepared_json=?,updated_at=? WHERE operation_id=?",canonical(i.prepared),new Date().toISOString(),i.operationId);return view(required(i.operationId));});},
     finishRepoOperation(i:RepoInput<'finishRepoOperation'>){return transaction(db,()=>{const r=required(i.operationId);if(r.request_hash!==i.requestHash)fail('REPO_OPERATION_BASIS_CHANGED');if(r.result_json){if(r.state!==i.state||r.result_json!==canonical(i.result))fail('REPO_OPERATION_RESULT_IMMUTABLE');return view(r);}if(i.state==='SUCCEEDED'&&r.prepared_json===null)fail('REPO_COMMIT_UNPROVEN');exec('UPDATE repo_operations SET state=?,result_json=?,updated_at=? WHERE operation_id=?',i.state,canonical(i.result),new Date().toISOString(),i.operationId);return view(required(i.operationId));});},
   };
-  return {execute(method:RepoMethod,input:unknown){return (handlers[method] as (i:unknown)=>unknown)(parseContract(repoRequests[method],input));}};
+  return {
+    // Internal synchronous read for a caller holding the Worker transaction.
+    getOriginal(permit:ExecutionPermit,operationId:string){return view(owned(required(operationId),permit));},
+    execute(method:RepoMethod,input:unknown){return (handlers[method] as (i:unknown)=>unknown)(parseContract(repoRequests[method],input));},
+  };
 }

@@ -1,0 +1,54 @@
+TAP version 13
+# (node:38700) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38700) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38700) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: managed maintenance uses original SQLite authority through authenticated Runner HTTP and cannot bypass queued or unknown jobs
+not ok 1 - managed maintenance uses original SQLite authority through authenticated Runner HTTP and cannot bypass queued or unknown jobs
+  ---
+  duration_ms: 10036.6231
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-maintenance-runner.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'RUNNER_FORBIDDEN'
+  code: 'RUNNER_FORBIDDEN'
+  stack: |-
+    RunnerClient.request (file:///D:/yms/AI/DevMesh/packages/runner/dist/index.mjs:49:11)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async RunnerClient.start (file:///D:/yms/AI/DevMesh/packages/runner/dist/index.mjs:79:22)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-maintenance-runner.test.mjs:23:15)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:38700) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38700) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a test-tools-only owner can preserve and reclaim its exact original read-attenuated workspace via the real Runner maintenance boundary
+not ok 2 - a test-tools-only owner can preserve and reclaim its exact original read-attenuated workspace via the real Runner maintenance boundary
+  ---
+  duration_ms: 8756.9654
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workspace-maintenance-runner.test.mjs:34:1'
+  failureType: 'testCodeFailure'
+  error: 'RUNNER_FORBIDDEN'
+  code: 'RUNNER_FORBIDDEN'
+  stack: |-
+    RunnerClient.request (file:///D:/yms/AI/DevMesh/packages/runner/dist/index.mjs:49:11)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async RunnerClient.start (file:///D:/yms/AI/DevMesh/packages/runner/dist/index.mjs:79:22)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workspace-maintenance-runner.test.mjs:37:15)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20184.5591

@@ -54,6 +54,9 @@ import type {WorkspacePreservationMethod} from './workspace-preservation-protoco
 import {createWorkspaceReclamationDomain} from './workspace-reclamation-domain.js';
 import {workspaceReclamationRequests} from './workspace-reclamation-protocol.js';
 import type {WorkspaceReclamationMethod} from './workspace-reclamation-protocol.js';
+import {createWorkspaceMaintenanceDomain} from './workspace-maintenance-domain.js';
+import {workspaceMaintenanceRequests} from './workspace-maintenance-protocol.js';
+import type {WorkspaceMaintenanceMethod} from './workspace-maintenance-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -70,6 +73,7 @@ export function createDomain(db: DatabaseSync) {
   const sourceArchives=createSourceArchiveDomain(db);
   const workspacePreservations=createWorkspacePreservationDomain(db);
   const workspaceReclamations=createWorkspaceReclamationDomain(db);
+  const workspaceMaintenance=createWorkspaceMaintenanceDomain(db);
   const sessions = createSessionDomain(db);
   const tools=createToolDomain(db,(runId,operationId,attemptId,payload)=>{
     bump(runId);event(runId,operationId,'IssueChanged',payload,{attemptId});
@@ -412,6 +416,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(workspaceMaintenanceRequests,method))return workspaceMaintenance.execute(method as WorkspaceMaintenanceMethod,input);
     if(Object.hasOwn(workspaceReclamationRequests,method))return workspaceReclamations.execute(method as WorkspaceReclamationMethod,input);
     if(Object.hasOwn(workspacePreservationRequests,method))return workspacePreservations.execute(method as WorkspacePreservationMethod,input);
     if(Object.hasOwn(candidateMaterialRequests,method))return candidateMaterials.execute(method as CandidateMaterialMethod,input);

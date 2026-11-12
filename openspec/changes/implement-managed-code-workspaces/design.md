@@ -94,11 +94,17 @@ Git Provider 的固定参数强制 `core.fsync=all`、`core.fsyncMethod=fsync`�
 
 实际扫描覆盖原 Attempt 父目录中的普通源码、Git 忽略及未跟踪文件、tmp 和 `.devmesh-file-operations` 恢复副本，记录内容 SHA-256、大小、模式、物理文件身份、时间戳和必要缺失标记。目录链接、外部硬链接、敏感路径、特殊文件和超限内容明确拒绝且保留原目录；内部硬链接仅在所有链接均在完整清单中时允许。固定排除项只有经受控 refs 核实的 `repo/.git` 与源码树中的可重建 node_modules，每项进入清单；被跟踪源码落入排除项则拒绝，不静默遗漏。限制为 8,000 项、单文件 2 MiB、总逻辑内容 128 MiB、清单 8 MiB。外部 Runner job-outputs、datasets、控制面仓库和独立 Git scratch 不随本工作区回收。
 
-完整保存清单和每个必要文件使用专用内容 target，在内容登记的同一 Worker 事务建立不可变业务外键引用；所有字节 READY 并核实受控保留 refs、原目录及原清单后才提交完整 ACK。Runner 再按原 operation 保存并 fsync 独立 receipt，上传成功本身不等于该 receipt。PREPARED 恢复只观察原 Git ref 并续接原对象写入 UUID，不重放 Git ref 更新；缺原保留事实、原字节漂移或未核实结果保持未完成，不替换操作。取得回收屏障时再次核实 ACK、当前主体、原清单、内容可用性及 receipt；未知或未完成 cleanup 的文件操作／恢复目录仍阻止回收，保存字节不将其转换成执行或删除权限。本地开发验证已通过扫描 8/8、保存存储 4/4、真实 Git 保存 5/5；实际 Runner 维护组合仍未验证，4.1、4.2 保持未完成。
+完整保存清单和每个必要文件使用专用内容 target，在内容登记的同一 Worker 事务建立不可变业务外键引用；所有字节 READY 并核实受控保留 refs、原目录及原清单后才提交完整 ACK。Runner 再按原 operation 保存并 fsync 独立 receipt，上传成功本身不等于该 receipt。PREPARED 恢复只观察原 Git ref 并续接原对象写入 UUID，不重放 Git ref 更新；缺原保留事实、原字节漂移或未核实结果保持未完成，不替换操作。取得回收屏障时再次核实 ACK、当前主体、原清单、内容可用性及 receipt；未知或未完成 cleanup 的文件操作／恢复目录仍阻止回收，保存字节不将其转换成执行或删除权限。本地开发验证已通过扫描 8/8、保存存储 4/4、真实 Git 保存 5/5；实际 Runner 维护组合 2/2 与屏障回归 5/5 已通过，结合材料／回收证据复核后完成 4.1、4.2。
 
 回收步骤 4.2 的后续实现将冻结完整保存 ACK、原 Attempt 父目录、唯一隔离目录及物理目录身份，并记录 PREPARED → ISOLATION_SENT → ISOLATED → DELETE_SENT → DELETED。隔离／删除意图和实际事实分别有 Runner 本地 fsync receipt，保存在 Attempt 之外；丢回复只核实原操作。首次移动要求完整清单一致，删除恢复允许原条目因部分删除而缺失，但每个剩余条目的路径、身份、内容和模式仍须符合原清单；内部硬链接允许因 unlink 减少链接数，新增外部链接、未知材料、内容变化或替换根目录均拒绝继续删除。DELETED 重放返回原事实，绝不删除后来复用路径的新目录。
 
-删除准入还需原执行 Grant 明确 REVOKED，并持有项目及工作区的实际屏障；租约过期或一次“无 Job”查询不能代替该准入关闭。默认从已满足持久 ACK 和撤销准入条件、首次建立原回收记录之后额外保留 24 小时；本地测试显式设为 0。维护授权允许验证 checkout 原资源为只读，仍要求原所有者和当前项目非 viewer 身份，不能据此恢复执行写入。统一维护授权适配将分别核实分配、repo、源码保存、完整保存和回收的原操作；没有受认证的维护后端时保持关闭。迁移 19 的回收存储 2/2、实际残余材料校验 8/8、真实 Git 隔离与删除恢复 6/6、存储回归 28/28 已通过，证据见 reclamation-v2；统一维护授权及实际 Runner 应用组合仍待实施，4.2 和 5.1 尚未完成。当前适配限于显式 local-development，同机目录和本机路径语义；跨节点／跨操作系统不共享宿主绝对目录，仍需 Runner 管理协议和真实远程身份验证。
+删除准入还需原执行 Grant 明确 REVOKED，并持有项目及工作区的实际屏障；租约过期或一次“无 Job”查询不能代替该准入关闭。默认从已满足持久 ACK 和撤销准入条件、首次建立原回收记录之后额外保留 24 小时；本地测试显式设为 0。维护授权允许验证 checkout 原资源为只读，仍要求原所有者和当前项目非 viewer 身份，不能据此恢复执行写入。统一维护授权适配将分别核实分配、repo、源码保存、完整保存和回收的原操作；没有受认证的维护后端时保持关闭。迁移 19 的回收存储 2/2、实际残余材料校验 8/8、真实 Git 隔离与删除恢复 6/6、存储回归 28/28 已通过，证据见 reclamation-v2；统一维护授权与真实 Runner 维护组合已通过 maintenance-v4；Runtime／动态 MCP 应用接线及 5.1 仍待完成。当前适配限于显式 local-development，同机目录和本机路径语义；跨节点／跨操作系统不共享宿主绝对目录，仍需 Runner 管理协议和真实远程身份验证。
+
+### Explicit local maintenance authority composition
+
+Runner 的独立维护 callback 绑定一个已认证 controllerId 和配置 runnerId，从 Worker 查询唯一原 operationId（分配、repo Git／文件、源码保存、完整保存、回收）。不存在或跨表歧义明确拒绝，不能用任意已知 UUID 替换。授权同时核对原 Attempt／activation／Grant、当前项目非 viewer 成员、原分配和仓库资源；回收还复核完整 ACK、READY 内容、已收尾文件操作及明确 REVOKED 的 Grant。平台默认没有 callback 时继续关闭维护能力。
+
+维护不属于模型工具，Tester 仅开放 tests 工具也能由受信任服务保存其原目录，不要求给模型增加 repo.commit。Worker 内部维护检查与普通工具白名单分开；原操作所属域、workspace 与 projectRepository 精确绑定后才可能取得屏障。Runner 的 cleanup 允许原资源降权为 read，正常执行路径仍要求当前写准入及有效租约，不允许据维护屏障发送新 Job。实际 HTTP／SQLite／Git 维护组合 2/2、屏障回归 5/5 与存储 28/28 已通过（maintenance-v4）；测试容器后端仅提供明确的受控事实，未启动实际 Docker/runsc。
 
 ## Risks / Trade-offs
 

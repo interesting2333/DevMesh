@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "Original managed workspace maintenance authority with real local authenticated A2A/Runner HTTP, SQLite and disposable Git. ControlledBackend launches no actual container. No model, OIDC, remote identity, Linux/runsc or acceptance gates.",
+  "baseCommit": "a35c6a9123fcfc89757b5adad24422c80863df14",
+  "sourceFingerprint": "091113040fbcd845f384abfab0174e74193d4a0b83b72ee60afeb0370a5af41d",
+  "startedAt": "2026-11-12T01:04:55.419Z",
+  "finishedAt": "2026-11-12T01:05:34.457Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "path": ".cache/p105-maintenance-v2-typecheck.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7695,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "path": ".cache/p105-maintenance-v2-lint.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 749,
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "build",
+      "path": ".cache/p105-maintenance-v2-build.txt",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13214,
+      "sha256": "ca99cd2ab187e047b9ef769c6824f85e94aab6a4d33202304d5f532e0a03e92d"
+    },
+    {
+      "name": "maintenance-runner",
+      "path": ".cache/p105-maintenance-v2-maintenance-runner.txt",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 17372,
+      "sha256": "b8a4e9c04d57c6fc95856880e461f426b9a5cd81b0c5f9329cdaa2f7cd77a3eb",
+      "tests": {
+        "tests": 2,
+        "pass": 0,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/p105-maintenance-v2-report.json",
+      "sha256": "1e1f9918538c9efe51e671e49a4c555e6d0bdf6af05ab326c940fc697eceb6ed",
+      "byteSize": 42424
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/p105-maintenance-v2-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "byteSize": 32
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/p105-maintenance-v2-lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061",
+      "byteSize": 61
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/p105-maintenance-v2-build.txt",
+      "sha256": "ca99cd2ab187e047b9ef769c6824f85e94aab6a4d33202304d5f532e0a03e92d",
+      "byteSize": 8640
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/p105-maintenance-v2-maintenance-runner.txt",
+      "sha256": "b8a4e9c04d57c6fc95856880e461f426b9a5cd81b0c5f9329cdaa2f7cd77a3eb",
+      "byteSize": 3050
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__code-workspaces__src__index.ts.txt",
+      "sha256": "037ea390545f8a90dcdf0f227864b7b1af32f6ca7da9358f0241dcb2cc0cdad5",
+      "byteSize": 1532
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__runner__src__policy.ts.txt",
+      "sha256": "8a48b2584a4faecb989e8abf7daeb09ef4748c2a07796218292beaa839c93d9a",
+      "byteSize": 4436
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__storage-sqlite__src__domain.ts.txt",
+      "sha256": "4243b8fca801cc2cf41c4ba877f6db50466cf9a32bb5131d2a417197b59b65bf",
+      "byteSize": 44310
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__storage-sqlite__src__index.ts.txt",
+      "sha256": "4336a4d7092bf039ad46d6480d2b446743c480382423d4e3f934e1f77e096f26",
+      "byteSize": 7873
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__storage-sqlite__src__protocol.ts.txt",
+      "sha256": "d144d10b184a7687cf19482717910064a807026dd8b0c57f296414451d35afce",
+      "byteSize": 10668
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__storage-sqlite__src__tool-authority-domain.ts.txt",
+      "sha256": "38271e6fa99642fda4ec0cea876a10aaacfb88b332a7f24f7d490906db514f8e",
+      "byteSize": 4292
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__storage-sqlite__src__workspace-preservation-domain.ts.txt",
+      "sha256": "cbc05d19369f964d3484dbac569e814a3cc788ad678bf20dd68d27cad05de55c",
+      "byteSize": 15012
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/tests__fixtures__source-archive.mjs.txt",
+      "sha256": "880149b8bad620331504e8cf9ed6baa1d40b6711e85561547f403c2191810657",
+      "byteSize": 5229
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__code-workspaces__src__maintenance-authority.ts.txt",
+      "sha256": "77209a2049f8c70d8e56d330292cf642e6130444256eafd5bc4e3e609039d19c",
+      "byteSize": 2781
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__storage-sqlite__src__workspace-maintenance-domain.ts.txt",
+      "sha256": "987699233192ed6a7c88ff189207a1eb2684a75dd1945470872ad34eb4f3ce2f",
+      "byteSize": 5241
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/packages__storage-sqlite__src__workspace-maintenance-protocol.ts.txt",
+      "sha256": "76da40e0613db44986c2aeb97ed9552e3d94d27297b6fb0f00cbbe8d13382cbc",
+      "byteSize": 1111
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/tests__fixtures__managed-runner.mjs.txt",
+      "sha256": "8131ed1d7a2ec631e3978ef6f32a546b0ce88d167938c3a54f5b0e53086c5bb2",
+      "byteSize": 2680
+    },
+    {
+      "path": "project/evidence/P1-05/development/maintenance-v2-failed/tests__workspace-maintenance-runner.test.mjs.txt",
+      "sha256": "947695ae055e467a3a4d49b20acb83515d575b1b999eadf21a1bc368f4dde9b0",
+      "byteSize": 5930
+    }
+  ],
+  "limitations": [
+    "Actual authenticated local Runner HTTP and SQLite; ControlledBackend is a fixture and runs no actual container.",
+    "No live model, OIDC, remote identity, Linux/runsc, product acceptance or stage gates.",
+    "Overall application composition and exact final checkpoint regression are separate pending work."
+  ]
+}

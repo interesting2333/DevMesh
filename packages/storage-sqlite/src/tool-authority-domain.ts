@@ -8,7 +8,7 @@ function fail():never{throw new StorageError('MCP_AUTHORITY_DENIED',403,'Current
 const cleanup=new Set(['tests.get','tests.stop','tests.by-operation','issues.get','issues.by-operation','pipeline.get','pipeline.logs','pipeline.artifacts','pipeline.stop','pipeline.by-operation','repo.by-operation','repo.fileByOperation']);
 export function createToolAuthorityDomain(db:DatabaseSync){
   const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined;
-  function check(permit:ExecutionPermit,toolName:string,action:'read'|'write'|'stop'){
+  function check(permit:ExecutionPermit,toolName:string,action:'read'|'write'|'stop',workspaceMaintenance=false){
     if(permit.ownerKind!=='workflowAttempt')fail();
     const h=get(`SELECT a.*,r.project_id,r.run_epoch,r.control_gate,r.terminal_outcome,w.work_epoch,w.blocked_reason,
       g.status AS grant_status,g.permit_json,p.owner_id,m.role AS membership FROM attempts a JOIN runs r ON r.run_id=a.run_id
@@ -22,8 +22,8 @@ export function createToolAuthorityDomain(db:DatabaseSync){
     if(['runId','runEpoch','workId','workEpoch','attemptId','activationId','grantId'].some(k=>(permit as unknown as Row)[k]!==(current as unknown as Row)[k]))fail();
     if(permit.resources.some(r=>!current.resources.some(c=>c.kind===r.kind&&c.resourceId===r.resourceId&&(c.access==='write'||r.access==='read'))))fail();
     const role=JSON.parse(String(h.role_snapshot_json)) as {allowedTools:string[]};
-    const modelName=toolName.replaceAll('.','_'),isCleanup=cleanup.has(toolName)&&action!=='write';
-    if(!role.allowedTools.includes(modelName)&&!role.allowedTools.includes(toolName)&&
+    const modelName=toolName.replaceAll('.','_'),isCleanup=workspaceMaintenance||cleanup.has(toolName)&&action!=='write';
+    if(!workspaceMaintenance&&!role.allowedTools.includes(modelName)&&!role.allowedTools.includes(toolName)&&
       !(isCleanup&&role.allowedTools.some(t=>t.startsWith(toolName.split('.')[0]+'_')||t.startsWith(toolName.split('.')[0]+'.'))))fail();
     if(!isCleanup){
       if(h.grant_status!=='ACTIVE'||h.control_gate!=='OPEN'||h.terminal_outcome!==null||h.ended_at!==null||h.blocked_reason!==null||
@@ -41,5 +41,7 @@ export function createToolAuthorityDomain(db:DatabaseSync){
     if(original.ownerKind!=='workflowAttempt'||current.ownerKind!=='workflowAttempt'||['runId','runEpoch','workId','workEpoch','attemptId','activationId','grantId'].some(k=>(original as unknown as Row)[k]!==(current as unknown as Row)[k]))fail();
     const permit=parseContract(executionPermit,{...current,resources:original.resources});check(permit,toolName,action);return permit;
   }
-  return {check,refresh};
+  // This internal path is not a model tool. Its callers must additionally bind
+  // the original allocation/operation and exact workspace resources.
+  return {check,refresh,workspaceMaintenance:(permit:ExecutionPermit)=>check(permit,'repo.by-operation','read',true)};
 }

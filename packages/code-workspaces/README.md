@@ -12,8 +12,8 @@
 | `LocalSourceArchives` | 核实原分配／repo.commit、父起点、范围和内容；传输并保留原操作／源码 refs 后提交 ACK | 实际分离仓库归档 4/4；`development/source-v2` |
 | `LocalCandidateIntegrations` | 按当前来源顺序合并、固定双父提交、一次发送、多 ref CAS；保留原操作并核实丢失 ACK | 实际 A2A／Scheduler／Host／Git 来源联调 4/4；`development/git-service-v2` |
 | `LocalCandidateConflicts`、Work 专属输入快照及验证分配组合 | 原报告及虚拟基点字节、原子内容引用、文件／目录／缺失版本、精确依赖快照准入 | 固定提交 051475c 的 21 项全量检查通过，工作区 49/49，包含真实冲突恢复、三方材料与固定验证输入；详见 m17-m19-review.md |
-| `LocalWorkspacePreservations` | 未提交／未跟踪／忽略／恢复材料、全部已知源码及 base 保留、原子内容引用、完整 ACK 与独立 Runner receipt、回收前检查 | 已通过材料扫描 8/8、保存存储 4/4 和真实 Git 5/5 的开发验证；检查复用及原始报告见 preservation-v4，实际 Runner 组合及工作包验收另行验证 |
-| `LocalWorkspaceReclamations` | 原目录隔离至唯一 Runner trash、独立隔离／删除意图与 receipt、部分删除核实及原 ACK 恢复 | 回收存储 2/2、残余校验 8/8、真实 Git 隔离／部分删除恢复 6/6、存储回归 28/28 通过，见 reclamation-v2；真实 Runner 维护组合仍待验证 |
+| `LocalWorkspacePreservations` | 未提交／未跟踪／忽略／恢复材料、全部已知源码及 base 保留、原子内容引用、完整 ACK 与独立 Runner receipt、回收前检查 | 已通过材料扫描 8/8、保存存储 4/4 和真实 Git 5/5 的开发验证；检查复用及原始报告见 preservation-v4，真实 Runner 维护组合 2/2 已通过（maintenance-v4）；整体应用接线和工作包验收另行验证 |
+| `LocalWorkspaceReclamations` | 原目录隔离至唯一 Runner trash、独立隔离／删除意图与 receipt、部分删除核实及原 ACK 恢复 | 回收存储 2/2、残余校验 8/8、真实 Git 隔离／部分删除恢复 6/6、存储回归 28/28 通过，见 reclamation-v2；真实 Runner 维护组合 2/2 已通过（maintenance-v4）；最终应用接线及验收另行验证 |
 
 证据目录以仓库根 `project/evidence/P1-05/` 为准。任务状态以 OpenSpec 和项目台账为准；局部通过不等于完整 P1-05、T05/T23 或产品验收。
 
@@ -64,3 +64,5 @@ const prepareCodeBasis = (candidate, signal) => integrations.prepareWorkInput({
 快照准备核实受控仓库身份、原 refs 和实际清单，I/O 后再复核来源；调度准入事务最终只接受与当前依赖匹配的 Work 快照。缺失快照时保持排队，不替换成全局最新候选。稳定原操作 ID 防止调度 tick／进程重启绕过未知结果；已知失败需显式受信任重试。
 
 以上服务未自动接入默认应用启动流程。真实远程身份、跨节点执行代理、模型、Linux/runsc 及完整材料生命周期仍按各自验收范围推进；当前本地测试夹具的质量决策及无 Job fencer 不代表这些能力通过。
+
+维护适配 `createLocalManagedRunnerAuthority`／`createLocalWorkspaceCleanupAuthority` 绑定显式本地服务身份、Runner 与控制面 Worker 的唯一原操作；缺省不启用。测试工具权限无需包含 repo 写工具，维护仍复核当前成员和原资源；Grant 撤销后允许 read 降权资源维护，不授予执行。详见 `development/maintenance-review.md`。
