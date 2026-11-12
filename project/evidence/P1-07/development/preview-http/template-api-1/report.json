@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-12T16:28:51.722Z",
+  "scope": "Retention of the already completed four-case template API Vitest run. Source files have not changed since that run; copied here before further recovery-policy edits. This is not a new execution.",
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "args": [
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "tests/api.test.ts",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=.artifacts/preview-session-api.json"
+  ],
+  "cwd": "D:/yms/AI/DevMesh/templates/web-crud-v1",
+  "actualJsonOutput": ".artifacts/unit-results.json",
+  "outputExplanation": "The template Vitest configuration selected unit-results.json; retain the actual file, not the requested CLI filename.",
+  "observedToolSession": 6386,
+  "exitCode": 0,
+  "tests": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0
+  },
+  "files": [
+    {
+      "source": "templates/web-crud-v1/src/web/api.ts",
+      "path": "api.ts.txt",
+      "sha256": "bc85f7c71aed5332e0f321d6d7f9ff3f14355fbbcff9c790fe44c44d74c9be42"
+    },
+    {
+      "source": "templates/web-crud-v1/tests/api.test.ts",
+      "path": "api.test.ts.txt",
+      "sha256": "57e1b230731b67b411edbc626b2c322972a6305a5a2a560023b730aa82404fc4"
+    },
+    {
+      "source": "templates/web-crud-v1/.artifacts/unit-results.json",
+      "path": "unit-results.json",
+      "sha256": "55bfcaa96ccd19fd6808c435f878244445d79cf3c91237a1f4f9221325176f24"
+    }
+  ]
+}

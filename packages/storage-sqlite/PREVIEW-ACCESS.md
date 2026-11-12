@@ -1,9 +1,11 @@
 # Private preview access admission
 
-Migration 34 adds durable admission commands to `SqliteStorage.request`. There is
-no HTTP route, browser session or forwarding transport in this increment. These
-commands are for explicitly configured, trusted composition; a caller-supplied
-`principalId` is not an authentication mechanism.
+Migration 34 adds durable admission commands to `SqliteStorage.request`. Migration
+35 adds distinct tickets, sessions and immutable credential events. These commands
+are for explicitly configured, trusted composition; a caller-supplied `principalId`
+is not an authentication mechanism. The separate `@devmesh/preview-gateway` and
+Runner HTTP transport provide local composition primitives; the platform does not
+automatically mount an identity/issuance route or enable a production listener.
 
 The owner registers `registerPreviewAccessPolicy` for a project with an immutable
 gateway ID, configuration hash and service principal. The configured original
@@ -18,10 +20,11 @@ zero and 30 seconds old; a future observation after a clock rollback is unavaila
 Only the original Runner-local transport can interpret its loopback address. It is
 not an arbitrary URL or a remote platform host's loopback connection target.
 
-`preparePreviewAccessRequest` binds a unique request ID to a method, path and body
-hash and the exact original target, subject and fence. Headers and body are not a
-forwarding implementation; the future transport must validate and bind the actual
-request it sends. GET/HEAD require an empty body hash. Other supported methods
+`preparePreviewAccessRequest` binds a unique request ID to a method, raw path, body
+hash and optional `headersSha256`, with the exact original target, subject and fence.
+The HTTP gateway always binds its sanitized forward headers; Runner verifies the
+actual bytes and headers. Legacy records without a header hash remain readable but
+the HTTP transport refuses to send them. GET/HEAD require an empty body hash. Other supported methods
 require owner/operator membership and an OPEN gate. A viewer cannot obtain a write
 method grant. This classification does not enforce physical database read-only
 access or prove that generated GET/HEAD routes have no side effects.
@@ -68,5 +71,21 @@ The logical gate does not change a READY dataset into WRITE_FROZEN, create a
 Release, change an accepted pointer or complete T5. Actual request processing,
 background writes, Runner/data fencing and proof of no accepted switch are needed
 before physical quiescence or reopening an old write path can be asserted. HTTP,
-short-lived purpose credentials, per-preview host/cookie isolation, browser tests
-and trusted production composition remain OpenSpec 3.1 obligations.
+short-lived credentials and browser isolation are validated separately from this
+storage state machine. Trusted platform identity/issuance, deployment composition,
+physical fencing and T5 remain separate implementation and acceptance obligations.
+
+`issuePreviewTicket` requires the configured gateway and current member/original
+binding. Tickets last at most 60 seconds; `exchangePreviewTicket` atomically
+consumes one ticket and creates one session lasting at most five minutes. Both
+expire no later than the preview. Only exact original internal exchange parameters
+recover the same session; a browser replay cannot choose another session. Only
+token SHA-256 values persist, never raw random secrets. Each project/member has at
+most 20 unconsumed live tickets and 20 active live sessions.
+
+`authenticatePreviewSession` independently checks purpose, gateway configuration,
+exact preview origin, time, original binding and current membership at each use.
+`revokePreviewSession` idempotently revokes only the original owned session, without
+membership-dependent cleanup or touching uncertain access requests. Credential and
+event writes share one SQLite transaction; generated target keys and composite
+foreign keys bind project/run/preview and the original policy configuration.

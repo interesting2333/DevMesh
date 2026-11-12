@@ -20,7 +20,7 @@ export class BoardApi {
   async recover(): Promise<void> {
     const pending = this.readPending();
     if (!pending) return;
-    await this.sendPending(pending);
+    await this.sendPending(pending, true);
   }
   private readPending(): Pending | null {
     const value = this.storage?.getItem(this.storageKey);
@@ -35,7 +35,7 @@ export class BoardApi {
     this.storage.setItem(this.storageKey, JSON.stringify(operation));
     await this.sendPending(operation);
   }
-  private async sendPending(operation: Pending): Promise<void> {
+  private async sendPending(operation: Pending, recovering = false): Promise<void> {
     try {
       Receipt.parse(await this.request(`/api/tasks${operation.id ? '/' + encodeURIComponent(operation.id) : ''}`, {
         method: operation.method,
@@ -44,6 +44,8 @@ export class BoardApi {
       }));
       this.storage!.removeItem(this.storageKey);
     } catch (error) {
+      // A rejected recovery says nothing about the earlier uncertain write.
+      if (recovering && error instanceof ApiError && !error.unknown) throw new ApiError(error.code, true);
       if (error instanceof ApiError && !error.unknown) this.storage!.removeItem(this.storageKey);
       throw error;
     }
@@ -54,7 +56,8 @@ export class BoardApi {
       const body = await response.json() as unknown;
       if (!response.ok) {
         const error = z.object({ error: z.string() }).safeParse(body);
-        throw new ApiError(error.success ? error.data.error : 'REQUEST_FAILED', response.status >= 500);
+        const code = error.success ? error.data.error : 'REQUEST_FAILED';
+        throw new ApiError(code, response.status >= 500 || ['PREVIEW_REQUEST_ALREADY_RECORDED', 'PREVIEW_ACCESS_REQUEST_CHANGED'].includes(code));
       }
       return body;
     } catch (error) {

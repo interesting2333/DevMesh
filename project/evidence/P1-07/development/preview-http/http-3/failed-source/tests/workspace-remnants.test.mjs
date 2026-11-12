@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,mkdir,writeFile,readFile,realpath,rename,rm,link} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join,relative,isAbsolute,sep} from 'node:path';
+import {captureWorkspaceMaterials} from '../packages/code-workspaces/dist/index.mjs';
+import {verifyWorkspaceRemnants} from '../packages/code-workspaces/dist/index.mjs';
+const signal=new AbortController().signal;
+async function fixture(t,{hardlinks=false}={}){
+ const root=await realpath(await mkdtemp(join(tmpdir(),'devmesh-remnant-preflight-')));t.after(()=>rm(root,{recursive:true,force:true}));const source=join(root,'source'),trash=join(root,'trash','original-operation');await mkdir(join(source,'repo','.git'),{recursive:true});await mkdir(join(root,'trash'));await writeFile(join(source,'repo','first'),'original first');await writeFile(join(source,'repo','second'),'original second');if(hardlinks){await mkdir(join(source,'recovery'));await link(join(source,'repo','first'),join(source,'recovery','receipt'));}
+ const captured=await captureWorkspaceMaterials({root:source,baseFiles:['deleted']},signal);await rename(source,trash);
+ const remove=async(path,recursive=false)=>{const resolved=await realpath(path),rel=relative(trash,resolved);assert.ok(rel&&rel!=='..'&&!rel.startsWith('..'+sep)&&!isAbsolute(rel),'Only exact children of the verified owned fixture trash can be removed');await rm(resolved,{recursive});};
+ return {root,source,trash,snapshot:captured.snapshot,verify:()=>verifyWorkspaceRemnants(captured.snapshot,trash,signal),remove};
+}
+test('a relocated original directory can verify the exact subset remaining after interrupted deletion',async t=>{const f=await fixture(t),before=await f.verify();await f.remove(join(f.trash,'repo','first'));const after=await f.verify();assert.equal(after.remainingEntries,before.remainingEntries-1);assert.equal(await readFile(join(f.trash,'repo','second'),'utf8'),'original second');});
+test('an original internal hardlink may lose one preserved name during partial deletion',async t=>{const f=await fixture(t,{hardlinks:true});await f.remove(join(f.trash,'recovery','receipt'));assert.ok((await f.verify()).remainingEntries>0);assert.equal(await readFile(join(f.trash,'repo','first'),'utf8'),'original first');});
+test('new material after the frozen delete intent is preserved and blocks further reclamation',async t=>{const f=await fixture(t);await writeFile(join(f.trash,'repo','new-material'),'must keep');await assert.rejects(f.verify(),{code:'WORKSPACE_RECLAMATION_MATERIAL_UNKNOWN'});assert.equal(await readFile(join(f.trash,'repo','new-material'),'utf8'),'must keep');assert.equal(await readFile(join(f.trash,'repo','first'),'utf8'),'original first');});
+test('modified original bytes block reclamation even under the original filename and inode',async t=>{const f=await fixture(t);await writeFile(join(f.trash,'repo','first'),'changed first');await assert.rejects(f.verify(),{code:'WORKSPACE_RECLAMATION_MATERIAL_CHANGED'});assert.equal(await readFile(join(f.trash,'repo','first'),'utf8'),'changed first');});
+test('a replacement trash root cannot inherit the original deletion decision',async t=>{const f=await fixture(t),retained=join(f.root,'retained-original');await rename(f.trash,retained);await mkdir(f.trash);await assert.rejects(f.verify(),{code:'WORKSPACE_RECLAMATION_ROOT_CHANGED'});assert.equal(await readFile(join(retained,'repo','first'),'utf8'),'original first');});
+test('an external link replacing a deleted original name is not mistaken for valid reduced link count',async t=>{const f=await fixture(t,{hardlinks:true});await f.remove(join(f.trash,'recovery','receipt'));await link(join(f.trash,'repo','first'),join(f.root,'outside-retained'));await assert.rejects(f.verify(),{code:'WORKSPACE_RECLAMATION_EXTERNAL_HARDLINK'});assert.equal(await readFile(join(f.root,'outside-retained'),'utf8'),'original first');});
+test('the original root can remain empty after all original children were removed',async t=>{const f=await fixture(t);await f.remove(join(f.trash,'repo'),true);assert.deepEqual(await f.verify(),{remainingEntries:0,remainingBytes:0});});
+test('a newly created formerly absent tracked file is not part of the deletion manifest',async t=>{const f=await fixture(t);await writeFile(join(f.trash,'repo','deleted'),'new bytes');await assert.rejects(f.verify(),{code:'WORKSPACE_RECLAMATION_MATERIAL_UNKNOWN'});assert.equal(await readFile(join(f.trash,'repo','deleted'),'utf8'),'new bytes');});

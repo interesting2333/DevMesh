@@ -23,6 +23,8 @@ export type {PreviewWatchdogResult} from './preview-watchdog.js';
 export {previewReleaseClaim,runnerPreviewLifecycle} from './preview-lifecycle.js';
 export type {PreviewReleaseClaim,RunnerPreviewLifecycle} from './preview-lifecycle.js';
 export type {RunnerPreviewBackendOptions} from './preview-backend.js';
+export {RunnerPreviewHttpTransport} from './preview-http.js';
+export type {PreviewHttpTransport,PreviewHttpInput,PreviewHttpResult} from './preview-http.js';
 export {DockerPreviewDriver,previewDockerCreateArguments,previewDockerNetworkArguments,previewDockerRemovalArguments,verifyPreviewDockerAbsence,verifyPreviewDockerImage,verifyPreviewDockerNetwork,verifyPreviewDockerContainer} from './preview-docker.js';
 export {previewCleanupKind,previewCleanupRequest,previewCleanupObservation} from './preview-cleanup.js';
 export type {PreviewCleanupKind,PreviewCleanupAction} from './preview-cleanup.js';

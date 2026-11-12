@@ -9,21 +9,22 @@ import {previewAccessSeed} from './preview-access-seed.mjs';
 import {hash,canonical} from './storage-data.mjs';
 export const emptyBody=hash('');
 let seed;
-async function originalSeed(t){
- if(seed)return seed;
+async function originalSeed(t,options){
+ if(!options&&seed)return seed;
  // Isolate every case with a copy of explicit upstream state. This fixture does
  // not run or qualify the upstream build/freeze/container lifecycle.
- const f=await previewAccessSeed(t),{d,p}=f,path=join(f.root,'access-seed.sqlite');
+ const f=await previewAccessSeed(t,options),{d,p}=f,path=join(f.root,'access-seed.sqlite');
  f.db.prepare('VACUUM INTO ?').run(path);
- seed={bytes:readFileSync(path),d,p,candidate:f.candidate,principalId:f.principalId,configured:f.configured};
- return seed;
+ const snapshot={bytes:readFileSync(path),d,p,candidate:f.candidate,principalId:f.principalId,configured:f.configured};
+ if(!options)seed=snapshot;
+ return snapshot;
 }
 // Candidate/dataset/container facts are explicit fixtures. No generated app HTTP.
-export async function previewAccessFixture(t,{worker=false}={}){
+export async function previewAccessFixture(t,{worker=false,seedOptions}={}){
  let storage,db,root;
  // Close before nested filesystem cleanup, including Windows SQLite WAL files.
  t.after(async()=>{try{await storage?.close?.();}finally{db?.close();if(root)rmSync(root,{recursive:true,force:true});}});
- const source=await originalSeed(t),{d,p,candidate,principalId,configured}=structuredClone({...source,bytes:undefined});
+ const source=await originalSeed(t,seedOptions),{d,p,candidate,principalId,configured}=structuredClone({...source,bytes:undefined});
  root=mkdtempSync(join(tmpdir(),'devmesh-preview-access-'));const seedPath=join(root,'seed.sqlite');writeFileSync(seedPath,source.bytes);
  db=new DatabaseSync(seedPath);db.exec('PRAGMA foreign_keys=ON');const domain=createDomain(db);
  storage={async request(method,input){return domain.execute(method,input);}};

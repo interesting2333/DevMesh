@@ -1,0 +1,6 @@
+{
+  "name":"@devmesh/code-workspaces","version":"0.0.0","private":true,"type":"module",
+  "exports":{".":{"types":"./dist/index.d.mts","import":"./dist/index.mjs"}},
+  "scripts":{"build":"tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean"},
+  "dependencies":{"@devmesh/contracts":"workspace:*","@devmesh/blob-store":"workspace:*","@devmesh/storage-sqlite":"workspace:*","@devmesh/runner":"workspace:*"}
+}

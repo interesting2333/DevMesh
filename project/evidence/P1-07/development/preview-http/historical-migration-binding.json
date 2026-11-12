@@ -1,0 +1,149 @@
+{
+  "recordedAt": "2026-11-12T16:26:35.313Z",
+  "scope": "Read-only comparison with pre-change HEAD, not a migration test.",
+  "sourceHead": "ef2eb5e05569d679e1b755798f589e5e4543b65b",
+  "historicalManifestLength": 34,
+  "files": [
+    {
+      "path": "packages/storage-sqlite/migrations/0001-store.sql",
+      "sha256": "82871f8e7b98afd7e96b5cb73cec36481c4e0db012bbce4875298d9dd06e9eea"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0002-core.sql",
+      "sha256": "f931bde2073cb7503fd48ccf31d5b44497b487a7f81fe1e52cf8dc3b5a968084"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0003-admission.sql",
+      "sha256": "75030b9665ead4d3be8495de9ef5221850e1e05a7765871556e69e7b9565fc64"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0004-sessions.sql",
+      "sha256": "6ef6f742cf22e5b97acd8ee85231916fc84ed9d38737745d14aedd6304c6f1f5"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0005-registry.sql",
+      "sha256": "4e2adc7e7376894bdac86ddeabc604d3b892a64c71fb322a3d2fac86e4b2be3e"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0006-runtime.sql",
+      "sha256": "d9568260464767556872c42314088aa6058912d0f485e76186da57137d196a3f"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0007-input.sql",
+      "sha256": "956ac99167b7a2f075e89f21781c9f378856bfce8956a278e0f96a0e277d387b"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0008-preparation.sql",
+      "sha256": "e3d51325c922e8701087f0abcf6e48b38a1263a99f2e414fe686651d791c2ede"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0009-scheduler.sql",
+      "sha256": "1834e4c79d9e004d00ce627d8e0944096b2fdc601500a2cf724f94c67345cc3d"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0010-issues.sql",
+      "sha256": "ca89103ce1dbb8d760f193883f9b2f11dd8324d2928996753f2c634383eb42ec"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0011-pipelines.sql",
+      "sha256": "6ce693ed7e93ea62cde70ad7b531396cbefb51bb75286815751c60027041ff12"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0012-repo.sql",
+      "sha256": "cd06e10fb06550981b6efee86e063893579f3edfa5dbf3066f5489cc11454ab9"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0013-workspaces.sql",
+      "sha256": "7e90d9e7dad4df35ec42a875fa23866cb8dd224917d1d04792bcef80d6c7f044"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0014-repofiles.sql",
+      "sha256": "0bf93f7aafcfd53a147fd855f685b949ddf32c7f293d5390f95324816789644a"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0015-sourcearchives.sql",
+      "sha256": "fe8bfce151ef0ffa2a5704f5a6df5a8683151317692345da369899919630a2d7"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0016-candidateintegrations.sql",
+      "sha256": "0d69c66c39dfb141a38ecb0c14173062c2353e6fd8fd07759ab80bb7adfc4fc4"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0017-candidatematerials.sql",
+      "sha256": "15b9cc5284709ff244eb126f0eb0f1d223dfb25eb09a96528d4a6d8c913baf6b"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0018-workspacepreservations.sql",
+      "sha256": "d2c38df2d1291dde574f69e355bc8cccb70b2dd406033f99c61d25083dc75e05"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0019-workspacereclamations.sql",
+      "sha256": "b83fb630f8aa153a7529f85a15934038277f10d15c86bd9a6102555e1b30b22b"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0020-runtimeworkspaces.sql",
+      "sha256": "782ed2b994f14dce549adae4a7622b441096696b5bbbcaf1ffa046eb8411a8c0"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0021-qualityverifications.sql",
+      "sha256": "dbc81d956e953cceb3fe6fe9f9177e170b1554a47f651bc677649602bf2ea6a2"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0022-qualitystagebindings.sql",
+      "sha256": "8145326f498b765327b43afc30a0a6752213b44a3d8b05f54d38844afc583f1d"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0023-workverifications.sql",
+      "sha256": "8bb27a5e071accb6b776e92f537965ee7a5553697d1e992471c62465e6a0cd12"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0024-verifiedfindings.sql",
+      "sha256": "430dbd37c8883582d942bf530ec6ec4422f73a07372e5aa525d89625a323609f"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0025-verifiedrepairs.sql",
+      "sha256": "1dc8a0740173e775974a84db61822f8729fd84c8c1ed77d44332b188a43bd532"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0026-candidatepromotions.sql",
+      "sha256": "b6a67f29e5d4bfe3d46bb7d7cfcd40485074ccfb05f3cadeacc14b3dfb9700f6"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0027-releasedeliveries.sql",
+      "sha256": "2368d237034c2db241018e78f3b6608e37eb24866c9b9d21ca8bc371cff1b9e9"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0028-candidatefreezes.sql",
+      "sha256": "27d83127f25792c2d2c10a97f2f6bf6998e10eb4210580d25cde61cd2219f201"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0029-qualityartifactrefs.sql",
+      "sha256": "5a0a672d447469e189883ce4b8c4d8b0fabb5155f263526eaa046fc316319672"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0030-candidatereviews.sql",
+      "sha256": "31a88c369d77983eb494f1b6172cdce61c9bc7131e13d5962605f8decc3f358b"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0031-candidaterejections.sql",
+      "sha256": "46be63e8e612658ca914cbd8d16259a64d6631bf6ed8a39088152cb89120307a"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0032-previewintents.sql",
+      "sha256": "e25974e2b36545c598e9c38d9411275149feb09400d1c53852dd67f1801f8e9f"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0033-previewruntime.sql",
+      "sha256": "d0021aeba62b222844b8844d1af81fc8d18dde578adbf32d82ae073ea36e7e6f"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0034-previewaccess.sql",
+      "sha256": "34c07bd4c72363c10c14c336cdea4c71887798d54d3eb7c7c34624dac493b6fc"
+    }
+  ],
+  "newMigration": {
+    "version": 35,
+    "name": "0035-previewsessions.sql",
+    "sha256": "0a3617a2994c4c7bd6edc904e0dd9b6bd8728b703b4351cec2351cd3c540cb2d"
+  }
+}

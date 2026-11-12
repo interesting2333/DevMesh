@@ -138,3 +138,5 @@ export type {PreviewBackendPolicy,DatasetView,PreviewView,PreviewEffect,PreviewE
 export {previewStartRequest,previewStopRequest,previewRuntimeFact} from './preview-protocol.js';
 export {previewAccessPolicy,previewAccessHttpRequest,previewWriteCloseRequest,previewAccessObservation} from './preview-access-protocol.js';
 export type {PreviewWriteGate,PreviewAccessTarget,PreviewAccessBinding,PreviewAccessRecord} from './preview-access-protocol.js';
+export {previewOrigin} from './preview-session-protocol.js';
+export type {PreviewTicket,PreviewSession} from './preview-session-protocol.js';

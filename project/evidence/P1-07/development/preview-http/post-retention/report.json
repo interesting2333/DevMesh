@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "scope": "Post-retention lint and management checks on the current working tree. These do not rerun product tests, build, typecheck, install or a clean checkout.",
+  "checks": [
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T16:40:08.078Z",
+      "finishedAt": "2026-11-12T16:40:23.758Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "project-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "startedAt": "2026-11-12T16:40:23.818Z",
+      "finishedAt": "2026-11-12T16:40:25.619Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "project-check.txt",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "openspec-strict",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/openspec.mjs",
+        "validate",
+        "--all",
+        "--strict",
+        "--no-interactive"
+      ],
+      "startedAt": "2026-11-12T16:40:25.624Z",
+      "finishedAt": "2026-11-12T16:40:42.399Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "openspec-strict.txt",
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "name": "design-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "design/生成完整方案.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-12T16:40:42.403Z",
+      "finishedAt": "2026-11-12T16:40:43.822Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "design-check.txt",
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "name": "diff-check",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "startedAt": "2026-11-12T16:40:43.827Z",
+      "finishedAt": "2026-11-12T16:40:46.248Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "diff-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

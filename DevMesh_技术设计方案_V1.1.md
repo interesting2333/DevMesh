@@ -1382,7 +1382,13 @@ ReleaseCandidate 固定：codeCommit、requirementRevision、planRevision、temp
 
 每个预览使用独立 host，正式部署还须与平台隔离可注册域及 Cookie 作用域；换端口或共享 path 不能满足完整隔离。可信装配固定 gatewayId、projectId、service principal 及配置 hash，访问绑定准确原候选／镜像／dataset／实例与 Runner loopback 端点。每次准入和发送前重新核实当前成员、健康、期限及原 fence；健康年龄须在 0～30 秒内，控制节点回拨后落在未来的原观察不能当作新鲜，原历史与未确定写保留。viewer 仅安全方法读取，owner／operator 可写预览业务，不扩大平台操作权限。Runner loopback 只能由具备原 Runner 身份的本地适配器连接，不能直接当成远端控制节点的本机目标。
 
-原数据后端显式登记 dataset 写门；缺登记不开放访问。关门请求固定原 operation／hash，递增 fence 并保存不可变历史，与访问派发在同一 writer 串行。每个请求保存原方法／路径／body hash、目标、用户及 fence，唯一许可后才可转发；许可丢 ACK 或 DISPATCHED／UNKNOWN 重启不重发。已派发或 UNKNOWN 写请求持续计数，关闭门后允许按当前 fence 新准入安全方法读取。
+短期用途凭据拆成一次性 ticket（最长 60 秒）和 session（最长 5 分钟），均不超过原预览期限；由可信网关使用 256 bit 随机数生成，控制数据库仅存 SHA-256、原目标及不可变消费／撤销历史。消费票据与创建唯一原会话在同一事务，丢 ACK 后只允许准确原内部参数查询，不签发替代会话。每个项目／成员最多 20 个有效未消费 ticket 和 20 个有效 session；逻辑容量与原写请求占用独立。
+
+网关选用 Node.js 原生 HTTPS／HTTP，域边界用锁版本 tldts 及包含私有后缀的 PSL 解析，不以最后两段域名推断。每预览 host 由 previewId 摘要导出；独立可注册域、证书和路由来自可信配置，loopback-development 也使用 HTTPS 并核实连接来源。平台可信身份入口签发 ticket 后，浏览器仅向准确预览 host 的 JSON POST 兑换；核实准确平台 Origin／CORS，设置 host-only、Secure、HttpOnly、SameSite=None Cookie。预览业务写入必须来自该预览 Origin；所有请求的 Cookie／Authorization／Origin／Referer／代理身份头均不转发，上游 Set-Cookie／跳转头不向浏览器透传。CSP 限制 worker、父页面、连接及嵌套 frame；真实浏览器验证单独留证，不能只凭响应头宣称隔离已验收。
+
+原数据后端显式登记 dataset 写门；缺登记不开放访问。关门请求固定原 operation／hash，递增 fence 并保存不可变历史，与访问派发在同一 writer 串行。每个请求保存原方法／原始路径／body hash／净化后 headers hash、目标、用户及 fence，唯一许可后才可转发；旧缺少 headers hash 的记录只读恢复，不获转发。业务写键按 gateway 配置／主体／预览隔离并绑定稳定原请求；重试只返回原状态，不再调用 HTTP，模板客户端保留该原键。许可丢 ACK 或 DISPATCHED／UNKNOWN 重启不重发。已派发或 UNKNOWN 写请求持续计数，关闭门后允许按当前 fence 新准入安全方法读取。
+
+Runner 转发器核实原预留、启动 hash、候选／镜像／dataset、实例、生命周期、新鲜实际 HTTP 健康与原 loopback 高端口，只在原 Runner 本地连接。不允许请求指定 URL、DNS 目标、重定向、连接复用或自动重试，限制正文／响应／时间／并发。业务 HTTP 构造前的明确拒绝可记录 NOT_SENT，构造后响应不完整保持 UNKNOWN；响应完整后先保存原传输观察，再复核当前会话／成员才返回正文。注销可撤销原会话，但不能解除已派发或未知写。
 
 上述门及请求计数仅为逻辑准入。GET／HEAD 分类不强制应用数据库只读，模板安全方法无副作用及禁止后台绕写须另行验证；HTTP 完整响应（包括错误状态）不等于业务写成功或后台写入排空。T5 前还须核实实际在途处理及 Runner 停止／数据 fencing 等外部证明，不能用计数为零伪造 WRITE_FROZEN／迁移完成。关闭旧门后不靠 TTL 自动重开，须先证明未发生接受切换。本地私有授权表不代表 HTTP 网关、浏览器凭据或生产装配已经完成。
 

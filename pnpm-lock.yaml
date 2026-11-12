@@ -231,6 +231,24 @@ importers:
         specifier: 0.1.9
         version: 0.1.9
 
+  packages/preview-gateway:
+    dependencies:
+      '@devmesh/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@devmesh/runner':
+        specifier: workspace:*
+        version: link:../runner
+      '@devmesh/storage-sqlite':
+        specifier: workspace:*
+        version: link:../storage-sqlite
+      tldts:
+        specifier: 7.4.26
+        version: 7.4.26
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+
   packages/result-verifier:
     dependencies:
       '@devmesh/blob-store':
@@ -1385,6 +1403,13 @@ packages:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
 
+  tldts-core@7.4.26:
+    resolution: {integrity: sha512-fMNX6ToAFZa2pWrKUd95hhwzx4f6tc+TLtjAstkj6L20FCmbsQ7SCciD3tAJQ/er+SmAlanZ8x0qFkNDZaftIg==}
+
+  tldts@7.4.26:
+    resolution: {integrity: sha512-ImrRMX8xrz7KZKdINMHBTsEWNlPxzI/CdDXEXmV3Fp0jAU31x1ZD4YmrAPGCz325aXYSuBPG5k6v2wRmWbm2QQ==}
+    hasBin: true
+
   toidentifier@1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
@@ -2396,6 +2421,12 @@ snapshots:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.7)
       picomatch: 4.0.7
+
+  tldts-core@7.4.26: {}
+
+  tldts@7.4.26:
+    dependencies:
+      tldts-core: 7.4.26
 
   toidentifier@1.0.1: {}
 

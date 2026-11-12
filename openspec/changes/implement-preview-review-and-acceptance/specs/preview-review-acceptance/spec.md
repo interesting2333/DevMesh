@@ -132,6 +132,34 @@ The system SHALL 固定可信网关的项目、service principal 及配置摘要
 - **WHEN** 原 HTTP 返回包括错误状态在内的完整响应，且网关在途写计数归零
 - **THEN** 仅记录传输观察，不把 HTTP 完成或方法分类当作业务成功／数据库排空，不创建 Release、切换接受指针或自动重开旧门
 
+### Requirement: Purpose-separated preview sessions and original HTTP forwarding
+
+The system SHALL 将一次性预览票据与短期预览会话分开，凭据仅由可信网关产生并只持久保存摘要。票据 MUST 绑定当前成员、网关配置、准确原目标、平台与预览 origin，兑换会话与消费票据同事务提交；重复兑换不得产生第二会话。预览 MUST 使用每实例 host、与平台不同的可注册域及 HTTPS，域边界包含私有公共后缀。真实 HTTP 请求 MUST 绑定最终方法、原始路径、正文及净化后请求头摘要，由拥有准确原预留的 Runner 转发。
+
+#### Scenario: Concurrent exchange or a lost exchange acknowledgement
+- **WHEN** 同一票据并发兑换，或消费提交后 ACK 丢失／Worker 重启
+- **THEN** 至多保存一个原会话，仅准确原内部重试可查询原结果；不同会话身份不再消费，票据不能作为会话使用，原期限不因重试延长
+
+#### Scenario: A browser exchanges a ticket from the wrong origin or host
+- **WHEN** 兑换没有准确平台 Origin、JSON 用途或准确预览 host，或攻击者跨 origin 写入业务接口
+- **THEN** 拒绝请求；成功兑换只设置 host-only、Secure、HttpOnly 的预览 Cookie，票据不放入 URL，平台身份与任何 Cookie 不转交生成应用，上游不能覆盖网关 Cookie
+
+#### Scenario: An original unsafe HTTP request is repeated or its response breaks
+- **WHEN** 相同主体／预览／网关配置的写键重试，或实际数据库已提交但完整 HTTP 响应丢失
+- **THEN** 原准入意图保持不变，重复键仅返回原状态且不再次发送；结果未知继续占用原写门计数，注销、到期或重启不将其排空
+
+#### Scenario: Runner target verification fails or forwarding loses authority
+- **WHEN** 原 Runner 预留、实例、镜像、dataset、期限、端口或生命周期不匹配，或最后成员／会话／写门授权失效
+- **THEN** 请求不得选择替代实例或调用者提供的 URL；构造业务 HTTP 前可确定未发送才记录 NOT_SENT，构造后未取得完整原响应保持 UNKNOWN，不跟随重定向或自动重试
+
+#### Scenario: A session is revoked while the upstream is responding
+- **WHEN** 原 HTTP 已开始，随后会话注销、到期或用户失去成员身份
+- **THEN** 可信网关可以记录原完整响应的私有传输观察，但向用户返回内容前重新核实当前会话与成员；拒绝返回受保护正文，不把注销当成原请求未发送
+
+#### Scenario: Generated content attempts to escape its preview host
+- **WHEN** 生成应用返回 Cookie、平台跳转或试图注册 Service Worker／访问父平台／打开外部连接
+- **THEN** 网关过滤响应身份和跳转头，使用明确 CSP／sandbox／worker／frame 策略及独立 origin 隔离；浏览器实测与 HTTP 头验证分别记录，未进行浏览器验证不得宣称完成该边界
+
 ### Requirement: Durable acceptance preparation without destructive defaults
 
 The system SHALL 在外部准备前固定候选、审查、原接受指针和数据策略，保存原操作身份。保留数据 MUST 用带 fencing 写门排空旧写入并快照最新数据，经准确迁移／完整性和服务健康验证后才准备完成；替换数据 MUST 有准确明确确认。未知结果 SHALL 查询原操作且不重复执行副作用。

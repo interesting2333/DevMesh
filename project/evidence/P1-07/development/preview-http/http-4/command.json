@@ -1,0 +1,21 @@
+{
+  "parentPid": 33572,
+  "pid": 37764,
+  "startedAt": "2026-11-12T16:18:56.310Z",
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "args": [
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=.",
+    "tests/verification-preview-http.test.mjs",
+    "tests/verification-preview-sessions.test.mjs",
+    "tests/verification-preview-access.test.mjs",
+    "tests/storage-preview-access.test.mjs",
+    "tests/storage-preview-sessions.test.mjs"
+  ],
+  "environment": {
+    "TEMP": "D:\\devmesh-session-validation-362cd158-26c7-4f8c-9913-de63b84eaf22",
+    "TMP": "D:\\devmesh-session-validation-362cd158-26c7-4f8c-9913-de63b84eaf22"
+  }
+}

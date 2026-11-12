@@ -1,0 +1,12 @@
+import {join} from 'node:path';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {openRunnerStorage,RunnerManager,RunnerPolicy,RunnerMaterials} from '../../packages/runner/dist/index.mjs';
+import {request,ControlledBackend,image,until} from './runner.mjs';
+const root=process.argv[2],dataRoot=join(root,'runner'),layout=await openRunnerStorage({dataRoot,controlDataRoot:join(root,'control'),backupRoot:join(root,'backup'),runnerId:'runner.crash',initialize:true});
+mkdirSync(join(dataRoot,'workspaces/attempt_runner1'));
+const policy=new RunnerPolicy({runnerId:'runner.crash',dataRoot,imageDigests:[image],commands:{build:['node','build.mjs']},maximumCpu:4,maximumMemoryMiB:1024,maximumTemporaryMiB:64,workspaces:{workspace1:{attemptId:'attempt_runner1',ownerKind:'workflowAttempt',resourceId:'workspace1',relativePath:'workspaces/attempt_runner1'}}});
+const manager=new RunnerManager(layout.store,policy,new ControlledBackend(),{async verify(){}},new RunnerMaterials(dataRoot),{pollIntervalMs:10000});await manager.start();const job=await manager.submit('controller.local',request());await manager.tick();await until(async()=>(await manager.get('controller.local',job.jobId)).state==='RUNNING');
+writeFileSync(join(dataRoot,'job-outputs/unacknowledged.txt'),'retained-until-archive-ack');
+const token=path=>JSON.parse(readFileSync(path,'utf8')).token;
+process.send({jobId:job.jobId,rootToken:token(join(dataRoot,'runner-layout.writer.lock')),databaseToken:token(join(dataRoot,'registry/runner.sqlite.writer.lock'))});
+setInterval(()=>{},1000);

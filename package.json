@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "pnpm --filter @devmesh/server dev",
     "start": "node apps/server/dist/main.mjs",
-    "build": "pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/result-verifier --filter @devmesh/code-workspaces --filter @devmesh/a2a-adapter --filter @devmesh/agent-runtime --filter @devmesh/runner --filter @devmesh/mcp-tools --filter @devmesh/input-api --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build",
+    "build": "pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/result-verifier --filter @devmesh/code-workspaces --filter @devmesh/a2a-adapter --filter @devmesh/agent-runtime --filter @devmesh/runner --filter @devmesh/mcp-tools --filter @devmesh/input-api --filter @devmesh/preview-gateway --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build",
     "build:vendor": "node scripts/build-vendor.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --deny-warnings --ignore-pattern=project/evidence/**/failed-source/** --ignore-pattern=project/evidence/**/validation-driver.mjs apps packages scripts project tests",
@@ -41,7 +41,8 @@
     "test:preparation": "node --test --test-concurrency=1 --test-reporter=tap tests/preparation*.test.mjs",
     "test:scheduler": "node --test --test-concurrency=1 --test-reporter=tap tests/scheduler*.test.mjs",
     "test:workspaces": "node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs tests/candidate*.test.mjs",
-    "test:verification": "node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs tests/verified-findings.test.mjs tests/verified-repairs.test.mjs tests/preview-image.test.mjs tests/quality-artifact-refs.test.mjs"
+    "test:verification": "node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs tests/verified-findings.test.mjs tests/verified-repairs.test.mjs tests/preview-image.test.mjs tests/quality-artifact-refs.test.mjs",
+    "test:preview-browser": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/preview-isolation.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

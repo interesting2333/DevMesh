@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "scope": "Actual template API unit execution and template typecheck after recovery authentication rejection fix; no OCI, browser, platform identity or complete template suite acceptance.",
+  "sourceFiles": [
+    {
+      "path": "templates/web-crud-v1/src/web/api.ts",
+      "sha256": "8ab29991160a261b646d6f2cb37df6ca71f5752b42b08a228f9431361133b114"
+    },
+    {
+      "path": "templates/web-crud-v1/tests/api.test.ts",
+      "sha256": "e0600672facf75e021c555cfc5a44a4ccaed9bfd6458d4632894f8f413b8fa98"
+    },
+    {
+      "path": "templates/web-crud-v1/src/shared/task.ts",
+      "sha256": "360898b93832dda89d3b0a04c3826a05168d9f51ad05b0e702bbcd0e22de7c7a"
+    },
+    {
+      "path": "templates/web-crud-v1/package.json",
+      "sha256": "f91bfe4cd79fda119e2897bd15508a4bc3d9fb68a88c8dfdd47c04ca9a34a41c"
+    },
+    {
+      "path": "templates/web-crud-v1/vitest.config.ts",
+      "sha256": "644fc48f6274aa6b6aafad317d80433a740d7c067e331b55e12bec9bc3cd78e1"
+    },
+    {
+      "path": "templates/web-crud-v1/tsconfig.json",
+      "sha256": "90b8560ea4c8f007180603c8862d9a008339a2c8d6a49d1388c15322cbefafa1"
+    },
+    {
+      "path": "templates/web-crud-v1/pnpm-lock.yaml",
+      "sha256": "95c52448605d2526e99e419fe50d218fb4d6a88d0b612e9f2c795586de77c354"
+    }
+  ],
+  "checks": [
+    {
+      "name": "api-unit",
+      "startedAt": "2026-11-12T16:37:34.331Z",
+      "finishedAt": "2026-11-12T16:38:03.365Z",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/api.test.ts"
+      ],
+      "cwd": "D:\\yms\\AI\\DevMesh\\templates\\web-crud-v1",
+      "exitCode": 0,
+      "signal": null,
+      "output": "api-unit.txt",
+      "sha256": "afca50708328baa5d8510f9a5f195fb72e58a2eceb43bb788088f55bb7fb2db0"
+    },
+    {
+      "name": "template-typecheck",
+      "startedAt": "2026-11-12T16:38:03.417Z",
+      "finishedAt": "2026-11-12T16:38:48.142Z",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "D:\\yms\\AI\\DevMesh\\templates\\web-crud-v1",
+      "exitCode": 0,
+      "signal": null,
+      "output": "template-typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "unchanged": true
+}

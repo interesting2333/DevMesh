@@ -14,10 +14,10 @@
 
 ## 3. Separate preview access
 
-- [ ] 3.1 实现独立 origin、固定目标、短期用途凭据与成员复核，使用真实本地 HTTP 验证 Cookie／用途／项目隔离、目标限制、读写门和到期。
+- [x] 3.1 实现独立 origin、固定目标、短期用途凭据与成员复核，使用真实本地 HTTP 验证 Cookie／用途／项目隔离、目标限制、读写门和到期。
 - [ ] 3.2 接平台预览查询／访问入口、隔离 iframe 策略及下载只读边界，验证未配置关闭、状态明确、访问或下载不接受。
 
-3.1 当前开发范围：迁移 34 新增私有 gateway／project／configurationHash 策略、原 dataset 后端显式写门、准确实例／镜像／数据／端点授权和逐请求持久派发日志。当前成员权限、新鲜健康、期限、原 fence 在准入与最后授权重新核实；写门关闭与 dispatch 同一 writer 串行，已派发或 UNKNOWN 写请求保留计数，丢许可／重启不再次派发。关闭后可在新 fence 准入安全方法读请求，不把 HTTP 分类或计数归零当作实际数据库只读／排空。HTTP 转发、短期用途凭据／会话、每预览 host／独立可注册域与 Cookie／iframe 实测、可信装配继续实施，完整 3.1 不提前勾选。
+3.1 本地实现与验证：迁移 34 的私有策略、原 dataset 写门与唯一派发保留；迁移 35 增加摘要存储、事务单次消费的 ticket／短期 session、当前成员与原目标复核。独立可注册域／私有 PSL、每预览 HTTPS host、host-only HttpOnly Cookie／准确 CORS／业务 Origin 与实际请求头正文绑定已实现；可信 Runner 本地传输核验原 journal／reservation／lifecycle／实例及实际 HTTP 健康，最后授权后仅发送一次，明确 NOT_SENT／UNKNOWN／完整 FINISHED 边界。真实 HTTPS／控制和 Runner SQLite Worker／模板业务 SQLite 组合 40/40，存储全量 33/33，实际 Edge Cookie／iframe 隔离 1/1；模板另验证原写 key 与认证失效恢复保护。失败执行、源码指纹及范围见 `project/evidence/P1-07/preview-http-development-review.md`。本项勾选只对应已写明的本地实现／真实 HTTP 验证；上游候选／镜像／容器事实为显式夹具，可信平台身份查询／签发入口、页面与下载边界继续 3.2，真实容器／物理排空／T5 与产品验收不据此通过。
 
 ## 4. Two-phase acceptance and publication
 

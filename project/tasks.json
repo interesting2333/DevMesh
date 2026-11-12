@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "00e4279c6d7ccfc75c95b0dd1a31d2897e351d96ef20e0b1aa6b26b3540dc9f5"
+      "sha256": "5f48775ac30ef5319864a8287f263567056ec6ef7862a48b726b81a9026d33f2"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "3df38d825b6700666f051f61ed5c3cc21930861e367cd720f3ea979af6955a25"
+      "sha256": "1396a94b01602c837450991be20905ee2b1a36da482abdd4edd8d927d9e778df"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "c23e7fafa14a79aa98003716eec1e0a891b22ad85aa9372c80be4b2845afae70"
+      "sha256": "36771012e80954ddf87b05d84e7a5aafe8439bb015789ff051718787d89b9271"
     }
   ],
   "gates": [
@@ -1150,7 +1150,22 @@
         "tests/verification-preview-access.test.mjs",
         "tests/storage-preview-access.test.mjs",
         "packages/storage-sqlite/PREVIEW-ACCESS.md",
-        "tests/fixtures/preview-access-seed.mjs"
+        "tests/fixtures/preview-access-seed.mjs",
+        "packages/storage-sqlite/migrations/0035-previewsessions.sql",
+        "packages/storage-sqlite/src/preview-session-domain.ts",
+        "packages/storage-sqlite/src/preview-session-protocol.ts",
+        "packages/preview-gateway/package.json",
+        "packages/preview-gateway/src/config.ts",
+        "packages/preview-gateway/src/index.ts",
+        "packages/preview-gateway/README.md",
+        "packages/runner/src/preview-http.ts",
+        "tests/verification-preview-sessions.test.mjs",
+        "tests/fixtures/preview-http.mjs",
+        "tests/verification-preview-http.test.mjs",
+        "tests/storage-preview-sessions.test.mjs",
+        "tests/browser/preview-isolation.test.mjs",
+        "templates/web-crud-v1/src/web/api.ts",
+        "templates/web-crud-v1/tests/api.test.ts"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1231,7 +1246,15 @@
         "project/evidence/P1-07/development/access-v42/commands.json",
         "project/evidence/P1-07/development/access-v42/source-comparisons.json",
         "project/evidence/P1-07/development/access-v42/post-retention-checks.json",
-        "project/evidence/P1-07/development/access-v42/checkpoint-binding.json"
+        "project/evidence/P1-07/development/access-v42/checkpoint-binding.json",
+        "project/evidence/P1-07/preview-http-development-review.md",
+        "project/evidence/P1-07/development/preview-http/http-4/report.json",
+        "project/evidence/P1-07/development/preview-http/browser-1/report.json",
+        "project/evidence/P1-07/development/preview-http/session-storage-1/report.json",
+        "project/evidence/P1-07/development/preview-http/template-api-2/report.json",
+        "project/evidence/P1-07/development/preview-http/source-comparisons.json",
+        "project/evidence/P1-07/development/preview-http/retention.json",
+        "project/evidence/P1-07/development/preview-http/post-retention/report.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1258,7 +1281,9 @@
         "2026-11-12：独立预览访问设计影响评估：技术专题 D4／完整主文、实施文档、D06／D08 及 OpenSpec 补充每预览 host／可注册域与 Cookie 边界、可信 gateway／配置／主体绑定、原 dataset 写门及请求唯一派发。逻辑准入、HTTP 安全方法、在途计数和完整响应均不能代替实际数据库只读／排空或 T5；重启／UNKNOWN 不重发、不超时重开。迁移 34 向前新增，历史迁移不改。HTTP／短期用途凭据／浏览器和可信装配继续实施，完整 3.1 不勾选；基线按实际字节同步，正式 P1-07／门槛仍等待。",
         "2026-11-12：复核发现旧健康年龄仅有 30 秒上界，控制时钟回拨时未来观察仍可用；旧构建已复现 missing-rejection，原产物 SHA 不变。当前源码增加 0 秒下界，原事实与未知写不清除；修正后测试另记。访问测试改为显式状态 SQLite seed，保留全部 FK／CHECK 与原请求 schema 校验，不证明上游冻结／质量／镜像执行；v37 中断与第一次复现的上游夹具失败分别保留。设计 D4／主文和 OpenSpec 同步，门槛不提前通过。",
         "2026-11-12：继续开发3.1：迁移34私有预览网关策略、准确原目标／当前成员授权、原dataset写门和请求唯一派发／观察历史。关闭与dispatch同writer串行，DISPATCHED／UNKNOWN跨网关持续计数，丢ACK／重启不重发，健康仅0～30秒；安全方法和计数归零不证明数据库只读／排空，无接受／T5／自动重开。v38访问19/19、lifecycle16/16、意图路径14/14；v39数据集11/11、存储32/32，Runner75通过1失败1条件跳过。原定时器测试提前关闭watchdog；v40／v41两次修正又错误等待不可变EXITED变REMOVED，失败日志与源码保留。v42保留EXITED并等待独立两项OBSERVED消失证明，原90秒用例超时不变；只重跑变化单例和Lint通过，v41其余14项与scheduler／smoke／contracts等原成功单列。414输入中仅该测试变化，其余413逐SHA一致，不称完整Runner重跑、同指纹全绿或干净checkout。真实SQLite／Worker／terminate与本地定时器有证据，上游候选／镜像／健康为明确夹具。完整3.1、2.3及正式P1-07／门槛等待，实际HTTP／用途会话／浏览器／可信装配／物理fencing继续。",
-        "2026-11-12：私有预览访问／写门增量源码固定在 9bef56249b642403e690aa3c23da95026d29b03a，access-v42 全部 414 个输入与该提交 Git 对象字节一致。只读绑定不是再次测试、干净 checkout、实际网关／浏览器／数据排空／T5 或产品／阶段验收；完整 3.1、2.3 和正式 P1-07 仍等待。"
+        "2026-11-12：私有预览访问／写门增量源码固定在 9bef56249b642403e690aa3c23da95026d29b03a，access-v42 全部 414 个输入与该提交 Git 对象字节一致。只读绑定不是再次测试、干净 checkout、实际网关／浏览器／数据排空／T5 或产品／阶段验收；完整 3.1、2.3 和正式 P1-07 仍等待。",
+        "2026-11-13：预览 HTTP／会话设计细化：技术专题 D4／完整主文、实施文档、D06／D08 与 OpenSpec 同步一次性 ticket／短期 session、摘要存储与原消费事务、独立可注册域及私有 PSL、HTTPS／host-only Cookie／CORS／iframe、最终请求头正文绑定、原 Runner 本地转发与实际未发送／未知边界。业务写键按主体／预览／配置隔离，模板保留已记录原键；注销不排空未知写。基线按实际字节更新，具体执行证据另记；真实身份入口／生产装配／物理 fencing／T5 继续实施，不把本地开发当成正式 P1-07 或阶段验收。",
+        "2026-11-13：完成OpenSpec 3.1本地独立预览HTTPS／会话及可信Runner传输，变更6/13。迁移35摘要ticket／session、单次消费及原目标成员复核；真实头正文绑定、原HTTP唯一派发、未发送／UNKNOWN／完整响应边界。实际HTTP／会话／访问／迁移组合40/40、存储全量33/33、Edge隔离1/1；模板客户端6/6及类型检查验证原写key与认证失效恢复保护。所有失败原报告／源码单列保留；HTTP与存储最终源码只后变两份模板客户端文件，已独立验证，浏览器源差异明确比对，不称同指纹整套重跑或干净checkout。控制／Runner／业务SQLite与HTTPS为真实，候选／镜像／容器身份为显式夹具。可信平台身份入口／页面／下载继续3.2，实际容器／物理排空／T5和正式P1-07／门槛仍待，不归档。"
       ]
     },
     {

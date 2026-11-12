@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-12T15:49:34.891Z",
+  "finishedAt": "2026-11-12T15:50:16.127Z",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "scope": "Targeted development iteration of actual SQLite/Worker preview purpose credentials. Explicit upstream preview facts, not HTTP/browser or enterprise identity acceptance. Selected source snapshots and storage emitted artifact SHA only; not a full clean-checkout regression.",
+  "executable": "D:\\Environments\\nodejs\\node.exe",
+  "args": [
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tests/verification-preview-sessions.test.mjs"
+  ],
+  "environment": {
+    "TEMP": "D:\\devmesh-session-validation-362cd158-26c7-4f8c-9913-de63b84eaf22",
+    "TMP": "D:\\devmesh-session-validation-362cd158-26c7-4f8c-9913-de63b84eaf22"
+  },
+  "sourceFiles": [
+    {
+      "path": "packages/storage-sqlite/src/preview-session-domain.ts",
+      "sha256": "ea09e1c9de8549d34c83325b2ecb05ef2cbc0848c49148b5c1a5e54b1e60b427"
+    },
+    {
+      "path": "packages/storage-sqlite/src/preview-session-protocol.ts",
+      "sha256": "67ef63ab221e85e1f48dd29cb4c14728b2322d19e2744d3fba567df6533efb4e"
+    },
+    {
+      "path": "packages/storage-sqlite/src/domain.ts",
+      "sha256": "070261c88599b5a9376eeb8e10c140dd9e40b43c9672119cba51cf18ab373c31"
+    },
+    {
+      "path": "packages/storage-sqlite/src/protocol.ts",
+      "sha256": "b72a7506e6f1c153d6d69efa94675793ffd9546a24742b320b5cdd63dc34145f"
+    },
+    {
+      "path": "packages/storage-sqlite/src/index.ts",
+      "sha256": "7e907adff9af265f79e84cfd6f3fa74f0e043b61de31dc6b360349f11ad06911"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0035-previewsessions.sql",
+      "sha256": "0a3617a2994c4c7bd6edc904e0dd9b6bd8728b703b4351cec2351cd3c540cb2d"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "1da248ef2e8673285481b8ea614ab09e37219b31411f3884792d53f9df046e7b"
+    },
+    {
+      "path": "tests/verification-preview-sessions.test.mjs",
+      "sha256": "f7ebadd98f7c897de7e305fbaf6e5196bfe8771301521d6d758674e0a2991d6a"
+    },
+    {
+      "path": "tests/fixtures/preview-access.mjs",
+      "sha256": "c0117b419abf76a0db86898993e219ef27dfddad756583304a6f2ee14c70fd33"
+    },
+    {
+      "path": "tests/fixtures/preview-access-seed.mjs",
+      "sha256": "ee55ce0553678a2a10ea41732935c8454c35ea0972288898642950547d29f882"
+    }
+  ],
+  "emitted": [
+    {
+      "path": "packages/storage-sqlite/dist/domain-BCDroewg.mjs",
+      "sha256": "d0ce6838cc62d9f5c01c6be1d56ec0d325256c084eb93ea4018eb0f406c86ca2"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/domain.mjs",
+      "sha256": "1b0a0f958a84e67c47fa0a28ff44aadd2908abd10c81f3e765ac1c4b0f3ca0e2"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/index.mjs",
+      "sha256": "d6b04720e1126f292e77bbdd292f1994b480374a7ca3f62355bf14c26938ae24"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/migrations-CmCClcp5.mjs",
+      "sha256": "e810ea480d18b40c3fd47f2a2fe7a0fc3656f814f0ad390ea575bd01c305bd17"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/migrations.mjs",
+      "sha256": "c760111f59b1a8a63a3c433505de35b2f211df85293511c1f1d4e08394fd1178"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/preview-session-protocol-ClvkGP-B.mjs",
+      "sha256": "3e83bce0ab297a889e0e3d94baf205a868a3e6b64689ccbe33b93dfdf5284f1a"
+    },
+    {
+      "path": "packages/storage-sqlite/dist/worker.mjs",
+      "sha256": "4d036a73799917e7eba37e42eddb621bb60d2bdf4bae0486effc61f8b30fff57"
+    }
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "unchanged": true,
+  "output": {
+    "path": "output.txt",
+    "sha256": "64a9d55cdcc41af313b2f0856fdb4e5b25c2c186c5aae25d9b0c512276ee59e9"
+  },
+  "tests": {
+    "tests": 9,
+    "pass": 9,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  }
+}

@@ -18,3 +18,7 @@ overrides:
 
 allowBuilds:
   esbuild: true
+
+minimumReleaseAgeExclude:
+  - tldts-core@7.4.26
+  - tldts@7.4.26

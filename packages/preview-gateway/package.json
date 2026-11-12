@@ -1,0 +1,15 @@
+{
+  "name": "@devmesh/preview-gateway",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {".": {"types": "./dist/index.d.mts", "import": "./dist/index.mjs"}},
+  "scripts": {"build": "tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean"},
+  "dependencies": {
+    "@devmesh/contracts": "workspace:*",
+    "@devmesh/storage-sqlite": "workspace:*",
+    "@devmesh/runner": "workspace:*",
+    "tldts": "7.4.26",
+    "zod": "4.4.3"
+  }
+}

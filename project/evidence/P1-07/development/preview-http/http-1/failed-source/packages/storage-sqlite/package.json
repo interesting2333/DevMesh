@@ -1,0 +1,9 @@
+{
+  "name": "@devmesh/storage-sqlite",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": { "types": "./dist/index.d.mts", "import": "./dist/index.mjs" } },
+  "scripts": { "build": "tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs" },
+  "dependencies": { "@devmesh/contracts": "workspace:*", "zod": "4.4.3" }
+}

@@ -1,0 +1,160 @@
+import {randomUUID} from 'node:crypto';
+import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
+import {parseContract,qualityPolicy,workRevision,productOutput} from '@devmesh/contracts';
+import type {QualityPolicy,QualityEvaluation} from '@devmesh/contracts';
+import {qualityRequests,qualityMaterialKey} from './quality-protocol.js';
+import type {QualityMethod,QualityInput,QualityBasis,QualityVerification,QualityMaterial,QualityMaterialDescriptor,QualityOrigin,QualityStage} from './quality-protocol.js';
+import {sourceManifest} from './workspace-protocol.js';
+import {canonical} from './json.js';
+import {digest,transaction} from './migrations.js';
+import {StorageError} from './errors.js';
+import type {PipelineInput} from './pipeline-protocol.js';
+import type {createCandidateIntegrationDomain} from './candidate-integration-domain.js';
+type Row=Record<string,string|number|null>;
+type Target={operationId:string;materialKey:string};
+function fail(code:string,status=409):never{throw new StorageError(code,status,'Quality verification requires immutable original execution and source facts');}
+const json=<T>(v:unknown):T=>JSON.parse(String(v)) as T;
+export function createQualityDomain(db:DatabaseSync,candidates?:Pick<ReturnType<typeof createCandidateIntegrationDomain>,'qualified'>){
+ const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined,all=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).all(...p) as Row[],exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
+ const verification=(id:string)=>get('SELECT * FROM quality_verifications WHERE operation_id=?',id)??fail('QUALITY_VERIFICATION_NOT_FOUND',404);
+ function member(projectId:string,principalId:string,write=false){const p=get('SELECT * FROM projects WHERE project_id=?',projectId),m=get('SELECT role FROM project_members WHERE project_id=? AND principal_id=?',projectId,principalId);if(!p||!m||write&&(p.owner_id!==principalId||m.role!=='owner'))fail('QUALITY_NOT_FOUND',404);return p;}
+ function owned(id:string,principalId:string,write=false){const v=verification(id);member(String(v.project_id),principalId,write);if(write&&v.principal_id!==principalId)fail('QUALITY_NOT_FOUND',404);return v;}
+ function bound(i:{operationId:string;principalId:string;requestHash:string}){const v=owned(i.operationId,i.principalId,true);if(v.request_hash!==i.requestHash)fail('QUALITY_REQUEST_CHANGED');return v;}
+ function policy(v:Row):QualityPolicy{return qualityPolicy.parse(json(get('SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?',v.project_id!,v.config_hash!)!.policy_json));}
+ function source(v:Row){if(!candidates)fail('QUALITY_SOURCE_QUALIFICATION_REQUIRED');const b=json<QualityBasis>(v.basis_json);return candidates.qualified({principalId:String(v.principal_id),runId:String(v.run_id),purpose:'work-input',workId:b.workId});}
+ function current(v:Row):boolean{const b=json<QualityBasis>(v.basis_json);const valid=!!get(`SELECT 1 FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id JOIN runs r ON r.run_id=a.run_id
+   JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id JOIN plan_works pw ON pw.run_id=a.run_id AND pw.work_id=a.work_id AND pw.plan_revision=r.current_plan_revision
+  WHERE a.attempt_id=? AND a.work_revision=? AND a.admitted_work_epoch=? AND a.input_fingerprint=? AND w.work_epoch=? AND w.blocked_reason IS NULL
+  AND pw.work_revision=a.work_revision AND r.run_epoch=? AND r.current_plan_revision=? AND s.plan_revision=r.current_plan_revision AND r.current_requirement_revision=? AND r.control_gate='OPEN' AND r.terminal_outcome IS NULL
+    AND (a.state IN ('WORKING','VERIFYING','SUCCEEDED') OR (a.state='FAILED' AND EXISTS(
+     SELECT 1 FROM work_verifications wv JOIN verified_work_results vr ON vr.attempt_id=wv.attempt_id
+     WHERE wv.attempt_id=a.attempt_id AND wv.quality_operation_id=? AND wv.state='APPLIED' AND vr.outcome='completed-with-findings')))
+    `,b.attemptId,b.workRevision,b.workEpoch,b.inputFingerprint,b.workEpoch,b.runEpoch,b.planRevision,b.requirementRevision,v.operation_id!);
+  if(!valid)return false;try{const snapshot=source(v);return snapshot.operationId===b.sourceIntegrationOperationId&&snapshot.basisSha256===b.sourceBasisSha256&&snapshot.manifest?.commit===b.targetCommit&&snapshot.manifest.sha256===b.allocationManifestSha256;}catch(error){if(error instanceof StorageError)return false;throw error;}
+ }
+ const origins=(id:string):QualityOrigin[]=>all('SELECT * FROM quality_origins WHERE operation_id=? ORDER BY producer_id',id).map(o=>({producerId:String(o.producer_id),pipelineId:String(o.pipeline_id),ordinal:Number(o.ordinal),execution:json(o.execution_json)}));
+ const view=(v:Row):QualityVerification=>({operationId:String(v.operation_id),principalId:String(v.principal_id),projectId:String(v.project_id),runId:String(v.run_id),attemptId:String(v.attempt_id),allocationOperationId:String(v.allocation_operation_id),configHash:String(v.config_hash),requestHash:String(v.request_hash),basis:json(v.basis_json),state:v.state as QualityVerification['state'],qualification:current(v)?'CURRENT':'STALE',evaluation:v.evaluation_json?json(v.evaluation_json):null,origins:origins(String(v.operation_id))});
+ const material=(t:Target)=>get('SELECT * FROM quality_materials WHERE operation_id=? AND material_key=?',t.operationId,t.materialKey)??fail('QUALITY_MATERIAL_NOT_FOUND',404);
+ const materialView=(r:Row):QualityMaterial=>({operationId:String(r.operation_id),materialKey:String(r.material_key),descriptor:json(r.descriptor_json),writeKey:String(r.write_key),contentHash:r.content_hash as string|null,writeId:r.write_id as string|null});
+ function ready(r:Row){if(!r.content_hash||!get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY' AND byte_size=?",r.expected_hash!,r.byte_size!))fail('QUALITY_MATERIAL_UNAVAILABLE');}
+  function beforeDispatch(v:Row){if(get("SELECT 1 FROM pipeline_stages s JOIN pipelines p ON p.pipeline_id=s.pipeline_id WHERE p.attempt_id=? AND p.workspace_ref=? AND s.state NOT IN ('PENDING','SKIPPED')",v.attempt_id!,json<QualityBasis>(v.basis_json).workspaceRef))fail('QUALITY_SOURCE_PREPARATION_TOO_LATE');}
+  function preparedSource(v:Row){const row=material({operationId:String(v.operation_id),materialKey:'source'});ready(row);if(!json<Extract<QualityMaterialDescriptor,{kind:'SOURCE'}>>(row.descriptor_json).instrumentation)fail('QUALITY_SOURCE_PROVENANCE_MISSING');return row;}
+  function stageView(row:Row):QualityStage{const s=get('SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?',row.pipeline_id!,row.ordinal!)!;return {producerId:String(row.producer_id),pipelineId:String(row.pipeline_id),ordinal:Number(row.ordinal),operationId:String(row.stage_operation_id),state:String(s.state),job:s.job_json?json(s.job_json):null};}
+ function original(v:Row,producerId:string){const o=get('SELECT * FROM quality_origins WHERE operation_id=? AND producer_id=?',v.operation_id!,producerId)??fail('QUALITY_ORIGIN_MISSING'),s=get('SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?',o.pipeline_id!,o.ordinal!)??fail('QUALITY_ORIGIN_MISSING');if(!s.job_json||digest(String(s.job_json))!==o.job_hash)fail('QUALITY_ORIGIN_CHANGED');return {o,job:json<PipelineInput<'recordPipelineStage'>['job']>(s.job_json)};}
+ function resultFacts(v:Row,e:QualityEvaluation){
+  const p=policy(v),b=json<QualityBasis>(v.basis_json),source=json<Extract<QualityMaterialDescriptor,{kind:'SOURCE'}>>(material({operationId:String(v.operation_id),materialKey:'source'}).descriptor_json);
+  if(e.targetCommit!==b.targetCommit||e.checkConfigHash!==v.config_hash||e.sourceManifestSha256!==source.sourceManifestSha256||e.topologySha256!==source.topologySha256)fail('QUALITY_RESULT_BASIS_CHANGED');
+  if(e.checks.length!==p.checks.length||new Set(e.checks.map(c=>c.checkId)).size!==e.checks.length)fail('QUALITY_RESULT_CHECKS_CHANGED');
+  for(const check of p.checks){const r=e.checks.find(c=>c.checkId===check.checkId);if(!r||canonical([...r.reportIds].sort())!==canonical([...check.reportIds].sort()))fail('QUALITY_RESULT_CHECKS_CHANGED');
+   if(check.kind==='human'){if(r.status!=='PENDING'||r.tests||r.coverage)fail('QUALITY_HUMAN_REVIEW_REQUIRED');continue;}
+   if(['PENDING','NOT_APPLICABLE'].includes(r.status))fail('QUALITY_RESULT_STATUS_INVALID');
+   if(r.status==='PASS')for(const id of check.producerIds){const {job}=original(v,id);if(job.state!=='EXITED'||job.exitCode!==0||job.errorCode||job.stopRequested)fail('QUALITY_EXECUTION_FAILED');}
+   if(check.kind==='coverage'&&r.status==='PASS'){
+    if(!r.coverage)fail('QUALITY_COVERAGE_MISSING');for(const key of ['lines','branches'] as const){const m=r.coverage[key],minimum=p.thresholds[key];if(m.minimum!==minimum)fail('QUALITY_THRESHOLD_CHANGED');
+     if(!m.total){if(key!=='branches'||m.status!=='NOT_APPLICABLE'||p.zeroBranches!=='complete-map-proves-none'||!r.coverage.lines.total)fail('QUALITY_COVERAGE_UNPROVEN');}
+     else if(m.status!=='PASS'||BigInt(m.covered)*100n<BigInt(m.total)*BigInt(minimum))fail('QUALITY_COVERAGE_BELOW_MINIMUM');}
+   }
+   if(check.kind==='tests'&&r.status==='PASS'&&(!r.tests||r.tests.failed||r.tests.skipped||r.tests.missing||r.tests.passed<check.requiredTests.length))fail('QUALITY_TESTS_UNPROVEN');
+   if(check.kind!=='coverage'&&r.coverage||check.kind!=='tests'&&r.tests)fail('QUALITY_RESULT_CHECKS_CHANGED');
+  }
+  const statuses=e.checks.filter(c=>c.status!=='PENDING').map(c=>c.status),automatic=statuses.includes('FAIL')?'FAIL':statuses.includes('STALE')?'STALE':statuses.includes('MISSING')?'MISSING':'PASS';
+  if(e.automaticStatus!==automatic||e.reviewStatus!==(p.checks.some(c=>c.kind==='human')?'PENDING':'NOT_REQUIRED'))fail('QUALITY_RESULT_STATUS_INVALID');
+ }
+ function completeMaterials(v:Row){
+  const p=policy(v),id=String(v.operation_id);ready(material({operationId:id,materialKey:'source'}));
+  for(const producer of p.producers){original(v,producer.producerId);ready(material({operationId:id,materialKey:'log.'+producer.producerId}));}
+  for(const report of p.reports)ready(material({operationId:id,materialKey:'report.'+report.reportId}));
+ }
+ const handlers={
+  registerQualityPolicy(i:QualityInput<'registerQualityPolicy'>){return transaction(db,()=>{member(i.projectId,i.principalId,true);const body=canonical(i.policy),hash=digest(body),old=get('SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?',i.projectId,hash);if(old&&old.policy_json!==body)fail('QUALITY_POLICY_IMMUTABLE');if(!old)exec('INSERT INTO quality_policies VALUES(?,?,?,?,?)',i.projectId,hash,body,i.principalId,new Date().toISOString());return {configHash:hash,policy:i.policy};});},
+  getQualityPolicy(i:QualityInput<'getQualityPolicy'>){member(i.projectId,i.principalId);const p=get('SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?',i.projectId,i.configHash)??fail('QUALITY_POLICY_NOT_FOUND',404);return {configHash:i.configHash,policy:qualityPolicy.parse(json(p.policy_json))};},
+  beginQualityVerification(i:QualityInput<'beginQualityVerification'>){return transaction(db,()=>{
+   const requestHash=digest(canonical(i)),old=get('SELECT * FROM quality_verifications WHERE operation_id=?',i.operationId);if(old){owned(i.operationId,i.principalId,true);if(old.request_hash!==requestHash)fail('QUALITY_REQUEST_CHANGED');return view(old);}
+   const a=get('SELECT * FROM attempts WHERE attempt_id=? AND run_id=?',i.attemptId,i.runId)??fail('QUALITY_ATTEMPT_NOT_FOUND',404),r=get('SELECT * FROM runs WHERE run_id=?',i.runId)!;member(String(r.project_id),i.principalId,true);
+   const w=get('SELECT * FROM workspace_allocations WHERE operation_id=?',i.allocationOperationId)??fail('QUALITY_ALLOCATION_UNPROVEN'),s=get('SELECT * FROM scheduled_work WHERE attempt_id=?',i.attemptId),manifest=json<Record<string,unknown>>(a.input_manifest_json);
+    if(a.role!=='tester'||!['WORKING','VERIFYING'].includes(String(a.state))||a.ended_at!==null||!s||w.state!=='READY'||w.kind!=='verification'||w.attempt_id!==i.attemptId||w.run_id!==i.runId||w.project_id!==r.project_id||w.runner_id!==s.runner_id||w.base_commit!==manifest.codeCommit||manifest.checkConfigHash!==i.configHash||!w.manifest_json)fail('QUALITY_ALLOCATION_UNPROVEN');
+   const p=get('SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?',r.project_id!,i.configHash)??fail('QUALITY_POLICY_NOT_FOUND'),frozenPolicy=qualityPolicy.parse(json(p.policy_json));if(frozenPolicy.templateVersion!==manifest.templateVersion)fail('QUALITY_POLICY_STALE');
+   const work=workRevision.parse(json(get('SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?',i.runId,a.work_id!,a.work_revision!)!.definition_json)),requirements=productOutput.parse(json(get('SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?',i.runId,r.current_requirement_revision!)!.content_json)).requirements;
+   const testRequirements=new Set(frozenPolicy.checks.flatMap(c=>c.requiredTests.flatMap(t=>t.requirementIds)));
+   if([...testRequirements].some(id=>!requirements.some(r=>r.id===id))||work.requirementIds.some(id=>!testRequirements.has(id)))fail('QUALITY_REQUIREMENT_MAPPING_MISSING');
+   for(const check of work.completionChecks){if(check.kind==='coverage-threshold'){if(frozenPolicy.thresholds.lines<check.lines||frozenPolicy.thresholds.branches<check.branches)fail('QUALITY_THRESHOLD_CHANGED');}
+    else if('checkId' in check){const expected=check.kind==='required-tests-pass'?'tests':check.kind==='command-exit-zero'?'command':'human';if(!frozenPolicy.checks.some(c=>c.checkId===check.checkId&&c.kind===expected))fail('QUALITY_REQUIRED_CHECK_MISSING');}}
+   if(!candidates)fail('QUALITY_SOURCE_QUALIFICATION_REQUIRED');const snapshot=candidates.qualified({principalId:i.principalId,runId:i.runId,purpose:'work-input',workId:String(a.work_id)});
+   if(!snapshot.manifest||snapshot.manifest.commit!==w.base_commit||snapshot.manifest.sha256!==json<{sha256:string}>(w.manifest_json).sha256)fail('QUALITY_SOURCE_CHANGED');
+   const basis:QualityBasis={attemptId:i.attemptId,workId:String(a.work_id),workRevision:Number(a.work_revision),workEpoch:Number(a.admitted_work_epoch),runEpoch:Number(a.admitted_run_epoch),planRevision:Number(s.plan_revision),requirementRevision:Number(r.current_requirement_revision),inputFingerprint:String(a.input_fingerprint),inputManifest:manifest,allocationOperationId:i.allocationOperationId,allocationRequestHash:String(w.request_hash),allocationManifestSha256:json<{sha256:string}>(w.manifest_json).sha256,sourceIntegrationOperationId:snapshot.operationId,sourceBasisSha256:snapshot.basisSha256,runnerId:String(w.runner_id),workspaceRef:String(w.workspace_ref),targetCommit:String(w.base_commit)};
+   exec("INSERT INTO quality_verifications VALUES(?,?,?,?,?,?,?,?,?,'PREPARED',NULL,?,NULL)",i.operationId,i.principalId,r.project_id!,i.runId,i.attemptId,i.allocationOperationId,i.configHash,requestHash,canonical(basis),new Date().toISOString());const v=verification(i.operationId);if(!current(v))fail('QUALITY_BASIS_STALE');return view(v);
+  });},
+  getQualityVerification(i:QualityInput<'getQualityVerification'>){return view(owned(i.operationId,i.principalId));},
+  publishQualityArtifacts(i:QualityInput<'publishQualityArtifacts'>){return transaction(db,()=>{
+   const v=bound(i),rows=all("SELECT * FROM quality_materials WHERE operation_id=? AND kind IN ('REPORT','RESULT') ORDER BY material_key",i.operationId),hashes=[...new Set(rows.map(r=>String(r.content_hash)))].sort();
+   if(v.state!=='EVALUATED'||canonical(hashes)!==canonical(i.contentHashes)||rows.length!==policy(v).reports.length+1)fail('QUALITY_ARTIFACT_CONTENT_CHANGED');
+   const old=all('SELECT * FROM quality_artifact_refs WHERE operation_id=? ORDER BY material_key',i.operationId);
+   if(!old.length&&!current(v))fail('QUALITY_BASIS_STALE');
+   if(old.length&&old.length!==rows.length)fail('QUALITY_ARTIFACT_CONTENT_CHANGED');
+   for(const r of rows){ready(r);const prior=old.find(p=>p.material_key===r.material_key);if(prior){if(prior.content_hash!==r.content_hash||!get("SELECT 1 FROM artifacts WHERE artifact_id=? AND content_hash=? AND project_id=? AND run_id=? AND attempt_id=? AND state='READY'",prior.artifact_id!,r.content_hash!,v.project_id!,v.run_id!,v.attempt_id!))fail('QUALITY_ARTIFACT_CONTENT_CHANGED');continue;}
+    const id='artifact_'+digest('quality-artifact\0'+i.operationId+'\0'+String(r.material_key)),object=get('SELECT * FROM content_objects WHERE content_hash=?',r.content_hash!)!,basis=json<QualityBasis>(v.basis_json);
+    exec("INSERT INTO artifacts VALUES(?,?,?,?,?,?,?,?,'READY',?,NULL,?)",id,v.project_id!,v.run_id!,v.attempt_id!,'quality-'+String(r.kind).toLowerCase(),r.content_hash!,object.byte_size!,object.storage_key!,basis.inputFingerprint,new Date().toISOString());
+    exec('INSERT INTO quality_artifact_refs VALUES(?,?,?,?)',i.operationId,r.material_key!,id,r.content_hash!);
+   }
+   return all('SELECT * FROM quality_artifact_refs WHERE operation_id=? ORDER BY material_key',i.operationId).map(r=>({materialKey:String(r.material_key),artifactId:String(r.artifact_id),sha256:String(r.content_hash),targetCommit:json<QualityBasis>(v.basis_json).targetCommit}));
+  });},
+  getQualitySourceManifest(i:QualityInput<'getQualitySourceManifest'>){const v=bound(i);return sourceManifest.parse(json(get('SELECT manifest_json FROM workspace_allocations WHERE operation_id=?',v.allocation_operation_id!)!.manifest_json));},
+  bindQualityStage(i:QualityInput<'bindQualityStage'>){return transaction(db,()=>{
+   const v=bound(i),old=get('SELECT * FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?',i.operationId,i.producerId);
+   if(old){if(old.pipeline_id!==i.pipelineId||old.ordinal!==i.ordinal)fail('QUALITY_STAGE_BINDING_IMMUTABLE');return stageView(old);}
+   if(v.state!=='PREPARED'||!current(v))fail('QUALITY_BASIS_STALE');preparedSource(v);
+   const b=json<QualityBasis>(v.basis_json),producer=policy(v).producers.find(p=>p.producerId===i.producerId),p=get('SELECT * FROM pipelines WHERE pipeline_id=?',i.pipelineId),s=get('SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?',i.pipelineId,i.ordinal);
+   if(!producer||!p||!s||p.attempt_id!==v.attempt_id||p.run_id!==v.run_id||p.workspace_ref!==b.workspaceRef||s.state!=='PENDING'||s.request_json||s.job_id)fail('QUALITY_STAGE_BINDING_INVALID');
+   if(get('SELECT 1 FROM quality_stage_bindings WHERE pipeline_id=? AND ordinal=?',i.pipelineId,i.ordinal))fail('QUALITY_STAGE_ALREADY_BOUND');
+   exec('INSERT INTO quality_stage_bindings VALUES(?,?,?,?,?,?)',i.operationId,i.producerId,i.pipelineId,i.ordinal,s.operation_id!,new Date().toISOString());return stageView(get('SELECT * FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?',i.operationId,i.producerId)!);
+  });},
+  listQualityStages(i:QualityInput<'listQualityStages'>){bound(i);return all('SELECT * FROM quality_stage_bindings WHERE operation_id=? ORDER BY producer_id',i.operationId).map(stageView);},
+  declareQualityOrigin(i:QualityInput<'declareQualityOrigin'>){return transaction(db,()=>{
+   const v=bound(i),p=policy(v),b=json<QualityBasis>(v.basis_json),producer=p.producers.find(p=>p.producerId===i.producerId);if(!producer||i.execution.producerId!==i.producerId)fail('QUALITY_PRODUCER_CHANGED');
+   preparedSource(v);const binding=get('SELECT * FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?',i.operationId,i.producerId);if(!binding||binding.pipeline_id!==i.pipelineId||binding.ordinal!==i.ordinal||binding.stage_operation_id!==i.execution.operationId)fail('QUALITY_STAGE_BINDING_INVALID');
+   const pipeline=get('SELECT * FROM pipelines WHERE pipeline_id=?',i.pipelineId),stage=get('SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?',i.pipelineId,i.ordinal),w=get('SELECT * FROM workspace_allocations WHERE operation_id=?',v.allocation_operation_id!)!;
+   if(!pipeline||!stage||!stage.job_json||pipeline.run_id!==v.run_id||pipeline.attempt_id!==v.attempt_id||pipeline.workspace_ref!==b.workspaceRef||pipeline.activation_id!==w.activation_id||pipeline.grant_id!==w.grant_id)fail('QUALITY_ORIGIN_SCOPE_CHANGED');
+   const job=json<PipelineInput<'recordPipelineStage'>['job']>(stage.job_json),e=i.execution,request=job.request as {imageDigest?:string;workspaceRef?:string},log=job.outputRefs[0];
+   if(!stage.request_json||canonical(job.request)!==stage.request_json||digest(String(stage.request_json))!==job.requestHash||stage.operation_id!==job.operationId||stage.job_id!==job.jobId)fail('QUALITY_ORIGIN_FACT_CHANGED');
+   if(stage.state!=='EXITED'||job.state!=='EXITED'||!job.executionProfile||!job.endedAt||!job.startedAt||!log||log.byteSize!==job.logCursor)fail('QUALITY_ORIGIN_INCOMPLETE');
+   if(e.attemptId!==v.attempt_id||e.runnerId!==b.runnerId||e.runnerId!==job.executionProfile.runnerId||e.jobId!==job.jobId||e.operationId!==job.operationId||e.requestHash!==job.requestHash||e.commandHash!==job.executionProfile.commandHash||e.commandHash!==digest(canonical(producer.command))||e.imageDigest!==request.imageDigest||e.imageDigest!==producer.imageDigest||request.workspaceRef!==b.workspaceRef||e.targetCommit!==b.targetCommit||e.checkConfigHash!==v.config_hash||e.state!==job.state||e.exitCode!==job.exitCode||e.errorCode!==job.errorCode||e.stopRequested!==job.stopRequested||e.startedAt!==job.startedAt||e.finishedAt!==job.endedAt||e.log.sha256!==log.sha256||e.log.size!==log.byteSize)fail('QUALITY_ORIGIN_FACT_CHANGED');
+   const old=get('SELECT * FROM quality_origins WHERE operation_id=? AND producer_id=?',i.operationId,i.producerId),execution=canonical(e),jobHash=digest(String(stage.job_json));if(old){if(old.pipeline_id!==i.pipelineId||old.ordinal!==i.ordinal||old.execution_json!==execution||old.job_hash!==jobHash)fail('QUALITY_ORIGIN_IMMUTABLE');return {producerId:i.producerId,pipelineId:i.pipelineId,ordinal:i.ordinal,execution:e};}
+   if(v.state!=='PREPARED')fail('QUALITY_VERIFICATION_CLOSED');if(get('SELECT 1 FROM quality_origins WHERE operation_id=? AND job_id=?',i.operationId,e.jobId))fail('QUALITY_JOB_REUSED');
+   exec('INSERT INTO quality_origins VALUES(?,?,?,?,?,?,?,?)',i.operationId,i.producerId,i.pipelineId,i.ordinal,e.jobId,execution,jobHash,new Date().toISOString());return {producerId:i.producerId,pipelineId:i.pipelineId,ordinal:i.ordinal,execution:e};
+  });},
+  declareQualityMaterial(i:QualityInput<'declareQualityMaterial'>){return transaction(db,()=>{
+   const v=bound(i),d=i.descriptor,key=qualityMaterialKey(d),old=get('SELECT * FROM quality_materials WHERE operation_id=? AND material_key=?',i.operationId,key);if(old){if(old.descriptor_json!==canonical(d))fail('QUALITY_MATERIAL_IMMUTABLE');return materialView(old);}if(v.state!=='PREPARED')fail('QUALITY_VERIFICATION_CLOSED');
+    if(d.kind==='SOURCE'){if(d.allocationManifestSha256!==json<QualityBasis>(v.basis_json).allocationManifestSha256)fail('QUALITY_SOURCE_CHANGED');if(!d.instrumentation)fail('QUALITY_SOURCE_PROVENANCE_MISSING');if(!current(v))fail('QUALITY_BASIS_STALE');beforeDispatch(v);}
+   else if(d.kind==='LOG'){const {job}=original(v,d.producerId),log=job.outputRefs[0]!;if(log.sha256!==d.sha256||log.byteSize!==d.byteSize)fail('QUALITY_LOG_CHANGED');}
+   else if(d.kind==='REPORT'){
+    const definition=policy(v).reports.find(r=>r.reportId===d.report.reportId);if(!definition)fail('QUALITY_REPORT_UNKNOWN');const {o,job}=original(v,definition.producerId),request=job.request as {outputSpec:string[]},index=request.outputSpec.indexOf(definition.path),output=job.outputRefs[index+1];
+    if(index<0||!output||d.report.outputPath!==definition.path||canonical(d.report.execution)!==o.execution_json||d.report.sha256!==d.sha256||d.report.size!==d.byteSize||output.sha256!==d.sha256||output.byteSize!==d.byteSize)fail('QUALITY_REPORT_CHANGED');
+   }else{completeMaterials(v);resultFacts(v,d.evaluation);if(digest(canonical(d.evaluation))!==d.sha256||Buffer.byteLength(canonical(d.evaluation))!==d.byteSize)fail('QUALITY_RESULT_HASH_CHANGED');}
+   const total=get('SELECT count(*) n,COALESCE(sum(byte_size),0) bytes FROM quality_materials WHERE operation_id=?',i.operationId)!;if(Number(total.n)>=50||Number(total.bytes)+d.byteSize>128*1024*1024)fail('QUALITY_MATERIAL_LIMIT');
+   exec('INSERT INTO quality_materials VALUES(?,?,?,?,?,?,?,NULL,NULL,?)',i.operationId,key,d.kind,canonical(d),d.sha256,d.byteSize,randomUUID(),new Date().toISOString());return materialView(material({operationId:i.operationId,materialKey:key}));
+  });},
+  listQualityMaterials(i:QualityInput<'listQualityMaterials'>){owned(i.operationId,i.principalId);return all('SELECT * FROM quality_materials WHERE operation_id=? AND material_key>? ORDER BY material_key LIMIT ?',i.operationId,i.afterKey,i.limit).map(materialView);},
+  completeQualityVerification(i:QualityInput<'completeQualityVerification'>){return transaction(db,()=>{
+   const v=bound(i);if(v.state==='EVALUATED')return view(v);completeMaterials(v);const result=material({operationId:i.operationId,materialKey:'result'});ready(result);const evaluation=json<Extract<QualityMaterialDescriptor,{kind:'RESULT'}>>(result.descriptor_json).evaluation;resultFacts(v,evaluation);
+   if(get("SELECT 1 FROM pipelines WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED','CANCELLED')",v.attempt_id!)||get("SELECT 1 FROM runtime_tool_calls WHERE activation_id IN (SELECT activation_id FROM workspace_allocations WHERE operation_id=?) AND state NOT IN ('SUCCEEDED','FAILED')",v.allocation_operation_id!)||get("SELECT 1 FROM repo_file_operations WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED')",v.attempt_id!)||get("SELECT 1 FROM repo_operations WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED')",v.attempt_id!))fail('QUALITY_EFFECT_OUTCOME_UNKNOWN');
+   exec("UPDATE quality_verifications SET state='EVALUATED',evaluation_json=?,evaluated_at=? WHERE operation_id=?",canonical(evaluation),new Date().toISOString(),i.operationId);return view(verification(i.operationId));
+  });},
+ };
+ return {
+  assertPipelinePrepared(attemptId:string,workspaceRef:string){
+   const allocation=get("SELECT * FROM workspace_allocations WHERE attempt_id=? AND workspace_ref=? AND kind='verification' AND state='READY'",attemptId,workspaceRef);if(!allocation)return;
+   const rows=all("SELECT * FROM quality_verifications WHERE attempt_id=? AND allocation_operation_id=? AND state='PREPARED'",attemptId,allocation.operation_id!);
+   const prepared=rows.filter(v=>{if(!current(v))return false;try{preparedSource(v);return true;}catch(error){if(error instanceof StorageError)return false;throw error;}});if(!prepared.length)fail('QUALITY_SOURCE_NOT_PREPARED');
+   if(!prepared.some(v=>policy(v).producers.every(p=>get('SELECT 1 FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?',v.operation_id!,p.producerId))))fail('QUALITY_STAGE_BINDING_INVALID');
+  },
+  completionFacts(operationId:string,principalId:string,attemptId:string){
+   const v=owned(operationId,principalId,true);if(v.attempt_id!==attemptId||v.state!=='EVALUATED'||!current(v))fail('QUALITY_BASIS_STALE');preparedSource(v);completeMaterials(v);const result=material({operationId,materialKey:'result'});ready(result);const evaluation=json<QualityEvaluation>(v.evaluation_json);resultFacts(v,evaluation);
+   return {verification:view(v),policy:policy(v),materials:all('SELECT * FROM quality_materials WHERE operation_id=? ORDER BY material_key',operationId).map(materialView)};
+  },
+  authorize(principalId:string,target:Target){owned(target.operationId,principalId,true);return material(target);},
+  validateWrite(i:{meta:{principalId:string;scopeId:string;idempotencyKey:string};target:Target;expectedHash:string;expectedSize:number}){const r=this.authorize(i.meta.principalId,i.target);if(i.meta.scopeId!==i.target.operationId||i.meta.idempotencyKey!==r.write_key||i.expectedHash!==r.expected_hash||i.expectedSize!==r.byte_size)fail('QUALITY_MATERIAL_WRITE_CHANGED');},
+  commit(principalId:string,target:Target,hash:string,writeId:string){const r=this.authorize(principalId,target);if(hash!==r.expected_hash||r.content_hash&&r.write_id!==writeId)fail('QUALITY_MATERIAL_WRITE_CHANGED');if(r.kind==='SOURCE'&&!r.content_hash)beforeDispatch(verification(target.operationId));exec('UPDATE quality_materials SET content_hash=?,write_id=? WHERE operation_id=? AND material_key=?',hash,writeId,target.operationId,target.materialKey);return {operationId:target.operationId,materialKey:target.materialKey,contentHash:hash};},
+  resolve(principalId:string,target:Target){owned(target.operationId,principalId);const r=material(target);ready(r);return {content_hash:String(r.content_hash)};},
+  execute(method:QualityMethod,input:unknown):unknown{const parsed=parseContract(qualityRequests[method],input);return (handlers[method] as (i:unknown)=>unknown)(parsed);},
+ };
+}

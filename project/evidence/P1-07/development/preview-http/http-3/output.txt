@@ -1,0 +1,381 @@
+TAP version 13
+# (node:5264) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5264) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5264) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5264) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: version 33 Worker upgrade requires a verified external backup and leaves old rows intact
+not ok 1 - version 33 Worker upgrade requires a verified external backup and leaves old rows intact
+  ---
+  duration_ms: 15211.8118
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\storage-preview-access.test.mjs:16:1'
+  failureType: 'testCodeFailure'
+  error: 'Partial migration targets only allow inspection'
+  code: 'SCHEMA_UPGRADE_REQUIRED'
+  name: 'StorageError'
+  stack: |-
+    Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+    Worker.emit (node:events:508:28)
+    MessagePort.<anonymous> (node:internal/worker:332:53)
+    [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+  ...
+# (node:5264) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: version 34 migration DDL, original rows and version markers roll back on failure then retry unchanged
+not ok 2 - version 34 migration DDL, original rows and version markers roll back on failure then retry unchanged
+  ---
+  duration_ms: 6034.8488
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\storage-preview-access.test.mjs:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    35 !== 34
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 34
+  actual: 35
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/storage-preview-access.test.mjs:20:753)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: fresh access tables/history refuse invalid identities and event faults preserve atomic admission
+ok 3 - fresh access tables/history refuse invalid identities and event faults preserve atomic admission
+  ---
+  duration_ms: 4539.9889
+  type: 'test'
+  ...
+# (node:5264) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical SQL bytes stay pinned; changed version 34 deployment SQL is rejected
+not ok 4 - historical SQL bytes stay pinned; changed version 34 deployment SQL is rejected
+  ---
+  duration_ms: 6454.7491
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\storage-preview-access.test.mjs:28:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    35 !== 34
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 34
+  actual: 35
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/storage-preview-access.test.mjs:29:339)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: access is closed until an owner configures its private gateway and the original backend enrolls its gate
+ok 5 - access is closed until an owner configures its private gateway and the original backend enrolls its gate
+  ---
+  duration_ms: 5826.9005
+  type: 'test'
+  ...
+# Subtest: current membership and safe HTTP classification are checked without granting platform mutation rights
+ok 6 - current membership and safe HTTP classification are checked without granting platform mutation rights
+  ---
+  duration_ms: 537.388
+  type: 'test'
+  ...
+# Subtest: request schema rejects ambiguous paths, hidden credentials and bodies on safe reads
+ok 7 - request schema rejects ambiguous paths, hidden credentials and bodies on safe reads
+  ---
+  duration_ms: 317.042
+  type: 'test'
+  ...
+# Subtest: prepared admission pins the original instance, image, dataset, start identity, endpoint and gate fence
+ok 8 - prepared admission pins the original instance, image, dataset, start identity, endpoint and gate fence
+  ---
+  duration_ms: 473.7384
+  type: 'test'
+  ...
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dispatch wins once; committed grant ACK loss and actual Worker restart never grant a second dispatch
+ok 9 - dispatch wins once; committed grant ACK loss and actual Worker restart never grant a second dispatch
+  ---
+  duration_ms: 15185.2089
+  type: 'test'
+  ...
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker serializes dispatch before close, retains its uncertain write and permits new fenced reads
+ok 10 - actual Worker serializes dispatch before close, retains its uncertain write and permits new fenced reads
+  ---
+  duration_ms: 13272.7183
+  type: 'test'
+  ...
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker serializes close before dispatch; a stale prepared write never passes admission
+ok 11 - actual Worker serializes close before dispatch; a stale prepared write never passes admission
+  ---
+  duration_ms: 12051.2663
+  type: 'test'
+  ...
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: UNKNOWN survives actual Worker restart and never permits a resend or NOT_SENT inference
+ok 12 - UNKNOWN survives actual Worker restart and never permits a resend or NOT_SENT inference
+  ---
+  duration_ms: 13186.1736
+  type: 'test'
+  ...
+# Subtest: HTTP completion and an empty logical gate do not manufacture data quiescence, releases or acceptance
+ok 13 - HTTP completion and an empty logical gate do not manufacture data quiescence, releases or acceptance
+  ---
+  duration_ms: 451.0338
+  type: 'test'
+  ...
+# Subtest: definitive NOT_SENT releases only its original dispatch; times, principals and observations are immutable
+ok 14 - definitive NOT_SENT releases only its original dispatch; times, principals and observations are immutable
+  ---
+  duration_ms: 580.5525
+  type: 'test'
+  ...
+# Subtest: revocation, stale health and preview expiry deny final authorization without losing uncertain write accounting
+ok 15 - revocation, stale health and preview expiry deny final authorization without losing uncertain write accounting
+  ---
+  duration_ms: 712.0012
+  type: 'test'
+  ...
+# Subtest: gate close and request state/history writes roll back together on real SQLite transaction faults
+ok 16 - gate close and request state/history writes roll back together on real SQLite transaction faults
+  ---
+  duration_ms: 503.5442
+  type: 'test'
+  ...
+# Subtest: original close hash/fence cannot be replaced, reenrollment never reopens and pending recovery is bounded/private
+ok 17 - original close hash/fence cannot be replaced, reenrollment never reopens and pending recovery is bounded/private
+  ---
+  duration_ms: 464.135
+  type: 'test'
+  ...
+# Subtest: all configured gateways share one dataset gate and an interim HTTP status cannot finish a write
+ok 18 - all configured gateways share one dataset gate and an interim HTTP status cannot finish a write
+  ---
+  duration_ms: 452.2242
+  type: 'test'
+  ...
+# Subtest: a backwards control clock cannot turn a future original health observation into fresh access
+ok 19 - a backwards control clock cannot turn a future original health observation into fresh access
+  ---
+  duration_ms: 496.4997
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: preview origins use the private/public suffix boundary, with explicit local HTTPS and disabled defaults
+ok 20 - preview origins use the private/public suffix boundary, with explicit local HTTPS and disabled defaults
+  ---
+  duration_ms: 195.0122
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTPS exchanges a purpose ticket once, scopes a host-only secure cookie and strips all upstream credentials
+ok 21 - real HTTPS exchanges a purpose ticket once, scopes a host-only secure cookie and strips all upstream credentials
+  ---
+  duration_ms: 35918.5326
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual template CRUD binds original body and headers; a repeated unsafe key never sends HTTP twice
+ok 22 - actual template CRUD binds original body and headers; a repeated unsafe key never sends HTTP twice
+  ---
+  duration_ms: 29566.6034
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: cross-origin writes and missing keys never get a dispatch; closing the gate preserves safe reads only
+ok 23 - cross-origin writes and missing keys never get a dispatch; closing the gate preserves safe reads only
+  ---
+  duration_ms: 25107.5631
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a real committed SQLite write with a broken HTTP response remains UNKNOWN and cannot be replayed or drained by logout
+ok 24 - a real committed SQLite write with a broken HTTP response remains UNKNOWN and cannot be replayed or drained by logout
+  ---
+  duration_ms: 23501.0988
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a lost durable dispatch ACK causes zero business HTTP, and retry returns the original DISPATCHED record
+ok 25 - a lost durable dispatch ACK causes zero business HTTP, and retry returns the original DISPATCHED record
+  ---
+  duration_ms: 24942.2481
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: revocation during actual upstream HTTP permits private completion accounting but withholds the response body
+ok 26 - revocation during actual upstream HTTP permits private completion accounting but withholds the response body
+  ---
+  duration_ms: 23958.271
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Runner original-instance mismatch never selects a replacement or arbitrary URL
+ok 27 - Runner original-instance mismatch never selects a replacement or arbitrary URL
+  ---
+  duration_ms: 21586.6603
+  type: 'test'
+  ...
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Runner final authorization denial records definite no-send without changing business data
+ok 28 - Runner final authorization denial records definite no-send without changing business data
+  ---
+  duration_ms: 22354.1482
+  type: 'test'
+  ...
+# (node:30240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: private ticket issuance requires configured gateway, current member, separate host and bounded original preview lifetime
+ok 29 - private ticket issuance requires configured gateway, current member, separate host and bounded original preview lifetime
+  ---
+  duration_ms: 4856.424
+  type: 'test'
+  ...
+# (node:30240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: one ticket creates exactly one session under real Worker concurrent exchange, and a replay cannot select a second session
+ok 30 - one ticket creates exactly one session under real Worker concurrent exchange, and a replay cannot select a second session
+  ---
+  duration_ms: 6470.1084
+  type: 'test'
+  ...
+# (node:30240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30240) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lost committed exchange ACK and real Worker termination recover only the original session, never minting a replacement
+ok 31 - lost committed exchange ACK and real Worker termination recover only the original session, never minting a replacement
+  ---
+  duration_ms: 10176.2163
+  type: 'test'
+  ...
+# Subtest: session purpose, origin, gateway, membership and revocation are checked at every use without returning tokens
+ok 32 - session purpose, origin, gateway, membership and revocation are checked at every use without returning tokens
+  ---
+  duration_ms: 741.8298
+  type: 'test'
+  ...
+# Subtest: ticket and session expiry cannot be extended by replay, and a future credential after clock rollback is unavailable
+ok 33 - ticket and session expiry cannot be extended by replay, and a future credential after clock rollback is unavailable
+  ---
+  duration_ms: 375.5645
+  type: 'test'
+  ...
+# Subtest: wrong origins, invalid session lifetimes, stale health and removed membership cannot consume a ticket
+ok 34 - wrong origins, invalid session lifetimes, stale health and removed membership cannot consume a ticket
+  ---
+  duration_ms: 756.1514
+  type: 'test'
+  ...
+# Subtest: consumption, session creation and immutable history roll back together; revocation failure leaves the original session active
+ok 35 - consumption, session creation and immutable history roll back together; revocation failure leaves the original session active
+  ---
+  duration_ms: 806.9776
+  type: 'test'
+  ...
+# Subtest: closing a dataset gate leaves read session authorization available, and logout never removes an uncertain write
+ok 36 - closing a dataset gate leaves read session authorization available, and logout never removes an uncertain write
+  ---
+  duration_ms: 604.5776
+  type: 'test'
+  ...
+# Subtest: live credential capacity is bounded per original project and member
+ok 37 - live credential capacity is bounded per original project and member
+  ---
+  duration_ms: 2008.3988
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 34
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 357727.5678

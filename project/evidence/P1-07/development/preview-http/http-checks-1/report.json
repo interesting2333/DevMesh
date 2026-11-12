@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "checks": [
+    {
+      "name": "template-typecheck",
+      "startedAt": "2026-11-12T16:21:05.811Z",
+      "finishedAt": "2026-11-12T16:22:02.463Z",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "templates/web-crud-v1",
+      "exitCode": 0,
+      "signal": null,
+      "output": "template-typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "contracts-check",
+      "startedAt": "2026-11-12T16:22:02.538Z",
+      "finishedAt": "2026-11-12T16:22:10.975Z",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs",
+        "--check"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "signal": null,
+      "output": "contracts-check.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    }
+  ],
+  "scope": "Additional checks after gateway/session code: template typecheck and unchanged public contract generation. No root typecheck or build is rerun here; their actual tool results and source-map binding are recorded separately."
+}

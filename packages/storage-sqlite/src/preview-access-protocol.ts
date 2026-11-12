@@ -6,7 +6,7 @@ const target = { subjectPrincipalId: opaqueKey, runId: ids.run, previewId: ids.p
 const original = { ...gateway, accessRequestId: opaqueKey, requestHash: sha256 };
 const dataset = { principalId: opaqueKey, datasetOperationId: ids.operation, datasetRequestHash: sha256 };
 const requestPath = z.string().max(8192).refine(path => path.startsWith('/') && !path.startsWith('//') && !/[\\#]/.test(path) && !/%(?:0[ad]|5c)/i.test(path) && ![...path].some(c => c.charCodeAt(0) <= 32 || c.charCodeAt(0) === 127));
-export const previewAccessHttpRequest = z.strictObject({ method: z.enum(['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE']), path: requestPath, bodySha256: sha256 }).superRefine((i, c) => { if (['GET', 'HEAD'].includes(i.method) && i.bodySha256 !== 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
+export const previewAccessHttpRequest = z.strictObject({ method: z.enum(['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE']), path: requestPath, bodySha256: sha256, headersSha256: sha256.optional() }).superRefine((i, c) => { if (['GET', 'HEAD'].includes(i.method) && i.bodySha256 !== 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
     c.addIssue({ code: 'custom', message: 'Safe reads require an empty body' }); });
 export const previewWriteCloseRequest = z.strictObject({ schemaVersion: z.literal('devmesh.preview-write-close.v1'), operationId: ids.operation, projectId: ids.project, datasetId: ids.dataset, datasetOperationId: ids.operation, datasetRequestHash: sha256, expectedFence: z.number().int().nonnegative().safe() });
 export const previewAccessObservation = z.discriminatedUnion('state', [

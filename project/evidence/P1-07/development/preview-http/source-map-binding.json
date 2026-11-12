@@ -1,0 +1,848 @@
+{
+  "recordedAt": "2026-11-12T16:20:09.750Z",
+  "scope": "Read-only source-map embedded source comparison of the already executed builds. Not a fresh build or clean-checkout regression.",
+  "entries": [
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/work-verification-protocol.ts",
+      "sourceSha256": "5a6235b14d987fcd489eafe2aace2a38ea1191480372b31ffc11a4ab4fa814bf",
+      "embeddedSha256": "5a6235b14d987fcd489eafe2aace2a38ea1191480372b31ffc11a4ab4fa814bf",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/release-delivery-protocol.ts",
+      "sourceSha256": "7c690b4cca294dd26f9f10bc72673902c457db0d8bae8d415004ddf0eeb4647d",
+      "embeddedSha256": "7c690b4cca294dd26f9f10bc72673902c457db0d8bae8d415004ddf0eeb4647d",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/verified-repair-protocol.ts",
+      "sourceSha256": "6bcd3e89da205632397786484524dfa3340cca8ff9e4d9aa147778fc9b7700f2",
+      "embeddedSha256": "6bcd3e89da205632397786484524dfa3340cca8ff9e4d9aa147778fc9b7700f2",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/session-protocol.ts",
+      "sourceSha256": "601cc31bdd81d2cac2f6f1122486678fbc691f78ff3802d88bfe3e2fb4b058df",
+      "embeddedSha256": "601cc31bdd81d2cac2f6f1122486678fbc691f78ff3802d88bfe3e2fb4b058df",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/runtime-protocol.ts",
+      "sourceSha256": "b76d5a29ec80b63ea58c5c48ef3afd313da57dccd24da5231d8301b4096f4afd",
+      "embeddedSha256": "b76d5a29ec80b63ea58c5c48ef3afd313da57dccd24da5231d8301b4096f4afd",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/input-protocol.ts",
+      "sourceSha256": "2053a8ac3529e50e8edf5b35a135205c295b66ab776da7f6fa6e638f1df928dc",
+      "embeddedSha256": "2053a8ac3529e50e8edf5b35a135205c295b66ab776da7f6fa6e638f1df928dc",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/preparation-protocol.ts",
+      "sourceSha256": "85a2b2981bcd763b8216ddc1e2c292de1f5b2df99f6599221663b8053633a349",
+      "embeddedSha256": "85a2b2981bcd763b8216ddc1e2c292de1f5b2df99f6599221663b8053633a349",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/pipeline-protocol.ts",
+      "sourceSha256": "928868199ff818d1ba946247083518dcf55cc7492b0a8973e04619d816f56b74",
+      "embeddedSha256": "928868199ff818d1ba946247083518dcf55cc7492b0a8973e04619d816f56b74",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/source-archive-protocol.ts",
+      "sourceSha256": "66169490d08d08e8be82dff512a58c7d43efd3fe78f74361838e9067ad76a5e2",
+      "embeddedSha256": "66169490d08d08e8be82dff512a58c7d43efd3fe78f74361838e9067ad76a5e2",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/candidate-protocol.ts",
+      "sourceSha256": "2f32113080a01c32a29404ef21ac03c9bff9bdcb3ccc079f2825fc6b847fca02",
+      "embeddedSha256": "2f32113080a01c32a29404ef21ac03c9bff9bdcb3ccc079f2825fc6b847fca02",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/candidate-integration-protocol.ts",
+      "sourceSha256": "5d0e2d76479576dacda989ed9eb82e0e3cf60452bbc951a13c1ea61f4063fc52",
+      "embeddedSha256": "5d0e2d76479576dacda989ed9eb82e0e3cf60452bbc951a13c1ea61f4063fc52",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/workspace-maintenance-protocol.ts",
+      "sourceSha256": "d22473eaf3e2941874c50c4c7d0369d3259abcc120d084f3789a462c06f6bed9",
+      "embeddedSha256": "d22473eaf3e2941874c50c4c7d0369d3259abcc120d084f3789a462c06f6bed9",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/workspace-reclamation-protocol.ts",
+      "sourceSha256": "64c2fb3b7ff5a36ef45c44c04be499b2b40e8a6970dd5d3bd10c745ac8e64eb0",
+      "embeddedSha256": "64c2fb3b7ff5a36ef45c44c04be499b2b40e8a6970dd5d3bd10c745ac8e64eb0",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/verified-finding-protocol.ts",
+      "sourceSha256": "60d0a7d407abaf8f1c7296f9ccbf70e334116077b5df1b2a5c076ce8a84a96c4",
+      "embeddedSha256": "60d0a7d407abaf8f1c7296f9ccbf70e334116077b5df1b2a5c076ce8a84a96c4",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/release-freeze-protocol.ts",
+      "sourceSha256": "53c4fc571f2a2606b52bd7bca7c2589be6fa908badd1d3bd928b0f1f7560441e",
+      "embeddedSha256": "53c4fc571f2a2606b52bd7bca7c2589be6fa908badd1d3bd928b0f1f7560441e",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/candidate-review-protocol.ts",
+      "sourceSha256": "7b92e3b1b764c44f2bffa5cc334da2d47b6d1bcd50858657ab882daeece19626",
+      "embeddedSha256": "7b92e3b1b764c44f2bffa5cc334da2d47b6d1bcd50858657ab882daeece19626",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/protocol.ts",
+      "sourceSha256": "b72a7506e6f1c153d6d69efa94675793ffd9546a24742b320b5cdd63dc34145f",
+      "embeddedSha256": "b72a7506e6f1c153d6d69efa94675793ffd9546a24742b320b5cdd63dc34145f",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/registry-domain.ts",
+      "sourceSha256": "d3e9d3d3c6437e1a64b287555abc09b9bd12d775441c937e79a21405c33a0ab8",
+      "embeddedSha256": "d3e9d3d3c6437e1a64b287555abc09b9bd12d775441c937e79a21405c33a0ab8",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/runtime-workspaces.ts",
+      "sourceSha256": "7c87b75456f537890bb78da9eb9c70619bb261a5a03486b800c828deaee223c5",
+      "embeddedSha256": "7c87b75456f537890bb78da9eb9c70619bb261a5a03486b800c828deaee223c5",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/runtime-domain.ts",
+      "sourceSha256": "3e8314c3fc5372d78182b4d7c41350b126cf0903b9a98c7785dd27871f415b84",
+      "embeddedSha256": "3e8314c3fc5372d78182b4d7c41350b126cf0903b9a98c7785dd27871f415b84",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/candidate-material-domain.ts",
+      "sourceSha256": "392b9bec5b83f80df397e99dc2414c13d38b6fce8ce21f7f8ce7f5aa52fd3dc6",
+      "embeddedSha256": "392b9bec5b83f80df397e99dc2414c13d38b6fce8ce21f7f8ce7f5aa52fd3dc6",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/quality-domain.ts",
+      "sourceSha256": "610b45b0fe64aa821ef58bd133131af0f36ed9425f1442ab8da46f41e42b6dd1",
+      "embeddedSha256": "610b45b0fe64aa821ef58bd133131af0f36ed9425f1442ab8da46f41e42b6dd1",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/work-effects.ts",
+      "sourceSha256": "e29c26f10be372eede3e5c0b19a8e136a2fc526e2ef45005d5f8f061f63e4fee",
+      "embeddedSha256": "e29c26f10be372eede3e5c0b19a8e136a2fc526e2ef45005d5f8f061f63e4fee",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/work-verification-domain.ts",
+      "sourceSha256": "523cb4d3df7fca4b3335dd27530681ced7662bd7a1182648b3cc80ca2daa318e",
+      "embeddedSha256": "523cb4d3df7fca4b3335dd27530681ced7662bd7a1182648b3cc80ca2daa318e",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/release-delivery-domain.ts",
+      "sourceSha256": "094520788e86c29d5338df96b748b43f58b1e4954168594c1c6e98eb0dd4db41",
+      "embeddedSha256": "094520788e86c29d5338df96b748b43f58b1e4954168594c1c6e98eb0dd4db41",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/plan-results.ts",
+      "sourceSha256": "38cf5a6882f5765df3015e665ead20ccdc9306cd624cd12c1495b470db90c9e4",
+      "embeddedSha256": "38cf5a6882f5765df3015e665ead20ccdc9306cd624cd12c1495b470db90c9e4",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/plan-domain.ts",
+      "sourceSha256": "18ac93b92f1a870c1f5bfed19e22e8cb38155453f7c7e363c83c432095a487e8",
+      "embeddedSha256": "18ac93b92f1a870c1f5bfed19e22e8cb38155453f7c7e363c83c432095a487e8",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/verified-repair-domain.ts",
+      "sourceSha256": "1c4c92434b02620dfe5135f0fd45c38daffac273a08e79f51bb9e42ed8b3f318",
+      "embeddedSha256": "1c4c92434b02620dfe5135f0fd45c38daffac273a08e79f51bb9e42ed8b3f318",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/session-domain.ts",
+      "sourceSha256": "0e7f5da01c40e6ce0c5f69da6cfae5b6bcf3f882aca8b99f9a166abfae76666a",
+      "embeddedSha256": "0e7f5da01c40e6ce0c5f69da6cfae5b6bcf3f882aca8b99f9a166abfae76666a",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/input-domain.ts",
+      "sourceSha256": "c3d00b2897c1ce58e72cc8ba280e71e6b408a35dec642928077cbc69f13ff519",
+      "embeddedSha256": "c3d00b2897c1ce58e72cc8ba280e71e6b408a35dec642928077cbc69f13ff519",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/understanding-domain.ts",
+      "sourceSha256": "27ee0294bde216f9c82d82a3c8b68cfd7dea79c3cf4a3596795c45f2e54d66b4",
+      "embeddedSha256": "27ee0294bde216f9c82d82a3c8b68cfd7dea79c3cf4a3596795c45f2e54d66b4",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/preparation-domain.ts",
+      "sourceSha256": "b1f0e85126222db467422f9ad44e4f5cc8ebebfadd4cc2b968b4317593e0a883",
+      "embeddedSha256": "b1f0e85126222db467422f9ad44e4f5cc8ebebfadd4cc2b968b4317593e0a883",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/candidate-basis.ts",
+      "sourceSha256": "d0e7a75be2a5dc363c55a24619629cfd824dde9308d683aa2bab3eb785599bf4",
+      "embeddedSha256": "d0e7a75be2a5dc363c55a24619629cfd824dde9308d683aa2bab3eb785599bf4",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/candidate-integration-domain.ts",
+      "sourceSha256": "b9f5acc5d8b873d14a2e494b21c160bc51d975adaa8a231b6de87dcd0c14fac6",
+      "embeddedSha256": "b9f5acc5d8b873d14a2e494b21c160bc51d975adaa8a231b6de87dcd0c14fac6",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/scheduler-domain.ts",
+      "sourceSha256": "97fd74363cfc3a2961b320154e6b169b8e6342c6acceace8fa93d49c3be62557",
+      "embeddedSha256": "97fd74363cfc3a2961b320154e6b169b8e6342c6acceace8fa93d49c3be62557",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/dispatch-domain.ts",
+      "sourceSha256": "8e479c9047698c1c9b94771862237ac606bba7003dc96eb7ee9a7b6d95788417",
+      "embeddedSha256": "8e479c9047698c1c9b94771862237ac606bba7003dc96eb7ee9a7b6d95788417",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/tool-domain.ts",
+      "sourceSha256": "f5c5c33937d8228c447af39c60b880abce1ade0e54250f6df7a2c39b461a8b5b",
+      "embeddedSha256": "f5c5c33937d8228c447af39c60b880abce1ade0e54250f6df7a2c39b461a8b5b",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/pipeline-domain.ts",
+      "sourceSha256": "5b1c3c47716182e7081b27a67ccbec643f86e449beb506f5e2fa134af6ebc1c3",
+      "embeddedSha256": "5b1c3c47716182e7081b27a67ccbec643f86e449beb506f5e2fa134af6ebc1c3",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/repo-file-domain.ts",
+      "sourceSha256": "43d64f2a94bea8f04e0490a3056baf4b546caa23fb2d610573a9e523c78cd795",
+      "embeddedSha256": "43d64f2a94bea8f04e0490a3056baf4b546caa23fb2d610573a9e523c78cd795",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/repo-domain.ts",
+      "sourceSha256": "654cf95f81ee9f021a10095e2b43881e9d36366ad3da62a41db9d4659268013a",
+      "embeddedSha256": "654cf95f81ee9f021a10095e2b43881e9d36366ad3da62a41db9d4659268013a",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/source-archive-domain.ts",
+      "sourceSha256": "9f9fafd87726863283198cde4d17e8d97f9b774b21f73b6637e18fb0af8391ee",
+      "embeddedSha256": "9f9fafd87726863283198cde4d17e8d97f9b774b21f73b6637e18fb0af8391ee",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/workspace-reclamation-domain.ts",
+      "sourceSha256": "fcc9b2e3881ee7718d3359d8d12f286e1e4243669dd6b24bbf6dfcd585bccc95",
+      "embeddedSha256": "fcc9b2e3881ee7718d3359d8d12f286e1e4243669dd6b24bbf6dfcd585bccc95",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/workspace-maintenance-domain.ts",
+      "sourceSha256": "5e89355d32b5665a35cfc594791e1c6aafa1d732b651899eaeb5f2e430c69ef5",
+      "embeddedSha256": "5e89355d32b5665a35cfc594791e1c6aafa1d732b651899eaeb5f2e430c69ef5",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/verified-finding-domain.ts",
+      "sourceSha256": "3f229920c23a7d93702fa0d3931ad12e5bb2414736317103edecf7028c3470b3",
+      "embeddedSha256": "3f229920c23a7d93702fa0d3931ad12e5bb2414736317103edecf7028c3470b3",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/release-freeze-domain.ts",
+      "sourceSha256": "fc655e3d70b964bc0fa684ad674fe88377d288d85b8d55932113f44e72ed08de",
+      "embeddedSha256": "fc655e3d70b964bc0fa684ad674fe88377d288d85b8d55932113f44e72ed08de",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/candidate-review-domain.ts",
+      "sourceSha256": "418195f5cf29c66b907863c9ff7f3f2cc3b9e55a3d4648326bdd13c71a292cdc",
+      "embeddedSha256": "418195f5cf29c66b907863c9ff7f3f2cc3b9e55a3d4648326bdd13c71a292cdc",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/preview-domain.ts",
+      "sourceSha256": "57fbd6b9163c3894ebbf05867d4c47aecf0e3f0ee58c185641af8b5cd53ccf73",
+      "embeddedSha256": "57fbd6b9163c3894ebbf05867d4c47aecf0e3f0ee58c185641af8b5cd53ccf73",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/preview-access-domain.ts",
+      "sourceSha256": "332039a5319e7318da3f82ca2bf3e0e19314a0480ee98a7d2eb7f0d9d3327c78",
+      "embeddedSha256": "332039a5319e7318da3f82ca2bf3e0e19314a0480ee98a7d2eb7f0d9d3327c78",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/preview-session-domain.ts",
+      "sourceSha256": "ea09e1c9de8549d34c83325b2ecb05ef2cbc0848c49148b5c1a5e54b1e60b427",
+      "embeddedSha256": "ea09e1c9de8549d34c83325b2ecb05ef2cbc0848c49148b5c1a5e54b1e60b427",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/domain-BXQb8xBZ.mjs.map",
+      "mapSha256": "229ca6eb75e8c5235010ed4231d85ddfa4375d5fa14729b252b6ff2169486868",
+      "source": "packages/storage-sqlite/src/domain.ts",
+      "sourceSha256": "070261c88599b5a9376eeb8e10c140dd9e40b43c9672119cba51cf18ab373c31",
+      "embeddedSha256": "070261c88599b5a9376eeb8e10c140dd9e40b43c9672119cba51cf18ab373c31",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/index.mjs.map",
+      "mapSha256": "e1500ddd83f5ba399b93c91a169385da37318c981cf8ec8d263fa86578a1daf0",
+      "source": "packages/storage-sqlite/src/lock.ts",
+      "sourceSha256": "2c63e201e8913927073ab02e1cccb5e2aed023edc6f0cc5c8b96862d384043c9",
+      "embeddedSha256": "2c63e201e8913927073ab02e1cccb5e2aed023edc6f0cc5c8b96862d384043c9",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/index.mjs.map",
+      "mapSha256": "e1500ddd83f5ba399b93c91a169385da37318c981cf8ec8d263fa86578a1daf0",
+      "source": "packages/storage-sqlite/src/index.ts",
+      "sourceSha256": "7e907adff9af265f79e84cfd6f3fa74f0e043b61de31dc6b360349f11ad06911",
+      "embeddedSha256": "7e907adff9af265f79e84cfd6f3fa74f0e043b61de31dc6b360349f11ad06911",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/migrations-CmCClcp5.mjs.map",
+      "mapSha256": "8f562ddc77c132a901294509d09fdb10abe3dd1ee3693009822968d67acdb900",
+      "source": "packages/storage-sqlite/src/errors.ts",
+      "sourceSha256": "d49e1a6030c7e212438b75fefa0435284d10316d9622c1061e5a70f2ffb38e13",
+      "embeddedSha256": "d49e1a6030c7e212438b75fefa0435284d10316d9622c1061e5a70f2ffb38e13",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/migrations-CmCClcp5.mjs.map",
+      "mapSha256": "8f562ddc77c132a901294509d09fdb10abe3dd1ee3693009822968d67acdb900",
+      "source": "packages/storage-sqlite/src/migrations.ts",
+      "sourceSha256": "a75a9d8ae3608ba0fc0bea032c4fd001c922bf5c1a4071e434ecec66b686fdce",
+      "embeddedSha256": "a75a9d8ae3608ba0fc0bea032c4fd001c922bf5c1a4071e434ecec66b686fdce",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/json.ts",
+      "sourceSha256": "4c5a1c60ca58c53a7c2c87cec9357ace7bc35c53fd6908338eb6bde7b7f723e3",
+      "embeddedSha256": "4c5a1c60ca58c53a7c2c87cec9357ace7bc35c53fd6908338eb6bde7b7f723e3",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/tool-protocol.ts",
+      "sourceSha256": "7f43dcf7339d58da56b7ca3bb87307dd420178f818277d04048b71533f978427",
+      "embeddedSha256": "7f43dcf7339d58da56b7ca3bb87307dd420178f818277d04048b71533f978427",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/repo-protocol.ts",
+      "sourceSha256": "02ef9783ebdb6ae6eda129514717179cde7a19232b36f373f454bbd44ea9ecc4",
+      "embeddedSha256": "02ef9783ebdb6ae6eda129514717179cde7a19232b36f373f454bbd44ea9ecc4",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/workspace-protocol.ts",
+      "sourceSha256": "370503d537c08962f1ee8b3d8ac9b06552eeee52948da1cd7bc6103154690034",
+      "embeddedSha256": "370503d537c08962f1ee8b3d8ac9b06552eeee52948da1cd7bc6103154690034",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/repo-file-protocol.ts",
+      "sourceSha256": "a5b53622a07bb0500f5a5769f1670e2cb430a8b36da12d6a3bcc0954bf68ae28",
+      "embeddedSha256": "a5b53622a07bb0500f5a5769f1670e2cb430a8b36da12d6a3bcc0954bf68ae28",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/registry-protocol.ts",
+      "sourceSha256": "7e57491ad4bf90ab5c90e4cc0a1b115db28b87255e3abd10a959d9c1d4294952",
+      "embeddedSha256": "7e57491ad4bf90ab5c90e4cc0a1b115db28b87255e3abd10a959d9c1d4294952",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/candidate-material-protocol.ts",
+      "sourceSha256": "7e1fa9495dfda24a114758720befc1ac9a96f1b6a9d7f1d87afb60b589125e94",
+      "embeddedSha256": "7e1fa9495dfda24a114758720befc1ac9a96f1b6a9d7f1d87afb60b589125e94",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/workspace-domain.ts",
+      "sourceSha256": "edbb06898c7fabb4c94e097c3ff92f8c338d10bae88714972c1ddcf943316493",
+      "embeddedSha256": "edbb06898c7fabb4c94e097c3ff92f8c338d10bae88714972c1ddcf943316493",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/tool-authority-domain.ts",
+      "sourceSha256": "38271e6fa99642fda4ec0cea876a10aaacfb88b332a7f24f7d490906db514f8e",
+      "embeddedSha256": "38271e6fa99642fda4ec0cea876a10aaacfb88b332a7f24f7d490906db514f8e",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/workspace-preservation-protocol.ts",
+      "sourceSha256": "7ba4419afb9d6df85db9d514a490cce88451a032567fb411c4db0ff2ae37c92a",
+      "embeddedSha256": "7ba4419afb9d6df85db9d514a490cce88451a032567fb411c4db0ff2ae37c92a",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/workspace-preservation-domain.ts",
+      "sourceSha256": "cbc05d19369f964d3484dbac569e814a3cc788ad678bf20dd68d27cad05de55c",
+      "embeddedSha256": "cbc05d19369f964d3484dbac569e814a3cc788ad678bf20dd68d27cad05de55c",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/quality-protocol.ts",
+      "sourceSha256": "44519926a12adb75850dc27a5fab52ff9dcafba87e6611076f9627bdea3b0324",
+      "embeddedSha256": "44519926a12adb75850dc27a5fab52ff9dcafba87e6611076f9627bdea3b0324",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/preview-protocol.ts",
+      "sourceSha256": "84e38f9c8af70698e6933a32112600d3305c14a16f1916d17d51a7411526c04f",
+      "embeddedSha256": "84e38f9c8af70698e6933a32112600d3305c14a16f1916d17d51a7411526c04f",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/preview-access-protocol.ts",
+      "sourceSha256": "a99d725afc14b86fa329bd4b96a65d788639efb259ac5defa04aebeb83b251ad",
+      "embeddedSha256": "a99d725afc14b86fa329bd4b96a65d788639efb259ac5defa04aebeb83b251ad",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/preview-session-protocol-BCmPAjJc.mjs.map",
+      "mapSha256": "2e3462867de8a5bd66232ed4c9a687b6ed40f80c5d5832fba7df95adbab5ed7a",
+      "source": "packages/storage-sqlite/src/preview-session-protocol.ts",
+      "sourceSha256": "67ef63ab221e85e1f48dd29cb4c14728b2322d19e2744d3fba567df6533efb4e",
+      "embeddedSha256": "67ef63ab221e85e1f48dd29cb4c14728b2322d19e2744d3fba567df6533efb4e",
+      "matches": true
+    },
+    {
+      "map": "packages/storage-sqlite/dist/worker.mjs.map",
+      "mapSha256": "b1cd48ca04ebc6ebff0664c3d6efa0af557478a1e4a80ca50d874c2bcb60a931",
+      "source": "packages/storage-sqlite/src/worker.ts",
+      "sourceSha256": "26baa1124be22de4432b84e0dd6706c3a662b54f6924e8aec8c72ddcde2e9b09",
+      "embeddedSha256": "26baa1124be22de4432b84e0dd6706c3a662b54f6924e8aec8c72ddcde2e9b09",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/dataset-backend--7MretZO.mjs.map",
+      "mapSha256": "3e7081e1178824bdf98b5fc7229938fa856d2f11452f8ae465bc54abefbd4f34",
+      "source": "packages/runner/src/dataset-paths.ts",
+      "sourceSha256": "f399fb851103970b4d6d0ba838acbaefb3f288419f44afb6353855016ba04bde",
+      "embeddedSha256": "f399fb851103970b4d6d0ba838acbaefb3f288419f44afb6353855016ba04bde",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/dataset-backend--7MretZO.mjs.map",
+      "mapSha256": "3e7081e1178824bdf98b5fc7229938fa856d2f11452f8ae465bc54abefbd4f34",
+      "source": "packages/runner/src/dataset-profile.ts",
+      "sourceSha256": "9e8c15907c54e540503e41e103041a23fbc1aea5b56f4324dfc12deae2c160d0",
+      "embeddedSha256": "9e8c15907c54e540503e41e103041a23fbc1aea5b56f4324dfc12deae2c160d0",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/dataset-backend--7MretZO.mjs.map",
+      "mapSha256": "3e7081e1178824bdf98b5fc7229938fa856d2f11452f8ae465bc54abefbd4f34",
+      "source": "packages/runner/src/dataset-backend.ts",
+      "sourceSha256": "11c3ea17ed3c185a558296ccfaa2c417d3d9fe9890cd3a3a9427318363797477",
+      "embeddedSha256": "11c3ea17ed3c185a558296ccfaa2c417d3d9fe9890cd3a3a9427318363797477",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/dataset-worker.mjs.map",
+      "mapSha256": "6d3b9adac7fa6ce527304cf5ee5fb77854e137cd89c55dd3ea942f857dafe2c7",
+      "source": "packages/runner/src/dataset-worker.ts",
+      "sourceSha256": "fac03a208bfb5bd60f952ef3882716148a2e3189f731d23bd126c268ff66f057",
+      "embeddedSha256": "fac03a208bfb5bd60f952ef3882716148a2e3189f731d23bd126c268ff66f057",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/index.mjs.map",
+      "mapSha256": "652a773bf4512591dff72145e682e9f70e7233161e9d9918921b59f761861cc4",
+      "source": "packages/runner/src/client.ts",
+      "sourceSha256": "fff289ebb79b4935a36e8bc59df4e27261418bac25aeefaa05f142c0d7b045e2",
+      "embeddedSha256": "fff289ebb79b4935a36e8bc59df4e27261418bac25aeefaa05f142c0d7b045e2",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/index.mjs.map",
+      "mapSha256": "652a773bf4512591dff72145e682e9f70e7233161e9d9918921b59f761861cc4",
+      "source": "packages/runner/src/docker.ts",
+      "sourceSha256": "5e28352b01943ccaab57349de59d3ac6b6237d8eb51958fd3935ee86965e4a93",
+      "embeddedSha256": "5e28352b01943ccaab57349de59d3ac6b6237d8eb51958fd3935ee86965e4a93",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/index.mjs.map",
+      "mapSha256": "652a773bf4512591dff72145e682e9f70e7233161e9d9918921b59f761861cc4",
+      "source": "packages/runner/src/preview-health.ts",
+      "sourceSha256": "5dcc57d85f94c00430dc3fd88c107dcaf908b4ded50f22903abfdc0d4aab28ca",
+      "embeddedSha256": "5dcc57d85f94c00430dc3fd88c107dcaf908b4ded50f22903abfdc0d4aab28ca",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/index.mjs.map",
+      "mapSha256": "652a773bf4512591dff72145e682e9f70e7233161e9d9918921b59f761861cc4",
+      "source": "packages/runner/src/preview-backend.ts",
+      "sourceSha256": "933fc6bb84332b910ae14c5637b1e66eb6706bfa530d7c6be486964ae37c4ed3",
+      "embeddedSha256": "933fc6bb84332b910ae14c5637b1e66eb6706bfa530d7c6be486964ae37c4ed3",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/index.mjs.map",
+      "mapSha256": "652a773bf4512591dff72145e682e9f70e7233161e9d9918921b59f761861cc4",
+      "source": "packages/runner/src/preview-watchdog.ts",
+      "sourceSha256": "ff476e8cf44fd4c4773605d854451fab83ff520d3c5a66af2bc5c0a07de4464f",
+      "embeddedSha256": "ff476e8cf44fd4c4773605d854451fab83ff520d3c5a66af2bc5c0a07de4464f",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/index.mjs.map",
+      "mapSha256": "652a773bf4512591dff72145e682e9f70e7233161e9d9918921b59f761861cc4",
+      "source": "packages/runner/src/preview-http.ts",
+      "sourceSha256": "18c33722a4f76d82f0c9ca99394c2f4f85aa29830d90ea6452a649e1d3279230",
+      "embeddedSha256": "18c33722a4f76d82f0c9ca99394c2f4f85aa29830d90ea6452a649e1d3279230",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/index.mjs.map",
+      "mapSha256": "652a773bf4512591dff72145e682e9f70e7233161e9d9918921b59f761861cc4",
+      "source": "packages/runner/src/preview-docker.ts",
+      "sourceSha256": "30735c88be374c32b7f68c468f6262af9ec42c8bdecac0258a9a1ca4861174a6",
+      "embeddedSha256": "30735c88be374c32b7f68c468f6262af9ec42c8bdecac0258a9a1ca4861174a6",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/main.mjs.map",
+      "mapSha256": "70c21f8720e04ac64c252223d8e29b82d60cca90d673b7dea350083b93bc8e14",
+      "source": "packages/runner/src/main.ts",
+      "sourceSha256": "469014966e142ccc1451c8cc630ebc559ba8b5b9c969890fe05bd4d4a9c2cfbe",
+      "embeddedSha256": "469014966e142ccc1451c8cc630ebc559ba8b5b9c969890fe05bd4d4a9c2cfbe",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/preview-cleanup-BFuEhH_z.mjs.map",
+      "mapSha256": "267327f4f07425c8416c9f4817ad197407dd27ec89b0263fed4defdee66e1a74",
+      "source": "packages/runner/src/preview-reservation.ts",
+      "sourceSha256": "41d7c1f50b15e661362be2acc668e6cdd4154d15a72598b5fdbb6b054295cc34",
+      "embeddedSha256": "41d7c1f50b15e661362be2acc668e6cdd4154d15a72598b5fdbb6b054295cc34",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/preview-cleanup-BFuEhH_z.mjs.map",
+      "mapSha256": "267327f4f07425c8416c9f4817ad197407dd27ec89b0263fed4defdee66e1a74",
+      "source": "packages/runner/src/preview-container.ts",
+      "sourceSha256": "b1da43d1091d7b99a51801efdddcf02fed10a74693ef45edba136f3bbca33117",
+      "embeddedSha256": "b1da43d1091d7b99a51801efdddcf02fed10a74693ef45edba136f3bbca33117",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/preview-cleanup-BFuEhH_z.mjs.map",
+      "mapSha256": "267327f4f07425c8416c9f4817ad197407dd27ec89b0263fed4defdee66e1a74",
+      "source": "packages/runner/src/preview-lifecycle.ts",
+      "sourceSha256": "6dbcef0cd5c232ecc8e9455f7c313525d0c575ea05b70b9ad7358bf6311e6b08",
+      "embeddedSha256": "6dbcef0cd5c232ecc8e9455f7c313525d0c575ea05b70b9ad7358bf6311e6b08",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/preview-cleanup-BFuEhH_z.mjs.map",
+      "mapSha256": "267327f4f07425c8416c9f4817ad197407dd27ec89b0263fed4defdee66e1a74",
+      "source": "packages/runner/src/preview-cleanup.ts",
+      "sourceSha256": "d3fed9fbb74f2d62ad955560c9a61c1188a4f670317a1a5172aad55ee25a01eb",
+      "embeddedSha256": "d3fed9fbb74f2d62ad955560c9a61c1188a4f670317a1a5172aad55ee25a01eb",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/protocol-CrzCRB9P.mjs.map",
+      "mapSha256": "c1779f3d592d719a3fae53e8cf0da17c1fb1e2dfcbcce62f8e7583c36598e3b6",
+      "source": "packages/runner/src/protocol.ts",
+      "sourceSha256": "4ffea2d8ec4be5487294f8a573983f6540620102da7b8a2031613ec4cec91567",
+      "embeddedSha256": "4ffea2d8ec4be5487294f8a573983f6540620102da7b8a2031613ec4cec91567",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/server-ke1TSt2G.mjs.map",
+      "mapSha256": "39a0aa936f1f62d1db53602c28777ba33dea832613c2f457c107b7ea5dc2e26f",
+      "source": "packages/runner/src/policy.ts",
+      "sourceSha256": "8a48b2584a4faecb989e8abf7daeb09ef4748c2a07796218292beaa839c93d9a",
+      "embeddedSha256": "8a48b2584a4faecb989e8abf7daeb09ef4748c2a07796218292beaa839c93d9a",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/server-ke1TSt2G.mjs.map",
+      "mapSha256": "39a0aa936f1f62d1db53602c28777ba33dea832613c2f457c107b7ea5dc2e26f",
+      "source": "packages/runner/src/store.ts",
+      "sourceSha256": "5aa5343423e110f2e69034f1b6ac708fa51af5e84fa1aa7839ce5bd81ef39698",
+      "embeddedSha256": "5aa5343423e110f2e69034f1b6ac708fa51af5e84fa1aa7839ce5bd81ef39698",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/server-ke1TSt2G.mjs.map",
+      "mapSha256": "39a0aa936f1f62d1db53602c28777ba33dea832613c2f457c107b7ea5dc2e26f",
+      "source": "packages/runner/src/materials.ts",
+      "sourceSha256": "b8de0e8ae970b1ec95828f5b48634a4354306cb3f58a714e20cad24336defc78",
+      "embeddedSha256": "b8de0e8ae970b1ec95828f5b48634a4354306cb3f58a714e20cad24336defc78",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/server-ke1TSt2G.mjs.map",
+      "mapSha256": "39a0aa936f1f62d1db53602c28777ba33dea832613c2f457c107b7ea5dc2e26f",
+      "source": "packages/runner/src/manager.ts",
+      "sourceSha256": "b3dd3b85c8035349bec8784e6ff13ce57275577f2f08d77813964ccb3141d72a",
+      "embeddedSha256": "b3dd3b85c8035349bec8784e6ff13ce57275577f2f08d77813964ccb3141d72a",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/server-ke1TSt2G.mjs.map",
+      "mapSha256": "39a0aa936f1f62d1db53602c28777ba33dea832613c2f457c107b7ea5dc2e26f",
+      "source": "packages/runner/src/layout.ts",
+      "sourceSha256": "0a5a5874d21e47722b0617444af7e5b9ff9ca3827101a6434dc73edc133d6919",
+      "embeddedSha256": "0a5a5874d21e47722b0617444af7e5b9ff9ca3827101a6434dc73edc133d6919",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/server-ke1TSt2G.mjs.map",
+      "mapSha256": "39a0aa936f1f62d1db53602c28777ba33dea832613c2f457c107b7ea5dc2e26f",
+      "source": "packages/runner/src/server.ts",
+      "sourceSha256": "abfabf45d8fdce64566c9ac70efd3d2b2db85dc29c0c780a0052b4c2bb2da556",
+      "embeddedSha256": "abfabf45d8fdce64566c9ac70efd3d2b2db85dc29c0c780a0052b4c2bb2da556",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/store-protocol.ts",
+      "sourceSha256": "f1273760323f079e8fda34500969eecb280025bd431c483640fe17da2ff4e1a1",
+      "embeddedSha256": "f1273760323f079e8fda34500969eecb280025bd431c483640fe17da2ff4e1a1",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/fence-domain.ts",
+      "sourceSha256": "70062c00a271231d669d6a2e2f8b55558ebce37acb187b340071bd22983cda2a",
+      "embeddedSha256": "70062c00a271231d669d6a2e2f8b55558ebce37acb187b340071bd22983cda2a",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/capacity-domain.ts",
+      "sourceSha256": "664f9e574a5da95b4563a361c5fb3dcc7b9280e811aada5301a0b34fde4d05e0",
+      "embeddedSha256": "664f9e574a5da95b4563a361c5fb3dcc7b9280e811aada5301a0b34fde4d05e0",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/container-domain.ts",
+      "sourceSha256": "1a01e0db9b9fd07cf505d0a5a912f3bda2d824941a1e61a235964c57d9f7b912",
+      "embeddedSha256": "1a01e0db9b9fd07cf505d0a5a912f3bda2d824941a1e61a235964c57d9f7b912",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/preview-clock.ts",
+      "sourceSha256": "5310424bec946c945ca27c76dfeead85eac648c76e95031c79f49e46b73d3664",
+      "embeddedSha256": "5310424bec946c945ca27c76dfeead85eac648c76e95031c79f49e46b73d3664",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sourceSha256": "1b27c3dc6be1fa96f25aac53ac921f2641424557ad1cfc45eb07a273849b58d2",
+      "embeddedSha256": "1b27c3dc6be1fa96f25aac53ac921f2641424557ad1cfc45eb07a273849b58d2",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/cleanup-migration.ts",
+      "sourceSha256": "d18a64dd3fcdcb50d326e0f4f485f222b11253f70d405473cd31c38f3c57ca4c",
+      "embeddedSha256": "d18a64dd3fcdcb50d326e0f4f485f222b11253f70d405473cd31c38f3c57ca4c",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/cleanup-domain.ts",
+      "sourceSha256": "72018d0baea1b71706f391b37c5c15ba4638c9575d79f7ea07a19cc32329f627",
+      "embeddedSha256": "72018d0baea1b71706f391b37c5c15ba4638c9575d79f7ea07a19cc32329f627",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/worker.mjs.map",
+      "mapSha256": "0fc46fcc20dc8cf19e39bec8389ddd41e4c8c72e8b98a9b76fd098caaa5865d9",
+      "source": "packages/runner/src/worker.ts",
+      "sourceSha256": "72a65daee1d19f058e0597471d7bbe78fe4696a78521bcd28d1f62a1eab46721",
+      "embeddedSha256": "72a65daee1d19f058e0597471d7bbe78fe4696a78521bcd28d1f62a1eab46721",
+      "matches": true
+    },
+    {
+      "map": "packages/runner/dist/workspace-fence-BX3LCM3x.mjs.map",
+      "mapSha256": "63c7f8f5e0f45856c46229df8d04e99f21c8b86690348c34a47bf76fb08b0e0b",
+      "source": "packages/runner/src/workspace-fence.ts",
+      "sourceSha256": "4e08840dc58fd21da5a53749646b5bc250389745f326137da213ab99cd336430",
+      "embeddedSha256": "4e08840dc58fd21da5a53749646b5bc250389745f326137da213ab99cd336430",
+      "matches": true
+    },
+    {
+      "map": "packages/preview-gateway/dist/index.mjs.map",
+      "mapSha256": "627e419808e68747a09f5fde847dd90d986bd7f6e2fdb3cbaa5d6bd4e3b0fe48",
+      "source": "packages/preview-gateway/src/config.ts",
+      "sourceSha256": "49d4baaf020f390e296764c44617518dff1d3a19afae168486017ff7a02bf8a1",
+      "embeddedSha256": "49d4baaf020f390e296764c44617518dff1d3a19afae168486017ff7a02bf8a1",
+      "matches": true
+    },
+    {
+      "map": "packages/preview-gateway/dist/index.mjs.map",
+      "mapSha256": "627e419808e68747a09f5fde847dd90d986bd7f6e2fdb3cbaa5d6bd4e3b0fe48",
+      "source": "packages/preview-gateway/src/index.ts",
+      "sourceSha256": "749c36877791518b75742be1b22d16295e82e297b02fb4daf2a373fb579dffaa",
+      "embeddedSha256": "749c36877791518b75742be1b22d16295e82e297b02fb4daf2a373fb579dffaa",
+      "matches": true
+    }
+  ],
+  "matches": 105,
+  "mismatches": []
+}

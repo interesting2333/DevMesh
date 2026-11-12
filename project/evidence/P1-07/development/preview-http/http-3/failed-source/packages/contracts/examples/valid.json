@@ -1,0 +1,385 @@
+[
+  {
+    "schema": "CreateProject",
+    "input": {
+      "initialRequest": {
+        "text": "建立一个任务看板",
+        "attachmentIds": []
+      },
+      "clientDraftId": "9930fa54-99c6-4cc6-bd70-79e9c6f49b07"
+    }
+  },
+  {
+    "schema": "SaveMessage",
+    "input": {
+      "text": "当前进展如何？",
+      "attachmentIds": [],
+      "clientMessageId": "9930fa54-99c6-4cc6-bd70-79e9c6f49b07"
+    }
+  },
+  {
+    "schema": "AnswerQuestions",
+    "input": {
+      "answers": [
+        {
+          "questionId": "question_01",
+          "questionRevision": 1,
+          "value": "按优先级排序"
+        }
+      ]
+    }
+  },
+  {
+    "schema": "ConfirmPlan",
+    "input": {
+      "requirementRevision": 1,
+      "reviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "schema": "PlanFeedback",
+    "input": {
+      "text": "请补充测试工作"
+    }
+  },
+  {
+    "schema": "ProposeChange",
+    "input": {
+      "proposedText": "增加截止日期",
+      "sourceMessageId": "message_01"
+    }
+  },
+  {
+    "schema": "DecideChange",
+    "input": {
+      "action": "confirm",
+      "analysisId": "analysis_01",
+      "basisHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "schema": "PauseRun",
+    "input": {}
+  },
+  {
+    "schema": "ResumeRun",
+    "input": {
+      "controlRevision": 3,
+      "recoveryReviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "schema": "CancelRun",
+    "input": {
+      "impactReviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "schema": "RetryWork",
+    "input": {
+      "runId": "run_01",
+      "failedAttemptId": "attempt_01",
+      "retryReviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "schema": "RedoRun",
+    "input": {
+      "redoReviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "schema": "AcceptCandidate",
+    "input": {
+      "candidateRevision": 1,
+      "reviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "dataPlanHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "schema": "ExecutionPermit",
+    "input": {
+      "schemaVersion": "devmesh.permit.v1",
+      "grantId": "grant_01",
+      "activationId": "activation_01",
+      "notBefore": "2026-11-10T08:00:00.000Z",
+      "expiresAt": "2026-11-10T08:00:15.000Z",
+      "ownerKind": "workflowAttempt",
+      "runId": "run_01",
+      "runEpoch": 2,
+      "workId": "work_01",
+      "workEpoch": 3,
+      "attemptId": "attempt_01",
+      "resources": [
+        {
+          "kind": "workspace",
+          "resourceId": "workspace_01",
+          "access": "write"
+        }
+      ]
+    }
+  },
+  {
+    "schema": "ExecutionPermit",
+    "input": {
+      "schemaVersion": "devmesh.permit.v1",
+      "grantId": "grant_01",
+      "activationId": "activation_01",
+      "notBefore": "2026-11-10T08:00:00.000Z",
+      "expiresAt": "2026-11-10T08:00:15.000Z",
+      "ownerKind": "invocationAttempt",
+      "invocationId": "invocation_01",
+      "invocationEpoch": 2,
+      "invocationAttemptId": "iattempt_01",
+      "resources": [
+        {
+          "kind": "snapshot",
+          "resourceId": "snapshot_01",
+          "access": "read"
+        }
+      ]
+    }
+  },
+  {
+    "schema": "Command",
+    "input": {
+      "schemaVersion": 1,
+      "type": "ConfirmPlan",
+      "idempotencyKey": "9930fa54-99c6-4cc6-bd70-79e9c6f49b07",
+      "target": {
+        "kind": "plan",
+        "projectId": "prj_01",
+        "runId": "run_01",
+        "planRevision": 1
+      },
+      "payload": {
+        "requirementRevision": 1,
+        "reviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  },
+  {
+    "schema": "DomainEvent",
+    "input": {
+      "schemaVersion": 1,
+      "eventId": "evt_01",
+      "projectId": "prj_01",
+      "runId": "run_01",
+      "seq": 1,
+      "type": "AttemptStateChanged",
+      "occurredAt": "2026-11-10T08:00:00.000Z",
+      "observedAt": "2026-11-10T08:00:00.120Z",
+      "timeSource": "producer",
+      "resourceRevision": 1,
+      "requirementRevision": 1,
+      "planRevision": 1,
+      "operationId": "op_01",
+      "workId": "work_01",
+      "attemptId": "attempt_01",
+      "payload": {
+        "attemptId": "attempt_01",
+        "state": "VERIFYING"
+      }
+    }
+  },
+  {
+    "schema": "ProductOutput",
+    "input": {
+      "schemaVersion": "devmesh.requirements.v1",
+      "role": "product",
+      "requirements": [
+        {
+          "id": "requirement_01",
+          "statement": "任务可设定优先级",
+          "sourceRefs": [
+            {
+              "kind": "message",
+              "messageId": "message_01"
+            }
+          ],
+          "acceptance": [
+            "排序后高优先级靠前"
+          ]
+        }
+      ],
+      "assumptions": [],
+      "questions": []
+    }
+  },
+  {
+    "schema": "ArchitectOutput",
+    "input": {
+      "schemaVersion": "devmesh.architecture.v1",
+      "role": "architect",
+      "interfaces": [],
+      "planDraft": {
+        "requirementRevision": 1,
+        "works": [
+          {
+            "workId": "work_01",
+            "workRevision": 1,
+            "role": "developer",
+            "goal": "实现已确认的看板字段",
+            "inputRefs": [
+              {
+                "kind": "artifact",
+                "artifactId": "artifact_01",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            ],
+            "outputSpec": [
+              {
+                "slot": "implementation.commit",
+                "schemaId": "devmesh.development-result.v1"
+              }
+            ],
+            "completionChecks": [
+              {
+                "kind": "commit-resolved",
+                "outputSlot": "implementation.commit"
+              }
+            ],
+            "dependencies": [],
+            "writeScope": [
+              "src/board.ts"
+            ],
+            "estimatedResources": {
+              "cpu": 2,
+              "memoryMiB": 4096,
+              "timeoutMs": 600000
+            },
+            "requirementIds": [
+              "requirement_01"
+            ]
+          }
+        ]
+      },
+      "risks": [],
+      "capabilityFit": {
+        "supported": true,
+        "gaps": []
+      }
+    }
+  },
+  {
+    "schema": "DeveloperOutput",
+    "input": {
+      "schemaVersion": "devmesh.development-result.v1",
+      "role": "developer",
+      "baseCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "resultCommit": "cccccccccccccccccccccccccccccccccccccccc",
+      "changedFiles": [
+        "src/board.ts"
+      ],
+      "checkRefs": [
+        {
+          "artifactId": "artifact_01",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "unverified": [],
+      "handoffProposal": {
+        "targetRole": "tester",
+        "goal": "验证字段及排序",
+        "artifactRefs": [
+          {
+            "artifactId": "artifact_01",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "reason": "开发成果已保存，待编排器准入"
+      }
+    }
+  },
+  {
+    "schema": "TesterOutput",
+    "input": {
+      "schemaVersion": "devmesh.test-result.v1",
+      "role": "tester",
+      "targetCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "caseResults": [
+        {
+          "checkId": "check_01",
+          "requirementIds": [
+            "requirement_01"
+          ],
+          "status": "FAILED",
+          "reportRef": {
+            "artifactId": "artifact_01",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "targetCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        }
+      ],
+      "coverageRef": {
+        "artifactId": "artifact_01",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "targetCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "defects": [
+        {
+          "id": "defect_01",
+          "severity": "HIGH",
+          "description": "排序反向",
+          "evidenceRefs": [
+            {
+              "artifactId": "artifact_01",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ]
+        }
+      ],
+      "buildRef": {
+        "artifactId": "artifact_01",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "targetCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  },
+  {
+    "schema": "WorkDelegation",
+    "input": {
+      "schemaVersion": "devmesh.work.v1",
+      "operationId": "op_dispatch_01",
+      "runId": "run_01",
+      "workId": "work_01",
+      "workRevision": 1,
+      "attemptId": "attempt_01",
+      "endpointId": "builtin.tester",
+      "endpointRevision": 1,
+      "grantId": "grant_01",
+      "activationId": "activation_01",
+      "runEpoch": 2,
+      "workEpoch": 3,
+      "requirementRevision": 1,
+      "planRevision": 1,
+      "inputManifestId": "manifest_01",
+      "roleSnapshotId": "role_tester_01",
+      "originRole": "developer",
+      "targetRole": "tester",
+      "requestedOutputSchema": "devmesh.test-result.v1"
+    }
+  },
+  {
+    "schema": "InvocationDelegation",
+    "input": {
+      "schemaVersion": "devmesh.invocation.v1",
+      "operationId": "op_invoke_01",
+      "invocationId": "invocation_01",
+      "invocationAttemptId": "iattempt_01",
+      "invocationEpoch": 2,
+      "activationId": "activation_01",
+      "grantId": "grant_01",
+      "endpointId": "external.reviewer",
+      "endpointRevision": 1,
+      "inputManifestRef": {
+        "artifactId": "artifact_01",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "definitionSnapshotRef": {
+        "artifactId": "artifact_01",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  }
+]
