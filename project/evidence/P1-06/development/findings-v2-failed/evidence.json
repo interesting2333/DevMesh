@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "scope": "P1-06 task 3.1 development: original quality findings, atomic Work completion, immutable issue history and trusted owner fix/reverification commands. Explicit seeded source/admission/Runtime evidence; no claim of a complete forward repair, production model or Linux Runner.",
+  "sourceCommit": "2be4aec4898e98055109ac695553e451bd7e0bcf",
+  "dirty": true,
+  "sourceFingerprint": "25157222741c725b2d19b28838a9030239268332b4a79f07046451c00b16e68e",
+  "unchanged": true,
+  "startedAt": "2026-11-12T04:30:42.386Z",
+  "finishedAt": "2026-11-12T04:41:08.233Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 176850,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13180,
+      "output": "lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "name": "verifier-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 406236,
+      "output": "verifier-build.txt",
+      "sha256": "57fff120c4a84ad22fd18bf314aca7bca58243c52ea38fb5d2e3087fc8106dd2"
+    },
+    {
+      "name": "verified-findings",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 25556,
+      "output": "verified-findings.txt",
+      "sha256": "d2cf98e197d0343eb808ca868c80c542a34091b5db2ccb18ad1408206916f80c"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/packages/storage-sqlite/migrations/0024-verifiedfindings.sql",
+      "sha256": "430dbd37c8883582d942bf530ec6ec4422f73a07372e5aa525d89625a323609f"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "4f3754e1e39369b05106ad7d39adba8ea0f4cb026140bd2ff69f1e1831655e6a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "f97232e23520b3eaee51b5fefa743733c5147f5dfffddef7f53daac2a277a93b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "2d9620e83b3520ac5e4cfc6272fb6d12094aba6a1e377c7783ce2d93a52ce29e"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "550cca23f800c15d5a7c7e63cf43d203a14e6749b69969eb79f8d24219cc5cc4"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/packages/storage-sqlite/src/tool-domain.ts",
+      "sha256": "f5c5c33937d8228c447af39c60b880abce1ade0e54250f6df7a2c39b461a8b5b"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/packages/storage-sqlite/src/verified-finding-domain.ts",
+      "sha256": "1e05135eacc5a27c0637b62936b9a453ca22982e2cc0c43c1062a57c4c43993a"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/packages/storage-sqlite/src/verified-finding-protocol.ts",
+      "sha256": "60d0a7d407abaf8f1c7296f9ccbf70e334116077b5df1b2a5c076ce8a84a96c4"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/tests/fixtures/candidate-data.mjs",
+      "sha256": "c37b546692211aad6852c0a0850197cf06f3a57b1fc347f4086cc971ba19d1f7"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/tests/fixtures/quality-storage.mjs",
+      "sha256": "e6d248ac5b080a173c2ae2fec61c292fd6d878aacea9fbd980af5cb8071c389d"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/tests/fixtures/quality.mjs",
+      "sha256": "06f6e11d546c7ab1aee67e9333c30f0ae2c9d286efbe8594cce1064858c907f6"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/tests/fixtures/verified-repair.mjs",
+      "sha256": "dde2fa4148c670f904b8e7029a8bd609beeab1056b4852fa6101976b1fa1aaee"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/failed-source/tests/verified-findings.test.mjs",
+      "sha256": "3984e615b1193f1b92a2358d310d473d98568d7448ca6961319a21dc95f395de"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/lint.txt",
+      "sha256": "09f91d9bb2d56025eb9a95cfdd3c69fa144e97c4a533cd33e9f3f88089eda061"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/report.json",
+      "sha256": "60ac8e1c20393b0acb1d99fe8ebebf9e47a81a0053592c1106529661245f7046"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/verified-findings.txt",
+      "sha256": "d2cf98e197d0343eb808ca868c80c542a34091b5db2ccb18ad1408206916f80c"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v2-failed/verifier-build.txt",
+      "sha256": "57fff120c4a84ad22fd18bf314aca7bca58243c52ea38fb5d2e3087fc8106dd2"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no exact clean checkpoint or stage/product acceptance.",
+    "Original admission/Git/Runner/Runtime candidate records are explicit test DB fixtures. Migrated SQLite, independent raw report evaluator, filesystem content ACK, Work completion and issue transactions are actual implementations.",
+    "No production model, generated container execution, OIDC, Linux/runsc, or completed end-to-end forward repair claimed."
+  ]
+}

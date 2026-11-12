@@ -126,4 +126,5 @@ export type {WorkspaceMaintenanceAuthority} from './workspace-maintenance-protoc
 export type {WorkspaceReclamation} from './workspace-reclamation-protocol.js';
 export {qualityMaterialKey} from './quality-protocol.js';
 export type {WorkVerification,WorkAssessment,WorkArtifactRef} from './work-verification-protocol.js';
+export type {OriginalFailure,VerifiedFindingView} from './verified-finding-protocol.js';
 export type {QualityBasis,QualityVerification,QualityOrigin,QualityMaterial,QualityMaterialDescriptor,QualityStage} from './quality-protocol.js';

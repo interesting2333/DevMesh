@@ -85,6 +85,16 @@
 - **WHEN** 修复分支经过受信任源码组合后，以准确合并候选 SHA 完成复验
 - **THEN** 关闭缺陷须同时核对修复归档确实属于该候选来源、新原质量报告准确绑定该 SHA，以及新正式 Tester 验证通过；不能将单个分支 SHA 或较早报告当作复验证据
 
+#### Scenario: Original failure import or its response is interrupted
+
+- **WHEN** 原 Work 完成事务导入确定的失败检查，中途写入失败或已提交响应丢失
+- **THEN** 中途失败时 Work 与 issue 导入一起回滚；原键恢复时返回原完成及原缺陷批次，以原 Work 验证和 checkId 去重，原复现／需求验收和报告引用不可覆盖
+
+#### Scenario: A candidate finding or an infrastructure error is unconfirmed
+
+- **WHEN** 只有模型声明的问题，或原执行发生基础设施错误／停止而不能确定可复现业务失败
+- **THEN** 保留候选与原质量事实，不自动生成确定的业务修复依据；新的缺失或模型声明复验结果记录 NOT_VERIFIED，不能改写原失败或被标为独立 FAILED
+
 ### Requirement: Candidate revisions freeze complete quality and delivery identities
 
 ReleaseCandidate SHALL 固定代码、需求／计划／模板／检查配置版本、必要检查集合、报告、构建产物、预览镜像和数据方案身份。必要检查未通过、材料缺失、存在未解决高严重缺陷或未知写操作时 MUST 不冻结可审查候选。变化 SHALL 创建新修订，不能覆盖已审查版本或直接更新项目接受指针。

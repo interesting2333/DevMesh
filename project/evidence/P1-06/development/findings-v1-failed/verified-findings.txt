@@ -1,0 +1,72 @@
+TAP version 13
+# (node:14020) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: formal failed Work atomically derives original findings and replay preserves exact failures
+ok 1 - formal failed Work atomically derives original findings and replay preserves exact failures
+  ---
+  duration_ms: 9730.4328
+  type: 'test'
+  ...
+# Subtest: model-only findings and missing preview do not become independently verified repair inputs
+ok 2 - model-only findings and missing preview do not become independently verified repair inputs
+  ---
+  duration_ms: 7369.1925
+  type: 'test'
+  ...
+# Subtest: finding insertion fault rolls formal completion back and original retry creates one batch
+ok 3 - finding insertion fault rolls formal completion back and original retry creates one batch
+  ---
+  duration_ms: 8768.6376
+  type: 'test'
+  ...
+# Subtest: trusted fix link requires the confirmed forward findings edge and original command receipt is stable
+not ok 4 - trusted fix link requires the confirmed forward findings edge and original command receipt is stable
+  ---
+  duration_ms: 780.5859
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:29:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-ChyyryUc.mjs:7664:18)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+    candidateFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:17:79)
+    async qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:14:10)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:30:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: members can read original finding history after pause but cannot mutate or impersonate an owner
+not ok 5 - members can read original finding history after pause but cannot mutate or impersonate an owner
+  ---
+  duration_ms: 818.5063
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-ChyyryUc.mjs:7664:18)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+    candidateFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:17:79)
+    async qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:14:10)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:38:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32371.9706

@@ -64,6 +64,9 @@ import {createWorkVerificationDomain} from './work-verification-domain.js';
 import {workVerificationRequests} from './work-verification-protocol.js';
 import type {WorkVerificationMethod} from './work-verification-protocol.js';
 import {knownAttemptEffects} from './work-effects.js';
+import {createVerifiedFindingDomain} from './verified-finding-domain.js';
+import {verifiedFindingRequests} from './verified-finding-protocol.js';
+import type {VerifiedFindingMethod} from './verified-finding-protocol.js';
 export { canonical } from './json.js';
 
 type Row = Record<string, string | number | null>;
@@ -93,6 +96,9 @@ export function createDomain(db: DatabaseSync) {
   const candidateIntegrations=createCandidateIntegrationDomain(db,plans);
   const quality=createQualityDomain(db,candidateIntegrations);
   const workVerifications=createWorkVerificationDomain(db,quality);
+  const verifiedFindings=createVerifiedFindingDomain(db,quality,candidateIntegrations,(runId,operationId,attemptId,payload)=>{
+    bump(runId);event(runId,operationId,'IssueChanged',payload,{attemptId});
+  });
   const candidateMaterials=createCandidateMaterialDomain(db);
   const candidateBasis=candidateIntegrations.basis;
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
@@ -337,6 +343,7 @@ export function createDomain(db: DatabaseSync) {
         exec('DELETE FROM role_slots WHERE attempt_id=?',input.attemptId);
         exec("UPDATE execution_grants SET status='REVOKED' WHERE attempt_id=?",input.attemptId);
         workVerifications.applied(String(verification.operation_id));
+        verifiedFindings.capture(String(verification.operation_id));
         bump(input.runId);
         event(input.runId,operationId,'AttemptStateChanged',{attemptId:input.attemptId,state},{workId,attemptId:input.attemptId});
         return {attemptId:input.attemptId,state,revision:Number(run(input.runId).resource_revision)};
@@ -428,6 +435,7 @@ export function createDomain(db: DatabaseSync) {
   };
   return { execute(method: Method, input: unknown): unknown {
     if(Object.hasOwn(workVerificationRequests,method))return workVerifications.execute(method as WorkVerificationMethod,input);
+    if(Object.hasOwn(verifiedFindingRequests,method))return verifiedFindings.execute(method as VerifiedFindingMethod,input);
     if(Object.hasOwn(qualityRequests,method))return quality.execute(method as QualityMethod,input);
     if(Object.hasOwn(workspaceMaintenanceRequests,method))return workspaceMaintenance.execute(method as WorkspaceMaintenanceMethod,input);
     if(Object.hasOwn(workspaceReclamationRequests,method))return workspaceReclamations.execute(method as WorkspaceReclamationMethod,input);

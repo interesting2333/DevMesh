@@ -57,6 +57,7 @@ export function createToolDomain(db:DatabaseSync,changed:(runId:string,operation
     });},
     linkIssueFix(input:ToolInput<'linkIssueFix'>){return mutation(input,'issues.linkFix','FIX_LINKED',h=>{
       const a=input.args,r=current(h.runId,a.issueId,a.issueRevision);
+      if(get('SELECT 1 FROM verified_findings WHERE issue_id=?',a.issueId))fail('ISSUE_TRUSTED_COMMAND_REQUIRED');
       if(r.state==='VERIFIED')fail('ISSUE_ALREADY_VERIFIED');
       if(!get(`SELECT 1 FROM works w JOIN runs r ON r.run_id=w.run_id JOIN plan_works p ON p.run_id=w.run_id AND p.work_id=w.work_id AND p.plan_revision=r.current_plan_revision
         JOIN plan_confirmations c ON c.run_id=r.run_id AND c.plan_revision=p.plan_revision AND c.requirement_revision=r.current_requirement_revision
@@ -66,6 +67,7 @@ export function createToolDomain(db:DatabaseSync,changed:(runId:string,operation
     });},
     recordIssueVerification(input:ToolInput<'recordIssueVerification'>){return mutation(input,'issues.recordVerification','VERIFICATION_RECORDED',h=>{
       const a=input.args,r=current(h.runId,a.issueId,a.issueRevision);ready(h.runId,a.evidence);
+      if(get('SELECT 1 FROM verified_findings WHERE issue_id=?',a.issueId))fail('ISSUE_TRUSTED_COMMAND_REQUIRED');
       const fix=get('SELECT * FROM attempts WHERE attempt_id=? AND run_id=? AND work_id=?',a.fixAttemptId,h.runId,r.fix_work_id??null);
       if(!fix)fail('ISSUE_FIX_ATTEMPT_INVALID',422);
       if(a.outcome!=='NOT_VERIFIED'){

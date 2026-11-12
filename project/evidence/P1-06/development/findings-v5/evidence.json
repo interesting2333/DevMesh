@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "scope": "P1-06 task 3.1 development: original quality findings, atomic Work completion, immutable issue history and trusted owner fix/reverification commands. Explicit seeded source/admission/Runtime evidence; no claim of a complete forward repair, production model or Linux Runner.",
+  "sourceCommit": "2be4aec4898e98055109ac695553e451bd7e0bcf",
+  "dirty": true,
+  "sourceFingerprint": "33d039935e13250341728d4c4310b927bb7d495fc943ce45d3f45e47c0701362",
+  "unchanged": true,
+  "startedAt": "2026-11-12T05:12:51.514Z",
+  "finishedAt": "2026-11-12T05:14:17.156Z",
+  "checks": [
+    {
+      "name": "current-mcp-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6357,
+      "output": "current-mcp-build.txt",
+      "sha256": "eb8d964a492ea14e4f6d5e617e73a645a4612297c7378968487420d63b9231ae"
+    },
+    {
+      "name": "quality-collector",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6711,
+      "output": "quality-collector.txt",
+      "sha256": "8e0d728e1cbd8365937af67b87747cbc4b02409ad73979d4a7ceee803158bf4f"
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 39811,
+      "output": "storage.txt",
+      "sha256": "960c70cc6aab87cbef1e36527f9568e4f848e9571c79af8478dafd2dc6593b11"
+    },
+    {
+      "name": "mcp-issues",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4589,
+      "output": "mcp-issues.txt",
+      "sha256": "fc969a1eef70e2c2812115f3709484a23c6a4d3ee77809febb2e5740cb929464"
+    },
+    {
+      "name": "mcp-pipeline",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28010,
+      "output": "mcp-pipeline.txt",
+      "sha256": "6ab92a2745555193db5afe5d33e1c9246f03cbf9d96918dd8467ee4897d08839"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-06/development/findings-v5/current-mcp-build.txt",
+      "sha256": "eb8d964a492ea14e4f6d5e617e73a645a4612297c7378968487420d63b9231ae"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v5/mcp-issues.txt",
+      "sha256": "fc969a1eef70e2c2812115f3709484a23c6a4d3ee77809febb2e5740cb929464"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v5/mcp-pipeline.txt",
+      "sha256": "6ab92a2745555193db5afe5d33e1c9246f03cbf9d96918dd8467ee4897d08839"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v5/quality-collector.txt",
+      "sha256": "8e0d728e1cbd8365937af67b87747cbc4b02409ad73979d4a7ceee803158bf4f"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v5/report.json",
+      "sha256": "912c9347f6bfbb09f9ad0c434a6201fb29520af45a49a18eccdfcef39f6ab945"
+    },
+    {
+      "path": "project/evidence/P1-06/development/findings-v5/storage.txt",
+      "sha256": "960c70cc6aab87cbef1e36527f9568e4f848e9571c79af8478dafd2dc6593b11"
+    }
+  ],
+  "limitations": [
+    "Development fingerprint only; no exact clean checkpoint or stage/product acceptance.",
+    "Original admission/Git/Runner/Runtime candidate records are explicit test DB fixtures. Migrated SQLite, independent raw report evaluator, filesystem content ACK, Work completion and issue transactions are actual implementations.",
+    "No production model, generated container execution, OIDC, Linux/runsc, or completed end-to-end forward repair claimed."
+  ]
+}

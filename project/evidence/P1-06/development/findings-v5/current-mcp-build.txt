@@ -1,0 +1,15 @@
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\.cache\p0-08\windows-clean-bf50680\packages\mcp-tools\package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 4 files
+ℹ dist\index.mjs       82.98 kB │ gzip: 20.65 kB
+ℹ dist\index.mjs.map  141.14 kB │ gzip: 35.36 kB
+ℹ dist\index.d.mts     14.50 kB │ gzip:  3.38 kB
+ℹ 3 files, total: 238.62 kB
+✔ Build complete in 4925ms
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+

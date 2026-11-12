@@ -1,0 +1,136 @@
+TAP version 13
+# (node:33188) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: formal failed Work atomically derives original findings and replay preserves exact failures
+ok 1 - formal failed Work atomically derives original findings and replay preserves exact failures
+  ---
+  duration_ms: 9889.9195
+  type: 'test'
+  ...
+# Subtest: model-only findings and missing preview do not become independently verified repair inputs
+ok 2 - model-only findings and missing preview do not become independently verified repair inputs
+  ---
+  duration_ms: 6422.5217
+  type: 'test'
+  ...
+# Subtest: finding insertion fault rolls formal completion back and original retry creates one batch
+ok 3 - finding insertion fault rolls formal completion back and original retry creates one batch
+  ---
+  duration_ms: 7125.2279
+  type: 'test'
+  ...
+# Subtest: trusted fix link requires the confirmed forward findings edge and original command receipt is stable
+ok 4 - trusted fix link requires the confirmed forward findings edge and original command receipt is stable
+  ---
+  duration_ms: 6220.6903
+  type: 'test'
+  ...
+# Subtest: members can read original finding history after pause but cannot mutate or impersonate an owner
+ok 5 - members can read original finding history after pause but cannot mutate or impersonate an owner
+  ---
+  duration_ms: 6123.4587
+  type: 'test'
+  ...
+# Subtest: exact integrated candidate containing the formally verified fix can close the original finding
+not ok 6 - exact integrated candidate containing the formally verified fix can close the original finding
+  ---
+  duration_ms: 9114.2587
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-KAjaXnZH.mjs:2555:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-KAjaXnZH.mjs:7658:62)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:41:315)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async verifiedRepairFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/verified-repair.mjs:31:14)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:39:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: a passing report on the original pre-fix SHA cannot close a finding
+not ok 7 - a passing report on the original pre-fix SHA cannot close a finding
+  ---
+  duration_ms: 24719.1071
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:45:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-KAjaXnZH.mjs:2555:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-KAjaXnZH.mjs:7658:62)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:41:315)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async verifiedRepairFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/verified-repair.mjs:31:14)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:46:28)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: a new exact failed recheck remains a separate immutable failure and cannot close the original
+not ok 8 - a new exact failed recheck remains a separate immutable failure and cannot close the original
+  ---
+  duration_ms: 19708.6019
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:48:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-KAjaXnZH.mjs:2555:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-KAjaXnZH.mjs:7658:62)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:41:315)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async verifiedRepairFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/verified-repair.mjs:31:14)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:49:34)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: a stopped or infrastructure-error execution does not become a trusted automatic business repair
+ok 9 - a stopped or infrastructure-error execution does not become a trusted automatic business repair
+  ---
+  duration_ms: 9472.8618
+  type: 'test'
+  ...
+# Subtest: a new model-only finding preserves NOT_VERIFIED instead of inventing an independent failed recheck
+not ok 10 - a new model-only finding preserves NOT_VERIFIED instead of inventing an independent failed recheck
+  ---
+  duration_ms: 11926.9012
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:54:1'
+  failureType: 'testCodeFailure'
+  error: '请求不符合契约。'
+  code: 'SCHEMA_INVALID'
+  name: 'ContractError'
+  stack: |-
+    parseContract (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/contracts/dist/index.js:222:8)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-KAjaXnZH.mjs:2555:19)
+    Object.execute (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/packages/storage-sqlite/dist/domain-KAjaXnZH.mjs:7658:62)
+    Object.request (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:13:83)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:41:315)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async verifiedRepairFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/verified-repair.mjs:31:14)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:55:34)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 6
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 115266.5307

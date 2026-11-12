@@ -41,7 +41,7 @@
     "test:preparation": "node --test --test-concurrency=1 --test-reporter=tap tests/preparation*.test.mjs",
     "test:scheduler": "node --test --test-concurrency=1 --test-reporter=tap tests/scheduler*.test.mjs",
     "test:workspaces": "node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs tests/candidate*.test.mjs",
-    "test:verification": "node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs"
+    "test:verification": "node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs tests/verified-findings.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

@@ -1,0 +1,167 @@
+TAP version 13
+# (node:12024) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: formal failed Work atomically derives original findings and replay preserves exact failures
+not ok 1 - formal failed Work atomically derives original findings and replay preserves exact failures
+  ---
+  duration_ms: 3140.7393
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:9:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_SOURCE_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    Object.insert (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:160)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:19:59)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:10:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# Subtest: model-only findings and missing preview do not become independently verified repair inputs
+not ok 2 - model-only findings and missing preview do not become independently verified repair inputs
+  ---
+  duration_ms: 2714.1648
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:15:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_SOURCE_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    Object.insert (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:160)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:19:59)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:16:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: finding insertion fault rolls formal completion back and original retry creates one batch
+not ok 3 - finding insertion fault rolls formal completion back and original retry creates one batch
+  ---
+  duration_ms: 1577.1099
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:19:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_SOURCE_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    Object.insert (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:160)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:19:59)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:20:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: trusted fix link requires the confirmed forward findings edge and original command receipt is stable
+not ok 4 - trusted fix link requires the confirmed forward findings edge and original command receipt is stable
+  ---
+  duration_ms: 2142.962
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:24:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_SOURCE_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    Object.insert (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:160)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:19:59)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:25:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: members can read original finding history after pause but cannot mutate or impersonate an owner
+not ok 5 - members can read original finding history after pause but cannot mutate or impersonate an owner
+  ---
+  duration_ms: 1232.1381
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_SOURCE_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    Object.insert (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:160)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:19:59)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:33:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: exact integrated candidate containing the formally verified fix can close the original finding
+not ok 6 - exact integrated candidate containing the formally verified fix can close the original finding
+  ---
+  duration_ms: 1550.9923
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_SOURCE_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    Object.insert (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:160)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:19:59)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async verifiedRepairFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/verified-repair.mjs:28:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:39:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: a passing report on the original pre-fix SHA cannot close a finding
+not ok 7 - a passing report on the original pre-fix SHA cannot close a finding
+  ---
+  duration_ms: 1360.9412
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:45:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_SOURCE_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    Object.insert (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:160)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:19:59)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async verifiedRepairFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/verified-repair.mjs:28:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:46:28)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: a new exact failed recheck remains a separate immutable failure and cannot close the original
+not ok 8 - a new exact failed recheck remains a separate immutable failure and cannot close the original
+  ---
+  duration_ms: 1346.8569
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p0-08\\windows-clean-bf50680\\tests\\verified-findings.test.mjs:48:1'
+  failureType: 'testCodeFailure'
+  error: 'CANDIDATE_SOURCE_UNPROVEN'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    run (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:91)
+    Object.insert (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/candidate-data.mjs:19:160)
+    qualityStorageFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/quality-storage.mjs:19:59)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async workVerificationFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/work-verification.mjs:10:10)
+    async verifiedRepairFixture (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/fixtures/verified-repair.mjs:28:10)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p0-08/windows-clean-bf50680/tests/verified-findings.test.mjs:49:34)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 0
+# fail 8
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20779.8309
