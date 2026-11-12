@@ -32,6 +32,18 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 - **WHEN** 平台 origin 被配置为预览目标，或访问凭据用途／项目／预览／期限不匹配
 - **THEN** 配置或访问被拒绝，平台 Cookie 和身份不发送给生成应用
 
+#### Scenario: Durable intent and uncertain original effect
+- **WHEN** dataset／预览意图已经提交，首次派发后丢失回执或服务重启
+- **THEN** 原键恢复同一资源与原操作；只有首次 PREPARED 派发获得执行许可，SENT／UNKNOWN 只查询原对象，未核实前拒绝新建替代对象，不把意图提交称为启动完成
+
+#### Scenario: Wrong backend receipt or accepted instance cleanup
+- **WHEN** 非配置后端、不同 requestHash／image／dataset／instance 的回执到达，或停止意图指向已接受版本
+- **THEN** 拒绝改变原执行事实或派发停止，保留原数据和版本归属；观察／对象状态／事件失败时全部回滚
+
+#### Scenario: Dataset directory survives workspace cleanup
+- **WHEN** 工作空间被清理，或请求尝试用路径、链接、硬链接替代 dataset 数据库／日志／侧文件
+- **THEN** dataset 保留在受控 ID 决定的独立 Runner 目录，拒绝越界或链接文件，不暴露控制数据库和备份
+
 ### Requirement: Durable acceptance preparation without destructive defaults
 
 The system SHALL 在外部准备前固定候选、审查、原接受指针和数据策略，保存原操作身份。保留数据 MUST 用带 fencing 写门排空旧写入并快照最新数据，经准确迁移／完整性和服务健康验证后才准备完成；替换数据 MUST 有准确明确确认。未知结果 SHALL 查询原操作且不重复执行副作用。

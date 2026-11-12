@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "0146f7738ca834603bc1c66f778b03a1d7c7b0ba",
+  "dirty": true,
+  "sourceFingerprint": "2d066070e940fc0a0536fe8e434b308b4b8a5169392ecb11203fceb236897758",
+  "startedAt": "2026-11-12T08:41:15.423Z",
+  "finishedAt": "2026-11-12T08:43:29.686Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6632,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 637,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9222,
+      "output": "current-build.txt",
+      "sha256": "39e47dd1954fba1c1d84211c6aa448af97cd9f60eb1d37209a2dfbb191357b5c"
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 17513,
+      "output": "preview-intents.txt",
+      "sha256": "ea242787a3d8db30010392b19af227623cec01e247490276a7fc43d3d636a8ff",
+      "tests": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "review",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 23766,
+      "output": "review.txt",
+      "sha256": "bdb455515aaf95b66f1bd4e621613f28cde9dc93e68118ad5ce77bded53c831d",
+      "tests": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "freeze",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26799,
+      "output": "freeze.txt",
+      "sha256": "93bdc003da5aeee104336fac00201ecfc7aab3fd881ef6162aabe2e4c8b75fea",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 32302,
+      "output": "storage.txt",
+      "sha256": "a7a8a529c15f7408fd700e220a015147b1f6714330270b4170c3907d3e44100b",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "runner",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 15114,
+      "output": "runner.txt",
+      "sha256": "7b2d414e73697691d861ebeff98c3748167e9a2631c63bec65d79db83f290902",
+      "tests": {
+        "tests": 16,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1242,
+      "output": "contracts.txt",
+      "sha256": "671430f37798f124900b3b52b2d7bed11f75c3c1336a7e06c10e590cbe4f176f",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 968,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/contracts.txt",
+      "sha256": "671430f37798f124900b3b52b2d7bed11f75c3c1336a7e06c10e590cbe4f176f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/current-build.txt",
+      "sha256": "39e47dd1954fba1c1d84211c6aa448af97cd9f60eb1d37209a2dfbb191357b5c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/freeze.txt",
+      "sha256": "93bdc003da5aeee104336fac00201ecfc7aab3fd881ef6162aabe2e4c8b75fea"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/preview-intents.txt",
+      "sha256": "ea242787a3d8db30010392b19af227623cec01e247490276a7fc43d3d636a8ff"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/report.json",
+      "sha256": "6e2b9ab6e9823ec613ebdf80662a12973cd49e883b86015b9df6f1e433a2f623"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/review.txt",
+      "sha256": "bdb455515aaf95b66f1bd4e621613f28cde9dc93e68118ad5ce77bded53c831d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/runner.txt",
+      "sha256": "7b2d414e73697691d861ebeff98c3748167e9a2631c63bec65d79db83f290902"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/storage.txt",
+      "sha256": "a7a8a529c15f7408fd700e220a015147b1f6714330270b4170c3907d3e44100b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v12/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 task2.1 durable dataset/preview intents: exact candidate/image/dataset bindings, original dispatch grant and UNKNOWN recovery, SQLite transaction and real Worker restart, initialized Runner dataset path isolation/link/hard-link checks and independent retention. Backend success receipts in intent tests are explicit controlled fixtures; no actual file snapshot or preview container health.",
+  "limitations": [
+    "Same Codex agent implementation and review, not independent or human product/stage acceptance.",
+    "Actual migrated SQLite intent domain and real SQLite Worker restart; source/admission/Runtime facts and success backend receipts are explicit fixtures.",
+    "Runner dataset path checks initialize a real local Runner store and filesystem, but do not execute a SQLite data snapshot, production migration or preview container.",
+    "No enterprise identity, model, Linux/runsc validation, preview origin/gateway, T5 acceptance or publication."
+  ]
+}

@@ -9,7 +9,7 @@ export const ids = {
   roleSnapshot: id('role'), definitionSnapshot: id('definition'), candidate: id('candidate'), release: id('release'),
   question: id('question'), requirement: id('requirement'), session: id('session'), job: id('job'),
   attachment: id('attachment'), message: id('message'), change: id('change'), decision: id('decision'),
-  preview: id('preview'), export: id('export'), analysis: id('analysis'), check: id('check'),
+  preview: id('preview'), dataset: id('dataset'), export: id('export'), analysis: id('analysis'), check: id('check'),
 } as const;
 export type ProjectId = z.infer<typeof ids.project>;
 export type RunId = z.infer<typeof ids.run>;

@@ -1,0 +1,80 @@
+TAP version 13
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dataset intent retains original identities, closed backend configuration and owner/CAS/idempotency boundaries
+ok 1 - dataset intent retains original identities, closed backend configuration and owner/CAS/idempotency boundaries
+  ---
+  duration_ms: 2499.7467
+  type: 'test'
+  ...
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dispatch is granted once and UNKNOWN recovers only the exact original receipt, with immutable history
+ok 2 - dispatch is granted once and UNKNOWN recovers only the exact original receipt, with immutable history
+  ---
+  duration_ms: 1900.5087
+  type: 'test'
+  ...
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: intent facts and events roll back together, and a lost intent acknowledgement cannot double-create
+ok 3 - intent facts and events roll back together, and a lost intent acknowledgement cannot double-create
+  ---
+  duration_ms: 1836.033
+  type: 'test'
+  ...
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: preview binds one exact image/dataset and UNKNOWN start cannot be substituted or stopped without the original instance
+ok 4 - preview binds one exact image/dataset and UNKNOWN start cannot be substituted or stopped without the original instance
+  ---
+  duration_ms: 1841.839
+  type: 'test'
+  ...
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: stop ACK and UNKNOWN preserve the original instance, dataset and exact image independently
+ok 5 - stop ACK and UNKNOWN preserve the original instance, dataset and exact image independently
+  ---
+  duration_ms: 1549.4527
+  type: 'test'
+  ...
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: persisted backend observations and state/event writes are atomic and recover across a real SQLite Worker restart
+ok 6 - persisted backend observations and state/event writes are atomic and recover across a real SQLite Worker restart
+  ---
+  duration_ms: 2047.7706
+  type: 'test'
+  ...
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: stale prepared candidates cannot dispatch new effects and cross-project or altered storage identities fail closed
+ok 7 - stale prepared candidates cannot dispatch new effects and cross-project or altered storage identities fail closed
+  ---
+  duration_ms: 1680.6229
+  type: 'test'
+  ...
+# (node:30328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: accepted release ownership prevents both new stops and dispatch of an earlier stop intent
+ok 8 - accepted release ownership prevents both new stops and dispatch of an earlier stop intent
+  ---
+  duration_ms: 1597.403
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15614.1319

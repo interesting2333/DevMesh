@@ -12,6 +12,8 @@ export type { ManagerOptions } from './manager.js';
 export { RunnerMaterials } from './materials.js';
 export { openRunnerStorage } from './layout.js';
 export type { RunnerLayoutOptions } from './layout.js';
+export {RunnerDatasetPaths} from './dataset-paths.js';
+export type {RunnerDatasetPathOptions} from './dataset-paths.js';
 export { serveRunner } from './server.js';
 export type { RunnerIdentity } from './server.js';
 export {acquireWorkspaceFence,releaseWorkspaceFence,workspaceFenceSchema} from './workspace-fence.js';

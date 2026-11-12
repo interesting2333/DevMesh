@@ -74,6 +74,9 @@ import type {ReleaseFreezeMethod} from './release-freeze-protocol.js';
 import {createCandidateReviewDomain} from './candidate-review-domain.js';
 import {candidateReviewRequests} from './candidate-review-protocol.js';
 import type {CandidateReviewMethod} from './candidate-review-protocol.js';
+import {createPreviewDomain} from './preview-domain.js';
+import {previewRequests} from './preview-protocol.js';
+import type {PreviewMethod} from './preview-protocol.js';
 import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
@@ -123,6 +126,10 @@ export function createDomain(db: DatabaseSync) {
     rejected(runId,operationId,candidateId,rejectionId,resultId,state){bump(runId);event(runId,operationId,'CandidateRejected',{candidateId,rejectionId,resultId,state});},
   });
   const candidateMaterials=createCandidateMaterialDomain(db);
+  const previews=createPreviewDomain(db,plans,releaseFreezes,{
+    operation:(...args)=>operation(...args),
+    changed(runId,operationId,target){bump(runId);event(runId,operationId,'datasetId' in target?'DatasetStateChanged':'PreviewOperationChanged',target);},
+  });
   const candidateBasis=candidateIntegrations.basis;
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
@@ -460,6 +467,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(previewRequests,method))return previews.execute(method as PreviewMethod,input);
     if(Object.hasOwn(candidateReviewRequests,method))return candidateReviews.execute(method as CandidateReviewMethod,input);
     if(Object.hasOwn(releaseFreezeRequests,method))return releaseFreezes.execute(method as ReleaseFreezeMethod,input);
     if(Object.hasOwn(releaseDeliveryRequests,method))return releaseDeliveries.execute(method as ReleaseDeliveryMethod,input);

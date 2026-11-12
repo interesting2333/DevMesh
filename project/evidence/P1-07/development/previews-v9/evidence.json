@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "0146f7738ca834603bc1c66f778b03a1d7c7b0ba",
+  "dirty": true,
+  "sourceFingerprint": "5fed85909305caed6a7c9e6e4d40334ef551b3a3051e36736be0a89541228feb",
+  "startedAt": "2026-11-12T08:33:31.054Z",
+  "finishedAt": "2026-11-12T08:34:08.299Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 7346,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 734,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13414,
+      "output": "current-build.txt",
+      "sha256": "00475475d9a4e5778c59e23927f5af705ec77ef2624ebdfdaa23fe227d85b942"
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 15684,
+      "output": "preview-intents.txt",
+      "sha256": "879242f606c6c70b923fc47e141ccf88133e8334ab6956cdc6bdea4aed548ee9",
+      "tests": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/previews-v9/current-build.txt",
+      "sha256": "00475475d9a4e5778c59e23927f5af705ec77ef2624ebdfdaa23fe227d85b942"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v9/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v9/preview-intents.txt",
+      "sha256": "879242f606c6c70b923fc47e141ccf88133e8334ab6956cdc6bdea4aed548ee9"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v9/report.json",
+      "sha256": "4f254d02952d1c2de3f30f59ec49bc6f67e878a4de21c0b421d7659341e11125"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v9/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 task2.1 durable dataset/preview intents: exact candidate/image/dataset bindings, original dispatch grant and UNKNOWN recovery, SQLite transaction and real Worker restart. Backend success receipts in intent tests are explicit controlled fixtures; no actual file snapshot or container health.",
+  "limitations": [
+    "Same Codex agent implementation and review, not independent or human product/stage acceptance.",
+    "Actual migrated SQLite intent domain and real SQLite Worker restart; source/admission/Runtime facts and success backend receipts are explicit fixtures.",
+    "Runner dataset path checks initialize a real local Runner store and filesystem, but do not execute a SQLite data snapshot, production migration or preview container.",
+    "No enterprise identity, model, Linux/runsc validation, preview origin/gateway, T5 acceptance or publication."
+  ]
+}

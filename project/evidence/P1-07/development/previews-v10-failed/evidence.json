@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "0146f7738ca834603bc1c66f778b03a1d7c7b0ba",
+  "dirty": true,
+  "sourceFingerprint": "11e8013e527ca5b7d4cca5b4ea2a806a1d72df79f45399707ca37520f9006bff",
+  "startedAt": "2026-11-12T08:36:05.368Z",
+  "finishedAt": "2026-11-12T08:38:19.515Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6606,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 632,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 8990,
+      "output": "current-build.txt",
+      "sha256": "1ad4575e76081aa22d3c901e466b57989e0008add9bc72ba700d2d12b9883943"
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 117857,
+      "output": "preview-intents.txt",
+      "sha256": "aaeca7e782ccecb6a401586f41ed638ce1d943b894281dbabf94c3545862f502",
+      "tests": {
+        "tests": 12,
+        "pass": 8,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/current-build.txt",
+      "sha256": "1ad4575e76081aa22d3c901e466b57989e0008add9bc72ba700d2d12b9883943"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/contracts/src/events.ts",
+      "sha256": "97bff99e35c2b25cb57f9673c138b1167b09742738c11b4a69674ce55ae446b4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/contracts/src/primitives.ts",
+      "sha256": "0c24d4cc404b312f9174c1c3cbf0b98a91dc258397a0ec776ad9fd403a3bc84e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/runner/src/dataset-paths.ts",
+      "sha256": "ba1a2df8745f1acf80a8f6aa43eee4bfd1ee049dd3c296331420ba91e39497e0"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/runner/src/index.ts",
+      "sha256": "d4360e6f0022d7bd9fb6d73cd7320d6511f343ae87dc1b2354cbaddef2777fc4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/storage-sqlite/migrations/0032-previewintents.sql",
+      "sha256": "e25974e2b36545c598e9c38d9411275149feb09400d1c53852dd67f1801f8e9f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "029c3828632e62471893decc707e6b5adb1c446415adc1c232d9613bb1b2747f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "137cd6dac5604879714ad3c0a8f2b792ceef9ca59b4d4361627e9f74baadd47e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "31d105d85403a3098cba584a5d17ed22d88c0d90fe10fa63f8ffab49bd063e70"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/storage-sqlite/src/preview-domain.ts",
+      "sha256": "f280d4a899f4c8dbae1af7a53d3aac7ebca601618be88cdbeaea7a1470981836"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/storage-sqlite/src/preview-protocol.ts",
+      "sha256": "58a949a26f28ef0e56da473dcde482a2c0e8e8385fe46e1245a091eb9cf7aaea"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "b2a1a7391d767c83ece9a7509626ad2a71e09980a69deedf98e53b9beb881e25"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/tests/fixtures/preview-intents.mjs",
+      "sha256": "e1a3fb7cdb0b797042cff0a86596425921e9547d5b68696560948abcc32ff941"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/tests/verification-dataset-paths.test.mjs",
+      "sha256": "1383dee01f08a0ebc64e920ceb9e782f02640fd85cc863ed36f16ba149177de4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/failed-source/tests/verification-preview-intents.test.mjs",
+      "sha256": "28bf0cb38f0b14cbc1db3617028a32948ddf36da851799e0150ab04ce16ce21e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/preview-intents.txt",
+      "sha256": "aaeca7e782ccecb6a401586f41ed638ce1d943b894281dbabf94c3545862f502"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/report.json",
+      "sha256": "f1e6a218e9967284b36a4cad091d1b58022e7ffafa554a1832d36685d1ebf501"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v10-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 task2.1 durable dataset/preview intents: exact candidate/image/dataset bindings, original dispatch grant and UNKNOWN recovery, SQLite transaction and real Worker restart. Backend success receipts in intent tests are explicit controlled fixtures; no actual file snapshot or container health.",
+  "limitations": [
+    "Same Codex agent implementation and review, not independent or human product/stage acceptance.",
+    "Actual migrated SQLite intent domain and real SQLite Worker restart; source/admission/Runtime facts and success backend receipts are explicit fixtures.",
+    "Runner dataset path checks initialize a real local Runner store and filesystem, but do not execute a SQLite data snapshot, production migration or preview container.",
+    "No enterprise identity, model, Linux/runsc validation, preview origin/gateway, T5 acceptance or publication."
+  ],
+  "failure": "Four path test bodies reached cleanup, then the fixture removed its temporary root before closing the Runner SQLite Worker. Windows EBUSY and a failed checkpoint left the owned test child alive; stop only the two verified dataset-path test processes (36476 and diagnostic 38940), preserve logs, and close Runner before directory removal. 8 intent tests passed; 4 path tests failed."
+}

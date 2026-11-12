@@ -133,3 +133,5 @@ export type {QualityBasis,QualityVerification,QualityOrigin,QualityMaterial,Qual
 export type {ReleaseDelivery,ReleaseDeliveryBasis,ReleaseDeliveryMaterial} from './release-delivery-protocol.js';
 export type {ReleaseCandidateRevision,ReleaseCandidateSummary,ReleaseCandidateManifest,CandidateWorkProof} from './release-freeze-protocol.js';
 export type {CandidateReviewItem,CandidateHumanResult,CandidateReviewView,CandidateRejectionResult} from './candidate-review-protocol.js';
+export {previewBackendPolicy,previewEffectReceipt} from './preview-protocol.js';
+export type {PreviewBackendPolicy,DatasetView,PreviewView,PreviewEffect,PreviewEffectReceipt} from './preview-protocol.js';

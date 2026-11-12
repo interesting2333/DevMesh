@@ -44,6 +44,20 @@ promotion 使用 releaseId 作为幂等键，含准确 image／dataset／原写�
 
 退回先保存 NOT_APPLIED 的明确下一步，不自动调用修复／变更。每个逻辑退回有稳定 ID 与当前记录 CAS；纠正和有理由撤回均追加历史。整个 Run 仍有 OPEN 退回时阻止接受准备，创建新候选不能隐去旧待处理问题。历史候选允许负责人明确撤回已有退回，仍禁止新批准或新 OPEN 退回；撤回只解除该待处理项，不改变人工检查或自动质量。原范围问题必须绑定已有审查项，新增需求可无既有条目，不能借分类更改验收定义。
 
+### 7. Intent acknowledgement does not assert an external effect
+
+迁移 32 为私有 Worker 域新增 preview_backend_policies、datasets、previews、preview_effects 与不可变观察历史。配置策略固定 project、template／schema、Runner、backendRef 和可信后端主体；仅显式可信装配可使用该内部登记接口，当前没有公共 HTTP／MCP 登记或回执入口。项目 owner 的普通主体不能替代已配置后端主体提交成功回执。未登记策略返回不可用；策略登记本身不启动服务，也不证明后端已配置／健康。
+
+owner 通过标准 meta／If-Match 保存准确候选上的 dataset 或 preview 意图。通用 operation 的 SUCCEEDED 表示意图事务已保存；外部执行状态必须读取独立 preview_effects，初始 PREPARED。原键恢复的是同一资源／操作，返回其当前状态，不是重新执行。effect 固定 requestHash、原 remoteKey、准确镜像／dataset／候选和服务主体；数据库短事务只允许一次 PREPARED→SENT 的 dispatch=true，SENT／UNKNOWN／终态再请求均为 false。后端失联或无充分证据保持 UNKNOWN，仅检查原对象。未发送且已过时的 PREPARED 可由可信后端明确关闭为 FAILED，释放后续准入；不把它伪装成外部动作完成。存在未核实意图时拒绝新建替代 dataset／preview。
+
+成功回执核实原 requestHash 与类型、dataset／存储键／来源／schema、准确 preview／image／instance 和观察时间；终态回执不可改写，观察追加保存，并与对象状态及领域事件同事务提交。后端动作、文件操作和网络请求全部位于这些事务外。后续适配器负责实际执行、可靠本地日志、内容／健康证据；本步骤的受控回执测试只证明持久核验规则。
+
+后端重启可按显式 project／policyHash 使用受限分页扫描原 PREPARED／SENT／UNKNOWN 操作；只有配置的原后端主体可扫描。游标按不可删除原行的位置排序，每轮恢复扫描从 0 开始，不把它当作状态变化流；找回 SENT／UNKNOWN 只查询原 remoteKey，不申请第二次执行许可。实际调度消费者仍由后续适配器实现。
+
+首次数据只允许冻结方案声明的 EMPTY／DEMO；迭代预览始终克隆原接受 dataset，即使最终接受方案选择 REPLACE 也不提前清空旧数据。源接受指针、项目、可用状态与 schema 需准确匹配；跨 schema 的生产迁移尚未配置时关闭，不将简单复制视为迁移成功。dataset 不能同时绑定两个可写预览。停止意图使用独立 previewRevision／impactReviewHash，只有原实例可核实退出后才 STOPPED／EXPIRED；已被 Release 引用的候选／dataset 拒绝新停止和停止派发。
+
+RunnerDatasetPaths 从已初始化且身份匹配的 Runner layout 解析 `datasets/<projectId>/<datasetId>/app.sqlite` 和同目录 `operation.json`，调用者不能传任意路径；控制面、备份和 Runner 根互斥。路径组件、数据库／日志／WAL／SHM 的链接与硬链接均受检查。该目录独立于 workspaces，预览停止及工作空间清理不删除 dataset；当前只实现保留，不提前实现到期 GC。实际 SQLite 一致快照、数据文件操作恢复、真实实例健康／到期、独立 origin 与接受发布仍按后续步骤实施。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

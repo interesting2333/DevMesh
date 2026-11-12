@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "currentReport": {
+    "path": "project/evidence/P1-07/development/previews-v13/report.json",
+    "sha256": "fc956fdcd3b6a3bf4b1dd736109f69565add770bcd92b2713761e77d710b265a",
+    "sourceFingerprint": "d67e9d7ce0e5d1077c6d3fce6c976955e92ca8abe23960a3034a216fff6d125c"
+  },
+  "baseReport": {
+    "path": "project/evidence/P1-07/development/previews-v12/report.json",
+    "sha256": "6e2b9ab6e9823ec613ebdf80662a12973cd49e883b86015b9df6f1e433a2f623",
+    "sourceFingerprint": "2d066070e940fc0a0536fe8e434b308b4b8a5169392ecb11203fceb236897758"
+  },
+  "sourceInputCount": 341,
+  "unchangedInputCount": 338,
+  "changedFiles": [
+    {
+      "path": "packages/storage-sqlite/src/preview-domain.ts",
+      "before": "ba6c9e35babb541b7bdfd651b0e24a76067003e3df7af304482e6c7489e8487d",
+      "after": "d39b7f2416399ce3078f4df8bcf3cb491537b35481d3c8d43e2af4086505c7bc"
+    },
+    {
+      "path": "packages/storage-sqlite/src/preview-protocol.ts",
+      "before": "58a949a26f28ef0e56da473dcde482a2c0e8e8385fe46e1245a091eb9cf7aaea",
+      "after": "b92fb3e5513720b46bc2d51abd700c2f79f818e865827adc9abbe09ee6e34425"
+    },
+    {
+      "path": "tests/verification-preview-intents.test.mjs",
+      "before": "2835611fbb7216473528bc2a9767e43c4ece958d10d3f11258b8df19d88fdabc",
+      "after": "266eff222709cd8528be993fc8ec2c79ed49570e4cc7784796684270cec21d80"
+    }
+  ],
+  "reason": "After the full v12 regression, the only production changes add a private read-only backend recovery enumeration request/handler. The existing dataset/preview writes, migrations, review, freeze, Runner execution and public event schemas are byte-identical. v13 reruns complete type/lint/current dependency build and 14 intent/directory tests including recovery pagination, policy isolation and actual Worker restart enumeration.",
+  "reusedChecks": [
+    {
+      "name": "review",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 23766,
+      "output": "review.txt",
+      "sha256": "bdb455515aaf95b66f1bd4e621613f28cde9dc93e68118ad5ce77bded53c831d",
+      "tests": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "path": "project/evidence/P1-07/development/previews-v12/review.txt",
+      "notRerun": true
+    },
+    {
+      "name": "freeze",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26799,
+      "output": "freeze.txt",
+      "sha256": "93bdc003da5aeee104336fac00201ecfc7aab3fd881ef6162aabe2e4c8b75fea",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "path": "project/evidence/P1-07/development/previews-v12/freeze.txt",
+      "notRerun": true
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 32302,
+      "output": "storage.txt",
+      "sha256": "a7a8a529c15f7408fd700e220a015147b1f6714330270b4170c3907d3e44100b",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "path": "project/evidence/P1-07/development/previews-v12/storage.txt",
+      "notRerun": true
+    },
+    {
+      "name": "runner",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 15114,
+      "output": "runner.txt",
+      "sha256": "7b2d414e73697691d861ebeff98c3748167e9a2631c63bec65d79db83f290902",
+      "tests": {
+        "tests": 16,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      },
+      "path": "project/evidence/P1-07/development/previews-v12/runner.txt",
+      "notRerun": true
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1242,
+      "output": "contracts.txt",
+      "sha256": "671430f37798f124900b3b52b2d7bed11f75c3c1336a7e06c10e590cbe4f176f",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "path": "project/evidence/P1-07/development/previews-v12/contracts.txt",
+      "notRerun": true
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 968,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d",
+      "path": "project/evidence/P1-07/development/previews-v12/contracts-check.txt",
+      "notRerun": true
+    }
+  ],
+  "limitations": [
+    "Not a fresh complete v12 rerun or clean checkout validation.",
+    "No actual dataset snapshot/production migration or preview container health; controlled receipts remain explicit fixtures."
+  ],
+  "productionSourceEqualityProof": [
+    {
+      "path": "packages/storage-sqlite/src/preview-domain.ts",
+      "previousHash": "ba6c9e35babb541b7bdfd651b0e24a76067003e3df7af304482e6c7489e8487d",
+      "currentHash": "d39b7f2416399ce3078f4df8bcf3cb491537b35481d3c8d43e2af4086505c7bc",
+      "removedFromCurrentToReconstructPrevious": [
+        "  listPreviewEffects(i:PreviewInput<'listPreviewEffects'>){\n   if(policy(i.projectId,i.policyHash).backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);\n   // Recovery scans restart at zero each cycle; this cursor pages retained\n   // original rows, it is not a change stream for subsequent state updates.\n   const rows=all('SELECT rowid sequence,* FROM preview_effects WHERE project_id=? AND policy_hash=? AND rowid>? AND state IN ('+i.states.map(()=>'?').join(',')+') ORDER BY rowid LIMIT ?',i.projectId,i.policyHash,i.afterSequence,...i.states,i.limit+1),more=rows.length>i.limit;if(more)rows.pop();\n   return {items:rows.map(r=>({sequence:Number(r.sequence),effect:effectView(r)})),nextSequence:more?Number(rows.at(-1)!.sequence):null};\n  },\n"
+      ],
+      "previousBytesMatch": true,
+      "currentBytesMatch": true
+    },
+    {
+      "path": "packages/storage-sqlite/src/preview-protocol.ts",
+      "previousHash": "58a949a26f28ef0e56da473dcde482a2c0e8e8385fe46e1245a091eb9cf7aaea",
+      "currentHash": "b92fb3e5513720b46bc2d51abd700c2f79f818e865827adc9abbe09ee6e34425",
+      "removedFromCurrentToReconstructPrevious": [
+        " listPreviewEffects:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20),states:z.array(z.enum(['PREPARED','SENT','UNKNOWN','SUCCEEDED','FAILED'])).min(1).max(5).default(['PREPARED','SENT','UNKNOWN'])}).refine(i=>new Set(i.states).size===i.states.length),",
+        " listPreviewEffects:{items:{sequence:number;effect:PreviewEffect}[];nextSequence:number|null};"
+      ],
+      "previousBytesMatch": true,
+      "currentBytesMatch": true
+    }
+  ]
+}

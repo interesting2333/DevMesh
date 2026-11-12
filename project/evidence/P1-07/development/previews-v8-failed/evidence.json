@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "0146f7738ca834603bc1c66f778b03a1d7c7b0ba",
+  "dirty": true,
+  "sourceFingerprint": "8a8dd1021b208e650a29a964a50e9af88e529acbc9cc497616ce718c4cb0b58e",
+  "startedAt": "2026-11-12T08:32:04.564Z",
+  "finishedAt": "2026-11-12T08:32:38.914Z",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9422,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 726,
+      "output": "lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 11328,
+      "output": "current-build.txt",
+      "sha256": "417d3a5aea1c9575f01420bad6630088cc0fe43f37800709b638cb0d26e71d4f"
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 12807,
+      "output": "preview-intents.txt",
+      "sha256": "169a6454acc3f2536cd5397b200eed4c091fea4a059262544690a3ff08bbabc3",
+      "tests": {
+        "tests": 7,
+        "pass": 5,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/current-build.txt",
+      "sha256": "417d3a5aea1c9575f01420bad6630088cc0fe43f37800709b638cb0d26e71d4f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/contracts/src/events.ts",
+      "sha256": "97bff99e35c2b25cb57f9673c138b1167b09742738c11b4a69674ce55ae446b4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/contracts/src/primitives.ts",
+      "sha256": "0c24d4cc404b312f9174c1c3cbf0b98a91dc258397a0ec776ad9fd403a3bc84e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/storage-sqlite/migrations/0032-previewintents.sql",
+      "sha256": "e25974e2b36545c598e9c38d9411275149feb09400d1c53852dd67f1801f8e9f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "029c3828632e62471893decc707e6b5adb1c446415adc1c232d9613bb1b2747f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/storage-sqlite/src/domain.ts",
+      "sha256": "137cd6dac5604879714ad3c0a8f2b792ceef9ca59b4d4361627e9f74baadd47e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "31d105d85403a3098cba584a5d17ed22d88c0d90fe10fa63f8ffab49bd063e70"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/storage-sqlite/src/preview-domain.ts",
+      "sha256": "6ba1c90a9c3ccda1e2a526a48bd0c0b890bd6cc3124aaca55b2b00567705eb4e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/storage-sqlite/src/preview-protocol.ts",
+      "sha256": "58a949a26f28ef0e56da473dcde482a2c0e8e8385fe46e1245a091eb9cf7aaea"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/packages/storage-sqlite/src/protocol.ts",
+      "sha256": "b2a1a7391d767c83ece9a7509626ad2a71e09980a69deedf98e53b9beb881e25"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/tests/fixtures/preview-intents.mjs",
+      "sha256": "e1a3fb7cdb0b797042cff0a86596425921e9547d5b68696560948abcc32ff941"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/failed-source/tests/verification-preview-intents.test.mjs",
+      "sha256": "423db7eec2278b916e2fc66e84d18787e0ccd164af239c13231c125e7db0f8f6"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/lint.txt",
+      "sha256": "f6b78256ce8b57633762469946541792d1b727de37322c35907862ddd875956a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/preview-intents.txt",
+      "sha256": "169a6454acc3f2536cd5397b200eed4c091fea4a059262544690a3ff08bbabc3"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/report.json",
+      "sha256": "1c7f54425d8c30b40b72f7d4ce2bfba3b78072c60897728e7f5f0c9288f510af"
+    },
+    {
+      "path": "project/evidence/P1-07/development/previews-v8-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 task2.1 durable dataset/preview intents: exact candidate/image/dataset bindings, original dispatch grant and UNKNOWN recovery, SQLite transaction and real Worker restart. Backend success receipts in intent tests are explicit controlled fixtures; no actual file snapshot or container health.",
+  "limitations": [
+    "Same Codex agent implementation and review, not independent or human product/stage acceptance.",
+    "Actual migrated SQLite intent domain and real SQLite Worker restart; source/admission/Runtime facts and success backend receipts are explicit fixtures.",
+    "Runner dataset path checks initialize a real local Runner store and filesystem, but do not execute a SQLite data snapshot, production migration or preview container.",
+    "No enterprise identity, model, Linux/runsc validation, preview origin/gateway, T5 acceptance or publication."
+  ],
+  "failure": "Preview INSERT supplied 14 values for 13 columns; 5/7 intent tests passed. Correct the SQL value count; no state/security guard relaxed."
+}
