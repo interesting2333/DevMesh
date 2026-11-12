@@ -1,0 +1,385 @@
+TAP version 13
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: T5 preserves original automatic facts, rolls back every boundary and recovers exact committed acceptance
+    # Subtest: legacy proof stays readable but cannot substitute a new ACCEPTANCE service purpose
+    ok 1 - legacy proof stays readable but cannot substitute a new ACCEPTANCE service purpose
+      ---
+      duration_ms: 18612.0784
+      type: 'test'
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at release
+    not ok 2 - rollback at release
+      ---
+      duration_ms: 10916.6971
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at pointer
+    not ok 3 - rollback at pointer
+      ---
+      duration_ms: 10032.4714
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at resolution
+    not ok 4 - rollback at resolution
+      ---
+      duration_ms: 9474.8446
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at human
+    not ok 5 - rollback at human
+      ---
+      duration_ms: 9946.5377
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at work-result
+    not ok 6 - rollback at work-result
+      ---
+      duration_ms: 10221.0337
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at attempt
+    not ok 7 - rollback at attempt
+      ---
+      duration_ms: 10945.1647
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at slot
+    not ok 8 - rollback at slot
+      ---
+      duration_ms: 11882.6311
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at grant
+    not ok 9 - rollback at grant
+      ---
+      duration_ms: 13470.2222
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at assessment
+    not ok 10 - rollback at assessment
+      ---
+      duration_ms: 10754.2481
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at run
+    not ok 11 - rollback at run
+      ---
+      duration_ms: 13778.1211
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at outbox
+    not ok 12 - rollback at outbox
+      ---
+      duration_ms: 10729.7484
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at event
+    not ok 13 - rollback at event
+      ---
+      duration_ms: 11451.075
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at operation-result
+    not ok 14 - rollback at operation-result
+      ---
+      duration_ms: 10991.3757
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:122)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: reject wrong versions, authority, proof, scope and pointer without partial facts
+    ok 15 - reject wrong versions, authority, proof, scope and pointer without partial facts
+      ---
+      duration_ms: 21855.8602
+      type: 'test'
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: missing material, changed review and unknown preparation close acceptance
+    ok 16 - missing material, changed review and unknown preparation close acceptance
+      ---
+      duration_ms: 21620.738
+      type: 'test'
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: unknown HTTP writes survive Worker restart and prevent acceptance
+    ok 17 - unknown HTTP writes survive Worker restart and prevent acceptance
+      ---
+      duration_ms: 24792.205
+      type: 'test'
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: trusted preflight verifies real content bytes and writer rejects a basis changed during I/O
+    ok 18 - trusted preflight verifies real content bytes and writer rejects a basis changed during I/O
+      ---
+      duration_ms: 15215.5612
+      type: 'test'
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: trusted acceptor reads actual frozen materials once and skips preflight after committed ACK loss
+    ok 19 - trusted acceptor reads actual frozen materials once and skips preflight after committed ACK loss
+      ---
+      duration_ms: 25713.4665
+      type: 'test'
+      ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: concurrent exact acceptance, immutable history, terminal ACK and retained dedicated promotion
+    not ok 20 - concurrent exact acceptance, immutable history, terminal ACK and retained dedicated promotion
+      ---
+      duration_ms: 10859.245
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:97:10'
+      failureType: 'testCodeFailure'
+      error: 'Provided value cannot be bound to SQLite parameter 1.'
+      code: 'ERR_INVALID_ARG_TYPE'
+      name: 'TypeError'
+      stack: |-
+        Object.get (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:20:140)
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:98:92)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:97:2)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+    1..20
+not ok 1 - T5 preserves original automatic facts, rolls back every boundary and recovers exact committed acceptance
+  ---
+  duration_ms: 354576.0137
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:44:1'
+  failureType: 'subtestsFailed'
+  error: '14 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: T5 accepts a fully automatic final Work without inventing human completions
+ok 2 - T5 accepts a fully automatic final Work without inventing human completions
+  ---
+  duration_ms: 95672.0116
+  type: 'test'
+  ...
+# (node:29520) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:29520) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:29520) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:29520) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: control readiness accepts independent ACCEPTANCE service claims and binds reservation, profile, project and review
+ok 3 - control readiness accepts independent ACCEPTANCE service claims and binds reservation, profile, project and review
+  ---
+  duration_ms: 96855.4932
+  type: 'test'
+  ...
+1..3
+# tests 23
+# suites 0
+# pass 8
+# fail 15
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 592408.3547

@@ -1,6 +1,6 @@
 # 接受准备、原证明与当前可用性
 
-迁移 36 保存原接受意图，迁移 37 保存不可变准备证明和追加的当前观察，迁移 38 统一数据策略／准备归属及逻辑写门。私有控制面可计算准备 READY；它不是 Release 或用户已接受。尚无默认实际准备后端、Release 创建或 T5 提交命令；企业身份、物理准备／fencing、真实容器健康及发布继续实施和验证。
+迁移 36 保存原接受意图，迁移 37 保存不可变准备证明和追加的当前观察，迁移 38 统一数据策略／准备归属及逻辑写门，迁移 39 增加独立 T5 提交。准备 READY 与用户已接受分开。当前有私有 T5 命令及可信材料核验调用层；默认实际准备后端、完整服务装配、企业身份、物理准备／fencing、真实容器健康及发布消费者继续实施和验证。
 
 可信宿主显式调用 `registerAcceptanceBackendPolicy`；该配置入口不挂公共 HTTP／MCP。owner 的普通项目身份不能替代配置的后端主体签派发／未知观察。登记配置不证明后端实际就绪。
 
@@ -22,6 +22,16 @@ REPLACE 另要求 `recordAcceptanceReplacementDecision` 的明确确认，绑定
 
 每次 inspect 返回 READY 前必须实际复核原 source／target 物理 fence 仍持有、目标写门仍关闭、Runner 原 claim 仍为 RELEASE_HELD 及原服务当前健康。新鲜观察绑定原 fence proofHash／claimHash／端点和不回退的 custodyRevision，Worker 只接受 0～30 秒健康年龄；未来时间或超时关闭当前 READY。UNKNOWN 保留原不可变证明但关闭可用性；UNKNOWN 不重置归属版本高水位。观察同时 CAS 核实开始时的 preparationRevision 与观察 sequence，二者及不可变历史和领域事件同事务；后续原准备 UNKNOWN 用持久 revision 关闭旧 READY，即使两个提交同一毫秒也不依赖时间比较。原重复 ACK 仅返回当前投影，不复活旧 READY。角色、候选或审查失效显示 STALE。
 
-这些私有回执只有显式后端主体可写，当前没有公共 HTTP／MCP 健康或回执入口。声明的 fence／健康字段不自动证明物理事实，只有实际适配器核验原对象才能签发；受控测试后端不是实际物理验收。后续须完成真实数据准备／隔离／迁移和 Runner 装配、正向迭代保留／替换验证，再实现 T5。原 SENT／UNKNOWN 不因当前 READY 自动改写为成功，也不靠期限解除或重开旧门。
+这些私有回执只有显式后端主体可写，当前没有公共 HTTP／MCP 健康或回执入口。声明的 fence／健康字段不自动证明物理事实，只有实际适配器核验原对象才能签发；受控测试后端不是实际物理验收。真实数据准备／隔离／迁移和 Runner 装配、正向迭代保留／替换继续验证。原 SENT／UNKNOWN 不因当前 READY 或后续 T5 改写派发历史，也不靠期限解除或重开旧门。
+
+`commitReleaseAcceptance` 只允许当前 owner，使用独立 meta／Run scope／强 If-Match 与明确 ACCEPT_RELEASE。输入固定原 preparationOperationId／requestHash／expectedPreparationRevision、最新 expectedObservationSequence／proofHash、准确 candidate revision／manifest／reviewHash、原接受指针与 dataPlanHash。新命令在单一 writer 事务重新核实全部依据、当前 HELD 健康／fence、READY 材料及无未知写，原子保存 Release、指针 CAS、acceptance_commits、必要人工完成、Run COMPLETED、专用 release_promotion_outbox、事件和原操作响应。任一步失败回滚；事务无文件或网络 I/O。
+
+`ReleaseAcceptor` 是显式可信调用层，先通过内容权限读取实际冻结材料、核对全部 SHA 与大小限制，再调用该命令。它不建立准备后端或签发物理证明。原键已存在时直接由 writer 核实权限／原正文并恢复，因此 ACK 丢失、Run 终态或材料后续不可用不导致重接受。`getAcceptedRelease` 只读返回迁移 39 提交时的原接受收据（含提交时 PENDING）；旧 Release 不伪造迁移回填，实际发布观察独立。
+
+原准备的 resolution 投影为 UNRESOLVED／UNSENT_FAILED／COMMITTED，与派发 state 分开；已提交不再占项目未核实准备名额，SENT／UNKNOWN 无提交结论继续阻塞。准备器跳过已提交对象，不重新准备或追加旧 READY。MANUAL_PENDING 只对冻结时已核实的最终 Tester 追加 work_acceptance_completions，绑定原 assessment 和具体人工结果，结束 Attempt／释放 slot；原自动评估、质量、候选 manifest 和 proof 不覆盖。
+
+专用 promotion 意图固定完整原准备、准确 proof 与接受 operation，普通 A2A Outbox 不消费。T5 只保存 ACCEPTED／提交时 PENDING，不切路由、不开写门、不确认 OWNED、不导出；这些消费者及明确未提交后的安全撤销继续实施，失败不能倒退接受事实。Release、提交结论、人工覆盖层及发布意图禁止更新和删除。
+
+新 T5 要求 `devmesh.acceptance-service-claim.v1` 的完整 ACCEPTANCE 用途与绑定。旧预览 claim 仍可读取历史准备证明，但不能用作新接受服务的用途证明；不会自动升级、重新签 claim 或替换原实例。
 
 已构建依赖后用 `pnpm test:acceptance` 执行本地协议回归，根 `pnpm check` 包含该组。用例的原质量收集经过实际 Runner HTTP、文件和 SQLite，但 A2A 准入／授权、Git、OCI／容器和人工观察为明确夹具；没有真实 Runtime 心跳的授权夹具只在派发前签发 15 秒授权，生产租约和作业期限不变。

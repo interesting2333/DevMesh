@@ -142,5 +142,7 @@ export {acceptanceBackendPolicy,acceptancePreparationRequest} from './acceptance
 export type {AcceptancePreparation,AcceptancePreparationRequest} from './acceptance-protocol.js';
 export {acceptanceReleaseClaim,previewAcceptanceReleaseClaim,acceptanceServiceClaim,acceptancePreparedProof,acceptancePreparationObservation} from './acceptance-readiness-protocol.js';
 export type {AcceptancePreparedProof,AcceptancePreparationObservation,AcceptancePreparationBackend,AcceptanceReadiness} from './acceptance-readiness-protocol.js';
+export {releasePromotionRequest} from './acceptance-commit-protocol.js';
+export type {AcceptedRelease,AcceptanceCommitInput} from './acceptance-commit-protocol.js';
 export {previewOrigin} from './preview-session-protocol.js';
 export type {PreviewTicket,PreviewSession} from './preview-session-protocol.js';

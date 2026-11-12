@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Real local control Worker/SQLite T5 acceptance transactions, fault rollback, exact basis, human completion and migration; explicit controlled infrastructure facts. No actual Docker/gVisor, physical fencing, service composition or production acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/acceptance-commit.test.mjs",
+        "tests/acceptance-service-proof.test.mjs"
+      ],
+      "startedAt": "2026-11-12T22:59:56.202Z",
+      "finishedAt": "2026-11-12T23:09:50.711Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "d4f570cb65250d52eee9c82d1347cbb06b683bd30b09663ac282cf8247a30bb3"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

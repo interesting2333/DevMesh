@@ -1,0 +1,6 @@
+{
+  "file": "tests/acceptance-commit.test.mjs",
+  "beforeSha256": "4d641ee5687d18d4d83d72597c4f19d546a041a7a671207aa1a2f2d5afded7d2",
+  "afterSha256": "d037f3b6c87820dc203a4936535a8656cce8cfe14b33bec4fd0f3322dc5a68f3",
+  "reason": "WorkVerifier.verify returns its wrapper, not the verification row. Read the verification operation ID from the exact frozen MANUAL_PENDING work. No product source or assertions weakened."
+}

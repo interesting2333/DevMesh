@@ -13,3 +13,4 @@ vendor/** -text -whitespace
 
 # Raw evidence is hashed before commit; retain the original output bytes.
 project/evidence/**/*.txt -text -whitespace
+project/evidence/P1-07/development/acceptance-commit/** -text -whitespace

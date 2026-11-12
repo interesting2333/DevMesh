@@ -7,8 +7,8 @@ import {tmpdir} from 'node:os';
 import {openStorage} from '../../packages/storage-sqlite/dist/index.mjs';
 import {releaseFreezeFixture} from './release-freeze.mjs';
 import {meta,hash,canonical} from './storage-data.mjs';
-export async function acceptanceFixture(t,{register=true,reviewed=true}={}){
-  const f=await releaseFreezeFixture(t),candidate=await f.freeze(),who={principalId:'user_1',runId:f.p.runId,candidateId:candidate.candidateId};
+export async function acceptanceFixture(t,{register=true,reviewed=true,...freezeOptions}={}){
+  const f=await releaseFreezeFixture(t,freezeOptions),candidate=await f.freeze(),who={principalId:'user_1',runId:f.p.runId,candidateId:candidate.candidateId};
   if(reviewed)for(const item of (await f.storage.request('getCandidateReview',who)).items){const r=await f.storage.request('getRun',{runId:f.p.runId});await f.storage.request('recordCandidateReview',{meta:meta(f.p.runId),runId:f.p.runId,candidateId:candidate.candidateId,ifMatch:'"r'+r.resourceRevision+'"',manifestHash:candidate.manifestHash,itemId:item.itemId,itemHash:item.itemHash,previousResultId:null,verdict:'PASS',procedure:'Explicit protocol fixture observation.',expected:item.expected,observed:'Explicit fixture passes this item; not a human product acceptance.',evidence:[]});}
   const root=await mkdtemp(join(tmpdir(),'devmesh-acceptance-')),databasePath=join(root,'control.sqlite'),storeId=f.get('SELECT store_id FROM store_metadata').store_id;
   await backup(f.db,databasePath);const db=new DatabaseSync(databasePath);db.exec('PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000');let storage=await openStorage({databasePath,storeId});

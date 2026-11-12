@@ -1386,7 +1386,9 @@ ReleaseCandidate 固定：codeCommit、requirementRevision、planRevision、temp
 
 接受服务使用独立 ACCEPTANCE 原服务请求，固定完整接受依据、实际数据回执及原源／目标 fences，不能翻译成预览 effect。Runner v7 的独立预留、只读 profile 和 network／create／start 日志绑定准确 operation／release／dataset；动作先持久 SENT，只有一次 dispatch 才可执行，丢 ACK 只核实原对象。作业、预览与接受服务在同一个 Runner writer 核算 slot／CPU／内存，跨 controller／用途的 dataset 独占；UNKNOWN／重启继续扣除，未派发取消或准确原容器 EXITED 才释放。接受服务不进入预览到期／清理扫描。
 
-接受服务的 `devmesh.acceptance-service-claim.v1` 与旧预览 claim 分开，固定原接受 hash、原服务 requestHash、reservation／profile、release／candidate／review／dataset／image 及原实例。新鲜健康与准确归属核实后才能取得 RELEASE_HELD，原 claim／实例／端口不可替换；HELD 丢 ACK 恢复原归属，不按 TTL 解除。HELD 仅为准备阶段记录，不能视为 T5 或 RELEASE_OWNED；当前独立 Runner 日志本身不完成服务启动适配、物理数据排空或控制面完整 READY。实际后端装配、明确未提交后的撤销、T5 与发布继续按原范围实现。
+接受服务的 `devmesh.acceptance-service-claim.v1` 与旧预览 claim 分开，固定原接受 hash、原服务 requestHash、reservation／profile、release／candidate／review／dataset／image 及原实例。新鲜健康与准确归属核实后才能取得 RELEASE_HELD，原 claim／实例／端口不可替换；HELD 丢 ACK 恢复原归属，不按 TTL 解除。HELD 仅为准备阶段记录，不能视为 T5 或 RELEASE_OWNED；当前独立 Runner 日志本身不完成服务启动适配、物理数据排空或控制面完整 READY。实际后端装配、明确未提交后的撤销与发布继续按原范围实现。
+
+T5 为独立 owner 命令，详细事务见 D5。可信调用层先实际读取冻结材料，原键成功恢复直接交回 writer 校验权限／原正文；新提交在本地短事务核实准确准备与最新观察、完整审查和指针，原子保存接受事实、必要人工完成、Run 终态及专用发布意图。原自动质量和评估不改写，发布失败单独呈现。该领域代码／受控后端验证不代表真实服务和物理 fence 已就绪，也不代表发布消费者已装配；完整 4.1／4.3／5.1 仍按各自证据验收。
 
 该规则覆盖“用户正在向旧版本增加任务，同时点接受新版本”的竞态。准备后代码、计划或数据策略变更则原接受操作失效并重新审查；正常新增业务记录由最终冻结快照纳入，不要求每条记录变化都重新确认产品计划。
 
@@ -1546,6 +1548,7 @@ flowchart LR
 | release_candidates、releases | 固定候选清单、确认版本、接受人、数据准备引用 | 一个 run 只接受一次；接受记录与项目引用必须同项目 |
 | acceptance_backend_policies、acceptance_data_decisions、acceptance_preparations／history | 显式可信准备策略、准确替换确认、固定接受依据与原外部操作 | 同项目复合归属、不可变请求／追加历史；一次派发，SENT／UNKNOWN 不替代，意图不等于 READY 或 T5 |
 | acceptance_prepared_proofs、acceptance_preparation_observations | 原 request／数据／fence／Runner claim 不可变证明；当前健康与 fence 持有的追加观察 | 配置后端主体写入；proof 首次固定，准备版本／观察 sequence 双 CAS／时间和归属高水位拒绝回退；观察／事件／Run 版本同事务，过期或 UNKNOWN 关闭当前 READY |
+| acceptance_commits、work_acceptance_completions、release_promotion_outbox | T5 的准确提交结论、独立人工完成覆盖层及原发布意图 | Release／准备／证明／观察复合引用；原 SENT／UNKNOWN 历史保留，提交后解除项目未核实准备占用；自动事实不覆盖，专用发布用途不进入普通 A2A 派发 |
 | Runner acceptance_services／events、acceptance_service_profiles／actions | ACCEPTANCE 原服务请求／数据回执／fences、容量、只读 profile、唯一外部动作与原服务 claim | 独立 Runner v7；同 writer 与作业／预览共享容量、跨用途 dataset 独占；原身份／历史不可覆盖，UNKNOWN 保留占用，HELD 不表示 T5 |
 
 DDL 中涉及同项目／同 run 的关系使用复合外键；只验证“ID 存在”不足以防止跨项目串用。平台接受指针故意引用 releases，不能指向普通 artifact 或未接受 candidate。
@@ -1692,7 +1695,15 @@ BEGIN IMMEDIATE → 校验当前 run、控制门、必要确认、依赖、预�
 
 #### 14. T5 接受候选
 
-数据／镜像准备见 [04 第 7 节](#137-预览业务数据与接受的两阶段处理)。BEGIN IMMEDIATE → 当前候选 revision、manifestHash、reviewHash、项目接受指针 CAS → 校验全部质量判定与数据准备凭证有效、无未知写入／待应用变化 → 插入不可变 Release → 更新 Project.acceptedReleaseId → Run 终态 COMPLETED → 保存 operation 结果、promotion Outbox 和事件 → COMMIT。事务内只查本地持久证据；不得发 HTTP 询问远端后再占锁等待。
+数据／镜像准备见 [04 第 7 节](#137-预览业务数据与接受的两阶段处理)。可信 ReleaseAcceptor 在事务外按冻结内容引用读取实际材料，校验完整 SHA 集合与大小边界；它不代替实际准备后端。BEGIN IMMEDIATE → 当前 owner 权限 → 原幂等键／正文恢复 → 新操作复核强 If-Match、准确 preparation 原请求／revision、最新观察 sequence／proofHash、候选 revision／manifestHash／完整 reviewHash、Run 代际／需求／计划与 OPEN、原接受指针、全部 READY 内容及当前健康／fence／无未知写 → 插入不可变 Release → 接受指针 CAS → 不可变提交结论 → 必要人工完成／Attempt／slot → Run COMPLETED／endedAt → 专用 promotion Outbox／事件／operation 结果 → COMMIT。事务内只查本地持久证据；不得持锁执行 HTTP 或文件操作。
+
+迁移 39 不改旧迁移或派发历史。acceptance_commits 固定 Release、本次接受操作、原准备、准确 proofHash 与观察 sequence；原 SENT／UNKNOWN 不改为 FAILED。项目唯一未核实准备由 writer 内查询和数据库准入触发器保障；只有该记录已有不可变提交结论，或准确从未派发的 FAILED，才不再占用；未知不能靠 TTL 解除。旧 Release 不回填伪造证明，新 Release 及提交／人工完成／发布意图禁止更新或删除。
+
+MANUAL_PENDING 只能来自冻结时已核实的最终 Tester：非 PASS 检查仅限必要人工项。T5 重新确认本候选完整人工 PASS 后，追加 work_acceptance_completions，固定原 assessment 证据与具体人工结果 ID／reviewHash，登记有效 Work success、结束 Attempt、撤销 grant／释放 slot并标记原 verification 已应用；原自动 assessment／质量／候选字节保持不变。不得把自动 FAIL 或缺材料解释成人工通过。
+
+已提交原键恢复先于终态、健康过期和材料读取，但仍检查当前 owner 与原正文；因此丢 ACK 或重启不会再接受、迁移或增加发布任务。返回的原结果记录 ACCEPTED 与提交时 PENDING；实际发布状态须由独立发布观察提供。promotion Outbox 使用独立表，固定原接受请求、数据、镜像、HELD 服务及 fence；普通 A2A 派发不消费。后续 OWNED 确认、路由切换、开放新门和导出失败不撤销已接受事实，尚未实现的消费者与真实环境验证继续分别留证。
+
+新 T5 只接受完整 ACCEPTANCE 服务 claim；旧预览 claim 的历史证明仍可读，不自动升级为新用途或据此新接受。
 
 #### 14. T6 注册代际激活
 
@@ -1988,6 +1999,8 @@ T22～T24 是本地会话与文件存储新增专项，与 T14 的备份恢复�
 | D06 | D3 §2；D4 §6 | 下载／打开预览后接受表与项目指针不变 |
 | D07 | D4 §4、§7 | 到期／取消只停指定未接受实例，代码与旧接受版保留 |
 | D08 | D4 §7 | 原数据持续写入时升级，检查冻结快照和迁移后数据 |
+
+T5 的本地技术证据必须分别覆盖新接受／原键恢复、准确准备 revision 与最新观察 sequence／proofHash、候选／reviewHash／指针、当前 owner、材料实际读取期间变化、缺材料与持久 UNKNOWN 写阻塞。逐个注入 Release、项目指针、提交结论、人工覆盖层／Work 结果／Attempt／slot／grant／verification、Run、专用 Outbox、事件及 operation 结果的写入故障，核实所有行与事件版本一起回滚。必要人工完成与全部自动完成两条路径分别验证；原自动评估、质量、候选和证明字节保持原样。旧预览 claim 可读与新 ACCEPTANCE 用途不可替代也要单测。该事务证据只覆盖 D01／D02／D04／D05／I25 的对应技术边界，不代替真实物理 fence、完整服务装配、发布／导出或产品人工验收；实际执行范围和未执行项见关联工作包证据。
 | D09 | D3 §5；D4 §8 | 回放播放与真实 run 控制无调用关系，退出恢复阅读位置 |
 | D10 | D4 §8 | 完整、缺文件、未知 schema、危险路径各有不同结果 |
 | D11 | D3 §5、§6 | 空、过滤空、错误、无权、只读、窄屏逐态人工观察 |

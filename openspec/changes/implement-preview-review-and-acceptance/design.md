@@ -188,6 +188,14 @@ INITIAL／REPLACE 按原方案初始化 EMPTY／DEMO，REPLACE 不复制旧数�
 
 接受服务使用独立 `devmesh.acceptance-service-claim.v1`，固定原接受 hash、服务 requestHash、reservation／profile、release／candidate／review／dataset／image 及原实例；原预览 claim 协议保持兼容，预览专用入口仅接受原预览 schema。只有新鲜的准确 HEALTHY 观察且没有释放容量时可推进 RELEASE_HELD；未知提交不因超时解除，预览 watchdog 不扫描或停止该用途。HELD 仅为准备归属，不表示 T5 或 RELEASE_OWNED。完整后端装配、物理容器／fencing、明确未提交后的安全撤销、T5 与发布继续原范围，4.1 仍须按完整验收判断。
 
+### 22. T5 records acceptance separately from dispatch and publication
+
+T5 由 owner 的独立 `commitReleaseAcceptance` 命令触发，原幂等键先于当前性检查恢复已提交结果；新命令在单一 BEGIN IMMEDIATE 内核实原 preparation／requestHash／revision、最新观察 sequence／proofHash、当前候选／完整 reviewHash、原接受指针、Run 代际与 OPEN、全部 READY 内容及无未知写。新提交要求完整 ACCEPTANCE 服务 claim；旧预览 claim 的历史证明可读，不作为新服务用途替代。事务只读本地持久证据，不持锁执行 HTTP 或文件操作。物理材料复核和后端装配继续由可信调用层落实，缺失时不能将领域测试称为完整接受联调。
+
+迁移 39 保存不可变 acceptance_commits，关联准确 Release、原准备／证明／观察和本次操作；保留原 SENT／UNKNOWN 派发历史，不把成功改写为 FAILED。项目唯一未核实准备采用 writer 内查询及数据库准入触发器：已有提交记录或从未派发的 FAILED 才解除占用，未知准备不靠 TTL 解除。新命令完成 Release、指针 CAS、必要 MANUAL_PENDING Work 的独立人工完成记录／Attempt／slot、Run COMPLETED、原操作结果、专用 promotion Outbox 与事件。任一步失败全部回滚。
+
+人工完成固定原 assessment 和本候选已通过的具体人工结果，不修改自动检查、自动状态、原质量或原证据。不可变 promotion 意图固定原请求、数据、镜像、HELD 服务及 fence；普通 A2A Outbox 不消费此用途。T5 返回已接受与发布待处理两个事实，后续服务归属确认、路由切换、开放新门和导出各自恢复，失败不得倒退接受事实。所有新历史及 Release 禁止更新或删除；旧 Release 不因迁移伪造准备证明。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

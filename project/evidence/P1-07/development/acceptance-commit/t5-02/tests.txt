@@ -1,0 +1,132 @@
+TAP version 13
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: T5 preserves original automatic facts, rolls back every boundary and recovers exact committed acceptance
+    # Subtest: legacy proof stays readable but cannot substitute a new ACCEPTANCE service purpose
+    ok 1 - legacy proof stays readable but cannot substitute a new ACCEPTANCE service purpose
+      ---
+      duration_ms: 15761.7454
+      type: 'test'
+      ...
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at release
+    not ok 2 - rollback at release
+      ---
+      duration_ms: 12335.4533
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'pendingVerificationId is not defined'
+      code: 'ERR_TEST_FAILURE'
+      name: 'ReferenceError'
+      stack: |-
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:182)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at pointer
+    not ok 3 - rollback at pointer
+      ---
+      duration_ms: 10573.0441
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'pendingVerificationId is not defined'
+      code: 'ERR_TEST_FAILURE'
+      name: 'ReferenceError'
+      stack: |-
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:182)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at resolution
+    not ok 4 - rollback at resolution
+      ---
+      duration_ms: 11276.0971
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'pendingVerificationId is not defined'
+      code: 'ERR_TEST_FAILURE'
+      name: 'ReferenceError'
+      stack: |-
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:182)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at human
+    not ok 5 - rollback at human
+      ---
+      duration_ms: 12615.8444
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'pendingVerificationId is not defined'
+      code: 'ERR_TEST_FAILURE'
+      name: 'ReferenceError'
+      stack: |-
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:182)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at work-result
+    not ok 6 - rollback at work-result
+      ---
+      duration_ms: 11557.7754
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'pendingVerificationId is not defined'
+      code: 'ERR_TEST_FAILURE'
+      name: 'ReferenceError'
+      stack: |-
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:182)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback at attempt
+    not ok 7 - rollback at attempt
+      ---
+      duration_ms: 10623.55
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-commit.test.mjs:67:12'
+      failureType: 'testCodeFailure'
+      error: 'pendingVerificationId is not defined'
+      code: 'ERR_TEST_FAILURE'
+      name: 'ReferenceError'
+      stack: |-
+        TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:68:182)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-commit.test.mjs:67:4)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:31568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)

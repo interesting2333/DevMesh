@@ -90,6 +90,9 @@ import type {AcceptanceMethod} from './acceptance-protocol.js';
 import {createAcceptanceReadinessDomain} from './acceptance-readiness-domain.js';
 import {acceptanceReadinessRequests} from './acceptance-readiness-protocol.js';
 import type {AcceptanceReadinessMethod} from './acceptance-readiness-protocol.js';
+import {createAcceptanceCommitDomain} from './acceptance-commit-domain.js';
+import {acceptanceCommitRequests} from './acceptance-commit-protocol.js';
+import type {AcceptanceCommitMethod} from './acceptance-commit-protocol.js';
 import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
@@ -152,6 +155,10 @@ export function createDomain(db: DatabaseSync) {
     sourceClosed(runId,operationId,datasetId,fence){bump(runId);event(runId,operationId,'DatasetWriteGateClosed',{datasetId,preparationId:operationId,fence});},
   });
   const acceptanceReadiness=createAcceptanceReadinessDomain(db,acceptances,(runId,operationId,sequence,state)=>{bump(runId);event(runId,operationId,'AcceptanceReadinessObserved',{preparationId:operationId,sequence,state});});
+  const acceptanceCommits=createAcceptanceCommitDomain(db,plans,releaseFreezes,candidateReviews,acceptances,acceptanceReadiness,{
+    operation:(...args)=>operation(...args),
+    completed(runId,operationId,candidateId,releaseId,attempts){bump(runId);for(const a of attempts)event(runId,operationId,'AttemptStateChanged',{attemptId:a.attemptId,state:'SUCCEEDED'},a);event(runId,operationId,'ReleaseAccepted',{candidateId,releaseId});const r=run(runId);event(runId,operationId,'ControlProgress',{state:{phase:r.phase,controlGate:r.control_gate,terminalOutcome:'COMPLETED'},controlRevision:Number(r.control_revision),runEpoch:Number(r.run_epoch)});},
+  });
   const candidateBasis=candidateIntegrations.basis;
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
@@ -489,6 +496,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(acceptanceCommitRequests,method))return acceptanceCommits.execute(method as AcceptanceCommitMethod,input);
     if(Object.hasOwn(acceptanceReadinessRequests,method))return acceptanceReadiness.execute(method as AcceptanceReadinessMethod,input);
     if(Object.hasOwn(previewSessionRequests,method))return previewSessions.execute(method as PreviewSessionMethod,input);
     if(Object.hasOwn(acceptanceRequests,method))return acceptances.execute(method as AcceptanceMethod,input);

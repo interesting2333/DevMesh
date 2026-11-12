@@ -51,11 +51,12 @@ export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick
     catch(error){if(error instanceof StorageError)return {...value,state:'UNAVAILABLE',reasonCode:error.code};throw error;}
   }
   const handlers={
-    verifyAcceptancePreparation(i:AcceptanceReadinessInput<'verifyAcceptancePreparation'>){const p=service(i);if(!['SENT','UNKNOWN'].includes(p.state)||get('SELECT 1 FROM acceptance_prepared_proofs WHERE operation_id=?',p.operationId))return {allowed:false,reasonCode:'ACCEPTANCE_DISPATCH_CLOSED'};if(p.qualification!=='CURRENT')return {allowed:false,reasonCode:'ACCEPTANCE_BASIS_CHANGED'};if(pending(p.projectId))return {allowed:false,reasonCode:'ACCEPTANCE_EFFECT_UNRESOLVED'};return {allowed:true,reasonCode:null};},
+    verifyAcceptancePreparation(i:AcceptanceReadinessInput<'verifyAcceptancePreparation'>){const p=service(i);if(p.resolution==='COMMITTED'||!['SENT','UNKNOWN'].includes(p.state)||get('SELECT 1 FROM acceptance_prepared_proofs WHERE operation_id=?',p.operationId))return {allowed:false,reasonCode:'ACCEPTANCE_DISPATCH_CLOSED'};if(p.qualification!=='CURRENT')return {allowed:false,reasonCode:'ACCEPTANCE_BASIS_CHANGED'};if(pending(p.projectId))return {allowed:false,reasonCode:'ACCEPTANCE_EFFECT_UNRESOLVED'};return {allowed:true,reasonCode:null};},
     getAcceptanceReadiness(i:AcceptanceReadinessInput<'getAcceptanceReadiness'>){return view(original(i));},
     recordAcceptancePreparationObservation(i:AcceptanceReadinessInput<'recordAcceptancePreparationObservation'>){
       const p=service(i),o=i.observation,body=canonical(o);if(!['SENT','UNKNOWN'].includes(p.state))fail('ACCEPTANCE_NOT_DISPATCHED');
       if(get('SELECT 1 FROM acceptance_preparation_observations WHERE operation_id=? AND observation_hash=?',p.operationId,digest(body)))return view(p);
+      if(p.resolution==='COMMITTED')fail('ACCEPTANCE_ALREADY_COMMITTED');
       if(p.revision!==i.expectedPreparationRevision)fail('ACCEPTANCE_PREPARATION_CHANGED');
       const last=latest(p.operationId),prior=last?acceptancePreparationObservation.parse(json(last.observation_json)):null;
       if(Number(last?.sequence??0)!==i.expectedSequence)fail('ACCEPTANCE_OBSERVATION_CHANGED');
@@ -72,5 +73,5 @@ export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick
     },
     listAcceptancePreparationObservations(i:AcceptanceReadinessInput<'listAcceptancePreparationObservations'>){original(i);const rows=all('SELECT * FROM acceptance_preparation_observations WHERE operation_id=? AND sequence>? ORDER BY sequence LIMIT ?',i.operationId,i.afterSequence,i.limit+1),page=rows.slice(0,i.limit);return {items:page.map(r=>({sequence:Number(r.sequence),observation:acceptancePreparationObservation.parse(json(r.observation_json)),observedAt:String(r.observed_at)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};},
   };
-  return {execute(method:AcceptanceReadinessMethod,input:unknown):unknown{const parsed=parseContract(acceptanceReadinessRequests[method],input);return transaction(db,()=>(handlers[method] as (i:unknown)=>unknown)(parsed));}};
+  return {getReadiness:handlers.getAcceptanceReadiness,execute(method:AcceptanceReadinessMethod,input:unknown):unknown{const parsed=parseContract(acceptanceReadinessRequests[method],input);return transaction(db,()=>(handlers[method] as (i:unknown)=>unknown)(parsed));}};
 }

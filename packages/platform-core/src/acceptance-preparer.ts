@@ -9,7 +9,7 @@ export class AcceptancePreparer {
     const subject={principalId:this.principalId,operationId:ids.operation.parse(operationId)};
     let preparation=await this.storage.request('getAcceptancePreparation',subject);
     const bound={...subject,requestHash:sha256.parse(preparation.requestHash)},before=await this.storage.request('getAcceptanceReadiness',bound);
-    if(preparation.state==='FAILED')return before;
+    if(preparation.state==='FAILED'||preparation.resolution==='COMMITTED')return before;
     if(!this.backend?.configured)throw new StorageError('ACCEPTANCE_BACKEND_NOT_CONFIGURED',503,'An explicit trusted acceptance backend is required');
     let dispatch=false;
     if(preparation.state==='PREPARED'){

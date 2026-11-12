@@ -24,7 +24,7 @@
 ## 4. Two-phase acceptance and publication
 
 - [ ] 4.1 持久固定接受依据与外部准备原操作，验证原接受指针、reviewHash、数据策略／明确替换决定、fencing／健康凭证和陈旧依据拒绝。
-- [ ] 4.2 实现 T5 原子 Release／接受指针／必要人工完成／Run 终态／Outbox／事件，验证每个写入故障回滚、并发 CAS、原键恢复、缺项／未知写阻塞与不可变接受历史。
+- [x] 4.2 实现 T5 原子 Release／接受指针／必要人工完成／Run 终态／Outbox／事件，验证每个写入故障回滚、并发 CAS、原键恢复、缺项／未知写阻塞与不可变接受历史。
 - [ ] 4.3 实现发布 Outbox 和独立导出任务恢复，验证路由／打包失败保留接受事实、ACK 丢失不双建、不重复迁移、旧写门未核实不重开。
 
 4.1 当前首批范围为迁移 36 的私有后端策略、固定候选／审查／原接受指针与数据方案、独立替换确认、预留原 release／目标 dataset ID、唯一派发、UNKNOWN 原操作恢复和仅未派发关闭。实际 Worker 并发／重开／丢 ACK／事务故障、INITIAL 及权限边界通过：最终接受／契约／迁移／质量收集 32/32，存储全量 34/34；失败原输出、夹具签发时点／测试参数修正和各组源码差异见 `project/evidence/P1-07/acceptance-intent-development-review.md`。迭代保留和正向替换确认仍待后续验证。没有准备 READY、外部数据执行、fencing／健康凭证或 T5 命令；这些继续同一子项，4.1 不勾选，变更仍 7/13。
@@ -38,6 +38,8 @@
 4.1 本轮增加 ACCEPTANCE v2 原 journal／物理 custody 记录和实际 SQLite 数据文件组件，INITIAL／REPLACE 的 EMPTY／DEMO、受限可信同 schema 保留快照、WAL 已提交状态／独立 UUID、文件摘要和原对象恢复；缺适配器、授权变化、fence 换代、超时与半成品不重派。模板只读原生连接修正后保持准备文件字节。最终数据／预览副本／原归属 24/24、模板单元／HTTP 24/24，构建／类型／Lint 和 137/137 映射通过。首轮失败批次主动中止、测试文件重名及恢复、各组捕获范围与原日志见 `project/evidence/P1-07/acceptance-data-development-review.md`。物理 custody 和接受依据／镜像仍为明确受控夹具，没有真实物理排空、准确接受服务／完整 READY、Release、T5 或发布；4.1 与 7/13、正式状态／门槛不变。
 
 4.1 本轮增加独立 ACCEPTANCE 服务原请求、Runner v7 容量预留／只读 profile／原 network-create-start 日志及 RELEASE_HELD claim，不构造 PreviewEffect。作业／预览／接受服务同 writer 核算全局容量与跨用途 dataset 独占；UNKNOWN 保留占用，原动作丢 ACK 不重派，准确观察 CAS／实例／端口与历史原子回滚。新服务 claim 在控制面核实 reservation／profile／原接受及审查；旧预览入口明确旧 schema。验证 service-1 12/12、regression-1 15/15、migrations-1 2/2，构建／类型／Lint、140 份源码映射及 5 份历史迁移正文匹配；初轮类型失败、追加 JS 用例的构建输入差异和迁移专项范围见 `project/evidence/P1-07/acceptance-service-development-review.md`。实际 Driver／物理容器与 fence、完整服务组合／READY、安全撤销、T5 和发布未完成，不勾选完整 4.1 或关闭工作包／门槛。
+
+4.2 本轮实现独立 T5／可信材料核验：迁移39保存不可变 Release／提交结论／必要人工覆盖层与专用 promotion 意图，准确 owner／原正文与准备双版本、指针 CAS、Run 终态／事件同事务。storage-01 40/40、t5-03 23/23 通过，覆盖13个写入故障完整回滚与原键重试、人工／自动完成、并发／重启／未知阻塞和真实材料预检；构建／类型／Lint及143份源码映射通过。首轮类型失败、夹具ID修正遗漏导致的失败与主动中止、唯一测试输入差异及38份历史迁移正文绑定见 `project/evidence/P1-07/acceptance-commit-development-review.md`。这里只完成4.2领域代码与明确受控基础设施验证；实际服务Driver／物理fence／完整准备、安全撤销、发布／导出与产品组合继续，4.1／4.3／5.1／5.2、正式P1-07和门槛不据此完成；变更8/13，不归档。
 
 ## 5. Composition and evidence
 

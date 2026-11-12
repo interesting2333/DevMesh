@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Real local control Worker/SQLite T5 acceptance transactions, fault rollback, exact basis, human completion and migration; explicit controlled infrastructure facts. No actual Docker/gVisor, physical fencing, service composition or production acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T22:29:29.114Z",
+      "finishedAt": "2026-11-12T22:34:24.532Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "9a202651ba264138819c76db7562057c4b0de0a3a97c70b5db0bca1e9c809471"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T22:34:24.540Z",
+      "finishedAt": "2026-11-12T22:36:50.007Z",
+      "exitCode": 2,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "93929e55178c304f26af2ae0cf3e0f96b70f9127f1879c190d4d8d8c33d2f3ed"
+    }
+  ],
+  "inputChanges": [
+    "tests/storage-dataset-ownership.test.mjs",
+    "tests/acceptance-commit.test.mjs",
+    "packages/storage-sqlite/src/acceptance-commit-domain.ts"
+  ],
+  "emittedChanges": [
+    "packages/storage-sqlite/dist/domain-D4MU3K39.mjs",
+    "packages/storage-sqlite/dist/domain-D4MU3K39.mjs.map",
+    "packages/storage-sqlite/dist/domain.mjs",
+    "packages/storage-sqlite/dist/index.mjs",
+    "packages/storage-sqlite/dist/index.mjs.map",
+    "packages/storage-sqlite/dist/migrations/manifest.json",
+    "packages/storage-sqlite/dist/preview-session-protocol-DAXkGPs3.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-DAXkGPs3.mjs.map",
+    "packages/storage-sqlite/dist/worker.mjs",
+    "packages/platform-core/dist/index.mjs",
+    "packages/platform-core/dist/index.mjs.map",
+    "packages/storage-sqlite/dist/domain-DBLXVtqm.mjs",
+    "packages/storage-sqlite/dist/domain-DBLXVtqm.mjs.map",
+    "packages/storage-sqlite/dist/migrations/0039-acceptancecommits.sql",
+    "packages/storage-sqlite/dist/preview-session-protocol-WC8uSu7C.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-WC8uSu7C.mjs.map"
+  ]
+}

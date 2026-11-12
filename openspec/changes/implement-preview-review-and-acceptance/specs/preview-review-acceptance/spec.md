@@ -4,6 +4,34 @@
 
 ## ADDED Requirements
 
+### Requirement: T5 atomically records exact acceptance and pending publication
+
+The system SHALL 在一个本地 writer 事务内保存准确原准备／证明／最新观察上的 Release、项目指针 CAS、必要人工 Work 完成、Run COMPLETED、操作结果、专用 promotion Outbox 和事件。新接受 MUST 复核当前 owner、候选／审查／数据方案／Run 代际、READY 内容、当前新鲜 fence／HELD 健康及无未知写。事务 MUST NOT 等待外部文件或 HTTP。原幂等成功恢复 MUST 先于终态／过期检查并仍核实当前权限。
+
+#### Scenario: T5 fails at a persistence boundary
+- **WHEN** Release、指针、人工完成、Run、提交结论、发布意图、事件或操作结果写入失败
+- **THEN** 全部事实回滚，原准备与原自动评估保持原样，不留下部分接受或重复发布任务
+
+#### Scenario: Acceptance commits but its acknowledgement is lost
+- **WHEN** 同一原键在重启、健康过期或 Run 终态后重试
+- **THEN** 当前 owner 恢复同一原操作／Release／待发布结果；不同正文拒绝，撤销权限后不返回受保护结果
+
+#### Scenario: Human completion resolves a final pending Work
+- **WHEN** 全部自动事实已通过且只有冻结的必要人工项等待，准确候选人工审查全部通过
+- **THEN** 接受事务追加准确原人工完成覆盖层并完成 Attempt、释放 slot；自动 assessment／质量及原候选字节保持不变
+
+#### Scenario: A committed preparation no longer blocks a later acceptance
+- **WHEN** 项目存在已提交原准备或明确从未派发的失败准备
+- **THEN** 新准备可按当前项目与 Run 依据竞争准入；SENT／UNKNOWN 且没有提交结论的准备仍互斥阻塞，不删除历史或伪装失败
+
+#### Scenario: Publication fails after acceptance
+- **WHEN** 原接受事务已提交而后续发布或导出尚未完成
+- **THEN** 保留原 Release 与 COMPLETED，专用原发布意图继续待处理；普通 A2A Outbox 不派发该任务，不自动重新接受
+
+#### Scenario: A legacy preview claim is presented for a new commit
+- **WHEN** 历史准备证明仍可读，但服务 claim 只有旧预览用途
+- **THEN** 新 T5 提交拒绝替代 ACCEPTANCE 服务 claim，不改写旧证明或伪造新用途
+
 ### Requirement: Acceptance services use original purpose and shared Runner admission
 
 The system SHALL 为 ACCEPTANCE 服务保存独立原请求、数据回执／fences、profile 和容器动作日志，不伪造 PREVIEW effect。作业、预览和接受服务 MUST 同事务核实全局 slot／CPU／内存与跨用途 dataset 独占。原请求及完整归属不可覆盖；UNKNOWN 不释放资源，只有从未派发取消或准确原实例 EXITED 才释放。

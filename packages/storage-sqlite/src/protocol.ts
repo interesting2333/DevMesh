@@ -58,6 +58,8 @@ import {acceptanceRequests} from './acceptance-protocol.js';
 import type {AcceptanceResults} from './acceptance-protocol.js';
 import {acceptanceReadinessRequests} from './acceptance-readiness-protocol.js';
 import type {AcceptanceReadinessResults} from './acceptance-readiness-protocol.js';
+import {acceptanceCommitRequests} from './acceptance-commit-protocol.js';
+import type {AcceptanceCommitResults} from './acceptance-commit-protocol.js';
 import {verifiedRepairRequests,verifiedRepairPublish} from './verified-repair-protocol.js';
 import type {VerifiedRepairResults} from './verified-repair-protocol.js';
 
@@ -70,6 +72,7 @@ const resources=z.array(z.strictObject({kind:z.enum(['snapshot','workspace','pro
 const admissionWork=z.strictObject({workId:ids.work,workRevision:revision,workEpoch:epoch,inputManifest,roleSnapshot,endpoint:endpointTarget,resources});
 const verificationOutputs=z.array(z.strictObject({slot:opaqueKey,ref:artifactRef})).max(64);
 export const requests = {
+  ...acceptanceCommitRequests,
   ...acceptanceReadinessRequests,
   ...acceptanceRequests,
   ...previewSessionRequests,
@@ -137,7 +140,7 @@ export type OperationResult = { operationId: string; status: string; result: Rec
 export type RunView = { runId: string; projectId: string; taskId: string; resourceRevision: number; runEpoch: number; controlRevision: number; phase: string; controlGate: string; terminalOutcome: string | null; currentPlanRevision: number | null; currentRequirementRevision: number | null; eventSeq: number };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
-export interface Results extends SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceReclamationResults, WorkspaceMaintenanceResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults {
+export interface Results extends SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceReclamationResults, WorkspaceMaintenanceResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults {
   registerContent: { contentHash: string; storageKey: string };
   createProjectWithRun: OperationResult;
   publishPlan: OperationResult;

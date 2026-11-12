@@ -294,6 +294,8 @@ P1-07 接受准备先用前向迁移保存准确候选／reviewHash、原接受�
 
 原准备证明与当前可用性分开验证：不可变 proof 固定原数据／schema／迁移／完整性、源与目标物理 fence 和准确 Runner RELEASE_HELD claim；当前观察重新核实原 fence 持有／目标关闭及同实例健康，0～30 秒时效、准备版本／观察 sequence 双 CAS 和跨 UNKNOWN 的归属高水位阻止旧状态复活。默认实际后端关闭，控制器只有首次唯一许可可 prepare，之后只 inspect；事务故障须证明 proof／观察／Run 版本／事件一起回滚。受控字段测试不算物理排空、真实容器健康或 T5 通过，正向保留／替换、实际适配器及发布仍须独立执行。
 
+T5 独立验证 owner 的 commitReleaseAcceptance 与可信 ReleaseAcceptor：事务外实际读取冻结材料并校验完整 hash 集合，事务内复核原准备／最新观察双版本、准确候选与完整审查／原指针／Run 代际／全部 READY 内容、健康／fence和未知写。迁移 39 保存不可变提交结论，原 SENT／UNKNOWN 派发历史不改为失败；仅已提交或准确未派发失败才解除项目未核实准备占用。Release、指针 CAS、必要人工完成覆盖层／Attempt／slot、Run COMPLETED、原响应、专用 promotion Outbox及事件故障必须全回滚。人工完成绑定具体人工结果，不改原自动 assessment／质量。并发、丢 ACK／重启、材料在读取期间变化、撤权、未知 HTTP 写及历史不可变分别留证。接受 ACK 恢复不再读文件或要求 Run 活跃；后续实际 OWNED／路由／开放新门／导出消费者另验，不能把独立本地事务通过写成完整服务或产品验收。
+
 数据归属增量须验证通用策略台账的 PREVIEW／ACCEPTANCE 区分、真实原准备 operation／requestHash、REPLACE 基线与复制 origin 分离、接受目标初始关闭及 proof 落库后的 WRITE_FROZEN。迁移 38 重建写门外键必须保持旧关闭门、未知写请求和历史原样；注入晚期故障后 schema、行、版本、迁移历史及外键 pragma 全部恢复。新元数据不证明业务文件、迁移、物理 fence 或 Release 已完成；源闭门与事件故障回滚、准确后端权限、丢 ACK 原记录恢复须单独验证。
 
 接受文件适配器单独验证实际 SQLite EMPTY／DEMO、同 schema 保留快照和 REPLACE 新数据。原 ACCEPTANCE v2 journal 排他创建后才取得显式配置的源／目标物理 custody；新建及发布前重查授权和同一持有记录。迁移材料必须准确原引用／实际字节／SHA-256、显式操作者信任及受限 COPY_SAME_SCHEMA 声明，未配置任意生产迁移时拒绝。回执绑定实际数据／journal／custody 摘要，包含 WAL 已提交快照并隔离应用 UUID；中断、超时、丢 ACK、配额或授权失败保留原日志与半成品，恢复仅查询。测试中的受控 custody 只验证程序分支，不能代替实际写排空；MATERIALIZED 不产生准备 READY、服务实例、Release 或 T5，准确 Runner 服务与可信组合继续独立实施。
