@@ -40,6 +40,18 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 - **WHEN** 非配置后端、不同 requestHash／image／dataset／instance 的回执到达，或停止意图指向已接受版本
 - **THEN** 拒绝改变原执行事实或派发停止，保留原数据和版本归属；观察／对象状态／事件失败时全部回滚
 
+#### Scenario: An earlier successful start no longer proves current availability
+- **WHEN** 原启动成功后没有新鲜健康观察、实际检查失败或原实例失联
+- **THEN** 保留不可变的原启动成功事实，但关闭当前可用性；持续检查原实例，恢复时不新建替代实例或修改原完成回执
+
+#### Scenario: A delayed health observation attempts to replace a newer fact
+- **WHEN** 慢响应使用旧 sequence 或更早时间提交，或者观察试图替代已经核实的实例／端口
+- **THEN** 拒绝写入，保留准确较新事实；历史、实例绑定、状态与事件保持原子，不通过健康心跳覆盖用户操作版本
+
+#### Scenario: An unaccepted preview expires during recovery
+- **WHEN** 原实例已核实且预览到期，或到期时原实例仍未知
+- **THEN** 只对已核实的原未接受实例建立一个持久停止操作并核实退出；未知实例继续查询，已接受版本／数据不被停止，不把意图或超时当作已退出
+
 #### Scenario: Dataset directory survives workspace cleanup
 - **WHEN** 工作空间被清理，或请求尝试用路径、链接、硬链接替代 dataset 数据库／日志／侧文件
 - **THEN** dataset 保留在受控 ID 决定的独立 Runner 目录，拒绝越界或链接文件，不暴露控制数据库和备份

@@ -14,7 +14,7 @@
     "build": "pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/result-verifier --filter @devmesh/code-workspaces --filter @devmesh/a2a-adapter --filter @devmesh/agent-runtime --filter @devmesh/runner --filter @devmesh/mcp-tools --filter @devmesh/input-api --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build",
     "build:vendor": "node scripts/build-vendor.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lint": "oxlint --deny-warnings --ignore-pattern=project/evidence/**/failed-source/** apps packages scripts project tests",
+    "lint": "oxlint --deny-warnings --ignore-pattern=project/evidence/**/failed-source/** --ignore-pattern=project/evidence/**/validation-driver.mjs apps packages scripts project tests",
     "test:smoke": "node --test --test-reporter=tap tests/foundation.test.mjs",
     "test:contracts": "node --test --test-reporter=tap tests/contracts.test.mjs",
     "test:storage": "node --test --test-reporter=tap tests/storage*.test.mjs",

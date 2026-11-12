@@ -134,4 +134,5 @@ export type {ReleaseDelivery,ReleaseDeliveryBasis,ReleaseDeliveryMaterial} from 
 export type {ReleaseCandidateRevision,ReleaseCandidateSummary,ReleaseCandidateManifest,CandidateWorkProof} from './release-freeze-protocol.js';
 export type {CandidateReviewItem,CandidateHumanResult,CandidateReviewView,CandidateRejectionResult} from './candidate-review-protocol.js';
 export {previewBackendPolicy,previewEffectReceipt,datasetPreparationRequest} from './preview-protocol.js';
-export type {PreviewBackendPolicy,DatasetView,PreviewView,PreviewEffect,PreviewEffectReceipt,DatasetPreparationRequest,DatasetPreparationObservation,DatasetPreparationBackend} from './preview-protocol.js';
+export type {PreviewBackendPolicy,DatasetView,PreviewView,PreviewEffect,PreviewEffectReceipt,DatasetPreparationRequest,DatasetPreparationObservation,DatasetPreparationBackend,PreviewStartRequest,PreviewStopRequest,PreviewRuntimeFact,PreviewRuntimeObservation,PreviewLifecycle,PreviewExecutionObservation,PreviewExecutionResult,PreviewExecutionBackend} from './preview-protocol.js';
+export {previewStartRequest,previewStopRequest,previewRuntimeFact} from './preview-protocol.js';

@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "bf892647d72489f3a5cd56e176a485130e5839fa",
+  "dirty": true,
+  "sourceFingerprint": "8043c667d22c3f3dde590ba72c414824804044713fb1917c5e22f89869157c4b",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T09:33:19.672Z",
+  "finishedAt": "2026-11-12T09:33:27.737Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 536,
+      "output": "frozen-install.txt",
+      "sha256": "3ff02633406b684352bd9795a6cb92b1e87f302eff76fbf2093f8e37e701a6fe"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6789,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 677,
+      "output": "lint.txt",
+      "sha256": "4be1a748a1683021f8f830f894fbc743b707aba88cae258d46c4b263f1a54231"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/platform-core/src/index.ts",
+      "sha256": "5832589eb3183be87d1add3f1bc0408b72063f86df1b1f6ebfa28e1f93a22702"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/platform-core/src/preview-lifecycle.ts",
+      "sha256": "18e238e63039c15f09a36d5892e07fba0baa71d78dc2c4cfce6ff7e335cd8b92"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/runner/src/index.ts",
+      "sha256": "63536d35fa5b36dad87e6fa49ecc386013318feecfe51637fdfb640fa9b36065"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/runner/src/preview-health.ts",
+      "sha256": "5dcc57d85f94c00430dc3fd88c107dcaf908b4ded50f22903abfdc0d4aab28ca"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/storage-sqlite/migrations/0033-previewruntime.sql",
+      "sha256": "983f2e7aaf0823f13070158ed2767d23eab242003505741f3a7addecc82aa82f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/storage-sqlite/migrations/manifest.json",
+      "sha256": "ee7e87c461226b5759a696d3b9c7e78920e1fa803df09bf328624e974ee44ec5"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/storage-sqlite/src/index.ts",
+      "sha256": "5ed7ec966e9ec1fdbfe8cc6aa89a8c78af8e22ea89114b87798ff53bfff11dc1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/storage-sqlite/src/preview-domain.ts",
+      "sha256": "9550470bd68a8574fc098b746eb6ef8cd856f5d3cd8186d948dde00f30fc9468"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/packages/storage-sqlite/src/preview-protocol.ts",
+      "sha256": "6366a9fadb7566bb01db78600477f51be34c7e68dbb03606146f81937411a0eb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/tests/fixtures/preview-intents.mjs",
+      "sha256": "a63663a53f074a47012e061bef16318ccbd793dcee9e9e1ec914084f4b53f6ab"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/tests/fixtures/preview-lifecycle.mjs",
+      "sha256": "fa0714779a9dd95077e9679b161d797c9d0b1bfb1d91ed0b47df3f3635644bf0"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/tests/verification-preview-intents.test.mjs",
+      "sha256": "772284b2a72bd21df0320ac0ccac75eea6324c032846dd8ca9594b974173b95e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/failed-source/tests/verification-preview-lifecycle.test.mjs",
+      "sha256": "f4d877c522d61c91c1891c311a8c2dfb329cd72dab0c309f594d89f06442ae0e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/frozen-install.txt",
+      "sha256": "3ff02633406b684352bd9795a6cb92b1e87f302eff76fbf2093f8e37e701a6fe"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/lint.txt",
+      "sha256": "4be1a748a1683021f8f830f894fbc743b707aba88cae258d46c4b263f1a54231"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/report.json",
+      "sha256": "41ec4115e8b9e1e2900ba4a91c229db9abc8839ac4aeb23dffcc402b8968fe74"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v18-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 task2.3 partial development: actual control SQLite lifecycle/health history, exact frozen image and dataset operation binding, health freshness and instance/endpoint pins, one start/stop dispatch, runtime CAS and UNKNOWN original-object recovery, private expiry and final cleanup authorization. Health probe uses actual bounded loopback HTTP. Container facts are an explicit ControlledPreviewBackend fixture; no Docker/runtime adapter, actual image execution, admission reservation or independent Runner expiry watchdog is proved by this step. Task2.3 remains unchecked.",
+  "limitations": [
+    "Task2.3 is partial and remains unchecked. Same Codex implementation/review, not independent or human product/stage acceptance.",
+    "Actual migrated control SQLite transactions, runtime/instance/history CAS and real control Worker reopen; actual local dataset files and original template CRUD are used for data-retention checks.",
+    "Original source/admission/Runtime and Release ownership are explicit fixtures. ControlledPreviewBackend supplies container/health/exit facts and is not a production backend or real container.",
+    "Health probe sends actual fixed loopback HTTP to an explicit test server; this does not prove a generated application or exact image is healthy.",
+    "Preview Docker/gVisor adapter, unified Runner resource reservations, independent Runner expiry watchdog, container network/listener profile and platform automatic composition remain to implement. No real model, enterprise identity, production migration, preview access gateway, T5 acceptance, publication or product/stage acceptance."
+  ],
+  "failure": "Typecheck passed. Lint encountered an unused local in the prior retained datasets-v16 validation-driver.mjs evidence snapshot. Preserve original evidence bytes and exclude only archived validation-driver.mjs under project/evidence from active-source lint, analogous to retained failed-source. Current application, tools and tests remain linted."
+}

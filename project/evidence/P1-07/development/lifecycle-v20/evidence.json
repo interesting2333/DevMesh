@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "bf892647d72489f3a5cd56e176a485130e5839fa",
+  "dirty": true,
+  "sourceFingerprint": "ccd953c45cd7ec9ba94b29abe55ad71c0573066a2ca4cc2ad474ffcebb2f28eb",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T09:37:21.980Z",
+  "finishedAt": "2026-11-12T09:41:37.937Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 502,
+      "output": "frozen-install.txt",
+      "sha256": "39e1b4db5254f25f228efe20af9a3214fc2c2cf5c0106068154f7e9e1f88e542"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 6801,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 630,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12448,
+      "output": "current-build.txt",
+      "sha256": "97a8aba46f59b5d16d585636eec67bd1fa2b4dc826bb2573d561fe62b1ac5338"
+    },
+    {
+      "name": "lifecycle",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 42208,
+      "output": "lifecycle.txt",
+      "sha256": "b63a0494190b8e6149a738b3d91f2e84489e7301dd6a0151ad2e781cd3f9631e",
+      "tests": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 21873,
+      "output": "preview-intents.txt",
+      "sha256": "b320e73d913e99b8cf56613801a235bbf3ea0a8128d0b46593053087f24de08f",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "datasets",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 29382,
+      "output": "datasets.txt",
+      "sha256": "2646637adf7277b751ef5ed3ddfbadee17fa1454a27ad20167dd012690702bfb",
+      "tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "smoke",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 3675,
+      "output": "smoke.txt",
+      "sha256": "f284c1f591693e47727fd6b21af040f5976127a202fc4937a8e7baf0be784ba2",
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9883,
+      "output": "scheduler.txt",
+      "sha256": "fa531697f72389b4d0b94401a07232a9a98babd37a6abf4c96ac62e4ea2d2187",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "review",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 33750,
+      "output": "review.txt",
+      "sha256": "635d63f5d6f8513867d28950dfb8b6048bd1022221efb533ffab3988dd9bc055",
+      "tests": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "freeze",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 46819,
+      "output": "freeze.txt",
+      "sha256": "2318304f529d1f626b8499b212683265f0b37884efcab2164e3d655a240e2b12",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "storage",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 32914,
+      "output": "storage.txt",
+      "sha256": "0db93ae0fcacb308f8fc328c272004acde91a20f519eb26a7c0abf8a8073cc78",
+      "tests": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "runner",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 13225,
+      "output": "runner.txt",
+      "sha256": "761f8368b12bc6ac6380fedaff512a67e02b1e0b262e2bc1b0194019f16827ac",
+      "tests": {
+        "tests": 16,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1029,
+      "output": "contracts.txt",
+      "sha256": "2693cb90c934b546a722cb557fa0324aeb94f8c2ac1dddb7dced8d06dfebd844",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 748,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/contracts.txt",
+      "sha256": "2693cb90c934b546a722cb557fa0324aeb94f8c2ac1dddb7dced8d06dfebd844"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/current-build.txt",
+      "sha256": "97a8aba46f59b5d16d585636eec67bd1fa2b4dc826bb2573d561fe62b1ac5338"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/datasets.txt",
+      "sha256": "2646637adf7277b751ef5ed3ddfbadee17fa1454a27ad20167dd012690702bfb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/freeze.txt",
+      "sha256": "2318304f529d1f626b8499b212683265f0b37884efcab2164e3d655a240e2b12"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/frozen-install.txt",
+      "sha256": "39e1b4db5254f25f228efe20af9a3214fc2c2cf5c0106068154f7e9e1f88e542"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/lifecycle.txt",
+      "sha256": "b63a0494190b8e6149a738b3d91f2e84489e7301dd6a0151ad2e781cd3f9631e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/preview-intents.txt",
+      "sha256": "b320e73d913e99b8cf56613801a235bbf3ea0a8128d0b46593053087f24de08f"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/report.json",
+      "sha256": "785943cc8adf770c308f2f6c7ee967448434f4025d72f20cd052982d4b9368b0"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/review.txt",
+      "sha256": "635d63f5d6f8513867d28950dfb8b6048bd1022221efb533ffab3988dd9bc055"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/runner.txt",
+      "sha256": "761f8368b12bc6ac6380fedaff512a67e02b1e0b262e2bc1b0194019f16827ac"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/scheduler.txt",
+      "sha256": "fa531697f72389b4d0b94401a07232a9a98babd37a6abf4c96ac62e4ea2d2187"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/smoke.txt",
+      "sha256": "f284c1f591693e47727fd6b21af040f5976127a202fc4937a8e7baf0be784ba2"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/storage.txt",
+      "sha256": "0db93ae0fcacb308f8fc328c272004acde91a20f519eb26a7c0abf8a8073cc78"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/validation-driver.mjs",
+      "sha256": "58111e71fe38b6d9237012ee5371add8b971b18a0b4e99f20d60d40bf66a7073"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v20/commands.json",
+      "sha256": "9496e0322f1c848b28ad41ab153e7e9632a8f313e4d7b02a35b071fe1db6ea24"
+    }
+  ],
+  "scope": "P1-07 task2.3 partial development: actual control SQLite lifecycle/health history, exact frozen image and dataset operation binding, health freshness and instance/endpoint pins, one start/stop dispatch, runtime CAS and UNKNOWN original-object recovery, private expiry and final cleanup authorization. Health probe uses actual bounded loopback HTTP. Container facts are an explicit ControlledPreviewBackend fixture; no Docker/runtime adapter, actual image execution, admission reservation or independent Runner expiry watchdog is proved by this step. Task2.3 remains unchecked.",
+  "limitations": [
+    "Task2.3 is partial and remains unchecked. Same Codex implementation/review, not independent or human product/stage acceptance.",
+    "Actual migrated control SQLite transactions, runtime/instance/history CAS and real control Worker reopen; actual local dataset files and original template CRUD are used for data-retention checks.",
+    "Original source/admission/Runtime and Release ownership are explicit fixtures. ControlledPreviewBackend supplies container/health/exit facts and is not a production backend or real container.",
+    "Health probe sends actual fixed loopback HTTP to an explicit test server; this does not prove a generated application or exact image is healthy.",
+    "Preview Docker/gVisor adapter, unified Runner resource reservations, independent Runner expiry watchdog, container network/listener profile and platform automatic composition remain to implement. No real model, enterprise identity, production migration, preview access gateway, T5 acceptance, publication or product/stage acceptance."
+  ]
+}

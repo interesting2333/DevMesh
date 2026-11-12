@@ -70,6 +70,18 @@ RunnerDatasetPaths 从已初始化且身份匹配的 Runner layout 解析 `datas
 
 日志和文件刷新在控制面事务外；Windows 使用有写权限的本次临时文件句柄执行 fsync，非 Windows 额外刷新目录。当前本地 Windows 测试不是 Linux 文件系统或突然断电验收。实际模板兼容、WAL 一致性、写入隔离、原操作并发／重启、实际配额失败及两类 ACK 丢失均单独验证；测试源 Release／源码准入仍是显式夹具，不推导 T5、真实容器或产品通过。装配和恢复说明维护于 `packages/runner/DATASETS.md`。
 
+### 9. Runtime health is a separate append-only observation
+
+迁移 33 保存独立的 `preview_runtime_observations`，不更改已终结的原启动／停止回执。当前可用性必须同时满足准确 dataset READY、预览 READY、未到期以及 30 秒内原实例的 HEALTHY 观察；首次健康成功之后失联、检查失败或超时均关闭当前可用性。历史启动成功仍保留，不重复创建实例来恢复显示。
+
+新启动请求固定完整已核实 OCI 身份（manifest／config／层）、准确 dataset 准备操作、模板／schema 及受控存储键。停止请求固定原启动 operation／requestHash 和原 instanceId。旧请求缺少新增绑定时不作无证据回填；后端只应关闭新准入并保留原对象用于核实。持续观察由原配置后端主体提交，绑定启动原请求；实例一旦核实不能替代，首次核实的 loopback 端口也不能漂移。UNKNOWN 不清空已核实的原 instanceId。
+
+观察在外部 I/O 前取得 sequence，写回使用 CAS、观察时间和原主体检查，避免更慢的旧响应覆盖后来的事实。历史追加、实例绑定、状态变化、Run 版本及事件同事务提交；相同健康状态的心跳只追加检查时间，不持续抬高用户操作版本。首次 READY 回执要求同一次准确 HEALTHY 观察，停止完成要求同一次原实例 EXITED 观察。仅一个自报成功回执不足以显示可用或已停止。
+
+`PreviewLifecycleManager` 使用私有生命周期扫描，覆盖已成功启动的持续健康和待核实原操作，恢复每轮从 0 开始。首次派发前 preflight，取得唯一许可后由后端在实际动作前再次调用 `verifyPreviewExecution`；停止清理始终复核 Release 归属。许可 ACK 丢失、动作 ACK 丢失或观察提交 ACK 丢失均不能获取第二次执行许可。未派发但已过期的启动意图可以明确关闭；已知原实例的未接受预览到期生成独立、幂等的停止操作。原实例尚未知时继续核实，不按名称替代新建，不伪造停止。
+
+Runner 的健康检查只允许后端从原容器事实取得的 `127.0.0.1` 高位端口，固定 GET `/api/health`，不携带平台身份、不跟随重定向；限制响应大小、结构及超时。真实 HTTP 测试仅证明这段请求边界。当前此节控制面和恢复器可用受控容器事实验证；Docker／gVisor 实例适配、与作业统一容量预留、独立 Runner 到期 watchdog 和容器内模板监听配置尚待继续实施，子项 2.3 保持未完成，不把受控事实称为真实镜像运行。
+
 ## Risks / Trade-offs
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。

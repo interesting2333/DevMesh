@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {ids,opaqueKey,sha256,timestamp,revision} from '@devmesh/contracts';
+import {ids,opaqueKey,sha256,timestamp,revision,previewImageIdentity} from '@devmesh/contracts';
 const meta=z.strictObject({principalId:opaqueKey,scopeId:opaqueKey,idempotencyKey:z.uuid()});
 const read={principalId:opaqueKey,runId:ids.run};
 const conditional={meta,runId:ids.run,ifMatch:z.string().optional()};
@@ -14,6 +14,13 @@ export const datasetPreparationRequest=z.strictObject({schemaVersion:z.literal('
  if(i.sourceDatasetId){if(i.sourceStorageKey!==i.projectId+'/'+i.sourceDatasetId+'/app.sqlite'||!i.sourceReleaseId||i.initialData!==null)c.addIssue({code:'custom',message:'Exact source release and dataset required'});}
  else if(i.sourceStorageKey!==null||i.sourceReleaseId!==null||i.initialData===null)c.addIssue({code:'custom',message:'Explicit initial data mode required'});
 });
+const previewSubject={operationId:ids.operation,projectId:ids.project,runId:ids.run,candidateId:ids.candidate,policyHash:sha256,backendRef:opaqueKey,runnerId:opaqueKey,previewId:ids.preview,datasetId:ids.dataset,imageDigest:z.string().regex(/^sha256:[a-f0-9]{64}$/)};
+export const previewStartRequest=z.strictObject({schemaVersion:z.literal('devmesh.preview-start.v1'),...previewSubject,manifestHash:sha256,storageKey:z.string().max(512),datasetOperationId:ids.operation,templateVersion:opaqueKey,schemaRevision:opaqueKey,imageIdentity:previewImageIdentity,expiresAt:timestamp}).superRefine((i,c)=>{if(i.storageKey!==i.projectId+'/'+i.datasetId+'/app.sqlite'||i.imageIdentity.imageDigest!==i.imageDigest)c.addIssue({code:'custom',message:'Exact dataset and image identity required'});});
+export const previewStopRequest=z.strictObject({schemaVersion:z.literal('devmesh.preview-stop.v1'),...previewSubject,startOperationId:ids.operation,startRequestHash:sha256,instanceId:opaqueKey,reason:z.enum(['USER','EXPIRED'])});
+export const previewRuntimeFact=z.strictObject({previewId:ids.preview,datasetId:ids.dataset,imageDigest:previewSubject.imageDigest,state:z.enum(['HEALTHY','UNHEALTHY','CREATED','EXITED','UNKNOWN']),instanceId:opaqueKey.nullable(),endpoint:z.strictObject({host:z.literal('127.0.0.1'),port:z.number().int().min(1024).max(65535)}).nullable(),checkedAt:timestamp}).superRefine((i,c)=>{
+ if((i.state==='UNKNOWN')!==(i.instanceId===null)||i.state==='HEALTHY'&&i.endpoint===null||['EXITED','CREATED','UNKNOWN'].includes(i.state)&&i.endpoint!==null)c.addIssue({code:'custom',message:'A runtime fact needs exact verified instance and endpoint evidence'});
+});
+const backendPage={principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)};
 export const previewRequests={
  registerPreviewBackendPolicy:z.strictObject({principalId:opaqueKey,projectId:ids.project,policy:previewBackendPolicy}),
  getPreviewBackendPolicy:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256}),
@@ -31,12 +38,30 @@ export const previewRequests={
   z.strictObject({state:z.literal('SUCCEEDED'),receipt:previewEffectReceipt}),
  ])}),
  listPreviewEffectHistory:z.strictObject({...bound,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
+  getPreviewLifecycle:z.strictObject({principalId:opaqueKey,previewId:ids.preview}),
+  listPreviewLifecycles:z.strictObject(backendPage),
+  verifyPreviewExecution:z.strictObject(bound),
+  recordPreviewRuntimeObservation:z.strictObject({...bound,expectedSequence:z.number().int().nonnegative(),fact:previewRuntimeFact}),
+  listPreviewRuntimeHistory:z.strictObject({...bound,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
+  preparePreviewExpiry:z.strictObject({principalId:opaqueKey,previewId:ids.preview}),
 };
 export type PreviewMethod=keyof typeof previewRequests;
 export type PreviewInput<M extends PreviewMethod>=z.output<(typeof previewRequests)[M]>;
 export type PreviewBackendPolicy=z.output<typeof previewBackendPolicy>;
 export type PreviewEffectReceipt=z.output<typeof previewEffectReceipt>;
 export type DatasetPreparationRequest=z.output<typeof datasetPreparationRequest>;
+export type PreviewStartRequest=z.output<typeof previewStartRequest>;
+export type PreviewStopRequest=z.output<typeof previewStopRequest>;
+export type PreviewRuntimeFact=z.output<typeof previewRuntimeFact>;
+export interface PreviewRuntimeObservation {sequence:number;fact:PreviewRuntimeFact;observedAt:string}
+export type PreviewExecutionObservation={state:'UNKNOWN';errorCode:string}|{state:'FAILED';errorCode:string;absenceVerified:true}|{state:'SUCCEEDED';receipt:Extract<PreviewEffectReceipt,{kind:'PREVIEW_READY'|'PREVIEW_STOPPED'}>};
+export interface PreviewExecutionResult {observation:PreviewExecutionObservation;fact:PreviewRuntimeFact}
+export interface PreviewExecutionBackend {
+ readonly configured:boolean;
+ preflight(effect:PreviewEffect,datasetEffect:PreviewEffect):Promise<void>;
+ execute(effect:PreviewEffect,datasetEffect:PreviewEffect,authorize:()=>Promise<boolean>):Promise<PreviewExecutionResult>;
+ inspect(effect:PreviewEffect):Promise<PreviewExecutionResult>;
+}
 export type DatasetPreparationObservation={state:'UNKNOWN';errorCode:string}|{state:'FAILED';errorCode:string;absenceVerified:true}|{state:'SUCCEEDED';receipt:Extract<PreviewEffectReceipt,{kind:'DATASET_READY'}>};
 export interface DatasetPreparationBackend {
  readonly configured:boolean;
@@ -53,7 +78,9 @@ export interface PreviewView {
  previewId:string;projectId:string;runId:string;candidateId:string;operationId:string;datasetId:string;policyHash:string;imageDigest:string;
  state:'STARTING'|'READY'|'STOPPING'|'STOPPED'|'EXPIRED'|'UNKNOWN';revision:number;instanceId:string|null;expiresAt:string;createdAt:string;
  impactReviewHash:string;stopOperationId:string|null;availability:'AVAILABLE'|'UNAVAILABLE';
+  healthState:PreviewRuntimeFact['state'];healthCheckedAt:string|null;
 }
+export interface PreviewLifecycle {preview:PreviewView;startEffect:PreviewEffect;datasetEffect:PreviewEffect;stopEffect:PreviewEffect|null;runtime:PreviewRuntimeObservation|null;accepted:boolean}
 export interface PreviewEffect {
  operationId:string;projectId:string;runId:string;candidateId:string;datasetId:string;previewId:string|null;policyHash:string;
  kind:'DATASET_PREPARE'|'PREVIEW_START'|'PREVIEW_STOP';remoteKey:string;requestHash:string;request:Record<string,unknown>;
@@ -65,4 +92,10 @@ export interface PreviewResults {
  getPreviewEffect:PreviewEffect;markPreviewEffectSent:{dispatch:boolean;effect:PreviewEffect};recordPreviewEffectObservation:PreviewEffect;
  listPreviewEffects:{items:{sequence:number;effect:PreviewEffect}[];nextSequence:number|null};
  listPreviewEffectHistory:{items:{sequence:number;observation:PreviewInput<'recordPreviewEffectObservation'>['observation'];observedAt:string}[];nextSequence:number|null};
+  getPreviewLifecycle:PreviewLifecycle;
+  listPreviewLifecycles:{items:{sequence:number;lifecycle:PreviewLifecycle}[];nextSequence:number|null};
+  verifyPreviewExecution:{allowed:boolean;reasonCode:string|null};
+  recordPreviewRuntimeObservation:PreviewRuntimeObservation;
+  listPreviewRuntimeHistory:{items:PreviewRuntimeObservation[];nextSequence:number|null};
+  preparePreviewExpiry:PreviewView;
 }

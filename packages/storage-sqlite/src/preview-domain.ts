@@ -5,7 +5,7 @@ import type {Meta,OperationResult} from './protocol.js';
 import type {createPlanDomain} from './plan-domain.js';
 import type {createReleaseFreezeDomain} from './release-freeze-domain.js';
 import {previewRequests,previewBackendPolicy} from './preview-protocol.js';
-import type {PreviewMethod,PreviewInput,PreviewBackendPolicy,DatasetView,PreviewView,PreviewEffect} from './preview-protocol.js';
+import type {PreviewMethod,PreviewInput,PreviewBackendPolicy,DatasetView,PreviewView,PreviewEffect,PreviewRuntimeFact,PreviewRuntimeObservation,PreviewLifecycle} from './preview-protocol.js';
 import {canonical} from './json.js';
 import {digest,transaction} from './migrations.js';
 import {StorageError} from './errors.js';
@@ -29,10 +29,13 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
  const datasetView=(r:Row):DatasetView=>({datasetId:String(r.dataset_id),projectId:String(r.project_id),runId:String(r.run_id),candidateId:String(r.candidate_id),operationId:String(r.operation_id),policyHash:String(r.policy_hash),sourceDatasetId:r.source_dataset_id as string|null,sourceReleaseId:r.source_release_id as string|null,storageKey:String(r.storage_key),schemaRevision:String(r.schema_revision),state:r.state as DatasetView['state'],revision:Number(r.revision),snapshotAt:r.snapshot_at as string|null,retentionUntil:String(r.retention_until),createdAt:String(r.created_at)});
  const effectView=(r:Row):PreviewEffect=>({operationId:String(r.operation_id),projectId:String(r.project_id),runId:String(r.run_id),candidateId:String(r.candidate_id),datasetId:String(r.dataset_id),previewId:r.preview_id as string|null,policyHash:String(r.policy_hash),kind:r.kind as PreviewEffect['kind'],remoteKey:String(r.remote_key),requestHash:String(r.request_hash),request:json(r.request_json),state:r.state as PreviewEffect['state'],revision:Number(r.revision),receipt:r.receipt_json?json(r.receipt_json):null,errorCode:r.error_code as string|null,createdAt:String(r.created_at)});
  const accepted=(r:Row)=>!!get('SELECT 1 FROM releases WHERE project_id=? AND (candidate_id=? OR prepared_data_ref=?)',r.project_id!,r.candidate_id!,r.dataset_id!);
+  const runtimeView=(r:Row):PreviewRuntimeObservation=>({sequence:Number(r.sequence),fact:json<PreviewRuntimeFact>(r.fact_json),observedAt:String(r.observed_at)});
+  const latestRuntime=(previewId:string)=>{const r=get('SELECT * FROM preview_runtime_observations WHERE preview_id=? ORDER BY sequence DESC LIMIT 1',previewId);return r?runtimeView(r):null;};
  function previewView(r:Row):PreviewView {
-  const d=dataset(String(r.dataset_id)),stop=get("SELECT operation_id FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",r.preview_id!);
+   const d=dataset(String(r.dataset_id)),stop=get("SELECT operation_id FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",r.preview_id!),runtime=latestRuntime(String(r.preview_id));
   const basis={previewId:r.preview_id,previewRevision:r.revision,datasetId:r.dataset_id,datasetRevision:d.revision,imageDigest:r.image_digest,instanceId:r.instance_id,accepted:accepted(r)};
-  return {previewId:String(r.preview_id),projectId:String(r.project_id),runId:String(r.run_id),candidateId:String(r.candidate_id),operationId:String(r.operation_id),datasetId:String(r.dataset_id),policyHash:String(r.policy_hash),imageDigest:String(r.image_digest),state:r.state as PreviewView['state'],revision:Number(r.revision),instanceId:r.instance_id as string|null,expiresAt:String(r.expires_at),createdAt:String(r.created_at),impactReviewHash:digest(canonical(basis)),stopOperationId:stop?String(stop.operation_id):null,availability:r.state==='READY'&&String(r.expires_at)>now()&&d.state==='READY'?'AVAILABLE':'UNAVAILABLE'};
+   const fresh=runtime?.fact.state==='HEALTHY'&&runtime.fact.instanceId===r.instance_id&&Date.now()-Date.parse(runtime.fact.checkedAt)<=30000;
+   return {previewId:String(r.preview_id),projectId:String(r.project_id),runId:String(r.run_id),candidateId:String(r.candidate_id),operationId:String(r.operation_id),datasetId:String(r.dataset_id),policyHash:String(r.policy_hash),imageDigest:String(r.image_digest),state:r.state as PreviewView['state'],revision:Number(r.revision),instanceId:r.instance_id as string|null,expiresAt:String(r.expires_at),createdAt:String(r.created_at),impactReviewHash:digest(canonical(basis)),stopOperationId:stop?String(stop.operation_id):null,availability:r.state==='READY'&&String(r.expires_at)>now()&&d.state==='READY'&&fresh?'AVAILABLE':'UNAVAILABLE',healthState:runtime?.fact.state??'UNKNOWN',healthCheckedAt:runtime?.fact.checkedAt??null};
  }
  function scoped(principalId:string,runId:string,r:Row,write=false){const run=authorized(principalId,runId,write);if(r.run_id!==runId||r.project_id!==run.project_id)fail('PREVIEW_NOT_FOUND',404);return run;}
  function current(i:{meta:Meta;runId:string;candidateId:PreviewInput<'createPreviewDataset'>['candidateId'];manifestHash:string;ifMatch?:string|undefined}){
@@ -41,6 +44,25 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
   if(c.qualification!=='CURRENT'||c.manifestHash!==i.manifestHash||run.terminal_outcome!==null||run.control_gate!=='OPEN'||run.phase!=='REVIEW')fail('PREVIEW_CANDIDATE_STALE');return {run,c};
  }
  function backend(i:{principalId:string;operationId:string;requestHash?:string}){const e=effect(i.operationId),p=policy(String(e.project_id),String(e.policy_hash));if(p.backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);if(i.requestHash!==undefined&&e.request_hash!==i.requestHash)fail('PREVIEW_REQUEST_CHANGED');return e;}
+  function backendPreview(principalId:string,previewId:string){const p=preview(previewId);backend({principalId,operationId:String(p.operation_id)});return p;}
+  function lifecycle(p:Row):PreviewLifecycle {const d=dataset(String(p.dataset_id)),stop=get("SELECT * FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",p.preview_id!);return {preview:previewView(p),startEffect:effectView(effect(String(p.operation_id))),datasetEffect:effectView(effect(String(d.operation_id))),stopEffect:stop?effectView(stop):null,runtime:latestRuntime(String(p.preview_id)),accepted:accepted(p)};}
+  function dispatchAllowed(r:Row){
+   if(r.kind==='PREVIEW_START'&&(String(preview(String(r.preview_id)).expires_at)<=now()||get("SELECT 1 FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",r.preview_id!)))fail('PREVIEW_EXPIRED_BEFORE_DISPATCH');
+   if(r.kind!=='PREVIEW_STOP'){
+    const owner=get('SELECT principal_id FROM operations WHERE operation_id=?',r.operation_id!)!,request=json<{manifestHash:string;sourceReleaseId?:string|null}>(r.request_json),run=authorized(String(owner.principal_id),String(r.run_id),true),c=freezes.getCandidate({principalId:String(owner.principal_id),runId:ids.run.parse(r.run_id),candidateId:ids.candidate.parse(r.candidate_id)});
+    if(run.terminal_outcome!==null||run.control_gate!=='OPEN'||run.phase!=='REVIEW'||c.qualification!=='CURRENT'||c.manifestHash!==request.manifestHash)fail('PREVIEW_CANDIDATE_STALE');
+    if(r.kind==='DATASET_PREPARE'&&(get('SELECT accepted_release_id FROM projects WHERE project_id=?',r.project_id!)!.accepted_release_id??null)!==(request.sourceReleaseId??null))fail('PREVIEW_SOURCE_RELEASE_CHANGED');
+   }else if(accepted(preview(String(r.preview_id))))fail('PREVIEW_OWNED_BY_RELEASE');
+  }
+  function addStop(operationId:string,r:Row,reason:'USER'|'EXPIRED'){
+   const v=previewView(r);if(accepted(r))fail('PREVIEW_OWNED_BY_RELEASE');
+   if(!r.instance_id||!['READY','STARTING','UNKNOWN'].includes(String(r.state)))fail('PREVIEW_ORIGINAL_INSTANCE_UNKNOWN');
+   if(reason==='EXPIRED'&&String(r.expires_at)>now())fail('PREVIEW_NOT_EXPIRED');
+   if(v.stopOperationId)fail('PREVIEW_STOP_ALREADY_REQUESTED');
+   const p=policy(v.projectId,v.policyHash),d=dataset(v.datasetId),start=effect(v.operationId);
+   addEffect(operationId,d,'PREVIEW_STOP',v.previewId,{schemaVersion:'devmesh.preview-stop.v1',operationId,projectId:v.projectId,runId:v.runId,candidateId:v.candidateId,policyHash:v.policyHash,backendRef:p.backendRef,runnerId:p.runnerId,previewId:v.previewId,datasetId:v.datasetId,imageDigest:v.imageDigest,startOperationId:v.operationId,startRequestHash:start.request_hash,instanceId:v.instanceId,reason},v.previewId);
+   exec("UPDATE previews SET state='STOPPING',revision=revision+1 WHERE preview_id=?",v.previewId);hooks.changed(v.runId,operationId,{previewId:v.previewId,state:'STOPPING'});return {previewId:v.previewId};
+  }
  function known(runId:string){if(get("SELECT 1 FROM preview_effects WHERE run_id=? AND state IN ('PREPARED','SENT','UNKNOWN')",runId))fail('PREVIEW_ORIGINAL_EFFECT_UNRESOLVED');}
  function addEffect(operationId:string,r:Row,kind:PreviewEffect['kind'],remoteKey:string,request:Record<string,unknown>,previewId:string|null=null){
   const body=canonical(request);exec("INSERT INTO preview_effects VALUES(?,?,?,?,?,?,?,?,?,?,?,'PREPARED',1,NULL,NULL,?)",operationId,r.project_id!,r.run_id!,r.candidate_id!,r.dataset_id!,previewId,r.policy_hash!,kind,remoteKey,digest(body),body,now());
@@ -78,23 +100,49 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
     const lifetime=Date.parse(i.expiresAt)-Date.now();if(lifetime<60000||lifetime>86400000)fail('PREVIEW_EXPIRY_INVALID',422);
     const p=policy(c.projectId,String(d.policy_hash)),previewId=uid('preview'),image=c.manifest.delivery.record.image!;
     exec("INSERT INTO previews VALUES(?,?,?,?,?,?,?,?,'STARTING',1,NULL,?,?)",previewId,c.projectId,i.runId,i.candidateId,operationId,i.datasetId,d.policy_hash!,image.imageDigest,i.expiresAt,now());
-    addEffect(operationId,d,'PREVIEW_START',previewId,{schemaVersion:'devmesh.preview-start.v1',operationId,projectId:c.projectId,runId:i.runId,candidateId:i.candidateId,manifestHash:c.manifestHash,policyHash:d.policy_hash,backendRef:p.backendRef,runnerId:p.runnerId,previewId,datasetId:i.datasetId,storageKey:d.storage_key,imageDigest:image.imageDigest,expiresAt:i.expiresAt},previewId);
+    addEffect(operationId,d,'PREVIEW_START',previewId,{schemaVersion:'devmesh.preview-start.v1',operationId,projectId:c.projectId,runId:i.runId,candidateId:i.candidateId,manifestHash:c.manifestHash,policyHash:d.policy_hash,backendRef:p.backendRef,runnerId:p.runnerId,previewId,datasetId:i.datasetId,storageKey:d.storage_key,datasetOperationId:d.operation_id,templateVersion:p.templateVersion,schemaRevision:p.schemaRevision,imageDigest:image.imageDigest,imageIdentity:image,expiresAt:i.expiresAt},previewId);
     hooks.changed(i.runId,operationId,{previewId,state:'STARTING'});return {previewId};
    });return previewView(preview(String(op.result!.previewId)));
   },
   getPreview(i:PreviewInput<'getPreview'>){const p=preview(i.previewId);scoped(i.principalId,i.runId,p);return previewView(p);},
+   getPreviewLifecycle(i:PreviewInput<'getPreviewLifecycle'>){return lifecycle(backendPreview(i.principalId,i.previewId));},
+   listPreviewLifecycles(i:PreviewInput<'listPreviewLifecycles'>){
+    if(policy(i.projectId,i.policyHash).backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);
+    const rows=all("SELECT rowid sequence,* FROM previews p WHERE project_id=? AND policy_hash=? AND rowid>? AND (state NOT IN ('STOPPED','EXPIRED') OR EXISTS(SELECT 1 FROM preview_effects e WHERE e.preview_id=p.preview_id AND e.state IN ('PREPARED','SENT','UNKNOWN'))) ORDER BY rowid LIMIT ?",i.projectId,i.policyHash,i.afterSequence,i.limit+1),more=rows.length>i.limit;if(more)rows.pop();return {items:rows.map(r=>({sequence:Number(r.sequence),lifecycle:lifecycle(r)})),nextSequence:more?Number(rows.at(-1)!.sequence):null};
+   },
+   verifyPreviewExecution(i:PreviewInput<'verifyPreviewExecution'>){
+    const r=backend(i);if(!['SENT','UNKNOWN'].includes(String(r.state)))return {allowed:false,reasonCode:'PREVIEW_EFFECT_NOT_EXECUTABLE'};
+    try{dispatchAllowed(r);return {allowed:true,reasonCode:null};}catch(error){if(error instanceof StorageError)return {allowed:false,reasonCode:error.code};throw error;}
+   },
+   recordPreviewRuntimeObservation(i:PreviewInput<'recordPreviewRuntimeObservation'>){return transaction(db,()=>{
+    const start=backend(i),fact=i.fact;if(start.kind!=='PREVIEW_START'||start.state==='PREPARED')fail('PREVIEW_START_NOT_SENT');
+    const p=preview(String(start.preview_id)),last=latestRuntime(String(p.preview_id)),body=canonical(fact);
+    if(last&&canonical(last.fact)===body)return last;
+    if((last?.sequence??0)!==i.expectedSequence)fail('PREVIEW_RUNTIME_REVISION_CHANGED');
+    if(fact.previewId!==p.preview_id||fact.datasetId!==p.dataset_id||fact.imageDigest!==p.image_digest||p.instance_id!==null&&fact.instanceId!==null&&p.instance_id!==fact.instanceId)fail('PREVIEW_RUNTIME_IDENTITY_CHANGED');
+    if(fact.checkedAt<String(start.created_at)||fact.checkedAt>now()||last&&fact.checkedAt<last.fact.checkedAt)fail('PREVIEW_RUNTIME_TIME_INVALID');
+    if((start.state==='FAILED'||['STOPPED','EXPIRED'].includes(String(p.state)))&&!['EXITED','UNKNOWN'].includes(fact.state))fail('PREVIEW_RUNTIME_TERMINAL');
+    const pinned=get("SELECT fact_json FROM preview_runtime_observations WHERE preview_id=? AND json_extract(fact_json,'$.endpoint') IS NOT NULL ORDER BY sequence LIMIT 1",p.preview_id!);
+    if(pinned&&fact.endpoint!==null&&canonical(json<PreviewRuntimeFact>(pinned.fact_json).endpoint)!==canonical(fact.endpoint))fail('PREVIEW_RUNTIME_ENDPOINT_CHANGED');
+    const stop=get("SELECT 1 FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",p.preview_id!);
+    const next:PreviewView['state']=['STOPPED','EXPIRED'].includes(String(p.state))?p.state as PreviewView['state']:stop?'STOPPING':fact.state==='EXITED'?(String(p.expires_at)<=now()?'EXPIRED':'STOPPED'):fact.state==='HEALTHY'?(start.state==='SUCCEEDED'?'READY':'STARTING'):'UNKNOWN';
+    const sequence=(last?.sequence??0)+1,observedAt=now();exec('INSERT INTO preview_runtime_observations VALUES(?,?,?,?,?,?,?)',p.preview_id!,sequence,start.operation_id!,start.request_hash!,body,fact.checkedAt,observedAt);
+    if(next!==p.state||p.instance_id===null&&fact.instanceId!==null){exec('UPDATE previews SET state=?,instance_id=coalesce(instance_id,?),revision=revision+1 WHERE preview_id=?',next,fact.instanceId,p.preview_id!);hooks.changed(String(p.run_id),String(start.operation_id),{previewId:String(p.preview_id),state:next});}
+    return {sequence,fact,observedAt};
+   });},
+   listPreviewRuntimeHistory(i:PreviewInput<'listPreviewRuntimeHistory'>){const e=backend(i);if(e.kind!=='PREVIEW_START')fail('PREVIEW_START_REQUIRED',422);const rows=all('SELECT * FROM preview_runtime_observations WHERE preview_id=? AND sequence>? ORDER BY sequence LIMIT ?',e.preview_id!,i.afterSequence,i.limit+1),more=rows.length>i.limit;if(more)rows.pop();return {items:rows.map(runtimeView),nextSequence:more?Number(rows.at(-1)!.sequence):null};},
+   preparePreviewExpiry(i:PreviewInput<'preparePreviewExpiry'>){
+    const p=backendPreview(i.principalId,i.previewId);if(accepted(p))fail('PREVIEW_OWNED_BY_RELEASE');if(String(p.expires_at)>now())fail('PREVIEW_NOT_EXPIRED');
+    const old=get("SELECT operation_id FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",i.previewId);if(old)return previewView(p);
+    const key=digest(i.previewId+':expiry'),idempotencyKey=key.slice(0,8)+'-'+key.slice(8,12)+'-4'+key.slice(13,16)+'-8'+key.slice(17,20)+'-'+key.slice(20,32),meta={principalId:i.principalId,scopeId:i.previewId,idempotencyKey};
+    hooks.operation(meta,'ExpirePreview',{previewId:i.previewId},operationId=>addStop(operationId,backendPreview(i.principalId,i.previewId),'EXPIRED'),()=>{backendPreview(i.principalId,i.previewId);});return previewView(preview(i.previewId));
+   },
   stopPreviewIntent(i:PreviewInput<'stopPreviewIntent'>){
    if(i.meta.scopeId!==i.previewId)fail('OPERATION_SCOPE_INVALID',422);const {meta:_meta,...payload}=i;
    const op=hooks.operation(i.meta,'StopPreviewIntent',payload,operationId=>{
     const r=preview(i.previewId);scoped(i.meta.principalId,i.runId,r,true);const v=previewView(r);
     if(v.revision!==i.previewRevision||v.impactReviewHash!==i.impactReviewHash)fail('PREVIEW_REVISION_CHANGED');
-    if(accepted(r))fail('PREVIEW_OWNED_BY_RELEASE');
-    if(!r.instance_id||r.state!=='READY')fail('PREVIEW_ORIGINAL_INSTANCE_UNKNOWN');
-    if(i.reason==='EXPIRED'&&String(r.expires_at)>now())fail('PREVIEW_NOT_EXPIRED');
-    if(v.stopOperationId)fail('PREVIEW_STOP_ALREADY_REQUESTED');
-    const p=policy(v.projectId,v.policyHash),d=dataset(v.datasetId);
-    addEffect(operationId,d,'PREVIEW_STOP',v.previewId,{schemaVersion:'devmesh.preview-stop.v1',operationId,projectId:v.projectId,runId:v.runId,candidateId:v.candidateId,policyHash:v.policyHash,backendRef:p.backendRef,runnerId:p.runnerId,previewId:v.previewId,datasetId:v.datasetId,imageDigest:v.imageDigest,instanceId:v.instanceId,reason:i.reason},v.previewId);
-    exec("UPDATE previews SET state='STOPPING',revision=revision+1 WHERE preview_id=?",i.previewId);hooks.changed(i.runId,operationId,{previewId:i.previewId,state:'STOPPING'});return {previewId:i.previewId};
+    return addStop(operationId,r,i.reason);
    },()=>{scoped(i.meta.principalId,i.runId,preview(i.previewId),true);});return previewView(preview(String(op.result!.previewId)));
   },
   getPreviewEffect(i:PreviewInput<'getPreviewEffect'>){return effectView(backend(i));},
@@ -108,12 +156,7 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
   markPreviewEffectSent(i:PreviewInput<'markPreviewEffectSent'>){return transaction(db,()=>{
    const r=backend(i);if(r.state!=='PREPARED')return {dispatch:false,effect:effectView(r)};
    if(r.revision!==i.expectedRevision)fail('PREVIEW_EFFECT_REVISION_CHANGED');
-   if(r.kind==='PREVIEW_START'&&String(preview(String(r.preview_id)).expires_at)<=now())fail('PREVIEW_EXPIRED_BEFORE_DISPATCH');
-   if(r.kind!=='PREVIEW_STOP'){
-    const owner=get('SELECT principal_id FROM operations WHERE operation_id=?',i.operationId)!,request=json<{manifestHash:string;sourceReleaseId?:string|null}>(r.request_json),run=authorized(String(owner.principal_id),String(r.run_id),true),c=freezes.getCandidate({principalId:String(owner.principal_id),runId:ids.run.parse(r.run_id),candidateId:ids.candidate.parse(r.candidate_id)});
-    if(run.terminal_outcome!==null||run.control_gate!=='OPEN'||run.phase!=='REVIEW'||c.qualification!=='CURRENT'||c.manifestHash!==request.manifestHash)fail('PREVIEW_CANDIDATE_STALE');
-    if(r.kind==='DATASET_PREPARE'&&(get('SELECT accepted_release_id FROM projects WHERE project_id=?',r.project_id!)!.accepted_release_id??null)!==(request.sourceReleaseId??null))fail('PREVIEW_SOURCE_RELEASE_CHANGED');
-   }else if(accepted(preview(String(r.preview_id))))fail('PREVIEW_OWNED_BY_RELEASE');
+    dispatchAllowed(r);
    // This is the only dispatch grant. Recovery of SENT/UNKNOWN can inspect the
    // original remoteKey but cannot obtain a second grant.
    exec("UPDATE preview_effects SET state='SENT',revision=revision+1 WHERE operation_id=?",i.operationId);return {dispatch:true,effect:effectView(effect(i.operationId))};
@@ -134,9 +177,11 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
      exec("UPDATE datasets SET state='READY',revision=revision+1,snapshot_at=? WHERE dataset_id=?",receipt.snapshotAt,r.dataset_id!);
     }else if(r.kind==='PREVIEW_START'){
      if(receipt.kind!=='PREVIEW_READY'||receipt.previewId!==r.preview_id||receipt.datasetId!==r.dataset_id||receipt.imageDigest!==p!.image_digest||p!.instance_id!==null&&p!.instance_id!==receipt.instanceId||receipt.checkedAt<String(r.created_at)||receipt.checkedAt>now())fail('PREVIEW_RECEIPT_CHANGED');
+      const runtime=latestRuntime(String(r.preview_id));if(runtime?.fact.state!=='HEALTHY'||runtime.fact.instanceId!==receipt.instanceId||runtime.fact.checkedAt!==receipt.checkedAt||Date.now()-Date.parse(receipt.checkedAt)>30000||get("SELECT 1 FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'",r.preview_id!))fail('PREVIEW_HEALTH_NOT_VERIFIED');
      exec("UPDATE previews SET state='READY',revision=revision+1,instance_id=? WHERE preview_id=?",receipt.instanceId,r.preview_id!);
     }else{
      if(receipt.kind!=='PREVIEW_STOPPED'||receipt.previewId!==r.preview_id||receipt.instanceId!==p!.instance_id||receipt.checkedAt<String(r.created_at)||receipt.checkedAt>now())fail('PREVIEW_RECEIPT_CHANGED');
+      const runtime=latestRuntime(String(r.preview_id));if(runtime?.fact.state!=='EXITED'||runtime.fact.instanceId!==receipt.instanceId||runtime.fact.checkedAt!==receipt.checkedAt)fail('PREVIEW_EXIT_NOT_VERIFIED');
      const request=json<{reason:string}>(r.request_json);exec('UPDATE previews SET state=?,revision=revision+1 WHERE preview_id=?',request.reason==='EXPIRED'?'EXPIRED':'STOPPED',r.preview_id!);
     }
    }else if(r.kind==='DATASET_PREPARE'){

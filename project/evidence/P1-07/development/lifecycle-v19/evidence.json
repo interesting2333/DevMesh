@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "bf892647d72489f3a5cd56e176a485130e5839fa",
+  "dirty": true,
+  "sourceFingerprint": "9b3ef66def5f7c6a6306d9b6973dab10cff6477e2003b400ecbb8e506c296b77",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T09:33:57.572Z",
+  "finishedAt": "2026-11-12T09:35:11.029Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 558,
+      "output": "frozen-install.txt",
+      "sha256": "c9e231ea41a0348e6fb2f6688bde3ffef11c00fbdb54af28b8691d209cf5ee8e"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 8039,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 719,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 18379,
+      "output": "current-build.txt",
+      "sha256": "f0b26288910bf11990c04bc503a806abed8fbfd9d1c995eb644d90ab73608652"
+    },
+    {
+      "name": "lifecycle",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 24812,
+      "output": "lifecycle.txt",
+      "sha256": "7331bc66634e2d5d9eef5fc497ea57c963454146b688280b7359f5a3d8491f91",
+      "tests": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 20879,
+      "output": "preview-intents.txt",
+      "sha256": "fd4d904aca96897cad6d2dfe1a42e3a0cef0f88be7c1d3c721a985be84215ec4",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v19/current-build.txt",
+      "sha256": "f0b26288910bf11990c04bc503a806abed8fbfd9d1c995eb644d90ab73608652"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v19/frozen-install.txt",
+      "sha256": "c9e231ea41a0348e6fb2f6688bde3ffef11c00fbdb54af28b8691d209cf5ee8e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v19/lifecycle.txt",
+      "sha256": "7331bc66634e2d5d9eef5fc497ea57c963454146b688280b7359f5a3d8491f91"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v19/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v19/preview-intents.txt",
+      "sha256": "fd4d904aca96897cad6d2dfe1a42e3a0cef0f88be7c1d3c721a985be84215ec4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v19/report.json",
+      "sha256": "1e7671edbf2887e00efd1d8ce19e12dc42596a5f67192fd61041a7dad8e2c189"
+    },
+    {
+      "path": "project/evidence/P1-07/development/lifecycle-v19/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    }
+  ],
+  "scope": "P1-07 task2.3 partial development: actual control SQLite lifecycle/health history, exact frozen image and dataset operation binding, health freshness and instance/endpoint pins, one start/stop dispatch, runtime CAS and UNKNOWN original-object recovery, private expiry and final cleanup authorization. Health probe uses actual bounded loopback HTTP. Container facts are an explicit ControlledPreviewBackend fixture; no Docker/runtime adapter, actual image execution, admission reservation or independent Runner expiry watchdog is proved by this step. Task2.3 remains unchecked.",
+  "limitations": [
+    "Task2.3 is partial and remains unchecked. Same Codex implementation/review, not independent or human product/stage acceptance.",
+    "Actual migrated control SQLite transactions, runtime/instance/history CAS and real control Worker reopen; actual local dataset files and original template CRUD are used for data-retention checks.",
+    "Original source/admission/Runtime and Release ownership are explicit fixtures. ControlledPreviewBackend supplies container/health/exit facts and is not a production backend or real container.",
+    "Health probe sends actual fixed loopback HTTP to an explicit test server; this does not prove a generated application or exact image is healthy.",
+    "Preview Docker/gVisor adapter, unified Runner resource reservations, independent Runner expiry watchdog, container network/listener profile and platform automatic composition remain to implement. No real model, enterprise identity, production migration, preview access gateway, T5 acceptance, publication or product/stage acceptance."
+  ]
+}
