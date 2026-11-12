@@ -309,5 +309,5 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
   ],
-  "scope": "Read-only source/log/material SHA, historical per-file source comparison (one test-only repair) and original v1-v33 SQL Git byte comparison, followed by ledger/spec/design/diff. Fresh v41 Lint is retained without rerunning. Historical FAILED reports and their successful checks remain historical. No new application tests or clean checkout."
+  "scope": "Read-only source/log/material SHA, historical per-file source comparison (one test-only repair) and original v1-v33 SQL Git byte comparison, followed by ledger/spec/design/diff. Fresh v42 Lint is retained without rerunning it as a post-retention check. Historical FAILED reports and their successful checks remain historical. No new application tests or clean checkout."
 }

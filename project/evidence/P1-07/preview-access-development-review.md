@@ -65,4 +65,8 @@ v38 [资源／五秒 CPU 采样](./development/access-v38-failed/lifecycle-profi
 
 HTTP 网关、用途凭据／会话、每预览 host／独立可注册域的 Cookie／iframe 浏览器验证、可信 Runner 本地目标传输及生产装配继续 3.1／3.2。真实请求头／正文必须由传输层绑定和观察，service principal／配置 hash 不代替登录。实际数据排空／物理 fencing、T5、发布恢复与明确未切换后的重开协议继续实施。模型／OIDC／Linux／Docker／gVisor 未配置时保留关闭边界，继续本地代码与验证。
 
-保留后核对 414 个输入、49 份原日志、586 项材料和 491 个失败源码快照 SHA；v1～v33 SQL 及 manifest 前缀与上个提交保持一致。v41 Lint 已通过；台账、OpenSpec 严格校验、设计主文与 diff 检查通过，见 [post-retention-checks.json](./development/access-v42/post-retention-checks.json)。
+保留后核对 414 个输入、49 份原日志、586 项材料和 491 个失败源码快照 SHA；v1～v33 SQL 及 manifest 前缀与上个提交保持一致。v42 Lint 已通过；台账、OpenSpec 严格校验、设计主文与 diff 检查通过，见 [post-retention-checks.json](./development/access-v42/post-retention-checks.json)。
+
+源码检查点 `9bef56249b642403e690aa3c23da95026d29b03a`；[checkpoint-binding](./development/access-v42/checkpoint-binding.json) 的全部 414 个输入与 Git 对象字节一致，绑定不等同重新测试或干净 checkout。
+
+绑定后台账与 diff 再核对通过，见 [checkpoint-management-checks](./development/access-v42/checkpoint-management-checks.json)。本次文档收尾只更正 post-retention scope 的 Lint 来源版本为 v42，未改动检查命令、退出码、计数或原日志。

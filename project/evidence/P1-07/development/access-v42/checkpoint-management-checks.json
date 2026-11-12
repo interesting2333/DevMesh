@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T15:25:27.607Z",
+  "checkpoint": "9bef56249b642403e690aa3c23da95026d29b03a",
+  "currentSourceFiles": 414,
+  "bindings": [
+    {
+      "path": "checkpoint-binding.json",
+      "sha256": "c6aee21d1341a17faa9ff52ff528af52f5dbe6e816c55eb6702adc03b4b83bdc"
+    }
+  ],
+  "checks": [
+    {
+      "name": "checkpoint-ledger-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "exitCode": 0,
+      "output": "checkpoint-ledger-check.txt",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "checkpoint-diff-check",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "output": "checkpoint-diff-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Unchanged source bytes and binding metadata after checkpoint documentation, ledger and diff checks. No application tests rerun or clean checkout."
+}

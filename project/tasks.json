@@ -1230,7 +1230,8 @@
         "project/evidence/P1-07/development/access-v42/evidence.json",
         "project/evidence/P1-07/development/access-v42/commands.json",
         "project/evidence/P1-07/development/access-v42/source-comparisons.json",
-        "project/evidence/P1-07/development/access-v42/post-retention-checks.json"
+        "project/evidence/P1-07/development/access-v42/post-retention-checks.json",
+        "project/evidence/P1-07/development/access-v42/checkpoint-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1256,7 +1257,8 @@
         "2026-11-12：原容器／网络移除增量源码固定在 e0aaca02e67a02eb567731f0ae72cdbe7f6e45c5，cleanup-v32 全部 406 个源码／模板输入与该提交 Git 对象字节一致。只读绑定不等同再次测试、干净 checkout、实际 Docker／物理移除／T5 或产品／阶段验收；完整 2.3 和正式 P1-07 仍未完成。",
         "2026-11-12：独立预览访问设计影响评估：技术专题 D4／完整主文、实施文档、D06／D08 及 OpenSpec 补充每预览 host／可注册域与 Cookie 边界、可信 gateway／配置／主体绑定、原 dataset 写门及请求唯一派发。逻辑准入、HTTP 安全方法、在途计数和完整响应均不能代替实际数据库只读／排空或 T5；重启／UNKNOWN 不重发、不超时重开。迁移 34 向前新增，历史迁移不改。HTTP／短期用途凭据／浏览器和可信装配继续实施，完整 3.1 不勾选；基线按实际字节同步，正式 P1-07／门槛仍等待。",
         "2026-11-12：复核发现旧健康年龄仅有 30 秒上界，控制时钟回拨时未来观察仍可用；旧构建已复现 missing-rejection，原产物 SHA 不变。当前源码增加 0 秒下界，原事实与未知写不清除；修正后测试另记。访问测试改为显式状态 SQLite seed，保留全部 FK／CHECK 与原请求 schema 校验，不证明上游冻结／质量／镜像执行；v37 中断与第一次复现的上游夹具失败分别保留。设计 D4／主文和 OpenSpec 同步，门槛不提前通过。",
-        "2026-11-12：继续开发3.1：迁移34私有预览网关策略、准确原目标／当前成员授权、原dataset写门和请求唯一派发／观察历史。关闭与dispatch同writer串行，DISPATCHED／UNKNOWN跨网关持续计数，丢ACK／重启不重发，健康仅0～30秒；安全方法和计数归零不证明数据库只读／排空，无接受／T5／自动重开。v38访问19/19、lifecycle16/16、意图路径14/14；v39数据集11/11、存储32/32，Runner75通过1失败1条件跳过。原定时器测试提前关闭watchdog；v40／v41两次修正又错误等待不可变EXITED变REMOVED，失败日志与源码保留。v42保留EXITED并等待独立两项OBSERVED消失证明，原90秒用例超时不变；只重跑变化单例和Lint通过，v41其余14项与scheduler／smoke／contracts等原成功单列。414输入中仅该测试变化，其余413逐SHA一致，不称完整Runner重跑、同指纹全绿或干净checkout。真实SQLite／Worker／terminate与本地定时器有证据，上游候选／镜像／健康为明确夹具。完整3.1、2.3及正式P1-07／门槛等待，实际HTTP／用途会话／浏览器／可信装配／物理fencing继续。"
+        "2026-11-12：继续开发3.1：迁移34私有预览网关策略、准确原目标／当前成员授权、原dataset写门和请求唯一派发／观察历史。关闭与dispatch同writer串行，DISPATCHED／UNKNOWN跨网关持续计数，丢ACK／重启不重发，健康仅0～30秒；安全方法和计数归零不证明数据库只读／排空，无接受／T5／自动重开。v38访问19/19、lifecycle16/16、意图路径14/14；v39数据集11/11、存储32/32，Runner75通过1失败1条件跳过。原定时器测试提前关闭watchdog；v40／v41两次修正又错误等待不可变EXITED变REMOVED，失败日志与源码保留。v42保留EXITED并等待独立两项OBSERVED消失证明，原90秒用例超时不变；只重跑变化单例和Lint通过，v41其余14项与scheduler／smoke／contracts等原成功单列。414输入中仅该测试变化，其余413逐SHA一致，不称完整Runner重跑、同指纹全绿或干净checkout。真实SQLite／Worker／terminate与本地定时器有证据，上游候选／镜像／健康为明确夹具。完整3.1、2.3及正式P1-07／门槛等待，实际HTTP／用途会话／浏览器／可信装配／物理fencing继续。",
+        "2026-11-12：私有预览访问／写门增量源码固定在 9bef56249b642403e690aa3c23da95026d29b03a，access-v42 全部 414 个输入与该提交 Git 对象字节一致。只读绑定不是再次测试、干净 checkout、实际网关／浏览器／数据排空／T5 或产品／阶段验收；完整 3.1、2.3 和正式 P1-07 仍等待。"
       ]
     },
     {
