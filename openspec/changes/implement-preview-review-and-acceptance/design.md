@@ -88,7 +88,7 @@ Runner 前向迁移 v3 为预览保存独立于短租约作业的持久容量预
 
 预留成功不是执行许可或健康证明。Runner 原派发位只允许一次 RESERVED→DISPATCHED；丢回执后的重试不再次授权执行。只有从未派发的预留可以明确取消；已派发预留必须由未来可信容器适配器提供准确原实例 EXITED 才释放。原实例、首次端口及 CAS／观察时间不可被慢响应替代，UNKNOWN 不清空身份或退还资源；同一 Runner 上跨 controller 也不能同时为同一 preview／dataset 建立可写预留。
 
-此步骤仅实现并测试真实 Runner SQLite 迁移、持久预留、统一作业准入和事实核验，不新增公共 HTTP／MCP 准入或回执入口。资源字段来自未来显式可信容器策略，不由普通用户／模型任意指定；实际 cgroup、磁盘配额、容器动作日志与独立 watchdog 仍由 2.3 后续实现和验证。
+容量增量本身只实现真实 Runner SQLite 迁移、持久预留、统一作业准入和事实核验，不新增公共 HTTP／MCP 准入或回执入口。资源字段来自显式可信容器策略，不由普通用户／模型任意指定；原容器动作日志及独立 watchdog 见后续 11／12，实际 cgroup 与磁盘配额仍需目标环境验证。
 
 ### 11. Container actions have a durable Runner journal
 
@@ -96,7 +96,15 @@ Runner 前向迁移 v3 为预览保存独立于短租约作业的持久容量预
 
 每个预览使用独立的 internal bridge，不共享可互访的生成应用网络。Docker 适配固定 runsc、非 root、只读根、cap-drop、资源上限、无重启、loopback 单端口与原 OCI manifest／config／层；inspect 复核完整 profile 和原网络／镜像／挂载。dataset 目录保留现有布局，数据库／WAL 可写，但 operation.json、receipt.json、dataset.json 分别覆盖只读挂载，原准备日志不能被生成代码覆盖。真实硬配额和可写目录权限必须由可信配置的适配器落实，缺失则关闭。
 
-容器内模板显式支持受控 APP_HOST=0.0.0.0，默认仍 loopback；宿主端口仅绑定 127.0.0.1。CLI／镜像解析可使用明确测试输入验证，不能据此宣称物理容器健康。已创建但从未启动的清理不能伪造 EXITED；独立 watchdog、原对象明确清理证明和可信平台装配继续与完整 2.3 一起实施，未验证的 Linux 条件单列。
+容器内模板显式支持受控 APP_HOST=0.0.0.0，默认仍 loopback；宿主端口仅绑定 127.0.0.1。CLI／镜像解析可使用明确测试输入验证，不能据此宣称物理容器健康。已创建但从未启动的清理不能伪造 EXITED；独立 watchdog 见下节，原对象明确清理证明和可信平台装配继续与完整 2.3 一起实施，未验证的 Linux 条件单列。
+
+### 12. Runner expiry and Release custody are mutually exclusive
+
+Runner v5 为新预留显式登记持久归属：PREVIEW、STOPPING、RELEASE_HELD、RELEASE_OWNED。原请求与登记不可替换，状态变化保存不可变历史。只在 RESERVED、尚无容器动作时登记；v4 旧对象不凭当前配置自动收养。停止动作获得派发许可时，在同一 writer 事务将归属推进 STOPPING；接受准备必须先取得准确原实例的 RELEASE_HELD，二者互斥。HELD／OWNED 均禁止预览到期和普通预览停止；未确认接受结果的 HELD 不因超时自动退回 PREVIEW。未来 T5 必须先持有该 Runner 凭据并在准确原接受提交后确认 OWNED；该私有握手本身不实现或证明 T5。
+
+独立 Runner watchdog 只依赖 Runner store／可信 Driver，按原 controller 有界分页扫描、每轮从零开始。到期先持久锁定原停止意图，已派发或 UNKNOWN 只查原对象，不重发停止；原 CREATED 继续持有资源，不能为清理伪造 EXITED。未派发预留可明确取消，准确原实例 EXITED 才释放已派发占用。网络／容器移除及从未启动对象的清理证明另行补齐，完整 2.3 保持未完成。
+
+到期判断同时使用 Worker 内单调时钟和原墙上时钟截止时间；观察到期在当前 Worker 锁存，外层事务回滚也不撤销该观察，成功提交后持久锁存跨重启保留。每次成功检查更新持久墙上时钟高水位，重启发现时间回退则关闭继续执行并按到期处理；不会用短时作业租约延长预览。单调时钟不能跨主机重启证明未被观察到的时钟变化，目标 Runner 仍须可信时间。定时器关闭等待在途工作结束，失联、单对象失败或丢回执不阻塞其余对象的扫描。
 
 ## Risks / Trade-offs
 

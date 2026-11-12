@@ -9,9 +9,18 @@ import {reservePreview,runnerCapacity} from './preview-reservation.js';
 import type {PreviewReservation,RunnerCapacity,RunnerCapacityUsage} from './preview-reservation.js';
 import {previewContainerProfile,previewContainerActionRequest,previewContainerAction,previewContainerObservation} from './preview-container.js';
 import type {PreviewContainerJournal} from './preview-container.js';
+import {previewReleaseClaim} from './preview-lifecycle.js';
+import type {RunnerPreviewLifecycle} from './preview-lifecycle.js';
 const owner={controllerId:opaqueKey};
 const previewBound={...owner,reservationId:opaqueKey,requestHash:z.string().regex(/^[a-f0-9]{64}$/)};
 export const storeRequests={
+ previewLifecycleEnroll:z.strictObject(previewBound),
+ previewLifecycleGet:z.strictObject(previewBound),
+ previewExpiryPrepare:z.strictObject(previewBound),
+ previewExpiryAuthorized:z.strictObject({...previewBound,expiryRequestHash:z.string().regex(/^[a-f0-9]{64}$/)}),
+ previewLifecycleActionAuthorized:z.strictObject({...previewBound,kind:previewContainerAction,actionRequestHash:z.string().regex(/^[a-f0-9]{64}$/)}),
+ previewReleaseHold:z.strictObject({...previewBound,claim:previewReleaseClaim,claimHash:z.string().regex(/^[a-f0-9]{64}$/)}),
+ previewReleaseCommit:z.strictObject({...previewBound,claimHash:z.string().regex(/^[a-f0-9]{64}$/),releaseId:opaqueKey,acceptanceOperationId:opaqueKey,acceptanceRequestHash:z.string().regex(/^[a-f0-9]{64}$/)}),
  previewContainerPrepare:z.strictObject({...previewBound,profile:previewContainerProfile}),
  previewContainerGet:z.strictObject(previewBound),
  previewContainerActionBegin:z.strictObject({...previewBound,action:previewContainerActionRequest}),
@@ -46,6 +55,8 @@ export type RunnerStoreMethod=keyof typeof storeRequests;
 export type StoreInput<M extends RunnerStoreMethod>=z.input<(typeof storeRequests)[M]>;
 export interface InternalJob {job:Job;execution:{workspacePath:string;argv:string[]};leasePermit:Job['request']['permit'];leaseRenewedAt:string}
 export interface StoreResults {
+ previewLifecycleEnroll:RunnerPreviewLifecycle;previewLifecycleGet:RunnerPreviewLifecycle|null;previewExpiryPrepare:RunnerPreviewLifecycle|null;
+ previewExpiryAuthorized:{allowed:boolean};previewLifecycleActionAuthorized:{allowed:boolean};previewReleaseHold:RunnerPreviewLifecycle;previewReleaseCommit:RunnerPreviewLifecycle;
  previewContainerPrepare:PreviewContainerJournal;previewContainerGet:PreviewContainerJournal|null;
  previewContainerActionBegin:{dispatch:boolean;journal:PreviewContainerJournal};previewContainerActionObserve:PreviewContainerJournal;
  capacityConfigure:RunnerCapacity;

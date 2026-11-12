@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "status": "FAILED",
+  "sourceCommit": "10dbb0f642d711b47d54330fbcf95e65254707bf",
+  "dirty": true,
+  "sourceFingerprint": "d00c24f145ca3fa28028576a404ab90da3d0ac59299a2367f3e52295f6831937",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T11:49:59.690Z",
+  "finishedAt": "2026-11-12T11:53:27.815Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2044,
+      "output": "frozen-install.txt",
+      "sha256": "1ac5b8b6716c41fb11031a9381c6d95d072447dab7a089aadf91ca0e65001df4"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 40216,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 8063,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 88887,
+      "output": "current-build.txt",
+      "sha256": "56ba804c8fd3d3c3c72ee932db997b9a3e8eaa4ac5f063b166420e3c0ed398ab"
+    },
+    {
+      "name": "watchdog",
+      "exitCode": 1,
+      "signal": null,
+      "durationMs": 68665,
+      "output": "watchdog.txt",
+      "sha256": "13212c775c9b1941b24270b2e39ca4d3bcfafbf27f021bc9d5f061e0e2c66f66",
+      "tests": {
+        "tests": 15,
+        "pass": 14,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/current-build.txt",
+      "sha256": "56ba804c8fd3d3c3c72ee932db997b9a3e8eaa4ac5f063b166420e3c0ed398ab"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/PREVIEWS.md",
+      "sha256": "a0a8721261d78bc485b39a6ef6c3cfbb0fceda2db519200ff5ac6b1f28c0bdee"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/capacity-domain.ts",
+      "sha256": "911a1e9c7a09c4e25947cae2c4d46756294842fad90d1cc9baff5dcdbbaf346a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/container-domain.ts",
+      "sha256": "416f64e8217a46cba068393b27f1d2c086693a38966c0a0ccd220ce5938e9878"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/fence-domain.ts",
+      "sha256": "88b545a856f2d1bcb4c4a15e59b97a2f003492f1a71f6e1511dc3b5a68c40966"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/index.ts",
+      "sha256": "2665057318a55153652f682e0dfce0ee775149bbf43f9fd818f28197e3fe5fa7"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/preview-backend.ts",
+      "sha256": "ba31e8f94f643b9a47da37a24885216ce8df7bf39ef9f5f98a8f9558c184b835"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/preview-clock.ts",
+      "sha256": "5310424bec946c945ca27c76dfeead85eac648c76e95031c79f49e46b73d3664"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "ece79d83d77a57b0b528d23730d7af42a3f22c0f2359d7ba5c5ce8545d8b3ff8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/preview-lifecycle.ts",
+      "sha256": "6dbcef0cd5c232ecc8e9455f7c313525d0c575ea05b70b9ad7358bf6311e6b08"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/preview-watchdog.ts",
+      "sha256": "15db6518bedac45604ee63a36a90276e2f1e82427d2a2b93e4f2badd91e6a953"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/store-protocol.ts",
+      "sha256": "6930dca4887bf3757a84fd07db9c6d9b051c3894dd17d7cc44eeb23b8232ef77"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/packages/runner/src/worker.ts",
+      "sha256": "1f70ae0b22eae2f650eb954b4634ecee8aea8e9418ce2907e979ba0216cd4cc1"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/tests/runner-preview-capacity.test.mjs",
+      "sha256": "acc487199ad4ea99ca5ae4acb13941e092e38781821fa44ffe3c07717d38450a"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "sha256": "8193d51b2181b3e1e3b69ffe29fde33946e0a4f2a86c090ac131c9b41490e1a7"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/failed-source/tests/runner-upgrade.test.mjs",
+      "sha256": "0e3e51d5edd2f10e2e0256d20a9e0b6541ee505581e3d390c276b918217c0dda"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/frozen-install.txt",
+      "sha256": "1ac5b8b6716c41fb11031a9381c6d95d072447dab7a089aadf91ca0e65001df4"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/report.json",
+      "sha256": "30c944dcf8ad074ed1790e646f5d0cc6e9f59db4d0bf353a5aad46a221311f1e"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/watchdog.txt",
+      "sha256": "13212c775c9b1941b24270b2e39ca4d3bcfafbf27f021bc9d5f061e0e2c66f66"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/validation-driver.mjs",
+      "sha256": "3c104b5510f438da97d73612dd4a8fce96d4402166333dfaf04220f305299170"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v28-failed/commands.json",
+      "sha256": "104b5a1b6feab3eccdfd4fff8786a00356f84a0ccdc67908824c7d863cdfddef"
+    }
+  ],
+  "scope": "P1-07 partial2.3: Runner v5 persistent custody, private release hold/commit, independent Runner expiry watchdog and original STOP recovery. Real SQLite/Workers/files/HTTP/timers; ControlledContainerDriver supplies container/network facts, no Docker execution, physical exit, T5 transaction, hard quota/firewall adapters or production composition. Created-only removal remains unimplemented. Historical v1/v2/v3/v4 forward migration and v5 rollback/drift are exercised. Full2.3 remains unchecked.",
+  "limitations": [
+    "Partial task2.3 remains unchecked; same Codex implementation/review, no independent/human, product or stage acceptance.",
+    "Actual Runner SQLite/Workers, local files/datasets, HTTP, timers, transaction rollback, original ACK recovery, terminate/reopen and forward migration are exercised. Container/network facts and HTTP health application are explicit fixtures, no Docker execution or physical exit evidence.",
+    "ReleaseHold/Commit are private trusted Runner custody calls, not a T5 transaction, public acceptance API or completed control-plane composition. HELD/OWNED never expire into stop permission.",
+    "No created-only container/network removal, trusted Linux quota/firewall adapters, production composition or actual Linux Docker/gVisor validation. No real model/OIDC, preview gateway, T5, publication, production migration or product acceptance."
+  ],
+  "failure": "Runner/dataset startup exceeded the test-only 3-second preview TTL; the production expiry guard correctly rejected dispatch. Preserve original logs and failed source; increase only test expiry/grace budgets, without weakening expiry, custody or original dispatch guards."
+}

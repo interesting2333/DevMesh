@@ -38,8 +38,9 @@ export class RunnerPreviewBackend implements PreviewExecutionBackend {
  #unknown(effect:PreviewEffect){const r=this.#request(effect);return this.#result(effect,previewRuntimeFact.parse({previewId:r.previewId,datasetId:r.datasetId,imageDigest:r.imageDigest,state:'UNKNOWN',instanceId:null,endpoint:null,checkedAt:new Date().toISOString()}));}
  async #observe(r:PreviewReservation,j:PreviewContainerJournal,kind:PreviewContainerAction,f:PreviewContainerFact|string){const action=j.actions.find(a=>a.kind===kind);if(!action||action.state==='OBSERVED')return j;const state=typeof f==='string'?'CREATED':f.state==='exited'?'EXITED':f.state==='running'?'RUNNING':f.state==='created'?'CREATED':null;if(!state||kind==='START'&&state==='CREATED'||kind==='STOP'&&state!=='EXITED')return j;return this.store.request('previewContainerActionObserve',{...bound(r),kind,actionRequestHash:action.requestHash,observation:{objectId:typeof f==='string'?f:f.containerId,state,checkedAt:new Date().toISOString()}});}
  async inspect(effect:PreviewEffect):Promise<PreviewExecutionResult>{
-  this.#enabled();const request=this.#request(effect),r=await this.#reservation(request);if(!r)return this.#unknown(effect);let j=await this.store.request('previewContainerGet',bound(r));if(!j)return this.#unknown(effect);
-  if(r.state==='CANCELLED'&&j.actions.length===0&&effect.kind==='PREVIEW_START')return {...this.#unknown(effect),observation:{state:'FAILED',errorCode:'PREVIEW_CANCELLED_WITHOUT_DISPATCH',absenceVerified:true}};
+   this.#enabled();const request=this.#request(effect),r=await this.#reservation(request);if(!r)return this.#unknown(effect);
+   if(r.state==='CANCELLED'&&effect.kind==='PREVIEW_START')return {...this.#unknown(effect),observation:{state:'FAILED',errorCode:'PREVIEW_CANCELLED_WITHOUT_DISPATCH',absenceVerified:true}};
+   let j=await this.store.request('previewContainerGet',bound(r));if(!j)return this.#unknown(effect);
   const networkId=await this.driver.network(j.profile,r.request);if(!networkId)return this.#unknown(effect);if(j.networkId!==null&&j.networkId!==networkId)throw new RunnerError('PREVIEW_CONTAINER_IDENTITY_CHANGED',409);
   j=await this.#observe(r,j,'NETWORK_CREATE',networkId);if(!j.networkId||!j.actions.some(a=>a.kind==='CREATE'))return this.#unknown(effect);
   const f=await this.driver.inspect(j.profile,r.request,j.networkId,j.containerId);if(!f)return this.#unknown(effect);j=await this.#observe(r,j,'CREATE',f);if(j.containerId!==f.containerId)throw new RunnerError('PREVIEW_CONTAINER_IDENTITY_CHANGED',409);
@@ -54,10 +55,11 @@ export class RunnerPreviewBackend implements PreviewExecutionBackend {
    const r=(await this.#reservation(request))!,j=await this.store.request('previewContainerGet',bound(r));if(!j?.networkId||!j.containerId||!await authorize())return this.inspect(effect);
    const before=await this.driver.inspect(j.profile,r.request,j.networkId,j.containerId);if(before?.state==='exited')return this.inspect(effect);
    if(!await authorize())return this.inspect(effect);const grant=await this.store.request('previewContainerActionBegin',{...bound(r),action:{kind:'STOP',requestHash:effect.requestHash,request}});if(!grant.dispatch||!await authorize())return this.inspect(effect);
-   await this.driver.stop(j.profile,r.request,j.networkId,j.containerId,authorize);return this.inspect(effect);
+    await this.driver.stop(j.profile,r.request,j.networkId,j.containerId,async()=>await authorize()&&(await this.store.request('previewLifecycleActionAuthorized',{...bound(r),kind:'STOP',actionRequestHash:effect.requestHash})).allowed);return this.inspect(effect);
   }
   if(!await authorize())return this.#unknown(effect);
   const r=await this.store.request('previewReserve',{controllerId:this.options.controllerId,request,requestHash:effect.requestHash,resourceLimits:this.options.resourceLimits,capacity:this.options.capacity});
+   await this.store.request('previewLifecycleEnroll',bound(r));
   const j=await this.store.request('previewContainerPrepare',{...bound(r),profile:this.#profile(r)});
   if(r.state!=='RESERVED')return this.inspect(effect);
   try{await this.driver.prepare(j.profile);}catch(error){await this.store.request('previewReservationCancel',bound(r));throw error;}if(!await authorize()){await this.store.request('previewReservationCancel',bound(r));return this.inspect(effect);}
@@ -66,10 +68,26 @@ export class RunnerPreviewBackend implements PreviewExecutionBackend {
    if(!await authorize())return this.inspect(effect);
    const grant=await this.store.request('previewContainerActionBegin',{...bound(r),action:{kind,requestHash:effect.requestHash,request}});if(!grant.dispatch||!await authorize())return this.inspect(effect);
    const current=grant.journal;
-   if(kind==='NETWORK_CREATE')await this.#observe(r,current,kind,await this.driver.createNetwork(current.profile,request,authorize));
-   else if(kind==='CREATE'){const f=await this.driver.create(current.profile,request,current.networkId!,authorize);if(!f)return this.inspect(effect);await this.#observe(r,current,kind,f);}
-   else{const f=await this.driver.start(current.profile,request,current.networkId!,current.containerId!,authorize);if(!f)return this.inspect(effect);await this.#observe(r,current,kind,f);}
+    const currentAuthority=async()=>await authorize()&&(await this.store.request('previewLifecycleActionAuthorized',{...bound(r),kind,actionRequestHash:effect.requestHash})).allowed;
+    if(kind==='NETWORK_CREATE')await this.#observe(r,current,kind,await this.driver.createNetwork(current.profile,request,currentAuthority));
+    else if(kind==='CREATE'){const f=await this.driver.create(current.profile,request,current.networkId!,currentAuthority);if(!f)return this.inspect(effect);await this.#observe(r,current,kind,f);}
+    else{const f=await this.driver.start(current.profile,request,current.networkId!,current.containerId!,currentAuthority);if(!f)return this.inspect(effect);await this.#observe(r,current,kind,f);}
   }
   return this.inspect(effect);
  }
+  /** Runner-only expiry path; never depends on a control database connection. */
+  async expireReservation(reservationId:string,isOpen:()=>boolean=()=>true){
+   this.#enabled();let r=await this.store.request('previewReservationGet',{controllerId:this.options.controllerId,reservationId:opaqueKey.parse(reservationId)});
+   let life=await this.store.request('previewLifecycleGet',bound(r));if(!life)return {state:'UNENROLLED' as const,result:null};
+   if(life.state.startsWith('RELEASE_'))return {state:life.state,result:null};
+   life=await this.store.request('previewExpiryPrepare',bound(r));
+   if(!life||life.state!=='STOPPING'||!isOpen())return {state:life?.state??'UNENROLLED',result:null};
+   if(r.state==='RESERVED'){await this.store.request('previewReservationCancel',bound(r));return {state:'CANCELLED' as const,result:null};}
+   const request=r.request,start:PreviewEffect={operationId:request.operationId,projectId:request.projectId,runId:request.runId,candidateId:request.candidateId,datasetId:request.datasetId,previewId:request.previewId,policyHash:request.policyHash,kind:'PREVIEW_START',remoteKey:request.previewId,requestHash:r.requestHash,request,state:'SENT',revision:0,receipt:null,errorCode:null,createdAt:r.createdAt};
+   const observed=await this.inspect(start);r=await this.store.request('previewReservationGet',{controllerId:this.options.controllerId,reservationId});if(r.releasedAt)return {state:r.state,result:observed};
+   life=await this.store.request('previewExpiryPrepare',bound(r));const journal=await this.store.request('previewContainerGet',bound(r));if(!life?.expiryRequest||!life.expiryRequestHash||journal?.actions.some(a=>a.kind==='STOP')||!isOpen())return {state:life?.state??'UNENROLLED',result:observed};
+   const effect:PreviewEffect={...start,operationId:life.expiryRequest.operationId,kind:'PREVIEW_STOP',requestHash:life.expiryRequestHash,request:life.expiryRequest};
+   const expiryRequestHash=life.expiryRequestHash,result=await this.execute(effect,start,async()=>isOpen()&&(await this.store.request('previewExpiryAuthorized',{...bound(r),expiryRequestHash})).allowed);
+   return {state:(await this.store.request('previewReservationGet',{controllerId:this.options.controllerId,reservationId})).state,result};
+  }
 }

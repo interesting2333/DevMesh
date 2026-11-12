@@ -21,11 +21,11 @@ PRAGMA user_version=4;`;
 const hash=(v:unknown)=>createHash('sha256').update(typeof v==='string'?v:canonical(v)).digest('hex');
 const fail=(code:string,status=409):never=>{throw new RunnerError(code,status);};
 type Row=Record<string,string|number|null>;
-export function createPreviewContainerDomain(db:DatabaseSync){
+export function createPreviewContainerDomain(db:DatabaseSync,actionGuard:(input:StoreInput<'previewContainerActionBegin'>)=>void){
  const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined,exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
  const tx=<T>(body:()=>T):T=>{db.exec('BEGIN IMMEDIATE');try{const r=body();db.exec('COMMIT');return r;}catch(e){db.exec('ROLLBACK');throw e;}};
- const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);if(version===3)tx(()=>{db.exec(migration);exec('INSERT INTO runner_schema_history VALUES(4,?,?)',hash(migration),new Date().toISOString());});else if(version!==4)fail('RUNNER_STORE_IDENTITY_MISMATCH');
- if(get('SELECT sha256 FROM runner_schema_history WHERE version=4')?.sha256!==hash(migration)||get('SELECT version FROM runner_identity WHERE singleton=1')?.version!==4)fail('RUNNER_MIGRATION_DRIFT');
+  const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);if(version===3)tx(()=>{db.exec(migration);exec('INSERT INTO runner_schema_history VALUES(4,?,?)',hash(migration),new Date().toISOString());});else if(![4,5].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
+  if(get('SELECT sha256 FROM runner_schema_history WHERE version=4')?.sha256!==hash(migration)||get('SELECT version FROM runner_identity WHERE singleton=1')?.version!==(version===3?4:version))fail('RUNNER_MIGRATION_DRIFT');
  const reservation=(i:{controllerId:string;reservationId:string;requestHash:string})=>{const r=get('SELECT * FROM preview_reservations WHERE reservation_id=? AND controller_id=?',i.reservationId,i.controllerId)??fail('PREVIEW_RESERVATION_NOT_FOUND',404);if(r.request_hash!==i.requestHash)fail('PREVIEW_RESERVATION_IDENTITY_MISMATCH');return r;};
  const profile=(id:string)=>get('SELECT * FROM preview_container_profiles WHERE reservation_id=?',id)??fail('PREVIEW_CONTAINER_JOURNAL_NOT_FOUND',404);
  const actionView=(r:Row):PreviewContainerActionRecord=>previewContainerActionSchema.parse({kind:r.kind,operationId:r.operation_id,requestHash:r.request_hash,request:JSON.parse(String(r.request_json)),state:r.state,observation:r.observation_json?JSON.parse(String(r.observation_json)):null,createdAt:r.created_at,observedAt:r.observed_at});
@@ -41,6 +41,7 @@ export function createPreviewContainerDomain(db:DatabaseSync){
     for(const k of ['projectId','runId','candidateId','policyHash','backendRef','runnerId','previewId','datasetId','imageDigest'] as const)if(stop[k]!==original[k])fail('PREVIEW_CONTAINER_ACTION_CHANGED');
    }else if(a.requestHash!==r.request_hash||canonical(a.request)!==r.request_json)fail('PREVIEW_CONTAINER_ACTION_CHANGED');
    const old=get('SELECT * FROM preview_container_actions WHERE reservation_id=? AND kind=?',i.reservationId,a.kind);if(old){if(old.operation_id!==a.request.operationId||old.request_hash!==a.requestHash)fail('PREVIEW_CONTAINER_ACTION_CHANGED');return {dispatch:false,journal:view(p)};}
+    actionGuard(i);
    if(r.state==='RESERVED'||r.released_at!==null)fail('PREVIEW_CONTAINER_DISPATCH_REQUIRED');
    if(a.kind!=='STOP'&&Date.parse(original.expiresAt)<=Date.now())fail('PREVIEW_RESERVATION_EXPIRED');
    if(a.kind==='CREATE'&&!p.network_id||a.kind==='START'&&!p.container_id||a.kind==='STOP'&&!p.container_id)fail('PREVIEW_CONTAINER_PREDECESSOR_UNKNOWN');

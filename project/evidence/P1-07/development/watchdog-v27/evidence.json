@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "10dbb0f642d711b47d54330fbcf95e65254707bf",
+  "dirty": true,
+  "sourceFingerprint": "5b1bba864255c2391f9895de106c939d55477b3fce7cbc64c97f964fbf30561d",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T11:43:01.892Z",
+  "finishedAt": "2026-11-12T11:48:17.479Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2328,
+      "output": "frozen-install.txt",
+      "sha256": "7b7f2c82e43b58ed85965b528a430abce1059abe9b4610274f845336cd7f6e32"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 42944,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12855,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 125158,
+      "output": "current-build.txt",
+      "sha256": "49330f5a874cb8a048307875b5444c83d854a9a192624b5b18350188de361fac"
+    },
+    {
+      "name": "watchdog",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 64618,
+      "output": "watchdog.txt",
+      "sha256": "32096420e8882c9ad6110ee7171390b6d979960f082a9e9b6ab72aaaf29bddfe",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "containers",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 54684,
+      "output": "containers.txt",
+      "sha256": "120d55b12448d10a97d9e34e64626ea65041b7fee8a2ee91430681a621196ae7",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "capacity",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12335,
+      "output": "capacity.txt",
+      "sha256": "19494c8dfb8fa67f5aab08e3c442836ab6e9f6f4c4c8ee6916ade6a459338b4c",
+      "tests": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/capacity.txt",
+      "sha256": "19494c8dfb8fa67f5aab08e3c442836ab6e9f6f4c4c8ee6916ade6a459338b4c"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/containers.txt",
+      "sha256": "120d55b12448d10a97d9e34e64626ea65041b7fee8a2ee91430681a621196ae7"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/current-build.txt",
+      "sha256": "49330f5a874cb8a048307875b5444c83d854a9a192624b5b18350188de361fac"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/frozen-install.txt",
+      "sha256": "7b7f2c82e43b58ed85965b528a430abce1059abe9b4610274f845336cd7f6e32"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/report.json",
+      "sha256": "4fa30d327d840f043dc26ee0065ff77b3e944b77aea0f30cf523f7eb93cae4bd"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/watchdog.txt",
+      "sha256": "32096420e8882c9ad6110ee7171390b6d979960f082a9e9b6ab72aaaf29bddfe"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/validation-driver.mjs",
+      "sha256": "2e4d165fc2ff76adc9b66a84e2b376c6eafd2ab272e4b83460b87a19cbf5d5be"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v27/commands.json",
+      "sha256": "361a84be473447ce2e067e55adc89b2bd604c7d9dac415b440a3da8f840f5fcc"
+    }
+  ],
+  "scope": "P1-07 partial2.3: Runner v5 persistent custody, private release hold/commit, independent Runner expiry watchdog and original STOP recovery. Real SQLite/Workers/files/HTTP/timers; ControlledContainerDriver supplies container/network facts, no Docker execution, physical exit, T5 transaction, hard quota/firewall adapters or production composition. Created-only removal remains unimplemented. Historical v1/v2/v3/v4 forward migration and v5 rollback/drift are exercised. Full2.3 remains unchecked.",
+  "limitations": [
+    "Partial task2.3 remains unchecked; same Codex implementation/review, no independent/human, product or stage acceptance.",
+    "Actual Runner SQLite/Workers, local files/datasets, HTTP, timers, transaction rollback, original ACK recovery, terminate/reopen and forward migration are exercised. Container/network facts and HTTP health application are explicit fixtures, no Docker execution or physical exit evidence.",
+    "ReleaseHold/Commit are private trusted Runner custody calls, not a T5 transaction, public acceptance API or completed control-plane composition. HELD/OWNED never expire into stop permission.",
+    "No created-only container/network removal, trusted Linux quota/firewall adapters, production composition or actual Linux Docker/gVisor validation. No real model/OIDC, preview gateway, T5, publication, production migration or product acceptance."
+  ]
+}

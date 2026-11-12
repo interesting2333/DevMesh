@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-12T12:08:32.502Z",
+  "sourceFingerprint": "80a301b0d25ee151e4b8c173a71622f5bf6ec7facc36a698998103228ebcca40",
+  "currentSourceFiles": 401,
+  "retainedOriginalLogs": 28,
+  "retainedMaterials": 52,
+  "failedSources": 15,
+  "checks": [
+    {
+      "name": "post-retention-lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "lint"
+      ],
+      "exitCode": 0,
+      "output": "post-retention-lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "ledger-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "exitCode": 0,
+      "output": "ledger-check.txt",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "openspec-strict",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/openspec.mjs",
+        "validate",
+        "implement-preview-review-and-acceptance",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "output": "openspec-strict.txt",
+      "sha256": "ed8d29910f804e54fa78ff4d30cef5b8c4be5d5876e52f48491c9f7754ac808b"
+    },
+    {
+      "name": "design-check",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "design/生成完整方案.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "output": "design-check.txt",
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "name": "diff-check",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "output": "diff-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Readonly current source/log/material SHA and post-retention lint/ledger/spec/design/diff checks; no new application tests or clean-checkout acceptance."
+}

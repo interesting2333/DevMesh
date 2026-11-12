@@ -27,7 +27,7 @@ export function createRunnerFenceDomain(db:DatabaseSync){
   const transaction=<T>(body:()=>T):T=>{db.exec('BEGIN IMMEDIATE');try{const result=body();db.exec('COMMIT');return result;}catch(e){db.exec('ROLLBACK');throw e;}};
   const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);
   if(version===1)transaction(()=>{db.exec(migration);exec('INSERT INTO runner_schema_history VALUES(2,?,?)',hash(migration),new Date().toISOString());});
-  else if(![2,3,4].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
+  else if(![2,3,4,5].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
   if(get('SELECT sha256 FROM runner_schema_history WHERE version=2')?.sha256!==hash(migration)||get('SELECT version FROM runner_identity WHERE singleton=1')?.version!==(version===1?2:version))fail('RUNNER_MIGRATION_DRIFT');
   const view=(r:Row):WorkspaceFence=>workspaceFenceSchema.parse({fenceId:String(r.fence_id),controllerId:String(r.controller_id),operationId:String(r.operation_id),workspaceRef:String(r.workspace_ref),workspacePath:String(r.workspace_path),holderToken:String(r.holder_token),requestHash:String(r.request_hash),request:JSON.parse(String(r.request_json)),state:r.state,createdAt:String(r.created_at),releasedAt:r.released_at});
   const owned=(controllerId:string,fenceId:string)=>{const row=get('SELECT * FROM workspace_fences WHERE fence_id=? AND controller_id=?',fenceId,controllerId);return row??fail('WORKSPACE_FENCE_NOT_FOUND',404);};

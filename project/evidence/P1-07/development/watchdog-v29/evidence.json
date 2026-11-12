@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "sourceCommit": "10dbb0f642d711b47d54330fbcf95e65254707bf",
+  "dirty": true,
+  "sourceFingerprint": "80a301b0d25ee151e4b8c173a71622f5bf6ec7facc36a698998103228ebcca40",
+  "runtime": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "startedAt": "2026-11-12T11:55:02.124Z",
+  "finishedAt": "2026-11-12T12:07:35.554Z",
+  "checks": [
+    {
+      "name": "frozen-install",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 11075,
+      "output": "frozen-install.txt",
+      "sha256": "b18da22f8030fb0640e778e9563b32b1b8392fe640cf400c58bb17115561c67b"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 26759,
+      "output": "typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 3806,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "current-build",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 49704,
+      "output": "current-build.txt",
+      "sha256": "55d2149dee82147d06baf2e5b39a504203b52811b74b154ad8af0e4a7c4fa3cb"
+    },
+    {
+      "name": "watchdog",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 79428,
+      "output": "watchdog.txt",
+      "sha256": "574170fc80abdfac46881b568e52ca96e813cd863b3b29405bf98630eb9c1151",
+      "tests": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "containers",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 91616,
+      "output": "containers.txt",
+      "sha256": "6db36945a6274bbf0a7707eec5c21ba45d387c5ef5fb2390dc3f62de2956a12d",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "capacity",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 31470,
+      "output": "capacity.txt",
+      "sha256": "6367af10080d022c7f74e2a15ee31490b7e9ad81f11c75a0893fbbc9d884e117",
+      "tests": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "runner",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 210304,
+      "output": "runner.txt",
+      "sha256": "05045dad2af6b380a4e7d0452383cfae99f5eb31339acfc96c02d050e233588b",
+      "tests": {
+        "tests": 59,
+        "pass": 58,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "lifecycle",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 94417,
+      "output": "lifecycle.txt",
+      "sha256": "170df6c256eb007ac0c4b48601c123b41ec5a92d85d3bafa45220a99452366bb",
+      "tests": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "datasets",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 85034,
+      "output": "datasets.txt",
+      "sha256": "fdc167b81d7b8f9da3b1a8905784075ee8d0a05c26e4ac943a0eb81ace6a8353",
+      "tests": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "preview-intents",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 35912,
+      "output": "preview-intents.txt",
+      "sha256": "fee5f1bc46dc81afc1c6f01092a121b87774744b57e2d772ef123155f034abb8",
+      "tests": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "workspace-fencing",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5119,
+      "output": "workspace-fencing.txt",
+      "sha256": "4952b256b6f33f12dfd6ba7ae6a159766658d7e07c831d01f0dcf0cac60dc4a0",
+      "tests": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "scheduler",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 16948,
+      "output": "scheduler.txt",
+      "sha256": "b629c4cb32f1f6e4068a94644358bfb3380bbcaa661bae148890a3a0ed84e4f8",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "smoke",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5906,
+      "output": "smoke.txt",
+      "sha256": "78083a9e8f4b8a67344d9d24973f45c1729ef3ac58669236283e55521a8b7511",
+      "tests": {
+        "tests": 10,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1
+      }
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2509,
+      "output": "contracts.txt",
+      "sha256": "3abd8b6fef6fbe028b3569df9df082b87a5637a6372bd9f12aac86e212879279",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "contracts-check",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1596,
+      "output": "contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    }
+  ],
+  "materials": [
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/capacity.txt",
+      "sha256": "6367af10080d022c7f74e2a15ee31490b7e9ad81f11c75a0893fbbc9d884e117"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/containers.txt",
+      "sha256": "6db36945a6274bbf0a7707eec5c21ba45d387c5ef5fb2390dc3f62de2956a12d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/contracts-check.txt",
+      "sha256": "8120008c69dbbeeef597785c025a84f42fa13ac348818793ef94ebc7d122e92d"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/contracts.txt",
+      "sha256": "3abd8b6fef6fbe028b3569df9df082b87a5637a6372bd9f12aac86e212879279"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/current-build.txt",
+      "sha256": "55d2149dee82147d06baf2e5b39a504203b52811b74b154ad8af0e4a7c4fa3cb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/datasets.txt",
+      "sha256": "fdc167b81d7b8f9da3b1a8905784075ee8d0a05c26e4ac943a0eb81ace6a8353"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/frozen-install.txt",
+      "sha256": "b18da22f8030fb0640e778e9563b32b1b8392fe640cf400c58bb17115561c67b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/lifecycle.txt",
+      "sha256": "170df6c256eb007ac0c4b48601c123b41ec5a92d85d3bafa45220a99452366bb"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/preview-intents.txt",
+      "sha256": "fee5f1bc46dc81afc1c6f01092a121b87774744b57e2d772ef123155f034abb8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/report.json",
+      "sha256": "3593336bcaf81d8bd76f3d0dd4126c63fe35a1390849535b918a3252bf98a7ca"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/runner.txt",
+      "sha256": "05045dad2af6b380a4e7d0452383cfae99f5eb31339acfc96c02d050e233588b"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/scheduler.txt",
+      "sha256": "b629c4cb32f1f6e4068a94644358bfb3380bbcaa661bae148890a3a0ed84e4f8"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/smoke.txt",
+      "sha256": "78083a9e8f4b8a67344d9d24973f45c1729ef3ac58669236283e55521a8b7511"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/watchdog.txt",
+      "sha256": "574170fc80abdfac46881b568e52ca96e813cd863b3b29405bf98630eb9c1151"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/workspace-fencing.txt",
+      "sha256": "4952b256b6f33f12dfd6ba7ae6a159766658d7e07c831d01f0dcf0cac60dc4a0"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/validation-driver.mjs",
+      "sha256": "3c104b5510f438da97d73612dd4a8fce96d4402166333dfaf04220f305299170"
+    },
+    {
+      "path": "project/evidence/P1-07/development/watchdog-v29/commands.json",
+      "sha256": "104b5a1b6feab3eccdfd4fff8786a00356f84a0ccdc67908824c7d863cdfddef"
+    }
+  ],
+  "scope": "P1-07 partial2.3: Runner v5 persistent custody, private release hold/commit, independent Runner expiry watchdog and original STOP recovery. Real SQLite/Workers/files/HTTP/timers; ControlledContainerDriver supplies container/network facts, no Docker execution, physical exit, T5 transaction, hard quota/firewall adapters or production composition. Created-only removal remains unimplemented. Historical v1/v2/v3/v4 forward migration and v5 rollback/drift are exercised. Full2.3 remains unchecked.",
+  "limitations": [
+    "Partial task2.3 remains unchecked; same Codex implementation/review, no independent/human, product or stage acceptance.",
+    "Actual Runner SQLite/Workers, local files/datasets, HTTP, timers, transaction rollback, original ACK recovery, terminate/reopen and forward migration are exercised. Container/network facts and HTTP health application are explicit fixtures, no Docker execution or physical exit evidence.",
+    "ReleaseHold/Commit are private trusted Runner custody calls, not a T5 transaction, public acceptance API or completed control-plane composition. HELD/OWNED never expire into stop permission.",
+    "No created-only container/network removal, trusted Linux quota/firewall adapters, production composition or actual Linux Docker/gVisor validation. No real model/OIDC, preview gateway, T5, publication, production migration or product acceptance."
+  ]
+}

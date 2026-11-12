@@ -68,6 +68,18 @@ The system SHALL 将生成应用置于独立 origin 和独立业务 dataset，�
 - **WHEN** 预览容器写业务数据库，或试图改写同目录准备日志、完成回执和应用身份 marker
 - **THEN** 数据库及 WAL 在独立 dataset 内按配额可写，原日志／回执／marker 的只读挂载受到核验，不开放平台目录、备份、socket 或凭据
 
+#### Scenario: Control plane disconnects before original preview expiry
+- **WHEN** 平台无法连接，Runner 自己保存的原未接受预览到期
+- **THEN** Runner 独立扫描原归属和期限；未派发预留可以取消，已核实原实例只持久派发一次到期 STOP；未知动作不重发，未核实退出不释放容量或删除 dataset
+
+#### Scenario: Release preparation competes with automatic or explicit stop
+- **WHEN** 接受准备尝试持有准确健康原实例，同时原停止或到期处理正在开始
+- **THEN** 在同一 Runner writer 内互斥持有与停止，先提交者排除后者；HELD／OWNED 绑定原接受请求与 releaseId，回执丢失恢复原归属，未知提交不靠 TTL 自动解除保护，原数据不被连带清理
+
+#### Scenario: Runner clock moves backwards or an old preview has no custody record
+- **WHEN** 观察到宿主时钟回拨，或旧版本预览没有明确归属登记
+- **THEN** 新登记预览使用单调经过时间与持久墙钟高水位防止观察到的回拨延长期限，已锁存到期不可撤销；旧预览保持未登记且仅查询，不自动收养、停止或冒充未接受实例
+
 #### Scenario: Dataset directory survives workspace cleanup
 - **WHEN** 工作空间被清理，或请求尝试用路径、链接、硬链接替代 dataset 数据库／日志／侧文件
 - **THEN** dataset 保留在受控 ID 决定的独立 Runner 目录，拒绝越界或链接文件，不暴露控制数据库和备份

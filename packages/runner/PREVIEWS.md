@@ -1,10 +1,10 @@
 # Preview Runner integration
 
-当前实现私有持久容量预留、统一准入、原容器动作日志，以及显式 `RunnerPreviewBackend`／`DockerPreviewDriver` 代码。Docker Driver 需要真实 Linux、可信硬配额和宿主网络隔离适配器，缺任一项保持关闭；这些适配器和真实容器联调尚未完成。独立预览到期 watchdog、容器清理及平台默认装配仍待实施，此文不是可运行容器服务的部署说明。HTTP 健康探针见 `preview-health.ts`，控制面生命周期恢复见 `@devmesh/platform-core` 的 `PreviewLifecycleManager`。
+当前实现私有持久容量预留、统一准入、原容器动作日志、Runner 独立到期 watchdog 和 Release 归属保护，以及显式 `RunnerPreviewBackend`／`DockerPreviewDriver` 代码。Docker Driver 需要真实 Linux、可信硬配额和宿主网络隔离适配器，缺任一项保持关闭；这些适配器、真实容器联调、容器清理及平台默认装配仍待实施，此文不是可运行容器服务的部署说明。HTTP 健康探针见 `preview-health.ts`，控制面生命周期恢复见 `@devmesh/platform-core` 的 `PreviewLifecycleManager`。
 
 ## Capacity and private store calls
 
-Runner SQLite v4 在原 v2 workspace fence、v3 容量预留之后前向迁移，分别核实 v2／v3／v4 的原迁移 SHA，不重写旧作业／fence／预留／历史。升级失败回滚 DDL 和版本，核实失败原因后用相同新程序重试。旧程序不支持 v4，不能用旧二进制直接打开升级后的 store；回退时关闭新准入，保留并核实原对象，不手动降级数据库。
+Runner SQLite v5 在原 v2 workspace fence、v3 容量预留、v4 容器日志之后前向迁移，逐一核实 v2～v5 的原迁移 SHA，不重写旧作业／fence／预留／历史。升级失败回滚本次 DDL 和版本，核实失败原因后用相同新程序重试。旧程序不支持 v5，不能用旧二进制直接打开升级后的 store；回退时关闭新准入，保留并核实原对象，不手动降级数据库。旧预览没有明确归属时保持 UNENROLLED，仅查询，不能自动收养或停止。
 
 可信装配通过同一个 `RunnerStore` 调用；这些方法没有公共 HTTP／MCP 路由。`capacityConfigure({maximumJobs,cpu,memoryMiB})` 的数值必须来自 Runner 部署预算，已经扣除系统预留。`RunnerManager.start()` 固定同一预算；`claim` 与 `previewReserve` 都校验相同预算。同一 Worker 的预算不允许变动，需关闭／重开 Worker 后显式配置；降低预算不释放现存对象，只阻止超额新准入。
 
@@ -24,6 +24,16 @@ Runner SQLite v4 在原 v2 workspace fence、v3 容量预留之后前向迁移�
 
 `RunnerPreviewBackend` 显式组合实际 dataset 后端、Runner store、路径解析及容器 Driver。控制面与 Runner 两级派发位都要求明确许可；每个外部变更还在异步检查结束后立即复核当前授权。重启或 UNKNOWN 只查询确定性原名称和固定 labels／profile／对象 ID，补记已存在的原事实；不继续尚未派发的下一动作。真实固定 loopback HTTP 探针通过才形成 HEALTHY；停止只核实原实例，EXITED 后释放容量并保留 dataset。CREATED 且从未启动不是 EXITED：当前停止仍返回未核实，继续占用，等待后续显式清理协议。
 
+## Runner custody and independent expiry
+
+`previewLifecycleEnroll` 只登记尚未派发且没有容器动作的新 RESERVED，固定原期限；重复读取原记录。归属为 PREVIEW／STOPPING／RELEASE_HELD／RELEASE_OWNED，附 revision 与不可变历史。STOP 唯一派发位与 PREVIEW→STOPPING 在同一 writer 事务提交；开始停止后不能再持有同一实例，HELD／OWNED 也不能授予 STOP。NETWORK_CREATE／CREATE／START 在最后外部执行前还核实 Runner 当前归属、期限和原 SENT 动作，平台许可不能覆盖 Runner 的到期拒绝。
+
+私有 `previewReleaseHold` 绑定完整 canonical claimHash、原启动 operation／requestHash、准确 candidate／manifest／preview／dataset／image／instance、新鲜原 HEALTHY 及接受 requestHash／releaseId；重复原 claim 幂等，任何替换拒绝。`previewReleaseCommit` 只把原 HELD 确认为 OWNED。这是未来 T5 必须接入的可信后台握手，尚未实现跨控制面的 T5：必须先持有，再提交接受，最后按原键确认归属；未知接受结果先查原提交，不能依靠预览 TTL 自动释放 HELD。当前没有自动撤销接口，撤销需要后续实现明确的未提交证明；不能把私有确认调用当作已保存 Release 的证据。
+
+显式构造 `new RunnerPreviewWatchdog(backend, {enabled:true, pollIntervalMs:1000, pageSize:20})`，调用 `start()`，退出前 `await close()`。默认关闭；不得提供普通用户／模型可替换的 backend 或 store。循环只依赖 Runner 原记录和 Driver，不依赖平台数据库／连接／15 秒作业租约。每轮从 sequence 0 分页，单对象失败隔离、同周期不重入；close 等待当前周期且最后执行许可检查阻止新的副作用。错误通知回调失败不会中断后续扫描。
+
+Runner 使用单调经过时间、持久墙钟高水位及到期锁存；观察到回拨立即到期，Worker 内即使外层事务回滚也记住该观察，持久锁存提交后跨重启保留。完全未观察到的宿主重启期间时钟变化仍依赖可信宿主时间，不能宣称解决任意时钟篡改。到期只取消从未派发的预留；已派发对象先查准确原事实，再为核实原实例保存确定性 EXPIRED STOP，并通过原日志派发一次。丢许可／执行 ACK 或未知停止只查询，不重发、不换实例；CREATED 从未启动仍不冒充 EXITED。HELD／OWNED 永远受保护，dataset 不删除。
+
 ## Docker profile and required adapters
 
 Driver 使用绝对 Docker 程序路径、Unix socket、固定 argv／有限环境、无 shell、有界输出与超时；不向容器传平台凭据。镜像检查区分 manifest digest 与 config ID，并逐项核实 repository／digest、OS／架构、原 config、层 diffID 顺序及源码／构建 labels。每次容器观察重新检查原 profile、镜像 config、资源、挂载、labels、网络与 loopback 端口，不收养或停止身份不符对象。
@@ -38,4 +48,4 @@ Driver 使用绝对 Docker 程序路径、Unix socket、固定 argv／有限环�
 
 测试实际运行控制面／Runner SQLite Worker、并发事务、原动作 ACK 丢失、观察提交回滚、历史升级失败回滚、Worker 终止重开、真实 dataset 和 loopback HTTP；`ControlledContainerDriver` 显式提供 network／container 事实，不执行 Docker，健康服务也属于测试夹具。Docker 参数与观察核验针对明确输入验证，Windows 不执行 Linux CLI 路径；模板另执行实际 HTTP／SQLite／浏览器检查。不能把受控事实当成物理退出、真实镜像健康、cgroup 或宿主防火墙证据。
 
-后续仍需独立 Runner 到期 watchdog（平台断连后也生效并保护已接受 Release）、原对象的显式清理／移除、真实 quota／network-isolation 适配器，以及可信平台装配与实际 Linux／gVisor 联调。不能复用短时作业 15 秒租约代替预览生命周期。普通用户／模型没有私有预留、容器注册或可信回执接口。完整开发子项 2.3 保持未勾选。
+后续仍需原对象的显式清理／移除、真实 quota／network-isolation 适配器、可信平台装配、T5 必需归属握手，以及实际 Linux／gVisor 联调。不能复用短时作业 15 秒租约代替预览生命周期。普通用户／模型没有私有预留、容器注册或可信回执接口。完整开发子项 2.3 保持未勾选。

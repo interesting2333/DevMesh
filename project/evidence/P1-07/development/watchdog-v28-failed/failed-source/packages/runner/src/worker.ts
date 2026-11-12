@@ -1,0 +1,73 @@
+import { parentPort,workerData } from 'node:worker_threads';
+import { DatabaseSync } from 'node:sqlite';
+import { existsSync } from 'node:fs';
+import { createHash,randomUUID } from 'node:crypto';
+import { ZodError } from 'zod';
+import { canonical } from '@devmesh/storage-sqlite';
+import { RunnerError,ownerKey } from './protocol.js';
+import type { Job,StartJob } from './protocol.js';
+import { storeRequests } from './store-protocol.js';
+import type { InternalJob,RunnerStoreMethod } from './store-protocol.js';
+import {createRunnerFenceDomain} from './fence-domain.js';
+import {createRunnerCapacityDomain} from './capacity-domain.js';
+import {createPreviewContainerDomain} from './container-domain.js';
+import {createPreviewLifecycleDomain} from './preview-lifecycle-domain.js';
+const port=parentPort;if(!port)throw Error('Runner store requires its Worker');
+const time=()=>new Date().toISOString(),digest=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
+type Row=Record<string,string|number|null>;
+let db:DatabaseSync|undefined;
+try{
+ const options=workerData as {databasePath:string;runnerId:string;initialize?:boolean};
+ const exists=existsSync(options.databasePath);if(!exists&&!options.initialize)throw new RunnerError('RUNNER_STORE_NOT_INITIALIZED',409);
+ db=new DatabaseSync(options.databasePath,{enableForeignKeyConstraints:true});db.exec('PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000;');
+ const get=(sql:string,...p:(string|number|null)[])=>db!.prepare(sql).get(...p) as Row|undefined,all=(sql:string,...p:(string|number|null)[])=>db!.prepare(sql).all(...p) as Row[],exec=(sql:string,...p:(string|number|null)[])=>db!.prepare(sql).run(...p);
+ const required=(row:Row|undefined)=>{if(!row)throw new RunnerError('JOB_NOT_FOUND',404);return row;};
+ const tx=<T>(f:()=>T):T=>{db!.exec('BEGIN IMMEDIATE');try{const value=f();if(value instanceof Promise)throw new RunnerError('ASYNC_TRANSACTION_FORBIDDEN',500);db!.exec('COMMIT');return value;}catch(e){db!.exec('ROLLBACK');throw e;}};
+ if(!exists){tx(()=>{db!.exec(`
+ CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=1)) STRICT;
+ CREATE TABLE jobs(job_id TEXT PRIMARY KEY,controller_id TEXT NOT NULL,operation_id TEXT NOT NULL,request_hash TEXT NOT NULL,request_json TEXT NOT NULL CHECK(json_valid(request_json)),execution_json TEXT NOT NULL CHECK(json_valid(execution_json)),owner_key TEXT NOT NULL,state TEXT NOT NULL CHECK(state IN ('QUEUED','STARTING','RUNNING','STOPPING','EXITED','OUTCOME_UNKNOWN')),container_id TEXT,created_at TEXT NOT NULL,started_at TEXT,ended_at TEXT,exit_code INTEGER,stop_requested INTEGER NOT NULL CHECK(stop_requested IN (0,1)),stop_evidence TEXT CHECK(stop_evidence IS NULL OR json_valid(stop_evidence)),error_code TEXT,lease_sequence INTEGER NOT NULL CHECK(lease_sequence>=0),lease_hash TEXT NOT NULL,lease_permit_json TEXT NOT NULL CHECK(json_valid(lease_permit_json)),lease_renewed_at TEXT NOT NULL,log_cursor INTEGER NOT NULL DEFAULT 0,outputs_json TEXT NOT NULL DEFAULT '[]' CHECK(json_valid(outputs_json)),UNIQUE(controller_id,operation_id),CHECK(state='EXITED' OR exit_code IS NULL)) STRICT;
+ CREATE TABLE job_events(job_id TEXT NOT NULL REFERENCES jobs(job_id),sequence INTEGER NOT NULL,snapshot_json TEXT NOT NULL CHECK(json_valid(snapshot_json)),created_at TEXT NOT NULL,PRIMARY KEY(job_id,sequence)) STRICT;
+ CREATE TRIGGER immutable_job_identity BEFORE UPDATE ON jobs WHEN NEW.job_id<>OLD.job_id OR NEW.controller_id<>OLD.controller_id OR NEW.operation_id<>OLD.operation_id OR NEW.request_hash<>OLD.request_hash OR NEW.request_json<>OLD.request_json OR NEW.execution_json<>OLD.execution_json OR NEW.owner_key<>OLD.owner_key BEGIN SELECT RAISE(ABORT,'JOB_IDENTITY_IMMUTABLE'); END;
+ CREATE TRIGGER immutable_job_terminal BEFORE UPDATE ON jobs WHEN OLD.state='EXITED' BEGIN SELECT RAISE(ABORT,'JOB_TERMINAL_IMMUTABLE'); END;
+ PRAGMA user_version=1;`);exec('INSERT INTO runner_identity VALUES(1,?,1)',options.runnerId);});}
+ const identity=get('SELECT * FROM runner_identity WHERE singleton=1');if(identity?.runner_id!==options.runnerId||![1,2,3,4,5].includes(Number(identity.version))||Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0])!==identity.version)throw new RunnerError('RUNNER_STORE_IDENTITY_MISMATCH',409);
+ const fences=createRunnerFenceDomain(db);
+  const capacity=createRunnerCapacityDomain(db,options.runnerId);
+  let lifecycle:ReturnType<typeof createPreviewLifecycleDomain>;
+  const containers=createPreviewContainerDomain(db,input=>lifecycle.actionGuard(input));
+  lifecycle=createPreviewLifecycleDomain(db);
+ const row=(id:string)=>required(get('SELECT * FROM jobs WHERE job_id=?',id));
+ const owned=(controller:string,id:string)=>{const r=row(id);if(r.controller_id!==controller)throw new RunnerError('JOB_NOT_FOUND',404);return r;};
+ const view=(r:Row):Job=>({jobId:String(r.job_id),controllerId:String(r.controller_id),operationId:String(r.operation_id),requestHash:String(r.request_hash),request:JSON.parse(String(r.request_json)),executionProfile:{runnerId:options.runnerId,commandHash:digest(JSON.parse(String(r.execution_json)).argv)},state:r.state as Job['state'],containerId:r.container_id as string|null,createdAt:String(r.created_at),startedAt:r.started_at as string|null,endedAt:r.ended_at as string|null,exitCode:r.exit_code as number|null,stopRequested:r.stop_requested===1,stopEvidence:r.stop_evidence?JSON.parse(String(r.stop_evidence)):null,errorCode:r.error_code as string|null,leaseSequence:Number(r.lease_sequence),lastHeartbeat:String(r.lease_renewed_at),logCursor:Number(r.log_cursor),outputRefs:JSON.parse(String(r.outputs_json))});
+ const internal=(r:Row):InternalJob=>({job:view(r),execution:JSON.parse(String(r.execution_json)),leasePermit:JSON.parse(String(r.lease_permit_json)),leaseRenewedAt:String(r.lease_renewed_at)});
+ const event=(r:Row)=>{const seq=Number(get('SELECT max(sequence) n FROM job_events WHERE job_id=?',String(r.job_id))?.n??0)+1;exec('INSERT INTO job_events VALUES(?,?,?,?)',String(r.job_id),seq,canonical(view(r)),time());};
+ const methods={
+    previewLifecycleEnroll:lifecycle.previewLifecycleEnroll,previewLifecycleGet:lifecycle.previewLifecycleGet,previewExpiryPrepare:lifecycle.previewExpiryPrepare,previewExpiryAuthorized:lifecycle.previewExpiryAuthorized,previewLifecycleActionAuthorized:lifecycle.previewLifecycleActionAuthorized,previewReleaseHold:lifecycle.previewReleaseHold,previewReleaseCommit:lifecycle.previewReleaseCommit,
+    previewContainerPrepare:containers.previewContainerPrepare,previewContainerGet:containers.previewContainerGet,previewContainerActionBegin:containers.previewContainerActionBegin,previewContainerActionObserve:containers.previewContainerActionObserve,
+    capacityConfigure:capacity.capacityConfigure,capacityUsage:capacity.capacityUsage,previewReserve:capacity.previewReserve,previewReservationGet:capacity.previewReservationGet,previewReservationByOperation:capacity.previewReservationByOperation,previewReservationPage:capacity.previewReservationPage,previewReservationDispatch:capacity.previewReservationDispatch,
+    previewReservationCancel(input:Parameters<typeof capacity.previewReservationCancel>[0]){const result=capacity.previewReservationCancel(input);if(result.releasedAt)lifecycle.forgetClock(result.reservationId);return result;},
+    previewReservationRecord(input:Parameters<typeof capacity.previewReservationRecord>[0]){const result=capacity.previewReservationRecord(input);if(result.releasedAt)lifecycle.forgetClock(result.reservationId);return result;},
+   fenceAcquire:fences.fenceAcquire,fenceGet:fences.fenceGet,fenceByOperation:fences.fenceByOperation,fenceActive:fences.fenceActive,fenceRelease:fences.fenceRelease,workspaceBinding:fences.workspaceBinding,
+  register(i:{controllerId:string;request:StartJob;execution:{workspacePath:string;argv:string[]}}){return tx(()=>{const old=get('SELECT * FROM jobs WHERE controller_id=? AND operation_id=?',i.controllerId,i.request.operationId),hash=digest(i.request);if(old){if(old.request_hash!==hash)throw new RunnerError('IDEMPOTENCY_KEY_REUSED',409);return view(old);}fences.assertAvailable(i.execution.workspacePath);if(Number(get("SELECT count(*) n FROM jobs WHERE state='QUEUED'")?.n??0)>=100)throw new RunnerError('RUNNER_QUEUE_FULL',429);const id='job_'+randomUUID().replaceAll('-',''),now=time();exec("INSERT INTO jobs(job_id,controller_id,operation_id,request_hash,request_json,execution_json,owner_key,state,created_at,stop_requested,lease_sequence,lease_hash,lease_permit_json,lease_renewed_at) VALUES(?,?,?,?,?,?,?,'QUEUED',?,0,0,?,?,?)",id,i.controllerId,i.request.operationId,hash,canonical(i.request),canonical(i.execution),ownerKey(i.request.permit),now,digest(i.request.permit),canonical(i.request.permit),now);const r=row(id);event(r);return view(r);});},
+  get(i:{controllerId:string;jobId:string}){return view(owned(i.controllerId,i.jobId));},
+  byOperation(i:{controllerId:string;operationId:string}){const r=get('SELECT * FROM jobs WHERE controller_id=? AND operation_id=?',i.controllerId,i.operationId);return r?view(r):null;},
+  pending(i:{limit:number}){return all("SELECT * FROM jobs WHERE state='QUEUED' ORDER BY created_at,job_id LIMIT ?",i.limit).map(internal);},
+  active(){return all("SELECT * FROM jobs WHERE state NOT IN ('QUEUED','EXITED') ORDER BY created_at,job_id").map(internal);},
+  claim(i:{jobId:string;maximumJobs:number;cpu:number;memoryMiB:number}){return tx(()=>{const r=row(i.jobId);if(r.state!=='QUEUED'||r.stop_requested===1)return null;fences.assertAvailable(String(JSON.parse(String(r.execution_json)).workspacePath));const jobs=all("SELECT * FROM jobs WHERE state NOT IN ('QUEUED','EXITED')"),request=JSON.parse(String(r.request_json)) as StartJob,limits=request.resourceLimits;if(!capacity.fits(limits,{maximumJobs:i.maximumJobs,cpu:i.cpu,memoryMiB:i.memoryMiB})||jobs.some(j=>JSON.parse(String(j.execution_json)).workspacePath===JSON.parse(String(r.execution_json)).workspacePath)||Date.parse(JSON.parse(String(r.lease_permit_json)).expiresAt)<=Date.now()||jobs.filter(j=>j.owner_key===r.owner_key).length>=(request.permit.ownerKind==='workflowAttempt'?2:1))return null;exec("UPDATE jobs SET state='STARTING',started_at=? WHERE job_id=?",time(),i.jobId);const changed=row(i.jobId);event(changed);return internal(changed);});},
+  stop(i:{controllerId:string;jobId:string}){return tx(()=>{const r=owned(i.controllerId,i.jobId);if(r.state==='EXITED'||r.stop_requested===1)return view(r);const queued=r.state==='QUEUED';exec('UPDATE jobs SET stop_requested=1,state=?,ended_at=?,stop_evidence=? WHERE job_id=?',queued?'EXITED':'STOPPING',queued?time():null,queued?canonical({neverDispatched:true,verifiedAt:time()}):null,i.jobId);const changed=row(i.jobId);event(changed);return view(changed);});},
+  renew(i:{controllerId:string;jobId:string;renewal:{permit:StartJob['permit'];sequence:number}}){return tx(()=>{const r=owned(i.controllerId,i.jobId);if(r.state==='EXITED'||r.stop_requested===1)throw new RunnerError('JOB_NOT_RENEWABLE',409);const old=JSON.parse(String(r.request_json)) as StartJob,p=i.renewal.permit,hash=digest(p);const omitTime=(v:StartJob['permit'])=>{const {notBefore:_n,expiresAt:_e,...identity}=v;return identity;};if(canonical(omitTime(p))!==canonical(omitTime(old.permit)))throw new RunnerError('RUNNER_LEASE_OWNER_CHANGED',403);if(i.renewal.sequence===r.lease_sequence&&hash===r.lease_hash)return view(r);if(i.renewal.sequence<=Number(r.lease_sequence)||p.expiresAt<=time())throw new RunnerError('RUNNER_LEASE_STALE',409);exec('UPDATE jobs SET lease_sequence=?,lease_hash=?,lease_permit_json=?,lease_renewed_at=? WHERE job_id=?',i.renewal.sequence,hash,canonical(p),time(),i.jobId);const changed=row(i.jobId);event(changed);return view(changed);});},
+  record(i:{jobId:string;state:string;containerId:string|null;exitCode:number|null;evidence:unknown;errorCode:string|null;materials?:{logCursor:number;outputRefs:Job['outputRefs']}}){return tx(()=>{
+   const r=row(i.jobId);if(r.state==='EXITED')return view(r);
+   if(r.container_id!==null&&i.containerId!==null&&r.container_id!==i.containerId)throw new RunnerError('RUNNER_CONTAINER_IDENTITY_MISMATCH',409);
+   if(r.state==='QUEUED')throw new RunnerError('JOB_NOT_DISPATCHED',409);
+   if(i.state==='EXITED'&&(!i.evidence||i.exitCode===null))throw new RunnerError('JOB_EXIT_NOT_VERIFIED',409);
+   if(i.state!=='EXITED'&&(i.exitCode!==null||i.materials))throw new RunnerError('JOB_EXIT_NOT_VERIFIED',409);
+   if(r.stop_requested===1&&i.state==='RUNNING')throw new RunnerError('JOB_STOPPING',409);
+   exec('UPDATE jobs SET state=?,container_id=coalesce(container_id,?),ended_at=?,exit_code=?,stop_evidence=?,error_code=?,log_cursor=?,outputs_json=? WHERE job_id=?',i.state,i.containerId,i.state==='EXITED'?time():null,i.exitCode,i.evidence?canonical(i.evidence):r.stop_evidence??null,i.errorCode,i.materials?.logCursor??Number(r.log_cursor),i.materials?canonical(i.materials.outputRefs):String(r.outputs_json),i.jobId);
+   const changed=row(i.jobId);event(changed);return view(changed);
+  });},
+  inspect(){return {version:5,runnerId:options.runnerId,jobs:Number(get('SELECT count(*) n FROM jobs')?.n??0),foreignKeyErrors:db!.prepare('PRAGMA foreign_key_check').all()};},
+ };
+ port.on('message',(m:{id:number;method:string;input:unknown})=>{try{if(m.method==='close'){db!.exec('PRAGMA wal_checkpoint(TRUNCATE)');db!.close();port.close();return;}if(!Object.hasOwn(storeRequests,m.method))throw new RunnerError('RUNNER_STORE_METHOD_INVALID',422);const method=m.method as RunnerStoreMethod,input=storeRequests[method].parse(m.input),value=(methods[method] as (input:unknown)=>unknown)(input);port.postMessage({id:m.id,value});}catch(error){port.postMessage({id:m.id,error:{code:error instanceof RunnerError?error.code:error instanceof ZodError?'RUNNER_REQUEST_INVALID':'RUNNER_STORE_FAILURE',status:error instanceof RunnerError?error.status:error instanceof ZodError?422:500}});}});
+ port.postMessage({id:0});
+}catch(error){if(db?.isOpen)db.close();port.postMessage({id:0,error:{code:error instanceof RunnerError?error.code:'RUNNER_STORE_FAILURE',status:error instanceof RunnerError?error.status:500}});port.close();}
