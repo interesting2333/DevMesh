@@ -1,6 +1,7 @@
 import {z} from 'zod';
 import {ids,opaqueKey,sha256,revision,epoch,gitCommit,previewImageIdentity,deliveryDataPlan} from '@devmesh/contracts';
 import type {DatasetView} from './preview-protocol.js';
+import type {acceptanceBasisView} from '@devmesh/contracts';
 import type {PreviewWriteGate,previewWriteCloseRequest} from './preview-access-protocol.js';
 const meta=z.strictObject({principalId:opaqueKey,scopeId:opaqueKey,idempotencyKey:z.uuid()});
 const conditional={meta,runId:ids.run,ifMatch:z.string().optional()};
@@ -18,6 +19,8 @@ export const acceptancePreparationRequest=z.strictObject({
   if((i.source?.releaseId??null)!==i.expectedAcceptedReleaseId||i.source&&(i.source.datasetId===i.target.datasetId||i.source.storageKey!==i.projectId+'/'+i.source.datasetId+'/app.sqlite'))c.addIssue({code:'custom',message:'Exact distinct original accepted source required'});
 });
 export const acceptanceRequests={
+  getCandidateAcceptanceBasis:z.strictObject({principalId:opaqueKey,runId:ids.run,candidateId:ids.candidate,policyHash:sha256.optional()}),
+  listCandidateAcceptancePreparations:z.strictObject({principalId:opaqueKey,runId:ids.run,candidateId:ids.candidate,afterSequence:z.number().int().nonnegative().safe().default(0),limit:z.number().int().min(1).max(100).default(20)}),
   registerAcceptanceBackendPolicy:z.strictObject({principalId:opaqueKey,projectId:ids.project,policy:acceptanceBackendPolicy}),
   recordAcceptanceReplacementDecision:z.strictObject({...conditional,...candidate,decisionId:ids.decision,confirmation:z.literal('REPLACE_ACCEPTED_DATA')}),
   beginAcceptancePreparation:z.strictObject({...conditional,...candidate,policyHash:sha256}),
@@ -39,6 +42,8 @@ export interface AcceptancePreparation {
   resolution:'UNRESOLVED'|'UNSENT_FAILED'|'COMMITTED'|'ABORTING'|'ABORTED';acceptanceOperationId:string|null;
 }
 export interface AcceptanceResults {
+  getCandidateAcceptanceBasis:z.output<typeof acceptanceBasisView>;
+  listCandidateAcceptancePreparations:{items:{sequence:number;preparation:AcceptancePreparation}[];nextSequence:number|null};
   getAcceptanceDataset:{dataset:DatasetView;purpose:'ACCEPTANCE';baseReleaseId:string|null;requestHash:string;gate:PreviewWriteGate};
   closeAcceptanceSourceWriteGate:{gate:PreviewWriteGate;closeRequest:z.output<typeof previewWriteCloseRequest>;current:boolean};
   registerAcceptanceBackendPolicy:{policyHash:string;policy:z.output<typeof acceptanceBackendPolicy>};

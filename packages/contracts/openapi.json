@@ -2021,11 +2021,10 @@
     "/api/v1/candidates/{candidateId}:accept": {
       "post": {
         "operationId": "AcceptCandidate",
-        "x-implementation-status": "planned",
-        "description": "P0-02 契约。业务 handler 尚未实现。先认证、权限和原操作去重，再校验新操作版本；202 仅为持久受理。",
+        "x-implementation-status": "implemented-offline",
         "security": [
           {
-            "browserSession": []
+            "trustedIdentity": []
           }
         ],
         "parameters": [
@@ -2070,17 +2069,27 @@
         },
         "responses": {
           "202": {
-            "description": "持久受理，后台结果另查",
+            "description": "已提交的输入事实或当前权限下的读取",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OperationReceipt"
+                  "$ref": "#/components/schemas/AcceptanceCommitReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
                 }
               }
             }
           },
           "401": {
-            "description": "未认证",
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2090,7 +2099,7 @@
             }
           },
           "403": {
-            "description": "权限不足",
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2100,7 +2109,7 @@
             }
           },
           "404": {
-            "description": "资源不存在或不可见",
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2110,7 +2119,7 @@
             }
           },
           "409": {
-            "description": "业务依据或原操作冲突",
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2120,7 +2129,27 @@
             }
           },
           "412": {
-            "description": "资源版本不匹配",
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2130,7 +2159,7 @@
             }
           },
           "422": {
-            "description": "非法 schema",
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2140,7 +2169,7 @@
             }
           },
           "428": {
-            "description": "缺失版本条件",
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2150,7 +2179,17 @@
             }
           },
           "429": {
-            "description": "限流",
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2160,7 +2199,7 @@
             }
           },
           "503": {
-            "description": "暂不可用，先查询原操作键",
+            "description": "公共错误；未知提交结果先按原操作键查询",
             "content": {
               "application/json": {
                 "schema": {
@@ -2169,7 +2208,8 @@
               }
             }
           }
-        }
+        },
+        "description": "准确两阶段T5提交，先实际复核冻结材料字节；成功回执固定ACCEPTED及当时PENDING，当前发布另查。原UUID／正文恢复先于新版本和配置检查。默认新接受关闭。"
       }
     },
     "/api/v1/projects/{projectId}/tasks": {
@@ -4150,6 +4190,1377 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PlanReview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/acceptance": {
+      "get": {
+        "operationId": "ReadAcceptanceBasis",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptanceBasis"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/acceptance/preparations": {
+      "get": {
+        "operationId": "ListCandidateAcceptancePreparations",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "afterSequence",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptancePreparationList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "BeginAcceptance",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\"r[1-9][0-9]*\"$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BeginAcceptance"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptancePreparation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/acceptance/replacement-confirmations": {
+      "post": {
+        "operationId": "ConfirmAcceptanceReplacement",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\"r[1-9][0-9]*\"$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmAcceptanceReplacement"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptanceReplacementReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/acceptance/preparations/{operationId}": {
+      "get": {
+        "operationId": "ReadAcceptancePreparation",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptancePreparation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/acceptance/preparations/{operationId}/close-unsent": {
+      "post": {
+        "operationId": "CloseUnsentAcceptance",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\"r[1-9][0-9]*\"$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloseUnsentAcceptance"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptancePreparation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/acceptance/preparations/{operationId}/abort": {
+      "post": {
+        "operationId": "AbortAcceptance",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "operationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\"r[1-9][0-9]*\"$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbortAcceptance"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptanceAbortReceipt"
                 }
               }
             }
@@ -8117,6 +9528,1165 @@
       }
     },
     "schemas": {
+      "BeginAcceptance": {
+        "type": "object",
+        "properties": {
+          "candidateRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "manifestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "reviewHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "expectedAcceptedReleaseId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dataPlanHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "policyHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "candidateRevision",
+          "manifestHash",
+          "reviewHash",
+          "expectedAcceptedReleaseId",
+          "dataPlanHash",
+          "policyHash"
+        ],
+        "additionalProperties": false
+      },
+      "ConfirmAcceptanceReplacement": {
+        "type": "object",
+        "properties": {
+          "candidateRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "manifestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "reviewHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "expectedAcceptedReleaseId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dataPlanHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "decisionId": {
+            "type": "string",
+            "pattern": "^decision_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "confirmation": {
+            "type": "string",
+            "const": "REPLACE_ACCEPTED_DATA"
+          }
+        },
+        "required": [
+          "candidateRevision",
+          "manifestHash",
+          "reviewHash",
+          "expectedAcceptedReleaseId",
+          "dataPlanHash",
+          "decisionId",
+          "confirmation"
+        ],
+        "additionalProperties": false
+      },
+      "CloseUnsentAcceptance": {
+        "type": "object",
+        "properties": {
+          "requestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "requestHash"
+        ],
+        "additionalProperties": false
+      },
+      "AbortAcceptance": {
+        "type": "object",
+        "properties": {
+          "requestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "expectedPreparationRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "confirmation": {
+            "type": "string",
+            "const": "ABORT_ACCEPTANCE_PREPARATION"
+          }
+        },
+        "required": [
+          "requestHash",
+          "expectedPreparationRevision",
+          "reason",
+          "confirmation"
+        ],
+        "additionalProperties": false
+      },
+      "AcceptanceBasis": {
+        "type": "object",
+        "properties": {
+          "candidateRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "manifestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "reviewHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "expectedAcceptedReleaseId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dataPlanHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "projectId": {
+            "type": "string",
+            "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "candidateId": {
+            "type": "string",
+            "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "codeCommit": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40}$"
+          },
+          "dataPlan": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "schemaVersion": {
+                    "type": "string",
+                    "const": "devmesh.data-plan.v1"
+                  },
+                  "runId": {
+                    "type": "string",
+                    "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "codeCommit": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{40}$"
+                  },
+                  "requirementRevision": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "planRevision": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "templateVersion": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                  },
+                  "checkConfigHash": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "strategy": {
+                    "type": "string",
+                    "const": "INITIAL"
+                  },
+                  "initialData": {
+                    "type": "string",
+                    "enum": [
+                      "EMPTY",
+                      "DEMO"
+                    ]
+                  },
+                  "sourceReleaseId": {
+                    "type": "null"
+                  },
+                  "migrationRef": {
+                    "type": "null"
+                  },
+                  "replacementDecisionId": {
+                    "type": "null"
+                  }
+                },
+                "required": [
+                  "schemaVersion",
+                  "runId",
+                  "codeCommit",
+                  "requirementRevision",
+                  "planRevision",
+                  "templateVersion",
+                  "checkConfigHash",
+                  "strategy",
+                  "initialData",
+                  "sourceReleaseId",
+                  "migrationRef",
+                  "replacementDecisionId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "schemaVersion": {
+                    "type": "string",
+                    "const": "devmesh.data-plan.v1"
+                  },
+                  "runId": {
+                    "type": "string",
+                    "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "codeCommit": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{40}$"
+                  },
+                  "requirementRevision": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "planRevision": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "templateVersion": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                  },
+                  "checkConfigHash": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "strategy": {
+                    "type": "string",
+                    "const": "PRESERVE_MIGRATE"
+                  },
+                  "initialData": {
+                    "type": "null"
+                  },
+                  "sourceReleaseId": {
+                    "type": "string",
+                    "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "migrationRef": {
+                    "type": "object",
+                    "properties": {
+                      "artifactId": {
+                        "type": "string",
+                        "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      }
+                    },
+                    "required": [
+                      "artifactId",
+                      "sha256"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "replacementDecisionId": {
+                    "type": "null"
+                  }
+                },
+                "required": [
+                  "schemaVersion",
+                  "runId",
+                  "codeCommit",
+                  "requirementRevision",
+                  "planRevision",
+                  "templateVersion",
+                  "checkConfigHash",
+                  "strategy",
+                  "initialData",
+                  "sourceReleaseId",
+                  "migrationRef",
+                  "replacementDecisionId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "schemaVersion": {
+                    "type": "string",
+                    "const": "devmesh.data-plan.v1"
+                  },
+                  "runId": {
+                    "type": "string",
+                    "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "codeCommit": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{40}$"
+                  },
+                  "requirementRevision": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "planRevision": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "templateVersion": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                  },
+                  "checkConfigHash": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "strategy": {
+                    "type": "string",
+                    "const": "REPLACE"
+                  },
+                  "initialData": {
+                    "type": "string",
+                    "enum": [
+                      "EMPTY",
+                      "DEMO"
+                    ]
+                  },
+                  "sourceReleaseId": {
+                    "type": "string",
+                    "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "migrationRef": {
+                    "type": "null"
+                  },
+                  "replacementDecisionId": {
+                    "type": "string",
+                    "pattern": "^decision_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  }
+                },
+                "required": [
+                  "schemaVersion",
+                  "runId",
+                  "codeCommit",
+                  "requirementRevision",
+                  "planRevision",
+                  "templateVersion",
+                  "checkConfigHash",
+                  "strategy",
+                  "initialData",
+                  "sourceReleaseId",
+                  "migrationRef",
+                  "replacementDecisionId"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "currentAcceptedReleaseId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resourceRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "qualification": {
+            "type": "string",
+            "enum": [
+              "CURRENT",
+              "STALE"
+            ]
+          },
+          "configured": {
+            "type": "boolean"
+          },
+          "policyHash": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "replacementConfirmed": {
+            "type": "boolean"
+          },
+          "blockedByPreparationOperationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "canManage": {
+            "type": "boolean"
+          },
+          "canPrepare": {
+            "type": "boolean"
+          },
+          "canConfirmReplacement": {
+            "type": "boolean"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "NOT_OWNER",
+                  "REVIEW_REQUIRED",
+                  "CANDIDATE_STALE",
+                  "SOURCE_CHANGED",
+                  "BACKEND_UNAVAILABLE",
+                  "REPLACEMENT_CONFIRMATION_REQUIRED",
+                  "PREPARATION_UNRESOLVED",
+                  "EFFECT_UNRESOLVED"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "candidateRevision",
+          "manifestHash",
+          "reviewHash",
+          "expectedAcceptedReleaseId",
+          "dataPlanHash",
+          "projectId",
+          "runId",
+          "candidateId",
+          "codeCommit",
+          "dataPlan",
+          "currentAcceptedReleaseId",
+          "resourceRevision",
+          "qualification",
+          "configured",
+          "policyHash",
+          "replacementConfirmed",
+          "blockedByPreparationOperationId",
+          "canManage",
+          "canPrepare",
+          "canConfirmReplacement",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "AcceptancePreparation": {
+        "type": "object",
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "candidateId": {
+            "type": "string",
+            "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "releaseId": {
+            "type": "string",
+            "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "requestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PREPARED",
+              "SENT",
+              "UNKNOWN",
+              "FAILED"
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "UNRESOLVED",
+              "UNSENT_FAILED",
+              "COMMITTED",
+              "ABORTING",
+              "ABORTED"
+            ]
+          },
+          "qualification": {
+            "type": "string",
+            "enum": [
+              "CURRENT",
+              "STALE"
+            ]
+          },
+          "basis": {
+            "type": "object",
+            "properties": {
+              "candidateRevision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "manifestHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "reviewHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "expectedAcceptedReleaseId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "dataPlanHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "candidateRevision",
+              "manifestHash",
+              "reviewHash",
+              "expectedAcceptedReleaseId",
+              "dataPlanHash"
+            ],
+            "additionalProperties": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+          },
+          "acceptanceOperationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "readiness": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "UNPREPARED",
+                  "READY",
+                  "UNAVAILABLE",
+                  "STALE"
+                ]
+              },
+              "sequence": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "proofHash": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "checkedAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "state",
+              "sequence",
+              "proofHash",
+              "checkedAt"
+            ],
+            "additionalProperties": false
+          },
+          "resourceRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "canCommit": {
+            "type": "boolean"
+          },
+          "canCloseUnsent": {
+            "type": "boolean"
+          },
+          "canAbort": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "operationId",
+          "runId",
+          "candidateId",
+          "releaseId",
+          "requestHash",
+          "revision",
+          "state",
+          "resolution",
+          "qualification",
+          "basis",
+          "createdAt",
+          "updatedAt",
+          "acceptanceOperationId",
+          "readiness",
+          "resourceRevision",
+          "canCommit",
+          "canCloseUnsent",
+          "canAbort"
+        ],
+        "additionalProperties": false
+      },
+      "AcceptancePreparationList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sequence": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "preparation": {
+                  "type": "object",
+                  "properties": {
+                    "operationId": {
+                      "type": "string",
+                      "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "runId": {
+                      "type": "string",
+                      "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "candidateId": {
+                      "type": "string",
+                      "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "releaseId": {
+                      "type": "string",
+                      "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "requestHash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "revision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": [
+                        "PREPARED",
+                        "SENT",
+                        "UNKNOWN",
+                        "FAILED"
+                      ]
+                    },
+                    "resolution": {
+                      "type": "string",
+                      "enum": [
+                        "UNRESOLVED",
+                        "UNSENT_FAILED",
+                        "COMMITTED",
+                        "ABORTING",
+                        "ABORTED"
+                      ]
+                    },
+                    "qualification": {
+                      "type": "string",
+                      "enum": [
+                        "CURRENT",
+                        "STALE"
+                      ]
+                    },
+                    "basis": {
+                      "type": "object",
+                      "properties": {
+                        "candidateRevision": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 9007199254740991
+                        },
+                        "manifestHash": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "reviewHash": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "expectedAcceptedReleaseId": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "dataPlanHash": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        }
+                      },
+                      "required": [
+                        "candidateRevision",
+                        "manifestHash",
+                        "reviewHash",
+                        "expectedAcceptedReleaseId",
+                        "dataPlanHash"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                    },
+                    "acceptanceOperationId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "readiness": {
+                      "type": "object",
+                      "properties": {
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "UNPREPARED",
+                            "READY",
+                            "UNAVAILABLE",
+                            "STALE"
+                          ]
+                        },
+                        "sequence": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "proofHash": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "checkedAt": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "state",
+                        "sequence",
+                        "proofHash",
+                        "checkedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "resourceRevision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "canCommit": {
+                      "type": "boolean"
+                    },
+                    "canCloseUnsent": {
+                      "type": "boolean"
+                    },
+                    "canAbort": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "operationId",
+                    "runId",
+                    "candidateId",
+                    "releaseId",
+                    "requestHash",
+                    "revision",
+                    "state",
+                    "resolution",
+                    "qualification",
+                    "basis",
+                    "createdAt",
+                    "updatedAt",
+                    "acceptanceOperationId",
+                    "readiness",
+                    "resourceRevision",
+                    "canCommit",
+                    "canCloseUnsent",
+                    "canAbort"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "sequence",
+                "preparation"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "nextSequence": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "nextSequence"
+        ],
+        "additionalProperties": false
+      },
+      "AcceptanceReplacementReceipt": {
+        "type": "object",
+        "properties": {
+          "decisionId": {
+            "type": "string",
+            "pattern": "^decision_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "operationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          }
+        },
+        "required": [
+          "decisionId",
+          "operationId"
+        ],
+        "additionalProperties": false
+      },
+      "AcceptanceAbortReceipt": {
+        "type": "object",
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "preparationOperationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "decisionHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "decidedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+          },
+          "decisionState": {
+            "type": "string",
+            "const": "RECORDED"
+          }
+        },
+        "required": [
+          "operationId",
+          "preparationOperationId",
+          "decisionHash",
+          "reason",
+          "decidedAt",
+          "decisionState"
+        ],
+        "additionalProperties": false
+      },
+      "AcceptanceCommitReceipt": {
+        "type": "object",
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "status": {
+            "type": "string",
+            "const": "SUCCEEDED"
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "releaseId": {
+                "type": "string",
+                "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "candidateId": {
+                "type": "string",
+                "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "candidateRevision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "manifestHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "reviewHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "preparationOperationId": {
+                "type": "string",
+                "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "acceptanceOperationId": {
+                "type": "string",
+                "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "requestHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "proofHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "datasetId": {
+                "type": "string",
+                "pattern": "^dataset_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "previousReleaseId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "acceptedBy": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "acceptedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+              },
+              "acceptanceState": {
+                "type": "string",
+                "const": "ACCEPTED"
+              },
+              "publicationState": {
+                "type": "string",
+                "const": "PENDING"
+              }
+            },
+            "required": [
+              "releaseId",
+              "projectId",
+              "runId",
+              "candidateId",
+              "candidateRevision",
+              "manifestHash",
+              "reviewHash",
+              "preparationOperationId",
+              "acceptanceOperationId",
+              "requestHash",
+              "proofHash",
+              "datasetId",
+              "previousReleaseId",
+              "acceptedBy",
+              "acceptedAt",
+              "acceptanceState",
+              "publicationState"
+            ],
+            "additionalProperties": false
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "preparation": {
+                "type": "string",
+                "pattern": "^\\/api\\/v1\\/runs\\/run_[A-Za-z0-9_-]+\\/candidates\\/candidate_[A-Za-z0-9_-]+\\/acceptance\\/preparations\\/op_[A-Za-z0-9_-]+$"
+              }
+            },
+            "required": [
+              "preparation"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "operationId",
+          "status",
+          "result",
+          "links"
+        ],
+        "additionalProperties": false
+      },
       "CandidateReviewEntry": {
         "type": "object",
         "properties": {
@@ -10864,19 +13434,73 @@
                     "minimum": 1,
                     "maximum": 9007199254740991
                   },
+                  "manifestHash": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
                   "reviewHash": {
                     "type": "string",
                     "pattern": "^[a-f0-9]{64}$"
                   },
+                  "expectedAcceptedReleaseId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "dataPlanHash": {
                     "type": "string",
                     "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "runId": {
+                    "type": "string",
+                    "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "preparationOperationId": {
+                    "type": "string",
+                    "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "requestHash": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "expectedPreparationRevision": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "expectedObservationSequence": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "proofHash": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "confirmation": {
+                    "type": "string",
+                    "const": "ACCEPT_RELEASE"
                   }
                 },
                 "required": [
                   "candidateRevision",
+                  "manifestHash",
                   "reviewHash",
-                  "dataPlanHash"
+                  "expectedAcceptedReleaseId",
+                  "dataPlanHash",
+                  "runId",
+                  "preparationOperationId",
+                  "requestHash",
+                  "expectedPreparationRevision",
+                  "expectedObservationSequence",
+                  "proofHash",
+                  "confirmation"
                 ],
                 "additionalProperties": false
               }
@@ -18370,6 +20994,7 @@
                   "RELEASE_UNAVAILABLE",
                   "RANGE_NOT_SUPPORTED",
                   "EXPORT_UNAVAILABLE",
+                  "ACCEPTANCE_UNAVAILABLE",
                   "REVIEW_UNAVAILABLE",
                   "IDENTITY_NOT_CONFIGURED",
                   "REQUEST_ORIGIN_INVALID",
@@ -21686,19 +24311,73 @@
             "minimum": 1,
             "maximum": 9007199254740991
           },
+          "manifestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
           "reviewHash": {
             "type": "string",
             "pattern": "^[a-f0-9]{64}$"
           },
+          "expectedAcceptedReleaseId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "dataPlanHash": {
             "type": "string",
             "pattern": "^[a-f0-9]{64}$"
+          },
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "preparationOperationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "requestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "expectedPreparationRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "expectedObservationSequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "proofHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "confirmation": {
+            "type": "string",
+            "const": "ACCEPT_RELEASE"
           }
         },
         "required": [
           "candidateRevision",
+          "manifestHash",
           "reviewHash",
-          "dataPlanHash"
+          "expectedAcceptedReleaseId",
+          "dataPlanHash",
+          "runId",
+          "preparationOperationId",
+          "requestHash",
+          "expectedPreparationRevision",
+          "expectedObservationSequence",
+          "proofHash",
+          "confirmation"
         ],
         "additionalProperties": false
       }

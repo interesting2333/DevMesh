@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
-import {assertResourceVersion,parseContract,ids} from '@devmesh/contracts';
+import {assertResourceVersion,parseContract,ids,acceptanceBasisView} from '@devmesh/contracts';
 import type {Meta,OperationResult} from './protocol.js';
 import type {createPlanDomain} from './plan-domain.js';
 import type {createReleaseFreezeDomain} from './release-freeze-domain.js';
@@ -59,6 +59,26 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
     hooks.changed(String(r.run_id),operationId,String(r.operation_id),r.state as AcceptancePreparation['state']);return view(r);
   }
   const handlers={
+    getCandidateAcceptanceBasis(i:AcceptanceInput<'getCandidateAcceptanceBasis'>):AcceptanceResults['getCandidateAcceptanceBasis']{return transaction(db,()=>{
+      const run=plans.authorized(i.principalId,i.runId),candidate=freezes.getCandidate(i),review=reviews.getReview(i),data=candidate.manifest.delivery.record.dataPlan!;
+      const currentAcceptedReleaseId=(get('SELECT accepted_release_id FROM projects WHERE project_id=?',candidate.projectId)!.accepted_release_id??null) as string|null,dataPlanHash=digest(canonical(data));
+      const keys={candidateId:i.candidateId,candidateRevision:candidate.revision,manifestHash:candidate.manifestHash,reviewHash:review.reviewHash,expectedAcceptedReleaseId:data.sourceReleaseId,dataPlanHash};
+      const stored=i.policyHash?get('SELECT policy_json FROM acceptance_backend_policies WHERE project_id=? AND policy_hash=?',candidate.projectId,i.policyHash):undefined,p=stored?acceptanceBackendPolicy.parse(json(stored.policy_json)):null;
+      const configured=Boolean(p&&p.templateVersion===data.templateVersion&&(data.strategy==='INITIAL'?p.initialModes.includes(data.initialData):data.strategy==='PRESERVE_MIGRATE'?p.allowPreserveMigration:p.allowReplacement&&p.initialModes.includes(data.initialData)));
+      const replacementConfirmed=data.strategy==='REPLACE'&&Boolean(get('SELECT 1 FROM acceptance_data_decisions WHERE decision_id=? AND project_id=? AND run_id=? AND candidate_id=? AND manifest_hash=? AND review_hash=? AND source_release_id=? AND data_plan_hash=? AND actor_id=?',data.replacementDecisionId,candidate.projectId,i.runId,i.candidateId,candidate.manifestHash,review.reviewHash,data.sourceReleaseId,dataPlanHash,i.principalId));
+      const unresolved=get("SELECT operation_id FROM acceptance_preparations p WHERE project_id=? AND state<>'FAILED' AND NOT EXISTS(SELECT 1 FROM acceptance_commits c WHERE c.preparation_operation_id=p.operation_id) AND NOT EXISTS(SELECT 1 FROM acceptance_abort_completions a WHERE a.preparation_operation_id=p.operation_id) ORDER BY rowid LIMIT 1",candidate.projectId);
+      let reason:AcceptanceResults['getCandidateAcceptanceBasis']['reason']=null;
+      if(run.membership!=='owner')reason='NOT_OWNER';else if(candidate.qualification!=='CURRENT')reason='CANDIDATE_STALE';else if(!review.canPrepareAcceptance)reason='REVIEW_REQUIRED';else if(currentAcceptedReleaseId!==data.sourceReleaseId)reason='SOURCE_CHANGED';
+      else {try{basis(i.principalId,{...i,...keys});}catch(error){if(error instanceof StorageError)reason='SOURCE_CHANGED';else throw error;}}
+      const canConfirmReplacement=reason===null&&data.strategy==='REPLACE'&&!replacementConfirmed;
+      if(reason===null){if(!configured)reason='BACKEND_UNAVAILABLE';else if(unresolved)reason='PREPARATION_UNRESOLVED';else if(get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')",candidate.projectId))reason='EFFECT_UNRESOLVED';else if(data.strategy==='REPLACE'&&!replacementConfirmed)reason='REPLACEMENT_CONFIRMATION_REQUIRED';}
+      return parseContract(acceptanceBasisView,{...keys,projectId:candidate.projectId,runId:i.runId,codeCommit:candidate.manifest.codeCommit,dataPlan:data,currentAcceptedReleaseId,resourceRevision:Number(run.resource_revision),qualification:candidate.qualification,configured,policyHash:configured?i.policyHash!:null,replacementConfirmed,blockedByPreparationOperationId:unresolved?String(unresolved.operation_id):null,canManage:run.membership==='owner',canPrepare:reason===null,canConfirmReplacement,reason});
+    });},
+    listCandidateAcceptancePreparations(i:AcceptanceInput<'listCandidateAcceptancePreparations'>):AcceptanceResults['listCandidateAcceptancePreparations']{return transaction(db,()=>{
+      plans.authorized(i.principalId,i.runId);freezes.getCandidate(i);
+      const rows=all('SELECT rowid sequence,* FROM acceptance_preparations WHERE run_id=? AND candidate_id=? AND rowid>? ORDER BY rowid LIMIT ?',i.runId,i.candidateId,i.afterSequence,i.limit+1),page=rows.slice(0,i.limit);
+      return {items:page.map(r=>({sequence:Number(r.sequence),preparation:view(r)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};
+    });},
     registerAcceptanceBackendPolicy(i:AcceptanceInput<'registerAcceptanceBackendPolicy'>){return transaction(db,()=>{const member=get('SELECT role FROM project_members WHERE project_id=? AND principal_id=?',i.projectId,i.principalId)??fail('RESOURCE_NOT_FOUND',404);if(member.role!=='owner')fail('FORBIDDEN',403);const body=canonical(i.policy),policyHash=digest(body);exec('INSERT OR IGNORE INTO acceptance_backend_policies VALUES(?,?,?,?,?)',i.projectId,policyHash,body,i.principalId,now());return {policyHash,policy:i.policy};});},
     recordAcceptanceReplacementDecision(i:AcceptanceInput<'recordAcceptanceReplacementDecision'>){
       if(i.meta.scopeId!==i.runId)fail('OPERATION_SCOPE_INVALID',422);const {meta,ifMatch:_match,...payload}=i;

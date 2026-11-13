@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 471cd32bc2babb116b769ce6fabe19b207dac7e6088d5deffa454b3331ac1b32 |
+| DevMesh_技术设计方案_V1.1.md | 2719f07b03e4ccecf7480d878d8d8c36c7d728377e61efa0b5d6027ba6c37244 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | e900e1074ee2d3737bd333b935bdeecbd585032b9a192c55340a2d645790ee9f |
+| DevMesh_产品验收场景_V10.0.md | b1c68a54485ac5b346974cca533b758a23676539b176ca78ce80f1ae514e88c8 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -549,3 +549,11 @@ Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend
 创建前保存当前标签原payload／键／版本，未知结果显式找回，不自动提交／修复／接受；无法读取的旧填写不被新请求覆盖。非当前成员及viewer写入关闭，不可见对象统一404。两个嵌入页面各自构建到dist/web/export和dist/web/review，避免多入口IIFE不受支持或并行clean清掉其他资产，完整工作台选型仍是React／Vite。
 
 真实本地Worker／HTTP／React／Edge开发验证与明确上游／浏览器身份夹具分别记录，见project/evidence/P1-07/review-entry-development-review.md。此增量属于5.1组合前置，不完成完整T5／发布、默认产品装配或后继保留／替换与实际物理验收，正式P1-07／G0～G4保持单独评审。
+
+### P1-07 接受准备与T5 HTTP入口增量
+
+准确候选的私有接受依据／准备列表与单条状态、原准备意图、独立替换确认、未派发关闭和已派发撤销入口复用既有领域；AcceptCandidate由早期三字段计划契约更新为完整两阶段正文，含runId、manifest、原准备request／revision、当前观察sequence／proofHash、原接受指针及明确ACCEPT_RELEASE。T5入口经ReleaseAcceptor读取准确冻结内容，默认未配置关闭。当前发布另查，不把当时PENDING解释成自动发布。
+
+startPlatform显式acceptancePolicies指定项目已登记策略快照，仅在启用Input API时组合真实ReleaseAcceptor；不自动登记策略、安装身份或推进后端。原键成功恢复先于当前配置／新版本检查，仍检查当前owner与原正文；已提交丢ACK可在关闭新接受配置后核实，不重新读取或生成材料。状态投影去除目录、端点、后端主体和proof正文；原状态和分页只读。links.preparation连接准确准备查询，普通InputOperation仍只服务输入类操作。
+
+本轮本地Worker／HTTP与实际材料字节预检验证独立记录；源码／OCI／Runner／fences／手工观察为明确夹具，不据此通过正式保留／替换、物理清理、Linux／gVisor、企业登录、完整工作台或产品验收。前置和门槛保持原状态。见project/evidence/P1-07/acceptance-entry-development-review.md。

@@ -16,3 +16,5 @@ export * from './preview.js';
 export * from './release-access.js';
 export {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView,releaseExportEntryView} from './release-export.js';
 export * from './candidate-review.js';
+
+export * from './release-acceptance.js';

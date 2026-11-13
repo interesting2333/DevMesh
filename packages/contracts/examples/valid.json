@@ -93,7 +93,16 @@
     "input": {
       "candidateRevision": 1,
       "reviewHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "dataPlanHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "dataPlanHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "runId": "run_01",
+      "manifestHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "preparationOperationId": "op_acceptance_01",
+      "requestHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "expectedPreparationRevision": 2,
+      "expectedObservationSequence": 1,
+      "proofHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expectedAcceptedReleaseId": null,
+      "confirmation": "ACCEPT_RELEASE"
     }
   },
   {

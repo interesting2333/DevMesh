@@ -301,3 +301,7 @@ business_pending_writes 合并预览和 Release 的 DISPATCHED／UNKNOWN 写。�
 ### Private manual review product entry
 
 既有逐项审查和退回域新增私有HTTP／React入口，详细决定见[review-entry-design.md](./review-entry-design.md)。原自动检查和候选不修改；历史withdraw能力由服务端当前owner／Run控制，原成功请求按原键找回。此入口是5.1组合的前置，完整准备、T5／发布和产品默认装配继续按任务验收。
+
+### Acceptance entry
+
+准确准备／替换确认／原操作查询／撤销及T5公共入口见 [acceptance-entry-design.md](./acceptance-entry-design.md)。

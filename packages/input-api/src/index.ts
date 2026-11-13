@@ -1,6 +1,9 @@
 import express from 'express';
 import {mountExportRoutes} from './export.js';
 import {mountReviewRoutes} from './review.js';
+import {mountAcceptanceRoutes} from './acceptance.js';
+import type {AcceptanceAccess} from './acceptance.js';
+export type {AcceptanceAccess} from './acceptance.js';
 import type { Express, Request, Response, NextFunction } from 'express';
 import { randomUUID, createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
@@ -25,6 +28,7 @@ export type InputApiOptions={enabled?:false}|{
   enabled:true; identityResolver?:IdentityResolver|undefined; baseline:TemplateBaseline;
   previewGateway?:PreviewAccessGateway|undefined;
   releaseGateway?:ReleaseAccessGateway|undefined;
+  acceptance?:AcceptanceAccess|undefined;
   maximumUploads?:number;diagnostic?:(detail:{requestId:string;error:unknown})=>void;
 };
 const runFile=promisify(execFile);
@@ -212,6 +216,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   mountPreviewRoutes(router,content,options.previewGateway,route);
   mountExportRoutes(router,content,route);
   mountReviewRoutes(router,content,route);
+  mountAcceptanceRoutes(router,content,options.acceptance,route);
   mountReleaseRoutes(router,content,options.releaseGateway,route);
   router.use((error:unknown,request:Request,response:Response,_next:NextFunction)=>{
     const framework=error as {type?:string;status?:number};

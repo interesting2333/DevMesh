@@ -1,0 +1,35 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {randomUUID} from 'node:crypto';
+import {loadConfig,startPlatform} from '../packages/platform-core/dist/index.mjs';
+import {contentFixture} from './fixtures/content-data.mjs';
+
+test('platform input configuration resolves the actual trusted Git baseline and requires an injected identity',{timeout:240000},async t=>{
+  const f=await contentFixture(t);await f.local.close();
+  const repositoryRoot=fileURLToPath(new URL('../',import.meta.url));
+  const commit=execFileSync('git',['rev-parse','HEAD'],{cwd:repositoryRoot,encoding:'utf8'}).trim();
+  const configPath=join(f.root,'platform.json');
+  const write=inputApi=>writeFileSync(configPath,JSON.stringify({host:'127.0.0.1',port:0,storage:f.options,inputApi}));
+  write({enabled:false});assert.equal(loadConfig({},configPath).inputApi,undefined);
+  write({enabled:true,repositoryRoot:'.',commit});assert.throws(()=>loadConfig({},configPath),/absolute trusted/);
+  write({enabled:true,repositoryRoot,commit:'HEAD'});assert.throws(()=>loadConfig({},configPath),/fixed commit/);
+  write({enabled:true,repositoryRoot,commit:'0'.repeat(40)});
+  await assert.rejects(startPlatform(loadConfig({},configPath)));
+  write({enabled:true,repositoryRoot,commit});
+  const config=loadConfig({},configPath);
+  const unconfigured=await startPlatform(config);t.after(()=>unconfigured.stop());
+  const denied=await fetch(`http://127.0.0.1:${unconfigured.address.port}/api/v1/projects`);
+  assert.equal(denied.status,503);assert.equal((await denied.json()).error.code,'IDENTITY_NOT_CONFIGURED');await unconfigured.stop();
+  const server=await startPlatform(config,{identityResolver:()=>({principalId:'composition_owner'})});t.after(()=>server.stop());
+  const origin=`http://127.0.0.1:${server.address.port}`;
+  const created=await fetch(origin+'/api/v1/projects',{method:'POST',headers:{'content-type':'application/json','idempotency-key':randomUUID()},body:JSON.stringify({initialRequest:{text:'来自实际模板的需求',attachmentIds:[]},clientDraftId:randomUUID()})});
+  assert.equal(created.status,201);const receipt=await created.json();
+  const response=await fetch(origin+`/api/v1/projects/${receipt.resource.projectId}/workspace`),workspace=await response.json();
+  assert.equal(response.status,200);assert.equal(workspace.templateBaseline.baseCommit,commit);assert.equal(workspace.templateBaseline.version,'1.0.0');
+  assert.equal(workspace.messages[0].text,'来自实际模板的需求');assert.equal(server.consumer,undefined);
+  await server.stop();
+});

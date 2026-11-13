@@ -1,3 +1,4 @@
+import {beginAcceptanceInput,confirmAcceptanceReplacementInput,closeUnsentAcceptanceInput,abortAcceptanceInput,acceptanceBasisView,acceptancePreparationView,acceptancePreparationList,acceptanceReplacementReceipt,acceptanceAbortReceipt,acceptanceCommitReceipt} from './release-acceptance.js';
 import { z } from 'zod';
 import {candidateReviewEntry,candidateHumanResult,candidateRejectionResult,candidateReviewHistory,candidateRejectionHistory,recordCandidateReviewInput,recordCandidateRejectionInput} from './candidate-review.js';
 import {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView} from './release-export.js';
@@ -15,6 +16,7 @@ import { preparationDelegation,preparationInput,retryUnderstandingInput,understa
 import { planReviewView } from './plans.js';
 
 export const schemas = {
+  BeginAcceptance:beginAcceptanceInput,ConfirmAcceptanceReplacement:confirmAcceptanceReplacementInput,CloseUnsentAcceptance:closeUnsentAcceptanceInput,AbortAcceptance:abortAcceptanceInput,AcceptanceBasis:acceptanceBasisView,AcceptancePreparation:acceptancePreparationView,AcceptancePreparationList:acceptancePreparationList,AcceptanceReplacementReceipt:acceptanceReplacementReceipt,AcceptanceAbortReceipt:acceptanceAbortReceipt,AcceptanceCommitReceipt:acceptanceCommitReceipt,
   CandidateReviewEntry:candidateReviewEntry,CandidateHumanResult:candidateHumanResult,CandidateRejectionResult:candidateRejectionResult,CandidateReviewHistory:candidateReviewHistory,CandidateRejectionHistory:candidateRejectionHistory,RecordCandidateReview:recordCandidateReviewInput,RecordCandidateRejection:recordCandidateRejectionInput,
   CreateReleaseExport:createReleaseExportInput,RetryReleaseExport:retryReleaseExportInput,ReleaseExport:releaseExportView,ReleaseExportList:releaseExportListView,
   Command: command, DomainEvent: domainEvent, EphemeralTokenDelta: ephemeralTokenDelta,
@@ -106,6 +108,17 @@ export function createOpenApiDocument() {
   add('/api/v1/runs/{runId}/understanding','get','ReadUnderstanding','Understanding',[parameter('runId',ids.run),parameter('requirementRevision',revision,'query',false)]);
   add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
   add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
+  const acceptancePath='/api/v1/runs/{runId}/candidates/{candidateId}/acceptance',acceptanceParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],conditionalAcceptance=[...acceptanceParameters,key,parameter('If-Match',strongETag,'header')];
+  add(acceptancePath,'get','ReadAcceptanceBasis','AcceptanceBasis',acceptanceParameters);
+  add(acceptancePath+'/preparations','get','ListCandidateAcceptancePreparations','AcceptancePreparationList',[...acceptanceParameters,{name:'afterSequence',in:'query',schema:{type:'integer',minimum:0,default:0}},{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:20}}]);
+  add(acceptancePath+'/preparations','post','BeginAcceptance','AcceptancePreparation',conditionalAcceptance,'BeginAcceptance','202');
+  add(acceptancePath+'/replacement-confirmations','post','ConfirmAcceptanceReplacement','AcceptanceReplacementReceipt',conditionalAcceptance,'ConfirmAcceptanceReplacement');
+  const preparationPath=acceptancePath+'/preparations/{operationId}',preparationParameters=[...acceptanceParameters,parameter('operationId',ids.operation)];
+  add(preparationPath,'get','ReadAcceptancePreparation','AcceptancePreparation',preparationParameters);
+  add(preparationPath+'/close-unsent','post','CloseUnsentAcceptance','AcceptancePreparation',[...preparationParameters,key,parameter('If-Match',strongETag,'header')],'CloseUnsentAcceptance','200');
+  add(preparationPath+'/abort','post','AbortAcceptance','AcceptanceAbortReceipt',[...preparationParameters,key,parameter('If-Match',strongETag,'header')],'AbortAcceptance','202');
+  add('/api/v1/candidates/{candidateId}:accept','post','AcceptCandidate','AcceptanceCommitReceipt',[parameter('candidateId',ids.candidate),key,parameter('If-Match',strongETag,'header')],'AcceptCandidate','202');
+  (paths['/api/v1/candidates/{candidateId}:accept']!.post as Record<string,unknown>).description='准确两阶段T5提交，先实际复核冻结材料字节；成功回执固定ACCEPTED及当时PENDING，当前发布另查。原UUID／正文恢复先于新版本和配置检查。默认新接受关闭。';
   const reviewPath='/api/v1/runs/{runId}/candidates/{candidateId}/review',reviewParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)];
   add(reviewPath,'get','ReadCandidateReview','CandidateReviewEntry',reviewParameters);
   add(reviewPath+'/results','post','RecordCandidateReview','CandidateHumanResult',[...reviewParameters,key,parameter('If-Match',strongETag,'header')],'RecordCandidateReview');

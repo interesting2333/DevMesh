@@ -21,6 +21,7 @@ test('platform input configuration resolves the actual trusted Git baseline and 
   await assert.rejects(startPlatform(loadConfig({},configPath)));
   write({enabled:true,repositoryRoot,commit});
   const config=loadConfig({},configPath);
+  await assert.rejects(startPlatform({...config,inputApi:undefined},{acceptancePolicies:{prj_explicit:'a'.repeat(64)}}),/Acceptance entry requires/);
   const unconfigured=await startPlatform(config);t.after(()=>unconfigured.stop());
   const denied=await fetch(`http://127.0.0.1:${unconfigured.address.port}/api/v1/projects`);
   assert.equal(denied.status,503);assert.equal((await denied.json()).error.code,'IDENTITY_NOT_CONFIGURED');await unconfigured.stop();

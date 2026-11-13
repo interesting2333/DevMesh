@@ -1082,7 +1082,7 @@ Runtime 抽取 `ExecutionHost` 接口：提供读取输入、检查许可、保�
 | GET /runs/{id}/delivery-review | candidateId | 返回逐需求检查、证据、数据方案、接受条件和 reviewHash |
 | POST /candidates/{id}/manual-checks | checkId、checkRevision、result、note、evidenceRefs | 人工结论独立保存；只能记录适用候选的检查，不改自动报告 |
 | POST /candidates/{id}:return | requirementId、problem、evidenceRefs | 原范围缺陷走修复；新增目标先生成变更提案；允许用户纠正分类 |
-| POST /candidates/{id}:accept | candidateRevision、reviewHash、dataPlanHash | 证据有效且无执行侧未知写入；202 进入数据准备与接受 operation，事务提交后结果包含 releaseId；提交前不显示接受成功 |
+| POST /candidates/{id}:accept | runId、candidateRevision、manifestHash、reviewHash、dataPlanHash、expectedAcceptedReleaseId、preparationOperationId／requestHash、expectedPreparationRevision／expectedObservationSequence、proofHash、confirmation=ACCEPT_RELEASE | 独立准备完成后实际复核冻结材料字节并执行T5；202的SUCCEEDED回执固定ACCEPTED及当时PENDING，发布另查；原键正文恢复先于新版本／配置检查 |
 | POST /previews/{id}:stop | previewRevision、impactReviewHash | 只停止该预览，202 跟踪真实退出；不删除代码、记录或其他实例 |
 | GET /runs/{id}/previews/{previewId} | 无 | 当前成员只读查询；明确未配置／恢复中／到期状态，不返回 Runner 端点或身份凭据 |
 | GET /runs/{id}/previews/{previewId}/view | 无 | 只读预览入口；受限 iframe，GET 不签发票据或接受版本 |
@@ -1292,11 +1292,21 @@ canRetry 由服务端基于原创建者、当前成员及 FAILED／过期 PACKIN
 
 预览页链接到 GET /api/v1/runs/:runId/candidates/:candidateId/review/view，独立 React 页面展示准确源码SHA、候选资格、原自动检查、完整必要人工项和Run内当前退回。人工项每组20条，记录实际操作／预期／观察／证据和明确PASS／FAIL；预期来自原冻结条目，只读显示。退回明确区分原范围缺陷与新增范围，原范围须关联条目；纠正及有理由撤回都追加历史，不自动实施修复／变更。
 
-同级 GET /review 返回公共投影与Run ETag；POST /review/results、/review/rejections 使用原UUID Idempotency-Key、Run If-Match和当前记录 previousResultId，原成功回执恢复先于新操作版本检查，仍复核当前owner。GET /review/history、/review/rejections/history 按条目／退回ID及 afterSequence 读取，默认20／最多100；/view 与 /client.js 也检查当前成员。不存在或不可见的对象统一404，其余陈旧审查以明确冲突返回；不暴露后端目录／策略或写入能力。原通用 AcceptCandidate 契约仍未据此宣称已装配。
+同级 GET /review 返回公共投影与Run ETag；POST /review/results、/review/rejections 使用原UUID Idempotency-Key、Run If-Match和当前记录 previousResultId，原成功回执恢复先于新操作版本检查，仍复核当前owner。GET /review/history、/review/rejections/history 按条目／退回ID及 afterSequence 读取，默认20／最多100；/view 与 /client.js 也检查当前成员。不存在或不可见的对象统一404，其余陈旧审查以明确冲突返回；不暴露后端目录／策略或写入能力。该审查入口本身不触发接受；接受入口按下文单独的两阶段契约及可信装配执行。
 
 服务端 canRecord 只对当前有效候选和可交互REVIEW的owner开放；canWithdrawRejections允许相同Run尚可交互的owner有理由撤回历史候选退回，历史不能新批准。该能力不参与reviewHash，也不改变原自动质量。仅审查全部通过且没有OPEN退回时显示“逐项审查已完成”；版本仍须独立准备和T5接受。
 
 页面每个Run／当前标签最多一份待核实提交，先把原payload／UUID／If-Match写入sessionStorage，再POST；刷新后只由用户点击核实原请求，不自动改正文、换键或重发。无法存储或旧记录无法读取时关闭新提交，核对后可显式清除损坏的填写记录；服务端明确拒绝时，用户须刷新核对再决定放弃本次填写。失联关闭新提交，撤权清除审查／历史并关闭动作。单在途、15秒合作取消、离开取消，BFCache恢复重载鉴权。JSON转义、nonce CSP、React惰性文本与固定本地资产共同保护用户观察及错误元数据。
+
+#### 12. 准确接受准备与T5私有入口（2026-11-13 开发增量）
+
+GET /runs/:runId/candidates/:candidateId/acceptance 返回准确SHA、candidateRevision、manifest／review／dataPlan hash、原方案与当前接受指针、Run ETag、显式策略是否匹配、owner能力、替换确认及项目未决准备阻塞。GET /acceptance/preparations 默认20／最多100条原行序号游标；GET /acceptance/preparations/:operationId 返回原意图、当前resolution和readiness摘要。读取不驱动外部准备或刷新健康，能力投影只是当前观察，实际命令仍独立鉴权及CAS。
+
+POST /acceptance/preparations 保存原意图；/replacement-confirmations 独立确认准确REPLACE；/preparations/:operationId/close-unsent 仅关闭从未派发；/preparations/:operationId/abort 记录有理由撤销决定。统一标准UUID及Run If-Match，原成功重放仍核实当前owner及原正文。撤销回执decisionState=RECORDED，不声明清理完成。已派发UNKNOWN不通过新意图、超时或普通关闭替代。
+
+POST /candidates/:candidateId:accept 使用本节表格的完整两阶段正文，经ReleaseAcceptor实际读取全部冻结材料并校验SHA后才调用T5；客户端不能提交proof正文、端点／路径／后端身份或任意目标dataset。成功回执有原operationId和固定accepted结果，links.preparation指向当前成员可读的准确原准备URL；其当时PENDING不是当前发布状态。准备及撤销操作不冒充现有InputOperation，后者只查询其本来登记的输入类操作。原接受回执未知时以原UUID／正文核实，不发新键。
+
+可信宿主通过startPlatform的acceptancePolicies提供projectId→已登记policyHash快照，Input API由宿主装配既有ReleaseAcceptor；默认不配置。DB中的策略须匹配冻结模板／数据方案；客户端不得选择未在宿主快照启用的策略。缺配置关闭新准备／接受，但成员读取原状态、owner核实已提交原请求及请求适用清理不依赖重启新后端。此入口不自动登记策略、派发准备或提供公共后端回执端点；真实准备／恢复器仍须可信装配。投影不返回原storageKey、Runner端点／主体、原prepared proof／claim或物理围栏细节。
 
 ---
 

@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "e28cfbbcc3cc109d0706b8131af0a83f2e2db299",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "finalGroups": [
+    {
+      "name": "entry",
+      "record": "entry-2026-11-13T09-35-43-152Z.json",
+      "tests": 5,
+      "pass": 5,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "acceptance",
+      "record": "acceptance-2026-11-13T09-35-43-330Z.json",
+      "tests": 51,
+      "pass": 51,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T09-35-43-205Z.json",
+      "tests": 22,
+      "pass": 22,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-13T09-35-43-338Z.json",
+      "tests": 4,
+      "pass": 4,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T09-34-59-998Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T09-35-43-636Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T09-35-43-569Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T09-35-43-483Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 82,
+  "totalSkipped": 0,
+  "failedRuns": [
+    {
+      "file": "type-2026-11-13T09-31-47-249Z.json",
+      "name": "type",
+      "code": 2
+    }
+  ],
+  "scope": "Modified-checkout development: actual local file-backed SQLite Worker, HTTP, immutable content-byte preflight and T5/ACK recovery. Existing React/Edge manual-review regression. Upstream source/admission/Runner/OCI/fence/health and manual observations are explicit protocol fixtures; no real model, OIDC/cookie login, Linux/gVisor, full product/workbench, physical cleanup or positive successor preserve/replace acceptance.",
+  "inputAssessment": "Final groups match one final source inventory, with no input changes during or after execution. Generated browser/node source maps include TSX and third-party byte comparisons. Earlier passing groups and failed type checks are retained as earlier inputs and replaced by final groups after corrections. Only explicitly retained failed-source snapshots are claimed, not an entire earlier checkout.",
+  "failedSources": [
+    {
+      "source": "packages/input-api/src/acceptance.ts",
+      "file": "failed-source/acceptance.ts",
+      "sha256": "bf3837861d2fec9a2e1c5aa523a1de32b50d4cc8ac4b4cc298d4082ee47a17a4",
+      "record": "type-2026-11-13T09-31-47-249Z.json"
+    },
+    {
+      "source": "packages/storage-sqlite/src/acceptance-domain.ts",
+      "file": "failed-source/acceptance-domain.ts",
+      "sha256": "263035f0a9b386bd2ace5de129bf2c27a9ad3c4da5310e4ddbce489ce5e3b2b1",
+      "record": "type-2026-11-13T09-31-47-249Z.json"
+    },
+    {
+      "source": "tests/input-composition.test.mjs",
+      "file": "failed-source/input-composition.test.mjs",
+      "sha256": "c70d7c7f325a32590e4645879cc40760bb4430d76ec5424e9b3c7d159da42d71",
+      "record": "type-2026-11-13T09-31-47-249Z.json"
+    }
+  ],
+  "reproduction": "Restore validation-driver.mjs and binding-driver.mjs under .cache/p129-*.mjs and raw records under .cache/p129-evidence. Driver lists exact build/type/lint/contracts/entry/acceptance/regression/browser commands. Browser regression requires bundled template Playwright and installed Edge. pnpm check as a whole was not run.",
+  "ackFault": "The fixture invokes the real ReleaseAcceptor, then injects a service exception after durable T5 success. HTTP receives503, then an unconfigured new mount and reopened Worker recover that same original key/body without content reads. This is explicit lost-application-ACK fault injection, not a claim to have cut a physical network or run a real Runner.",
+  "composition": "Actual HTTP tests mount Input API with the real ReleaseAcceptor and actual frozen CAS content; startPlatform factory is wired to the same class and existing platform composition regression checks baseline/identity and rejects acceptancePolicies without Input API. This increment does not claim a full accepted-generation run booted through startPlatform.",
+  "managementChecks": "management-checks.json"
+}

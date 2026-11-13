@@ -37,3 +37,13 @@ GET /releases/:releaseId/exports/view 提供独立 React 18 入口，GET 同级 
 GET /review/history?itemId=… 与 /review/rejections/history?rejectionId=… 支持afterSequence、limit（默认20，最多100）。owner可写当前候选；历史候选只允许在原Run仍可交互时明确撤回既有退回，服务端canWithdrawRejections单独控制。viewer只读。不存在／不可见对象统一404，原依据／记录冲突返回409，Run版本冲突412、缺新操作版本428；原成功键优先于新版本核对，仍授权。
 
 React表单要求明确结论和实际操作／观察，原预期只读，证据按artifact ID＋SHA-256逐行填写。退回区分原范围与新增范围，追加纠正／撤回，不自动修复或应用变更。当前标签在会话存储保留单个原提交用于未知结果恢复；只有点击才核实，损坏原记录先核对再显式清除，失联关闭新提交，撤权清空投影。页面不配置企业登录、接受后端、T5或发布调度。
+
+## 接受准备和准确T5入口
+
+GET /runs/:runId/candidates/:candidateId/acceptance 读取准确依据和Run ETag；同级preparations支持GET游标列表（默认20／最多100）及POST原准备意图；/replacement-confirmations独立确认REPLACE。GET preparations/:operationId查询原状态，POST其close-unsent只关闭未派发意图，POST其abort保存有理由撤销决定。GET不推进准备或刷新健康；撤销回执RECORDED不意味着物理清理完成。
+
+POST /candidates/:candidateId:accept现在使用AcceptCandidate完整两阶段契约，须显式ACCEPT_RELEASE和准确准备requestHash／revision、最新观察sequence／proofHash及candidate／review／dataPlan／原接受指针。仅可信组合的ReleaseAcceptor实际核对材料字节后执行T5；不能传证明正文、Runner地址／路径或新后端身份。成功202的SUCCEEDED结果固定原ACCEPTED和当时PENDING，发布状态另查；links.preparation可GET当前原准备。通用InputOperation不包含这些准备／撤销操作；未知提交用原键正文重放核实。
+
+mountInputApi的acceptance选项仅供可信宿主：policies为已登记projectId→policyHash快照，commit必须组合ReleaseAcceptor；startPlatform通过显式acceptancePolicies安装该组合。配置缺省关闭新准备／接受；DB须有准确原策略且满足模板与数据方案。不要将接受后端主体作为用户身份，也不要用storage.commitReleaseAcceptance直接代替材料预检。已成功原请求可在配置关闭后恢复，新的请求仍关闭，授权继续复核。字段／范围校验、原操作去重和If-Match由领域再次执行。
+
+准备／数据后端的注册、定时恢复／advance由可信宿主另行装配，此HTTP入口不自动调用它们。公共状态去除storageKey、原proof、端点和后端主体；完整状态仍保留在私有控制面供可信适配器恢复。当前CLI没有企业IdentityResolver或默认接受策略／Runner后端，不能把本地协议夹具当成可部署的完整产品登录与执行环境。

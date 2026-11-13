@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ids, revision, sha256, inputText, opaqueKey, operationStatus, nonemptyText } from './primitives.js';
 import { createProjectInput, saveMessageInput } from './input.js';
 import { answerQuestionsInput } from './preparation.js';
+import {acceptCandidateInput} from './release-acceptance.js';
 
 export const idempotencyKey = z.uuid();
 export const commandBodies = {
@@ -17,7 +18,7 @@ export const commandBodies = {
   CancelRun: z.strictObject({ impactReviewHash: sha256 }),
   RetryWork: z.strictObject({ runId: ids.run, failedAttemptId: ids.attempt, retryReviewHash: sha256 }),
   RedoRun: z.strictObject({ redoReviewHash: sha256 }),
-  AcceptCandidate: z.strictObject({ candidateRevision: revision, reviewHash: sha256, dataPlanHash: sha256 }),
+  AcceptCandidate: acceptCandidateInput,
 } as const;
 const targets = {
   creation: z.strictObject({ kind: z.literal('creation'), namespace: opaqueKey }),

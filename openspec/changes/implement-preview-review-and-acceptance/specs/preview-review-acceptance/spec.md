@@ -585,3 +585,18 @@ The system SHALL expose current-member JSON, React page, protected local script 
 - **WHEN** a request changes the original expected value, current result, candidate, Run version or ownership
 - **THEN** the original server CAS and permission rules reject the new write without replacing existing observations
 - **AND** unseen resources return404, uncertain state closes new actions, and revoked access clears the protected browser projections
+
+### Requirement: Private acceptance entry preserves exact two-phase authority
+The system SHALL expose current-member reads for exact candidate acceptance basis and bounded original preparation history. Trusted host configuration SHALL select already registered per-project policy hashes; HTTP SHALL NOT register a backend or accept paths, endpoints, backend identities or prepared proof bodies. Reads SHALL NOT dispatch or refresh backend health.
+
+#### Scenario: Create or recover an original preparation
+- **WHEN** the current owner explicitly submits preparation, independent replacement confirmation, unsent closure or a dispatched abort decision
+- **THEN** the system enforces the original UUID and body, current ownership, Run If-Match and exact candidate, review, data plan and accepted-source basis through the existing writer
+- **AND** committed original recovery precedes new revision and configuration checks; abort acknowledgement records a decision and does not assert physical cleanup
+- **AND** URL Run/candidate/operation ownership is checked, revoked or foreign resources return404, and public projections omit private proof bodies and host details
+
+#### Scenario: Exact material preflight and lost T5 acknowledgement
+- **WHEN** an owner explicitly submits AcceptCandidate with the original preparation request/revision, current observation sequence/proof hash, candidate/review/data plan/source and ACCEPT_RELEASE
+- **THEN** the trusted ReleaseAcceptor reads and validates the exact immutable content bytes before the T5 writer, while missing bytes or changed basis prevent a new acceptance
+- **AND** a committed acknowledgement lost after T5 is recovered with the original key/body without repeating material generation or preflight, even when new acceptance configuration is disabled; current owner authorization still applies
+- **AND** the fixed receipt distinguishes ACCEPTED from its original PENDING publication and links the exact current-member preparation query
