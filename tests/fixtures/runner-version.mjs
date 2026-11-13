@@ -50,7 +50,23 @@ export function historicalV9Fixture(db){
 // Dedicated compatibility fixture only: remove empty v11 structures. Production
 // opens run only forward migrations. Retain all original v10 rows and hashes.
 export function historicalV10Fixture(db){
+  historicalV11Fixture(db);
  const version=db.prepare('PRAGMA user_version').get().user_version;if(version<11)return;
  if(version!==11||db.prepare('SELECT count(*) n FROM release_service_handoffs').get().n)throw Error('Not a compatible dedicated v11 fixture');
  db.exec('BEGIN IMMEDIATE');try{db.exec('DROP TRIGGER retired_source_service; DROP TABLE release_service_proofs; DROP TABLE release_service_actions; DROP TABLE release_service_events; DROP TABLE release_service_profiles; DROP TABLE release_service_reservations; DROP TABLE release_service_handoffs; ALTER TABLE runner_identity RENAME TO runner_identity_v11_fixture; CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=10)) STRICT; INSERT INTO runner_identity SELECT singleton,runner_id,10 FROM runner_identity_v11_fixture; DROP TABLE runner_identity_v11_fixture; DELETE FROM runner_schema_history WHERE version=11; PRAGMA user_version=10;');if(db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Invalid v10 fixture');db.exec('COMMIT');}catch(e){db.exec('ROLLBACK');throw e;}
+}
+
+// Dedicated v11 reconstruction: keep every old action byte, never fabricate a
+// completed quota phase. A store with a new v12 quota action is not compatible.
+export function historicalV11Fixture(db){
+ const version=db.prepare('PRAGMA user_version').get().user_version;if(version<12)return;
+ if(version!==12||db.prepare("SELECT 1 FROM release_service_actions WHERE kind='PROFILE_PREPARE'").get())throw Error('Not a compatible dedicated v12 fixture');
+ const sql=readFileSync(new URL('../../packages/runner/src/release-service-migration.ts',import.meta.url),'utf8').match(/Migration=`([\s\S]*?)`;/)[1],lines=sql.split('\n');
+ const table=lines.find(l=>l.startsWith('CREATE TABLE release_service_actions(')).replace('release_service_actions(','release_service_actions_v11_fixture(');
+ const triggers=lines.filter(l=>l.startsWith('CREATE TRIGGER immutable_release_service_action ')||l.startsWith('CREATE TRIGGER preserve_release_service_action '));
+ const retired=sql.match(/CREATE TRIGGER retired_source_service[\s\S]*?END;/)[0];
+ db.exec('BEGIN IMMEDIATE');try{
+  db.exec(['DROP TRIGGER retired_source_service;',table,'INSERT INTO release_service_actions_v11_fixture SELECT * FROM release_service_actions;','DROP TABLE release_service_actions;','ALTER TABLE release_service_actions_v11_fixture RENAME TO release_service_actions;',...triggers,retired,'DROP TABLE release_profile_preparations;','ALTER TABLE runner_identity RENAME TO runner_identity_v12_fixture;','CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=11)) STRICT;','INSERT INTO runner_identity SELECT singleton,runner_id,11 FROM runner_identity_v12_fixture;','DROP TABLE runner_identity_v12_fixture;','DELETE FROM runner_schema_history WHERE version=12;','PRAGMA user_version=11;'].join('\n'));
+  if(db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Invalid v11 fixture');db.exec('COMMIT');
+ }catch(error){db.exec('ROLLBACK');throw error;}
 }

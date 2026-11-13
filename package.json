@@ -43,8 +43,9 @@
     "test:workspaces": "node --test --test-concurrency=1 --test-reporter=tap tests/workspace*.test.mjs tests/candidate*.test.mjs",
     "test:verification": "node --test --test-concurrency=1 --test-reporter=tap tests/verification*.test.mjs tests/work-verification.test.mjs tests/verified-findings.test.mjs tests/verified-repairs.test.mjs tests/preview-image.test.mjs tests/quality-artifact-refs.test.mjs",
     "test:preview-browser": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/preview*.test.mjs",
-    "test:acceptance": "node --test --test-concurrency=1 --test-reporter=tap tests/acceptance*.test.mjs tests/release-publication.test.mjs tests/release-access.test.mjs tests/release-http.test.mjs",
-    "test:release-browser": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/release*.test.mjs"
+    "test:acceptance": "node --test --test-concurrency=1 --test-reporter=tap tests/acceptance*.test.mjs tests/release-publication.test.mjs tests/release-access.test.mjs tests/release-http.test.mjs tests/release-continuation.test.mjs",
+    "test:release-browser": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/release*.test.mjs",
+    "test:release-continuation": "node --test --test-concurrency=1 tests/release-continuation.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | bd70ed0266e5f56943def68b6f5fdde800ee656cbc1d43b34641b45c007aa4c3 |
+| DevMesh_技术设计方案_V1.1.md | 2d891aa7e8fb5a22a973427a7773ccd2b6e10fa1f3c5e52370f44877bf3b5698 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | c6af2393c28ea184bbaadff8c5659467915479ddba95f265518b7ccf244a206d |
+| DevMesh_产品验收场景_V10.0.md | 3e0a18406cd2d9ba15ac18d83e544b53c34bcc8f7ebfc0ffc634db69240a0b96 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -525,3 +525,7 @@ Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend
 ### P1-07 Release 独立访问开发增量
 
 迁移43独立 Release 请求／会话／凭据、统一 business_pending_writes，显式 ReleaseGateway、RunnerReleaseHttpTransport 与平台查询／领票／iframe页。当前准确发布路由与成员／原 Runner 健康核实后访问；写入一次派发，未知结果保留并阻止后继验收／切换；预览凭据不能互用。实现与组合说明见 packages/preview-gateway/RELEASE.md。默认身份／物理 provider／平台 listener 不自动启用，导出、阶段继续协调、门再次换代的正式恢复与完整迭代继续；本增量不改变正式状态或门槛。
+
+### P1-07 发布继续协调增量
+
+实现显式原阶段 resume 和 Runner v12 配额唯一派发，原 inspect／首次 publish 语义保留。验证实际 Worker 重启、阶段结果／本地回执／全局许可丢 ACK、未发生动作继续 UNKNOWN、并发唯一许可、当前授权变化和历史升级回滚。物理配额／fences／guard／Docker 为明确夹具，独立导出及默认组合和完整后继流程另验；本增量不能关闭正式 P1-07 或 G0。

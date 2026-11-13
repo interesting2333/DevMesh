@@ -36,7 +36,7 @@ try{
  CREATE TRIGGER immutable_job_identity BEFORE UPDATE ON jobs WHEN NEW.job_id<>OLD.job_id OR NEW.controller_id<>OLD.controller_id OR NEW.operation_id<>OLD.operation_id OR NEW.request_hash<>OLD.request_hash OR NEW.request_json<>OLD.request_json OR NEW.execution_json<>OLD.execution_json OR NEW.owner_key<>OLD.owner_key BEGIN SELECT RAISE(ABORT,'JOB_IDENTITY_IMMUTABLE'); END;
  CREATE TRIGGER immutable_job_terminal BEFORE UPDATE ON jobs WHEN OLD.state='EXITED' BEGIN SELECT RAISE(ABORT,'JOB_TERMINAL_IMMUTABLE'); END;
  PRAGMA user_version=1;`);exec('INSERT INTO runner_identity VALUES(1,?,1)',options.runnerId);});}
-  const identity=get('SELECT * FROM runner_identity WHERE singleton=1');if(identity?.runner_id!==options.runnerId||![1,2,3,4,5,6,7,8,9,10,11].includes(Number(identity.version))||Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0])!==identity.version)throw new RunnerError('RUNNER_STORE_IDENTITY_MISMATCH',409);
+  const identity=get('SELECT * FROM runner_identity WHERE singleton=1');if(identity?.runner_id!==options.runnerId||![1,2,3,4,5,6,7,8,9,10,11,12].includes(Number(identity.version))||Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0])!==identity.version)throw new RunnerError('RUNNER_STORE_IDENTITY_MISMATCH',409);
  const fences=createRunnerFenceDomain(db);
   const capacity=createRunnerCapacityDomain(db,options.runnerId);
   let lifecycle:ReturnType<typeof createPreviewLifecycleDomain>;

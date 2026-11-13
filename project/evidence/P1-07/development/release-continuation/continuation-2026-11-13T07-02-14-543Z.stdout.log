@@ -1,0 +1,193 @@
+TAP version 13
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: explicit continuation completes original physical stages after ACK loss and Worker termination
+    # Subtest: REVOKE_PREPARATION
+    not ok 1 - REVOKE_PREPARATION
+      ---
+      duration_ms: 12675.0323
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\release-continuation.test.mjs:32:188'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: STOP
+    not ok 2 - STOP
+      ---
+      duration_ms: 13904.6239
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\release-continuation.test.mjs:32:188'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: CONTAINER_REMOVE
+    not ok 3 - CONTAINER_REMOVE
+      ---
+      duration_ms: 8036.8204
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\release-continuation.test.mjs:32:188'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: NETWORK_REMOVE
+    not ok 4 - NETWORK_REMOVE
+      ---
+      duration_ms: 8982.7556
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\release-continuation.test.mjs:32:188'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: ARM_FENCES
+    not ok 5 - ARM_FENCES
+      ---
+      duration_ms: 10066.9682
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\release-continuation.test.mjs:32:188'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: tests\\release-continuation.test.mjs
+not ok 1 - tests\\release-continuation.test.mjs
+  ---
+  duration_ms: 62281.6024
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\release-continuation.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 6
+# suites 0
+# pass 0
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 62292.6289

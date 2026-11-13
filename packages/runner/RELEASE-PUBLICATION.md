@@ -8,11 +8,11 @@
 
 阶段依次为 REVOKE_PREPARATION、STOP、CONTAINER_REMOVE、NETWORK_REMOVE。每阶段独立 SENT／OBSERVED 日志，只有首次 dispatch=true 才能执行物理动作，执行前再次核实原控制授权。容器消失必须来自成功的准确 ID 查询；inspect 失败或删除命令成功不构成证明。消失观察、原服务 REMOVED、容量释放和服务历史同一 Runner writer 事务；网络移除另行核实，业务数据和原 profile／claim／proof 保留。
 
-`inspect(publication)` 仅查询已持久登记的原步骤并保存观察，不登记新交接、申请新阶段、撤权、停止或移除。没有原 Runner 登记时明确返回 NOT_FOUND。登记 ACK 或阶段 ACK 丢失后，重复 `retire` 也只进入 inspect；核实已完成步骤不会自动派发下一未派发步骤。因此跨步骤中断可能持续未完成，需要后续显式恢复协调协议；不能据此声称完整自动发布恢复已经实现。
+`inspect(publication)` 仅查询已持久登记的原步骤并保存观察，不登记新交接、申请新阶段、撤权、停止或移除。没有原 Runner 登记时明确返回 NOT_FOUND。登记 ACK 或阶段 ACK 丢失后，重复 `retire` 也只进入 inspect；核实已完成步骤不会自动派发下一未派发步骤。跨步骤中断由下面新增的显式 resume 协调；查询不会隐式进入该路径。
 
 Runner v10 增加 `release_retirements`／`release_retirement_actions`，历史 v2～v9 SQL 不改。交接与原接受撤销互斥，原服务新事实和执行权关闭。dataset 交接占用持续保留，旧容器释放服务容量后也不能被任意 preview／acceptance 重新预留。恢复分页按原 controller 有界查询，包含容量已释放但网络尚未核实消失的记录。后继可写服务必须通过专用受控交接接管该占用；普通预留接口不能绕过。
 
-本地验证使用实际控制／Runner SQLite Worker、正式首轮 T5、真实业务数据文件；永久物理撤权、Docker／网络和 OCI 是显式夹具。独立可写服务的容量、阶段日志及显式组合见下一节；真实物理 guard／fence／路由、Release 入口／导出及 Linux／gVisor 验收继续实施，完整 OpenSpec 4.3 尚未完成。
+本地验证使用实际控制／Runner SQLite Worker、正式首轮 T5、真实业务数据文件；永久物理撤权、Docker／网络和 OCI 是显式夹具。独立可写服务的容量、阶段日志及显式组合见下一节，独立访问见网关说明；真实物理 guard／fence／路由、导出及 Linux／gVisor 验收继续实施，完整 OpenSpec 4.3 尚未完成。
 
 ## 独立可写服务组件
 
@@ -22,7 +22,7 @@ Runner v10 增加 `release_retirements`／`release_retirement_actions`，历史 
 
 迭代先 SOURCE_STOP→SOURCE_CONTAINER_REMOVE→SOURCE_NETWORK_REMOVE。准确容器消失、旧 release reservation REMOVED、释放容量和历史同一 writer 事务；未知或失败继续占用。网络清理后才预留新的 purpose=RELEASE 容量和独立 profile，job／preview／acceptance／release 共用槽位、CPU 和内存预算，永久 dataset 交接屏障不因服务容量释放而消失。
 
-GUARD_ENFORCE→NETWORK_CREATE→CREATE→START→准确 HTTP 健康→内部生成 RELEASE_OWNED claim→ROUTE_BIND。Guard 必须覆盖所有业务数据写入，包括后台和直接文件写入，同时受物理代和当前控制门约束；APP_READ_ONLY／代理标志不代替这个保证。实际可写创建／启动前 Driver 再查 guard、原 OCI、配额、完整容器／网络 profile 和末次授权，旧源停止／清理只查完整原 profile，不要求已经退役的 guard 重新准入。
+PROFILE_PREPARE→GUARD_ENFORCE→NETWORK_CREATE→CREATE→START→准确 HTTP 健康→内部生成 RELEASE_OWNED claim→ROUTE_BIND。Guard 必须覆盖所有业务数据写入，包括后台和直接文件写入，同时受物理代和当前控制门约束；APP_READ_ONLY／代理标志不代替这个保证。实际可写创建／启动前 Driver 再查 guard、原 OCI、配额、完整容器／网络 profile 和末次授权，旧源停止／清理只查完整原 profile，不要求已经退役的 guard 重新准入。
 
 新容器业务目录可写而 operation.json／receipt.json／dataset.json 单独只读。固定 APP_RUNTIME_ROOT=/tmp/devmesh-runtime 把进程运行锁留在临时盘；该锁只避免同一运行根重复打开，跨实例写入排他仍由物理 fence／guard 保证。模板只读连接不创建锁，发布连接启动和健康不切 SQLite 日志模式；首次获准写请求才切换 WAL 并开始事务，不以 init／migration 启动发布服务。
 
@@ -30,11 +30,11 @@ GUARD_ENFORCE→NETWORK_CREATE→CREATE→START→准确 HTTP 健康→内部生
 
 Guard 的后续写准入须读取同一个控制事务视图：项目接受指针仍为该 release、原 publication 已 PUBLISHED、当前 route 的 release／hash／generation 与原 proof 相符，claim 的 reservation／profile／serviceRequestHash／实例和物理代准确匹配，dataset 为 READY，写门为 OPEN。初次开门的 fence／revision 为固定 targetGate basis 各加一，datasetOperationId／datasetRequestHash 保持原身份，close 字段清空；后续关闭或修订即拒绝旧准入，重新开门须另有已验证协议，不因名称相同继续放行。已进入的写动作也必须由物理 Authority 排空后才能移交，逐次逻辑查询不能代替这个保证。
 
-Routes.bind 登记的是受控制准入约束的准备路由；控制发布成功前不得激活公开业务入口。路由 provider 必须按控制库当前原子路由视图决定可见性，不能先切公开流量再补数据库记录。路由观察 BOUND 证明原准备绑定，不单独证明已对外开放；正式 Release 入口的授权和可见性仍待入口组件实现与验收。
+Routes.bind 登记的是受控制准入约束的准备路由；控制发布成功前不得激活公开业务入口。路由 provider 必须按控制库当前原子路由视图决定可见性，不能先切公开流量再补数据库记录。路由观察 BOUND 证明原准备绑定，不单独证明已对外开放；显式 Release 访问入口见 `packages/preview-gateway/RELEASE.md`，真实物理路由仍须独立验收。
 
-每阶段只有唯一持久 SENT grant 能执行动作。inspect 不登记、预留、准备配额、接管、安装 guard、创建／启动、切路由或获得新 fence；仅查询已派发原步骤并保存观察，已有 claim／route 完整时可派生稳定 proof。回执丢失可核实原步骤，跨阶段中断仍需要后续显式继续协调协议，不能声称完整自动恢复。Release 实际业务入口／导出、默认装配、真实物理 Authority／guard／route 与 Linux／gVisor 仍继续实施与验收。
+每阶段只有唯一持久 SENT grant 能执行动作。inspect 不登记、预留、准备配额、接管、安装 guard、创建／启动、切路由或获得新 fence；仅查询已派发原步骤并保存观察，已有 claim／route 完整时可派生稳定 proof。回执丢失可核实原步骤；显式 resume 才允许申请后继未派发阶段的唯一许可。独立导出、默认装配、正式后继 T5 与真实物理 Authority／guard／route、Linux／gVisor 仍继续实施与验收。
 
-配额 `prepare` 当前只在首次发布许可的路径中执行，没有独立的阶段回执；中断后查询不会重新执行它。后续继续协调协议须补齐原配额准备结果的核实方式，并与当前控制授权衔接，不能直接重新调用整条发布链路来跳过 UNKNOWN。
+Runner v12 增加持久 PROFILE_PREPARE 阶段；新 profile 同事务记录 EXECUTE_ONCE。唯一动作许可后调用 `driver.prepare(profile, request, authorize)`，结果由 `driver.prepared(profile, request)` 只读核实。丢许可或结果 ACK 后不能重复 prepare，配额尚不可核实则停止推进。v11 既有 profile 标记 INSPECT_ONLY，只能核实准确原目录与上限，不在升级中回填完成或恢复时重新应用配额；旧动作／proof／容量和历史 SQL 保留，迁移失败回滚。
 
 ## 可信装配入口
 
@@ -61,4 +61,6 @@ export function createReleasePublisher({
 }
 ```
 
-创建后由可信调用方执行 `publisher.advance(releaseId)`，它从原 PENDING 领取一次控制许可。`recoverPage({ projectId, policyHash, afterSequence, limit })` 查询原控制发布作业并保存当前观察；SENT／UNKNOWN 的恢复保持查询语义。当前组件在物理阶段之间中断时可能持续 UNKNOWN，重复 `advance` 不会强行派发后续阶段。store／control 的打开、身份配置和关闭由宿主负责，这个函数没有安装平台 HTTP 路由或后台恢复循环。
+创建后由可信调用方执行 `publisher.advance(releaseId)`，它从原 PENDING 领取一次控制许可。`recoverPage({ projectId, policyHash, afterSequence, limit })` 有界扫描原控制发布作业。对 SENT／UNKNOWN，advance 先 inspect；后端显式提供 resume 时，再经 `verifyReleasePublicationContinuation` 核实同一原请求／basis、当前接受指针、准确关闭门及无未决写，才协调逐阶段许可。原 `verifyReleasePublication` 仍只授权 SENT，publish 不重派。已派发阶段只查询，前驱未核实便停止，不创建替代服务。多个协调器仍由每阶段 Runner 单 writer 的唯一许可互斥。store／control 的打开、身份配置和关闭由宿主负责，这个函数没有安装平台 HTTP 路由或后台恢复循环。
+
+分页上限约束记录数；它不对任意注入的 provider Promise 安装统一超时或取消。宿主须为物理查询／调用配置截止和在途操作管理；超时不证明动作未执行，不释放占用或恢复原许可。Native Docker CLI 和 HTTP 的已有时限不等于所有自定义 provider 都已取得同样保障。

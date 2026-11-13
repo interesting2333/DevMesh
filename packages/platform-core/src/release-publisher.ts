@@ -19,7 +19,14 @@ export class ReleasePublisher {
    if(publication.state==='PUBLISHED')return publication;
   }
   let observation;
-  try{observation=releasePublicationObservation.parse(dispatch?await this.backend.publish(publication,async()=>(await this.storage.request('verifyReleasePublication',bound)).allowed):await this.backend.inspect(publication));}
+   try{
+    observation=releasePublicationObservation.parse(dispatch?await this.backend.publish(publication,async()=>(await this.storage.request('verifyReleasePublication',bound)).allowed):await this.backend.inspect(publication));
+    // A new phase receives its own Runner grant; the original publish is never replayed.
+    if(!dispatch&&observation.state==='UNKNOWN'&&this.backend.resume){
+     const authorize=async()=>(await this.storage.request('verifyReleasePublicationContinuation',bound)).allowed;
+     if(await authorize())observation=releasePublicationObservation.parse(await this.backend.resume(publication,authorize));
+    }
+   }
   catch{observation={state:'UNKNOWN' as const,errorCode:'RELEASE_PUBLICATION_BACKEND_UNCERTAIN',checkedAt:new Date().toISOString()};}
   return this.storage.request('recordReleasePublicationObservation',{...bound,expectedRevision:publication.revision,expectedSequence:publication.sequence,observation});
  }

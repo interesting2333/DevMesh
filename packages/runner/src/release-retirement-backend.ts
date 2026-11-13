@@ -25,28 +25,36 @@ export class RunnerReleaseRetirementBackend {
   const request=releaseRetirementRequest.parse({schemaVersion:'devmesh.release-retirement.v1',promotion:p.request,promotionRequestHash:p.requestHash,gates:p.basis});
   return {request,bound:{controllerId:this.options.controllerId,releaseId:p.releaseId,requestHash:hash(request)}};
  }
- async #current(p:ReleasePublication,authorize:boolean){
+  async #current(p:ReleasePublication,authorize:boolean,continuation=false){
   const q=p.request.preparation,o=this.options;
   if(q.runnerId!==o.runnerId||q.backendRef!==o.backendRef||q.backendPrincipalId!==o.principalId||q.releaseId!==p.releaseId||hash(p.request)!==p.requestHash)throw new RunnerError('RELEASE_RETIREMENT_IDENTITY_CHANGED',409);
   const current=await this.control.request('getReleasePublication',{principalId:o.principalId,releaseId:p.releaseId});
   if(current.requestHash!==p.requestHash||canonical(current.request)!==canonical(p.request)||canonical(current.basis)!==canonical(p.basis)||current.dispatchedAt===null||current.state==='PENDING')throw new RunnerError('RELEASE_RETIREMENT_IDENTITY_CHANGED',409);
-  if(authorize&&!(await this.control.request('verifyReleasePublication',{principalId:o.principalId,releaseId:p.releaseId,requestHash:p.requestHash})).allowed)throw new RunnerError('RELEASE_RETIREMENT_AUTHORITY_CLOSED',409);
+   if(authorize&&!(await this.control.request(continuation?'verifyReleasePublicationContinuation':'verifyReleasePublication',{principalId:o.principalId,releaseId:p.releaseId,requestHash:p.requestHash})).allowed)throw new RunnerError('RELEASE_RETIREMENT_AUTHORITY_CLOSED',409);
  }
- async preflight(p:ReleasePublication){
+  async preflight(p:ReleasePublication,continuation=false){
   if(!this.configured)throw new RunnerError('RELEASE_RETIREMENT_NOT_CONFIGURED',503,'not-sent');
-  const {request}=this.#bound(p);await this.#current(p,true);await this.authority.preflight(request);
+   const {request}=this.#bound(p);await this.#current(p,true,continuation);await this.authority.preflight(request);
  }
  async retire(p:ReleasePublication,authorize:()=>Promise<boolean>):Promise<ReleaseRetirement>{
-  await this.preflight(p);if(p.state!=='SENT')return this.inspect(p);
+   return this.#advance(p,authorize,false);
+  }
+  /** Explicit coordination; only unstarted stages receive new unique grants. */
+  async resume(p:ReleasePublication,authorize:()=>Promise<boolean>):Promise<ReleaseRetirement>{
+   return this.#advance(p,authorize,true);
+  }
+  async #advance(p:ReleasePublication,authorize:()=>Promise<boolean>,continuation:boolean):Promise<ReleaseRetirement>{
+   if(p.state!=='SENT'&&!(continuation&&p.state==='UNKNOWN'))return this.inspect(p);
+   await this.preflight(p,continuation);
   if(!await authorize())throw new RunnerError('RELEASE_RETIREMENT_AUTHORITY_CLOSED',409,'not-sent');
   const {request,bound}=this.#bound(p),grant=await this.store.request('releaseRetirementEnroll',{controllerId:bound.controllerId,request,requestHash:bound.requestHash});
-  if(!grant.dispatch)return this.inspect(p);
+   if(!grant.dispatch&&!continuation)return this.inspect(p);
   let current=grant.journal;
   for(const kind of ['REVOKE_PREPARATION','STOP','CONTAINER_REMOVE','NETWORK_REMOVE'] as ReleaseRetirementKind[]){
    try{
-    await this.#current(p,true);if(!await authorize())break;
+    await this.#current(p,true,continuation);if(!await authorize())break;
     const g=await this.store.request('releaseRetirementActionBegin',{...bound,kind}),a=g.action;
-    const allowed=async()=>{try{await this.#current(p,true);return await authorize()&&(await this.store.request('releaseRetirementActionAuthorized',{...bound,kind,actionRequestHash:a.requestHash})).allowed;}catch{return false;}};
+    const allowed=async()=>{try{await this.#current(p,true,continuation);return await authorize()&&(await this.store.request('releaseRetirementActionAuthorized',{...bound,kind,actionRequestHash:a.requestHash})).allowed;}catch{return false;}};
     current=await this.#observe(p,current,a,g.dispatch,allowed);
     if(!current.actions.some(x=>x.request.kind===kind&&x.state==='OBSERVED'))break;
    }catch{break;}

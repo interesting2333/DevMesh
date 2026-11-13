@@ -476,3 +476,23 @@ The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增
 #### Scenario: Route or original service changes
 - **WHEN** 会话中的 route hash／generation、claim／profile、实例或当前授权与原绑定不再一致
 - **THEN** 新派发／发送前拒绝，不选择替代实例；已完成记账保留，失效成员不能取得响应正文
+
+### Requirement: Explicit continuation never replays an uncertain publication stage
+
+The system SHALL 将原结果查询与后续阶段协调分开。显式 continuation MUST 核实原已派发发布的当前控制授权及同一 basis，未派发阶段 MUST 在 Runner 单 writer 取得唯一许可；已派发阶段只查询准确原对象。inspect MUST NOT 调用 continuation、quota prepare、原阶段重发或下一阶段派发。
+
+#### Scenario: A completed stage loses its acknowledgement before the next stage
+- **WHEN** 原动作已执行而回执丢失，随后 Worker 重启并显式继续
+- **THEN** 核实同一原动作后才申请下一阶段唯一许可，不重复执行原动作、重新接受或重跑迁移；前驱仍未知则停止推进并保留占用
+
+#### Scenario: A publication dispatch grant is lost before Runner enrollment
+- **WHEN** 控制面原派发已提交但 Runner 尚无登记
+- **THEN** 只读 inspect 不登记；显式继续经当前原控制授权后登记相同请求并开始逐阶段许可，不创建第二发布或替代对象
+
+#### Scenario: Quota preparation is uncertain or inherited from v11
+- **WHEN** 配额准备许可／结果丢失，或升级前已有 profile 但无配额阶段日志
+- **THEN** 新操作只核实原配额，不重发；历史 profile 明确只查询，不伪造已完成，也不在恢复中重新应用配额。准确配额不可核实则不开始 guard／容器动作
+
+#### Scenario: Concurrent coordinators lose authority or encounter changed objects
+- **WHEN** 多个协调器同时恢复，或原配置／物理 fence／guard／控制门／接受指针变化
+- **THEN** 同一原阶段至多派发一次；未知旧动作保留，失去授权时不派发后继，不用新配置、实例或路由替代

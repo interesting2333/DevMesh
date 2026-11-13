@@ -3,6 +3,7 @@ import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {canonical,releaseServiceClaim,releasePublicationProof} from '@devmesh/storage-sqlite';
 import {RunnerError} from './protocol.js';
 import {releaseServiceMigration} from './release-service-migration.js';
+import {releaseContinuationMigration} from './release-continuation-migration.js';
 import {releaseServiceRequest,releaseServiceProfile,releaseServiceReservation,releaseServiceActionRequest,releaseServiceAction,releaseServiceNames,releaseServiceGateBinding} from './release-service.js';
 import type {ReleaseServiceJournal,ReleaseServiceOriginal,ReleaseServiceFences,ReleaseServiceKind} from './release-service.js';
 import type {StoreInput} from './store-protocol.js';
@@ -19,8 +20,9 @@ export function createReleaseServiceDomain(db:DatabaseSync,runnerId:string,retir
  const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined,all=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).all(...p) as Row[],exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
  const tx=<T>(body:()=>T):T=>{db.exec('BEGIN IMMEDIATE');try{const v=body();db.exec('COMMIT');return v;}catch(e){db.exec('ROLLBACK');throw e;}};
  const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);
- if(version===10)tx(()=>{db.exec(releaseServiceMigration);exec('INSERT INTO runner_schema_history VALUES(11,?,?)',hash(releaseServiceMigration),now());if(db.prepare('PRAGMA foreign_key_check').all().length)fail('RUNNER_MIGRATION_FOREIGN_KEYS');});else if(version!==11)fail('RUNNER_STORE_IDENTITY_MISMATCH');
- if(get('SELECT sha256 FROM runner_schema_history WHERE version=11')?.sha256!==hash(releaseServiceMigration)||get('SELECT version FROM runner_identity')?.version!==11)fail('RUNNER_MIGRATION_DRIFT');
+ if(version===10)tx(()=>{db.exec(releaseServiceMigration);exec('INSERT INTO runner_schema_history VALUES(11,?,?)',hash(releaseServiceMigration),now());if(db.prepare('PRAGMA foreign_key_check').all().length)fail('RUNNER_MIGRATION_FOREIGN_KEYS');});else if(![11,12].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
+  if(Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0])===11)tx(()=>{db.exec(releaseContinuationMigration);exec('INSERT INTO runner_schema_history VALUES(12,?,?)',hash(releaseContinuationMigration),now());if(db.prepare('PRAGMA foreign_key_check').all().length)fail('RUNNER_MIGRATION_FOREIGN_KEYS');});
+ if(get('SELECT sha256 FROM runner_schema_history WHERE version=11')?.sha256!==hash(releaseServiceMigration)||get('SELECT sha256 FROM runner_schema_history WHERE version=12')?.sha256!==hash(releaseContinuationMigration)||get('SELECT version FROM runner_identity')?.version!==12)fail('RUNNER_MIGRATION_DRIFT');
  if(Number(Object.values(db.prepare('PRAGMA foreign_keys').get()!)[0])!==1)fail('RUNNER_MIGRATION_FOREIGN_KEYS');
  const row=(i:Bound)=>{const r=get('SELECT * FROM release_service_handoffs WHERE release_id=? AND controller_id=?',i.releaseId,i.controllerId)??fail('RELEASE_SERVICE_NOT_FOUND',404);if(r.request_hash!==i.requestHash)fail('RELEASE_SERVICE_IDENTITY_CHANGED');return r;};
  const reservation=(id:string)=>get('SELECT * FROM release_service_reservations WHERE release_id=?',id);
@@ -36,7 +38,7 @@ export function createReleaseServiceDomain(db:DatabaseSync,runnerId:string,retir
  }
  function view(h:Row):ReleaseServiceJournal{
   const q=releaseServiceRequest.parse(JSON.parse(String(h.request_json))),id=String(h.release_id),p=profile(id),r=reservation(id),proof=get('SELECT * FROM release_service_proofs WHERE release_id=?',id),retirement=retirements.releaseRetirementGet({controllerId:String(h.controller_id),releaseId:id,requestHash:q.retirementRequestHash});
-  return {sequence:Number(h.sequence),controllerId:String(h.controller_id),request:q,requestHash:String(h.request_hash),retirement,source:h.source_release_id?original(String(h.source_release_id)):null,reservation:r?rview(r):null,profile:p?releaseServiceProfile.parse(JSON.parse(String(p.profile_json))):null,profileHash:p?String(p.profile_hash):null,networkId:p?.network_id as string|null??null,containerId:p?.container_id as string|null??null,actions:all('SELECT * FROM release_service_actions WHERE release_id=? ORDER BY created_at,kind',id).map(actionView),proof:proof?releasePublicationProof.parse(JSON.parse(String(proof.proof_json))):null,proofHash:proof?String(proof.proof_hash):null,createdAt:String(h.created_at)};
+  return {sequence:Number(h.sequence),controllerId:String(h.controller_id),request:q,requestHash:String(h.request_hash),retirement,source:h.source_release_id?original(String(h.source_release_id)):null,profilePreparation:p?String(get('SELECT mode FROM release_profile_preparations WHERE release_id=?',id)?.mode) as 'EXECUTE_ONCE'|'INSPECT_ONLY':null,reservation:r?rview(r):null,profile:p?releaseServiceProfile.parse(JSON.parse(String(p.profile_json))):null,profileHash:p?String(p.profile_hash):null,networkId:p?.network_id as string|null??null,containerId:p?.container_id as string|null??null,actions:all('SELECT * FROM release_service_actions WHERE release_id=? ORDER BY created_at,kind',id).map(actionView),proof:proof?releasePublicationProof.parse(JSON.parse(String(proof.proof_json))):null,proofHash:proof?String(proof.proof_hash):null,createdAt:String(h.created_at)};
  }
  const event=(r:Row)=>exec('INSERT INTO release_service_events VALUES(?,?,?,?)',r.release_id!,Number(r.revision),canonical(rview(r)),r.updated_at!);
  const changed=(id:string)=>{const r=reservation(id)!;event(r);return rview(r);};
@@ -53,7 +55,7 @@ export function createReleaseServiceDomain(db:DatabaseSync,runnerId:string,retir
    if(kind==='SOURCE_CONTAINER_REMOVE'&&!seen(id,'SOURCE_STOP')||kind==='SOURCE_NETWORK_REMOVE'&&!seen(id,'SOURCE_CONTAINER_REMOVE'))fail('RELEASE_SERVICE_PREDECESSOR_UNKNOWN');return h;
   }
   readySource(h);live(h);if(!profile(id))fail('RELEASE_SERVICE_PROFILE_UNAVAILABLE');
-  const previous:Partial<Record<ReleaseServiceKind,ReleaseServiceKind>>={NETWORK_CREATE:'GUARD_ENFORCE',CREATE:'NETWORK_CREATE',START:'CREATE',ROUTE_BIND:'START'};
+  const previous:Partial<Record<ReleaseServiceKind,ReleaseServiceKind>>={GUARD_ENFORCE:'PROFILE_PREPARE',NETWORK_CREATE:'GUARD_ENFORCE',CREATE:'NETWORK_CREATE',START:'CREATE',ROUTE_BIND:'START'};
   if(previous[kind]&&!seen(id,previous[kind]!))fail('RELEASE_SERVICE_PREDECESSOR_UNKNOWN');
   if(kind==='ROUTE_BIND'&&!healthy(h).claimHash)fail('RELEASE_SERVICE_CLAIM_UNAVAILABLE');return h;
  }
@@ -81,7 +83,7 @@ export function createReleaseServiceDomain(db:DatabaseSync,runnerId:string,retir
    const h=row(i),v=view(h),r=v.reservation??fail('RELEASE_SERVICE_NOT_RESERVED'),p=i.profile,old=profile(i.releaseId),names=releaseServiceNames(r.reservationId),f=fences(i.releaseId);
    if(p.reservationId!==r.reservationId||p.requestHash!==i.requestHash||p.datasetDirectory!==v.retirement.original.profile.datasetDirectory||p.datasetBytes!==v.retirement.original.profile.datasetBytes||canonical(p.resourceLimits)!==canonical(r.resourceLimits)||p.networkName!==names.networkName||p.containerName!==names.containerName||p.fenceProofHash!==f.target.proofHash||p.gateBindingHash!==releaseServiceGateBinding(v.request))fail('RELEASE_SERVICE_PROFILE_CHANGED');
    if(old){if(old.profile_json!==canonical(p))fail('RELEASE_SERVICE_PROFILE_CHANGED');return v;}live(h);if(r.state!=='RESERVED')fail('RELEASE_SERVICE_ALREADY_DISPATCHED');
-   exec('INSERT INTO release_service_profiles VALUES(?,?,?,NULL,NULL,?)',i.releaseId,hash(p),canonical(p),now());return view(h);
+   exec('INSERT INTO release_service_profiles VALUES(?,?,?,NULL,NULL,?)',i.releaseId,hash(p),canonical(p),now());exec("INSERT INTO release_profile_preparations VALUES(?,'EXECUTE_ONCE')",i.releaseId);return view(h);
   });},
   releaseServiceActionBegin(i:StoreInput<'releaseServiceActionBegin'>){return tx(()=>{
    const h=row(i),old=action(i.releaseId,i.kind);if(old)return {dispatch:false,action:actionView(old)};eligible(i,i.kind);const v=view(h),source=i.kind.startsWith('SOURCE_')?v.source:null,r=source?.reservation??v.reservation;
@@ -90,7 +92,7 @@ export function createReleaseServiceDomain(db:DatabaseSync,runnerId:string,retir
    if(i.kind==='GUARD_ENFORCE'){exec("UPDATE release_service_reservations SET state='DISPATCHED',revision=revision+1,updated_at=? WHERE release_id=?",now(),i.releaseId);changed(i.releaseId);}
    return {dispatch:true,action:actionView(action(i.releaseId,i.kind)!)};
   });},
-  releaseServiceActionAuthorized(i:StoreInput<'releaseServiceActionAuthorized'>){row(i);const a=action(i.releaseId,i.kind);try{eligible(i,i.kind);return {allowed:a?.state==='SENT'&&a.request_hash===i.actionRequestHash};}catch(e){if(e instanceof RunnerError)return {allowed:false};throw e;}},
+  releaseServiceActionAuthorized(i:StoreInput<'releaseServiceActionAuthorized'>){row(i);const a=action(i.releaseId,i.kind);try{eligible(i,i.kind);return {allowed:a?.state==='SENT'&&a.request_hash===i.actionRequestHash&&(i.kind!=='PROFILE_PREPARE'||get('SELECT mode FROM release_profile_preparations WHERE release_id=?',i.releaseId)?.mode==='EXECUTE_ONCE')};}catch(e){if(e instanceof RunnerError)return {allowed:false};throw e;}},
   releaseServiceActionObserve(i:StoreInput<'releaseServiceActionObserve'>){return tx(()=>{
    const h=row(i),old=action(i.releaseId,i.kind)??fail('RELEASE_SERVICE_ACTION_NOT_FOUND',404),o=i.observation;
    if(old.request_hash!==i.actionRequestHash||o.kind!==i.kind)fail('RELEASE_SERVICE_IDENTITY_CHANGED');
@@ -101,7 +103,9 @@ export function createReleaseServiceDomain(db:DatabaseSync,runnerId:string,retir
     const f=o.proof,p=v.request.promotion.preparedProof,revoke=v.retirement.actions.find(x=>x.observation?.kind==='REVOKE_PREPARATION')?.observation;
     if(revoke?.kind!=='REVOKE_PREPARATION'||f.releaseId!==q.releaseId||f.promotionRequestHash!==v.request.promotionRequestHash||f.retirementRequestHash!==v.request.retirementRequestHash||f.revocationProofHash!==revoke.proof.proofHash||f.target.datasetId!==q.target.datasetId||!follows(f.target,p.targetFence.physical))fail('RELEASE_SERVICE_FENCES_CHANGED');
     if(q.source){if(!f.source||!p.sourceFence||f.source.releaseId!==q.source.releaseId||f.source.datasetId!==q.source.datasetId||f.source.datasetOperationId!==q.source.datasetOperationId||!follows(f.source,p.sourceFence.physical))fail('RELEASE_SERVICE_FENCES_CHANGED');}else if(f.source!==null)fail('RELEASE_SERVICE_FENCES_CHANGED');
-   }else if(o.kind==='GUARD_ENFORCE'){
+   }else if(o.kind==='PROFILE_PREPARE'){
+     if(o.profileHash!==v.profileHash)fail('RELEASE_SERVICE_PROFILE_CHANGED');
+    }else if(o.kind==='GUARD_ENFORCE'){
     const g=o.proof,r=v.reservation!,p=v.profile!;if(g.releaseId!==q.releaseId||g.runnerId!==runnerId||g.controllerId!==i.controllerId||g.serviceRequestHash!==i.requestHash||g.reservationId!==r.reservationId||g.profileHash!==v.profileHash||g.datasetId!==q.target.datasetId||g.targetProofHash!==p.fenceProofHash||g.gateBindingHash!==p.gateBindingHash)fail('RELEASE_SERVICE_GUARD_CHANGED');
    }else if(o.kind==='ROUTE_BIND'){
     const r=o.route,c=v.reservation!.claim;if(!c||r.routeId!=='release.'+q.projectId||r.projectId!==q.projectId||r.releaseId!==q.releaseId||r.previousReleaseId!==q.expectedAcceptedReleaseId||r.generation!==(v.request.gates.previousRoute?.generation??0)+1||r.datasetId!==q.target.datasetId||r.imageDigest!==q.image.imageDigest||r.instanceId!==c.instanceId||r.serviceClaimHash!==v.reservation!.claimHash||canonical(r.endpoint)!==canonical(v.reservation!.endpoint)||o.routeHash!==hash(r))fail('RELEASE_SERVICE_ROUTE_CHANGED');

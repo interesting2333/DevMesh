@@ -285,3 +285,11 @@ Release 入口要求当前 accepted 指针、PUBLISHED 原证明与持久 route 
 Runner 转发仅在原 Runner 节点连接原 loopback，先实际查询原独立可写 journal、稳定 proof、当前 guard／fences／route 及 HTTP 健康；再次检查控制授权后才构造一次有界 HTTP 请求。不接受 URL、重定向、连接池或自动重试。请求保存净化后 headers／body 摘要、原目标及 gate fence／revision；唯一派发回执丢失不转发，构造 HTTP 后的不完整响应记录 UNKNOWN。完整响应先记账，再复核成员／会话才返回正文。
 
 business_pending_writes 合并预览和 Release 的 DISPATCHED／UNKNOWN 写。接受准备／T5、发布、门 pending 计数和撤销恢复全部接入该屏障；新派发与关门在同一个控制 writer 串行，补充 SQLite 触发器拒绝未确定写下的提交／发布／旧门恢复，历史迁移1～42正文不改。注销、移除成员或路由切换不解除原写占用，历史原请求可核实但不重派。该增量仍须实际 HTTPS、控制／Runner／业务 SQLite 联调与原失败留证；物理 Provider 和独立产品验收缺项不因此消失。
+
+### Publication continuation grants each unstarted stage separately
+
+恢复查询 inspect 继续禁止派发。新增显式 resume 协调原发布，先读取原动作结果；仅在控制面新 continuation 核验确认原 SENT／UNKNOWN、当前接受指针、原请求／basis、准确关闭门与无未决写后，才尝试 Runner 已有阶段的唯一 actionBegin。已派发阶段只查询，不重发；前驱未核实不开始下一步。没有原 Runner 登记时可按同一请求登记，不创建替代资源。初次 publish 及原 verifyReleasePublication 的 SENT 边界不放宽。
+
+配额准备也属于物理动作。Runner v12 新增 PROFILE_PREPARE 阶段、原 profile 的执行模式，prepared 查询只验证准确目录／字节上限。新 profile 同事务登记 EXECUTE_ONCE，唯一许可后才 prepare；ACK 丢失只查。v11 既有 profile 在迁移中标 INSPECT_ONLY，不回填已完成，不在恢复时重新 enforce；配额无法验证则保留未完成。迁移保留历史 SQL、原行／动作／proof／容量，失败完整回滚。后续重新 own 和 prepareProof 只恢复同一不可变本地事实；任何配置／guard／fence／原实例变化关闭后续派发。
+
+本轮不把导出、正式后继保留／替换 T5、默认装配或物理 Linux 验收计为完成。4.3、5.1、5.2 继续按完整范围验收。

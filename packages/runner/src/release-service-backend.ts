@@ -32,38 +32,45 @@ export class RunnerReleaseServiceBackend implements ReleasePublicationBackend {
   const request=releaseServiceRequest.parse({...old,schemaVersion:'devmesh.release-service-start.v1',purpose:'RELEASE',retirementRequestHash:hash(old)});
   return {request,bound:{controllerId:this.options.controllerId,releaseId:p.releaseId,requestHash:hash(request)}};
  }
- async #current(p:ReleasePublication,authorize:boolean){
+  async #current(p:ReleasePublication,authorize:boolean,continuation=false){
   const q=p.request.preparation,o=this.options;
   if(q.runnerId!==o.runnerId||q.backendRef!==o.backendRef||q.backendPrincipalId!==o.principalId||q.releaseId!==p.releaseId||hash(p.request)!==p.requestHash)throw new RunnerError('RELEASE_SERVICE_IDENTITY_CHANGED',409);
   const c=await this.control.request('getReleasePublication',{principalId:o.principalId,releaseId:p.releaseId});
   if(c.requestHash!==p.requestHash||canonical(c.request)!==canonical(p.request)||canonical(c.basis)!==canonical(p.basis))throw new RunnerError('RELEASE_SERVICE_IDENTITY_CHANGED',409);
-  if(authorize&&!(await this.control.request('verifyReleasePublication',{principalId:o.principalId,releaseId:p.releaseId,requestHash:p.requestHash})).allowed)throw new RunnerError('RELEASE_SERVICE_AUTHORITY_CLOSED',409);
+   if(authorize&&!(await this.control.request(continuation?'verifyReleasePublicationContinuation':'verifyReleasePublication',{principalId:o.principalId,releaseId:p.releaseId,requestHash:p.requestHash})).allowed)throw new RunnerError('RELEASE_SERVICE_AUTHORITY_CLOSED',409);
  }
  async preflight(p:ReleasePublication){this.#enabled();await this.#current(p,false);await this.authority.preflight(p);await this.routes.preflight(p);await this.store.request('capacityConfigure',this.options.capacity);await this.driver.probe(p.request.preparation,this.options.repository);}
- async #allowed(p:ReleasePublication,j:ReleaseServiceJournal,authorize:()=>Promise<boolean>){
-  try{await this.#current(p,true);if(!await authorize())return false;const a=j.actions.find(a=>a.request.kind==='ARM_FENCES'&&a.state==='OBSERVED');if(a?.observation?.kind==='ARM_FENCES'&&canonical(await this.authority.inspect(j.retirement))!==canonical(a.observation.proof))return false;const g=j.actions.find(a=>a.request.kind==='GUARD_ENFORCE'&&a.state==='OBSERVED');if(g?.observation?.kind==='GUARD_ENFORCE'&&canonical(await this.driver.inspectGuard(j.profile!,j.request,j.controllerId))!==canonical(g.observation.proof))return false;return await authorize();}catch{return false;}
+  async #allowed(p:ReleasePublication,j:ReleaseServiceJournal,authorize:()=>Promise<boolean>,continuation=false){
+   try{await this.#current(p,true,continuation);if(!await authorize())return false;const a=j.actions.find(a=>a.request.kind==='ARM_FENCES'&&a.state==='OBSERVED');if(a?.observation?.kind==='ARM_FENCES'&&canonical(await this.authority.inspect(j.retirement))!==canonical(a.observation.proof))return false;if(j.actions.some(a=>a.request.kind==='PROFILE_PREPARE'&&a.state==='OBSERVED')&&!await this.driver.prepared(j.profile!,j.request))return false;const g=j.actions.find(a=>a.request.kind==='GUARD_ENFORCE'&&a.state==='OBSERVED');if(g?.observation?.kind==='GUARD_ENFORCE'&&canonical(await this.driver.inspectGuard(j.profile!,j.request,j.controllerId))!==canonical(g.observation.proof))return false;return await authorize();}catch{return false;}
  }
- async #step(p:ReleasePublication,j:ReleaseServiceJournal,kind:ReleaseServiceKind,authorize:()=>Promise<boolean>){
-  if(!await this.#allowed(p,j,authorize))throw new RunnerError('RELEASE_SERVICE_AUTHORITY_CLOSED',409);
+  async #step(p:ReleasePublication,j:ReleaseServiceJournal,kind:ReleaseServiceKind,authorize:()=>Promise<boolean>,continuation=false){
+   if(!await this.#allowed(p,j,authorize,continuation))throw new RunnerError('RELEASE_SERVICE_AUTHORITY_CLOSED',409);
   const {bound}=this.#bound(p),g=await this.store.request('releaseServiceActionBegin',{...bound,kind});
-  if(!g.dispatch)return false;
-  const allowed=async()=>await this.#allowed(p,j,authorize)&&(await this.store.request('releaseServiceActionAuthorized',{...bound,kind,actionRequestHash:g.action.requestHash})).allowed;
-  j=await this.#observe(p,j,g.action,true,allowed);return j.actions.some(a=>a.request.kind===kind&&a.state==='OBSERVED');
+   if(!g.dispatch&&!continuation)return false;
+   const allowed=async()=>await this.#allowed(p,j,authorize,continuation)&&(await this.store.request('releaseServiceActionAuthorized',{...bound,kind,actionRequestHash:g.action.requestHash})).allowed;
+   j=await this.#observe(p,j,g.action,g.dispatch,allowed);return j.actions.some(a=>a.request.kind===kind&&a.state==='OBSERVED');
  }
  async publish(p:ReleasePublication,authorize:()=>Promise<boolean>):Promise<ReleasePublicationObservation>{
-  await this.preflight(p);if(p.state!=='SENT')return this.inspect(p);
+   return this.#advance(p,authorize,false);
+  }
+  async resume(p:ReleasePublication,authorize:()=>Promise<boolean>):Promise<ReleasePublicationObservation>{
+   return this.#advance(p,authorize,true);
+  }
+  async #advance(p:ReleasePublication,authorize:()=>Promise<boolean>,continuation:boolean):Promise<ReleasePublicationObservation>{
+   if(p.state!=='SENT'&&!(continuation&&p.state==='UNKNOWN'))return this.inspect(p);
+   await this.preflight(p);
   try{
-   await this.#current(p,true);const retired=await this.retirement.retire(p,authorize);if(!retired.networkCleared)return this.#unknown('RELEASE_SERVICE_RETIREMENT_UNVERIFIED');
+    await this.#current(p,true,continuation);const retired=continuation?await this.retirement.resume(p,authorize):await this.retirement.retire(p,authorize);if(!retired.networkCleared)return this.#unknown('RELEASE_SERVICE_RETIREMENT_UNVERIFIED');
    const {request,bound}=this.#bound(p);if(!await authorize())return this.#unknown('RELEASE_SERVICE_AUTHORITY_CLOSED');
-   const grant=await this.store.request('releaseServiceEnroll',{controllerId:bound.controllerId,request,requestHash:bound.requestHash,resourceLimits:this.options.resourceLimits});if(!grant.dispatch)return this.inspect(p);let j=grant.journal;
-   for(const kind of ['ARM_FENCES',...j.source?['SOURCE_STOP','SOURCE_CONTAINER_REMOVE','SOURCE_NETWORK_REMOVE'] as const:[]] as ReleaseServiceKind[]){if(!await this.#step(p,j,kind,authorize))return this.inspect(p);j=await this.store.request('releaseServiceGet',bound);}
-   if(!await this.#allowed(p,j,authorize))return this.#unknown('RELEASE_SERVICE_AUTHORITY_CLOSED');
+    const grant=await this.store.request('releaseServiceEnroll',{controllerId:bound.controllerId,request,requestHash:bound.requestHash,resourceLimits:this.options.resourceLimits});if(!grant.dispatch&&!continuation)return this.inspect(p);let j=grant.journal;
+    for(const kind of ['ARM_FENCES',...j.source?['SOURCE_STOP','SOURCE_CONTAINER_REMOVE','SOURCE_NETWORK_REMOVE'] as const:[]] as ReleaseServiceKind[]){if(!await this.#step(p,j,kind,authorize,continuation))return this.inspect(p);j=await this.store.request('releaseServiceGet',bound);}
+    if(!await this.#allowed(p,j,authorize,continuation))return this.#unknown('RELEASE_SERVICE_AUTHORITY_CLOSED');
    j=await this.store.request('releaseServiceReserve',{...bound,capacity:this.options.capacity});const r=j.reservation!,f=j.actions.find(a=>a.request.kind==='ARM_FENCES')!.observation;if(f?.kind!=='ARM_FENCES')return this.#unknown();
    const profile=releaseServiceProfile.parse({schemaVersion:'devmesh.release-service-profile.v1',purpose:'RELEASE',accessMode:'READ_WRITE',writeAdmission:'CONTROL_GATE_FENCED',reservationId:r.reservationId,requestHash:bound.requestHash,repository:this.options.repository,datasetDirectory:j.retirement.original.profile.datasetDirectory,datasetBytes:j.retirement.original.profile.datasetBytes,resourceLimits:r.resourceLimits,...releaseServiceNames(r.reservationId),fenceProofHash:f.proof.target.proofHash,gateBindingHash:releaseServiceGateBinding(request)});
-   j=await this.store.request('releaseServiceProfilePrepare',{...bound,profile});await this.driver.prepare(profile,request);
-   for(const kind of ['GUARD_ENFORCE','NETWORK_CREATE','CREATE','START'] as const){if(!await this.#step(p,j,kind,authorize))return this.inspect(p);j=await this.store.request('releaseServiceGet',bound);}
-   j=await this.#refresh(p,j);if(!await this.#allowed(p,j,authorize)||j.reservation?.fact?.state!=='HEALTHY')return this.#unknown('RELEASE_SERVICE_UNHEALTHY');
-   j=await this.store.request('releaseServiceOwn',bound);if(!await this.#step(p,j,'ROUTE_BIND',authorize))return this.inspect(p);
+    j=await this.store.request('releaseServiceProfilePrepare',{...bound,profile});
+    for(const kind of ['PROFILE_PREPARE','GUARD_ENFORCE','NETWORK_CREATE','CREATE','START'] as const){if(!await this.#step(p,j,kind,authorize,continuation))return this.inspect(p);j=await this.store.request('releaseServiceGet',bound);}
+    j=await this.#refresh(p,j);if(!await this.#allowed(p,j,authorize,continuation)||j.reservation?.fact?.state!=='HEALTHY')return this.#unknown('RELEASE_SERVICE_UNHEALTHY');
+    j=await this.store.request('releaseServiceOwn',bound);if(!await this.#step(p,j,'ROUTE_BIND',authorize,continuation))return this.inspect(p);
    await this.store.request('releaseServicePrepareProof',bound);return this.inspect(p);
   }catch(e){return this.#unknown(e instanceof RunnerError?e.code:'RELEASE_SERVICE_OUTCOME_UNKNOWN');}
  }
@@ -73,7 +80,7 @@ export class RunnerReleaseServiceBackend implements ReleasePublicationBackend {
   this.#enabled();try{
    await this.#current(p,false);const {bound}=this.#bound(p);let j=await this.store.request('releaseServiceGet',bound);
    for(const a of j.actions){if(a.state==='OBSERVED')continue;j=await this.#observe(p,j,a,false,async()=>false);}
-   if(!j.reservation||j.reservation.releasedAt!==null||!j.profile||!j.containerId||!j.networkId)return this.#unknown();
+    if(!j.reservation||j.reservation.releasedAt!==null||!j.profile||!j.containerId||!j.networkId||!await this.driver.prepared(j.profile,j.request))return this.#unknown();
    j=await this.#refresh(p,j);if(j.reservation?.fact?.state!=='HEALTHY'||!j.reservation.claimHash||!j.actions.some(a=>a.request.kind==='ROUTE_BIND'&&a.state==='OBSERVED'))return this.#unknown('RELEASE_SERVICE_UNHEALTHY');
    j=await this.store.request('releaseServicePrepareProof',bound);const proof=j.proof!,arm=j.actions.find(a=>a.request.kind==='ARM_FENCES')!.observation,guard=j.actions.find(a=>a.request.kind==='GUARD_ENFORCE')!.observation;
    if(arm?.kind!=='ARM_FENCES'||guard?.kind!=='GUARD_ENFORCE'||canonical(await this.authority.inspect(j.retirement))!==canonical(arm.proof)||canonical(await this.driver.inspectGuard(j.profile!,j.request,j.controllerId))!==canonical(guard.proof)||canonical(await this.routes.inspect(j))!==canonical(proof.route))return this.#unknown('RELEASE_SERVICE_CURRENT_CHANGED');
@@ -90,6 +97,7 @@ export class RunnerReleaseServiceBackend implements ReleasePublicationBackend {
  }
  async #observe(p:ReleasePublication,j:ReleaseServiceJournal,a:ReleaseServiceAction,dispatch:boolean,authorize:()=>Promise<boolean>):Promise<ReleaseServiceJournal>{
   if(a.state==='OBSERVED')return j;const {bound}=this.#bound(p),kind=a.request.kind;
+   if(kind==='PROFILE_PREPARE'){if(dispatch&&j.profilePreparation==='EXECUTE_ONCE')await this.driver.prepare(j.profile!,j.request,authorize);return await this.driver.prepared(j.profile!,j.request)?this.store.request('releaseServiceActionObserve',{...bound,kind,actionRequestHash:a.requestHash,observation:{kind,profileHash:j.profileHash!,checkedAt:time()}}):j;}
   if(kind==='ARM_FENCES'){const proof=dispatch?await this.authority.handoff(j.retirement,authorize):await this.authority.inspect(j.retirement);return proof?this.store.request('releaseServiceActionObserve',{...bound,kind,actionRequestHash:a.requestHash,observation:{kind,proof,checkedAt:time()}}):j;}
   if(kind==='GUARD_ENFORCE'){const proof=dispatch?await this.driver.enforceGuard(j.profile!,j.request,j.controllerId,authorize):await this.driver.inspectGuard(j.profile!,j.request,j.controllerId);return proof?this.store.request('releaseServiceActionObserve',{...bound,kind,actionRequestHash:a.requestHash,observation:{kind,proof,checkedAt:time()}}):j;}
   if(kind==='ROUTE_BIND'){const route=dispatch?await this.routes.bind(j,authorize):await this.routes.inspect(j);return route?this.store.request('releaseServiceActionObserve',{...bound,kind,actionRequestHash:a.requestHash,observation:{kind,route,routeHash:hash(route),checkedAt:time()}}):j;}

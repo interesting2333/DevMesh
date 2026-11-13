@@ -13,10 +13,11 @@ export const releaseServiceRequest=releaseRetirementRequest.extend({schemaVersio
 export const releaseServiceFences=z.strictObject({schemaVersion:z.literal('devmesh.release-service-fences.v1'),releaseId:ids.release,promotionRequestHash:sha256,retirementRequestHash:sha256,revocationProofHash:sha256,target:releasePublicationProof.shape.target,source:releasePublicationProof.shape.source});
 export const releaseServiceProfile=previewContainerProfile.omit({schemaVersion:true}).extend({schemaVersion:z.literal('devmesh.release-service-profile.v1'),purpose:z.literal('RELEASE'),accessMode:z.literal('READ_WRITE'),writeAdmission:z.literal('CONTROL_GATE_FENCED'),fenceProofHash:sha256,gateBindingHash:sha256});
 export const releaseServiceGuardProof=z.strictObject({schemaVersion:z.literal('devmesh.release-service-guard.v1'),releaseId:ids.release,runnerId:opaqueKey,controllerId:opaqueKey,serviceRequestHash:sha256,reservationId:opaqueKey,profileHash:sha256,datasetId:ids.dataset,targetProofHash:sha256,gateBindingHash:sha256,guardId:opaqueKey,proofHash:sha256,scope:z.literal('ALL_DATASET_WRITES'),writeAdmission:z.literal('CONTROL_GATE_FENCED'),state:z.literal('ENFORCED')});
-export const releaseServiceKind=z.enum(['ARM_FENCES','SOURCE_STOP','SOURCE_CONTAINER_REMOVE','SOURCE_NETWORK_REMOVE','GUARD_ENFORCE','NETWORK_CREATE','CREATE','START','ROUTE_BIND']);
+export const releaseServiceKind=z.enum(['ARM_FENCES','SOURCE_STOP','SOURCE_CONTAINER_REMOVE','SOURCE_NETWORK_REMOVE','PROFILE_PREPARE','GUARD_ENFORCE','NETWORK_CREATE','CREATE','START','ROUTE_BIND']);
 export const releaseServiceActionRequest=z.strictObject({schemaVersion:z.literal('devmesh.release-service-action.v1'),operationId:ids.operation,releaseId:ids.release,serviceRequestHash:sha256,kind:releaseServiceKind,reservationId:opaqueKey.nullable(),profileHash:sha256.nullable(),containerId:dockerObjectId.nullable(),networkId:dockerObjectId.nullable()});
 export const releaseServiceObservation=z.discriminatedUnion('kind',[
  z.strictObject({kind:z.literal('ARM_FENCES'),proof:releaseServiceFences,checkedAt:timestamp}),
+ z.strictObject({kind:z.literal('PROFILE_PREPARE'),profileHash:sha256,checkedAt:timestamp}),
  z.strictObject({kind:z.literal('GUARD_ENFORCE'),proof:releaseServiceGuardProof,checkedAt:timestamp}),
  z.strictObject({kind:z.enum(['NETWORK_CREATE','CREATE','START','SOURCE_STOP']),objectId:dockerObjectId,state:z.enum(['CREATED','RUNNING','EXITED']),checkedAt:timestamp}),
  z.strictObject({kind:z.enum(['SOURCE_CONTAINER_REMOVE','SOURCE_NETWORK_REMOVE']),objectId:dockerObjectId,absenceVerified:z.literal(true),checkedAt:timestamp}),
@@ -34,7 +35,7 @@ export type ReleaseServiceKind=z.output<typeof releaseServiceKind>;
 export type ReleaseServiceAction=z.output<typeof releaseServiceAction>;
 export type ReleaseServiceReservation=z.output<typeof releaseServiceReservation>;
 export interface ReleaseServiceOriginal {request:ReleaseServiceRequest;requestHash:string;reservation:ReleaseServiceReservation;profile:ReleaseServiceProfile;profileHash:string;networkId:string;containerId:string;proof:ReleasePublicationProof}
-export interface ReleaseServiceJournal {sequence:number;controllerId:string;request:ReleaseServiceRequest;requestHash:string;retirement:ReleaseRetirement;source:ReleaseServiceOriginal|null;reservation:ReleaseServiceReservation|null;profile:ReleaseServiceProfile|null;profileHash:string|null;networkId:string|null;containerId:string|null;actions:ReleaseServiceAction[];proof:ReleasePublicationProof|null;proofHash:string|null;createdAt:string}
+export interface ReleaseServiceJournal {sequence:number;controllerId:string;request:ReleaseServiceRequest;requestHash:string;retirement:ReleaseRetirement;source:ReleaseServiceOriginal|null;profilePreparation:'EXECUTE_ONCE'|'INSPECT_ONLY'|null;reservation:ReleaseServiceReservation|null;profile:ReleaseServiceProfile|null;profileHash:string|null;networkId:string|null;containerId:string|null;actions:ReleaseServiceAction[];proof:ReleasePublicationProof|null;proofHash:string|null;createdAt:string}
 const bound={controllerId:opaqueKey,releaseId:ids.release,requestHash:sha256};
 export const releaseServiceStoreRequests={
  releaseServiceEnroll:z.strictObject({controllerId:opaqueKey,request:releaseServiceRequest,requestHash:sha256,resourceLimits:previewResourceLimits}),
@@ -74,7 +75,8 @@ export interface ReleaseServiceWriteGuard {
 }
 export interface ReleaseServiceDriver {
  readonly configured:boolean;probe(r:ReleaseServiceRequest['promotion']['preparation'],repository:string):Promise<void>;
- prepare(p:ReleaseServiceProfile,r:ReleaseServiceRequest):Promise<void>;
+ prepare(p:ReleaseServiceProfile,r:ReleaseServiceRequest,authorize:()=>Promise<boolean>):Promise<void>;
+ prepared(p:ReleaseServiceProfile,r:ReleaseServiceRequest):Promise<boolean>;
  enforceGuard(p:ReleaseServiceProfile,r:ReleaseServiceRequest,controllerId:string,authorize:()=>Promise<boolean>):Promise<ReleaseServiceGuardProof>;
  inspectGuard(p:ReleaseServiceProfile,r:ReleaseServiceRequest,controllerId:string):Promise<ReleaseServiceGuardProof|null>;
  network(p:ReleaseServiceProfile,r:ReleaseServiceRequest):Promise<string|null>;

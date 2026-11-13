@@ -41,4 +41,6 @@ mountInputApi(app, content, {
 
 控制迁移43引入独立 Release 请求／票据／会话历史及 `business_pending_writes`，统一计数 PREVIEW／RELEASE 的 DISPATCHED／UNKNOWN 写。验收就绪、T5、发布及撤销完成／重开门使用同一屏障。丢派发 ACK 不调用业务 transport；请求已构造后的不完整响应保留 UNKNOWN，不能重发或把超时当未执行。私有查询和原请求观察用于恢复，当前没有自动判断业务 UNKNOWN 结局的协调器。
 
-本增量不完成物理 ALL_DATASET_WRITES guard、继续协调、默认平台装配、导出或正式后继保留／替换 T5。当前开放门要求与原发布证明的初次 OPEN 版本一致；后继准备撤销后若门再次换代，须完成原物理服务／fence 恢复和明确重新授权协议，不能沿用旧会话直接放开写。应用宿主不可通过删除原记录、修改策略、重开旧门或重建实例绕过恢复条件。
+发布中断的继续由显式组合的 `ReleasePublisher.advance/recoverPage` 与原 `RunnerReleaseServiceBackend.resume` 承担；网关 GET 仍只查询，不触发恢复。恢复先核实原阶段结果，每个尚未派发阶段再领取唯一许可，并复核当前接受指针、闭门、未定写屏障及原 fence／guard。Runner v12 将配额准备纳入动作日志，旧 profile 只查询已有配额事实。具体装配和限制见 [Runner 发布说明](../runner/RELEASE-PUBLICATION.md)。
+
+物理 ALL_DATASET_WRITES guard、默认平台装配、导出和正式后继保留／替换 T5 仍需各自实现及验收。当前开放门要求与原发布证明的初次 OPEN 版本一致；后继准备撤销后若门再次换代，须完成原物理服务／fence 恢复和明确重新授权协议，不能沿用旧会话直接放开写。应用宿主不可通过删除原记录、修改策略、重开旧门或重建实例绕过恢复条件。

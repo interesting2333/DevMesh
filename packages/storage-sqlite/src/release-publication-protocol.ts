@@ -40,7 +40,8 @@ export const releasePublicationRequests={
  getReleasePublication:z.strictObject({principalId:opaqueKey,releaseId:ids.release}),
  listReleasePublications:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:counter.default(0),limit:z.number().int().min(1).max(100).default(20)}),
  beginReleasePublication:z.strictObject({...bound,expectedRevision:counter}),
- verifyReleasePublication:z.strictObject(bound),
+  verifyReleasePublication:z.strictObject(bound),
+  verifyReleasePublicationContinuation:z.strictObject(bound),
  recordReleasePublicationObservation:z.strictObject({...bound,expectedRevision:counter,expectedSequence:counter,observation:releasePublicationObservation}),
  listReleasePublicationHistory:z.strictObject({...bound,afterSequence:counter.default(0),limit:z.number().int().min(1).max(100).default(20)}),
 };
@@ -58,7 +59,8 @@ export interface ReleasePublicationResults {
  getReleasePublication:ReleasePublication;
  listReleasePublications:{items:{sequence:number;publication:ReleasePublication}[];nextSequence:number|null};
  beginReleasePublication:{dispatch:boolean;publication:ReleasePublication};
- verifyReleasePublication:{allowed:boolean;reasonCode:string|null};
+  verifyReleasePublication:{allowed:boolean;reasonCode:string|null};
+  verifyReleasePublicationContinuation:{allowed:boolean;reasonCode:string|null};
  recordReleasePublicationObservation:ReleasePublication;
  listReleasePublicationHistory:{items:{sequence:number;revision:number;state:ReleasePublication['state'];errorCode:string|null;observedAt:string}[];nextSequence:number|null};
 }
@@ -73,5 +75,8 @@ export interface ReleasePublicationBackend {
  publish(publication:ReleasePublication,authorize:()=>Promise<boolean>):Promise<ReleasePublicationObservation>;
  /** Query the original result and current objects; never acquire, renew, create,
   * migrate, start a replacement, switch routes or open a gate in this method. */
- inspect(publication:ReleasePublication):Promise<ReleasePublicationObservation>;
+  inspect(publication:ReleasePublication):Promise<ReleasePublicationObservation>;
+  /** Explicit original-stage coordination. Each unstarted physical stage needs a
+   * new unique durable Runner grant. Uncertain dispatched stages are query-only. */
+  resume?(publication:ReleasePublication,authorize:()=>Promise<boolean>):Promise<ReleasePublicationObservation>;
 }

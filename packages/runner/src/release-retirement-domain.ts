@@ -21,7 +21,7 @@ export function createReleaseRetirementDomain(db:DatabaseSync,runnerId:string,se
  const tx=<T>(body:()=>T):T=>{db.exec('BEGIN IMMEDIATE');try{const v=body();db.exec('COMMIT');return v;}catch(e){db.exec('ROLLBACK');throw e;}};
  const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);
  if(version===9)tx(()=>{db.exec(releaseRetirementMigration);exec('INSERT INTO runner_schema_history VALUES(10,?,?)',hash(releaseRetirementMigration),new Date().toISOString());if(db.prepare('PRAGMA foreign_key_check').all().length)fail('RUNNER_MIGRATION_FOREIGN_KEYS');});
- else if(![10,11].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
+ else if(![10,11,12].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
  if(get('SELECT sha256 FROM runner_schema_history WHERE version=10')?.sha256!==hash(releaseRetirementMigration)||get('SELECT version FROM runner_identity')?.version!==(version===9?10:version))fail('RUNNER_MIGRATION_DRIFT');
  if(Number(Object.values(db.prepare('PRAGMA foreign_keys').get()!)[0])!==1)fail('RUNNER_MIGRATION_FOREIGN_KEYS');
  const row=(i:Bound)=>{const r=get('SELECT * FROM release_retirements WHERE release_id=? AND controller_id=?',i.releaseId,i.controllerId)??fail('RELEASE_RETIREMENT_NOT_FOUND',404);if(r.request_hash!==i.requestHash)fail('RELEASE_RETIREMENT_IDENTITY_CHANGED');return r;};
