@@ -29,6 +29,9 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
   const row=(id:string)=>get('SELECT * FROM acceptance_preparations WHERE operation_id=?',id)??fail('ACCEPTANCE_PREPARATION_NOT_FOUND',404);
   function backend(principalId:string,r:Row){if(policy(String(r.project_id),String(r.policy_hash)).backendPrincipalId!==principalId)fail('FORBIDDEN',403);}
   function scoped(principalId:string,r:Row){if(policy(String(r.project_id),String(r.policy_hash)).backendPrincipalId!==principalId)plans.authorized(principalId,String(r.run_id));return r;}
+  function hasReplacementConfirmation(principalId:string,projectId:string,i:Pick<AcceptanceInput<'recordAcceptanceReplacementDecision'>,'runId'|'candidateId'|'manifestHash'|'reviewHash'|'expectedAcceptedReleaseId'|'dataPlanHash'|'decisionId'>){
+    return Boolean(get('SELECT 1 FROM acceptance_data_confirmations WHERE decision_id=? AND project_id=? AND run_id=? AND candidate_id=? AND manifest_hash=? AND review_hash=? AND source_release_id=? AND data_plan_hash=? AND actor_id=?',i.decisionId,projectId,i.runId,i.candidateId,i.manifestHash,i.reviewHash,i.expectedAcceptedReleaseId,i.dataPlanHash,principalId));
+  }
   function basis(principalId:string,i:Pick<AcceptanceInput<'beginAcceptancePreparation'>,'runId'|'candidateId'|'candidateRevision'|'manifestHash'|'reviewHash'|'expectedAcceptedReleaseId'|'dataPlanHash'>){
     const run=owner(principalId,i.runId),candidate=freezes.getCandidate({principalId,runId:i.runId,candidateId:i.candidateId});
     const review=reviews.getReview({principalId,runId:i.runId,candidateId:i.candidateId});
@@ -70,7 +73,7 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
       const keys={candidateId:i.candidateId,candidateRevision:candidate.revision,manifestHash:candidate.manifestHash,reviewHash:review.reviewHash,expectedAcceptedReleaseId:data.sourceReleaseId,dataPlanHash};
       const stored=i.policyHash?get('SELECT policy_json FROM acceptance_backend_policies WHERE project_id=? AND policy_hash=?',candidate.projectId,i.policyHash):undefined,p=stored?acceptanceBackendPolicy.parse(json(stored.policy_json)):null;
       const configured=Boolean(p&&p.templateVersion===data.templateVersion&&(data.strategy==='INITIAL'?p.initialModes.includes(data.initialData):data.strategy==='PRESERVE_MIGRATE'?p.allowPreserveMigration:p.allowReplacement&&p.initialModes.includes(data.initialData)));
-      const replacementConfirmed=data.strategy==='REPLACE'&&Boolean(get('SELECT 1 FROM acceptance_data_decisions WHERE decision_id=? AND project_id=? AND run_id=? AND candidate_id=? AND manifest_hash=? AND review_hash=? AND source_release_id=? AND data_plan_hash=? AND actor_id=?',data.replacementDecisionId,candidate.projectId,i.runId,i.candidateId,candidate.manifestHash,review.reviewHash,data.sourceReleaseId,dataPlanHash,i.principalId));
+      const replacementConfirmed=data.strategy==='REPLACE'&&hasReplacementConfirmation(i.principalId,candidate.projectId,{...keys,runId:i.runId,decisionId:data.replacementDecisionId});
       const unresolved=get("SELECT operation_id FROM acceptance_preparations p WHERE project_id=? AND state<>'FAILED' AND NOT EXISTS(SELECT 1 FROM acceptance_commits c WHERE c.preparation_operation_id=p.operation_id) AND NOT EXISTS(SELECT 1 FROM acceptance_abort_completions a WHERE a.preparation_operation_id=p.operation_id) ORDER BY rowid LIMIT 1",candidate.projectId);
       let reason:AcceptanceResults['getCandidateAcceptanceBasis']['reason']=null;
       if(run.membership!=='owner')reason='NOT_OWNER';else if(candidate.qualification!=='CURRENT')reason='CANDIDATE_STALE';else if(!review.canPrepareAcceptance)reason='REVIEW_REQUIRED';else if(currentAcceptedReleaseId!==data.sourceReleaseId)reason='SOURCE_CHANGED';
@@ -98,7 +101,12 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
     recordAcceptanceReplacementDecision(i:AcceptanceInput<'recordAcceptanceReplacementDecision'>){
       if(i.meta.scopeId!==i.runId)fail('OPERATION_SCOPE_INVALID',422);const {meta,ifMatch:_match,...payload}=i;
       const op=hooks.operation(meta,'ConfirmAcceptanceReplacement',payload,operationId=>{const b=basis(meta.principalId,i);assertResourceVersion(i.ifMatch,Number(b.run.resource_revision));if(b.data.strategy!=='REPLACE'||b.data.replacementDecisionId!==i.decisionId||!i.expectedAcceptedReleaseId)fail('ACCEPTANCE_REPLACEMENT_NOT_APPLICABLE');
-        exec('INSERT INTO acceptance_data_decisions VALUES(?,?,?,?,?,?,?,?,?,?,?)',i.decisionId,operationId,b.candidate.projectId,i.runId,i.candidateId,i.manifestHash,i.reviewHash,i.expectedAcceptedReleaseId,i.dataPlanHash,meta.principalId,now());hooks.decision(i.runId,operationId,i.decisionId);return {decisionId:i.decisionId};},()=>{owner(meta.principalId,i.runId);});
+        if(hasReplacementConfirmation(meta.principalId,b.candidate.projectId,i))fail('ACCEPTANCE_REPLACEMENT_ALREADY_CONFIRMED');
+        const anchor=get('SELECT * FROM acceptance_data_decisions WHERE decision_id=?',i.decisionId);
+        if(anchor&&(anchor.project_id!==b.candidate.projectId||anchor.run_id!==i.runId||anchor.candidate_id!==i.candidateId||anchor.manifest_hash!==i.manifestHash||anchor.source_release_id!==i.expectedAcceptedReleaseId||anchor.data_plan_hash!==i.dataPlanHash))fail('ACCEPTANCE_REPLACEMENT_BASIS_CHANGED');
+        const values=[i.decisionId,operationId,b.candidate.projectId,i.runId,i.candidateId,i.manifestHash,i.reviewHash,i.expectedAcceptedReleaseId,i.dataPlanHash,meta.principalId,now()];
+        if(!anchor)exec('INSERT INTO acceptance_data_decisions VALUES(?,?,?,?,?,?,?,?,?,?,?)',...values);
+        exec('INSERT INTO acceptance_data_confirmations VALUES(?,?,?,?,?,?,?,?,?,?,?)',...values);hooks.decision(i.runId,operationId,i.decisionId);return {decisionId:i.decisionId};},()=>{owner(meta.principalId,i.runId);});
       return {decisionId:String(op.result!.decisionId),operationId:op.operationId};
     },
     beginAcceptancePreparation(i:AcceptanceInput<'beginAcceptancePreparation'>){
@@ -109,8 +117,7 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
         if(get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')",b.candidate.projectId))fail('ACCEPTANCE_EFFECT_UNRESOLVED');
         if(p.templateVersion!==b.data.templateVersion||b.data.strategy==='INITIAL'&&!p.initialModes.includes(b.data.initialData)||b.data.strategy==='PRESERVE_MIGRATE'&&!p.allowPreserveMigration||b.data.strategy==='REPLACE'&&(!p.allowReplacement||!p.initialModes.includes(b.data.initialData)))fail('ACCEPTANCE_BACKEND_NOT_CONFIGURED',503);
         if(b.data.strategy==='REPLACE'){
-          const d=get('SELECT * FROM acceptance_data_decisions WHERE decision_id=?',b.data.replacementDecisionId);
-          if(!d||d.project_id!==b.candidate.projectId||d.run_id!==i.runId||d.candidate_id!==i.candidateId||d.manifest_hash!==i.manifestHash||d.review_hash!==i.reviewHash||d.source_release_id!==i.expectedAcceptedReleaseId||d.data_plan_hash!==i.dataPlanHash||d.actor_id!==meta.principalId)fail('ACCEPTANCE_REPLACEMENT_UNCONFIRMED');
+          if(!hasReplacementConfirmation(meta.principalId,b.candidate.projectId,{...i,decisionId:b.data.replacementDecisionId}))fail('ACCEPTANCE_REPLACEMENT_UNCONFIRMED');
         }
         const releaseId=uid('release'),datasetId=uid('dataset'),request=acceptancePreparationRequest.parse({schemaVersion:'devmesh.acceptance-prepare.v1',operationId,releaseId,projectId:b.candidate.projectId,runId:i.runId,candidateId:i.candidateId,candidateRevision:i.candidateRevision,manifestHash:i.manifestHash,reviewHash:i.reviewHash,expectedAcceptedReleaseId:i.expectedAcceptedReleaseId,dataPlanHash:i.dataPlanHash,runEpoch:b.candidate.manifest.runEpoch,requirementRevision:b.candidate.manifest.requirementRevision,planRevision:b.candidate.manifest.planRevision,codeCommit:b.candidate.manifest.codeCommit,image:b.candidate.manifest.delivery.record.image!,dataPlan:b.data,policyHash:i.policyHash,backendPrincipalId:p.backendPrincipalId,backendRef:p.backendRef,runnerId:p.runnerId,source:b.source,target:{datasetId,storageKey:b.candidate.projectId+'/'+datasetId+'/app.sqlite',schemaRevision:p.schemaRevision}}),body=canonical(request),at=now();
         if(Buffer.byteLength(body)>256*1024)fail('ACCEPTANCE_REQUEST_TOO_LARGE');

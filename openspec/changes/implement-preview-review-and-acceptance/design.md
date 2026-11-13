@@ -339,3 +339,7 @@ Acceptance history is projected through one bounded synchronous Worker transacti
 ### 后继数据方案与替换确认顺序
 
 交付REPLACE只收集方案，批准绑定冻结候选与审查，继续使用已有接受前独立确认。循环前置修正、同库两轮T5测试范围及物理夹具边界见[successor-data-strategy-design.md](./successor-data-strategy-design.md)。
+
+### 替换确认的追加历史
+
+审查变化后的再次确认、首次锚点与追加历史、前向迁移及原键恢复见 [replacement-reconfirmation-design.md](./replacement-reconfirmation-design.md)。

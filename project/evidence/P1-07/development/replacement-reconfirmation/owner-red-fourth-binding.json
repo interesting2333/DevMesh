@@ -1,0 +1,30 @@
+{
+  "record": "owner-red-2026-11-13T15-57-43-107Z.json",
+  "sources": [
+    {
+      "file": "packages/storage-sqlite/src/acceptance-domain.ts",
+      "source": "failed-source/owner-red-fourth/packages__storage-sqlite__src__acceptance-domain.ts",
+      "sha256": "7a32521398a4dfb9bd017229c72b976344ff9e30649bba247c11bef1e78b2485"
+    },
+    {
+      "file": "packages/storage-sqlite/migrations/0045-acceptanceconfirmations.sql",
+      "source": "failed-source/owner-red-fourth/packages__storage-sqlite__migrations__0045-acceptanceconfirmations.sql",
+      "sha256": "22369c4caf0d3f03a2dbb3aa72480c7cc056b64b69fdc93d2cf220a077fd9af4"
+    },
+    {
+      "file": "packages/storage-sqlite/migrations/manifest.json",
+      "source": "failed-source/owner-red-fourth/packages__storage-sqlite__migrations__manifest.json",
+      "sha256": "543a0b9d8b4a6a3b14454410eaab0e4cb86b6df1e16a38cf0d1f9778d4d99862"
+    },
+    {
+      "file": "tests/acceptance-reconfirmation.test.mjs",
+      "source": "failed-source/owner-red-fourth/tests__acceptance-reconfirmation.test.mjs",
+      "sha256": "44314ff303eea73050498170df2e54675bee263180a3c0d2db13b6e69116d672"
+    },
+    {
+      "file": "tests/storage-acceptance-reconfirmation-upgrade.test.mjs",
+      "source": "failed-source/owner-red-fourth/tests__storage-acceptance-reconfirmation-upgrade.test.mjs",
+      "sha256": "183dd9ab8d0493ee6bf597bce6d2a2c9cb7444641bf18c2a63e53ad434d02813"
+    }
+  ]
+}

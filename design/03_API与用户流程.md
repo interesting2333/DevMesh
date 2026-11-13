@@ -341,3 +341,13 @@ preview-management/view和client.js为受保护成员入口；逐项审查提供
 ### 后继数据方案与替换确认顺序
 
 REPLACE交付是方案收集，先固定原作业输出与当前sourceReleaseId，再冻结候选并逐项审查。交付／冻结不要求尚未能够绑定候选的通用CHANGE批准，也不授权替换。接受页已有独立replacement-confirmations命令绑定准确候选／manifestHash／reviewHash／原接受指针／dataPlanHash／decisionId及owner、UUID、Run If-Match；确认后才允许准备。审查改变使旧确认失效。保留迁移的准确artifact与INITIAL来源限制保持；实际执行／T5／发布仍分离。
+
+### 替换确认的追加历史
+
+冻结方案的replacementDecisionId保持不变，首次确认保存为不可变锚点；审查变化后再次明确确认，使用新原UUID和当前Run If-Match，向acceptance_data_confirmations追加当前reviewHash的记录。旧确认仍可按原键恢复原回执，但不能授权新审查。同一owner以最新Run条件重复当前已确认审查时，新键返回409 ACCEPTANCE_REPLACEMENT_ALREADY_CONFIRMED。确认和准备均核对准确候选、manifest、来源、方案、decisionId和当前owner；旧键重放仍先核实当前权限。准备查询当前审查的准确历史确认，不改写首次决定。
+
+再次确认的并发条件：成功确认推进Run版本；并发持相同旧If-Match的另一请求返回412，最新If-Match下重复当前已确认审查的新键返回409。保持原键恢复与当前权限核实，不调整版本前置校验顺序。
+
+冻结依据仍有效时，其他当前owner不能借用原确认，须用自己的新原UUID和当前Run条件明确确认。历史按decisionId／reviewHash／actorId去重，原操作者和首次决定保留，撤权后原键回执不可恢复。
+
+原冻结／上游操作依赖的主体权限失效时，候选继续陈旧，其他owner的确认不能恢复它；需要先产生有效候选。本次验证多个当前owner对仍有效候选分别确认，并验证原冻结主体失去owner权限（包括仅保留operator）时不放宽既有资格检查，不宣称完整owner交接产品流程。

@@ -1,0 +1,49 @@
+TAP version 13
+# (node:28560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28560) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:28560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: reconfirmation history and operation roll back atomically; stale conditions, changed original keys and revoked owners cannot confirm
+not ok 1 - reconfirmation history and operation roll back atomically; stale conditions, changed original keys and revoked owners cannot confirm
+  ---
+  duration_ms: 13478.8765
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-reconfirmation.test.mjs:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"candidateRevision":1,"manifestHash":"e8bdecda0708812ee1695e776b6bb19b789d97c6aa050fc42ef6ea6b8c2b0b01","reviewHash":"812e90b0bb0faec70a8b1379534611c4eb1005cfcf20275dc5c81e050e7e8231","expectedAcceptedReleaseId":"release_b3738c24c5f64d858d4b5e0415bf3498","dataPlanHash":"4bfb0aaf78e08f62e0bbfc823bbc5b9b48017714fc1363b7151dda271e6d8eba","projectId":"prj_9ef6063eb91a4da59c4f263c44aeb6d1","runId":"run_071d727596834780aa5a1fd451ecdd8f","candidateId":"candidate_c5c632ba2a524d41a5a74a6117e455d7","codeCommit":"dddddddddddddddddddddddddddddddddddddddd","dataPlan":{"schemaVersion":"devmesh.data-plan.v1","runId":"run_071d727596834780aa5a1fd451ecdd8f","codeCommit":"dddddddddddddddddddddddddddddddddddddddd","requirementRevision":1,"planRevision":1,"templateVersion":"web-crud-v1","checkConfigHash":"a3a9ed559ed116080f5855ac334f1228693917f47c7ec6c4a95b3d84e293d17f","strategy":"REPLACE","initialData":"EMPTY","sourceReleaseId":"release_b3738c24c5f64d858d4b5e0415bf3498","migrationRef":null,"replacementDecisionId":"decision_16bc52eae6664a4196dbbd0fdbe96f8e"},"currentAcceptedReleaseId":"release_b3738c24c5f64d858d4b5e0415bf3498","resourceRevision":25,"qualification":"STALE","configured":true,"policyHash":"bc19b610cf3e9a228261da02fcb7afafac7e70bae2c0fc235bcf7c2348aa620f","replacementConfirmed":false,"blockedByPreparationOperationId":null,"canManage":true,"canPrepare":false,"canConfirmReplacement":false,"reason":"CANDIDATE_STALE"}
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-reconfirmation.test.mjs:26:196)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14617.5478

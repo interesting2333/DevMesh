@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-14",
+  "base": "d982c445a95a7415f9bb995c0e95d0ef893657ca",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "reconfirmation",
+      "record": "reconfirmation-2026-11-13T15-59-39-602Z.json",
+      "tests": 3,
+      "pass": 3,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T16-00-37-705Z.json",
+      "tests": 13,
+      "pass": 13,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "storage",
+      "record": "storage-2026-11-13T16-02-49-630Z.json",
+      "tests": 47,
+      "pass": 47,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T15-58-42-194Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T15-59-39-576Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T15-59-39-602Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T15-59-39-601Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 63,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "First immutable anchor and append-only per-owner review confirmations are written in the same original operation transaction; preparation uses the exact current review basis.",
+    "Concurrent new requests admit one and reject the other stale Run version with 412; a fresh precondition duplicate returns explicit 409. Original-key recovery preserves its receipt without replacing current qualification.",
+    "Insertion failure rolls back the confirmation, original operation and Run/event effects. Missing/stale conditions, wrong data plan, changed original body and revoked owner are rejected. History UPDATE/DELETE are rejected.",
+    "Actual same-control-database successor replacement prepares a distinct empty SQLite target, retains source bytes, performs read-only HTTP health and commits the exact current review in the second T5. Worker reopen retains both acceptance commits, first anchor and two confirmations.",
+    "Version 44 historical row fixtures copy verbatim to version 45; failures before copy and after DDL/history roll back schema, version, migration history and original facts. Cross-anchor inserts and history mutation are rejected."
+  ],
+  "countType": "Test execution occurrences; the new upgrade test is also included in the complete storage group.",
+  "failures": {
+    "history": [
+      {
+        "record": "reconfirmation-2026-11-13T15-43-25-563Z.json",
+        "code": 1,
+        "changedDuringRun": [],
+        "changedSinceRun": [
+          "tests/acceptance-reconfirmation.test.mjs"
+        ],
+        "bindings": [
+          {
+            "file": "tests/acceptance-reconfirmation.test.mjs",
+            "sha256": "fbb4f743ed21147bad2cf7097c589611e9d194ffc211de1086daad9255f18bbd",
+            "source": "failed-source/first-new-build/acceptance-reconfirmation.test.mjs"
+          }
+        ],
+        "explanation": "Two pass, one fail: a successful confirmation advances Run revision, so the competing stale If-Match correctly returns PRECONDITION_FAILED rather than the originally asserted duplicate conflict. Product code is unchanged. Test now asserts exact 412 for that race and separately exact 409 for a duplicate with refreshed precondition; all prior history, rollback and T5 assertions remain."
+      },
+      {
+        "record": "red-2026-11-13T15-36-57-705Z.json",
+        "code": 1,
+        "changedDuringRun": [],
+        "changedSinceRun": [
+          "packages/storage-sqlite/migrations/manifest.json",
+          "packages/storage-sqlite/src/acceptance-domain.ts",
+          "tests/acceptance-reconfirmation.test.mjs"
+        ],
+        "bindings": [
+          {
+            "file": "packages/storage-sqlite/migrations/manifest.json",
+            "sha256": "a6be4357f616957227916fd57d024795ca292d7e44e84d1422dffa04cc9961ea",
+            "source": "git:d982c44:packages/storage-sqlite/migrations/manifest.json"
+          },
+          {
+            "file": "packages/storage-sqlite/src/acceptance-domain.ts",
+            "sha256": "f7cbcb45cb5b88661e5a300853d856a2e6b3c7ad121d6a92248f777f58aa6677",
+            "source": "git:d982c44:packages/storage-sqlite/src/acceptance-domain.ts"
+          },
+          {
+            "file": "tests/acceptance-reconfirmation.test.mjs",
+            "sha256": "0aaf2d9a3581f46ffa760e98a6e9b0065c1c6dcd02bdb5a4405830c7b82be325",
+            "source": "failed-source/red-initial/acceptance-reconfirmation.test.mjs"
+          }
+        ],
+        "explanation": "Expected old implementation: both reconfirmations fail the first decision unique key; the first assertion did not print nested rejection codes."
+      },
+      {
+        "record": "red-2026-11-13T15-38-18-606Z.json",
+        "code": 1,
+        "changedDuringRun": [],
+        "changedSinceRun": [
+          "packages/storage-sqlite/migrations/manifest.json",
+          "packages/storage-sqlite/src/acceptance-domain.ts",
+          "tests/acceptance-reconfirmation.test.mjs"
+        ],
+        "bindings": [
+          {
+            "file": "packages/storage-sqlite/migrations/manifest.json",
+            "sha256": "a6be4357f616957227916fd57d024795ca292d7e44e84d1422dffa04cc9961ea",
+            "source": "git:d982c44:packages/storage-sqlite/migrations/manifest.json"
+          },
+          {
+            "file": "packages/storage-sqlite/src/acceptance-domain.ts",
+            "sha256": "f7cbcb45cb5b88661e5a300853d856a2e6b3c7ad121d6a92248f777f58aa6677",
+            "source": "git:d982c44:packages/storage-sqlite/src/acceptance-domain.ts"
+          },
+          {
+            "file": "tests/acceptance-reconfirmation.test.mjs",
+            "sha256": "fbb4f743ed21147bad2cf7097c589611e9d194ffc211de1086daad9255f18bbd",
+            "source": "failed-source/first-new-build/acceptance-reconfirmation.test.mjs"
+          }
+        ],
+        "explanation": "Expected old implementation: both rejections explicitly report STORAGE_CONSTRAINT and the first decision unique key. Diagnostic was added; future Worker reopen moved after actual commit without weakening assertions."
+      },
+      {
+        "record": "owner-red-2026-11-13T15-53-34-536Z.json",
+        "code": 1,
+        "changedDuringRun": [],
+        "bindings": [
+          {
+            "file": "packages/storage-sqlite/src/acceptance-domain.ts",
+            "source": "failed-source/owner-red/packages__storage-sqlite__src__acceptance-domain.ts",
+            "sha256": "7a32521398a4dfb9bd017229c72b976344ff9e30649bba247c11bef1e78b2485"
+          },
+          {
+            "file": "packages/storage-sqlite/migrations/0045-acceptanceconfirmations.sql",
+            "source": "failed-source/owner-red/packages__storage-sqlite__migrations__0045-acceptanceconfirmations.sql",
+            "sha256": "22369c4caf0d3f03a2dbb3aa72480c7cc056b64b69fdc93d2cf220a077fd9af4"
+          },
+          {
+            "file": "packages/storage-sqlite/migrations/manifest.json",
+            "source": "failed-source/owner-red/packages__storage-sqlite__migrations__manifest.json",
+            "sha256": "543a0b9d8b4a6a3b14454410eaab0e4cb86b6df1e16a38cf0d1f9778d4d99862"
+          },
+          {
+            "file": "tests/acceptance-reconfirmation.test.mjs",
+            "source": "failed-source/owner-red/tests__acceptance-reconfirmation.test.mjs",
+            "sha256": "113c1e96f81a971c72a064ca9b8aceefd4eae5d5327d9072288d0af7287bbaac"
+          },
+          {
+            "file": "tests/storage-acceptance-reconfirmation-upgrade.test.mjs",
+            "source": "failed-source/owner-red/tests__storage-acceptance-reconfirmation-upgrade.test.mjs",
+            "sha256": "183dd9ab8d0493ee6bf597bce6d2a2c9cb7444641bf18c2a63e53ad434d02813"
+          }
+        ],
+        "explanation": "Initial additional owner test expected a current candidate after downgrading its original freeze actor to viewer; assertion correctly fails."
+      },
+      {
+        "record": "owner-red-2026-11-13T15-54-53-032Z.json",
+        "code": 1,
+        "changedDuringRun": [],
+        "bindings": [
+          {
+            "file": "packages/storage-sqlite/src/acceptance-domain.ts",
+            "source": "failed-source/owner-red-second/packages__storage-sqlite__src__acceptance-domain.ts",
+            "sha256": "7a32521398a4dfb9bd017229c72b976344ff9e30649bba247c11bef1e78b2485"
+          },
+          {
+            "file": "packages/storage-sqlite/migrations/0045-acceptanceconfirmations.sql",
+            "source": "failed-source/owner-red-second/packages__storage-sqlite__migrations__0045-acceptanceconfirmations.sql",
+            "sha256": "22369c4caf0d3f03a2dbb3aa72480c7cc056b64b69fdc93d2cf220a077fd9af4"
+          },
+          {
+            "file": "packages/storage-sqlite/migrations/manifest.json",
+            "source": "failed-source/owner-red-second/packages__storage-sqlite__migrations__manifest.json",
+            "sha256": "543a0b9d8b4a6a3b14454410eaab0e4cb86b6df1e16a38cf0d1f9778d4d99862"
+          },
+          {
+            "file": "tests/acceptance-reconfirmation.test.mjs",
+            "source": "failed-source/owner-red-second/tests__acceptance-reconfirmation.test.mjs",
+            "sha256": "10fd301cbb9f05dbbca64e3d17abf0a80ce955983593945b0f20e87ab6ce6f02"
+          },
+          {
+            "file": "tests/storage-acceptance-reconfirmation-upgrade.test.mjs",
+            "source": "failed-source/owner-red-second/tests__storage-acceptance-reconfirmation-upgrade.test.mjs",
+            "sha256": "183dd9ab8d0493ee6bf597bce6d2a2c9cb7444641bf18c2a63e53ad434d02813"
+          }
+        ],
+        "explanation": "Diagnostic identifies CANDIDATE_STALE. Historical source bytes are reconstructed exactly from the first owner test plus its sole diagnostic, verified against original input SHA."
+      },
+      {
+        "record": "owner-red-2026-11-13T15-55-55-396Z.json",
+        "code": 1,
+        "changedDuringRun": [],
+        "bindings": [
+          {
+            "file": "packages/storage-sqlite/src/acceptance-domain.ts",
+            "source": "failed-source/owner-red-third/packages__storage-sqlite__src__acceptance-domain.ts",
+            "sha256": "7a32521398a4dfb9bd017229c72b976344ff9e30649bba247c11bef1e78b2485"
+          },
+          {
+            "file": "packages/storage-sqlite/migrations/0045-acceptanceconfirmations.sql",
+            "source": "failed-source/owner-red-third/packages__storage-sqlite__migrations__0045-acceptanceconfirmations.sql",
+            "sha256": "22369c4caf0d3f03a2dbb3aa72480c7cc056b64b69fdc93d2cf220a077fd9af4"
+          },
+          {
+            "file": "packages/storage-sqlite/migrations/manifest.json",
+            "source": "failed-source/owner-red-third/packages__storage-sqlite__migrations__manifest.json",
+            "sha256": "543a0b9d8b4a6a3b14454410eaab0e4cb86b6df1e16a38cf0d1f9778d4d99862"
+          },
+          {
+            "file": "tests/acceptance-reconfirmation.test.mjs",
+            "source": "failed-source/owner-red-third/tests__acceptance-reconfirmation.test.mjs",
+            "sha256": "5831e6958e0614e2075ad9d5b96d3721c8344de06b4e9125c55a79c35c669db8"
+          },
+          {
+            "file": "tests/storage-acceptance-reconfirmation-upgrade.test.mjs",
+            "source": "failed-source/owner-red-third/tests__storage-acceptance-reconfirmation-upgrade.test.mjs",
+            "sha256": "183dd9ab8d0493ee6bf597bce6d2a2c9cb7444641bf18c2a63e53ad434d02813"
+          }
+        ],
+        "explanation": "Keeping the original actor as operator still leaves existing frozen authority stale. Candidate checks remain unchanged; the test must retain valid original authority rather than simulate unsupported full handover."
+      },
+      {
+        "record": "owner-red-2026-11-13T15-57-43-107Z.json",
+        "code": 1,
+        "changedDuringRun": [],
+        "bindings": [
+          {
+            "file": "packages/storage-sqlite/src/acceptance-domain.ts",
+            "source": "failed-source/owner-red-fourth/packages__storage-sqlite__src__acceptance-domain.ts",
+            "sha256": "7a32521398a4dfb9bd017229c72b976344ff9e30649bba247c11bef1e78b2485"
+          },
+          {
+            "file": "packages/storage-sqlite/migrations/0045-acceptanceconfirmations.sql",
+            "source": "failed-source/owner-red-fourth/packages__storage-sqlite__migrations__0045-acceptanceconfirmations.sql",
+            "sha256": "22369c4caf0d3f03a2dbb3aa72480c7cc056b64b69fdc93d2cf220a077fd9af4"
+          },
+          {
+            "file": "packages/storage-sqlite/migrations/manifest.json",
+            "source": "failed-source/owner-red-fourth/packages__storage-sqlite__migrations__manifest.json",
+            "sha256": "543a0b9d8b4a6a3b14454410eaab0e4cb86b6df1e16a38cf0d1f9778d4d99862"
+          },
+          {
+            "file": "tests/acceptance-reconfirmation.test.mjs",
+            "source": "failed-source/owner-red-fourth/tests__acceptance-reconfirmation.test.mjs",
+            "sha256": "44314ff303eea73050498170df2e54675bee263180a3c0d2db13b6e69116d672"
+          },
+          {
+            "file": "tests/storage-acceptance-reconfirmation-upgrade.test.mjs",
+            "source": "failed-source/owner-red-fourth/tests__storage-acceptance-reconfirmation-upgrade.test.mjs",
+            "sha256": "183dd9ab8d0493ee6bf597bce6d2a2c9cb7444641bf18c2a63e53ad434d02813"
+          }
+        ],
+        "explanation": "With both original frozen authority and the additional current owner valid, independent confirmation is rejected by ACCEPTANCE_REPLACEMENT_BASIS_CHANGED because of the first actor anchor. Final fix removes only the fixed-anchor actor equality, deduplicates per actor and retains current owner authorization plus exact candidate checks."
+      }
+    ],
+    "baseline": {
+      "source": "packages/storage-sqlite/src/acceptance-domain.ts",
+      "sourceHash": "f7cbcb45cb5b88661e5a300853d856a2e6b3c7ad121d6a92248f777f58aa6677",
+      "mapHash": "87bca87b8f30dede928258560814ca63240a095aec5ce1ce53849af904fd689f",
+      "artifactHash": "02afaa583a6b17f863e5d287308b5e5291c790ed0692819506c3557cc0646c14",
+      "embeddedSourceMatchesBase": true
+    },
+    "ownerBaseline": {
+      "sourceHash": "7a32521398a4dfb9bd017229c72b976344ff9e30649bba247c11bef1e78b2485",
+      "mapHash": "8e31692fef4fde78c7cf56cdca24913643dcf3749657d7b03cebad6198f523d4",
+      "artifactHash": "760f563325cf211c968b3f1613a15a9881bfe78dbaa723eb046154760ec93590",
+      "embeddedSourceMatchesInitialNewBuild": true
+    }
+  },
+  "inputAssessment": "Complete ordered root build precedes final tests. Final reconfirmation, regression and storage groups run sequentially, with no in-run or later source/test inventory changes. Current source-map bytes match source files. Old control SQL 1..44 is identical to base, new migration 45 matches the append-only manifest, Runner/store/dependencies are unchanged. Old compiled source and all failed input bytes are bound in failure-history.json.",
+  "scope": "Local development: review change invalidates the old confirmation; exact new confirmation appends history, concurrent old If-Match loses with 412, current If-Match duplicate returns 409. Original receipt recovery, current owner checks, atomic rollback, immutable history and actual successor SQLite replacement plus second T5 use production code. Version 44 migration fixtures are explicit historical rows, not T5. Source/model/Runtime/admission/OCI and physical fencing/container/network/route remain controlled. Second publication, complete D01-D08, clean checkout, real Linux/OIDC and product acceptance remain outstanding.",
+  "limits": [
+    "Historical migration rows, source/model/Runtime/admission/OCI and physical fencing/container/network/route are explicit fixtures.",
+    "Second publication, full D01-D08, clean checkout, real enterprise identity and Linux/gVisor are outstanding.",
+    "This is a single-agent development review; formal work package, stage gates and product acceptance remain separate."
+  ],
+  "managementChecks": "management-checks.json"
+}

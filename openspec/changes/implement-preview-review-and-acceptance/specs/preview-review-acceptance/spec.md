@@ -741,3 +741,29 @@ The system SHALL collect an exact canonical REPLACE data proposal before candida
 #### Scenario: Confirmation uses changed basis or insufficient authority
 - **WHEN** candidate, source, data plan, review, decision identity, Run precondition or owner authority does not match
 - **THEN** confirmation or preparation is rejected without preparing a replacement target or changing accepted history
+
+### Requirement: Replacement reconfirmation retains append-only history
+
+The system SHALL retain the first replacement decision and append a confirmation for each newly approved exact review basis. Preparation SHALL use the current review's matching owner confirmation. The original operation key SHALL recover its original receipt after current owner authorization, and SHALL NOT authorize a different review. A different new key with a current Run precondition for a review already confirmed by that same owner SHALL return an explicit conflict without adding history.
+
+#### Scenario: Review changes after replacement confirmation
+- **WHEN** the review changes while the frozen candidate and data plan retain their decision identity
+- **THEN** the previous confirmation remains immutable and cannot authorize preparation for the new review
+- **AND** the current owner can explicitly confirm the new exact review with a new original key and current Run precondition
+
+#### Scenario: Concurrent reconfirmation and transaction failure
+- **WHEN** two distinct keys concurrently confirm the same new review
+- **THEN** exactly one confirmation succeeds and the other fails its now-stale Run precondition without appending history
+- **AND** an insertion failure rolls back both its operation and confirmation without changing the first decision
+
+#### Scenario: Upgrade preserves the original approval
+- **WHEN** a version 44 control database upgrades
+- **THEN** each existing first approval is copied verbatim into append-only confirmation history without changing the original
+- **AND** a migration failure leaves version, migration history, schema and original facts unchanged
+
+#### Scenario: A new owner confirms without inheriting another owner approval
+- **WHEN** another current owner explicitly confirms the same still-qualified frozen basis
+- **THEN** the new owner must append their own authorized confirmation and cannot use the previous actor approval
+- **AND** all original actor history remains immutable and revoked actors cannot recover protected receipts
+
+- **AND** loss of authority required by the original frozen inputs continues to stale the candidate and is not repaired by another actor confirmation

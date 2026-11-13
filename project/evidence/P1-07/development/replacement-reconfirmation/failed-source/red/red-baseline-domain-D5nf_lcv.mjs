@@ -1,0 +1,12560 @@
+import { i as digest, o as transaction, s as StorageError } from "./migrations-BsETEmRY.mjs";
+import { $ as qualityMaterialTarget, A as releasePromotionRequest, At as repoIntegrateArgs, C as releasePublicationGate, Ct as repoWriteFileArgs, Dt as workspaceRequests, E as releasePublicationRequests, Et as sourceManifest, Ft as toolRequests, H as previewAccessPolicy, It as canonical, J as previewRequests, K as previewBackendPolicy, L as acceptanceBackendPolicy, M as acceptancePreparedProof, N as acceptanceReadinessRequests, Q as qualityMaterialKey, R as acceptancePreparationRequest, S as releasePublicationBasis, St as repoFileRequests, T as releasePublicationProof, U as previewAccessRequests, W as previewWriteCloseRequest, Y as previewRuntimeFact, _t as endpointConfig, a as releaseAccessRequestHash, b as acceptanceAbortDecision, c as releaseTargetForPublication, ct as workspacePreservationTarget, d as acceptanceAbortCompletionEvidence, dt as candidateMaterialKey, et as qualityRequests, ft as candidateMaterialRequests, i as releaseAccessPolicy, it as workspaceMaterialIdentity, j as acceptancePreparationObservation, jt as repoRequests, k as acceptanceCommitRequests, kt as repoCommitArgs, l as previewOrigin, lt as createToolAuthorityDomain, m as acceptanceAbortSourceGate, o as releaseAccessRequests, p as acceptanceAbortRecoveryRequests, pt as candidateMaterialTarget, st as workspacePreservationRequests, t as redactExportRecord, tt as createWorkspacePreservationDomain, u as previewSessionRequests, ut as createWorkspaceDomain, v as acceptanceDatasetAbortRequest, vt as registryRequests, wt as gitDirectoryIdentity, x as acceptanceAbortRequests, yt as repoDeleteFileArgs, z as acceptanceRequests } from "./export-redaction-BFWjPx8a.mjs";
+import { dirname, isAbsolute, join } from "node:path";
+import { createHash, randomUUID } from "node:crypto";
+import { z } from "zod";
+import { acceptanceBasisView, acceptancePreparationList, answerQuestionsInput, architectOutput, artifactRef, assertResourceVersion, attachmentIds, attachmentName, attemptState, candidatePreviewWorkspace, createTaskInput, deliveryDataPlan, domainEvent, epoch, executionPermit, gitCommit, ids, inputManifest, inspectPlan, opaqueKey, parseContract, pipelineDefinition, planDraft, planReviewView, preparationDelegation, preparationProfile, previewDatasetManagement, previewImageIdentity, previewImageLimits, previewManagement, productOutput, projectName, qualityPolicy, relativeFile, releaseDeliveryPolicy, revision, role, roleOutput, saveMessageInput, sha256, timestamp, understandingOutput, understandingView, workDelegation, workRevision } from "@devmesh/contracts";
+import "node:sqlite";
+//#region src/release-export-protocol.ts
+const target$1 = {
+	principalId: opaqueKey,
+	exportId: opaqueKey
+};
+const claim$3 = {
+	...target$1,
+	generation: z.number().int().positive(),
+	claimToken: z.uuid()
+};
+const releaseExportRequests = {
+	createReleaseExport: z.strictObject({
+		meta: z.strictObject({
+			principalId: opaqueKey,
+			scopeId: opaqueKey,
+			idempotencyKey: z.uuid()
+		}),
+		releaseId: opaqueKey,
+		format: z.literal("zip")
+	}),
+	getReleaseExport: z.strictObject(target$1),
+	getReleaseExportEntry: z.strictObject({
+		principalId: opaqueKey,
+		releaseId: opaqueKey
+	}),
+	listReleaseExports: z.strictObject({
+		principalId: opaqueKey,
+		releaseId: opaqueKey,
+		afterExportId: opaqueKey.optional(),
+		limit: z.number().int().min(1).max(200).default(50)
+	}),
+	listReleaseExportWork: z.strictObject({
+		afterExportId: opaqueKey.optional(),
+		limit: z.number().int().min(1).max(200).default(32)
+	}),
+	retryReleaseExport: z.strictObject({
+		...target$1,
+		expectedGeneration: z.number().int().nonnegative()
+	}),
+	claimReleaseExport: z.strictObject(target$1),
+	getReleaseExportContext: z.strictObject(claim$3),
+	prepareReleaseExportArchive: z.strictObject({
+		...claim$3,
+		hash: sha256,
+		byteSize: z.number().int().nonnegative().max(200 * 1024 * 1024),
+		manifest: z.json()
+	}),
+	failReleaseExport: z.strictObject({
+		...claim$3,
+		errorCode: z.string().regex(/^[A-Z][A-Z0-9_]{0,95}$/)
+	})
+};
+//#endregion
+//#region src/work-verification-protocol.ts
+const subject$2 = {
+	principalId: opaqueKey,
+	operationId: ids.operation
+};
+const workVerificationTarget = { operationId: ids.operation };
+const workVerificationRequests = {
+	getWorkVerificationCandidate: z.strictObject({
+		principalId: opaqueKey,
+		runId: ids.run,
+		attemptId: ids.attempt
+	}),
+	beginWorkVerification: z.strictObject({
+		...subject$2,
+		runId: ids.run,
+		attemptId: ids.attempt,
+		candidate: roleOutput,
+		qualityOperationId: ids.operation.nullable().default(null)
+	}),
+	getWorkVerification: z.strictObject(subject$2),
+	listWorkVerifications: z.strictObject({
+		principalId: opaqueKey,
+		runId: ids.run,
+		afterOperationId: z.string().default(""),
+		limit: z.number().int().min(1).max(100).default(50)
+	})
+};
+//#endregion
+//#region src/release-delivery-protocol.ts
+const subject$1 = {
+	principalId: opaqueKey,
+	operationId: ids.operation
+};
+const bound$2 = {
+	...subject$1,
+	requestHash: sha256
+};
+const releaseDeliveryTarget = {
+	operationId: ids.operation,
+	materialKey: opaqueKey
+};
+const releaseDeliveryRequests = {
+	registerReleaseDeliveryPolicy: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policy: releaseDeliveryPolicy
+	}),
+	getReleaseDeliveryPolicy: z.strictObject({
+		principalId: opaqueKey,
+		projectId: ids.project,
+		policyHash: sha256
+	}),
+	beginReleaseDelivery: z.strictObject({
+		...subject$1,
+		runId: ids.run,
+		qualityOperationId: ids.operation,
+		policyHash: sha256
+	}),
+	getReleaseDelivery: z.strictObject(subject$1),
+	getReleaseDeliveryOrigin: z.strictObject(bound$2),
+	listReleaseDeliveryMaterials: z.strictObject(subject$1),
+	completeReleaseDelivery: z.strictObject({
+		...bound$2,
+		image: previewImageIdentity,
+		dataPlan: deliveryDataPlan
+	})
+};
+//#endregion
+//#region src/verified-repair-protocol.ts
+const verifiedRepairTarget = { operationId: ids.operation };
+const verifiedRepairRequests = {
+	prepareVerifiedRepair: z.strictObject({
+		principalId: opaqueKey,
+		operationId: ids.operation,
+		runId: ids.run,
+		sourceAttemptId: ids.attempt,
+		issueIds: z.array(opaqueKey).min(1).max(50),
+		writeScope: workRevision.shape.writeScope,
+		planRevision: revision,
+		requirementRevision: revision,
+		reviewHash: sha256,
+		changeImpact: z.enum([
+			"implementation-only",
+			"requirements",
+			"interfaces"
+		])
+	}),
+	getVerifiedRepair: z.strictObject({
+		principalId: opaqueKey,
+		operationId: ids.operation
+	}),
+	listVerifiedRepairs: z.strictObject({
+		principalId: opaqueKey,
+		runId: ids.run
+	})
+};
+const verifiedRepairPublish = z.strictObject({
+	meta: z.strictObject({
+		principalId: opaqueKey,
+		scopeId: opaqueKey,
+		idempotencyKey: z.uuid()
+	}),
+	runId: ids.run,
+	operationId: ids.operation
+});
+//#endregion
+//#region src/session-protocol.ts
+const meta$5 = z.strictObject({
+	principalId: opaqueKey,
+	scopeId: opaqueKey,
+	idempotencyKey: z.uuid()
+});
+const messageKind = z.enum([
+	"user",
+	"assistant",
+	"tool-call",
+	"tool-result",
+	"context-summary"
+]);
+const page$1 = {
+	afterSeq: epoch.default(0),
+	limit: z.number().int().min(1).max(200).default(50)
+};
+const messageRef = z.strictObject({
+	messageId: ids.message,
+	seq: revision,
+	sha256
+});
+const contextManifest = z.strictObject({
+	schemaVersion: z.literal("devmesh.context.v1"),
+	sessionId: ids.session,
+	roleSnapshotId: ids.roleSnapshot,
+	throughMessageSeq: epoch,
+	configHash: sha256,
+	messages: z.array(messageRef).max(200),
+	summaryContentHash: sha256.optional()
+});
+const objectTarget = z.discriminatedUnion("kind", [
+	z.strictObject({
+		kind: z.literal("releaseExport"),
+		exportId: opaqueKey,
+		generation: z.number().int().positive(),
+		claimToken: z.uuid()
+	}),
+	z.strictObject({
+		kind: z.literal("releaseDelivery"),
+		...releaseDeliveryTarget
+	}),
+	z.strictObject({
+		kind: z.literal("verifiedRepair"),
+		...verifiedRepairTarget
+	}),
+	z.strictObject({
+		kind: z.literal("workVerification"),
+		...workVerificationTarget
+	}),
+	z.strictObject({
+		kind: z.literal("qualityMaterial"),
+		...qualityMaterialTarget
+	}),
+	z.strictObject({
+		kind: z.literal("workspacePreservation"),
+		...workspacePreservationTarget
+	}),
+	z.strictObject({
+		kind: z.literal("candidateMaterial"),
+		...candidateMaterialTarget
+	}),
+	z.strictObject({ kind: z.literal("content") }),
+	z.strictObject({
+		kind: z.literal("attachment"),
+		clientAttachmentId: z.uuid(),
+		name: z.string().min(1).max(255)
+	}),
+	z.strictObject({
+		kind: z.literal("message"),
+		sessionId: ids.session,
+		clientMessageId: opaqueKey,
+		activationId: ids.activation,
+		stepNo: revision.optional(),
+		messageKind,
+		toolCallId: opaqueKey.optional(),
+		sourceRef: z.strictObject({ messageId: ids.message }).optional()
+	}),
+	z.strictObject({
+		kind: z.literal("context"),
+		manifest: contextManifest
+	}),
+	z.strictObject({
+		kind: z.literal("modelRequest"),
+		sessionId: ids.session,
+		stepNo: revision,
+		contextSnapshotId: opaqueKey,
+		configHash: sha256
+	}),
+	z.strictObject({
+		kind: z.literal("modelResponse"),
+		sessionId: ids.session,
+		stepNo: revision,
+		activationId: ids.activation,
+		state: z.enum([
+			"RESPONDED",
+			"INTERRUPTED",
+			"FAILED"
+		]),
+		providerRequestId: z.string().min(1).max(512).optional(),
+		usage: z.strictObject({
+			inputTokens: epoch,
+			outputTokens: epoch,
+			source: z.enum(["provider", "estimated"])
+		}).optional()
+	})
+]);
+const contentReference = z.discriminatedUnion("kind", [
+	z.strictObject({
+		kind: z.literal("releaseExport"),
+		exportId: opaqueKey
+	}),
+	z.strictObject({
+		kind: z.literal("exportMaterial"),
+		exportId: opaqueKey,
+		materialKey: opaqueKey,
+		generation: z.number().int().positive(),
+		claimToken: z.uuid()
+	}),
+	z.strictObject({
+		kind: z.literal("releaseDelivery"),
+		...releaseDeliveryTarget
+	}),
+	z.strictObject({
+		kind: z.literal("verifiedRepair"),
+		...verifiedRepairTarget
+	}),
+	z.strictObject({
+		kind: z.literal("workVerification"),
+		...workVerificationTarget
+	}),
+	z.strictObject({
+		kind: z.literal("qualityMaterial"),
+		...qualityMaterialTarget
+	}),
+	z.strictObject({
+		kind: z.literal("workspacePreservation"),
+		...workspacePreservationTarget
+	}),
+	z.strictObject({
+		kind: z.literal("candidateMaterial"),
+		...candidateMaterialTarget
+	}),
+	z.strictObject({
+		kind: z.literal("attachment"),
+		attachmentId: ids.attachment
+	}),
+	z.strictObject({
+		kind: z.literal("message"),
+		messageId: ids.message
+	}),
+	z.strictObject({
+		kind: z.literal("inputMessage"),
+		messageId: ids.message
+	}),
+	z.strictObject({
+		kind: z.literal("preparationInput"),
+		preparationAttemptId: opaqueKey
+	}),
+	z.strictObject({
+		kind: z.literal("preparationResponse"),
+		preparationAttemptId: opaqueKey
+	}),
+	z.strictObject({
+		kind: z.literal("artifact"),
+		artifactId: ids.artifact
+	}),
+	z.strictObject({
+		kind: z.literal("context"),
+		contextSnapshotId: opaqueKey
+	}),
+	z.strictObject({
+		kind: z.literal("modelRequest"),
+		sessionId: ids.session,
+		stepNo: revision
+	}),
+	z.strictObject({
+		kind: z.literal("modelResponse"),
+		sessionId: ids.session,
+		stepNo: revision
+	})
+]);
+const sessionRequests = {
+	beginObjectWrite: z.strictObject({
+		meta: meta$5,
+		expectedHash: sha256,
+		expectedSize: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+		mimeType: z.string().min(1).max(128),
+		target: objectTarget
+	}),
+	getObjectWrite: z.strictObject({
+		principalId: opaqueKey,
+		writeId: opaqueKey
+	}),
+	sealObjectWrite: z.strictObject({
+		principalId: opaqueKey,
+		writeId: opaqueKey
+	}),
+	commitObjectWrite: z.strictObject({
+		principalId: opaqueKey,
+		writeId: opaqueKey
+	}),
+	failObjectWrite: z.strictObject({
+		principalId: opaqueKey,
+		writeId: opaqueKey,
+		error: z.string().min(1).max(2e3)
+	}),
+	scanObjectWrites: z.strictObject({
+		afterWriteId: z.string().default(""),
+		limit: page$1.limit
+	}),
+	ensureSession: z.strictObject({
+		principalId: opaqueKey,
+		runId: ids.run,
+		attemptId: ids.attempt
+	}),
+	getSession: z.strictObject({
+		principalId: opaqueKey,
+		sessionId: ids.session
+	}),
+	closeSession: z.strictObject({
+		principalId: opaqueKey,
+		sessionId: ids.session
+	}),
+	listSessionMessages: z.strictObject({
+		principalId: opaqueKey,
+		sessionId: ids.session,
+		...page$1
+	}),
+	getModelStep: z.strictObject({
+		principalId: opaqueKey,
+		sessionId: ids.session,
+		stepNo: revision
+	}),
+	markModelStepSent: z.strictObject({
+		principalId: opaqueKey,
+		sessionId: ids.session,
+		stepNo: revision
+	}),
+	resolveContentRead: z.strictObject({
+		principalId: opaqueKey,
+		reference: contentReference
+	}),
+	releaseContentRead: z.strictObject({
+		principalId: opaqueKey,
+		pinId: opaqueKey
+	}),
+	recoverContentReads: z.strictObject({}),
+	listContentObjects: z.strictObject({
+		afterHash: z.string().default(""),
+		limit: page$1.limit
+	}),
+	markContentMissing: z.strictObject({
+		contentHash: sha256,
+		error: z.string().min(1).max(2e3)
+	}),
+	beginContentDeletion: z.strictObject({ contentHash: sha256 }),
+	finishContentDeletion: z.strictObject({ contentHash: sha256 })
+};
+//#endregion
+//#region src/runtime-protocol.ts
+const claim$2 = {
+	endpointId: opaqueKey,
+	taskId: opaqueKey,
+	workerId: opaqueKey,
+	claimToken: opaqueKey
+};
+const activation = { activationId: ids.activation };
+const runtimeRequests = {
+	getExecutionHost: z.strictObject(claim$2),
+	getRuntimeWorkspaceRecovery: z.strictObject(claim$2),
+	reconcileRuntimeWorkspaceResult: z.strictObject(claim$2),
+	renewExecutionHost: z.strictObject(claim$2),
+	getAcceptedTaskSnapshot: z.strictObject(claim$2),
+	reconcileRuntimeTask: z.strictObject({
+		...claim$2,
+		reason: opaqueKey
+	}),
+	beginRuntimeActivation: z.strictObject({
+		...claim$2,
+		...activation,
+		principalId: opaqueKey,
+		sessionId: ids.session,
+		configHash: sha256,
+		config: z.record(z.string(), z.json()),
+		maxSteps: z.number().int().min(1).max(200),
+		tokenLimit: z.number().int().min(1)
+	}),
+	assertRuntimeActivation: z.strictObject({
+		...activation,
+		reservedTokens: z.number().int().nonnegative().default(0)
+	}),
+	accountRuntimeModel: z.strictObject({
+		...activation,
+		stepNo: revision
+	}),
+	markRuntimeModelSent: z.strictObject({
+		...activation,
+		stepNo: revision,
+		reservedTokens: z.number().int().positive()
+	}),
+	setRuntimeState: z.strictObject({
+		...activation,
+		state: z.enum([
+			"WAITING",
+			"FINISHED",
+			"FAILED",
+			"RECONCILE"
+		]),
+		reason: opaqueKey.optional(),
+		unknownUsage: z.boolean().default(false)
+	}),
+	prepareRuntimeTool: z.strictObject({
+		...activation,
+		stepNo: revision,
+		toolCallId: opaqueKey,
+		toolName: opaqueKey,
+		argsHash: sha256,
+		responseHash: sha256,
+		effectClass: z.enum([
+			"READ",
+			"IDEMPOTENT_WRITE",
+			"NONIDEMPOTENT_WRITE"
+		])
+	}),
+	getRuntimeTool: z.strictObject({
+		...activation,
+		stepNo: revision,
+		toolCallId: opaqueKey
+	}),
+	markRuntimeToolSent: z.strictObject({
+		...activation,
+		operationId: ids.operation
+	}),
+	finishRuntimeTool: z.strictObject({
+		...activation,
+		operationId: ids.operation,
+		resultMessageId: ids.message,
+		failed: z.boolean()
+	}),
+	markRuntimeToolUnknown: z.strictObject({
+		...activation,
+		operationId: ids.operation,
+		errorCode: opaqueKey
+	}),
+	recoverRuntimeActivations: z.strictObject({}),
+	publishRuntimeResult: z.strictObject({
+		...activation,
+		stepNo: revision,
+		contentHash: sha256,
+		output: z.record(z.string(), z.json())
+	}),
+	prepareRuntimeWorkspaceResult: z.strictObject({
+		...activation,
+		stepNo: revision,
+		contentHash: sha256,
+		output: z.record(z.string(), z.json())
+	})
+};
+//#endregion
+//#region src/input-protocol.ts
+const principal$1 = { principalId: opaqueKey };
+const meta$4 = z.strictObject({
+	...principal$1,
+	scopeId: opaqueKey,
+	idempotencyKey: z.uuid()
+});
+const page = { limit: z.number().int().min(1).max(200).default(50) };
+const claim$1 = {
+	...principal$1,
+	intakeId: opaqueKey,
+	claimToken: z.uuid()
+};
+const inputRequests = {
+	checkInputAccess: z.strictObject({
+		...principal$1,
+		projectId: ids.project.optional(),
+		runId: ids.run.optional(),
+		write: z.boolean().default(false)
+	}).refine((v) => v.projectId !== void 0 !== (v.runId !== void 0), "Exactly one target is required"),
+	createInputProject: z.strictObject({
+		meta: meta$4,
+		name: projectName,
+		baseCommit: gitCommit,
+		bodyHash: sha256,
+		attachmentIds,
+		clientDraftId: z.uuid()
+	}),
+	createInputTask: z.strictObject({
+		meta: meta$4,
+		projectId: ids.project,
+		ifMatch: z.string().optional(),
+		bodyHash: sha256,
+		body: createTaskInput
+	}),
+	appendInputMessage: z.strictObject({
+		meta: meta$4,
+		runId: ids.run,
+		ifMatch: z.string().optional(),
+		bodyHash: sha256,
+		body: saveMessageInput
+	}),
+	getInputOperation: z.strictObject({
+		...principal$1,
+		operationId: ids.operation
+	}),
+	lookupInputOperation: z.strictObject({
+		...principal$1,
+		scopeId: opaqueKey,
+		idempotencyKey: z.uuid()
+	}),
+	getInputWorkspace: z.strictObject({
+		...principal$1,
+		projectId: ids.project,
+		runId: ids.run.optional(),
+		afterMessageId: z.string().max(256).optional(),
+		...page
+	}),
+	listInputProjects: z.strictObject({
+		...principal$1,
+		cursor: z.strictObject({
+			updatedAt: z.iso.datetime({ precision: 3 }),
+			projectId: ids.project
+		}).optional(),
+		limit: z.number().int().min(1).max(100).default(20)
+	}),
+	listInputEvents: z.strictObject({
+		...principal$1,
+		projectId: ids.project,
+		runId: ids.run,
+		afterSeq: epoch.default(0),
+		...page
+	}),
+	getInputAttachment: z.strictObject({
+		...principal$1,
+		attachmentId: ids.attachment
+	}),
+	removeInputAttachment: z.strictObject({
+		...principal$1,
+		attachmentId: ids.attachment
+	}),
+	claimUploadIntake: z.strictObject({
+		meta: meta$4,
+		claimToken: z.uuid()
+	}),
+	getUploadIntake: z.strictObject({
+		...principal$1,
+		intakeId: opaqueKey
+	}),
+	validateUploadIntake: z.strictObject({
+		...claim$1,
+		requestHash: sha256,
+		contentHash: sha256,
+		byteSize: z.number().int().min(1).max(2097152),
+		name: attachmentName,
+		clientAttachmentId: z.uuid()
+	}),
+	commitUploadIntake: z.strictObject({
+		...claim$1,
+		contentHash: sha256,
+		attachmentId: ids.attachment
+	}),
+	failUploadIntake: z.strictObject({
+		...claim$1,
+		errorCode: opaqueKey
+	}),
+	recoverUploadIntakes: z.strictObject({})
+};
+//#endregion
+//#region src/preparation-protocol.ts
+const principal = { principalId: opaqueKey };
+const meta$3 = z.strictObject({
+	...principal,
+	scopeId: opaqueKey,
+	idempotencyKey: z.uuid()
+});
+const target = {
+	...principal,
+	runId: ids.run
+};
+const claim = {
+	preparationAttemptId: opaqueKey,
+	workerId: opaqueKey,
+	claimToken: opaqueKey
+};
+const json$16 = z.record(z.string(), z.json());
+const preparationRequests = {
+	ensurePreparationJob: z.strictObject({
+		...target,
+		processingOperationId: ids.operation
+	}),
+	getPreparationJob: z.strictObject({
+		...principal,
+		jobId: ids.job
+	}),
+	getUnderstanding: z.strictObject({
+		...target,
+		requirementRevision: revision.optional()
+	}),
+	answerPreparationQuestions: z.strictObject({
+		meta: meta$3,
+		runId: ids.run,
+		ifMatch: z.string().optional(),
+		body: answerQuestionsInput
+	}),
+	retryPreparationInterpretation: z.strictObject({
+		meta: meta$3,
+		runId: ids.run,
+		ifMatch: z.string().optional(),
+		failedInterpretationOperationId: ids.operation
+	}),
+	listPreparationJobs: z.strictObject({ limit: z.number().int().min(1).max(100).default(20) }),
+	failUnreservedPreparation: z.strictObject({
+		...principal,
+		jobId: ids.job,
+		errorCode: z.enum([
+			"BASIS_SUPERSEDED",
+			"PREPARATION_INPUT_LIMIT",
+			"CONTENT_UNAVAILABLE",
+			"PREPARATION_GIT_SOURCE_INVALID",
+			"PREPARATION_BUDGET_EXHAUSTED"
+		])
+	}),
+	getPreparationContext: z.strictObject({
+		...principal,
+		jobId: ids.job
+	}),
+	registerPreparationBootstrap: z.strictObject({
+		...principal,
+		jobId: ids.job,
+		path: relativeFile,
+		contentHash: sha256
+	}),
+	reservePreparation: z.strictObject({
+		...principal,
+		jobId: ids.job,
+		basisHash: sha256,
+		profile: preparationProfile,
+		profileHash: sha256,
+		inputHash: sha256,
+		callerId: opaqueKey,
+		endpointId: opaqueKey,
+		endpointRevision: revision,
+		registryGenerationId: opaqueKey,
+		projectionRevision: epoch
+	}),
+	markPreparationDispatchSent: z.strictObject({ preparationAttemptId: opaqueKey }),
+	lookupPreparationDispatch: z.strictObject({ preparationAttemptId: opaqueKey }),
+	reconcilePreparationDispatch: z.strictObject({ preparationAttemptId: opaqueKey }),
+	acceptPreparationTask: z.strictObject({
+		callerId: opaqueKey,
+		endpointId: opaqueKey,
+		endpointRevision: revision,
+		delegation: preparationDelegation,
+		message: json$16,
+		registryGenerationId: opaqueKey,
+		projectionRevision: epoch
+	}),
+	getPreparationTask: z.strictObject({
+		callerId: opaqueKey,
+		endpointId: opaqueKey,
+		taskId: opaqueKey
+	}),
+	listPreparationTasks: z.strictObject({
+		callerId: opaqueKey,
+		endpointId: opaqueKey,
+		afterId: opaqueKey.optional(),
+		limit: z.number().int().min(1).max(100).default(50)
+	}),
+	listPreparationTaskEvents: z.strictObject({
+		callerId: opaqueKey,
+		endpointId: opaqueKey,
+		taskId: opaqueKey,
+		afterSeq: epoch.default(0)
+	}),
+	cancelPreparationTask: z.strictObject({
+		callerId: opaqueKey,
+		endpointId: opaqueKey,
+		taskId: opaqueKey
+	}),
+	claimPreparationTasks: z.strictObject({
+		endpointId: opaqueKey,
+		workerId: opaqueKey,
+		limit: z.number().int().min(1).max(2).default(1)
+	}),
+	getPreparationHost: z.strictObject(claim),
+	preparePreparationStep: z.strictObject({
+		...claim,
+		requestHash: sha256,
+		reservedTokens: z.number().int().positive()
+	}),
+	markPreparationSent: z.strictObject(claim),
+	savePreparationResponse: z.strictObject({
+		...claim,
+		responseHash: sha256,
+		providerRequestId: z.string().min(1).max(512),
+		usage: z.strictObject({
+			inputTokens: z.number().int().nonnegative(),
+			outputTokens: z.number().int().nonnegative(),
+			source: z.enum(["provider", "estimated"])
+		})
+	}),
+	failPreparation: z.strictObject({
+		...claim,
+		errorCode: opaqueKey,
+		unknown: z.boolean(),
+		knownFailure: z.boolean().default(false)
+	}),
+	applyPreparationResponse: z.strictObject({
+		...claim,
+		outputHash: sha256,
+		output: json$16,
+		planContentHash: sha256.optional()
+	}),
+	recoverPreparations: z.strictObject({})
+};
+//#endregion
+//#region src/pipeline-protocol.ts
+const pipelineId = opaqueKey;
+const ordinal = z.number().int().min(0).max(7);
+const permit = { permit: executionPermit };
+const pipelineJobFact = z.strictObject({
+	jobId: ids.job,
+	operationId: ids.operation,
+	requestHash: sha256,
+	request: z.record(z.string(), z.json()),
+	executionProfile: z.strictObject({
+		runnerId: opaqueKey,
+		commandHash: sha256
+	}).nullable().default(null),
+	endedAt: timestamp.nullable().default(null),
+	state: z.enum([
+		"QUEUED",
+		"STARTING",
+		"RUNNING",
+		"STOPPING",
+		"EXITED",
+		"OUTCOME_UNKNOWN"
+	]),
+	exitCode: z.number().int().nullable(),
+	errorCode: opaqueKey.nullable(),
+	stopRequested: z.boolean(),
+	logCursor: z.number().int().nonnegative(),
+	containerId: z.string().min(1).nullable(),
+	startedAt: timestamp.nullable(),
+	stopEvidence: z.record(z.string(), z.json()).nullable(),
+	outputRefs: z.array(z.strictObject({
+		path: relativeFile,
+		sha256,
+		byteSize: z.number().int().nonnegative()
+	})).max(33)
+});
+const pipelineRequests = {
+	createPipeline: z.strictObject({
+		...permit,
+		operationId: ids.operation,
+		definition: pipelineDefinition,
+		workspaceRef: opaqueKey
+	}),
+	getPipeline: z.strictObject({
+		...permit,
+		pipelineId
+	}),
+	getPipelineOperation: z.strictObject({
+		...permit,
+		operationId: ids.operation
+	}),
+	stopPipeline: z.strictObject({
+		...permit,
+		pipelineId
+	}),
+	listPipelineStages: z.strictObject({ limit: z.number().int().min(1).max(40).default(20) }),
+	markPipelineStageSent: z.strictObject({
+		pipelineId,
+		ordinal
+	}),
+	getPipelineStagePermit: z.strictObject({
+		pipelineId,
+		ordinal
+	}),
+	recordPipelineStage: z.strictObject({
+		pipelineId,
+		ordinal,
+		job: pipelineJobFact
+	}),
+	markPipelineStageUnknown: z.strictObject({
+		pipelineId,
+		ordinal,
+		errorCode: opaqueKey
+	})
+};
+//#endregion
+//#region src/source-archive-protocol.ts
+const original$2 = {
+	permit: executionPermit,
+	operationId: ids.operation
+};
+const acknowledgement$1 = z.strictObject({
+	commit: gitCommit,
+	tree: gitCommit,
+	manifestSha256: sha256,
+	repositoryIdentity: gitDirectoryIdentity,
+	archiveRef: z.string().max(256),
+	sourceRef: z.string().max(256)
+});
+const sourceArchiveRequests = {
+	beginSourceArchive: z.strictObject({
+		...original$2,
+		allocationOperationId: ids.operation,
+		commitOperationId: ids.operation
+	}),
+	getSourceArchive: z.strictObject(original$2),
+	prepareSourceArchive: z.strictObject({
+		...original$2,
+		requestHash: sha256,
+		manifest: sourceManifest
+	}),
+	completeSourceArchive: z.strictObject({
+		...original$2,
+		requestHash: sha256,
+		acknowledgement: acknowledgement$1
+	}),
+	markSourceArchiveUncertain: z.strictObject({
+		...original$2,
+		requestHash: sha256,
+		errorCode: opaqueKey
+	}),
+	failSourceArchive: z.strictObject({
+		...original$2,
+		requestHash: sha256,
+		errorCode: opaqueKey
+	})
+};
+//#endregion
+//#region src/candidate-protocol.ts
+const candidateSubjectFields = {
+	principalId: opaqueKey,
+	runId: ids.run,
+	purpose: z.enum(["run-candidate", "work-input"]),
+	workId: ids.work.optional()
+};
+const validCandidateSubject = (value) => value.purpose === "work-input" ? value.workId !== void 0 : value.workId === void 0;
+const candidateRequests = {
+	getCandidateSourceBasis: z.strictObject(candidateSubjectFields).refine(validCandidateSubject, { message: "A work-input requires exactly one target Work" }),
+	assertCandidateSourceBasis: z.strictObject({
+		...candidateSubjectFields,
+		basisSha256: sha256
+	}).refine(validCandidateSubject, { message: "A work-input requires exactly one target Work" })
+};
+//#endregion
+//#region src/candidate-integration-protocol.ts
+const original$1 = {
+	principalId: opaqueKey,
+	operationId: ids.operation
+};
+const bound$1 = {
+	...original$1,
+	requestHash: sha256
+};
+const step = {
+	...bound$1,
+	ordinal: z.number().int().min(0).max(29)
+};
+const refProof = z.strictObject({
+	ref: z.string().min(1).max(256),
+	commit: gitCommit
+});
+const acknowledgement = z.strictObject({
+	repositoryIdentity: gitDirectoryIdentity,
+	refs: z.array(refProof).min(2).max(3),
+	manifestSha256: sha256
+});
+const candidateIntegrationRequests = {
+	beginCandidateIntegration: z.strictObject({
+		...candidateSubjectFields,
+		operationId: ids.operation,
+		originOperationId: ids.operation.optional()
+	}).refine(validCandidateSubject).refine((i) => !i.originOperationId || i.purpose === "run-candidate"),
+	getCandidateIntegration: z.strictObject(original$1),
+	getCandidateIntegrationBasis: z.strictObject(original$1),
+	getCandidateIntegrationManifest: z.strictObject(original$1),
+	getCandidateIntegrationStep: z.strictObject({
+		...original$1,
+		ordinal: step.ordinal
+	}),
+	beginCandidateStep: z.strictObject(step),
+	prepareCandidateStep: z.strictObject({
+		...step,
+		bases: z.array(gitCommit).min(1).max(64),
+		tree: gitCommit,
+		clean: z.boolean(),
+		reportSha256: sha256
+	}),
+	markCandidateStepSent: z.strictObject(step),
+	acknowledgeCandidateStep: z.strictObject({
+		...step,
+		proof: z.strictObject({
+			repositoryIdentity: gitDirectoryIdentity,
+			commit: gitCommit,
+			tree: gitCommit,
+			ref: z.string().min(1).max(256)
+		})
+	}),
+	prepareCandidateIntegration: z.strictObject({
+		...bound$1,
+		manifest: sourceManifest
+	}),
+	markCandidateIntegrationSent: z.strictObject(bound$1),
+	acknowledgeCandidateIntegration: z.strictObject({
+		...bound$1,
+		acknowledgement
+	}),
+	failUnsentCandidateIntegration: z.strictObject({
+		...bound$1,
+		errorCode: opaqueKey
+	}),
+	recordCandidateCasRejection: z.strictObject({
+		...bound$1,
+		originalRefsAbsent: z.literal(true),
+		gitChildExited: z.literal(true),
+		observedHead: gitCommit.nullable()
+	}),
+	markCandidateIntegrationUncertain: z.strictObject({
+		...bound$1,
+		errorCode: opaqueKey
+	}),
+	getQualifiedCandidateSnapshot: z.strictObject(candidateSubjectFields).refine(validCandidateSubject)
+};
+//#endregion
+//#region src/workspace-maintenance-protocol.ts
+const workspaceMaintenanceRequests = {
+	getManagedWorkspaceBinding: z.strictObject({
+		permit: executionPermit,
+		workspaceRef: opaqueKey,
+		runnerId: opaqueKey
+	}),
+	authorizeWorkspaceMaintenance: z.strictObject({
+		permit: executionPermit,
+		operationId: ids.operation,
+		workspaceRef: opaqueKey,
+		runnerId: opaqueKey
+	}),
+	authorizeManagedWorkspaceAccess: z.strictObject({
+		permit: executionPermit,
+		workspaceRef: opaqueKey,
+		runnerId: opaqueKey,
+		purpose: z.enum(["execution", "fence"])
+	})
+};
+//#endregion
+//#region src/workspace-reclamation-protocol.ts
+const original = {
+	permit: executionPermit,
+	operationId: ids.operation
+};
+const bound = {
+	...original,
+	requestHash: sha256
+};
+const isolationProof = z.strictObject({
+	sourceAbsent: z.literal(true),
+	trashIdentity: workspaceMaterialIdentity,
+	manifestSha256: sha256,
+	receiptSha256: sha256
+});
+const deletionProof = z.strictObject({
+	sourceAbsent: z.literal(true),
+	trashAbsent: z.literal(true),
+	receiptSha256: sha256
+});
+const workspaceReclamationRequests = {
+	beginWorkspaceReclamation: z.strictObject({
+		...original,
+		preservationOperationId: ids.operation
+	}),
+	getWorkspaceReclamation: z.strictObject(original),
+	assertWorkspaceReclamationReady: z.strictObject(original),
+	markWorkspaceIsolationSent: z.strictObject({
+		...bound,
+		receiptSha256: sha256
+	}),
+	acknowledgeWorkspaceIsolation: z.strictObject({
+		...bound,
+		proof: isolationProof
+	}),
+	markWorkspaceDeletionSent: z.strictObject({
+		...bound,
+		receiptSha256: sha256
+	}),
+	acknowledgeWorkspaceDeletion: z.strictObject({
+		...bound,
+		proof: deletionProof
+	}),
+	markWorkspaceReclamationUncertain: z.strictObject({
+		...bound,
+		errorCode: opaqueKey
+	})
+};
+//#endregion
+//#region src/verified-finding-protocol.ts
+const subject = {
+	principalId: opaqueKey,
+	runId: ids.run
+};
+const command = {
+	...subject,
+	operationId: ids.operation,
+	issueId: opaqueKey,
+	issueRevision: revision
+};
+const verifiedFindingRequests = {
+	getVerifiedFinding: z.strictObject({
+		...subject,
+		issueId: opaqueKey,
+		afterRevision: z.number().int().min(0).default(0),
+		limit: z.number().int().min(1).max(20).default(20)
+	}),
+	listVerifiedFindings: z.strictObject({
+		...subject,
+		afterIssueId: z.string().default(""),
+		limit: z.number().int().min(1).max(100).default(50)
+	}),
+	linkVerifiedFindingFix: z.strictObject({
+		...command,
+		fixWorkId: ids.work
+	}),
+	recordVerifiedFindingResult: z.strictObject({
+		...command,
+		fixAttemptId: ids.attempt,
+		verificationAttemptId: ids.attempt
+	})
+};
+//#endregion
+//#region src/release-freeze-protocol.ts
+const read$1 = {
+	principalId: opaqueKey,
+	runId: ids.run
+};
+const meta$2 = z.strictObject({
+	principalId: opaqueKey,
+	scopeId: opaqueKey,
+	idempotencyKey: z.uuid()
+});
+const releaseFreezeRequests = {
+	prepareReleaseCandidateFreeze: z.strictObject({
+		...read$1,
+		integrationOperationId: ids.operation,
+		deliveryOperationId: ids.operation
+	}),
+	freezeReleaseCandidate: z.strictObject({
+		meta: meta$2,
+		runId: ids.run,
+		ifMatch: z.string().optional(),
+		integrationOperationId: ids.operation,
+		deliveryOperationId: ids.operation,
+		basisHash: sha256,
+		contentHashes: z.array(sha256).min(1).max(2048)
+	}),
+	getReleaseCandidate: z.strictObject({
+		...read$1,
+		candidateId: ids.candidate
+	}),
+	getCurrentReleaseCandidate: z.strictObject(read$1),
+	listReleaseCandidates: z.strictObject({
+		...read$1,
+		afterRevision: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	})
+};
+//#endregion
+//#region src/candidate-review-protocol.ts
+const read = {
+	principalId: opaqueKey,
+	runId: ids.run,
+	candidateId: ids.candidate
+};
+const text = z.string().trim().min(1).max(4096);
+const meta$1 = z.strictObject({
+	principalId: opaqueKey,
+	scopeId: opaqueKey,
+	idempotencyKey: z.uuid()
+});
+const candidateReviewRequests = {
+	getCandidateReview: z.strictObject(read),
+	recordCandidateReview: z.strictObject({
+		meta: meta$1,
+		runId: ids.run,
+		candidateId: ids.candidate,
+		ifMatch: z.string().optional(),
+		manifestHash: sha256,
+		itemId: opaqueKey,
+		itemHash: sha256,
+		previousResultId: opaqueKey.nullable(),
+		verdict: z.enum(["PASS", "FAIL"]),
+		procedure: text,
+		expected: z.string().min(1).max(32768),
+		observed: text,
+		evidence: z.array(artifactRef).max(16)
+	}),
+	recordCandidateRejection: z.strictObject({
+		meta: meta$1,
+		runId: ids.run,
+		candidateId: ids.candidate,
+		ifMatch: z.string().optional(),
+		manifestHash: sha256,
+		rejectionId: opaqueKey,
+		previousResultId: opaqueKey.nullable(),
+		classification: z.enum(["IN_SCOPE_DEFECT", "SCOPE_CHANGE"]),
+		state: z.enum(["OPEN", "WITHDRAWN"]),
+		itemId: opaqueKey.nullable(),
+		itemHash: sha256.nullable(),
+		description: text,
+		reason: text,
+		evidence: z.array(artifactRef).max(16)
+	}),
+	listCandidateReviewHistory: z.strictObject({
+		...read,
+		itemId: opaqueKey.optional(),
+		afterSequence: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	}),
+	listCandidateRejectionHistory: z.strictObject({
+		...read,
+		rejectionId: opaqueKey.optional(),
+		afterSequence: z.number().int().nonnegative().default(0),
+		limit: z.number().int().min(1).max(100).default(20)
+	})
+};
+//#endregion
+//#region src/release-session-protocol.ts
+const gateway = {
+	principalId: opaqueKey,
+	gatewayId: opaqueKey,
+	configurationHash: sha256
+};
+const origins = {
+	platformOrigin: previewOrigin,
+	releaseOrigin: previewOrigin
+};
+const releaseSessionRequests = {
+	issueReleaseTicket: z.strictObject({
+		...gateway,
+		...origins,
+		subjectPrincipalId: opaqueKey,
+		runId: ids.run,
+		releaseId: ids.release,
+		ticketId: opaqueKey,
+		tokenSha256: sha256,
+		expiresAt: timestamp
+	}),
+	exchangeReleaseTicket: z.strictObject({
+		...gateway,
+		...origins,
+		ticketTokenSha256: sha256,
+		sessionId: opaqueKey,
+		sessionTokenSha256: sha256,
+		expiresAt: timestamp
+	}),
+	authenticateReleaseSession: z.strictObject({
+		...gateway,
+		releaseOrigin: previewOrigin,
+		tokenSha256: sha256
+	}),
+	revokeReleaseSession: z.strictObject({
+		...gateway,
+		releaseOrigin: previewOrigin,
+		tokenSha256: sha256
+	})
+};
+//#endregion
+//#region src/protocol.ts
+const meta = z.strictObject({
+	principalId: opaqueKey,
+	scopeId: opaqueKey,
+	idempotencyKey: z.uuid()
+});
+const conditional = {
+	meta,
+	runId: ids.run,
+	ifMatch: z.string().optional()
+};
+const limit = z.number().int().min(1).max(200).default(50);
+const roleSnapshot = z.strictObject({
+	role,
+	revision: opaqueKey,
+	provider: opaqueKey,
+	model: opaqueKey,
+	promptArtifactId: ids.artifact,
+	outputSchemaId: opaqueKey,
+	allowedTools: z.array(opaqueKey),
+	maxSteps: revision,
+	contextLimitTokens: revision,
+	outputReserveTokens: revision,
+	requestTimeoutMs: revision,
+	maxReadOnlyRetries: epoch
+});
+const endpointTarget = z.strictObject({
+	endpointId: opaqueKey,
+	revision,
+	cardHash: sha256,
+	registryGenerationId: opaqueKey
+});
+const resources = z.array(z.strictObject({
+	kind: z.enum([
+		"snapshot",
+		"workspace",
+		"projectRepository",
+		"dataset"
+	]),
+	resourceId: opaqueKey,
+	access: z.enum(["read", "write"])
+})).min(1).max(64);
+const admissionWork = z.strictObject({
+	workId: ids.work,
+	workRevision: revision,
+	workEpoch: epoch,
+	inputManifest,
+	roleSnapshot,
+	endpoint: endpointTarget,
+	resources
+});
+const verificationOutputs = z.array(z.strictObject({
+	slot: opaqueKey,
+	ref: artifactRef
+})).max(64);
+const requests = {
+	...releaseExportRequests,
+	...releaseAccessRequests,
+	...releaseSessionRequests,
+	...releasePublicationRequests,
+	...acceptanceAbortRecoveryRequests,
+	...acceptanceAbortRequests,
+	...acceptanceCommitRequests,
+	...acceptanceReadinessRequests,
+	...acceptanceRequests,
+	...previewSessionRequests,
+	...previewAccessRequests,
+	...previewRequests,
+	...candidateReviewRequests,
+	...releaseFreezeRequests,
+	...releaseDeliveryRequests,
+	...verifiedRepairRequests,
+	publishVerifiedRepair: verifiedRepairPublish,
+	...verifiedFindingRequests,
+	...workVerificationRequests,
+	...qualityRequests,
+	...workspaceMaintenanceRequests,
+	...workspaceReclamationRequests,
+	...workspacePreservationRequests,
+	...candidateMaterialRequests,
+	...candidateIntegrationRequests,
+	...candidateRequests,
+	...sourceArchiveRequests,
+	...repoFileRequests,
+	...workspaceRequests,
+	...repoRequests,
+	...pipelineRequests,
+	...toolRequests,
+	...preparationRequests,
+	...inputRequests,
+	...runtimeRequests,
+	...registryRequests,
+	...sessionRequests,
+	registerContent: z.strictObject({
+		contentHash: sha256,
+		byteSize: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+		mimeType: z.string().min(1).max(128)
+	}),
+	createProjectWithRun: z.strictObject({
+		meta,
+		projectId: ids.project.optional(),
+		name: projectName,
+		baseCommit: gitCommit,
+		contentHash: sha256,
+		kind: z.enum([
+			"NEW",
+			"ITERATION",
+			"FIX"
+		]).default("NEW"),
+		clientMessageId: z.uuid()
+	}),
+	publishPlan: z.strictObject({
+		...conditional,
+		requirementRevision: revision,
+		planRevision: revision,
+		requirements: productOutput,
+		plan: planDraft,
+		planContentHash: sha256
+	}),
+	confirmPlan: z.strictObject({
+		...conditional,
+		planRevision: revision,
+		requirementRevision: revision,
+		reviewHash: sha256,
+		carryForwardHash: sha256.optional()
+	}),
+	getPlanReview: z.strictObject({
+		principalId: opaqueKey,
+		runId: ids.run,
+		planRevision: revision.optional()
+	}),
+	confirmReviewedPlan: z.strictObject({
+		...conditional,
+		planRevision: revision,
+		requirementRevision: revision,
+		reviewHash: sha256,
+		carryForwardHash: sha256.optional()
+	}),
+	admitWorks: z.strictObject({
+		...conditional,
+		runEpoch: epoch,
+		planRevision: revision,
+		works: z.array(admissionWork).min(1).max(2)
+	}),
+	nextScheduledWork: z.strictObject({ limit: z.number().int().min(1).max(100).default(24) }),
+	deferScheduledWork: z.strictObject({
+		runId: ids.run,
+		resourceRevision: revision
+	}),
+	admitScheduledWork: z.strictObject({
+		...conditional,
+		runEpoch: epoch,
+		planRevision: revision,
+		work: admissionWork.omit({ inputManifest: true }),
+		callerId: opaqueKey,
+		runnerId: opaqueKey,
+		reservationKey: opaqueKey,
+		runnerCapacity: z.number().int().min(1).max(4),
+		runnerLimits: z.strictObject({
+			cpu: z.number().positive().max(64),
+			memoryMiB: revision,
+			timeoutMs: revision
+		}),
+		maximumAttempts: z.number().int().min(1).max(200),
+		maximumReservedMs: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+		templateVersion: opaqueKey,
+		checkConfigHash: sha256
+	}),
+	recordVerifiedWork: z.strictObject({
+		meta,
+		runId: ids.run,
+		attemptId: ids.attempt,
+		outcome: z.enum(["success", "completed-with-findings"]),
+		evidence: artifactRef,
+		outputs: verificationOutputs,
+		codeCommit: gitCommit.nullable(),
+		verificationOperationId: ids.operation.optional()
+	}),
+	listScheduledDispatches: z.strictObject({ limit: z.number().int().min(1).max(50).default(8) }),
+	markScheduledDispatchSent: z.strictObject({
+		attemptId: ids.attempt,
+		callerId: opaqueKey
+	}),
+	reconcileScheduledDispatch: z.strictObject({
+		attemptId: ids.attempt,
+		callerId: opaqueKey
+	}),
+	transitionAttempt: z.strictObject({
+		meta,
+		runId: ids.run,
+		attemptId: ids.attempt,
+		expectedState: attemptState,
+		state: attemptState,
+		evidenceRef: artifactRef.optional()
+	}),
+	setControlIntent: z.strictObject({
+		...conditional,
+		action: z.enum(["pause", "cancel"])
+	}),
+	finishRun: z.strictObject({
+		...conditional,
+		outcome: z.enum(["FAILED", "CANCELLED"]),
+		reason: z.string().min(1).max(2e3)
+	}),
+	lookupOperation: z.strictObject({
+		principalId: opaqueKey,
+		scopeId: opaqueKey,
+		idempotencyKey: z.uuid()
+	}),
+	getOperation: z.strictObject({ operationId: ids.operation }),
+	getRun: z.strictObject({ runId: ids.run }),
+	getAttempt: z.strictObject({ attemptId: ids.attempt }),
+	listEvents: z.strictObject({
+		runId: ids.run,
+		afterSeq: epoch.default(0),
+		limit
+	}),
+	claimOutbox: z.strictObject({
+		workerId: opaqueKey,
+		limit,
+		leaseMs: z.number().int().min(100).max(3e4).default(5e3)
+	}),
+	settleOutbox: z.strictObject({
+		outboxId: opaqueKey,
+		workerId: opaqueKey,
+		deliveryAttempt: revision,
+		outcome: z.enum(["ACKED", "RECONCILE"])
+	}),
+	inspect: z.strictObject({})
+};
+//#endregion
+//#region src/release-export-domain.ts
+const json$15 = (v) => JSON.parse(String(v));
+function fail$31(code, status = 409) {
+	throw new StorageError(code, status, "Release export requires its frozen materials and current project membership");
+}
+function createReleaseExportDomain(db, hooks) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	const all = (sql, ...p) => db.prepare(sql).all(...p);
+	const exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const now = () => (/* @__PURE__ */ new Date()).toISOString();
+	function release(principalId, releaseId) {
+		return get("SELECT r.*,c.receipt_json FROM releases r JOIN acceptance_commits c ON c.release_id=r.release_id JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=? WHERE r.release_id=?", principalId, releaseId) ?? fail$31("RESOURCE_NOT_FOUND", 404);
+	}
+	function authorized(principalId, exportId, owner = false) {
+		const r = get("SELECT * FROM release_exports WHERE export_id=?", exportId) ?? fail$31("RESOURCE_NOT_FOUND", 404);
+		release(principalId, String(r.release_id));
+		if (owner && r.principal_id !== principalId) fail$31("FORBIDDEN", 403);
+		return r;
+	}
+	const snapshot = (r) => json$15(r.snapshot_json);
+	function view(r, principalId) {
+		const s = snapshot(r);
+		return {
+			exportId: String(r.export_id),
+			releaseId: String(r.release_id),
+			runId: s.release.runId,
+			candidateId: s.candidateId,
+			codeCommit: s.codeCommit,
+			cutoffSeq: s.cutoffSeq,
+			snapshotHash: String(r.snapshot_hash),
+			state: r.state,
+			generation: Number(r.generation),
+			leaseUntil: r.lease_until,
+			archiveHash: r.archive_hash,
+			archiveSize: r.archive_size,
+			errorCode: r.error_code,
+			createdAt: String(r.created_at),
+			updatedAt: String(r.updated_at),
+			canRetry: r.principal_id === principalId && (r.state === "FAILED" || r.state === "PACKING" && String(r.lease_until) <= now())
+		};
+	}
+	function history(id, state, generation, error = null) {
+		exec("INSERT INTO release_export_history SELECT ?,COALESCE(MAX(seq),0)+1,?,?,?,? FROM release_export_history WHERE export_id=?", id, state, generation, error, now(), id);
+	}
+	function claim(i) {
+		const r = authorized(i.principalId, i.exportId, true);
+		if (r.state !== "PACKING" || r.generation !== i.generation || r.claim_token !== i.claimToken || String(r.lease_until) <= now()) fail$31("EXPORT_CLAIM_STALE");
+		return r;
+	}
+	const context = (r) => ({
+		job: view(r, String(r.principal_id)),
+		generation: Number(r.generation),
+		claimToken: String(r.claim_token),
+		snapshot: snapshot(r),
+		writeKey: String(r.claim_token)
+	});
+	function capture(principalId, releaseId) {
+		const r = release(principalId, releaseId), c = get("SELECT * FROM release_candidates WHERE candidate_id=? AND run_id=?", r.candidate_id, r.run_id) ?? fail$31("EXPORT_MATERIAL_MISSING"), m = json$15(c.manifest_json);
+		if (digest(canonical(m)) !== r.manifest_hash || m.codeCommit !== c.code_commit) fail$31("EXPORT_MATERIAL_CHANGED");
+		const integration = get("SELECT manifest_json FROM candidate_integrations WHERE operation_id=? AND state='ACKNOWLEDGED'", m.source.operationId), source = sourceManifest.parse(json$15(integration?.manifest_json));
+		const { sha256, ...body } = source;
+		if (source.commit !== m.codeCommit || source.sha256 !== m.source.manifestSha256 || digest(canonical(body)) !== sha256) fail$31("EXPORT_SOURCE_CHANGED");
+		const run = get("SELECT event_seq FROM runs WHERE run_id=?", r.run_id), cutoffSeq = Number(run.event_seq), materials = [];
+		function add(key, path, hash, transform = "EXACT") {
+			const content = get("SELECT byte_size FROM content_objects WHERE content_hash=? AND state='READY'", hash) ?? fail$31("EXPORT_MATERIAL_MISSING");
+			if (Number(content.byte_size) > 64 * 1024 * 1024) fail$31("EXPORT_LIMIT_EXCEEDED", 413);
+			materials.push({
+				key,
+				path,
+				contentHash: hash,
+				byteSize: Number(content.byte_size),
+				transform
+			});
+		}
+		const records = {};
+		records.acceptance = json$15(r.receipt_json);
+		const policy = get("SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?", r.project_id, m.checkConfigHash) ?? fail$31("EXPORT_MATERIAL_MISSING");
+		const qualityConfiguration = json$15(policy.policy_json);
+		if (digest(canonical(qualityConfiguration)) !== m.checkConfigHash) fail$31("EXPORT_MATERIAL_CHANGED");
+		records.qualityConfiguration = qualityConfiguration;
+		for (const [key, table, revision] of [[
+			"requirements",
+			"requirement_revisions",
+			m.requirementRevision
+		], [
+			"plan",
+			"plan_revisions",
+			m.planRevision
+		]]) {
+			const row = get(`SELECT content_json FROM ${table} WHERE run_id=? AND revision=?`, r.run_id, revision) ?? fail$31("EXPORT_MATERIAL_MISSING");
+			records[key] = json$15(row.content_json);
+		}
+		records.candidate = {
+			candidateId: String(r.candidate_id),
+			revision: Number(r.candidate_revision),
+			manifestHash: String(r.manifest_hash),
+			automaticStatus: m.automaticStatus,
+			reviewStatus: m.reviewStatus,
+			works: m.works,
+			quality: m.quality.map((q) => ({
+				operationId: q.verification.operationId,
+				evaluation: q.verification.evaluation
+			})),
+			issues: m.issues,
+			image: m.delivery.record.image,
+			dataPlan: m.delivery.record.dataPlan
+		};
+		const bounded = (sql, ...p) => {
+			const rows = all(sql, ...p);
+			if (rows.length > 2e3) fail$31("EXPORT_LIMIT_EXCEEDED", 413);
+			return rows;
+		};
+		const roleRows = bounded("SELECT attempt_id,work_id,role,state,role_snapshot_json FROM attempts WHERE run_id=? ORDER BY created_at,attempt_id LIMIT 2001", r.run_id);
+		records.roles = roleRows.map((a) => ({
+			attemptId: a.attempt_id,
+			workId: a.work_id,
+			role: a.role,
+			state: a.state,
+			configuration: json$15(a.role_snapshot_json)
+		}));
+		records.events = bounded("SELECT seq,type,work_id,attempt_id,payload_json,occurred_at,observed_at FROM events WHERE run_id=? AND seq<=? ORDER BY seq LIMIT 2001", r.run_id, cutoffSeq).map((e) => ({
+			seq: e.seq,
+			type: e.type,
+			workId: e.work_id,
+			attemptId: e.attempt_id,
+			payload: json$15(e.payload_json),
+			occurredAt: e.occurred_at,
+			observedAt: e.observed_at
+		}));
+		records.a2a = bounded("SELECT endpoint_id,task_id,attempt_id,protocol_state FROM a2a_tasks WHERE run_id=? ORDER BY endpoint_id,task_id LIMIT 2001", r.run_id);
+		records.a2aHistory = bounded("SELECT e.endpoint_id,e.task_id,e.seq,e.snapshot_json,e.created_at FROM a2a_task_events e JOIN a2a_tasks t ON t.endpoint_id=e.endpoint_id AND t.task_id=e.task_id WHERE t.run_id=? ORDER BY e.endpoint_id,e.task_id,e.seq LIMIT 2001", r.run_id).map((e) => ({
+			endpointId: e.endpoint_id,
+			taskId: e.task_id,
+			seq: e.seq,
+			snapshot: json$15(e.snapshot_json),
+			createdAt: e.created_at
+		}));
+		records.tools = bounded("SELECT t.operation_id,t.attempt_id,t.tool_name,t.effect_class,t.request_hash,o.status,o.created_at,o.updated_at FROM tool_operations t JOIN operations o ON o.operation_id=t.operation_id WHERE t.run_id=? ORDER BY t.operation_id LIMIT 2001", r.run_id);
+		records.repositoryOperations = bounded("SELECT operation_id,attempt_id,tool_name,state,request_hash,created_at,updated_at FROM repo_operations WHERE run_id=? ORDER BY operation_id LIMIT 2001", r.run_id);
+		const messages = bounded("SELECT m.message_id,m.session_id,m.message_seq,m.kind,m.body_content_hash,m.created_at FROM session_messages m JOIN agent_sessions s ON s.session_id=m.session_id WHERE s.run_id=? ORDER BY m.session_id,m.message_seq LIMIT 2001", r.run_id);
+		records.messages = messages.map((v, n) => {
+			const key = "message." + n;
+			add(key, "collaboration/messages/" + n + ".json", String(v.body_content_hash), "REDACT_JSON");
+			return {
+				key,
+				sessionId: v.session_id,
+				seq: v.message_seq,
+				kind: v.kind,
+				createdAt: v.created_at
+			};
+		});
+		records.sessionCursors = [...new Set(messages.map((m) => String(m.session_id)))].map((sessionId) => ({
+			sessionId,
+			throughMessageSeq: Math.max(...messages.filter((m) => m.session_id === sessionId).map((m) => Number(m.message_seq)))
+		}));
+		for (const [n, v] of m.delivery.materials.entries()) add("delivery." + n, {
+			"run.instructions": "delivery/run-instructions.json",
+			"collaboration.record": "collaboration/runner-record.json",
+			"role.configuration": "configuration/runner-role.json",
+			"data.plan": "delivery/data-plan.json",
+			"image.manifest": "delivery/image/manifest.json",
+			"image.config": "delivery/image/config.json"
+		}[v.materialKey] ?? "delivery/" + v.materialKey + ".bin", v.contentHash, [
+			"run.instructions",
+			"collaboration.record",
+			"role.configuration"
+		].includes(v.materialKey) ? "REDACT_JSON" : "EXACT");
+		for (const [n, q] of m.quality.entries()) for (const [j, v] of q.materials.entries()) add(`quality.${n}.${j}`, `quality/${n}/${j}.bin`, v.contentHash);
+		const artifactIndex = [], seen = /* @__PURE__ */ new Set();
+		function artifact(artifactId, transform = "EXACT", expectedHash) {
+			if (seen.has(artifactId)) {
+				if (expectedHash !== void 0 && artifactIndex.find((a) => a.artifactId === artifactId).sha256 !== expectedHash) fail$31("EXPORT_MATERIAL_CHANGED");
+				return;
+			}
+			const row = get("SELECT content_hash FROM artifacts WHERE artifact_id=? AND project_id=? AND state='READY'", artifactId, r.project_id) ?? fail$31("EXPORT_MATERIAL_MISSING");
+			if (expectedHash !== void 0 && row.content_hash !== expectedHash) fail$31("EXPORT_MATERIAL_CHANGED");
+			seen.add(artifactId);
+			const key = "artifact." + seen.size, path = "artifacts/" + seen.size + ".json", hash = String(row.content_hash);
+			add(key, path, hash, transform);
+			artifactIndex.push({
+				artifactId,
+				key,
+				path,
+				sha256: hash
+			});
+		}
+		for (const role of roleRows) artifact(json$15(role.role_snapshot_json).promptArtifactId, "REDACT_JSON");
+		records.userMessages = bounded("SELECT message_id,author,body_artifact_id,created_at FROM input_messages WHERE run_id=? ORDER BY created_at,message_id LIMIT 2001", r.run_id).map((v) => {
+			artifact(String(v.body_artifact_id), "REDACT_JSON");
+			return {
+				messageId: v.message_id,
+				author: v.author,
+				artifactId: v.body_artifact_id,
+				createdAt: v.created_at
+			};
+		});
+		records.inputAttachments = bounded("SELECT a.attachment_id,a.name,a.content_hash,a.byte_size,l.message_id,l.position FROM input_message_attachments l JOIN input_messages m ON m.message_id=l.message_id JOIN attachments a ON a.attachment_id=l.attachment_id WHERE m.run_id=? ORDER BY l.message_id,l.position LIMIT 2001", r.run_id).map((v, n) => {
+			const key = "attachment." + n;
+			add(key, "collaboration/attachments/" + n + ".json", String(v.content_hash), "REDACT_JSON");
+			return {
+				key,
+				messageId: v.message_id,
+				attachmentId: v.attachment_id,
+				name: v.name,
+				position: v.position
+			};
+		});
+		for (const w of m.works) for (const ref of [
+			w.evidence,
+			w.assessment.candidate,
+			...w.assessment.outputs.map((o) => o.ref)
+		]) artifact(ref.artifactId, "EXACT", ref.sha256);
+		records.artifactIndex = artifactIndex;
+		if (materials.length > 1e4 || materials.reduce((n, v) => n + v.byteSize, 0) > 190 * 1024 * 1024) fail$31("EXPORT_LIMIT_EXCEEDED", 413);
+		return {
+			schemaVersion: "devmesh.release-export-snapshot.v1",
+			release: json$15(r.receipt_json),
+			candidateId: String(r.candidate_id),
+			candidateRevision: Number(r.candidate_revision),
+			manifestHash: String(r.manifest_hash),
+			codeCommit: m.codeCommit,
+			requirementRevision: m.requirementRevision,
+			planRevision: m.planRevision,
+			checkConfigHash: m.checkConfigHash,
+			templateVersion: m.templateVersion,
+			cutoffSeq,
+			source: {
+				identity: m.source.basis.repository.identity,
+				manifest: source
+			},
+			records: redactExportRecord(records),
+			materials
+		};
+	}
+	const handlers = {
+		createReleaseExport(i) {
+			if (i.meta.scopeId !== i.releaseId) fail$31("OPERATION_SCOPE_INVALID", 422);
+			if (!hooks) fail$31("SERVICE_UNAVAILABLE", 503);
+			const op = hooks.operation(i.meta, "CreateReleaseExport", {
+				releaseId: i.releaseId,
+				format: i.format
+			}, (operationId) => {
+				const s = capture(i.meta.principalId, i.releaseId), text = canonical(s);
+				if (Buffer.byteLength(text) > 240 * 1024) fail$31("EXPORT_LIMIT_EXCEEDED", 413);
+				const id = "export_" + randomUUID().replaceAll("-", ""), time = now();
+				exec("INSERT INTO release_exports(export_id,operation_id,release_id,principal_id,snapshot_hash,snapshot_json,state,write_key,created_at,updated_at) VALUES(?,?,?,?,?,?,'QUEUED',?,?,?)", id, operationId, i.releaseId, i.meta.principalId, digest(text), text, randomUUID(), time, time);
+				for (const m of s.materials) exec("INSERT INTO release_export_materials VALUES(?,?,?,?,?,?)", id, m.key, m.path, m.contentHash, m.byteSize, m.transform);
+				history(id, "QUEUED", 0);
+				return { exportId: id };
+			}, () => {
+				release(i.meta.principalId, i.releaseId);
+			});
+			return view(authorized(i.meta.principalId, String(op.result.exportId)), i.meta.principalId);
+		},
+		getReleaseExport(i) {
+			return view(authorized(i.principalId, i.exportId), i.principalId);
+		},
+		getReleaseExportEntry(i) {
+			const r = release(i.principalId, i.releaseId), c = get("SELECT code_commit FROM release_candidates WHERE candidate_id=?", r.candidate_id) ?? fail$31("EXPORT_MATERIAL_MISSING"), p = get("SELECT accepted_release_id FROM projects WHERE project_id=?", r.project_id);
+			return {
+				releaseId: i.releaseId,
+				runId: String(r.run_id),
+				candidateId: String(r.candidate_id),
+				codeCommit: String(c.code_commit),
+				acceptedAt: String(r.accepted_at),
+				isCurrentAccepted: p.accepted_release_id === i.releaseId
+			};
+		},
+		listReleaseExports(i) {
+			release(i.principalId, i.releaseId);
+			const rows = all("SELECT * FROM release_exports WHERE release_id=? AND export_id>? ORDER BY export_id LIMIT ?", i.releaseId, i.afterExportId ?? "", i.limit + 1);
+			return {
+				jobs: rows.slice(0, i.limit).map((r) => view(r, i.principalId)),
+				nextCursor: rows.length > i.limit ? String(rows[i.limit - 1].export_id) : null
+			};
+		},
+		listReleaseExportWork(i) {
+			const rows = all("SELECT e.export_id,e.principal_id,e.state,e.generation FROM release_exports e JOIN releases r ON r.release_id=e.release_id JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=e.principal_id WHERE e.export_id>? AND (e.state='QUEUED' OR (e.state='PACKING' AND e.lease_until<=?)) ORDER BY e.export_id LIMIT ?", i.afterExportId ?? "", now(), i.limit + 1);
+			return {
+				jobs: rows.slice(0, i.limit).map((r) => ({
+					exportId: String(r.export_id),
+					principalId: String(r.principal_id),
+					state: r.state,
+					generation: Number(r.generation)
+				})),
+				nextCursor: rows.length > i.limit ? String(rows[i.limit - 1].export_id) : null
+			};
+		},
+		retryReleaseExport(i) {
+			const r = authorized(i.principalId, i.exportId, true);
+			if (r.state === "READY") return view(r, i.principalId);
+			if (r.generation !== i.expectedGeneration) fail$31("EXPORT_CLAIM_STALE");
+			if (r.state === "QUEUED") return view(r, i.principalId);
+			if (r.state === "PACKING" && String(r.lease_until) > now()) fail$31("EXPORT_IN_PROGRESS");
+			exec("UPDATE release_exports SET state='QUEUED',claim_token=NULL,lease_until=NULL,error_code=NULL,updated_at=? WHERE export_id=?", now(), i.exportId);
+			history(i.exportId, "QUEUED", Number(r.generation));
+			return view(authorized(i.principalId, i.exportId), i.principalId);
+		},
+		claimReleaseExport(i) {
+			const r = authorized(i.principalId, i.exportId, true);
+			if (r.state !== "QUEUED") return null;
+			const generation = Number(r.generation) + 1;
+			exec("UPDATE release_exports SET state='PACKING',generation=?,claim_token=?,lease_until=?,error_code=NULL,updated_at=? WHERE export_id=?", generation, randomUUID(), new Date(Date.now() + 12e4).toISOString(), now(), i.exportId);
+			history(i.exportId, "PACKING", generation);
+			return context(authorized(i.principalId, i.exportId, true));
+		},
+		getReleaseExportContext(i) {
+			return context(claim(i));
+		},
+		prepareReleaseExportArchive(i) {
+			const r = claim(i), text = canonical(i.manifest);
+			if (Buffer.byteLength(text) > 192 * 1024) fail$31("EXPORT_LIMIT_EXCEEDED", 413);
+			if (r.archive_hash !== null && (r.archive_hash !== i.hash || r.archive_size !== i.byteSize || r.archive_manifest !== text)) fail$31("EXPORT_ARCHIVE_CHANGED");
+			exec("UPDATE release_exports SET archive_hash=?,archive_size=?,archive_manifest=?,updated_at=? WHERE export_id=?", i.hash, i.byteSize, text, now(), i.exportId);
+			return view(authorized(i.principalId, i.exportId), i.principalId);
+		},
+		failReleaseExport(i) {
+			const r = claim(i);
+			exec("UPDATE release_exports SET state='FAILED',error_code=?,updated_at=? WHERE export_id=?", i.errorCode, now(), i.exportId);
+			history(i.exportId, "FAILED", Number(r.generation), i.errorCode);
+			return view(authorized(i.principalId, i.exportId), i.principalId);
+		}
+	};
+	function authorize(principalId, t) {
+		const r = authorized(principalId, t.exportId, true);
+		if (r.state === "READY" && r.generation === t.generation && r.claim_token === t.claimToken) return r;
+		return claim({
+			principalId,
+			exportId: t.exportId,
+			generation: t.generation,
+			claimToken: t.claimToken
+		});
+	}
+	return {
+		execute(method, input) {
+			const i = parseContract(releaseExportRequests[method], input), call = () => handlers[method](i);
+			return method === "createReleaseExport" ? call() : transaction(db, call);
+		},
+		authorize,
+		validateWrite(i) {
+			const r = authorize(i.meta.principalId, i.target);
+			if (i.meta.scopeId !== i.target.exportId || i.meta.idempotencyKey !== r.claim_token || i.expectedHash !== r.archive_hash || i.expectedSize !== r.archive_size || i.mimeType !== "application/zip") fail$31("EXPORT_ARCHIVE_CHANGED");
+		},
+		commit(principalId, t, hash, write) {
+			const r = authorize(principalId, t);
+			if (hash !== r.archive_hash || write.expected_hash !== r.archive_hash || write.expected_size !== r.archive_size) fail$31("EXPORT_ARCHIVE_CHANGED");
+			if (r.state !== "READY") {
+				exec("UPDATE release_exports SET state='READY',content_hash=?,error_code=NULL,updated_at=? WHERE export_id=?", hash, now(), t.exportId);
+				history(t.exportId, "READY", Number(r.generation));
+			}
+			return {
+				exportId: t.exportId,
+				contentHash: hash
+			};
+		},
+		resolve(principalId, t) {
+			const r = authorized(principalId, t.exportId, t.kind === "exportMaterial");
+			if (t.kind === "releaseExport") {
+				if (r.state !== "READY" || !r.content_hash) fail$31("EXPORT_NOT_READY");
+				return { content_hash: r.content_hash };
+			}
+			claim({
+				principalId,
+				...t
+			});
+			return get("SELECT content_hash FROM release_export_materials WHERE export_id=? AND material_key=?", t.exportId, t.materialKey) ?? fail$31("EXPORT_MATERIAL_MISSING");
+		}
+	};
+}
+//#endregion
+//#region src/registry-domain.ts
+const uid$8 = (p) => p + "_" + randomUUID().replaceAll("-", "");
+const now$13 = () => (/* @__PURE__ */ new Date()).toISOString();
+const reject$3 = (code, message, status = 409) => {
+	throw new StorageError(code, status, message);
+};
+const terminal$1 = /* @__PURE__ */ new Set([
+	"completed",
+	"failed",
+	"canceled",
+	"rejected"
+]);
+const wireState = (state) => "TASK_STATE_" + state.toUpperCase().replaceAll("-", "_");
+function createRegistryDomain(db, onAttemptState) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	const all = (sql, ...p) => db.prepare(sql).all(...p);
+	const exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const required = (r) => r ?? reject$3("RESOURCE_NOT_FOUND", "Requested record does not exist", 404);
+	const control = () => get("SELECT c.*,g.manifest_revision,g.manifest_hash FROM registry_control c JOIN registry_generations g ON g.generation_id=c.active_generation_id WHERE singleton_id=1");
+	const bump = () => exec("UPDATE registry_control SET projection_revision=projection_revision+1 WHERE singleton_id=1");
+	function scheduledState(attemptId, state, prior) {
+		const a = get(`SELECT a.*,r.run_epoch,r.control_gate,r.terminal_outcome,w.work_epoch current_work_epoch FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id
+     JOIN runs r ON r.run_id=a.run_id JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id WHERE a.attempt_id=?`, attemptId);
+		if (!a || a.ended_at !== null || !prior.includes(String(a.state))) return;
+		if (state !== "OUTCOME_UNKNOWN" && (a.control_gate !== "OPEN" || a.admitted_run_epoch !== a.run_epoch || a.admitted_work_epoch !== a.current_work_epoch || a.terminal_outcome !== null)) return;
+		exec("UPDATE attempts SET state=? WHERE attempt_id=?", state, attemptId);
+		onAttemptState?.(String(a.run_id), String(a.dispatch_operation_id), String(a.work_id), attemptId, state);
+	}
+	const endpoint = (id, rev) => {
+		const r = required(get("SELECT e.*,s.lifecycle,s.last_applied_sequence,s.latest_check_id,c.status,c.expires_at FROM endpoint_registrations e JOIN endpoint_runtime_state s ON s.endpoint_id=e.endpoint_id AND s.revision=e.revision LEFT JOIN endpoint_checks c ON c.check_id=s.latest_check_id WHERE e.endpoint_id=? AND e.revision=?", id, rev));
+		return {
+			config: JSON.parse(String(r.config_json)),
+			configHash: String(r.config_hash),
+			lifecycle: String(r.lifecycle),
+			checkId: r.latest_check_id === null ? null : String(r.latest_check_id),
+			status: String(r.status ?? "UNKNOWN"),
+			expiresAt: r.expires_at === null ? null : String(r.expires_at),
+			checkSequence: Number(r.last_applied_sequence)
+		};
+	};
+	const snapshot = () => {
+		const c = control();
+		if (!c) return {
+			generationId: null,
+			projectionRevision: 0,
+			manifestRevision: null,
+			manifestHash: null,
+			endpoints: [],
+			bindings: []
+		};
+		return {
+			generationId: String(c.active_generation_id),
+			projectionRevision: Number(c.projection_revision),
+			manifestRevision: String(c.manifest_revision),
+			manifestHash: String(c.manifest_hash),
+			endpoints: all("SELECT endpoint_id,revision FROM endpoint_registrations ORDER BY endpoint_id,revision").map((e) => endpoint(String(e.endpoint_id), Number(e.revision))),
+			bindings: all("SELECT role,endpoint_id,endpoint_revision FROM role_endpoint_bindings WHERE generation_id=? ORDER BY role", String(c.active_generation_id)).map((r) => ({
+				role: String(r.role),
+				endpointId: String(r.endpoint_id),
+				revision: Number(r.endpoint_revision)
+			}))
+		};
+	};
+	function available(id, rev, hash) {
+		const e = endpoint(id, rev);
+		if (e.lifecycle !== "ACTIVE" || !e.config.enabled || e.status !== "HEALTHY" || !e.expiresAt || e.expiresAt <= now$13()) reject$3("ENDPOINT_UNAVAILABLE", "Endpoint is not active with a current compatible health check", 503);
+		if (hash && e.config.cardHash !== hash) reject$3("ENDPOINT_CARD_CHANGED", "Frozen card hash differs");
+		return e;
+	}
+	function applyCheck(input) {
+		const t = required(get("SELECT * FROM registry_probe_tickets WHERE check_id=?", input.checkId)), e = endpoint(String(t.endpoint_id), Number(t.endpoint_revision));
+		if (t.config_hash !== e.configHash) reject$3("PROBE_BASIS_CHANGED", "Probe configuration differs");
+		if (input.checkedAt < String(t.issued_at) || input.expiresAt <= input.checkedAt || Date.parse(input.expiresAt) - Date.parse(input.checkedAt) > 3e5 || Date.parse(input.checkedAt) > Date.now() + 5e3) reject$3("PROBE_TIME_INVALID", "Health result has invalid observation or expiry");
+		const previous = get("SELECT * FROM endpoint_checks WHERE check_id=?", input.checkId);
+		const status = input.status === "HEALTHY" && input.observedCardHash !== e.config.cardHash ? "NEEDS_REVIEW" : input.status;
+		if (previous) {
+			if (previous.status !== status || previous.observed_card_hash !== input.observedCardHash || previous.checked_at !== input.checkedAt || previous.expires_at !== input.expiresAt || previous.error_code !== input.errorCode) reject$3("PROBE_RESULT_CONFLICT", "A probe result is immutable");
+			return false;
+		}
+		exec("INSERT INTO endpoint_checks VALUES(?,?,?,?,?,?,?,?,?)", input.checkId, String(t.endpoint_id), Number(t.endpoint_revision), Number(t.check_sequence), status, input.observedCardHash, input.checkedAt, input.expiresAt, input.errorCode);
+		if (Number(t.check_sequence) <= e.checkSequence) return false;
+		exec("UPDATE endpoint_runtime_state SET latest_check_id=?,last_applied_sequence=?,changed_at=? WHERE endpoint_id=? AND revision=?", input.checkId, Number(t.check_sequence), now$13(), String(t.endpoint_id), Number(t.endpoint_revision));
+		return true;
+	}
+	const taskRow = (caller, id, taskId) => required(get("SELECT t.*,o.caller_id,o.endpoint_revision,o.status_revision,o.cancel_requested FROM a2a_tasks t JOIN a2a_task_ownership o ON o.endpoint_id=t.endpoint_id AND o.task_id=t.task_id WHERE t.endpoint_id=? AND t.task_id=? AND o.caller_id=?", id, taskId, caller));
+	const taskView = (r) => ({
+		endpointId: String(r.endpoint_id),
+		taskId: String(r.task_id),
+		contextId: String(r.context_id),
+		state: String(r.protocol_state),
+		revision: Number(r.status_revision),
+		cancelRequested: r.cancel_requested === 1,
+		snapshot: JSON.parse(String(r.snapshot_json))
+	});
+	const internalTask = (id, taskId) => required(get("SELECT t.*,o.caller_id,o.endpoint_revision,o.status_revision,o.cancel_requested FROM a2a_tasks t JOIN a2a_task_ownership o ON o.endpoint_id=t.endpoint_id AND o.task_id=t.task_id WHERE t.endpoint_id=? AND t.task_id=?", id, taskId));
+	function updateTask(r, state, body) {
+		const current = JSON.parse(String(r.snapshot_json)), data = body ?? {
+			...current,
+			status: {
+				state: wireState(state),
+				timestamp: now$13()
+			}
+		};
+		if (data.id !== r.task_id || data.contextId !== r.context_id || data.status?.state !== wireState(state)) reject$3("TASK_SNAPSHOT_INVALID", "Snapshot identity/state must match the persisted Task", 422);
+		data.metadata = {
+			...data.metadata,
+			cancelRequested: r.cancel_requested === 1
+		};
+		const text = canonical(data), rev = Number(r.status_revision) + 1;
+		if (Buffer.byteLength(text) > 128 * 1024) reject$3("TASK_SNAPSHOT_TOO_LARGE", "Use content references for large bodies", 413);
+		exec("UPDATE a2a_tasks SET protocol_state=?,snapshot_json=? WHERE endpoint_id=? AND task_id=?", state, text, String(r.endpoint_id), String(r.task_id));
+		exec("UPDATE a2a_task_ownership SET status_revision=?,updated_at=? WHERE endpoint_id=? AND task_id=?", rev, now$13(), String(r.endpoint_id), String(r.task_id));
+		exec("INSERT INTO a2a_task_events VALUES(?,?,?,?,?)", String(r.endpoint_id), String(r.task_id), rev, text, now$13());
+		return taskView(internalTask(String(r.endpoint_id), String(r.task_id)));
+	}
+	function validateDelegation(d, caller) {
+		const a = required(get("SELECT a.*,r.control_gate,r.terminal_outcome,r.run_epoch,r.current_plan_revision,r.current_requirement_revision,w.work_epoch FROM attempts a JOIN runs r ON r.run_id=a.run_id JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id WHERE a.attempt_id=?", d.attemptId));
+		const b = required(get("SELECT * FROM attempt_dispatch_bindings WHERE attempt_id=?", d.attemptId));
+		const e = available(d.endpointId, d.endpointRevision), g = required(get("SELECT * FROM execution_grants WHERE grant_id=? AND attempt_id=? AND activation_id=?", d.grantId, d.attemptId, d.activationId));
+		const p = JSON.parse(String(g.permit_json));
+		const role = JSON.parse(String(a.role_snapshot_json));
+		if (!e.config.allowedCallers.includes(caller)) reject$3("CALLER_NOT_ALLOWED", "Service caller cannot invoke this endpoint", 403);
+		if (a.run_id !== d.runId || a.work_id !== d.workId || a.work_revision !== d.workRevision || a.role !== d.targetRole || a.dispatch_operation_id !== d.operationId || b.endpoint_id !== d.endpointId || b.endpoint_revision !== d.endpointRevision || b.input_manifest_id !== d.inputManifestId || b.role_snapshot_id !== d.roleSnapshotId || a.current_plan_revision !== d.planRevision || a.current_requirement_revision !== d.requirementRevision) reject$3("DELEGATION_BASIS_CHANGED", "Delegation differs from frozen dispatch authority", 403);
+		if (role.outputSchemaId !== d.requestedOutputSchema) reject$3("DELEGATION_BASIS_CHANGED", "Requested output schema differs from the frozen role snapshot", 403);
+		if (a.control_gate !== "OPEN" || a.terminal_outcome !== null || a.ended_at !== null || a.run_epoch !== d.runEpoch || a.work_epoch !== d.workEpoch || g.status !== "ACTIVE" || String(g.expires_at) <= now$13() || p.notBefore > now$13() || p.runEpoch !== d.runEpoch || p.workEpoch !== d.workEpoch) reject$3("EXECUTION_PERMIT_INVALID", "Execution gate, epoch or grant is no longer valid", 403);
+		return {
+			a,
+			b
+		};
+	}
+	const handlers = {
+		getRegistrySnapshot() {
+			return transaction(db, snapshot);
+		},
+		issueEndpointProbe(input) {
+			return transaction(db, () => {
+				const e = input.endpoint, hash = digest(canonical(e)), old = get("SELECT config_hash FROM endpoint_registrations WHERE endpoint_id=? AND revision=?", e.endpointId, e.revision);
+				if (old && old.config_hash !== hash) reject$3("ENDPOINT_REVISION_REUSED", "Endpoint revision is immutable");
+				const seq = Number(get("SELECT max(check_sequence) n FROM registry_probe_tickets WHERE endpoint_id=? AND endpoint_revision=?", e.endpointId, e.revision)?.n ?? 0) + 1, id = uid$8("check");
+				exec("INSERT INTO registry_probe_tickets VALUES(?,?,?,?,?,?)", id, e.endpointId, e.revision, seq, hash, now$13());
+				return {
+					checkId: id,
+					sequence: seq
+				};
+			});
+		},
+		commitRegistry(input) {
+			return transaction(db, () => {
+				const manifest = input.manifest, hash = digest(canonical(manifest)), c = control(), previous = get("SELECT * FROM registry_imports WHERE manifest_revision=?", manifest.manifestRevision);
+				if (previous && previous.manifest_hash !== hash) reject$3("MANIFEST_REVISION_REUSED", "Same manifest revision has different content");
+				if (previous && previous.generation_id !== c?.active_generation_id) reject$3("MANIFEST_ROLLBACK_FORBIDDEN", "Publish a new revision to select historical configuration");
+				if (Number(c?.projection_revision ?? 0) !== input.expectedProjectionRevision) reject$3("REGISTRY_VERSION_CHANGED", "Registry projection changed during validation");
+				for (const e of manifest.endpoints) {
+					const configHash = digest(canonical(e)), old = get("SELECT * FROM endpoint_registrations WHERE endpoint_id=? AND revision=?", e.endpointId, e.revision);
+					if (old && old.config_hash !== configHash) reject$3("ENDPOINT_REVISION_REUSED", "Endpoint version cannot change");
+					if (!old) {
+						exec("INSERT INTO endpoint_registrations VALUES(?,?,?,?,?)", e.endpointId, e.revision, configHash, canonical(e), now$13());
+						exec("INSERT INTO endpoint_runtime_state VALUES(?,?,?,NULL,0,?,?)", e.endpointId, e.revision, e.enabled ? "ACTIVE" : "DRAINING", e.enabled ? null : "manifest-disabled", now$13());
+					}
+				}
+				const expected = new Set(manifest.endpoints.map((e) => e.endpointId + ":" + e.revision));
+				for (const check of input.checks) {
+					const ticket = required(get("SELECT * FROM registry_probe_tickets WHERE check_id=?", check.checkId));
+					if (!expected.has(ticket.endpoint_id + ":" + ticket.endpoint_revision)) reject$3("PROBE_OUTSIDE_MANIFEST", "Probe belongs to a different manifest endpoint");
+					applyCheck(check);
+				}
+				for (const e of manifest.endpoints) if (!input.checks.some((check) => {
+					const t = get("SELECT endpoint_id,endpoint_revision FROM registry_probe_tickets WHERE check_id=?", check.checkId);
+					return t?.endpoint_id === e.endpointId && t.endpoint_revision === e.revision;
+				})) reject$3("MANIFEST_CHECKS_INCOMPLETE", "Check every configured endpoint before committing");
+				if (!previous) {
+					const gen = uid$8("generation");
+					exec("INSERT INTO registry_generations VALUES(?,?,?,?,?)", gen, manifest.manifestRevision, hash, canonical(manifest), now$13());
+					exec("INSERT INTO registry_imports VALUES(?,?,?,?)", manifest.manifestRevision, hash, gen, now$13());
+					for (const e of manifest.endpoints) if (e.role && e.enabled) exec("INSERT INTO role_endpoint_bindings VALUES(?,?,?,?)", gen, e.role, e.endpointId, e.revision);
+					for (const old of all("SELECT endpoint_id,revision FROM endpoint_runtime_state WHERE lifecycle='ACTIVE'")) if (!manifest.endpoints.some((e) => e.endpointId === old.endpoint_id && e.revision === old.revision && e.enabled)) exec("UPDATE endpoint_runtime_state SET lifecycle='DRAINING',drain_reason='manifest-removed',changed_at=? WHERE endpoint_id=? AND revision=?", now$13(), String(old.endpoint_id), Number(old.revision));
+					if (c) exec("UPDATE registry_control SET active_generation_id=?,projection_revision=projection_revision+1,activated_at=? WHERE singleton_id=1", gen, now$13());
+					else exec("INSERT INTO registry_control VALUES(1,?,1,?)", gen, now$13());
+				} else bump();
+				return snapshot();
+			});
+		},
+		recordEndpointCheck(input) {
+			return transaction(db, () => {
+				const applied = applyCheck(input);
+				if (applied) bump();
+				return {
+					applied,
+					projectionRevision: Number(control()?.projection_revision ?? 0)
+				};
+			});
+		},
+		setEndpointLifecycle(input) {
+			return transaction(db, () => {
+				const e = endpoint(input.endpointId, input.revision);
+				if (input.lifecycle === "ACTIVE" && (e.status !== "HEALTHY" || !e.expiresAt || e.expiresAt <= now$13() || !e.config.enabled)) reject$3("ENDPOINT_UNAVAILABLE", "Explicit activation requires compatible current health");
+				if (input.lifecycle === "RETIRED" && get("SELECT b.attempt_id FROM attempt_dispatch_bindings b JOIN attempts a ON a.attempt_id=b.attempt_id JOIN runs r ON r.run_id=a.run_id WHERE b.endpoint_id=? AND b.endpoint_revision=? AND r.terminal_outcome IS NULL", input.endpointId, input.revision)) reject$3("ENDPOINT_IN_USE", "Endpoint is frozen by a nonterminal Run");
+				if (input.lifecycle === "RETIRED" && get("SELECT t.task_id FROM a2a_tasks t JOIN a2a_task_ownership o ON o.endpoint_id=t.endpoint_id AND o.task_id=t.task_id WHERE t.endpoint_id=? AND o.endpoint_revision=? AND t.protocol_state NOT IN ('completed','failed','canceled','rejected')", input.endpointId, input.revision)) reject$3("ENDPOINT_IN_USE", "Endpoint has nonterminal tasks");
+				exec("UPDATE endpoint_runtime_state SET lifecycle=?,drain_reason=?,changed_at=? WHERE endpoint_id=? AND revision=?", input.lifecycle, input.lifecycle === "ACTIVE" ? null : input.reason, now$13(), input.endpointId, input.revision);
+				exec("INSERT INTO registry_audit VALUES(?,?,?,?,?,?,?)", uid$8("audit"), input.actorId, input.endpointId, input.revision, input.lifecycle, input.reason, now$13());
+				bump();
+				return snapshot();
+			});
+		},
+		assertRegistryTarget(input) {
+			return transaction(db, () => {
+				const c = required(control());
+				if (c.active_generation_id !== input.generationId || c.projection_revision !== input.projectionRevision) reject$3("REGISTRY_PROJECTION_STALE", "Refresh registry before executing", 503);
+				if (input.role && !get("SELECT role FROM role_endpoint_bindings WHERE generation_id=? AND role=? AND endpoint_id=? AND endpoint_revision=?", input.generationId, input.role, input.endpointId, input.revision)) reject$3("REGISTRY_BINDING_CHANGED", "Default role binding differs");
+				return available(input.endpointId, input.revision, input.cardHash);
+			});
+		},
+		acceptA2AWork(input) {
+			return transaction(db, () => {
+				const d = input.delegation, hash = digest(canonical({
+					endpointId: input.endpointId,
+					endpointRevision: d.endpointRevision,
+					delegation: d,
+					message: input.message
+				})), old = get("SELECT * FROM delegation_inbox WHERE caller_id=? AND operation_id=?", input.callerId, d.operationId);
+				if (old) {
+					if (old.request_hash !== hash) reject$3("IDEMPOTENCY_KEY_REUSED", "Original operation belongs to a different A2A request");
+					return taskView(taskRow(input.callerId, String(old.endpoint_id), String(old.task_id)));
+				}
+				if (d.endpointId !== input.endpointId || d.endpointRevision !== input.endpointRevision) reject$3("ENDPOINT_REVISION_UNAVAILABLE", "Requested implementation is not hosted by this route");
+				const { b } = validateDelegation(d, input.callerId);
+				if (required(control()).projection_revision !== input.projectionRevision || b.registry_generation_id !== input.generationId) reject$3("REGISTRY_PROJECTION_STALE", "Registry projection is not current", 503);
+				const scheduled = get("SELECT caller_id FROM scheduled_work WHERE attempt_id=?", d.attemptId);
+				if (scheduled && (scheduled.caller_id !== input.callerId || !get("SELECT 1 FROM scheduled_dispatch_delivery WHERE attempt_id=? AND operation_id=? AND state IN ('SENT','RECONCILE')", d.attemptId, d.operationId))) reject$3("DISPATCH_NOT_SENT", "Scheduled work requires its persisted original send", 403);
+				if (get("SELECT task_id FROM a2a_tasks WHERE attempt_id=?", d.attemptId)) reject$3("ATTEMPT_ALREADY_ACCEPTED", "An Attempt already has a task");
+				const id = randomUUID(), context = randomUUID(), time = now$13(), text = canonical({
+					id,
+					contextId: context,
+					status: {
+						state: wireState("submitted"),
+						timestamp: time
+					},
+					history: [input.message],
+					metadata: {
+						operationId: d.operationId,
+						endpointRevision: d.endpointRevision
+					},
+					artifacts: []
+				});
+				exec("INSERT INTO a2a_tasks VALUES(?,?,?,?,?,?,?)", input.endpointId, id, context, d.runId, d.attemptId, "submitted", text);
+				exec("INSERT INTO a2a_task_ownership VALUES(?,?,?,?,1,0,?,?)", input.endpointId, id, input.callerId, input.endpointRevision, time, time);
+				exec("INSERT INTO delegation_inbox VALUES(?,?,?,?,?,?)", input.callerId, d.operationId, hash, input.endpointId, id, time);
+				exec("INSERT INTO accepted_work(endpoint_id,task_id,state,activation_id) VALUES(?,?,'PENDING',?)", input.endpointId, id, d.activationId);
+				exec("INSERT INTO a2a_task_events VALUES(?,?,1,?,?)", input.endpointId, id, text, time);
+				if (scheduled) scheduledState(d.attemptId, "SUBMITTED", ["RESERVED", "OUTCOME_UNKNOWN"]);
+				return taskView(taskRow(input.callerId, input.endpointId, id));
+			});
+		},
+		getA2ATask(input) {
+			return taskView(taskRow(input.callerId, input.endpointId, input.taskId));
+		},
+		listA2ATasks(input) {
+			return transaction(db, () => {
+				const rows = all("SELECT t.*,o.status_revision,o.cancel_requested FROM a2a_tasks t JOIN a2a_task_ownership o ON o.endpoint_id=t.endpoint_id AND o.task_id=t.task_id WHERE o.caller_id=? AND t.endpoint_id=? AND t.task_id>? ORDER BY t.task_id LIMIT ?", input.callerId, input.endpointId, input.afterId ?? "", input.limit + 1), tasks = rows.slice(0, input.limit).map(taskView);
+				return {
+					tasks,
+					nextPageToken: rows.length > input.limit ? tasks.at(-1).taskId : "",
+					totalSize: Number(get("SELECT count(*) n FROM a2a_task_ownership WHERE caller_id=? AND endpoint_id=?", input.callerId, input.endpointId)?.n ?? 0)
+				};
+			});
+		},
+		listA2ATaskEvents(input) {
+			return transaction(db, () => {
+				taskRow(input.callerId, input.endpointId, input.taskId);
+				return all("SELECT seq,snapshot_json FROM a2a_task_events WHERE endpoint_id=? AND task_id=? AND seq>? ORDER BY seq LIMIT 100", input.endpointId, input.taskId, input.afterSeq).map((r) => ({
+					seq: Number(r.seq),
+					snapshot: JSON.parse(String(r.snapshot_json))
+				}));
+			});
+		},
+		cancelA2ATask(input) {
+			return transaction(db, () => {
+				const r = taskRow(input.callerId, input.endpointId, input.taskId);
+				if (r.protocol_state === "canceled" || r.cancel_requested === 1) return taskView(r);
+				if (terminal$1.has(String(r.protocol_state))) reject$3("TASK_NOT_CANCELABLE", "Task is terminal");
+				exec("UPDATE a2a_task_ownership SET cancel_requested=1 WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId);
+				r.cancel_requested = 1;
+				const pending = get("SELECT task_id FROM accepted_work WHERE endpoint_id=? AND task_id=? AND state='PENDING'", input.endpointId, input.taskId);
+				if (pending) exec("UPDATE accepted_work SET state='FINISHED' WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId);
+				return updateTask(r, pending ? "canceled" : String(r.protocol_state));
+			});
+		},
+		claimAcceptedWork(input) {
+			return transaction(db, () => {
+				const result = [];
+				for (const r of all("SELECT task_id FROM accepted_work WHERE endpoint_id=? AND state='PENDING' ORDER BY task_id LIMIT ?", input.endpointId, input.limit)) {
+					const t = internalTask(input.endpointId, String(r.task_id)), body = JSON.parse(String(t.snapshot_json));
+					const d = parseContract(registryRequests.acceptA2AWork.shape.delegation, body.history[0]?.parts[0]?.data);
+					validateDelegation(d, String(t.caller_id));
+					const token = uid$8("claim");
+					exec("UPDATE accepted_work SET state='ACTIVE',worker_id=?,claim_token=?,claimed_at=? WHERE endpoint_id=? AND task_id=?", input.workerId, token, now$13(), input.endpointId, String(r.task_id));
+					updateTask(t, "working");
+					scheduledState(d.attemptId, "WORKING", ["SUBMITTED"]);
+					result.push({
+						endpointId: input.endpointId,
+						taskId: String(r.task_id),
+						workerId: input.workerId,
+						claimToken: token,
+						delegation: d
+					});
+				}
+				return result;
+			});
+		},
+		settleAcceptedWork(input) {
+			return transaction(db, () => {
+				const a = required(get("SELECT * FROM accepted_work WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId)), r = internalTask(input.endpointId, input.taskId);
+				if (a.worker_id !== input.workerId || a.claim_token !== input.claimToken || a.state !== "ACTIVE") reject$3("ACCEPTED_WORK_CLAIM_CHANGED", "Only current active consumer can update Task");
+				if (input.state === "canceled" && (!input.stopVerified || get("SELECT operation_id FROM tool_operations WHERE attempt_id=? AND operation_id IN (SELECT operation_id FROM operations WHERE status NOT IN ('SUCCEEDED','FAILED'))", String(r.attempt_id)) || get("SELECT j.job_id FROM runner_jobs j JOIN tool_operations t ON t.operation_id=j.operation_id WHERE t.attempt_id=? AND j.state<>'EXITED'", String(r.attempt_id)))) reject$3("STOP_NOT_VERIFIED", "Cancellation needs known stopped effects");
+				const result = updateTask(r, input.state, input.snapshot);
+				exec("UPDATE accepted_work SET state=? WHERE endpoint_id=? AND task_id=?", terminal$1.has(input.state) ? "FINISHED" : ["input-required", "auth-required"].includes(input.state) ? "WAITING" : "ACTIVE", input.endpointId, input.taskId);
+				if (input.state === "completed") scheduledState(String(r.attempt_id), "VERIFYING", ["WORKING"]);
+				if (["input-required", "auth-required"].includes(input.state)) scheduledState(String(r.attempt_id), "INPUT_REQUIRED", ["WORKING"]);
+				if ([
+					"failed",
+					"rejected",
+					"canceled"
+				].includes(input.state)) scheduledState(String(r.attempt_id), "OUTCOME_UNKNOWN", [
+					"SUBMITTED",
+					"WORKING",
+					"INPUT_REQUIRED"
+				]);
+				return result;
+			});
+		},
+		recoverAcceptedWork() {
+			return transaction(db, () => ({ reconcileCount: Number(exec("UPDATE accepted_work SET state='RECONCILE' WHERE state='ACTIVE'").changes) }));
+		}
+	};
+	return {
+		markCandidateReady(attemptId) {
+			scheduledState(attemptId, "VERIFYING", ["WORKING"]);
+		},
+		freezeDispatch(attemptId, role, target, fingerprint, roleSnapshotId) {
+			const c = control();
+			if (!c) return null;
+			if (c.active_generation_id !== target.registryGenerationId || !get("SELECT role FROM role_endpoint_bindings WHERE generation_id=? AND role=? AND endpoint_id=? AND endpoint_revision=?", target.registryGenerationId, role, target.endpointId, target.revision)) reject$3("REGISTRY_BINDING_CHANGED", "Requested role binding differs from active Registry");
+			available(target.endpointId, target.revision, target.cardHash);
+			const id = uid$8("manifest");
+			exec("INSERT INTO attempt_dispatch_bindings VALUES(?,?,?,?,?,?,?,?)", attemptId, target.endpointId, target.revision, target.registryGenerationId, Number(c.projection_revision), id, fingerprint, roleSnapshotId);
+			return id;
+		},
+		execute(method, input) {
+			const parsed = parseContract(registryRequests[method], input);
+			return handlers[method](parsed);
+		}
+	};
+}
+//#endregion
+//#region src/runtime-workspaces.ts
+function fail$30(code) {
+	throw new StorageError(code, 409, "Managed runtime result could not be verified");
+}
+function createRuntimeWorkspaces(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	function managed(a) {
+		return JSON.parse(String(a.config_json)).workspace ?? null;
+	}
+	function allocation(a) {
+		const config = managed(a);
+		if (!config || config.schemaVersion !== "devmesh.managed-runtime.v1") fail$30("RUNTIME_WORKSPACE_NOT_CONFIGURED");
+		const rows = db.prepare("SELECT * FROM workspace_allocations WHERE activation_id=? AND attempt_id=? AND grant_id=?").all(String(a.activation_id), String(a.attempt_id), String(a.grant_id));
+		if (rows.length !== 1) fail$30("RUNTIME_WORKSPACE_ALLOCATION_UNPROVEN");
+		const w = rows[0];
+		if (w.state !== "READY" || !w.identity_json || !w.manifest_json || w.runner_id !== config.runnerId) fail$30("RUNTIME_WORKSPACE_ALLOCATION_UNPROVEN");
+		return w;
+	}
+	function view(r) {
+		return {
+			activationId: String(r.activation_id),
+			allocationOperationId: String(r.allocation_operation_id),
+			commitOperationId: r.commit_operation_id,
+			archiveOperationId: r.archive_operation_id,
+			stepNo: Number(r.step_no),
+			contentHash: String(r.content_hash),
+			output: JSON.parse(String(r.output_json))
+		};
+	}
+	function prepare(a, stepNo, contentHash, raw) {
+		const output = roleOutput.parse(raw), old = get("SELECT * FROM runtime_workspace_results WHERE activation_id=?", a.activation_id);
+		if (old) {
+			if (old.content_hash !== contentHash || old.output_json !== canonical(output) || old.step_no !== stepNo) fail$30("RUNTIME_WORKSPACE_RESULT_IMMUTABLE");
+			return view(old);
+		}
+		const w = allocation(a), attempt = get("SELECT * FROM attempts WHERE attempt_id=?", a.attempt_id);
+		if (!attempt || output.role !== attempt.role) fail$30("RUNTIME_WORKSPACE_ROLE_CHANGED");
+		const input = JSON.parse(String(attempt.input_manifest_json));
+		if (w.base_commit !== input.codeCommit) fail$30("RUNTIME_WORKSPACE_BASE_CHANGED");
+		if (digest(canonical(output)) !== contentHash || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY'", contentHash)) fail$30("RESULT_HASH_MISMATCH");
+		if (!get("SELECT 1 FROM model_steps m JOIN runtime_model_accounting c ON c.session_id=m.session_id AND c.step_no=m.step_no WHERE m.session_id=? AND m.step_no=? AND m.state='RESPONDED' AND c.activation_id=?", a.session_id, stepNo, a.activation_id)) fail$30("MODEL_RESPONSE_NOT_DURABLE");
+		if (get("SELECT 1 FROM runtime_tool_calls WHERE activation_id=? AND state NOT IN ('FAILED','SUCCEEDED')", a.activation_id)) fail$30("TOOL_OUTCOME_UNKNOWN");
+		let commitId = null, archiveId = null;
+		if (output.role === "developer") {
+			if (w.kind !== "development" || output.baseCommit !== w.base_commit) fail$30("RUNTIME_WORKSPACE_BASE_CHANGED");
+			const commits = db.prepare("SELECT * FROM repo_operations WHERE activation_id=? AND attempt_id=? AND grant_id=? AND tool_name='repo.commit' AND state='SUCCEEDED' AND json_extract(prepared_json,'$.commit')=? AND json_extract(result_json,'$.commit')=? AND json_extract(request_json,'$.binding.workspaceRef')=?").all(a.activation_id, a.attempt_id, a.grant_id, output.resultCommit, output.resultCommit, w.workspace_ref);
+			if (commits.length !== 1) fail$30("RUNTIME_WORKSPACE_COMMIT_UNPROVEN");
+			commitId = String(commits[0].operation_id);
+			archiveId = "op_" + digest("runtime-source-archive\0" + String(a.activation_id));
+		} else if (output.role === "tester") {
+			if (w.kind !== "verification" || output.targetCommit !== w.base_commit) fail$30("RUNTIME_WORKSPACE_BASE_CHANGED");
+		} else fail$30("RUNTIME_WORKSPACE_ROLE_CHANGED");
+		db.prepare("INSERT INTO runtime_workspace_results VALUES(?,?,?,?,?,?,?,?)").run(a.activation_id, w.operation_id, commitId, archiveId, stepNo, contentHash, canonical(output), (/* @__PURE__ */ new Date()).toISOString());
+		return view(get("SELECT * FROM runtime_workspace_results WHERE activation_id=?", a.activation_id));
+	}
+	function assertPublication(a, stepNo, contentHash, output) {
+		if (!managed(a)) return;
+		const r = get("SELECT * FROM runtime_workspace_results WHERE activation_id=?", a.activation_id), w = allocation(a);
+		if (!r || r.step_no !== stepNo || r.content_hash !== contentHash || r.output_json !== canonical(output) || r.allocation_operation_id !== w.operation_id) fail$30("RUNTIME_WORKSPACE_RESULT_UNPREPARED");
+		if (r.archive_operation_id) {
+			const s = get("SELECT * FROM source_archives WHERE operation_id=?", r.archive_operation_id);
+			if (!s || s.state !== "ACKNOWLEDGED" || s.allocation_operation_id !== w.operation_id || s.commit_operation_id !== r.commit_operation_id || s.activation_id !== a.activation_id || !s.manifest_json || !s.acknowledgement_json) fail$30("RUNTIME_SOURCE_ARCHIVE_UNACKNOWLEDGED");
+			const ack = JSON.parse(String(s.acknowledgement_json)), manifest = JSON.parse(String(s.manifest_json)), result = roleOutput.parse(output);
+			if (result.role !== "developer" || ack.commit !== result.resultCommit || manifest.commit !== result.resultCommit || ack.manifestSha256 !== manifest.sha256) fail$30("RUNTIME_SOURCE_ARCHIVE_UNACKNOWLEDGED");
+		}
+	}
+	return {
+		prepare,
+		assertPublication,
+		get(activationId) {
+			const r = get("SELECT * FROM runtime_workspace_results WHERE activation_id=?", activationId);
+			return r ? view(r) : null;
+		}
+	};
+}
+//#endregion
+//#region src/runtime-domain.ts
+const uid$7 = (p) => p + "_" + randomUUID().replaceAll("-", "");
+const now$12 = () => (/* @__PURE__ */ new Date()).toISOString();
+const reject$2 = (code, message, status = 409) => {
+	throw new StorageError(code, status, message);
+};
+function publicConfiguration(value, depth = 0) {
+	if (depth > 64) reject$2("RUNTIME_CONFIGURATION_INVALID", "Configuration nesting exceeds its limit", 422);
+	if (Array.isArray(value)) {
+		for (const item of value) publicConfiguration(item, depth + 1);
+		return;
+	}
+	if (value && typeof value === "object") for (const [key, item] of Object.entries(value)) {
+		if (/^(authorization|cookie|set-cookie|api[_-]?key|access[_-]?token|refresh[_-]?token|reasoning_content|thinking|chain_of_thought)$/i.test(key)) reject$2("PRIVATE_MODEL_FIELD", "Credentials and internal reasoning cannot enter configuration snapshots", 422);
+		publicConfiguration(item, depth + 1);
+	}
+}
+function createRuntimeDomain(db, onCandidateReady) {
+	const workspaces = createRuntimeWorkspaces(db);
+	const get = (sql, ...p) => db.prepare(sql).get(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const required = (r) => r ?? reject$2("RESOURCE_NOT_FOUND", "Requested runtime record does not exist", 404);
+	const activation = (id) => required(get("SELECT * FROM runtime_activations WHERE activation_id=?", id));
+	const activationView = (r) => ({
+		activationId: String(r.activation_id),
+		sessionId: String(r.session_id),
+		state: String(r.state),
+		tokensUsed: Number(r.tokens_used),
+		tokenLimit: Number(r.token_limit),
+		maxSteps: Number(r.max_steps),
+		unknownUsage: r.unknown_usage === 1,
+		configHash: String(r.config_hash)
+	});
+	const tool = (id, activationId) => required(get("SELECT * FROM runtime_tool_calls WHERE operation_id=? AND activation_id=?", id, activationId));
+	const toolView = (r) => ({
+		operationId: String(r.operation_id),
+		activationId: String(r.activation_id),
+		sessionId: String(r.session_id),
+		stepNo: Number(r.step_no),
+		toolCallId: String(r.tool_call_id),
+		toolName: String(required(get("SELECT tool_name FROM tool_operations WHERE operation_id=?", String(r.operation_id))).tool_name),
+		state: String(r.state),
+		resultMessageId: r.result_message_id === null ? null : String(r.result_message_id),
+		argsHash: String(r.args_hash),
+		errorCode: r.error_code === null ? null : String(r.error_code)
+	});
+	function host(c, recovery = false) {
+		const row = required(get("SELECT a.*,w.state accepted_state,w.activation_id,w.worker_id,w.claim_token,p.owner_id,r.run_epoch,r.control_gate,r.terminal_outcome,x.work_epoch FROM accepted_work w JOIN a2a_tasks t ON t.endpoint_id=w.endpoint_id AND t.task_id=w.task_id JOIN attempts a ON a.attempt_id=t.attempt_id JOIN runs r ON r.run_id=a.run_id JOIN projects p ON p.project_id=r.project_id JOIN works x ON x.run_id=a.run_id AND x.work_id=a.work_id WHERE w.endpoint_id=? AND w.task_id=?", c.endpointId, c.taskId));
+		if (!(recovery ? [
+			"ACTIVE",
+			"RECONCILE",
+			"FINISHED"
+		].includes(String(row.accepted_state)) : row.accepted_state === "ACTIVE") || row.worker_id !== c.workerId || row.claim_token !== c.claimToken) reject$2("EXECUTION_HOST_CLAIM_CHANGED", "A durable original consumer claim is required", 403);
+		if (recovery) {
+			const member = get("SELECT m.role FROM project_members m JOIN runs r ON r.project_id=m.project_id WHERE r.run_id=? AND m.principal_id=?", String(row.run_id), String(row.owner_id));
+			if (!member || member.role === "viewer") reject$2("EXECUTION_HOST_ACL_CHANGED", "Current write membership is required", 403);
+		}
+		if (get("SELECT cancel_requested FROM a2a_task_ownership WHERE endpoint_id=? AND task_id=?", c.endpointId, c.taskId)?.cancel_requested === 1) reject$2("EXECUTION_CANCELED", "Task cancellation closes action admission", 403);
+		return row;
+	}
+	function permit(row) {
+		const g = required(get("SELECT * FROM execution_grants WHERE attempt_id=? AND activation_id=?", String(row.attempt_id), String(row.activation_id))), p = JSON.parse(String(g.permit_json));
+		if (row.control_gate !== "OPEN" || row.terminal_outcome !== null || row.ended_at !== null || g.status !== "ACTIVE" || String(g.expires_at) <= now$12() || String(p.notBefore) > now$12() || p.runEpoch !== row.run_epoch || p.workEpoch !== row.work_epoch) reject$2("EXECUTION_PERMIT_INVALID", "Run control, epoch or grant changed", 403);
+		return {
+			g,
+			p
+		};
+	}
+	function assertActive(id, reserved = 0) {
+		const a = activation(id);
+		if (a.state !== "RUNNING") reject$2("RUNTIME_NOT_RUNNING", "Runtime cannot admit new actions");
+		permit(host({
+			endpointId: String(a.endpoint_id),
+			taskId: String(a.task_id),
+			workerId: String(a.worker_id),
+			claimToken: String(a.claim_token)
+		}));
+		if (a.unknown_usage === 1 || Number(a.tokens_used) + reserved > Number(a.token_limit) || Number(a.tokens_used) >= Number(a.token_limit)) reject$2("MODEL_BUDGET_EXCEEDED", "Token budget exhausted or prior model cost is unknown");
+		if (reserved > 0 && Number(get("SELECT count(*) n FROM runtime_model_accounting WHERE activation_id=?", id)?.n ?? 0) >= Number(a.max_steps)) reject$2("MODEL_STEP_LIMIT", "Activation step budget exhausted");
+		return a;
+	}
+	const handlers = {
+		getRuntimeWorkspaceRecovery(input) {
+			return transaction(db, () => {
+				const h = host(input, true), a = activation(String(h.activation_id)), g = required(get("SELECT * FROM execution_grants WHERE grant_id=?", String(a.grant_id))), work = required(get("SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", String(h.run_id), String(h.work_id), Number(h.work_revision))), task = required(get("SELECT snapshot_json FROM a2a_tasks WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId));
+				return {
+					host: {
+						principalId: String(h.owner_id),
+						runId: String(h.run_id),
+						attemptId: String(h.attempt_id),
+						activationId: String(h.activation_id),
+						grantId: String(g.grant_id),
+						sessionId: String(a.session_id),
+						roleSnapshot: JSON.parse(String(h.role_snapshot_json)),
+						permit: JSON.parse(String(g.permit_json)),
+						inputManifest: JSON.parse(String(h.input_manifest_json)),
+						inputFingerprint: String(h.input_fingerprint),
+						work: JSON.parse(String(work.definition_json)),
+						requirements: {},
+						taskSnapshot: JSON.parse(String(task.snapshot_json))
+					},
+					config: JSON.parse(String(a.config_json)),
+					result: workspaces.get(String(a.activation_id))
+				};
+			});
+		},
+		prepareRuntimeWorkspaceResult(input) {
+			return transaction(db, () => workspaces.prepare(assertActive(input.activationId), input.stepNo, input.contentHash, input.output));
+		},
+		reconcileRuntimeWorkspaceResult(input) {
+			return transaction(db, () => {
+				const h = host(input, true), a = activation(String(h.activation_id)), result = workspaces.get(String(h.activation_id));
+				if (!result) reject$2("RUNTIME_WORKSPACE_RESULT_UNPREPARED", "Only a durable original workspace result can be reconciled");
+				if (![
+					"RUNNING",
+					"RECONCILE",
+					"FINISHED"
+				].includes(String(a.state))) reject$2("RUNTIME_ALREADY_STOPPED", "Original activation does not allow historical result recovery");
+				return publish(parseContract(runtimeRequests.publishRuntimeResult, {
+					activationId: String(a.activation_id),
+					stepNo: result.stepNo,
+					contentHash: result.contentHash,
+					output: result.output
+				}), true);
+			});
+		},
+		getAcceptedTaskSnapshot(input) {
+			return transaction(db, () => {
+				const a = required(get("SELECT * FROM accepted_work WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId));
+				if (a.worker_id !== input.workerId || a.claim_token !== input.claimToken || a.state !== "ACTIVE") reject$2("EXECUTION_HOST_CLAIM_CHANGED", "Active consumer claim required", 403);
+				return JSON.parse(String(required(get("SELECT snapshot_json FROM a2a_tasks WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId)).snapshot_json));
+			});
+		},
+		renewExecutionHost(input) {
+			return transaction(db, () => {
+				const h = host(input), { g, p } = permit(h);
+				const member = get("SELECT m.role FROM project_members m JOIN runs r ON r.project_id=m.project_id WHERE r.run_id=? AND m.principal_id=?", String(h.run_id), String(h.owner_id));
+				if (!member || member.role === "viewer") reject$2("EXECUTION_HOST_ACL_CHANGED", "Current membership is required", 403);
+				const time = now$12(), renewed = {
+					...p,
+					expiresAt: new Date(Date.parse(time) + 15e3).toISOString()
+				};
+				exec("UPDATE execution_grants SET permit_json=?,expires_at=? WHERE grant_id=?", canonical(renewed), renewed.expiresAt, String(g.grant_id));
+				return { permit: renewed };
+			});
+		},
+		reconcileRuntimeTask(input) {
+			return transaction(db, () => {
+				const a = required(get("SELECT * FROM accepted_work WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId));
+				if (a.worker_id !== input.workerId || a.claim_token !== input.claimToken || !["ACTIVE", "RECONCILE"].includes(String(a.state))) reject$2("EXECUTION_HOST_CLAIM_CHANGED", "Original consumer claim required", 403);
+				exec("UPDATE accepted_work SET state='RECONCILE' WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId);
+				return { state: "RECONCILE" };
+			});
+		},
+		getExecutionHost(input) {
+			return transaction(db, () => {
+				const h = host(input), { g, p } = permit(h), s = get("SELECT session_id FROM agent_sessions WHERE attempt_id=?", String(h.attempt_id));
+				const work = required(get("SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", String(h.run_id), String(h.work_id), Number(h.work_revision)));
+				const requirements = required(get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=(SELECT json_extract(snapshot_json,'$.history[0].parts[0].data.requirementRevision') FROM a2a_tasks WHERE endpoint_id=? AND task_id=?)", String(h.run_id), input.endpointId, input.taskId));
+				const task = required(get("SELECT snapshot_json FROM a2a_tasks WHERE endpoint_id=? AND task_id=?", input.endpointId, input.taskId));
+				return {
+					principalId: String(h.owner_id),
+					runId: String(h.run_id),
+					attemptId: String(h.attempt_id),
+					activationId: String(h.activation_id),
+					grantId: String(g.grant_id),
+					sessionId: s ? String(s.session_id) : null,
+					roleSnapshot: JSON.parse(String(h.role_snapshot_json)),
+					permit: p,
+					inputManifest: JSON.parse(String(h.input_manifest_json)),
+					inputFingerprint: String(h.input_fingerprint),
+					work: JSON.parse(String(work.definition_json)),
+					requirements: JSON.parse(String(requirements.content_json)),
+					taskSnapshot: JSON.parse(String(task.snapshot_json))
+				};
+			});
+		},
+		beginRuntimeActivation(input) {
+			return transaction(db, () => {
+				const h = host(input), { g } = permit(h), s = required(get("SELECT * FROM agent_sessions WHERE session_id=? AND attempt_id=?", input.sessionId, String(h.attempt_id))), role = JSON.parse(String(h.role_snapshot_json));
+				if (h.owner_id !== input.principalId || h.activation_id !== input.activationId || s.status !== "OPEN") reject$2("EXECUTION_HOST_MISMATCH", "Runtime must use the claimed activation and its owner/session", 403);
+				if (input.configHash !== digest(canonical(input.config)) || input.maxSteps > role.maxSteps) reject$2("RUNTIME_CONFIGURATION_INVALID", "Frozen configuration hash or step budget differs");
+				publicConfiguration(input.config);
+				const old = get("SELECT * FROM runtime_activations WHERE activation_id=?", input.activationId);
+				if (old) {
+					if (old.config_hash !== input.configHash || old.session_id !== input.sessionId || old.claim_token !== input.claimToken) reject$2("RUNTIME_ACTIVATION_CONFLICT", "Activation cannot change configuration or consumer");
+					return activationView(old);
+				}
+				exec("INSERT INTO runtime_activations VALUES(?,?,?,?,?,?,?,?,?,?,?,?,0,0,'RUNNING',NULL,?,?)", input.activationId, String(h.attempt_id), String(g.grant_id), input.sessionId, input.endpointId, input.taskId, input.workerId, input.claimToken, input.configHash, canonical(input.config), input.maxSteps, input.tokenLimit, now$12(), now$12());
+				return activationView(activation(input.activationId));
+			});
+		},
+		assertRuntimeActivation(input) {
+			return transaction(db, () => activationView(assertActive(input.activationId, input.reservedTokens)));
+		},
+		markRuntimeModelSent(input) {
+			return transaction(db, () => {
+				const a = assertActive(input.activationId, input.reservedTokens), step = required(get("SELECT m.*,c.config_hash FROM model_steps m JOIN context_snapshots c ON c.context_snapshot_id=m.context_snapshot_id WHERE m.session_id=? AND m.step_no=?", String(a.session_id), input.stepNo));
+				if (step.state !== "PREPARED" || step.config_hash !== a.config_hash) reject$2("MODEL_STEP_ORDER_INVALID", "Only a prepared step with this frozen configuration can be sent");
+				if (!get("SELECT content_hash FROM content_objects WHERE content_hash=? AND state='READY'", String(step.request_content_hash))) reject$2("CONTENT_NOT_READY", "Request body must remain available");
+				exec("UPDATE model_steps SET state='SENT',sent_at=? WHERE session_id=? AND step_no=?", now$12(), String(a.session_id), input.stepNo);
+				return { state: "SENT" };
+			});
+		},
+		accountRuntimeModel(input) {
+			return transaction(db, () => {
+				const a = activation(input.activationId), step = required(get("SELECT * FROM model_steps WHERE session_id=? AND step_no=?", String(a.session_id), input.stepNo));
+				const existing = get("SELECT * FROM runtime_model_accounting WHERE session_id=? AND step_no=?", String(a.session_id), input.stepNo);
+				if (existing) {
+					if (existing.activation_id !== input.activationId) reject$2("MODEL_STEP_ACTIVATION_MISMATCH", "Model step belongs to another activation");
+					return activationView(a);
+				}
+				if (![
+					"RESPONDED",
+					"INTERRUPTED",
+					"FAILED"
+				].includes(String(step.state)) || !step.usage_json) reject$2("MODEL_USAGE_UNAVAILABLE", "Persist the complete response and usage before accounting");
+				if (!get("SELECT message_id FROM session_messages WHERE session_id=? AND step_no=? AND activation_id=? AND kind='assistant'", String(a.session_id), input.stepNo, input.activationId)) reject$2("MODEL_STEP_ACTIVATION_MISMATCH", "Step belongs to another activation");
+				const u = JSON.parse(String(step.usage_json));
+				exec("INSERT INTO runtime_model_accounting VALUES(?,?,?,?,?,?,?)", String(a.session_id), input.stepNo, input.activationId, u.inputTokens, u.outputTokens, u.source, now$12());
+				exec("UPDATE runtime_activations SET tokens_used=tokens_used+?,updated_at=? WHERE activation_id=?", u.inputTokens + u.outputTokens, now$12(), input.activationId);
+				return activationView(activation(input.activationId));
+			});
+		},
+		setRuntimeState(input) {
+			return transaction(db, () => {
+				const a = activation(input.activationId);
+				if (a.state !== input.state && a.state !== "RUNNING") reject$2("RUNTIME_ALREADY_STOPPED", "Runtime outcome cannot be overwritten");
+				exec("UPDATE runtime_activations SET state=?,reason=?,unknown_usage=max(unknown_usage,?),updated_at=? WHERE activation_id=?", input.state, input.reason ?? null, input.unknownUsage ? 1 : 0, now$12(), input.activationId);
+				return activationView(activation(input.activationId));
+			});
+		},
+		prepareRuntimeTool(input) {
+			return transaction(db, () => {
+				const old = get("SELECT * FROM runtime_tool_calls WHERE activation_id=? AND step_no=? AND tool_call_id=?", input.activationId, input.stepNo, input.toolCallId);
+				if (old) {
+					const op = required(get("SELECT * FROM tool_operations WHERE operation_id=?", String(old.operation_id)));
+					if (old.args_hash !== input.argsHash || old.response_hash !== input.responseHash || op.tool_name !== input.toolName || op.effect_class !== input.effectClass) reject$2("TOOL_CALL_ID_REUSED", "Persisted tool call differs");
+					return toolView(old);
+				}
+				const a = assertActive(input.activationId), h = host({
+					endpointId: String(a.endpoint_id),
+					taskId: String(a.task_id),
+					workerId: String(a.worker_id),
+					claimToken: String(a.claim_token)
+				}), { g } = permit(h);
+				if (!JSON.parse(String(h.role_snapshot_json)).allowedTools.includes(input.toolName)) reject$2("TOOL_NOT_ALLOWED", "Tool is outside the frozen role allowlist", 403);
+				const step = required(get("SELECT * FROM model_steps WHERE session_id=? AND step_no=?", String(a.session_id), input.stepNo));
+				if (step.state !== "RESPONDED" || step.response_content_hash !== input.responseHash) reject$2("MODEL_RESPONSE_NOT_DURABLE", "Full response must be persisted before tool admission");
+				if (!get("SELECT content_hash FROM content_objects WHERE content_hash=? AND state='READY'", input.responseHash) || !get("SELECT step_no FROM runtime_model_accounting WHERE activation_id=? AND session_id=? AND step_no=?", input.activationId, String(a.session_id), input.stepNo)) reject$2("MODEL_RESPONSE_NOT_DURABLE", "Response must be available and accounted to this activation");
+				if (!get("SELECT content_hash FROM content_objects WHERE content_hash=? AND state='READY'", input.argsHash)) reject$2("CONTENT_NOT_READY", "Persist tool arguments before admission");
+				const id = uid$7("op"), time = now$12(), hash = digest(canonical(input));
+				exec("INSERT INTO operations VALUES(?,?,?,?,?,?,'ACCEPTED',NULL,?,?)", id, String(h.owner_id), "runtime:" + input.activationId, input.toolCallId + ":" + input.stepNo, hash, "TOOL", time, time);
+				exec("INSERT INTO tool_operations VALUES(?,?,?,?,?,?,?,?,?,?)", id, String(h.run_id), String(h.attempt_id), String(a.session_id) + ":" + input.stepNo, input.toolCallId, String(a.endpoint_id), input.toolName, input.effectClass, hash, String(g.permit_json));
+				exec("INSERT INTO runtime_tool_calls VALUES(?,?,?,?,?,?,?,NULL,'PREPARED',NULL,?,?)", id, input.activationId, String(a.session_id), input.stepNo, input.toolCallId, input.argsHash, input.responseHash, time, time);
+				return toolView(tool(id, input.activationId));
+			});
+		},
+		getRuntimeTool(input) {
+			const r = get("SELECT * FROM runtime_tool_calls WHERE activation_id=? AND step_no=? AND tool_call_id=?", input.activationId, input.stepNo, input.toolCallId);
+			return r ? toolView(r) : null;
+		},
+		markRuntimeToolSent(input) {
+			return transaction(db, () => {
+				if (tool(input.operationId, input.activationId).state !== "PREPARED") reject$2("TOOL_ALREADY_SENT", "Query the original operation instead of executing again");
+				assertActive(input.activationId);
+				exec("UPDATE runtime_tool_calls SET state='SENT',updated_at=? WHERE operation_id=?", now$12(), input.operationId);
+				exec("UPDATE operations SET status='RUNNING',updated_at=? WHERE operation_id=?", now$12(), input.operationId);
+				return toolView(tool(input.operationId, input.activationId));
+			});
+		},
+		finishRuntimeTool(input) {
+			return transaction(db, () => {
+				const t = tool(input.operationId, input.activationId), state = input.failed ? "FAILED" : "SUCCEEDED";
+				if (t.state === state && t.result_message_id === input.resultMessageId) return toolView(t);
+				if (["FAILED", "SUCCEEDED"].includes(String(t.state))) reject$2("TOOL_RESULT_IMMUTABLE", "Tool result is immutable");
+				if (t.state === "PREPARED") reject$2("TOOL_NOT_SENT", "An unsent tool cannot have an execution result");
+				const m = required(get("SELECT * FROM session_messages WHERE message_id=? AND session_id=? AND step_no=? AND tool_call_id=? AND kind='tool-result'", input.resultMessageId, String(t.session_id), Number(t.step_no), String(t.tool_call_id)));
+				exec("UPDATE runtime_tool_calls SET state=?,result_message_id=?,updated_at=? WHERE operation_id=?", state, input.resultMessageId, now$12(), input.operationId);
+				exec("UPDATE operations SET status=?,result_json=?,updated_at=? WHERE operation_id=?", state, canonical({
+					messageId: input.resultMessageId,
+					contentHash: m.body_content_hash
+				}), now$12(), input.operationId);
+				return toolView(tool(input.operationId, input.activationId));
+			});
+		},
+		markRuntimeToolUnknown(input) {
+			return transaction(db, () => {
+				const t = tool(input.operationId, input.activationId);
+				if (["FAILED", "SUCCEEDED"].includes(String(t.state))) return toolView(t);
+				exec("UPDATE runtime_tool_calls SET state='OUTCOME_UNKNOWN',error_code=?,updated_at=? WHERE operation_id=?", input.errorCode, now$12(), input.operationId);
+				exec("UPDATE operations SET status='OUTCOME_UNKNOWN',updated_at=? WHERE operation_id=?", now$12(), input.operationId);
+				return toolView(tool(input.operationId, input.activationId));
+			});
+		},
+		recoverRuntimeActivations() {
+			return transaction(db, () => {
+				const tools = Number(exec("UPDATE runtime_tool_calls SET state='OUTCOME_UNKNOWN',error_code='PROCESS_INTERRUPTED',updated_at=datetime('now') WHERE state='SENT'").changes);
+				exec("UPDATE operations SET status='OUTCOME_UNKNOWN' WHERE operation_id IN (SELECT operation_id FROM runtime_tool_calls WHERE state='OUTCOME_UNKNOWN') AND status NOT IN ('FAILED','SUCCEEDED')");
+				return {
+					activations: Number(exec("UPDATE runtime_activations SET state='RECONCILE',reason='PROCESS_INTERRUPTED',unknown_usage=max(unknown_usage,EXISTS(SELECT 1 FROM model_steps m WHERE m.session_id=runtime_activations.session_id AND m.state='SENT')),updated_at=datetime('now') WHERE state='RUNNING'").changes),
+					tools
+				};
+			});
+		},
+		publishRuntimeResult(input) {
+			return transaction(db, () => publish(input));
+		}
+	};
+	function publish(input, recovery = false) {
+		const a = activation(input.activationId), old = get("SELECT * FROM runtime_results WHERE activation_id=?", input.activationId);
+		const output = parseContract(roleOutput, input.output), hash = digest(canonical(output));
+		if (hash !== input.contentHash) reject$2("RESULT_HASH_MISMATCH", "Candidate bytes must equal the validated output");
+		if (old) {
+			if (required(get("SELECT * FROM artifacts WHERE artifact_id=?", String(old.artifact_id))).content_hash !== hash || old.step_no !== input.stepNo) reject$2("RESULT_IMMUTABLE", "Candidate cannot change");
+			onCandidateReady?.(String(a.attempt_id));
+			return {
+				artifactId: String(old.artifact_id),
+				sha256: hash,
+				schemaId: output.schemaVersion
+			};
+		}
+		if (a.state !== "RUNNING" && !(recovery && a.state === "RECONCILE")) reject$2("RUNTIME_NOT_RUNNING", "Runtime has no active result admission");
+		const h = host({
+			endpointId: String(a.endpoint_id),
+			taskId: String(a.task_id),
+			workerId: String(a.worker_id),
+			claimToken: String(a.claim_token)
+		}, recovery);
+		if (!recovery) permit(h);
+		const role = JSON.parse(String(h.role_snapshot_json));
+		workspaces.assertPublication(a, input.stepNo, input.contentHash, output);
+		if (output.role !== role.role || output.schemaVersion !== role.outputSchemaId) reject$2("RESULT_SCHEMA_MISMATCH", "Candidate differs from frozen role/schema");
+		if (required(get("SELECT state FROM model_steps WHERE session_id=? AND step_no=?", String(a.session_id), input.stepNo)).state !== "RESPONDED" || !get("SELECT step_no FROM runtime_model_accounting WHERE session_id=? AND step_no=?", String(a.session_id), input.stepNo)) reject$2("MODEL_RESPONSE_NOT_DURABLE", "Complete and account the final response first");
+		if (get("SELECT operation_id FROM runtime_tool_calls WHERE activation_id=? AND state NOT IN ('FAILED','SUCCEEDED')", input.activationId)) reject$2("TOOL_OUTCOME_UNKNOWN", "Unresolved tools block candidate publication");
+		const content = required(get("SELECT * FROM content_objects WHERE content_hash=? AND state='READY'", hash)), project = required(get("SELECT project_id FROM runs WHERE run_id=?", String(h.run_id))), id = uid$7("artifact");
+		exec("INSERT INTO artifacts VALUES(?,?,?,?,?,?,?,?,'READY',?,NULL,?)", id, String(project.project_id), String(h.run_id), String(h.attempt_id), "agent-candidate", hash, Number(content.byte_size), String(content.storage_key), String(h.input_fingerprint), now$12());
+		exec("INSERT INTO runtime_results VALUES(?,?,?,?)", input.activationId, id, input.stepNo, String(a.session_id));
+		exec("UPDATE runtime_activations SET state='FINISHED',updated_at=? WHERE activation_id=?", now$12(), input.activationId);
+		const task = JSON.parse(String(required(get("SELECT snapshot_json FROM a2a_tasks WHERE endpoint_id=? AND task_id=?", String(a.endpoint_id), String(a.task_id))).snapshot_json)), time = now$12();
+		task.status = {
+			state: "TASK_STATE_COMPLETED",
+			timestamp: time
+		};
+		task.artifacts = [{
+			artifactId: id,
+			name: "Role candidate",
+			parts: [{ data: {
+				artifactId: id,
+				sha256: hash,
+				schemaId: output.schemaVersion,
+				sessionId: String(a.session_id)
+			} }]
+		}];
+		const snapshot = canonical(task);
+		exec("UPDATE a2a_tasks SET protocol_state='completed',snapshot_json=? WHERE endpoint_id=? AND task_id=?", snapshot, String(a.endpoint_id), String(a.task_id));
+		exec("UPDATE a2a_task_ownership SET status_revision=status_revision+1,updated_at=? WHERE endpoint_id=? AND task_id=?", time, String(a.endpoint_id), String(a.task_id));
+		const seq = Number(required(get("SELECT status_revision FROM a2a_task_ownership WHERE endpoint_id=? AND task_id=?", String(a.endpoint_id), String(a.task_id))).status_revision);
+		exec("INSERT INTO a2a_task_events VALUES(?,?,?,?,?)", String(a.endpoint_id), String(a.task_id), seq, snapshot, time);
+		exec("UPDATE accepted_work SET state='FINISHED' WHERE endpoint_id=? AND task_id=?", String(a.endpoint_id), String(a.task_id));
+		onCandidateReady?.(String(h.attempt_id));
+		return {
+			artifactId: id,
+			sha256: hash,
+			schemaId: output.schemaVersion
+		};
+	}
+	return { execute(method, input) {
+		const p = parseContract(runtimeRequests[method], input);
+		return handlers[method](p);
+	} };
+}
+//#endregion
+//#region src/candidate-material-domain.ts
+function fail$29(code, status = 409) {
+	throw new StorageError(code, status, "Candidate materials require immutable original facts");
+}
+const same$3 = (a, b) => canonical(a) === canonical(b);
+function createCandidateMaterialDomain(db) {
+	const get = (sql, ...params) => db.prepare(sql).get(...params);
+	const all = (sql, ...params) => db.prepare(sql).all(...params);
+	const exec = (sql, ...params) => db.prepare(sql).run(...params);
+	const integration = (operationId) => get("SELECT * FROM candidate_integrations WHERE operation_id=?", operationId) ?? fail$29("CANDIDATE_INTEGRATION_NOT_FOUND", 404);
+	function member(operationId, principalId, write) {
+		const r = integration(operationId), m = get("SELECT role FROM project_members WHERE project_id=? AND principal_id=?", r.project_id, principalId);
+		if (!m || write && (m.role === "viewer" || r.principal_id !== principalId)) fail$29("CANDIDATE_MATERIAL_NOT_FOUND", 404);
+		return r;
+	}
+	function bound(i) {
+		const r = member(i.operationId, i.principalId, true);
+		if (r.request_hash !== i.requestHash) fail$29("CANDIDATE_REQUEST_CHANGED");
+		return {
+			r,
+			s: get("SELECT * FROM candidate_integration_steps WHERE operation_id=? AND ordinal=?", i.operationId, i.ordinal) ?? fail$29("CANDIDATE_STEP_NOT_FOUND", 404)
+		};
+	}
+	const material = (t) => get("SELECT * FROM candidate_materials WHERE operation_id=? AND ordinal=? AND material_key=?", t.operationId, t.ordinal, t.materialKey) ?? fail$29("CANDIDATE_MATERIAL_NOT_FOUND", 404);
+	const descriptor = (r) => JSON.parse(String(r.descriptor_json));
+	const view = (r) => ({
+		operationId: String(r.operation_id),
+		ordinal: Number(r.ordinal),
+		materialKey: String(r.material_key),
+		descriptor: descriptor(r),
+		writeKey: r.write_key,
+		contentHash: r.content_hash,
+		writeId: r.write_id
+	});
+	const rows = (operationId, ordinal) => all("SELECT * FROM candidate_materials WHERE operation_id=? AND ordinal=? ORDER BY material_key", operationId, ordinal);
+	function report(operationId, ordinal, hash) {
+		const r = material({
+			operationId,
+			ordinal,
+			materialKey: "report"
+		}), d = descriptor(r);
+		if (d.kind !== "REPORT" || d.mergeSha256 !== hash || !r.content_hash || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY' AND byte_size=?", r.content_hash, r.byte_size)) fail$29("CANDIDATE_REPORT_UNAVAILABLE");
+		return r;
+	}
+	const manifestHash = (operationId, ordinal, items) => digest(canonical({
+		schemaVersion: "devmesh.candidate-materials.v1",
+		operationId,
+		ordinal,
+		materials: items.map((row) => ({
+			materialKey: String(row.material_key),
+			descriptor: descriptor(row)
+		}))
+	}));
+	const handlers = {
+		getCandidateMaterial(i) {
+			member(i.operationId, i.principalId, false);
+			const r = get("SELECT * FROM candidate_materials WHERE operation_id=? AND ordinal=? AND material_key=?", i.operationId, i.ordinal, i.materialKey);
+			return r ? view(r) : null;
+		},
+		declareCandidateMaterials(i) {
+			return transaction(db, () => {
+				const { r, s } = bound(i), p = s.preparation_json ? JSON.parse(String(s.preparation_json)) : null, result = [];
+				if (new Set(i.materials.map(candidateMaterialKey)).size !== i.materials.length) fail$29("CANDIDATE_MATERIAL_DUPLICATE");
+				for (const d of i.materials) {
+					const key = candidateMaterialKey(d), old = get("SELECT * FROM candidate_materials WHERE operation_id=? AND ordinal=? AND material_key=?", i.operationId, i.ordinal, key);
+					if (old) {
+						if (!same$3(descriptor(old), d)) fail$29("CANDIDATE_MATERIAL_IMMUTABLE");
+						result.push(view(old));
+						continue;
+					}
+					if (!["BUILDING", "CONFLICT_PENDING"].includes(String(r.state))) fail$29("CANDIDATE_INTEGRATION_CLOSED");
+					if (d.kind === "REPORT") {
+						if (![
+							"COMPUTING",
+							"PREPARED",
+							"CONFLICT_PENDING"
+						].includes(String(s.state)) || p && p.reportSha256 !== d.mergeSha256) fail$29("CANDIDATE_REPORT_CHANGED");
+					} else {
+						if (s.state !== "CONFLICT_PENDING" || !p || p.clean) fail$29("CANDIDATE_CONFLICT_UNPREPARED");
+						report(i.operationId, i.ordinal, p.reportSha256);
+						if (d.version.startsWith("base.") && !p.bases.includes(d.version.slice(5))) fail$29("CANDIDATE_CONFLICT_BASE_CHANGED");
+						if (d.version.startsWith("stage.") && d.kind === "DIRECTORY") fail$29("CANDIDATE_CONFLICT_STAGE_INVALID");
+					}
+					const content = d.kind === "FILE" || d.kind === "REPORT";
+					exec("INSERT INTO candidate_materials(operation_id,ordinal,material_key,descriptor_json,kind,expected_hash,byte_size,write_key,created_at) VALUES(?,?,?,?,?,?,?,?,?)", i.operationId, i.ordinal, key, canonical(d), d.kind, content ? d.sha256 : null, content ? d.byteSize : null, content ? randomUUID() : null, (/* @__PURE__ */ new Date()).toISOString());
+					result.push(view(material({
+						operationId: i.operationId,
+						ordinal: i.ordinal,
+						materialKey: key
+					})));
+				}
+				const totals = get("SELECT count(*) n,COALESCE(sum(byte_size),0) bytes FROM candidate_materials WHERE operation_id=? AND ordinal=?", i.operationId, i.ordinal);
+				if (Number(totals.n) > 2e4 || Number(totals.bytes) > 128 * 1024 * 1024) fail$29("CANDIDATE_MATERIALS_TOO_LARGE");
+				return result;
+			});
+		},
+		listCandidateMaterials(i) {
+			member(i.operationId, i.principalId, false);
+			return all("SELECT * FROM candidate_materials WHERE operation_id=? AND ordinal=? AND material_key>? ORDER BY material_key LIMIT ?", i.operationId, i.ordinal, i.afterKey, i.limit).map(view);
+		},
+		sealCandidateConflictMaterials(i) {
+			return transaction(db, () => {
+				const { r, s } = bound(i), old = get("SELECT * FROM candidate_conflict_manifests WHERE operation_id=? AND ordinal=?", i.operationId, i.ordinal);
+				if (old) {
+					if (old.manifest_hash !== i.manifestSha256 || old.material_count !== i.materialCount) fail$29("CANDIDATE_CONFLICT_IMMUTABLE");
+					return {
+						manifestSha256: i.manifestSha256,
+						materialCount: i.materialCount
+					};
+				}
+				if (r.state !== "CONFLICT_PENDING" || s.state !== "CONFLICT_PENDING" || !s.preparation_json) fail$29("CANDIDATE_CONFLICT_UNPREPARED");
+				const p = JSON.parse(String(s.preparation_json));
+				report(i.operationId, i.ordinal, p.reportSha256);
+				const items = rows(i.operationId, i.ordinal);
+				if (items.length !== i.materialCount || manifestHash(i.operationId, i.ordinal, items) !== i.manifestSha256) fail$29("CANDIDATE_CONFLICT_MANIFEST_CHANGED");
+				exec("INSERT INTO candidate_conflict_manifests VALUES(?,?,?,?,?,?)", i.operationId, i.ordinal, p.reportSha256, i.materialCount, i.manifestSha256, (/* @__PURE__ */ new Date()).toISOString());
+				return {
+					manifestSha256: i.manifestSha256,
+					materialCount: i.materialCount
+				};
+			});
+		},
+		acknowledgeCandidateConflict(i) {
+			return transaction(db, () => {
+				const { r, s } = bound(i), manifest = get("SELECT * FROM candidate_conflict_manifests WHERE operation_id=? AND ordinal=?", i.operationId, i.ordinal), proof = i.proof, identity = JSON.parse(String(r.basis_json)).repository.identity;
+				if (!manifest || manifest.report_hash !== proof.reportSha256 || manifest.manifest_hash !== proof.manifestSha256 || manifest.material_count !== proof.materialCount || !same$3(identity, proof.repositoryIdentity)) fail$29("CANDIDATE_CONFLICT_ACK_UNPROVEN");
+				if (r.state === "CONFLICT" && s.state === "CONFLICT") {
+					if (!same$3(JSON.parse(String(r.acknowledgement_json)), proof)) fail$29("CANDIDATE_CONFLICT_IMMUTABLE");
+					return {
+						operationId: i.operationId,
+						state: "CONFLICT",
+						acknowledgement: proof
+					};
+				}
+				if (r.state !== "CONFLICT_PENDING" || s.state !== "CONFLICT_PENDING") fail$29("CANDIDATE_CONFLICT_UNPREPARED");
+				const items = rows(i.operationId, i.ordinal);
+				if (items.length !== proof.materialCount || manifestHash(i.operationId, i.ordinal, items) !== proof.manifestSha256) fail$29("CANDIDATE_CONFLICT_MANIFEST_CHANGED");
+				for (const row of items) if (["FILE", "REPORT"].includes(String(row.kind)) && (!row.content_hash || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY' AND byte_size=?", row.expected_hash, row.byte_size))) fail$29("CANDIDATE_MATERIAL_UNAVAILABLE");
+				const at = (/* @__PURE__ */ new Date()).toISOString(), ack = canonical(proof);
+				exec("UPDATE candidate_integration_steps SET state='CONFLICT',acknowledgement_json=?,acknowledged_at=? WHERE operation_id=? AND ordinal=?", ack, at, i.operationId, i.ordinal);
+				exec("UPDATE candidate_integrations SET state='CONFLICT',acknowledgement_json=?,acknowledged_at=?,error_code=NULL WHERE operation_id=?", ack, at, i.operationId);
+				return {
+					operationId: i.operationId,
+					state: "CONFLICT",
+					acknowledgement: proof
+				};
+			});
+		}
+	};
+	return {
+		authorize(principalId, target) {
+			member(target.operationId, principalId, true);
+			const row = material(target);
+			if (!["FILE", "REPORT"].includes(String(row.kind))) fail$29("CANDIDATE_MATERIAL_HAS_NO_BYTES");
+			return row;
+		},
+		validateWrite(input) {
+			const row = this.authorize(input.meta.principalId, input.target);
+			if (input.meta.scopeId !== input.target.operationId || input.meta.idempotencyKey !== row.write_key || input.expectedHash !== row.expected_hash || input.expectedSize !== row.byte_size) fail$29("CANDIDATE_MATERIAL_WRITE_CHANGED");
+		},
+		commit(principalId, target, hash, writeId) {
+			const row = this.authorize(principalId, target);
+			if (hash !== row.expected_hash) fail$29("CANDIDATE_MATERIAL_WRITE_CHANGED");
+			if (row.content_hash && row.write_id !== writeId) fail$29("CANDIDATE_MATERIAL_IMMUTABLE");
+			exec("UPDATE candidate_materials SET content_hash=?,write_id=? WHERE operation_id=? AND ordinal=? AND material_key=?", hash, writeId, target.operationId, target.ordinal, target.materialKey);
+			return {
+				operationId: target.operationId,
+				ordinal: target.ordinal,
+				materialKey: target.materialKey,
+				contentHash: hash
+			};
+		},
+		resolve(principalId, target) {
+			member(target.operationId, principalId, false);
+			const row = material(target);
+			if (!row.content_hash) fail$29("CANDIDATE_MATERIAL_UNAVAILABLE");
+			return { content_hash: row.content_hash };
+		},
+		execute(method, input) {
+			const parsed = parseContract(candidateMaterialRequests[method], input);
+			return handlers[method](parsed);
+		}
+	};
+}
+//#endregion
+//#region src/quality-domain.ts
+function fail$28(code, status = 409) {
+	throw new StorageError(code, status, "Quality verification requires immutable original execution and source facts");
+}
+const json$14 = (v) => JSON.parse(String(v));
+function createQualityDomain(db, candidates) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const verification = (id) => get("SELECT * FROM quality_verifications WHERE operation_id=?", id) ?? fail$28("QUALITY_VERIFICATION_NOT_FOUND", 404);
+	function member(projectId, principalId, write = false) {
+		const p = get("SELECT * FROM projects WHERE project_id=?", projectId), m = get("SELECT role FROM project_members WHERE project_id=? AND principal_id=?", projectId, principalId);
+		if (!p || !m || write && (p.owner_id !== principalId || m.role !== "owner")) fail$28("QUALITY_NOT_FOUND", 404);
+		return p;
+	}
+	function owned(id, principalId, write = false) {
+		const v = verification(id);
+		member(String(v.project_id), principalId, write);
+		if (write && v.principal_id !== principalId) fail$28("QUALITY_NOT_FOUND", 404);
+		return v;
+	}
+	function bound(i) {
+		const v = owned(i.operationId, i.principalId, true);
+		if (v.request_hash !== i.requestHash) fail$28("QUALITY_REQUEST_CHANGED");
+		return v;
+	}
+	function policy(v) {
+		return qualityPolicy.parse(json$14(get("SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?", v.project_id, v.config_hash).policy_json));
+	}
+	function source(v) {
+		if (!candidates) fail$28("QUALITY_SOURCE_QUALIFICATION_REQUIRED");
+		const b = json$14(v.basis_json);
+		return candidates.qualified({
+			principalId: String(v.principal_id),
+			runId: String(v.run_id),
+			purpose: "work-input",
+			workId: b.workId
+		});
+	}
+	function current(v) {
+		const b = json$14(v.basis_json);
+		if (!!!get(`SELECT 1 FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id JOIN runs r ON r.run_id=a.run_id
+   JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id JOIN plan_works pw ON pw.run_id=a.run_id AND pw.work_id=a.work_id AND pw.plan_revision=r.current_plan_revision
+  WHERE a.attempt_id=? AND a.work_revision=? AND a.admitted_work_epoch=? AND a.input_fingerprint=? AND w.work_epoch=? AND w.blocked_reason IS NULL
+  AND pw.work_revision=a.work_revision AND r.run_epoch=? AND r.current_plan_revision=? AND s.plan_revision=r.current_plan_revision AND r.current_requirement_revision=? AND r.control_gate='OPEN' AND r.terminal_outcome IS NULL
+    AND (a.state IN ('WORKING','VERIFYING','SUCCEEDED') OR (a.state='FAILED' AND EXISTS(
+     SELECT 1 FROM work_verifications wv JOIN verified_work_results vr ON vr.attempt_id=wv.attempt_id
+     WHERE wv.attempt_id=a.attempt_id AND wv.quality_operation_id=? AND wv.state='APPLIED' AND vr.outcome='completed-with-findings')))
+    `, b.attemptId, b.workRevision, b.workEpoch, b.inputFingerprint, b.workEpoch, b.runEpoch, b.planRevision, b.requirementRevision, v.operation_id)) return false;
+		try {
+			const snapshot = source(v);
+			return snapshot.operationId === b.sourceIntegrationOperationId && snapshot.basisSha256 === b.sourceBasisSha256 && snapshot.manifest?.commit === b.targetCommit && snapshot.manifest.sha256 === b.allocationManifestSha256;
+		} catch (error) {
+			if (error instanceof StorageError) return false;
+			throw error;
+		}
+	}
+	const origins = (id) => all("SELECT * FROM quality_origins WHERE operation_id=? ORDER BY producer_id", id).map((o) => ({
+		producerId: String(o.producer_id),
+		pipelineId: String(o.pipeline_id),
+		ordinal: Number(o.ordinal),
+		execution: json$14(o.execution_json)
+	}));
+	const view = (v) => ({
+		operationId: String(v.operation_id),
+		principalId: String(v.principal_id),
+		projectId: String(v.project_id),
+		runId: String(v.run_id),
+		attemptId: String(v.attempt_id),
+		allocationOperationId: String(v.allocation_operation_id),
+		configHash: String(v.config_hash),
+		requestHash: String(v.request_hash),
+		basis: json$14(v.basis_json),
+		state: v.state,
+		qualification: current(v) ? "CURRENT" : "STALE",
+		evaluation: v.evaluation_json ? json$14(v.evaluation_json) : null,
+		origins: origins(String(v.operation_id))
+	});
+	const material = (t) => get("SELECT * FROM quality_materials WHERE operation_id=? AND material_key=?", t.operationId, t.materialKey) ?? fail$28("QUALITY_MATERIAL_NOT_FOUND", 404);
+	const materialView = (r) => ({
+		operationId: String(r.operation_id),
+		materialKey: String(r.material_key),
+		descriptor: json$14(r.descriptor_json),
+		writeKey: String(r.write_key),
+		contentHash: r.content_hash,
+		writeId: r.write_id
+	});
+	function ready(r) {
+		if (!r.content_hash || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY' AND byte_size=?", r.expected_hash, r.byte_size)) fail$28("QUALITY_MATERIAL_UNAVAILABLE");
+	}
+	function beforeDispatch(v) {
+		if (get("SELECT 1 FROM pipeline_stages s JOIN pipelines p ON p.pipeline_id=s.pipeline_id WHERE p.attempt_id=? AND p.workspace_ref=? AND s.state NOT IN ('PENDING','SKIPPED')", v.attempt_id, json$14(v.basis_json).workspaceRef)) fail$28("QUALITY_SOURCE_PREPARATION_TOO_LATE");
+	}
+	function preparedSource(v) {
+		const row = material({
+			operationId: String(v.operation_id),
+			materialKey: "source"
+		});
+		ready(row);
+		if (!json$14(row.descriptor_json).instrumentation) fail$28("QUALITY_SOURCE_PROVENANCE_MISSING");
+		return row;
+	}
+	function stageView(row) {
+		const s = get("SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?", row.pipeline_id, row.ordinal);
+		return {
+			producerId: String(row.producer_id),
+			pipelineId: String(row.pipeline_id),
+			ordinal: Number(row.ordinal),
+			operationId: String(row.stage_operation_id),
+			state: String(s.state),
+			job: s.job_json ? json$14(s.job_json) : null
+		};
+	}
+	function original(v, producerId) {
+		const o = get("SELECT * FROM quality_origins WHERE operation_id=? AND producer_id=?", v.operation_id, producerId) ?? fail$28("QUALITY_ORIGIN_MISSING"), s = get("SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?", o.pipeline_id, o.ordinal) ?? fail$28("QUALITY_ORIGIN_MISSING");
+		if (!s.job_json || digest(String(s.job_json)) !== o.job_hash) fail$28("QUALITY_ORIGIN_CHANGED");
+		return {
+			o,
+			job: json$14(s.job_json)
+		};
+	}
+	function resultFacts(v, e) {
+		const p = policy(v), b = json$14(v.basis_json), source = json$14(material({
+			operationId: String(v.operation_id),
+			materialKey: "source"
+		}).descriptor_json);
+		if (e.targetCommit !== b.targetCommit || e.checkConfigHash !== v.config_hash || e.sourceManifestSha256 !== source.sourceManifestSha256 || e.topologySha256 !== source.topologySha256) fail$28("QUALITY_RESULT_BASIS_CHANGED");
+		if (e.checks.length !== p.checks.length || new Set(e.checks.map((c) => c.checkId)).size !== e.checks.length) fail$28("QUALITY_RESULT_CHECKS_CHANGED");
+		for (const check of p.checks) {
+			const r = e.checks.find((c) => c.checkId === check.checkId);
+			if (!r || canonical([...r.reportIds].sort()) !== canonical([...check.reportIds].sort())) fail$28("QUALITY_RESULT_CHECKS_CHANGED");
+			if (check.kind === "human") {
+				if (r.status !== "PENDING" || r.tests || r.coverage) fail$28("QUALITY_HUMAN_REVIEW_REQUIRED");
+				continue;
+			}
+			if (["PENDING", "NOT_APPLICABLE"].includes(r.status)) fail$28("QUALITY_RESULT_STATUS_INVALID");
+			if (r.status === "PASS") for (const id of check.producerIds) {
+				const { job } = original(v, id);
+				if (job.state !== "EXITED" || job.exitCode !== 0 || job.errorCode || job.stopRequested) fail$28("QUALITY_EXECUTION_FAILED");
+			}
+			if (check.kind === "coverage" && r.status === "PASS") {
+				if (!r.coverage) fail$28("QUALITY_COVERAGE_MISSING");
+				for (const key of ["lines", "branches"]) {
+					const m = r.coverage[key], minimum = p.thresholds[key];
+					if (m.minimum !== minimum) fail$28("QUALITY_THRESHOLD_CHANGED");
+					if (!m.total) {
+						if (key !== "branches" || m.status !== "NOT_APPLICABLE" || p.zeroBranches !== "complete-map-proves-none" || !r.coverage.lines.total) fail$28("QUALITY_COVERAGE_UNPROVEN");
+					} else if (m.status !== "PASS" || BigInt(m.covered) * 100n < BigInt(m.total) * BigInt(minimum)) fail$28("QUALITY_COVERAGE_BELOW_MINIMUM");
+				}
+			}
+			if (check.kind === "tests" && r.status === "PASS" && (!r.tests || r.tests.failed || r.tests.skipped || r.tests.missing || r.tests.passed < check.requiredTests.length)) fail$28("QUALITY_TESTS_UNPROVEN");
+			if (check.kind !== "coverage" && r.coverage || check.kind !== "tests" && r.tests) fail$28("QUALITY_RESULT_CHECKS_CHANGED");
+		}
+		const statuses = e.checks.filter((c) => c.status !== "PENDING").map((c) => c.status), automatic = statuses.includes("FAIL") ? "FAIL" : statuses.includes("STALE") ? "STALE" : statuses.includes("MISSING") ? "MISSING" : "PASS";
+		if (e.automaticStatus !== automatic || e.reviewStatus !== (p.checks.some((c) => c.kind === "human") ? "PENDING" : "NOT_REQUIRED")) fail$28("QUALITY_RESULT_STATUS_INVALID");
+	}
+	function completeMaterials(v) {
+		const p = policy(v), id = String(v.operation_id);
+		ready(material({
+			operationId: id,
+			materialKey: "source"
+		}));
+		for (const producer of p.producers) {
+			original(v, producer.producerId);
+			ready(material({
+				operationId: id,
+				materialKey: "log." + producer.producerId
+			}));
+		}
+		for (const report of p.reports) ready(material({
+			operationId: id,
+			materialKey: "report." + report.reportId
+		}));
+	}
+	const handlers = {
+		registerQualityPolicy(i) {
+			return transaction(db, () => {
+				member(i.projectId, i.principalId, true);
+				const body = canonical(i.policy), hash = digest(body), old = get("SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?", i.projectId, hash);
+				if (old && old.policy_json !== body) fail$28("QUALITY_POLICY_IMMUTABLE");
+				if (!old) exec("INSERT INTO quality_policies VALUES(?,?,?,?,?)", i.projectId, hash, body, i.principalId, (/* @__PURE__ */ new Date()).toISOString());
+				return {
+					configHash: hash,
+					policy: i.policy
+				};
+			});
+		},
+		getQualityPolicy(i) {
+			member(i.projectId, i.principalId);
+			const p = get("SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?", i.projectId, i.configHash) ?? fail$28("QUALITY_POLICY_NOT_FOUND", 404);
+			return {
+				configHash: i.configHash,
+				policy: qualityPolicy.parse(json$14(p.policy_json))
+			};
+		},
+		beginQualityVerification(i) {
+			return transaction(db, () => {
+				const requestHash = digest(canonical(i)), old = get("SELECT * FROM quality_verifications WHERE operation_id=?", i.operationId);
+				if (old) {
+					owned(i.operationId, i.principalId, true);
+					if (old.request_hash !== requestHash) fail$28("QUALITY_REQUEST_CHANGED");
+					return view(old);
+				}
+				const a = get("SELECT * FROM attempts WHERE attempt_id=? AND run_id=?", i.attemptId, i.runId) ?? fail$28("QUALITY_ATTEMPT_NOT_FOUND", 404), r = get("SELECT * FROM runs WHERE run_id=?", i.runId);
+				member(String(r.project_id), i.principalId, true);
+				const w = get("SELECT * FROM workspace_allocations WHERE operation_id=?", i.allocationOperationId) ?? fail$28("QUALITY_ALLOCATION_UNPROVEN"), s = get("SELECT * FROM scheduled_work WHERE attempt_id=?", i.attemptId), manifest = json$14(a.input_manifest_json);
+				if (a.role !== "tester" || !["WORKING", "VERIFYING"].includes(String(a.state)) || a.ended_at !== null || !s || w.state !== "READY" || w.kind !== "verification" || w.attempt_id !== i.attemptId || w.run_id !== i.runId || w.project_id !== r.project_id || w.runner_id !== s.runner_id || w.base_commit !== manifest.codeCommit || manifest.checkConfigHash !== i.configHash || !w.manifest_json) fail$28("QUALITY_ALLOCATION_UNPROVEN");
+				const p = get("SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?", r.project_id, i.configHash) ?? fail$28("QUALITY_POLICY_NOT_FOUND"), frozenPolicy = qualityPolicy.parse(json$14(p.policy_json));
+				if (frozenPolicy.templateVersion !== manifest.templateVersion) fail$28("QUALITY_POLICY_STALE");
+				const work = workRevision.parse(json$14(get("SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", i.runId, a.work_id, a.work_revision).definition_json)), requirements = productOutput.parse(json$14(get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", i.runId, r.current_requirement_revision).content_json)).requirements;
+				const testRequirements = new Set(frozenPolicy.checks.flatMap((c) => c.requiredTests.flatMap((t) => t.requirementIds)));
+				if ([...testRequirements].some((id) => !requirements.some((r) => r.id === id)) || work.requirementIds.some((id) => !testRequirements.has(id))) fail$28("QUALITY_REQUIREMENT_MAPPING_MISSING");
+				for (const check of work.completionChecks) if (check.kind === "coverage-threshold") {
+					if (frozenPolicy.thresholds.lines < check.lines || frozenPolicy.thresholds.branches < check.branches) fail$28("QUALITY_THRESHOLD_CHANGED");
+				} else if ("checkId" in check) {
+					const expected = check.kind === "required-tests-pass" ? "tests" : check.kind === "command-exit-zero" ? "command" : "human";
+					if (!frozenPolicy.checks.some((c) => c.checkId === check.checkId && c.kind === expected)) fail$28("QUALITY_REQUIRED_CHECK_MISSING");
+				}
+				if (!candidates) fail$28("QUALITY_SOURCE_QUALIFICATION_REQUIRED");
+				const snapshot = candidates.qualified({
+					principalId: i.principalId,
+					runId: i.runId,
+					purpose: "work-input",
+					workId: String(a.work_id)
+				});
+				if (!snapshot.manifest || snapshot.manifest.commit !== w.base_commit || snapshot.manifest.sha256 !== json$14(w.manifest_json).sha256) fail$28("QUALITY_SOURCE_CHANGED");
+				const basis = {
+					attemptId: i.attemptId,
+					workId: String(a.work_id),
+					workRevision: Number(a.work_revision),
+					workEpoch: Number(a.admitted_work_epoch),
+					runEpoch: Number(a.admitted_run_epoch),
+					planRevision: Number(s.plan_revision),
+					requirementRevision: Number(r.current_requirement_revision),
+					inputFingerprint: String(a.input_fingerprint),
+					inputManifest: manifest,
+					allocationOperationId: i.allocationOperationId,
+					allocationRequestHash: String(w.request_hash),
+					allocationManifestSha256: json$14(w.manifest_json).sha256,
+					sourceIntegrationOperationId: snapshot.operationId,
+					sourceBasisSha256: snapshot.basisSha256,
+					runnerId: String(w.runner_id),
+					workspaceRef: String(w.workspace_ref),
+					targetCommit: String(w.base_commit)
+				};
+				exec("INSERT INTO quality_verifications VALUES(?,?,?,?,?,?,?,?,?,'PREPARED',NULL,?,NULL)", i.operationId, i.principalId, r.project_id, i.runId, i.attemptId, i.allocationOperationId, i.configHash, requestHash, canonical(basis), (/* @__PURE__ */ new Date()).toISOString());
+				const v = verification(i.operationId);
+				if (!current(v)) fail$28("QUALITY_BASIS_STALE");
+				return view(v);
+			});
+		},
+		getQualityVerification(i) {
+			return view(owned(i.operationId, i.principalId));
+		},
+		publishQualityArtifacts(i) {
+			return transaction(db, () => {
+				const v = bound(i), rows = all("SELECT * FROM quality_materials WHERE operation_id=? AND kind IN ('REPORT','RESULT') ORDER BY material_key", i.operationId), hashes = [...new Set(rows.map((r) => String(r.content_hash)))].sort();
+				if (v.state !== "EVALUATED" || canonical(hashes) !== canonical(i.contentHashes) || rows.length !== policy(v).reports.length + 1) fail$28("QUALITY_ARTIFACT_CONTENT_CHANGED");
+				const old = all("SELECT * FROM quality_artifact_refs WHERE operation_id=? ORDER BY material_key", i.operationId);
+				if (!old.length && !current(v)) fail$28("QUALITY_BASIS_STALE");
+				if (old.length && old.length !== rows.length) fail$28("QUALITY_ARTIFACT_CONTENT_CHANGED");
+				for (const r of rows) {
+					ready(r);
+					const prior = old.find((p) => p.material_key === r.material_key);
+					if (prior) {
+						if (prior.content_hash !== r.content_hash || !get("SELECT 1 FROM artifacts WHERE artifact_id=? AND content_hash=? AND project_id=? AND run_id=? AND attempt_id=? AND state='READY'", prior.artifact_id, r.content_hash, v.project_id, v.run_id, v.attempt_id)) fail$28("QUALITY_ARTIFACT_CONTENT_CHANGED");
+						continue;
+					}
+					const id = "artifact_" + digest("quality-artifact\0" + i.operationId + "\0" + String(r.material_key)), object = get("SELECT * FROM content_objects WHERE content_hash=?", r.content_hash), basis = json$14(v.basis_json);
+					exec("INSERT INTO artifacts VALUES(?,?,?,?,?,?,?,?,'READY',?,NULL,?)", id, v.project_id, v.run_id, v.attempt_id, "quality-" + String(r.kind).toLowerCase(), r.content_hash, object.byte_size, object.storage_key, basis.inputFingerprint, (/* @__PURE__ */ new Date()).toISOString());
+					exec("INSERT INTO quality_artifact_refs VALUES(?,?,?,?)", i.operationId, r.material_key, id, r.content_hash);
+				}
+				return all("SELECT * FROM quality_artifact_refs WHERE operation_id=? ORDER BY material_key", i.operationId).map((r) => ({
+					materialKey: String(r.material_key),
+					artifactId: String(r.artifact_id),
+					sha256: String(r.content_hash),
+					targetCommit: json$14(v.basis_json).targetCommit
+				}));
+			});
+		},
+		getQualitySourceManifest(i) {
+			const v = bound(i);
+			return sourceManifest.parse(json$14(get("SELECT manifest_json FROM workspace_allocations WHERE operation_id=?", v.allocation_operation_id).manifest_json));
+		},
+		bindQualityStage(i) {
+			return transaction(db, () => {
+				const v = bound(i), old = get("SELECT * FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?", i.operationId, i.producerId);
+				if (old) {
+					if (old.pipeline_id !== i.pipelineId || old.ordinal !== i.ordinal) fail$28("QUALITY_STAGE_BINDING_IMMUTABLE");
+					return stageView(old);
+				}
+				if (v.state !== "PREPARED" || !current(v)) fail$28("QUALITY_BASIS_STALE");
+				preparedSource(v);
+				const b = json$14(v.basis_json), producer = policy(v).producers.find((p) => p.producerId === i.producerId), p = get("SELECT * FROM pipelines WHERE pipeline_id=?", i.pipelineId), s = get("SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?", i.pipelineId, i.ordinal);
+				if (!producer || !p || !s || p.attempt_id !== v.attempt_id || p.run_id !== v.run_id || p.workspace_ref !== b.workspaceRef || s.state !== "PENDING" || s.request_json || s.job_id) fail$28("QUALITY_STAGE_BINDING_INVALID");
+				if (get("SELECT 1 FROM quality_stage_bindings WHERE pipeline_id=? AND ordinal=?", i.pipelineId, i.ordinal)) fail$28("QUALITY_STAGE_ALREADY_BOUND");
+				exec("INSERT INTO quality_stage_bindings VALUES(?,?,?,?,?,?)", i.operationId, i.producerId, i.pipelineId, i.ordinal, s.operation_id, (/* @__PURE__ */ new Date()).toISOString());
+				return stageView(get("SELECT * FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?", i.operationId, i.producerId));
+			});
+		},
+		listQualityStages(i) {
+			bound(i);
+			return all("SELECT * FROM quality_stage_bindings WHERE operation_id=? ORDER BY producer_id", i.operationId).map(stageView);
+		},
+		declareQualityOrigin(i) {
+			return transaction(db, () => {
+				const v = bound(i), p = policy(v), b = json$14(v.basis_json), producer = p.producers.find((p) => p.producerId === i.producerId);
+				if (!producer || i.execution.producerId !== i.producerId) fail$28("QUALITY_PRODUCER_CHANGED");
+				preparedSource(v);
+				const binding = get("SELECT * FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?", i.operationId, i.producerId);
+				if (!binding || binding.pipeline_id !== i.pipelineId || binding.ordinal !== i.ordinal || binding.stage_operation_id !== i.execution.operationId) fail$28("QUALITY_STAGE_BINDING_INVALID");
+				const pipeline = get("SELECT * FROM pipelines WHERE pipeline_id=?", i.pipelineId), stage = get("SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?", i.pipelineId, i.ordinal), w = get("SELECT * FROM workspace_allocations WHERE operation_id=?", v.allocation_operation_id);
+				if (!pipeline || !stage || !stage.job_json || pipeline.run_id !== v.run_id || pipeline.attempt_id !== v.attempt_id || pipeline.workspace_ref !== b.workspaceRef || pipeline.activation_id !== w.activation_id || pipeline.grant_id !== w.grant_id) fail$28("QUALITY_ORIGIN_SCOPE_CHANGED");
+				const job = json$14(stage.job_json), e = i.execution, request = job.request, log = job.outputRefs[0];
+				if (!stage.request_json || canonical(job.request) !== stage.request_json || digest(String(stage.request_json)) !== job.requestHash || stage.operation_id !== job.operationId || stage.job_id !== job.jobId) fail$28("QUALITY_ORIGIN_FACT_CHANGED");
+				if (stage.state !== "EXITED" || job.state !== "EXITED" || !job.executionProfile || !job.endedAt || !job.startedAt || !log || log.byteSize !== job.logCursor) fail$28("QUALITY_ORIGIN_INCOMPLETE");
+				if (e.attemptId !== v.attempt_id || e.runnerId !== b.runnerId || e.runnerId !== job.executionProfile.runnerId || e.jobId !== job.jobId || e.operationId !== job.operationId || e.requestHash !== job.requestHash || e.commandHash !== job.executionProfile.commandHash || e.commandHash !== digest(canonical(producer.command)) || e.imageDigest !== request.imageDigest || e.imageDigest !== producer.imageDigest || request.workspaceRef !== b.workspaceRef || e.targetCommit !== b.targetCommit || e.checkConfigHash !== v.config_hash || e.state !== job.state || e.exitCode !== job.exitCode || e.errorCode !== job.errorCode || e.stopRequested !== job.stopRequested || e.startedAt !== job.startedAt || e.finishedAt !== job.endedAt || e.log.sha256 !== log.sha256 || e.log.size !== log.byteSize) fail$28("QUALITY_ORIGIN_FACT_CHANGED");
+				const old = get("SELECT * FROM quality_origins WHERE operation_id=? AND producer_id=?", i.operationId, i.producerId), execution = canonical(e), jobHash = digest(String(stage.job_json));
+				if (old) {
+					if (old.pipeline_id !== i.pipelineId || old.ordinal !== i.ordinal || old.execution_json !== execution || old.job_hash !== jobHash) fail$28("QUALITY_ORIGIN_IMMUTABLE");
+					return {
+						producerId: i.producerId,
+						pipelineId: i.pipelineId,
+						ordinal: i.ordinal,
+						execution: e
+					};
+				}
+				if (v.state !== "PREPARED") fail$28("QUALITY_VERIFICATION_CLOSED");
+				if (get("SELECT 1 FROM quality_origins WHERE operation_id=? AND job_id=?", i.operationId, e.jobId)) fail$28("QUALITY_JOB_REUSED");
+				exec("INSERT INTO quality_origins VALUES(?,?,?,?,?,?,?,?)", i.operationId, i.producerId, i.pipelineId, i.ordinal, e.jobId, execution, jobHash, (/* @__PURE__ */ new Date()).toISOString());
+				return {
+					producerId: i.producerId,
+					pipelineId: i.pipelineId,
+					ordinal: i.ordinal,
+					execution: e
+				};
+			});
+		},
+		declareQualityMaterial(i) {
+			return transaction(db, () => {
+				const v = bound(i), d = i.descriptor, key = qualityMaterialKey(d), old = get("SELECT * FROM quality_materials WHERE operation_id=? AND material_key=?", i.operationId, key);
+				if (old) {
+					if (old.descriptor_json !== canonical(d)) fail$28("QUALITY_MATERIAL_IMMUTABLE");
+					return materialView(old);
+				}
+				if (v.state !== "PREPARED") fail$28("QUALITY_VERIFICATION_CLOSED");
+				if (d.kind === "SOURCE") {
+					if (d.allocationManifestSha256 !== json$14(v.basis_json).allocationManifestSha256) fail$28("QUALITY_SOURCE_CHANGED");
+					if (!d.instrumentation) fail$28("QUALITY_SOURCE_PROVENANCE_MISSING");
+					if (!current(v)) fail$28("QUALITY_BASIS_STALE");
+					beforeDispatch(v);
+				} else if (d.kind === "LOG") {
+					const { job } = original(v, d.producerId), log = job.outputRefs[0];
+					if (log.sha256 !== d.sha256 || log.byteSize !== d.byteSize) fail$28("QUALITY_LOG_CHANGED");
+				} else if (d.kind === "REPORT") {
+					const definition = policy(v).reports.find((r) => r.reportId === d.report.reportId);
+					if (!definition) fail$28("QUALITY_REPORT_UNKNOWN");
+					const { o, job } = original(v, definition.producerId), index = job.request.outputSpec.indexOf(definition.path), output = job.outputRefs[index + 1];
+					if (index < 0 || !output || d.report.outputPath !== definition.path || canonical(d.report.execution) !== o.execution_json || d.report.sha256 !== d.sha256 || d.report.size !== d.byteSize || output.sha256 !== d.sha256 || output.byteSize !== d.byteSize) fail$28("QUALITY_REPORT_CHANGED");
+				} else {
+					completeMaterials(v);
+					resultFacts(v, d.evaluation);
+					if (digest(canonical(d.evaluation)) !== d.sha256 || Buffer.byteLength(canonical(d.evaluation)) !== d.byteSize) fail$28("QUALITY_RESULT_HASH_CHANGED");
+				}
+				const total = get("SELECT count(*) n,COALESCE(sum(byte_size),0) bytes FROM quality_materials WHERE operation_id=?", i.operationId);
+				if (Number(total.n) >= 50 || Number(total.bytes) + d.byteSize > 128 * 1024 * 1024) fail$28("QUALITY_MATERIAL_LIMIT");
+				exec("INSERT INTO quality_materials VALUES(?,?,?,?,?,?,?,NULL,NULL,?)", i.operationId, key, d.kind, canonical(d), d.sha256, d.byteSize, randomUUID(), (/* @__PURE__ */ new Date()).toISOString());
+				return materialView(material({
+					operationId: i.operationId,
+					materialKey: key
+				}));
+			});
+		},
+		listQualityMaterials(i) {
+			owned(i.operationId, i.principalId);
+			return all("SELECT * FROM quality_materials WHERE operation_id=? AND material_key>? ORDER BY material_key LIMIT ?", i.operationId, i.afterKey, i.limit).map(materialView);
+		},
+		completeQualityVerification(i) {
+			return transaction(db, () => {
+				const v = bound(i);
+				if (v.state === "EVALUATED") return view(v);
+				completeMaterials(v);
+				const result = material({
+					operationId: i.operationId,
+					materialKey: "result"
+				});
+				ready(result);
+				const evaluation = json$14(result.descriptor_json).evaluation;
+				resultFacts(v, evaluation);
+				if (get("SELECT 1 FROM pipelines WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED','CANCELLED')", v.attempt_id) || get("SELECT 1 FROM runtime_tool_calls WHERE activation_id IN (SELECT activation_id FROM workspace_allocations WHERE operation_id=?) AND state NOT IN ('SUCCEEDED','FAILED')", v.allocation_operation_id) || get("SELECT 1 FROM repo_file_operations WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED')", v.attempt_id) || get("SELECT 1 FROM repo_operations WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED')", v.attempt_id)) fail$28("QUALITY_EFFECT_OUTCOME_UNKNOWN");
+				exec("UPDATE quality_verifications SET state='EVALUATED',evaluation_json=?,evaluated_at=? WHERE operation_id=?", canonical(evaluation), (/* @__PURE__ */ new Date()).toISOString(), i.operationId);
+				return view(verification(i.operationId));
+			});
+		}
+	};
+	return {
+		assertPipelinePrepared(attemptId, workspaceRef) {
+			const allocation = get("SELECT * FROM workspace_allocations WHERE attempt_id=? AND workspace_ref=? AND kind='verification' AND state='READY'", attemptId, workspaceRef);
+			if (!allocation) return;
+			const prepared = all("SELECT * FROM quality_verifications WHERE attempt_id=? AND allocation_operation_id=? AND state='PREPARED'", attemptId, allocation.operation_id).filter((v) => {
+				if (!current(v)) return false;
+				try {
+					preparedSource(v);
+					return true;
+				} catch (error) {
+					if (error instanceof StorageError) return false;
+					throw error;
+				}
+			});
+			if (!prepared.length) fail$28("QUALITY_SOURCE_NOT_PREPARED");
+			if (!prepared.some((v) => policy(v).producers.every((p) => get("SELECT 1 FROM quality_stage_bindings WHERE operation_id=? AND producer_id=?", v.operation_id, p.producerId)))) fail$28("QUALITY_STAGE_BINDING_INVALID");
+		},
+		completionFacts(operationId, principalId, attemptId) {
+			const v = owned(operationId, principalId, true);
+			if (v.attempt_id !== attemptId || v.state !== "EVALUATED" || !current(v)) fail$28("QUALITY_BASIS_STALE");
+			preparedSource(v);
+			completeMaterials(v);
+			ready(material({
+				operationId,
+				materialKey: "result"
+			}));
+			resultFacts(v, json$14(v.evaluation_json));
+			return {
+				verification: view(v),
+				policy: policy(v),
+				materials: all("SELECT * FROM quality_materials WHERE operation_id=? ORDER BY material_key", operationId).map(materialView)
+			};
+		},
+		authorize(principalId, target) {
+			owned(target.operationId, principalId, true);
+			return material(target);
+		},
+		validateWrite(i) {
+			const r = this.authorize(i.meta.principalId, i.target);
+			if (i.meta.scopeId !== i.target.operationId || i.meta.idempotencyKey !== r.write_key || i.expectedHash !== r.expected_hash || i.expectedSize !== r.byte_size) fail$28("QUALITY_MATERIAL_WRITE_CHANGED");
+		},
+		commit(principalId, target, hash, writeId) {
+			const r = this.authorize(principalId, target);
+			if (hash !== r.expected_hash || r.content_hash && r.write_id !== writeId) fail$28("QUALITY_MATERIAL_WRITE_CHANGED");
+			if (r.kind === "SOURCE" && !r.content_hash) beforeDispatch(verification(target.operationId));
+			exec("UPDATE quality_materials SET content_hash=?,write_id=? WHERE operation_id=? AND material_key=?", hash, writeId, target.operationId, target.materialKey);
+			return {
+				operationId: target.operationId,
+				materialKey: target.materialKey,
+				contentHash: hash
+			};
+		},
+		resolve(principalId, target) {
+			owned(target.operationId, principalId);
+			const r = material(target);
+			ready(r);
+			return { content_hash: String(r.content_hash) };
+		},
+		execute(method, input) {
+			const parsed = parseContract(qualityRequests[method], input);
+			return handlers[method](parsed);
+		}
+	};
+}
+//#endregion
+//#region src/work-effects.ts
+/** Read original durable effects; no lease expiry is an exit receipt. */
+function knownAttemptEffects(db, attemptId) {
+	return [
+		"SELECT 1 FROM tool_operations t JOIN operations o ON o.operation_id=t.operation_id WHERE t.attempt_id=? AND o.status NOT IN ('SUCCEEDED','FAILED')",
+		"SELECT 1 FROM runner_jobs j JOIN tool_operations t ON t.operation_id=j.operation_id WHERE t.attempt_id=? AND j.state<>'EXITED'",
+		"SELECT 1 FROM pipelines WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED','CANCELLED')",
+		"SELECT 1 FROM pipeline_stages s JOIN pipelines p ON p.pipeline_id=s.pipeline_id WHERE p.attempt_id=? AND s.state NOT IN ('PENDING','SKIPPED','EXITED')",
+		"SELECT 1 FROM runtime_tool_calls t JOIN runtime_activations a ON a.activation_id=t.activation_id WHERE a.attempt_id=? AND t.state NOT IN ('SUCCEEDED','FAILED')",
+		"SELECT 1 FROM repo_operations WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED')",
+		"SELECT 1 FROM repo_file_operations WHERE attempt_id=? AND state NOT IN ('SUCCEEDED','FAILED')",
+		"SELECT 1 FROM source_archives WHERE attempt_id=? AND state NOT IN ('ACKNOWLEDGED','FAILED')"
+	].every((sql) => !db.prepare(sql).get(attemptId));
+}
+/** Repair confirmation cannot admit a plan over live or unresolved old effects. */
+function completedRunEffects(db, runId) {
+	return db.prepare("SELECT attempt_id,ended_at FROM attempts WHERE run_id=?").all(runId).every((a) => a.ended_at !== null && knownAttemptEffects(db, a.attempt_id));
+}
+//#endregion
+//#region src/work-verification-domain.ts
+const json$13 = (v) => JSON.parse(String(v));
+function fail$27(code, status = 409) {
+	throw new StorageError(code, status, "Formal Work completion requires current original verification facts");
+}
+function createWorkVerificationDomain(db, quality) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p), workspaceResults = createRuntimeWorkspaces(db);
+	function authorized(principalId, runId, write = false) {
+		const r = get("SELECT r.*,p.owner_id,m.role FROM runs r JOIN projects p ON p.project_id=r.project_id JOIN project_members m ON m.project_id=p.project_id AND m.principal_id=? WHERE r.run_id=?", principalId, runId);
+		if (!r || write && (r.owner_id !== principalId || r.role !== "owner")) fail$27("WORK_VERIFICATION_NOT_FOUND", 404);
+		return r;
+	}
+	const record = (id) => get("SELECT * FROM work_verifications WHERE operation_id=?", id) ?? fail$27("WORK_VERIFICATION_NOT_FOUND", 404);
+	function owned(principalId, id, write = false) {
+		const row = record(id);
+		authorized(principalId, String(row.run_id), write);
+		if (write && row.principal_id !== principalId) fail$27("WORK_VERIFICATION_NOT_FOUND", 404);
+		return row;
+	}
+	function candidate(principalId, runId, attemptId, terminal = false) {
+		const r = authorized(principalId, runId, true), a = get("SELECT * FROM attempts WHERE attempt_id=? AND run_id=?", attemptId, runId) ?? fail$27("WORK_VERIFICATION_ATTEMPT_MISSING");
+		if (r.control_gate !== "OPEN" || r.terminal_outcome !== null || a.ended_at !== null && !terminal || !(terminal ? [
+			"VERIFYING",
+			"SUCCEEDED",
+			"FAILED"
+		] : ["VERIFYING"]).includes(String(a.state))) fail$27("WORK_VERIFICATION_ADMISSION_CLOSED");
+		const scheduled = get("SELECT * FROM scheduled_work WHERE attempt_id=?", attemptId), w = get("SELECT * FROM works WHERE run_id=? AND work_id=?", runId, a.work_id), planned = get("SELECT * FROM plan_works WHERE run_id=? AND plan_revision=? AND work_id=?", runId, r.current_plan_revision, a.work_id);
+		if (!scheduled || !w || !planned || w.blocked_reason !== null || r.run_epoch !== a.admitted_run_epoch || w.work_epoch !== a.admitted_work_epoch || planned.work_revision !== a.work_revision || scheduled.plan_revision !== r.current_plan_revision || !get("SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?", runId, r.current_plan_revision, r.current_requirement_revision)) fail$27("WORK_VERIFICATION_BASIS_STALE");
+		const result = get(`SELECT rr.*,ra.config_json,ra.state runtime_state,ra.grant_id,a.content_hash,a.input_fingerprint candidate_fingerprint,a.state artifact_state,c.state content_state
+   FROM runtime_results rr JOIN runtime_activations ra ON ra.activation_id=rr.activation_id JOIN artifacts a ON a.artifact_id=rr.artifact_id
+   JOIN content_objects c ON c.content_hash=a.content_hash WHERE ra.attempt_id=? AND a.attempt_id=? AND a.run_id=?`, attemptId, attemptId, runId);
+		if (!result || result.runtime_state !== "FINISHED" || result.artifact_state !== "READY" || result.content_state !== "READY" || result.candidate_fingerprint !== a.input_fingerprint) fail$27("WORK_VERIFICATION_CANDIDATE_MISSING");
+		return {
+			r,
+			a,
+			result,
+			work: workRevision.parse(json$13(get("SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", runId, a.work_id, a.work_revision).definition_json)),
+			ref: {
+				artifactId: String(result.artifact_id),
+				sha256: String(result.content_hash)
+			}
+		};
+	}
+	function assess(principalId, runId, attemptId, raw, qualityOperationId, terminal = false) {
+		const c = candidate(principalId, runId, attemptId, terminal), output = roleOutput.parse(raw), { r, a, result, work } = c, role = json$13(a.role_snapshot_json), manifest = json$13(a.input_manifest_json);
+		if (digest(canonical(output)) !== c.ref.sha256 || output.role !== a.role || output.role !== role.role || output.schemaVersion !== role.outputSchemaId) fail$27("WORK_VERIFICATION_CANDIDATE_CHANGED");
+		if (!knownAttemptEffects(db, attemptId)) fail$27("WORK_VERIFICATION_EFFECT_UNKNOWN");
+		const checks = [], add = (kind, status, code) => checks.push({
+			kind,
+			status,
+			code
+		});
+		const readyRef = (ref) => !!get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.run_id=? AND a.project_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'", ref.artifactId, runId, r.project_id, ref.sha256);
+		let archive, qualified, codeCommit = null;
+		const workspace = workspaceResults.get(String(result.activation_id));
+		if (output.role === "developer" || output.role === "tester") {
+			if (!workspace || workspace.contentHash !== c.ref.sha256 || canonical(workspace.output) !== canonical(output)) fail$27("WORK_VERIFICATION_WORKSPACE_UNPROVEN");
+			workspaceResults.assertPublication({
+				...result,
+				activation_id: result.activation_id,
+				attempt_id: attemptId
+			}, Number(result.step_no), c.ref.sha256, output);
+		}
+		if (output.role === "developer") {
+			archive = get("SELECT * FROM source_archives WHERE operation_id=? AND attempt_id=? AND state='ACKNOWLEDGED'", workspace.archiveOperationId, attemptId);
+			if (!archive?.manifest_json || !archive.acknowledgement_json || json$13(archive.manifest_json).commit !== output.resultCommit || output.baseCommit !== manifest.codeCommit) fail$27("WORK_VERIFICATION_SOURCE_UNPROVEN");
+			codeCommit = output.resultCommit;
+			if (output.unverified.length) add("developer-result", "MISSING", "DECLARED_CHECKS_UNVERIFIED");
+			for (const ref of [...output.checkRefs, ...output.handoffProposal?.artifactRefs ?? []]) if (!readyRef(ref)) add("candidate-evidence", "MISSING", "CANDIDATE_EVIDENCE_UNAVAILABLE");
+		} else if (output.role === "tester") {
+			if (!quality || !qualityOperationId) fail$27("WORK_VERIFICATION_QUALITY_REQUIRED");
+			qualified = quality.completionFacts(qualityOperationId, principalId, attemptId);
+			if (qualified.verification.configHash !== manifest.checkConfigHash || qualified.verification.basis.targetCommit !== output.targetCommit || output.targetCommit !== manifest.codeCommit || qualified.verification.allocationOperationId !== workspace.allocationOperationId) fail$27("WORK_VERIFICATION_QUALITY_CHANGED");
+			const evaluation = qualified.verification.evaluation, materials = qualified.materials.filter((m) => m.contentHash), hashes = (kind) => new Set(materials.filter((m) => {
+				const d = m.descriptor;
+				return d.kind === "REPORT" && qualified.policy.reports.some((r) => r.reportId === d.report.reportId && r.format === (kind === "tests" ? "vitest-json-v1" : "istanbul-v1"));
+			}).map((m) => m.contentHash));
+			const resultHash = materials.find((m) => m.materialKey === "result").contentHash, coverage = hashes("coverage"), tests = hashes("tests");
+			coverage.add(resultHash);
+			tests.add(resultHash);
+			const verifyRef = (ref, allowed) => readyRef(ref) && allowed.has(ref.sha256);
+			if (!verifyRef(output.coverageRef, coverage) || !verifyRef(output.buildRef, /* @__PURE__ */ new Set([resultHash]))) add("candidate-evidence", "FAIL", "CANDIDATE_REPORT_PROVENANCE_CHANGED");
+			if (output.caseResults.length !== qualified.policy.checks.filter((c) => c.kind === "tests").length || new Set(output.caseResults.map((c) => c.checkId)).size !== output.caseResults.length) add("candidate-tests", "FAIL", "CANDIDATE_TEST_SCOPE_CHANGED");
+			for (const expected of qualified.policy.checks.filter((c) => c.kind === "tests")) {
+				const actual = output.caseResults.filter((c) => c.checkId === expected.checkId), measured = evaluation.checks.find((c) => c.checkId === expected.checkId);
+				if (actual.length !== 1 || !verifyRef(actual[0].reportRef, tests) || canonical([...new Set(expected.requiredTests.flatMap((t) => t.requirementIds))].sort()) !== canonical([...new Set(actual[0].requirementIds)].sort())) add("candidate-tests", "FAIL", "CANDIDATE_REPORT_PROVENANCE_CHANGED");
+				else if (actual[0].status === "PASSED" !== (measured.status === "PASS")) add("candidate-tests", "FAIL", "CANDIDATE_STATUS_CONTRADICTS_RAW_REPORT");
+			}
+			for (const defect of output.defects) for (const ref of defect.evidenceRefs) if (!readyRef(ref) || !materials.some((m) => m.contentHash === ref.sha256)) add("candidate-defect", "FAIL", "CANDIDATE_REPORT_PROVENANCE_CHANGED");
+			if (output.defects.length) add("candidate-defect", "FAIL", "CANDIDATE_FINDING_UNRESOLVED");
+			if (output.previewRef && !readyRef(output.previewRef)) add("candidate-preview", "MISSING", "CANDIDATE_EVIDENCE_UNAVAILABLE");
+			add("independent-quality", evaluation.automaticStatus === "STALE" ? "MISSING" : evaluation.automaticStatus, "ORIGINAL_QUALITY_" + evaluation.automaticStatus);
+			if (evaluation.reviewStatus === "PENDING") add("quality-review", "PENDING", "HUMAN_DECISION_REQUIRED");
+		} else if (output.role === "architect") {
+			for (const entry of output.interfaces) if (!readyRef(entry.specificationRef)) add("candidate-interface", "MISSING", "CANDIDATE_EVIDENCE_UNAVAILABLE");
+		}
+		const outputs = work.outputSpec.map((s) => ({
+			slot: s.slot,
+			ref: c.ref
+		}));
+		for (const slot of work.outputSpec) if (slot.schemaId !== output.schemaVersion) add("output-schema", "MISSING", "OUTPUT_SCHEMA_VERIFIER_UNAVAILABLE");
+		for (const check of work.completionChecks) if (check.kind === "artifact-exists") add(check.kind, "PASS", "CANDIDATE_ARTIFACT_READY");
+		else if (check.kind === "schema-valid") add(check.kind, check.schemaId === output.schemaVersion ? "PASS" : "MISSING", check.schemaId === output.schemaVersion ? "CANDIDATE_SCHEMA_VALID" : "OUTPUT_SCHEMA_VERIFIER_UNAVAILABLE");
+		else if (check.kind === "commit-resolved") add(check.kind, output.role === "developer" && archive ? "PASS" : "MISSING", archive ? "SOURCE_ARCHIVE_ACKNOWLEDGED" : "SOURCE_COMMIT_UNPROVEN");
+		else if (check.kind === "human-decision") add(check.kind, "PENDING", "HUMAN_DECISION_REQUIRED");
+		else if (check.kind === "coverage-threshold") {
+			const metric = qualified?.verification.evaluation?.checks.find((c) => c.coverage)?.coverage;
+			add(check.kind, metric && qualified.policy.thresholds.lines >= check.lines && qualified.policy.thresholds.branches >= check.branches && metric.lines.status === "PASS" && ["PASS", "NOT_APPLICABLE"].includes(metric.branches.status) ? "PASS" : qualified ? "FAIL" : "MISSING", qualified ? "ORIGINAL_COVERAGE_CHECK" : "FIXED_SOURCE_CHECK_UNPROVEN");
+		} else {
+			const measured = qualified?.verification.evaluation?.checks.find((c) => c.checkId === check.checkId), definition = qualified?.policy.checks.find((c) => c.checkId === check.checkId), kind = check.kind === "required-tests-pass" ? "tests" : "command";
+			add(check.kind, measured && definition?.kind === kind ? measured.status === "STALE" || measured.status === "NOT_APPLICABLE" ? "MISSING" : measured.status : "MISSING", measured ? "ORIGINAL_REQUIRED_CHECK" : "FIXED_SOURCE_CHECK_UNPROVEN");
+		}
+		const basis = {
+			runId,
+			attemptId,
+			workId: a.work_id,
+			workRevision: a.work_revision,
+			workEpoch: a.admitted_work_epoch,
+			runEpoch: a.admitted_run_epoch,
+			planRevision: r.current_plan_revision,
+			requirementRevision: r.current_requirement_revision,
+			inputFingerprint: a.input_fingerprint,
+			inputManifestSha256: digest(String(a.input_manifest_json)),
+			roleSnapshotSha256: digest(String(a.role_snapshot_json)),
+			candidate: c.ref,
+			candidateSha256: digest(canonical(output)),
+			workspace: workspace ?? null,
+			sourceArchive: archive ? {
+				operationId: archive.operation_id,
+				manifestSha256: digest(String(archive.manifest_json)),
+				ackSha256: digest(String(archive.acknowledgement_json))
+			} : null,
+			quality: qualified ? {
+				operationId: qualityOperationId,
+				basis: qualified.verification.basis,
+				evaluation: qualified.verification.evaluation,
+				materials: qualified.materials.map((m) => ({
+					key: m.materialKey,
+					hash: m.contentHash,
+					descriptor: m.descriptor
+				}))
+			} : null
+		};
+		const status = checks.some((c) => c.status === "PENDING") ? "PENDING" : checks.some((c) => c.status === "FAIL") ? "FAIL" : checks.some((c) => c.status === "MISSING") ? "MISSING" : "PASS", outcome = status === "PASS" ? "success" : output.role === "tester" && qualified && status !== "PENDING" ? "completed-with-findings" : null;
+		return {
+			basis,
+			evaluation: {
+				schemaVersion: "devmesh.work-verification.v1",
+				runId,
+				attemptId,
+				workId: String(a.work_id),
+				workRevision: Number(a.work_revision),
+				inputFingerprint: String(a.input_fingerprint),
+				basisSha256: digest(canonical(basis)),
+				candidate: c.ref,
+				outputs,
+				codeCommit,
+				qualityOperationId,
+				checks,
+				automaticStatus: status,
+				outcome
+			},
+			c
+		};
+	}
+	function current(row) {
+		try {
+			return digest(canonical(assess(String(row.principal_id), String(row.run_id), String(row.attempt_id), json$13(row.candidate_json), row.quality_operation_id, row.state === "APPLIED").basis)) === digest(String(row.basis_json));
+		} catch (error) {
+			if (error instanceof StorageError) return false;
+			throw error;
+		}
+	}
+	const view = (row) => ({
+		operationId: String(row.operation_id),
+		principalId: String(row.principal_id),
+		runId: String(row.run_id),
+		attemptId: String(row.attempt_id),
+		requestHash: String(row.request_hash),
+		state: row.state,
+		qualification: current(row) ? "CURRENT" : "STALE",
+		evaluation: json$13(row.evaluation_json),
+		expectedHash: String(row.expected_hash),
+		byteSize: Number(row.byte_size),
+		writeKey: String(row.write_key),
+		completionKey: String(row.completion_key),
+		artifactId: row.artifact_id,
+		contentHash: row.content_hash,
+		writeId: row.write_id
+	});
+	const handlers = {
+		getWorkVerificationCandidate(i) {
+			const c = candidate(i.principalId, i.runId, i.attemptId);
+			return {
+				candidate: c.ref,
+				work: c.work
+			};
+		},
+		beginWorkVerification(i) {
+			return transaction(db, () => {
+				const hash = digest(canonical(i)), old = get("SELECT * FROM work_verifications WHERE operation_id=?", i.operationId);
+				if (old) {
+					owned(i.principalId, i.operationId, true);
+					if (old.request_hash !== hash) fail$27("WORK_VERIFICATION_REQUEST_CHANGED");
+					return view(old);
+				}
+				const result = assess(i.principalId, i.runId, i.attemptId, i.candidate, i.qualityOperationId), body = canonical(result.evaluation), time = (/* @__PURE__ */ new Date()).toISOString();
+				if (Buffer.byteLength(body) > 256 * 1024) fail$27("WORK_VERIFICATION_TOO_LARGE");
+				exec("INSERT INTO work_verifications VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,'PREPARED',NULL,NULL,NULL,?,NULL)", i.operationId, i.principalId, i.runId, i.attemptId, hash, canonical(i.candidate), i.qualityOperationId, canonical(result.basis), body, digest(body), Buffer.byteLength(body), randomUUID(), randomUUID(), "artifact_" + randomUUID().replaceAll("-", ""), time);
+				return view(record(i.operationId));
+			});
+		},
+		getWorkVerification(i) {
+			return view(owned(i.principalId, i.operationId));
+		},
+		listWorkVerifications(i) {
+			authorized(i.principalId, i.runId);
+			return all("SELECT * FROM work_verifications WHERE run_id=? AND operation_id>? ORDER BY operation_id LIMIT ?", i.runId, i.afterOperationId, i.limit).map(view);
+		}
+	};
+	return {
+		frozenFacts(principalId, operationId, allowCarried = false) {
+			const r = owned(principalId, operationId, true);
+			if (allowCarried ? r.state !== "APPLIED" : !["READY", "APPLIED"].includes(String(r.state)) || !current(r)) fail$27("WORK_VERIFICATION_BASIS_STALE");
+			const assessment = json$13(r.evaluation_json);
+			if (!r.content_hash || r.content_hash !== digest(canonical(assessment)) || !get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'", r.artifact_id, r.content_hash)) fail$27("WORK_VERIFICATION_CONTENT_UNAVAILABLE");
+			return {
+				state: String(r.state),
+				assessment,
+				operationId: String(r.operation_id),
+				runId: String(r.run_id),
+				attemptId: String(r.attempt_id),
+				evidence: {
+					artifactId: String(r.artifact_id),
+					sha256: String(r.content_hash)
+				}
+			};
+		},
+		authorize(principalId, target) {
+			return owned(principalId, target.operationId, true);
+		},
+		validateWrite(i) {
+			const row = this.authorize(i.meta.principalId, i.target);
+			if (i.meta.scopeId !== row.operation_id || i.meta.idempotencyKey !== row.write_key || i.expectedHash !== row.expected_hash || i.expectedSize !== row.byte_size) fail$27("WORK_VERIFICATION_WRITE_CHANGED");
+		},
+		commit(principalId, target, hash, writeId) {
+			const row = this.authorize(principalId, target);
+			if (hash !== row.expected_hash || row.write_id && row.write_id !== writeId) fail$27("WORK_VERIFICATION_WRITE_CHANGED");
+			if (row.content_hash) return {
+				artifactId: String(row.artifact_id),
+				contentHash: hash
+			};
+			const a = get("SELECT * FROM attempts WHERE attempt_id=?", row.attempt_id), r = authorized(principalId, String(row.run_id), true);
+			exec("INSERT INTO artifacts VALUES(?,?,?,?,?,?,?,?,'READY',?,NULL,?)", row.expected_artifact_id, r.project_id, row.run_id, row.attempt_id, "work-verification", hash, row.byte_size, "sha256/" + hash.slice(0, 2) + "/" + hash, a.input_fingerprint, (/* @__PURE__ */ new Date()).toISOString());
+			exec("UPDATE work_verifications SET state='READY',content_hash=?,artifact_id=expected_artifact_id,write_id=? WHERE operation_id=?", hash, writeId, target.operationId);
+			return {
+				artifactId: String(row.expected_artifact_id),
+				contentHash: hash
+			};
+		},
+		resolve(principalId, target) {
+			const row = owned(principalId, target.operationId);
+			if (!row.content_hash || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY'", row.content_hash)) fail$27("WORK_VERIFICATION_CONTENT_UNAVAILABLE");
+			return { content_hash: String(row.content_hash) };
+		},
+		assertCompletion(i) {
+			if (!i.verificationOperationId) fail$27("WORK_VERIFICATION_REQUIRED");
+			const row = owned(i.meta.principalId, i.verificationOperationId, true);
+			if (row.run_id !== i.runId || row.attempt_id !== i.attemptId || row.state !== "READY" || !current(row)) fail$27("WORK_VERIFICATION_BASIS_STALE");
+			const result = json$13(row.evaluation_json);
+			if (i.meta.idempotencyKey !== row.completion_key || !result.outcome || result.outcome !== i.outcome || canonical(result.outputs) !== canonical(i.outputs) || result.codeCommit !== i.codeCommit || row.artifact_id !== i.evidence.artifactId || row.content_hash !== i.evidence.sha256 || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY'", row.content_hash)) fail$27("WORK_VERIFICATION_RESULT_CHANGED");
+			return row;
+		},
+		applied(id) {
+			exec("UPDATE work_verifications SET state='APPLIED',applied_at=? WHERE operation_id=?", (/* @__PURE__ */ new Date()).toISOString(), id);
+		},
+		execute(method, input) {
+			const parsed = parseContract(workVerificationRequests[method], input);
+			return handlers[method](parsed);
+		}
+	};
+}
+//#endregion
+//#region src/release-delivery-domain.ts
+const json$12 = (v) => JSON.parse(String(v));
+function fail$26(code, status = 409) {
+	throw new StorageError(code, status, "Release delivery requires the original approved build and exact retained bytes");
+}
+function createReleaseDeliveryDomain(db, quality) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	function member(principalId, projectId, write = false) {
+		const r = get("SELECT p.*,m.role FROM projects p JOIN project_members m ON m.project_id=p.project_id AND m.principal_id=? WHERE p.project_id=?", principalId, projectId);
+		if (!r || write && (r.owner_id !== principalId || r.role !== "owner")) fail$26("RELEASE_DELIVERY_NOT_FOUND", 404);
+		return r;
+	}
+	const record = (id) => get("SELECT * FROM release_deliveries WHERE operation_id=?", id) ?? fail$26("RELEASE_DELIVERY_NOT_FOUND", 404);
+	function owned(principalId, id, write = false) {
+		const r = record(id);
+		member(principalId, String(r.project_id), write);
+		if (write && r.principal_id !== principalId) fail$26("RELEASE_DELIVERY_NOT_FOUND", 404);
+		return r;
+	}
+	function bound(i) {
+		const r = owned(i.principalId, i.operationId, true);
+		if (r.request_hash !== i.requestHash) fail$26("RELEASE_DELIVERY_REQUEST_CHANGED");
+		return r;
+	}
+	const policy = (projectId, hash) => releaseDeliveryPolicy.parse(json$12(get("SELECT policy_json FROM release_delivery_policies WHERE project_id=? AND policy_hash=?", projectId, hash)?.policy_json ?? fail$26("RELEASE_DELIVERY_POLICY_MISSING")));
+	function freeze(i) {
+		const run = get("SELECT * FROM runs WHERE run_id=?", i.runId) ?? fail$26("RELEASE_DELIVERY_NOT_FOUND", 404), project = member(i.principalId, String(run.project_id), true), p = policy(String(run.project_id), i.policyHash);
+		if (!quality) fail$26("RELEASE_DELIVERY_QUALITY_REQUIRED");
+		const qrow = get("SELECT attempt_id FROM quality_verifications WHERE operation_id=? AND run_id=?", i.qualityOperationId, i.runId) ?? fail$26("RELEASE_DELIVERY_QUALITY_REQUIRED"), q = quality.completionFacts(i.qualityOperationId, i.principalId, String(qrow.attempt_id)), v = q.verification, b = v.basis;
+		if (!knownAttemptEffects(db, b.attemptId)) fail$26("RELEASE_DELIVERY_EFFECT_UNKNOWN");
+		const { schemaVersion: _version, templateVersion: _template, checkConfigHash: _config, ...profile } = p;
+		if (v.evaluation?.automaticStatus !== "PASS" || v.configHash !== p.checkConfigHash || q.policy.templateVersion !== p.templateVersion || !q.policy.delivery || canonical(q.policy.delivery) !== canonical(profile)) fail$26("RELEASE_DELIVERY_POLICY_CHANGED");
+		const origin = v.origins.find((o) => o.producerId === p.producerId), stage = origin ? get("SELECT job_json FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?", origin.pipelineId, origin.ordinal) : void 0;
+		if (!origin || !stage?.job_json) fail$26("RELEASE_DELIVERY_BUILD_MISSING");
+		const job = json$12(stage.job_json), spec = job.request.outputSpec;
+		if (job.state !== "EXITED" || job.exitCode !== 0 || job.errorCode || job.stopRequested || !Array.isArray(spec) || !job.executionProfile || !job.startedAt || !job.endedAt) fail$26("RELEASE_DELIVERY_BUILD_UNPROVEN");
+		const materials = p.materials.map((m) => {
+			const index = spec.indexOf(m.path), output = job.outputRefs[index + 1];
+			if (index < 0 || index >= 32 || !output || output.byteSize > previewImageLimits.blobBytes) fail$26("RELEASE_DELIVERY_MATERIAL_MISSING");
+			return {
+				materialKey: m.key,
+				path: m.path,
+				outputIndex: index + 1,
+				expectedHash: output.sha256,
+				byteSize: output.byteSize
+			};
+		});
+		if (materials.reduce((n, m) => n + m.byteSize, 0) > previewImageLimits.totalBytes) fail$26("RELEASE_DELIVERY_MATERIAL_LIMIT");
+		const result = q.materials.find((m) => m.materialKey === "result")?.contentHash;
+		if (!result) fail$26("RELEASE_DELIVERY_QUALITY_REQUIRED");
+		return {
+			run,
+			project,
+			policy: p,
+			basis: {
+				runId: i.runId,
+				runEpoch: b.runEpoch,
+				planRevision: b.planRevision,
+				requirementRevision: b.requirementRevision,
+				targetCommit: b.targetCommit,
+				sourceManifestSha256: b.allocationManifestSha256,
+				checkConfigHash: v.configHash,
+				templateVersion: p.templateVersion,
+				qualityOperationId: i.qualityOperationId,
+				qualityBasisSha256: digest(canonical(b)),
+				qualityResultHash: result,
+				attemptId: b.attemptId,
+				workEpoch: b.workEpoch,
+				jobHash: digest(String(stage.job_json)),
+				sourceReleaseId: project.accepted_release_id
+			},
+			job,
+			materials
+		};
+	}
+	function current(r) {
+		try {
+			if (r.state === "READY") for (const m of all("SELECT * FROM release_delivery_materials WHERE operation_id=?", r.operation_id)) ready(m);
+			return canonical(freeze(json$12(r.request_json)).basis) === r.basis_json;
+		} catch (error) {
+			if (error instanceof StorageError) return false;
+			throw error;
+		}
+	}
+	const view = (r) => ({
+		operationId: String(r.operation_id),
+		principalId: String(r.principal_id),
+		projectId: String(r.project_id),
+		runId: String(r.run_id),
+		requestHash: String(r.request_hash),
+		policyHash: String(r.policy_hash),
+		basis: json$12(r.basis_json),
+		state: r.state,
+		qualification: current(r) ? "CURRENT" : "STALE",
+		image: r.image_json ? json$12(r.image_json) : null,
+		dataPlan: r.data_plan_json ? json$12(r.data_plan_json) : null
+	});
+	const material = (t) => get("SELECT * FROM release_delivery_materials WHERE operation_id=? AND material_key=?", t.operationId, t.materialKey) ?? fail$26("DELIVERY_MATERIAL_NOT_FOUND", 404);
+	const materialView = (r) => ({
+		operationId: String(r.operation_id),
+		materialKey: String(r.material_key),
+		path: String(r.output_path),
+		outputIndex: Number(r.output_index),
+		expectedHash: String(r.expected_hash),
+		byteSize: Number(r.byte_size),
+		writeKey: String(r.write_key),
+		contentHash: r.content_hash,
+		writeId: r.write_id
+	});
+	function ready(r) {
+		if (!r.content_hash || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY' AND byte_size=?", r.content_hash, r.byte_size)) fail$26("DELIVERY_MATERIAL_UNAVAILABLE");
+	}
+	function checkData(r, data) {
+		const b = json$12(r.basis_json);
+		if (data.runId !== r.run_id || data.codeCommit !== b.targetCommit || data.requirementRevision !== b.requirementRevision || data.planRevision !== b.planRevision || data.templateVersion !== b.templateVersion || data.checkConfigHash !== b.checkConfigHash || data.sourceReleaseId !== b.sourceReleaseId) fail$26("DELIVERY_DATA_PLAN_CHANGED");
+		if (data.migrationRef && !get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.project_id=? AND a.run_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'", data.migrationRef.artifactId, r.project_id, r.run_id, data.migrationRef.sha256)) fail$26("DELIVERY_MIGRATION_MISSING");
+	}
+	const handlers = {
+		registerReleaseDeliveryPolicy(i) {
+			return transaction(db, () => {
+				member(i.principalId, i.projectId, true);
+				if (!quality) fail$26("RELEASE_DELIVERY_QUALITY_REQUIRED");
+				const q = get("SELECT policy_json FROM quality_policies WHERE project_id=? AND config_hash=?", i.projectId, i.policy.checkConfigHash);
+				if (!q) fail$26("RELEASE_DELIVERY_POLICY_CHANGED");
+				const value = json$12(q.policy_json), { schemaVersion: _version, templateVersion, checkConfigHash: _config, ...profile } = i.policy;
+				if (value.templateVersion !== templateVersion || !value.delivery || canonical(value.delivery) !== canonical(profile)) fail$26("RELEASE_DELIVERY_POLICY_CHANGED");
+				const body = canonical(i.policy), hash = digest(body), old = get("SELECT policy_json FROM release_delivery_policies WHERE project_id=? AND policy_hash=?", i.projectId, hash);
+				if (old && old.policy_json !== body) fail$26("DELIVERY_POLICY_IMMUTABLE");
+				if (!old) exec("INSERT INTO release_delivery_policies VALUES(?,?,?,?,?,?)", i.projectId, hash, i.policy.checkConfigHash, body, i.principalId, (/* @__PURE__ */ new Date()).toISOString());
+				return {
+					policyHash: hash,
+					policy: i.policy
+				};
+			});
+		},
+		getReleaseDeliveryPolicy(i) {
+			member(i.principalId, i.projectId);
+			return {
+				policyHash: i.policyHash,
+				policy: policy(i.projectId, i.policyHash)
+			};
+		},
+		beginReleaseDelivery(i) {
+			return transaction(db, () => {
+				const requestHash = digest(canonical(i)), old = get("SELECT * FROM release_deliveries WHERE operation_id=?", i.operationId);
+				if (old) {
+					owned(i.principalId, i.operationId, true);
+					if (old.request_hash !== requestHash) fail$26("RELEASE_DELIVERY_REQUEST_CHANGED");
+					return view(old);
+				}
+				const f = freeze(i);
+				exec("INSERT INTO release_deliveries VALUES(?,?,?,?,?,?,?,?,?,?,'PREPARED',NULL,NULL,?)", i.operationId, i.principalId, f.run.project_id, i.runId, i.qualityOperationId, i.policyHash, requestHash, canonical(i), canonical(f.basis), canonical(f.job), (/* @__PURE__ */ new Date()).toISOString());
+				for (const m of f.materials) exec("INSERT INTO release_delivery_materials VALUES(?,?,?,?,?,?,?,NULL,NULL)", i.operationId, m.materialKey, m.path, m.outputIndex, m.expectedHash, m.byteSize, randomUUID());
+				return view(record(i.operationId));
+			});
+		},
+		getReleaseDelivery(i) {
+			return view(owned(i.principalId, i.operationId));
+		},
+		getReleaseDeliveryOrigin(i) {
+			const r = bound(i);
+			return {
+				job: json$12(r.job_json),
+				policy: policy(String(r.project_id), String(r.policy_hash))
+			};
+		},
+		listReleaseDeliveryMaterials(i) {
+			owned(i.principalId, i.operationId);
+			return all("SELECT * FROM release_delivery_materials WHERE operation_id=? ORDER BY output_index", i.operationId).map(materialView);
+		},
+		completeReleaseDelivery(i) {
+			return transaction(db, () => {
+				const r = bound(i), image = canonical(i.image), data = canonical(i.dataPlan);
+				if (r.state === "READY") {
+					if (r.image_json !== image || r.data_plan_json !== data) fail$26("RELEASE_DELIVERY_IMMUTABLE");
+					return view(r);
+				}
+				if (!current(r)) fail$26("RELEASE_DELIVERY_BASIS_STALE");
+				const rows = all("SELECT * FROM release_delivery_materials WHERE operation_id=? ORDER BY output_index", i.operationId);
+				for (const m of rows) ready(m);
+				const byKey = new Map(rows.map((m) => [m.material_key, m])), b = json$12(r.basis_json), p = policy(String(r.project_id), String(r.policy_hash)), layerRows = rows.filter((m) => String(m.material_key).startsWith("image.layer.")).sort((a, b) => Number(String(a.material_key).slice(12)) - Number(String(b.material_key).slice(12)));
+				if (i.image.imageDigest !== "sha256:" + byKey.get("image.manifest").expected_hash || i.image.configDigest !== "sha256:" + byKey.get("image.config").expected_hash || i.image.buildArtifactHash !== byKey.get("build").expected_hash || i.image.targetCommit !== b.targetCommit || i.image.architecture !== p.architecture || i.image.layers.length !== layerRows.length || i.image.layers.some((l, index) => l.digest !== "sha256:" + layerRows[index].expected_hash || l.byteSize !== layerRows[index].byte_size)) fail$26("RELEASE_DELIVERY_IMAGE_CHANGED");
+				if (digest(data) !== byKey.get("data.plan").expected_hash) fail$26("DELIVERY_DATA_PLAN_CANONICAL_REQUIRED");
+				checkData(r, i.dataPlan);
+				exec("UPDATE release_deliveries SET state='READY',image_json=?,data_plan_json=? WHERE operation_id=?", image, data, i.operationId);
+				return view(record(i.operationId));
+			});
+		}
+	};
+	return {
+		authorize(principalId, target) {
+			owned(principalId, target.operationId, true);
+			return material(target);
+		},
+		validateWrite(i) {
+			const r = this.authorize(i.meta.principalId, i.target);
+			if (i.meta.scopeId !== i.target.operationId || i.meta.idempotencyKey !== r.write_key || i.expectedHash !== r.expected_hash || i.expectedSize !== r.byte_size) fail$26("DELIVERY_MATERIAL_WRITE_CHANGED");
+		},
+		commit(principalId, target, hash, writeId) {
+			const r = this.authorize(principalId, target);
+			if (hash !== r.expected_hash || r.content_hash && r.write_id !== writeId) fail$26("DELIVERY_MATERIAL_WRITE_CHANGED");
+			if (!r.content_hash) exec("UPDATE release_delivery_materials SET content_hash=?,write_id=? WHERE operation_id=? AND material_key=?", hash, writeId, target.operationId, target.materialKey);
+			return { contentHash: hash };
+		},
+		resolve(principalId, target) {
+			owned(principalId, target.operationId);
+			const r = material(target);
+			ready(r);
+			return { content_hash: String(r.content_hash) };
+		},
+		completionFacts(principalId, operationId) {
+			const r = owned(principalId, operationId, true);
+			if (r.state !== "READY" || !current(r)) fail$26("RELEASE_DELIVERY_BASIS_STALE");
+			const materials = all("SELECT * FROM release_delivery_materials WHERE operation_id=? ORDER BY output_index", operationId);
+			for (const m of materials) ready(m);
+			return {
+				delivery: view(r),
+				policy: policy(String(r.project_id), String(r.policy_hash)),
+				materials: materials.map(materialView)
+			};
+		},
+		execute(method, input) {
+			const parsed = parseContract(releaseDeliveryRequests[method], input);
+			return handlers[method](parsed);
+		}
+	};
+}
+//#endregion
+//#region src/plan-results.ts
+/** Both scheduling and Git source qualification use this exact original result. */
+function createPlanResults(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	function latest(runId, workId) {
+		return get(`SELECT a.*,v.outcome,v.evidence_artifact_id,v.outputs_json,v.code_commit,s.plan_revision source_plan_revision,w.work_epoch current_work_epoch,w.blocked_reason
+ FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id JOIN verified_work_results v ON v.attempt_id=a.attempt_id
+ JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id WHERE a.run_id=? AND a.work_id=?
+ AND a.attempt_no=(SELECT MAX(n.attempt_no) FROM attempts n WHERE n.run_id=a.run_id AND n.work_id=a.work_id)`, runId, workId);
+	}
+	function snapshot(row) {
+		if (row.ended_at === null || row.blocked_reason !== null || row.admitted_work_epoch !== row.current_work_epoch || !(row.state === "SUCCEEDED" && row.outcome === "success" || row.state === "FAILED" && row.outcome === "completed-with-findings" && row.role === "tester")) return null;
+		const plan = get("SELECT * FROM plan_revisions WHERE run_id=? AND revision=?", row.run_id, row.source_plan_revision), definition = get("SELECT definition_hash FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", row.run_id, row.work_id, row.work_revision), decision = get("SELECT decision_id FROM decisions WHERE run_id=? AND subject_kind='PLAN' AND subject_id=?", row.run_id, String(row.source_plan_revision)), evidence = get("SELECT a.content_hash FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.run_id=? AND a.state='READY' AND c.state='READY'", row.evidence_artifact_id, row.run_id);
+		if (!plan || !definition || !decision || !evidence || !get("SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?", row.run_id, row.source_plan_revision, plan.requirement_revision)) return null;
+		const requirement = get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", row.run_id, plan.requirement_revision), manifest = inputManifest.parse(JSON.parse(String(row.input_manifest_json)));
+		if (!requirement || !manifest.decisionIds.includes(ids.decision.parse(decision.decision_id)) || manifest.interfaces.length) return null;
+		const outputs = JSON.parse(String(row.outputs_json));
+		for (const out of outputs) if (!get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.run_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'", out.ref.artifactId, row.run_id, out.ref.sha256)) return null;
+		const proof = get("SELECT operation_id,content_hash FROM work_verifications WHERE attempt_id=? AND state='APPLIED' AND artifact_id=?", row.attempt_id, row.evidence_artifact_id);
+		return {
+			workId: String(row.work_id),
+			workRevision: Number(row.work_revision),
+			workEpoch: Number(row.admitted_work_epoch),
+			attemptId: String(row.attempt_id),
+			sourcePlanRevision: Number(row.source_plan_revision),
+			requirementRevision: Number(plan.requirement_revision),
+			requirementSha256: digest(String(requirement.content_json)),
+			definitionSha256: String(definition.definition_hash),
+			sourcePlanDecisionId: String(decision.decision_id),
+			outcome: String(row.outcome),
+			state: String(row.state),
+			codeCommit: row.code_commit,
+			inputFingerprint: String(row.input_fingerprint),
+			inputManifestSha256: digest(canonical(manifest)),
+			checkConfigHash: manifest.checkConfigHash,
+			templateVersion: manifest.templateVersion,
+			admittedRunEpoch: Number(row.admitted_run_epoch),
+			roleSnapshotSha256: digest(String(row.role_snapshot_json)),
+			evidence: {
+				artifactId: String(row.evidence_artifact_id),
+				sha256: String(evidence.content_hash)
+			},
+			outputs,
+			workVerification: proof ? {
+				operationId: String(proof.operation_id),
+				sha256: String(proof.content_hash)
+			} : null
+		};
+	}
+	function resolve(runId, planRevision, workId, requireConfirmation = true) {
+		const row = latest(runId, workId), planned = get("SELECT work_revision FROM plan_works WHERE run_id=? AND plan_revision=? AND work_id=?", runId, planRevision, workId);
+		if (!row || !planned || planned.work_revision !== row.work_revision) return null;
+		if (row.ended_at === null || row.blocked_reason !== null || row.admitted_work_epoch !== row.current_work_epoch) return null;
+		if (row.source_plan_revision === planRevision) return {
+			row,
+			carry: null
+		};
+		const carry = get("SELECT * FROM plan_carried_results WHERE run_id=? AND plan_revision=? AND work_id=?", runId, planRevision, workId), run = get("SELECT run_epoch,current_requirement_revision FROM runs WHERE run_id=?", runId), fact = snapshot(row);
+		if (!carry || !run || !fact || carry.attempt_id !== row.attempt_id || carry.snapshot_json !== canonical(fact) || carry.snapshot_sha256 !== digest(canonical(fact)) || fact.requirementRevision !== run.current_requirement_revision || requireConfirmation && !get("SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?", runId, planRevision, fact.requirementRevision)) return null;
+		return {
+			row,
+			carry: fact
+		};
+	}
+	return {
+		latest,
+		snapshot,
+		resolve
+	};
+}
+//#endregion
+//#region src/plan-domain.ts
+function createPlanDomain(db) {
+	const get = (sql, ...params) => db.prepare(sql).get(...params);
+	const missing = () => new StorageError("RESOURCE_NOT_FOUND", 404, "Plan is not visible");
+	function authorized(principalId, runId, write = false) {
+		const row = get("SELECT r.*,m.role AS membership,t.base_commit FROM runs r JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=? JOIN user_tasks t ON t.task_id=r.task_id WHERE r.run_id=?", principalId, runId);
+		if (!row) throw missing();
+		if (write && row.membership === "viewer") throw new StorageError("FORBIDDEN", 403, "A project operator or owner is required");
+		return row;
+	}
+	function inspect(row, plan, requireDelivery = true) {
+		const requirements = get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", row.run_id, plan.requirementRevision);
+		if (!requirements) throw missing();
+		const facts = parseContract(productOutput, JSON.parse(String(requirements.content_json)));
+		return inspectPlan(plan, {
+			requirementIds: new Set(facts.requirements.map((r) => r.id)),
+			requireDelivery,
+			hasArtifact: (ref) => !!get(`SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash
+        WHERE a.run_id=? AND a.artifact_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'`, row.run_id, ref.artifactId, ref.sha256)
+		});
+	}
+	function pendingQuestions(runId) {
+		return !!get(`SELECT 1 FROM clarification_current c JOIN clarification_questions q ON q.run_id=c.run_id
+      AND q.question_id=c.question_id AND q.revision=c.question_revision WHERE c.run_id=? AND c.state='OPEN'
+      AND json_extract(q.content_json,'$.required')=1`, runId);
+	}
+	function pendingInterpretation(runId, requirementRevision) {
+		return !!get(`SELECT 1 FROM preparation_jobs WHERE run_id=? AND purpose='INTERPRET' AND state NOT IN ('APPLIED','SUPERSEDED')
+      AND json_extract(basis_json,'$.requirementRevision')=?`, runId, requirementRevision);
+	}
+	function pendingSource(runId, requirementRevision) {
+		return !!get(`SELECT 1 FROM understanding_revisions u WHERE u.run_id=? AND u.requirement_revision=? AND EXISTS(
+      SELECT 1 FROM input_processing p JOIN input_messages m ON m.message_id=p.message_id JOIN operations o ON o.operation_id=p.operation_id
+      WHERE m.run_id=u.run_id AND o.status IN ('WAITING','RUNNING','OUTCOME_UNKNOWN'))`, runId, requirementRevision);
+	}
+	function getPlanReview(input) {
+		const row = authorized(input.principalId, input.runId), revision = input.planRevision ?? row.current_plan_revision;
+		const published = get("SELECT * FROM plan_revisions WHERE run_id=? AND revision=?", input.runId, revision ?? null);
+		if (!published) throw missing();
+		const plan = parseContract(planDraft, JSON.parse(String(published.content_json)));
+		const saved = get("SELECT actor,operation_id,created_at FROM plan_confirmations WHERE run_id=? AND plan_revision=?", input.runId, revision ?? null);
+		const confirmation = saved ? {
+			actor: saved.actor,
+			operationId: saved.operation_id,
+			confirmedAt: saved.created_at
+		} : null;
+		const current = revision === row.current_plan_revision && published.requirement_revision === row.current_requirement_revision;
+		const graph = inspect(row, plan);
+		const repair = get("SELECT basis_json,carry_json FROM verified_repairs WHERE run_id=? AND published_plan_revision=? AND state='PUBLISHED'", input.runId, revision ?? null), carried = repair ? JSON.parse(String(repair.carry_json)) : void 0, repairBasis = repair ? JSON.parse(String(repair.basis_json)) : void 0;
+		const carryCurrent = !carried || carried.every((fact) => !!createPlanResults(db).resolve(input.runId, Number(revision), fact.workId, false)) && (confirmation !== null || repairBasis.issues.every((issue) => {
+			const actual = get("SELECT i.revision,i.state,f.failure_sha256 FROM issues i JOIN verified_findings f ON f.issue_id=i.issue_id WHERE i.issue_id=? AND i.run_id=?", issue.issueId, input.runId);
+			return actual?.revision === issue.revision && actual.state === issue.state && actual.failure_sha256 === issue.failureSha256;
+		}));
+		const effectsReady = !!confirmation || !repair || completedRunEffects(db, input.runId);
+		const canConfirm = current && !confirmation && carryCurrent && effectsReady && row.membership !== "viewer" && row.terminal_outcome === null && ["OPEN", "PAUSED"].includes(String(row.control_gate)) && graph.issues.length === 0 && !pendingQuestions(input.runId) && !pendingInterpretation(input.runId, plan.requirementRevision) && !pendingSource(input.runId, plan.requirementRevision);
+		return parseContract(planReviewView, {
+			projectId: row.project_id,
+			runId: input.runId,
+			resourceRevision: row.resource_revision,
+			planRevision: revision,
+			requirementRevision: published.requirement_revision,
+			reviewHash: published.content_hash,
+			baseCommit: row.base_commit,
+			plan,
+			mode: current ? "current" : "history",
+			canConfirm,
+			confirmation,
+			topology: graph.topology,
+			issues: [
+				...graph.issues,
+				...!carryCurrent ? [{
+					code: "PLAN_CARRY_CHANGED",
+					path: "carryForward"
+				}] : [],
+				...!effectsReady ? [{
+					code: "REPAIR_EFFECT_UNKNOWN",
+					path: "carryForward"
+				}] : []
+			].slice(0, 100),
+			...carried ? { carryForward: {
+				sha256: digest(canonical(carried)),
+				round: repairBasis.round,
+				sourcePlanRevision: repairBasis.planRevision,
+				results: carried.map((fact) => ({
+					workId: fact.workId,
+					workRevision: fact.workRevision,
+					attemptId: fact.attemptId,
+					sourcePlanRevision: fact.sourcePlanRevision,
+					outcome: fact.outcome,
+					codeCommit: fact.codeCommit,
+					evidence: fact.evidence,
+					checkConfigHash: fact.checkConfigHash,
+					templateVersion: fact.templateVersion,
+					inputManifestSha256: fact.inputManifestSha256,
+					snapshotSha256: digest(canonical(fact)),
+					origin: fact.workVerification ? "FORMAL" : "HISTORICAL"
+				}))
+			} } : {}
+		});
+	}
+	return {
+		authorized,
+		inspect,
+		pendingQuestions,
+		pendingInterpretation,
+		pendingSource,
+		getPlanReview
+	};
+}
+//#endregion
+//#region src/verified-repair-domain.ts
+const json$11 = (v) => JSON.parse(String(v));
+const uid$6 = (prefix) => prefix + "_" + randomUUID().replaceAll("-", "");
+function fail$25(code, status = 409) {
+	throw new StorageError(code, status, "Forward repair requires original findings, bounded scope and explicit plan approval");
+}
+function createVerifiedRepairDomain(db) {
+	const plans = createPlanDomain(db), results = createPlanResults(db), get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	function member(principalId, runId, write = false) {
+		const r = get("SELECT r.*,p.owner_id,m.role FROM runs r JOIN projects p ON p.project_id=r.project_id JOIN project_members m ON m.project_id=p.project_id AND m.principal_id=? WHERE r.run_id=?", principalId, runId);
+		if (!r || write && (r.owner_id !== principalId || r.role !== "owner")) fail$25("VERIFIED_REPAIR_NOT_FOUND", 404);
+		return r;
+	}
+	const record = (id) => get("SELECT * FROM verified_repairs WHERE operation_id=?", id) ?? fail$25("VERIFIED_REPAIR_NOT_FOUND", 404);
+	function owned(principalId, id, write = false) {
+		const row = record(id);
+		member(principalId, String(row.run_id), write);
+		if (write && row.principal_id !== principalId) fail$25("VERIFIED_REPAIR_NOT_FOUND", 404);
+		return row;
+	}
+	function freeze(i) {
+		const run = member(i.principalId, i.runId, true);
+		if (i.changeImpact !== "implementation-only") fail$25("REPAIR_EXPLICIT_CHANGE_REVIEW_REQUIRED", 422);
+		if (run.control_gate !== "OPEN" || run.terminal_outcome !== null) fail$25("REPAIR_ADMISSION_CLOSED");
+		const planRow = get("SELECT * FROM plan_revisions WHERE run_id=? AND revision=?", i.runId, run.current_plan_revision), requirement = get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", i.runId, run.current_requirement_revision);
+		if (!planRow || !requirement || i.planRevision !== run.current_plan_revision || i.requirementRevision !== run.current_requirement_revision || i.reviewHash !== planRow.content_hash || !get("SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?", i.runId, i.planRevision, i.requirementRevision)) fail$25("REPAIR_BASIS_CHANGED");
+		if (plans.pendingQuestions(i.runId) || plans.pendingInterpretation(i.runId, i.requirementRevision) || plans.pendingSource(i.runId, i.requirementRevision)) fail$25("REPAIR_EXPLICIT_CHANGE_REVIEW_REQUIRED");
+		if (!completedRunEffects(db, i.runId) || get("SELECT 1 FROM preparation_slots WHERE run_id=?", i.runId)) fail$25("REPAIR_EFFECT_UNKNOWN");
+		const draft = planDraft.parse(json$11(planRow.content_json)), source = all("SELECT a.work_id,a.work_revision,wv.operation_id,wv.basis_json,wv.quality_operation_id FROM attempts a JOIN work_verifications wv ON wv.attempt_id=a.attempt_id AND wv.state='APPLIED' JOIN verified_work_results v ON v.attempt_id=a.attempt_id AND v.evidence_artifact_id=wv.artifact_id WHERE a.attempt_id=? AND a.run_id=? AND a.role='tester' AND a.state='FAILED' AND v.outcome='completed-with-findings'", i.sourceAttemptId, i.runId)[0], sourceWork = source ? draft.works.find((w) => w.workId === source.work_id) : void 0;
+		if (!source || !sourceWork || sourceWork.workRevision !== source.work_revision || !source.quality_operation_id || results.resolve(i.runId, i.planRevision, sourceWork.workId)?.row.attempt_id !== i.sourceAttemptId || json$11(source.basis_json).requirementRevision !== i.requirementRevision) fail$25("REPAIR_FINDINGS_UNPROVEN", 422);
+		if (new Set(i.issueIds).size !== i.issueIds.length) fail$25("REPAIR_FINDINGS_UNPROVEN", 422);
+		const issues = i.issueIds.map((issueId) => {
+			const row = get("SELECT i.issue_id,i.revision,i.state,f.failure_sha256,f.work_verification_id FROM issues i JOIN verified_findings f ON f.issue_id=i.issue_id WHERE i.issue_id=? AND i.run_id=? AND i.source_attempt_id=?", issueId, i.runId, i.sourceAttemptId);
+			if (!row || row.state === "VERIFIED" || row.work_verification_id !== source.operation_id) fail$25("REPAIR_FINDINGS_UNPROVEN", 422);
+			return {
+				issueId,
+				revision: Number(row.revision),
+				state: String(row.state),
+				failureSha256: String(row.failure_sha256)
+			};
+		}).sort((a, b) => a.issueId.localeCompare(b.issueId));
+		const round = Number(get("SELECT count(*) n FROM verified_repairs WHERE run_id=? AND state='PUBLISHED'", i.runId)?.n ?? 0) + 1;
+		if (round > 2) fail$25("REPAIR_ROUND_LIMIT");
+		if (draft.works.length + 2 > 30) fail$25("REPAIR_WORK_LIMIT", 422);
+		const byId = new Map(draft.works.map((w) => [w.workId, w])), ancestors = /* @__PURE__ */ new Set();
+		function visit(work) {
+			for (const edge of work.dependencies) {
+				if (ancestors.has(edge.workId)) continue;
+				ancestors.add(edge.workId);
+				const parent = byId.get(edge.workId);
+				if (!parent) fail$25("REPAIR_BASIS_CHANGED");
+				visit(parent);
+			}
+		}
+		visit(sourceWork);
+		const developers = [...ancestors].map((id) => byId.get(id)).filter((w) => w.role === "developer" && w.completionChecks.some((c) => c.kind === "commit-resolved"));
+		const scopes = developers.flatMap((w) => w.writeScope);
+		if (!i.writeScope.length || new Set(i.writeScope).size !== i.writeScope.length || i.writeScope.some((path) => !scopes.some((scope) => path === scope || path.startsWith(scope + "/")))) fail$25("REPAIR_WRITE_SCOPE_REVIEW_REQUIRED", 422);
+		const carries = [];
+		for (const work of draft.works) {
+			const value = results.resolve(i.runId, i.planRevision, work.workId);
+			if (!value) continue;
+			const fact = results.snapshot(value.row);
+			if (!fact || fact.requirementRevision !== i.requirementRevision || fact.requirementSha256 !== digest(String(requirement.content_json))) fail$25("REPAIR_EXPLICIT_CHANGE_REVIEW_REQUIRED");
+			carries.push(fact);
+		}
+		carries.sort((a, b) => a.workId.localeCompare(b.workId));
+		return {
+			run,
+			draft,
+			sourceWork,
+			developers,
+			basis: {
+				runEpoch: Number(run.run_epoch),
+				planRevision: i.planRevision,
+				requirementRevision: i.requirementRevision,
+				planHash: i.reviewHash,
+				requirementSha256: digest(String(requirement.content_json)),
+				sourceAttemptId: i.sourceAttemptId,
+				sourceVerificationId: String(source.operation_id),
+				round,
+				issues,
+				carriedResults: carries
+			},
+			carries
+		};
+	}
+	function current(row) {
+		try {
+			const run = member(String(row.principal_id), String(row.run_id));
+			if (row.state === "PUBLISHED") return run.current_plan_revision === row.published_plan_revision && run.current_requirement_revision === json$11(row.basis_json).requirementRevision;
+			return canonical(freeze(json$11(row.request_json)).basis) === row.basis_json;
+		} catch (error) {
+			if (error instanceof StorageError) return false;
+			throw error;
+		}
+	}
+	function view(row) {
+		const basis = json$11(row.basis_json), plan = planDraft.parse(json$11(row.plan_json)), carriedResults = json$11(row.carry_json);
+		return {
+			operationId: String(row.operation_id),
+			principalId: String(row.principal_id),
+			runId: String(row.run_id),
+			state: row.state,
+			qualification: current(row) ? "CURRENT" : "STALE",
+			round: basis.round,
+			planRevision: basis.planRevision + 1,
+			requirementRevision: basis.requirementRevision,
+			fixWorkId: plan.works.at(-2).workId,
+			verificationWorkId: plan.works.at(-1).workId,
+			plan,
+			carriedResults,
+			carryForwardHash: digest(canonical(carriedResults)),
+			expectedHash: String(row.expected_hash),
+			byteSize: Number(row.byte_size),
+			writeKey: String(row.write_key),
+			publishKey: String(row.publish_key),
+			contentHash: row.content_hash
+		};
+	}
+	const handlers = {
+		prepareVerifiedRepair(i) {
+			return transaction(db, () => {
+				const hash = digest(canonical(i)), old = get("SELECT * FROM verified_repairs WHERE operation_id=?", i.operationId);
+				if (old) {
+					owned(i.principalId, i.operationId, true);
+					if (old.request_hash !== hash) fail$25("VERIFIED_REPAIR_REQUEST_CHANGED");
+					return view(old);
+				}
+				const f = freeze(i), fixId = ids.work.parse(uid$6("work")), testId = ids.work.parse(uid$6("work")), evidence = artifactRef.parse(f.carries.find((c) => c.attemptId === i.sourceAttemptId).evidence), devSchema = "devmesh.development-result.v1";
+				const fix = {
+					workId: fixId,
+					workRevision: 1,
+					role: "developer",
+					goal: "Repair independently verified findings from " + f.sourceWork.workId + "; preserve the confirmed requirements and interfaces.",
+					inputRefs: [{
+						kind: "output",
+						workId: f.sourceWork.workId,
+						outputSlot: f.sourceWork.outputSpec[0].slot
+					}, {
+						kind: "artifact",
+						...evidence
+					}],
+					outputSpec: [{
+						slot: "result",
+						schemaId: devSchema
+					}],
+					completionChecks: [
+						{
+							kind: "artifact-exists",
+							outputSlot: "result"
+						},
+						{
+							kind: "schema-valid",
+							outputSlot: "result",
+							schemaId: devSchema
+						},
+						{
+							kind: "commit-resolved",
+							outputSlot: "result"
+						}
+					],
+					dependencies: [{
+						workId: f.sourceWork.workId,
+						requiredOutcome: "completed-with-findings"
+					}],
+					writeScope: i.writeScope,
+					estimatedResources: f.developers[0].estimatedResources,
+					requirementIds: f.sourceWork.requirementIds
+				};
+				const reverify = {
+					...f.sourceWork,
+					workId: testId,
+					workRevision: 1,
+					goal: "Reverify the exact candidate containing " + fixId + " with the unchanged original required checks.",
+					inputRefs: [{
+						kind: "output",
+						workId: fixId,
+						outputSlot: "result"
+					}, {
+						kind: "artifact",
+						...evidence
+					}],
+					dependencies: [{
+						workId: fixId,
+						requiredOutcome: "success"
+					}]
+				};
+				const plan = planDraft.parse({
+					...f.draft,
+					works: [
+						...f.draft.works,
+						fix,
+						reverify
+					]
+				});
+				if (plans.inspect(f.run, plan).issues.length) fail$25("REPAIR_PLAN_INVALID", 422);
+				const body = canonical(plan);
+				if (Buffer.byteLength(canonical({
+					plan,
+					carriedResults: f.carries
+				})) > 192 * 1024) fail$25("REPAIR_PLAN_TOO_LARGE", 422);
+				exec("INSERT INTO verified_repairs VALUES(?,?,?,?,?,?,?,?,?,?,?,?,'PREPARED',NULL,NULL,NULL,NULL,?)", i.operationId, i.principalId, i.runId, hash, canonical(i), canonical(f.basis), body, canonical(f.carries), digest(body), Buffer.byteLength(body), randomUUID(), randomUUID(), (/* @__PURE__ */ new Date()).toISOString());
+				return view(record(i.operationId));
+			});
+		},
+		getVerifiedRepair(i) {
+			return view(owned(i.principalId, i.operationId));
+		},
+		listVerifiedRepairs(i) {
+			member(i.principalId, i.runId);
+			return all("SELECT * FROM verified_repairs WHERE run_id=? ORDER BY created_at,operation_id LIMIT 100", i.runId).map(view);
+		}
+	};
+	return {
+		authorize(principalId, target) {
+			return owned(principalId, target.operationId, true);
+		},
+		validateWrite(i) {
+			const row = this.authorize(i.meta.principalId, i.target);
+			if (i.meta.scopeId !== row.operation_id || i.meta.idempotencyKey !== row.write_key || i.expectedHash !== row.expected_hash || i.expectedSize !== row.byte_size) fail$25("VERIFIED_REPAIR_WRITE_CHANGED");
+		},
+		commit(principalId, target, hash, writeId) {
+			const row = this.authorize(principalId, target);
+			if (hash !== row.expected_hash || row.write_id && row.write_id !== writeId) fail$25("VERIFIED_REPAIR_WRITE_CHANGED");
+			if (!row.content_hash) exec("UPDATE verified_repairs SET state='READY',content_hash=?,write_id=? WHERE operation_id=?", hash, writeId, target.operationId);
+			return { contentHash: hash };
+		},
+		resolve(principalId, target) {
+			const row = owned(principalId, target.operationId);
+			if (!row.content_hash) fail$25("VERIFIED_REPAIR_CONTENT_UNAVAILABLE");
+			return { content_hash: String(row.content_hash) };
+		},
+		publish(principalId, runId, operationId, publishKey, publicationOperationId, publish) {
+			const row = owned(principalId, operationId, true);
+			if (row.run_id !== runId || row.publish_key !== publishKey || row.state !== "READY" || !current(row) || !get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY'", row.content_hash)) fail$25("VERIFIED_REPAIR_BASIS_STALE");
+			const info = view(row), run = member(principalId, runId, true), result = publish(run, info.requirementRevision, info.planRevision, info.plan, info.expectedHash, publicationOperationId);
+			for (const fact of info.carriedResults) exec("INSERT INTO plan_carried_results VALUES(?,?,?,?,?,?,?,?)", runId, info.planRevision, fact.workId, fact.attemptId, operationId, run.run_epoch, canonical(fact), digest(canonical(fact)));
+			exec("UPDATE verified_repairs SET state='PUBLISHED',published_plan_revision=?,publication_operation_id=? WHERE operation_id=?", info.planRevision, publicationOperationId, operationId);
+			return {
+				...result,
+				repairOperationId: operationId,
+				fixWorkId: info.fixWorkId,
+				verificationWorkId: info.verificationWorkId,
+				carryForwardHash: info.carryForwardHash
+			};
+		},
+		assertConfirmation(runId, planRevision, carryForwardHash) {
+			const row = get("SELECT * FROM verified_repairs WHERE run_id=? AND published_plan_revision=? AND state='PUBLISHED'", runId, planRevision);
+			if (!row) {
+				if (carryForwardHash !== void 0) fail$25("PLAN_CARRY_CHANGED");
+				return null;
+			}
+			if (!completedRunEffects(db, runId)) fail$25("REPAIR_EFFECT_UNKNOWN");
+			const info = view(row);
+			if (carryForwardHash !== info.carryForwardHash) fail$25("PLAN_CARRY_REVIEW_REQUIRED");
+			for (const fact of info.carriedResults) if (!results.resolve(runId, planRevision, fact.workId, false)) fail$25("PLAN_CARRY_CHANGED");
+			const basis = json$11(row.basis_json);
+			for (const issue of basis.issues) {
+				const current = get("SELECT i.revision,i.state,f.failure_sha256 FROM issues i JOIN verified_findings f ON f.issue_id=i.issue_id WHERE i.issue_id=? AND i.run_id=?", issue.issueId, runId);
+				if (!current || current.revision !== issue.revision || current.state !== issue.state || current.failure_sha256 !== issue.failureSha256) fail$25("REPAIR_FINDINGS_CHANGED");
+			}
+			return {
+				issueIds: basis.issues.map((i) => i.issueId),
+				fixWorkId: info.fixWorkId
+			};
+		},
+		execute(method, input) {
+			const parsed = parseContract(verifiedRepairRequests[method], input);
+			return handlers[method](parsed);
+		}
+	};
+}
+//#endregion
+//#region src/session-domain.ts
+const uid$5 = (prefix) => `${prefix}_${randomUUID().replaceAll("-", "")}`;
+const now$11 = () => (/* @__PURE__ */ new Date()).toISOString();
+const reject$1 = (code, message, status = 409) => {
+	throw new StorageError(code, status, message);
+};
+function createSessionDomain(db) {
+	const candidateMaterials = createCandidateMaterialDomain(db);
+	const workspacePreservations = createWorkspacePreservationDomain(db);
+	const quality = createQualityDomain(db);
+	const workVerifications = createWorkVerificationDomain(db);
+	const verifiedRepairs = createVerifiedRepairDomain(db);
+	const releaseExports = createReleaseExportDomain(db);
+	const releaseDeliveries = createReleaseDeliveryDomain(db);
+	const get = (sql, ...args) => db.prepare(sql).get(...args);
+	const all = (sql, ...args) => db.prepare(sql).all(...args);
+	const exec = (sql, ...args) => db.prepare(sql).run(...args);
+	const required = (row) => row ?? reject$1("RESOURCE_NOT_FOUND", "Requested storage record does not exist", 404);
+	const session = (principalId, sessionId) => {
+		const row = required(get("SELECT s.*,p.owner_id FROM agent_sessions s JOIN runs r ON r.run_id=s.run_id JOIN projects p ON p.project_id=r.project_id WHERE s.session_id=?", sessionId));
+		if (row.owner_id !== principalId) reject$1("FORBIDDEN", "Session belongs to another principal", 403);
+		return row;
+	};
+	const sessionView = (r) => ({
+		sessionId: String(r.session_id),
+		runId: String(r.run_id),
+		attemptId: String(r.attempt_id),
+		roleSnapshotId: String(r.role_snapshot_id),
+		lastMessageSeq: Number(r.last_message_seq),
+		lastStepNo: Number(r.last_step_no),
+		status: String(r.status)
+	});
+	const contentView = (r) => ({
+		contentHash: String(r.content_hash),
+		byteSize: Number(r.byte_size),
+		storageKey: String(r.storage_key),
+		mimeType: String(r.mime_type),
+		state: String(r.state)
+	});
+	const messageView = (r) => ({
+		messageId: String(r.message_id),
+		seq: Number(r.message_seq),
+		sessionId: String(r.session_id),
+		activationId: String(r.activation_id),
+		stepNo: r.step_no,
+		kind: String(r.kind),
+		contentHash: String(r.body_content_hash),
+		toolCallId: r.tool_call_id,
+		sourceRef: r.source_ref ? JSON.parse(String(r.source_ref)) : null,
+		createdAt: String(r.created_at)
+	});
+	const stepView = (r) => ({
+		sessionId: String(r.session_id),
+		stepNo: Number(r.step_no),
+		state: String(r.state),
+		requestHash: String(r.request_content_hash),
+		responseHash: r.response_content_hash,
+		contextSnapshotId: String(r.context_snapshot_id),
+		usage: r.usage_json ? JSON.parse(String(r.usage_json)) : null,
+		providerRequestId: r.provider_request_id
+	});
+	const ready = (hash) => {
+		const row = required(get("SELECT * FROM content_objects WHERE content_hash=?", hash));
+		if (row.state !== "READY") reject$1("CONTENT_UNAVAILABLE", "Content is missing or unavailable", 503);
+		return row;
+	};
+	const write = (principalId, writeId) => {
+		const row = required(get("SELECT w.*,o.result_json FROM object_write_operations w JOIN operations o ON o.operation_id=w.operation_id WHERE write_id=?", writeId));
+		if (row.owner_id !== principalId) reject$1("FORBIDDEN", "Write belongs to another principal", 403);
+		if (row.purpose === "workspacePreservation") workspacePreservations.authorize(principalId, JSON.parse(String(row.target_json)));
+		if (row.purpose === "candidateMaterial") candidateMaterials.authorize(principalId, JSON.parse(String(row.target_json)));
+		if (row.purpose === "qualityMaterial") quality.authorize(principalId, JSON.parse(String(row.target_json)));
+		if (row.purpose === "workVerification") workVerifications.authorize(principalId, JSON.parse(String(row.target_json)));
+		if (row.purpose === "releaseExport") releaseExports.authorize(principalId, JSON.parse(String(row.target_json)));
+		if (row.purpose === "releaseDelivery") releaseDeliveries.authorize(principalId, JSON.parse(String(row.target_json)));
+		if (row.purpose === "verifiedRepair") verifiedRepairs.authorize(principalId, JSON.parse(String(row.target_json)));
+		return row;
+	};
+	const writeView = (r) => ({
+		writeId: String(r.write_id),
+		operationId: String(r.operation_id),
+		ownerId: String(r.owner_id),
+		expectedHash: String(r.expected_hash),
+		expectedSize: Number(r.expected_size),
+		mimeType: String(r.mime_type),
+		target: JSON.parse(String(r.target_json)),
+		stagingKey: String(r.staging_key),
+		state: String(r.state),
+		result: r.result_json ? JSON.parse(String(r.result_json)) : null
+	});
+	function targetSession(principalId, target) {
+		if (target.kind === "content" || target.kind === "attachment") return;
+		if (target.kind === "workVerification") {
+			workVerifications.authorize(principalId, target);
+			return;
+		}
+		if (target.kind === "releaseExport") {
+			releaseExports.authorize(principalId, target);
+			return;
+		}
+		if (target.kind === "releaseDelivery") {
+			releaseDeliveries.authorize(principalId, target);
+			return;
+		}
+		if (target.kind === "verifiedRepair") {
+			verifiedRepairs.authorize(principalId, target);
+			return;
+		}
+		if (target.kind === "qualityMaterial") {
+			quality.authorize(principalId, target);
+			return;
+		}
+		if (target.kind === "workspacePreservation") {
+			workspacePreservations.authorize(principalId, target);
+			return;
+		}
+		if (target.kind === "candidateMaterial") {
+			candidateMaterials.authorize(principalId, target);
+			return;
+		}
+		return session(principalId, target.kind === "context" ? target.manifest.sessionId : target.sessionId);
+	}
+	function appendMessage(s, input, hash) {
+		const old = get("SELECT * FROM session_messages WHERE session_id=? AND client_message_id=?", s.session_id, input.clientMessageId);
+		if (old) {
+			if (old.body_content_hash !== hash || old.kind !== input.messageKind || old.activation_id !== input.activationId || old.step_no !== (input.stepNo ?? null) || old.tool_call_id !== (input.toolCallId ?? null) || old.source_ref !== (input.sourceRef ? canonical(input.sourceRef) : null)) reject$1("MESSAGE_KEY_REUSED", "Message key was used with another body or metadata");
+			return {
+				messageId: old.message_id,
+				seq: old.message_seq,
+				sessionId: s.session_id
+			};
+		}
+		if (s.status !== "OPEN") reject$1("SESSION_CLOSED", "Cannot append to a closed session");
+		const tool = input.messageKind === "tool-call" || input.messageKind === "tool-result";
+		if (tool !== (input.toolCallId !== void 0)) reject$1("TOOL_CALL_ID_INVALID", "Tool messages require a toolCallId", 422);
+		if (tool && (!input.stepNo || !get("SELECT step_no FROM model_steps WHERE session_id=? AND step_no=? AND response_content_hash IS NOT NULL", s.session_id, input.stepNo))) reject$1("MODEL_RESPONSE_REQUIRED", "Persist the complete model response before tool messages");
+		if (input.sourceRef && !get("SELECT message_id FROM session_messages WHERE session_id=? AND message_id=?", s.session_id, input.sourceRef.messageId)) reject$1("SOURCE_SCOPE_INVALID", "Source message must belong to the same session");
+		const messageId = uid$5("message"), seq = Number(s.last_message_seq) + 1;
+		exec("INSERT INTO session_messages VALUES(?,?,?,?,?,?,?,?,?,?,?)", messageId, s.session_id, seq, input.clientMessageId, input.activationId, input.stepNo ?? null, input.messageKind, hash, input.toolCallId ?? null, input.sourceRef ? canonical(input.sourceRef) : null, now$11());
+		exec("UPDATE agent_sessions SET last_message_seq=? WHERE session_id=?", seq, s.session_id);
+		return {
+			messageId,
+			seq,
+			sessionId: s.session_id
+		};
+	}
+	function commitTarget(principalId, target, hash, row) {
+		if (target.kind === "releaseExport") return releaseExports.commit(principalId, target, hash, row);
+		if (target.kind === "content") return { contentHash: hash };
+		if (target.kind === "workVerification") return workVerifications.commit(principalId, target, hash, String(row.write_id));
+		if (target.kind === "releaseDelivery") return releaseDeliveries.commit(principalId, target, hash, String(row.write_id));
+		if (target.kind === "verifiedRepair") return verifiedRepairs.commit(principalId, target, hash, String(row.write_id));
+		if (target.kind === "qualityMaterial") return quality.commit(principalId, target, hash, String(row.write_id));
+		if (target.kind === "workspacePreservation") return workspacePreservations.commit(principalId, target, hash, String(row.write_id));
+		if (target.kind === "candidateMaterial") return candidateMaterials.commit(principalId, target, hash, String(row.write_id));
+		if (target.kind === "attachment") {
+			const old = get("SELECT * FROM attachments WHERE owner_id=? AND client_attachment_id=?", principalId, target.clientAttachmentId);
+			if (old) {
+				if (old.content_hash !== hash || old.name !== target.name || old.state !== "READY") reject$1("ATTACHMENT_KEY_REUSED", "Attachment key belongs to different content");
+				return {
+					attachmentId: old.attachment_id,
+					contentHash: hash
+				};
+			}
+			const attachmentId = uid$5("attachment");
+			exec("INSERT INTO attachments VALUES(?,?,?,?,?,?,?,'READY',?)", attachmentId, principalId, target.clientAttachmentId, row.operation_id, target.name, row.expected_size, hash, now$11());
+			return {
+				attachmentId,
+				contentHash: hash
+			};
+		}
+		const s = targetSession(principalId, target);
+		if (s.status !== "OPEN") reject$1("SESSION_CLOSED", "Session is closed");
+		if (target.kind === "message") return appendMessage(s, {
+			...target,
+			sourceRef: target.sourceRef
+		}, hash);
+		if (target.kind === "context") {
+			const m = target.manifest;
+			if (digest(canonical(m)) !== hash) reject$1("CONTEXT_HASH_INVALID", "Context bytes must equal the canonical manifest", 422);
+			if (m.roleSnapshotId !== s.role_snapshot_id || m.throughMessageSeq > Number(s.last_message_seq)) reject$1("CONTEXT_BASIS_CHANGED", "Context role or cursor does not belong to this session");
+			let previous = 0;
+			for (const ref of m.messages) {
+				if (ref.seq <= previous || ref.seq > m.throughMessageSeq || !get("SELECT message_id FROM session_messages WHERE session_id=? AND message_id=? AND message_seq=? AND body_content_hash=?", s.session_id, ref.messageId, ref.seq, ref.sha256)) reject$1("CONTEXT_BASIS_CHANGED", "Context message order/hash differs from committed history");
+				ready(ref.sha256);
+				previous = ref.seq;
+			}
+			if (m.summaryContentHash) {
+				if (!get("SELECT message_id FROM session_messages WHERE session_id=? AND body_content_hash=? AND kind='context-summary' AND message_seq<=?", s.session_id, m.summaryContentHash, m.throughMessageSeq)) reject$1("CONTEXT_SUMMARY_UNAUTHORIZED", "Summary must be a saved summary in this session");
+				ready(m.summaryContentHash);
+			} else if (m.messages.length !== m.throughMessageSeq) reject$1("CONTEXT_MESSAGES_MISSING", "Uncompressed context must list all messages through its cursor");
+			const id = uid$5("context");
+			exec("INSERT INTO context_snapshots VALUES(?,?,?,?,?,?,?,?)", id, s.session_id, m.throughMessageSeq, hash, m.summaryContentHash ?? null, m.configHash, canonical(m.messages), now$11());
+			exec("UPDATE agent_sessions SET context_manifest_ref=? WHERE session_id=?", hash, s.session_id);
+			return {
+				contextSnapshotId: id,
+				sessionId: s.session_id,
+				contentHash: hash,
+				throughMessageSeq: m.throughMessageSeq
+			};
+		}
+		if (target.kind === "modelRequest") {
+			const snapshot = required(get("SELECT * FROM context_snapshots WHERE workflow_session_id=? AND context_snapshot_id=?", s.session_id, target.contextSnapshotId));
+			if (snapshot.config_hash !== target.configHash) reject$1("CONTEXT_BASIS_CHANGED", "Model request config differs from context");
+			ready(String(snapshot.manifest_content_hash));
+			if (target.stepNo !== Number(s.last_step_no) + 1 || get("SELECT step_no FROM model_steps WHERE session_id=? AND state IN ('PREPARED','SENT')", s.session_id)) reject$1("MODEL_STEP_ORDER_INVALID", "Previous model step must be resolved and step numbers contiguous");
+			exec("INSERT INTO model_steps(session_id,step_no,context_snapshot_id,request_content_hash,state,started_at) VALUES(?,?,?,?,'PREPARED',?)", s.session_id, target.stepNo, target.contextSnapshotId, hash, now$11());
+			exec("UPDATE agent_sessions SET last_step_no=? WHERE session_id=?", target.stepNo, s.session_id);
+			return {
+				sessionId: s.session_id,
+				stepNo: target.stepNo,
+				state: "PREPARED"
+			};
+		}
+		if (required(get("SELECT * FROM model_steps WHERE session_id=? AND step_no=?", s.session_id, target.stepNo)).response_content_hash !== null) reject$1("MODEL_RESPONSE_IMMUTABLE", "A step response already exists");
+		exec("UPDATE model_steps SET response_content_hash=?,usage_json=?,provider_request_id=?,state=?,ended_at=? WHERE session_id=? AND step_no=?", hash, target.usage ? canonical(target.usage) : null, target.providerRequestId ?? null, target.state, now$11(), s.session_id, target.stepNo);
+		return {
+			...appendMessage(s, {
+				clientMessageId: `model-response.${target.stepNo}`,
+				activationId: target.activationId,
+				stepNo: target.stepNo,
+				messageKind: "assistant"
+			}, hash),
+			stepNo: target.stepNo,
+			state: target.state
+		};
+	}
+	function resolveReference(principalId, ref) {
+		let row;
+		if (ref.kind === "releaseExport" || ref.kind === "exportMaterial") return ready(String(releaseExports.resolve(principalId, ref).content_hash));
+		if (ref.kind === "releaseDelivery") row = releaseDeliveries.resolve(principalId, ref);
+		else if (ref.kind === "verifiedRepair") row = verifiedRepairs.resolve(principalId, ref);
+		else if (ref.kind === "workVerification") row = workVerifications.resolve(principalId, ref);
+		else if (ref.kind === "qualityMaterial") row = quality.resolve(principalId, ref);
+		else if (ref.kind === "workspacePreservation") row = workspacePreservations.resolve(principalId, ref);
+		else if (ref.kind === "candidateMaterial") row = candidateMaterials.resolve(principalId, ref);
+		else if (ref.kind === "attachment") {
+			row = required(get("SELECT content_hash,owner_id FROM attachments WHERE attachment_id=? AND state='READY'", ref.attachmentId));
+			if (row.owner_id !== principalId && !get("SELECT 1 FROM input_message_attachments a JOIN input_messages m ON m.message_id=a.message_id JOIN project_members p ON p.project_id=m.project_id WHERE a.attachment_id=? AND p.principal_id=?", ref.attachmentId, principalId)) reject$1("FORBIDDEN", "Attachment belongs to another principal", 403);
+		} else if (ref.kind === "artifact") {
+			row = required(get("SELECT a.content_hash,a.project_id,p.owner_id FROM artifacts a JOIN projects p ON p.project_id=a.project_id WHERE artifact_id=? AND a.state='READY'", ref.artifactId));
+			if (!get("SELECT 1 FROM project_members WHERE project_id=? AND principal_id=?", row.project_id, principalId)) reject$1("FORBIDDEN", "Artifact belongs to another principal", 403);
+		} else if (ref.kind === "inputMessage") row = required(get("SELECT a.content_hash FROM input_messages i JOIN artifacts a ON a.artifact_id=i.body_artifact_id JOIN project_members m ON m.project_id=i.project_id AND m.principal_id=? WHERE i.message_id=? AND a.state='READY'", principalId, ref.messageId));
+		else if (ref.kind === "preparationInput" || ref.kind === "preparationResponse") {
+			const column = ref.kind === "preparationInput" ? "p.input_hash" : "s.response_hash";
+			row = required(get(`SELECT ${column} AS content_hash FROM preparation_attempts p JOIN preparation_jobs j ON j.job_id=p.job_id JOIN runs r ON r.run_id=p.run_id JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=j.principal_id LEFT JOIN preparation_steps s ON s.preparation_attempt_id=p.preparation_attempt_id WHERE p.preparation_attempt_id=? AND j.principal_id=? AND ${column} IS NOT NULL`, ref.preparationAttemptId, principalId));
+		} else if (ref.kind === "message") {
+			row = required(get("SELECT session_id,body_content_hash AS content_hash FROM session_messages WHERE message_id=?", ref.messageId));
+			session(principalId, String(row.session_id));
+		} else if (ref.kind === "context") {
+			row = required(get("SELECT workflow_session_id AS session_id,manifest_content_hash AS content_hash FROM context_snapshots WHERE context_snapshot_id=?", ref.contextSnapshotId));
+			session(principalId, String(row.session_id));
+		} else {
+			session(principalId, ref.sessionId);
+			row = required(get(`SELECT ${ref.kind === "modelRequest" ? "request_content_hash" : "response_content_hash"} AS content_hash FROM model_steps WHERE session_id=? AND step_no=?`, ref.sessionId, ref.stepNo));
+			if (!row.content_hash) reject$1("CONTENT_UNAVAILABLE", "Step has no complete response yet", 409);
+		}
+		return ready(String(row.content_hash));
+	}
+	function unreferenced(hash) {
+		if (get("SELECT write_id FROM object_write_operations WHERE expected_hash=? AND state IN ('RECEIVING','SEALED')", hash) || get("SELECT pin_id FROM storage_pins WHERE content_hash=? AND state='ACTIVE'", hash)) reject$1("CONTENT_REFERENCED", "Content has an active write or read pin");
+		const quote = (s) => "\"" + s.replaceAll("\"", "\"\"") + "\"";
+		for (const table of all("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name<>'storage_pins'")) for (const key of all(`PRAGMA foreign_key_list(${quote(String(table.name))})`)) if (key.table === "content_objects" && get(`SELECT 1 FROM ${quote(String(table.name))} WHERE ${quote(String(key.from))}=? LIMIT 1`, hash)) reject$1("CONTENT_REFERENCED", "Content still has a business reference");
+	}
+	const handlers = {
+		beginObjectWrite(input) {
+			return transaction(db, () => {
+				targetSession(input.meta.principalId, input.target);
+				if (input.target.kind === "workspacePreservation") workspacePreservations.validateWrite({
+					...input,
+					target: input.target
+				});
+				if (input.target.kind === "candidateMaterial") candidateMaterials.validateWrite({
+					...input,
+					target: input.target
+				});
+				if (input.target.kind === "qualityMaterial") quality.validateWrite({
+					...input,
+					target: input.target
+				});
+				if (input.target.kind === "workVerification") workVerifications.validateWrite({
+					...input,
+					target: input.target
+				});
+				if (input.target.kind === "releaseExport") releaseExports.validateWrite({
+					...input,
+					target: input.target
+				});
+				if (input.target.kind === "releaseDelivery") releaseDeliveries.validateWrite({
+					...input,
+					target: input.target
+				});
+				if (input.target.kind === "verifiedRepair") verifiedRepairs.validateWrite({
+					...input,
+					target: input.target
+				});
+				const { meta, ...payload } = input, requestHash = digest(canonical({
+					kind: "WriteObject",
+					payload
+				}));
+				const old = get("SELECT operation_id,request_hash FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?", meta.principalId, meta.scopeId, meta.idempotencyKey);
+				if (old) {
+					if (old.request_hash !== requestHash) reject$1("IDEMPOTENCY_KEY_REUSED", "Original write key belongs to different bytes or target");
+					return writeView(write(meta.principalId, String(required(get("SELECT write_id FROM object_write_operations WHERE operation_id=?", old.operation_id)).write_id)));
+				}
+				const operationId = uid$5("op"), writeId = uid$5("write"), time = now$11();
+				exec("INSERT INTO operations VALUES(?,?,?,?,?,?,'ACCEPTED',NULL,?,?)", operationId, meta.principalId, meta.scopeId, meta.idempotencyKey, requestHash, "WriteObject", time, time);
+				exec("INSERT INTO object_write_operations VALUES(?,?,?,?,?,?,?,?,?,?,?,'RECEIVING',NULL,?,?)", writeId, operationId, meta.principalId, meta.scopeId, input.target.kind, `objects/${writeId}.part`, input.expectedHash, input.expectedSize, input.mimeType, canonical(input.target), new Date(Date.now() + 3e5).toISOString(), time, time);
+				exec("UPDATE operations SET result_json=? WHERE operation_id=?", canonical({ writeId }), operationId);
+				return writeView(write(meta.principalId, writeId));
+			});
+		},
+		getObjectWrite(input) {
+			return writeView(write(input.principalId, input.writeId));
+		},
+		sealObjectWrite(input) {
+			return transaction(db, () => {
+				if (write(input.principalId, input.writeId).state !== "REGISTERED") exec("UPDATE object_write_operations SET state='SEALED',error_json=NULL,updated_at=? WHERE write_id=?", now$11(), input.writeId);
+				return writeView(write(input.principalId, input.writeId));
+			});
+		},
+		commitObjectWrite(input) {
+			return transaction(db, () => {
+				const row = write(input.principalId, input.writeId);
+				if (row.state === "REGISTERED") return writeView(row);
+				if (row.state !== "SEALED") reject$1("OBJECT_NOT_PUBLISHED", "Verified publication must precede reference commit");
+				const hash = String(row.expected_hash), key = `sha256/${hash.slice(0, 2)}/${hash}`, time = now$11();
+				const old = get("SELECT * FROM content_objects WHERE content_hash=?", hash);
+				if (old && (old.byte_size !== row.expected_size || old.storage_key !== key || !["READY", "MISSING"].includes(String(old.state)))) reject$1("CONTENT_CONFLICT", "Content metadata or deletion state conflicts");
+				if (old) exec("UPDATE content_objects SET state='READY',verified_at=?,last_error=NULL WHERE content_hash=?", time, hash);
+				else exec("INSERT INTO content_objects(content_hash,byte_size,storage_key,mime_type,state,created_at,storage_provider,verified_at) VALUES(?,?,?,?,'READY',?,'local',?)", hash, row.expected_size, key, row.mime_type, time, time);
+				const result = commitTarget(input.principalId, JSON.parse(String(row.target_json)), hash, row);
+				exec("UPDATE object_write_operations SET state='REGISTERED',error_json=NULL,updated_at=? WHERE write_id=?", time, input.writeId);
+				exec("UPDATE operations SET status='SUCCEEDED',result_json=?,updated_at=? WHERE operation_id=?", canonical({
+					...result,
+					writeId: input.writeId,
+					contentHash: hash
+				}), time, row.operation_id);
+				return writeView(write(input.principalId, input.writeId));
+			});
+		},
+		failObjectWrite(input) {
+			return transaction(db, () => {
+				if (write(input.principalId, input.writeId).state !== "REGISTERED") exec("UPDATE object_write_operations SET state='FAILED',error_json=?,updated_at=? WHERE write_id=?", canonical({ message: input.error }), now$11(), input.writeId);
+				return writeView(write(input.principalId, input.writeId));
+			});
+		},
+		scanObjectWrites(input) {
+			return all("SELECT w.*,o.result_json FROM object_write_operations w JOIN operations o ON o.operation_id=w.operation_id WHERE write_id>? AND state<>'REGISTERED' ORDER BY write_id LIMIT ?", input.afterWriteId, input.limit).map(writeView);
+		},
+		ensureSession(input) {
+			return transaction(db, () => {
+				const attempt = required(get("SELECT a.*,p.owner_id FROM attempts a JOIN runs r ON r.run_id=a.run_id JOIN projects p ON p.project_id=r.project_id WHERE a.attempt_id=? AND a.run_id=?", input.attemptId, input.runId));
+				if (attempt.owner_id !== input.principalId) reject$1("FORBIDDEN", "Attempt belongs to another principal", 403);
+				const old = get("SELECT * FROM agent_sessions WHERE attempt_id=?", input.attemptId);
+				if (old) return sessionView(old);
+				if (attempt.ended_at !== null) reject$1("ATTEMPT_ENDED", "Cannot start a session after the attempt ended");
+				const role = required(get("SELECT snapshot_id FROM role_snapshots WHERE role=? AND content_hash=? ORDER BY created_at,snapshot_id LIMIT 1", attempt.role, digest(String(attempt.role_snapshot_json))));
+				const id = uid$5("session");
+				exec("INSERT INTO agent_sessions(session_id,run_id,attempt_id,role_snapshot_id,created_at) VALUES(?,?,?,?,?)", id, input.runId, input.attemptId, role.snapshot_id, now$11());
+				return sessionView(required(get("SELECT * FROM agent_sessions WHERE session_id=?", id)));
+			});
+		},
+		getSession(input) {
+			return sessionView(session(input.principalId, input.sessionId));
+		},
+		closeSession(input) {
+			return transaction(db, () => {
+				const s = session(input.principalId, input.sessionId);
+				if (get("SELECT attempt_id FROM attempts WHERE attempt_id=? AND ended_at IS NULL", s.attempt_id)) reject$1("ACTIVE_ATTEMPT_EXISTS", "End the attempt before closing its session");
+				if (s.status !== "CLOSED") exec("UPDATE agent_sessions SET status='CLOSED',closed_at=? WHERE session_id=?", now$11(), input.sessionId);
+				return sessionView(session(input.principalId, input.sessionId));
+			});
+		},
+		listSessionMessages(input) {
+			session(input.principalId, input.sessionId);
+			const messages = all("SELECT * FROM session_messages WHERE session_id=? AND message_seq>? ORDER BY message_seq LIMIT ?", input.sessionId, input.afterSeq, input.limit).map(messageView);
+			return {
+				messages,
+				nextCursor: messages.at(-1)?.seq ?? input.afterSeq
+			};
+		},
+		getModelStep(input) {
+			session(input.principalId, input.sessionId);
+			return stepView(required(get("SELECT * FROM model_steps WHERE session_id=? AND step_no=?", input.sessionId, input.stepNo)));
+		},
+		markModelStepSent(input) {
+			return transaction(db, () => {
+				session(input.principalId, input.sessionId);
+				const step = required(get("SELECT * FROM model_steps WHERE session_id=? AND step_no=?", input.sessionId, input.stepNo));
+				if (step.state === "PREPARED") exec("UPDATE model_steps SET state='SENT',sent_at=? WHERE session_id=? AND step_no=?", now$11(), input.sessionId, input.stepNo);
+				else if (step.state !== "SENT") reject$1("MODEL_STEP_IMMUTABLE", "Model step has already ended");
+				return stepView(required(get("SELECT * FROM model_steps WHERE session_id=? AND step_no=?", input.sessionId, input.stepNo)));
+			});
+		},
+		resolveContentRead(input) {
+			return transaction(db, () => {
+				const content = resolveReference(input.principalId, input.reference), pinId = uid$5("pin");
+				exec("INSERT INTO storage_pins VALUES(?,?,'READ',?,?,?,'ACTIVE',?)", pinId, content.content_hash, input.principalId, canonical(input.reference), new Date(Date.now() + 6e4).toISOString(), now$11());
+				return {
+					...contentView(content),
+					pinId
+				};
+			});
+		},
+		releaseContentRead(input) {
+			const result = exec("UPDATE storage_pins SET state='RELEASED' WHERE pin_id=? AND owner_id=? AND state='ACTIVE'", input.pinId, input.principalId);
+			return { released: Number(result.changes) > 0 };
+		},
+		recoverContentReads() {
+			return { released: Number(exec("UPDATE storage_pins SET state='RELEASED' WHERE owner_type='READ' AND state='ACTIVE'").changes) };
+		},
+		listContentObjects(input) {
+			return all("SELECT * FROM content_objects WHERE content_hash>? ORDER BY content_hash LIMIT ?", input.afterHash, input.limit).map(contentView);
+		},
+		markContentMissing(input) {
+			exec("UPDATE content_objects SET state='MISSING',last_error=? WHERE content_hash=? AND state IN ('READY','MISSING')", input.error, input.contentHash);
+			return {
+				contentHash: input.contentHash,
+				state: String(required(get("SELECT state FROM content_objects WHERE content_hash=?", input.contentHash)).state)
+			};
+		},
+		beginContentDeletion(input) {
+			return transaction(db, () => {
+				const c = required(get("SELECT * FROM content_objects WHERE content_hash=?", input.contentHash));
+				unreferenced(input.contentHash);
+				exec("UPDATE content_objects SET state='DELETING' WHERE content_hash=?", input.contentHash);
+				return contentView({
+					...c,
+					state: "DELETING"
+				});
+			});
+		},
+		finishContentDeletion(input) {
+			return transaction(db, () => {
+				const row = get("SELECT state FROM content_objects WHERE content_hash=?", input.contentHash);
+				if (!row) return {
+					contentHash: input.contentHash,
+					deleted: true
+				};
+				if (row.state !== "DELETING") reject$1("DELETE_NOT_STARTED", "Deletion must be reserved first");
+				unreferenced(input.contentHash);
+				exec("DELETE FROM storage_pins WHERE content_hash=? AND state='RELEASED'", input.contentHash);
+				exec("DELETE FROM content_objects WHERE content_hash=?", input.contentHash);
+				return {
+					contentHash: input.contentHash,
+					deleted: true
+				};
+			});
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(sessionRequests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+//#region src/input-domain.ts
+const uid$4 = (prefix) => `${prefix}_${randomUUID().replaceAll("-", "")}`;
+const now$10 = () => (/* @__PURE__ */ new Date()).toISOString();
+const fail$24 = (code, status, message) => {
+	throw new StorageError(code, status, message);
+};
+function createInputDomain(db, h) {
+	const get = (sql, ...args) => db.prepare(sql).get(...args);
+	const all = (sql, ...args) => db.prepare(sql).all(...args);
+	const exec = (sql, ...args) => db.prepare(sql).run(...args);
+	const required = (row) => row ?? fail$24("RESOURCE_NOT_FOUND", 404, "Resource does not exist or is not visible");
+	function authorize(principalId, projectId, write = false) {
+		const member = required(get("SELECT role FROM project_members WHERE project_id=? AND principal_id=?", projectId, principalId));
+		if (write && member.role === "viewer") fail$24("FORBIDDEN", 403, "Membership is read only");
+		return String(member.role);
+	}
+	function authorizedRun(principalId, runId, write = false) {
+		const row = required(get("SELECT * FROM runs WHERE run_id=?", runId));
+		authorize(principalId, String(row.project_id), write);
+		return row;
+	}
+	const ready = (hash) => required(get("SELECT * FROM content_objects WHERE content_hash=? AND state='READY'", hash));
+	function ownedAttachments(principalId, ids) {
+		for (const id of ids) required(get("SELECT a.attachment_id FROM attachments a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.attachment_id=? AND a.owner_id=? AND a.state='READY' AND c.state='READY' AND a.byte_size BETWEEN 1 AND 2097152", id, principalId));
+	}
+	function bind(messageId, ids) {
+		ids.forEach((id, i) => exec("INSERT INTO input_message_attachments VALUES(?,?,?)", messageId, id, i));
+	}
+	function resource(operationId, projectId, runId) {
+		exec("INSERT INTO input_operation_resources VALUES(?,?,?)", operationId, projectId, runId);
+	}
+	function processing(principalId, projectId, runId, messageId, intentHint) {
+		const operationId = uid$4("op"), time = now$10();
+		exec("INSERT INTO operations VALUES(?,?,?,?,?,?,'WAITING',NULL,?,?)", operationId, principalId, runId, `input.${messageId}`, digest(canonical({
+			messageId,
+			intentHint
+		})), "PROCESS_INPUT", time, time);
+		exec("INSERT INTO input_processing VALUES(?,?,?)", messageId, operationId, intentHint);
+		resource(operationId, projectId, runId);
+		h.outbox(operationId, "understanding", {
+			schemaVersion: 1,
+			projectId,
+			runId,
+			messageId,
+			intentHint
+		});
+		return operationId;
+	}
+	const operationView = (r) => ({
+		operationId: String(r.operation_id),
+		status: String(r.status),
+		result: r.result_json === null ? null : JSON.parse(String(r.result_json))
+	});
+	function visibleOperation(principalId, row) {
+		const r = required(row);
+		if (r.principal_id !== principalId) fail$24("RESOURCE_NOT_FOUND", 404, "Operation is not visible");
+		const linked = get("SELECT project_id FROM input_operation_resources WHERE operation_id=?", r.operation_id);
+		if (linked) authorize(principalId, String(linked.project_id));
+		else if (!get("SELECT intake_id FROM upload_intakes WHERE operation_id=? AND principal_id=?", r.operation_id, principalId)) fail$24("RESOURCE_NOT_FOUND", 404, "Operation is not an input API operation");
+		return operationView(r);
+	}
+	const attachmentView = (r) => ({
+		attachmentId: String(r.attachment_id),
+		clientAttachmentId: String(r.client_attachment_id),
+		name: String(r.name),
+		byteSize: Number(r.byte_size),
+		state: String(r.state),
+		createdAt: String(r.created_at)
+	});
+	function attachment(principalId, attachmentId) {
+		const row = required(get("SELECT * FROM attachments WHERE attachment_id=?", attachmentId));
+		if (row.owner_id !== principalId && !get("SELECT 1 FROM input_message_attachments a JOIN input_messages m ON m.message_id=a.message_id JOIN project_members p ON p.project_id=m.project_id WHERE a.attachment_id=? AND p.principal_id=?", attachmentId, principalId)) fail$24("RESOURCE_NOT_FOUND", 404, "Attachment is not visible");
+		return row;
+	}
+	const intakeView = (r, claimed = false) => ({
+		intakeId: String(r.intake_id),
+		operationId: String(r.operation_id),
+		state: String(r.state),
+		stagingKey: String(r.staging_key),
+		requestHash: r.request_hash,
+		attachmentId: r.attachment_id,
+		errorCode: r.error_code,
+		claimed
+	});
+	function intake(principalId, intakeId) {
+		return required(get("SELECT * FROM upload_intakes WHERE intake_id=? AND principal_id=?", intakeId, principalId));
+	}
+	function finishIntake(row, attachmentId) {
+		const a = required(get("SELECT * FROM attachments WHERE attachment_id=? AND owner_id=? AND state='READY'", attachmentId, row.principal_id));
+		if (a.content_hash !== row.expected_hash || a.name !== row.name || a.client_attachment_id !== row.client_attachment_id || a.byte_size !== row.byte_size) fail$24("UPLOAD_CONTENT_CONFLICT", 409, "Published attachment differs from validated input");
+		ready(String(a.content_hash));
+		const time = now$10();
+		exec("UPDATE upload_intakes SET state='READY',content_hash=?,attachment_id=?,error_code=NULL,updated_at=? WHERE intake_id=?", a.content_hash, attachmentId, time, row.intake_id);
+		exec("UPDATE operations SET status='SUCCEEDED',result_json=?,updated_at=? WHERE operation_id=?", canonical({ attachmentId }), time, row.operation_id);
+	}
+	function readTransaction(fn) {
+		db.exec("BEGIN");
+		try {
+			const value = fn();
+			db.exec("COMMIT");
+			return value;
+		} catch (error) {
+			if (db.isTransaction) db.exec("ROLLBACK");
+			throw error;
+		}
+	}
+	const handlers = {
+		checkInputAccess(input) {
+			const projectId = input.projectId ?? String(authorizedRun(input.principalId, input.runId, input.write).project_id);
+			return {
+				projectId,
+				membership: authorize(input.principalId, projectId, input.write)
+			};
+		},
+		createInputProject(input) {
+			if (input.meta.scopeId !== "projects.create") fail$24("OPERATION_SCOPE_INVALID", 422, "Invalid creation scope");
+			const { meta, baseCommit, ...payload } = input;
+			return h.operation(meta, "CreateInputProject", payload, (operationId) => {
+				ownedAttachments(meta.principalId, input.attachmentIds);
+				const facts = h.createInputFacts({
+					principalId: meta.principalId,
+					name: input.name,
+					baseCommit,
+					contentHash: input.bodyHash,
+					kind: "NEW",
+					clientMessageId: input.clientDraftId
+				}, operationId, false);
+				bind(facts.messageId, input.attachmentIds);
+				resource(operationId, facts.projectId, facts.runId);
+				const understandingOperationId = processing(meta.principalId, facts.projectId, facts.runId, facts.messageId, "unsure");
+				return {
+					...facts,
+					understandingOperationId
+				};
+			}, () => {
+				const old = get("SELECT r.project_id FROM operations o JOIN input_operation_resources r ON r.operation_id=o.operation_id WHERE o.principal_id=? AND o.scope_id=? AND o.idempotency_key=?", meta.principalId, meta.scopeId, meta.idempotencyKey);
+				if (old) authorize(meta.principalId, String(old.project_id), true);
+			});
+		},
+		createInputTask(input) {
+			const { meta, ifMatch, ...payload } = input;
+			if (meta.scopeId !== input.projectId) fail$24("OPERATION_SCOPE_INVALID", 422, "Invalid project scope");
+			return h.operation(meta, "CreateInputTask", payload, (operationId) => {
+				const project = required(get("SELECT * FROM projects WHERE project_id=?", input.projectId));
+				assertResourceVersion(ifMatch, Number(project.revision));
+				if (get("SELECT run_id FROM runs WHERE project_id=? AND terminal_outcome IS NULL", input.projectId)) fail$24("ACTIVE_RUN_EXISTS", 409, "Project already has an active Run");
+				if (project.accepted_release_id !== input.body.baseAcceptedReleaseId) fail$24("ACCEPTED_RELEASE_CHANGED", 409, "Task must start from the current accepted release");
+				const release = required(get("SELECT c.code_commit FROM releases r JOIN release_candidates c ON c.candidate_id=r.candidate_id WHERE r.project_id=? AND r.release_id=?", input.projectId, input.body.baseAcceptedReleaseId));
+				ownedAttachments(meta.principalId, input.body.goal.attachmentIds);
+				const facts = h.createInputFacts({
+					principalId: meta.principalId,
+					projectId: input.projectId,
+					name: String(project.name),
+					baseCommit: String(release.code_commit),
+					contentHash: input.bodyHash,
+					kind: input.body.kind,
+					clientMessageId: input.body.clientDraftId
+				}, operationId, false);
+				exec("UPDATE user_tasks SET title=? WHERE task_id=?", input.body.title, facts.taskId);
+				exec("UPDATE projects SET revision=revision+1 WHERE project_id=?", input.projectId);
+				bind(facts.messageId, input.body.goal.attachmentIds);
+				resource(operationId, input.projectId, facts.runId);
+				return {
+					...facts,
+					understandingOperationId: processing(meta.principalId, input.projectId, facts.runId, facts.messageId, "unsure"),
+					projectRevision: Number(project.revision) + 1
+				};
+			}, () => {
+				authorize(meta.principalId, input.projectId, true);
+			});
+		},
+		appendInputMessage(input) {
+			const { meta, ifMatch, ...payload } = input;
+			if (meta.scopeId !== input.runId) fail$24("OPERATION_SCOPE_INVALID", 422, "Invalid Run scope");
+			return h.operation(meta, "AppendInputMessage", payload, (operationId) => {
+				const run = authorizedRun(meta.principalId, input.runId, true);
+				assertResourceVersion(ifMatch, Number(run.resource_revision));
+				if (run.terminal_outcome !== null || run.control_gate === "CANCELLING") fail$24("RUN_NOT_WRITABLE", 409, "Run cannot accept new messages");
+				if (get("SELECT message_id FROM input_messages WHERE run_id=? AND author=? AND client_message_id=?", input.runId, meta.principalId, input.body.clientMessageId)) fail$24("MESSAGE_KEY_REUSED", 409, "Message intent has already been saved under another operation");
+				ownedAttachments(meta.principalId, input.body.attachmentIds);
+				const content = ready(input.bodyHash), time = now$10(), artifactId = uid$4("artifact"), messageId = uid$4("message");
+				exec("INSERT INTO artifacts(artifact_id,project_id,run_id,kind,content_hash,byte_size,storage_key,state,created_at) VALUES(?,?,?,'USER_INPUT',?,?,?,'READY',?)", artifactId, run.project_id, input.runId, input.bodyHash, content.byte_size, content.storage_key, time);
+				exec("INSERT INTO input_messages VALUES(?,?,?,?,?,?,?)", messageId, run.project_id, input.runId, meta.principalId, artifactId, input.body.clientMessageId, time);
+				bind(messageId, input.body.attachmentIds);
+				resource(operationId, String(run.project_id), input.runId);
+				const processingOperationId = processing(meta.principalId, String(run.project_id), input.runId, messageId, input.body.intentHint ?? "unsure");
+				exec("UPDATE runs SET resource_revision=resource_revision+1 WHERE run_id=?", input.runId);
+				exec("UPDATE projects SET updated_at=? WHERE project_id=?", time, run.project_id);
+				h.event(input.runId, operationId, "InputSaved", { messageId });
+				return {
+					projectId: run.project_id,
+					runId: input.runId,
+					messageId,
+					artifactId,
+					processingOperationId,
+					revision: Number(run.resource_revision) + 1
+				};
+			}, () => {
+				authorizedRun(meta.principalId, input.runId, true);
+			});
+		},
+		getInputOperation(input) {
+			return visibleOperation(input.principalId, get("SELECT * FROM operations WHERE operation_id=?", input.operationId));
+		},
+		lookupInputOperation(input) {
+			if (input.scopeId.startsWith("run_")) authorizedRun(input.principalId, input.scopeId);
+			else if (input.scopeId.startsWith("prj_")) authorize(input.principalId, input.scopeId);
+			else if (!["projects.create", "uploads"].includes(input.scopeId)) fail$24("OPERATION_SCOPE_INVALID", 422, "Unknown input scope");
+			const row = get("SELECT * FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?", input.principalId, input.scopeId, input.idempotencyKey);
+			return row ? visibleOperation(input.principalId, row) : null;
+		},
+		getInputWorkspace(input) {
+			return readTransaction(() => {
+				const membership = authorize(input.principalId, input.projectId), p = required(get("SELECT * FROM projects WHERE project_id=?", input.projectId));
+				const latest = required(get("SELECT * FROM runs WHERE project_id=? ORDER BY created_at DESC,rowid DESC LIMIT 1", input.projectId));
+				const r = input.runId ? required(get("SELECT * FROM runs WHERE project_id=? AND run_id=?", input.projectId, input.runId)) : latest;
+				const mode = r.run_id === latest.run_id ? "current" : "history";
+				let after = 0;
+				if (input.afterMessageId) after = Number(required(get("SELECT rowid AS cursor FROM input_messages WHERE run_id=? AND message_id=?", r.run_id, input.afterMessageId)).cursor);
+				const rows = all("SELECT m.*,p.intent_hint FROM input_messages m LEFT JOIN input_processing p ON p.message_id=m.message_id WHERE m.run_id=? AND m.rowid>? ORDER BY m.rowid LIMIT ?", r.run_id, after, input.limit + 1);
+				const selected = rows.slice(0, input.limit), allowedActions = [];
+				const questions = get(`SELECT COUNT(*) AS total, SUM(json_extract(q.content_json,'$.required')) AS required
+        FROM clarification_current c JOIN clarification_questions q ON q.run_id=c.run_id AND q.question_id=c.question_id AND q.revision=c.question_revision
+        WHERE c.run_id=? AND c.state='OPEN'`, r.run_id);
+				const preparation = {
+					understandingAvailable: !!get("SELECT 1 FROM understanding_revisions WHERE run_id=? AND requirement_revision=?", r.run_id, r.current_requirement_revision ?? null),
+					requiredOpenQuestions: Number(questions?.required ?? 0),
+					pending: !!get(`SELECT 1 FROM preparation_jobs WHERE run_id=? AND state IN ('WAITING','READY','ACTIVE','RECONCILE')
+          UNION ALL SELECT 1 FROM input_processing p JOIN input_messages m ON m.message_id=p.message_id JOIN operations o ON o.operation_id=p.operation_id
+          WHERE m.run_id=? AND o.status='WAITING' LIMIT 1`, r.run_id, r.run_id)
+				};
+				if (membership !== "viewer" && mode === "current") {
+					if (r.terminal_outcome === null && r.control_gate !== "CANCELLING") allowedActions.push("saveMessage");
+					if (r.terminal_outcome === null && r.control_gate !== "CANCELLING" && Number(questions?.total) > 0) allowedActions.push("answerQuestions");
+					if (p.accepted_release_id && !get("SELECT 1 FROM runs WHERE project_id=? AND terminal_outcome IS NULL", input.projectId)) allowedActions.push("createTask");
+				}
+				return {
+					project: {
+						projectId: input.projectId,
+						name: String(p.name),
+						revision: Number(p.revision),
+						acceptedReleaseId: p.accepted_release_id
+					},
+					run: h.runView(r),
+					mode,
+					membership,
+					allowedActions,
+					preparation,
+					eventCursor: Number(r.event_seq),
+					messages: selected.map((m) => ({
+						messageId: String(m.message_id),
+						author: String(m.author),
+						bodyArtifactId: String(m.body_artifact_id),
+						clientMessageId: String(m.client_message_id),
+						createdAt: String(m.created_at),
+						attachmentIds: all("SELECT attachment_id FROM input_message_attachments WHERE message_id=? ORDER BY position", m.message_id).map((a) => String(a.attachment_id)),
+						intentHint: m.intent_hint
+					})),
+					nextMessageCursor: rows.length > input.limit ? String(selected.at(-1).message_id) : null
+				};
+			});
+		},
+		listInputProjects(input) {
+			return readTransaction(() => {
+				const rows = all("SELECT p.*,m.role FROM projects p JOIN project_members m ON m.project_id=p.project_id WHERE m.principal_id=? AND (? IS NULL OR p.updated_at<? OR (p.updated_at=? AND p.project_id<?)) ORDER BY p.updated_at DESC,p.project_id DESC LIMIT ?", input.principalId, input.cursor?.updatedAt ?? null, input.cursor?.updatedAt ?? null, input.cursor?.updatedAt ?? null, input.cursor?.projectId ?? null, input.limit + 1);
+				const projects = rows.slice(0, input.limit).map((r) => ({
+					projectId: String(r.project_id),
+					name: String(r.name),
+					updatedAt: String(r.updated_at),
+					membership: String(r.role)
+				})), last = projects.at(-1);
+				return {
+					projects,
+					nextCursor: rows.length > input.limit && last ? {
+						updatedAt: last.updatedAt,
+						projectId: last.projectId
+					} : null
+				};
+			});
+		},
+		listInputEvents(input) {
+			return readTransaction(() => {
+				const r = authorizedRun(input.principalId, input.runId);
+				if (r.project_id !== input.projectId) fail$24("RESOURCE_NOT_FOUND", 404, "Run is not in this project");
+				if (input.afterSeq > Number(r.event_seq)) fail$24("EVENT_CURSOR_INVALID", 409, "Event cursor is ahead of this Run");
+				const events = all("SELECT * FROM events WHERE run_id=? AND seq>? ORDER BY seq LIMIT ?", input.runId, input.afterSeq, input.limit).map((r) => parseContract(domainEvent, {
+					schemaVersion: r.schema_version,
+					eventId: r.event_id,
+					projectId: r.project_id,
+					runId: r.run_id,
+					seq: r.seq,
+					type: r.type,
+					occurredAt: r.occurred_at,
+					observedAt: r.observed_at,
+					timeSource: r.time_source,
+					resourceRevision: r.resource_revision,
+					requirementRevision: r.requirement_revision,
+					planRevision: r.plan_revision,
+					operationId: r.operation_id,
+					...r.work_id ? { workId: r.work_id } : {},
+					...r.attempt_id ? { attemptId: r.attempt_id } : {},
+					payload: JSON.parse(String(r.payload_json))
+				}));
+				return {
+					events,
+					nextCursor: events.at(-1)?.seq ?? input.afterSeq
+				};
+			});
+		},
+		getInputAttachment(input) {
+			return attachmentView(attachment(input.principalId, input.attachmentId));
+		},
+		removeInputAttachment(input) {
+			return transaction(db, () => {
+				const r = attachment(input.principalId, input.attachmentId);
+				if (r.owner_id !== input.principalId) fail$24("FORBIDDEN", 403, "Only the uploader can remove an unbound attachment");
+				if (get("SELECT 1 FROM input_message_attachments WHERE attachment_id=?", input.attachmentId)) fail$24("ATTACHMENT_BOUND", 409, "Saved input retains this attachment");
+				exec("UPDATE attachments SET state='REMOVED' WHERE attachment_id=?", input.attachmentId);
+				return attachmentView({
+					...r,
+					state: "REMOVED"
+				});
+			});
+		},
+		claimUploadIntake(input) {
+			return transaction(db, () => {
+				const m = input.meta;
+				if (m.scopeId !== "uploads") fail$24("OPERATION_SCOPE_INVALID", 422, "Invalid upload scope");
+				const old = get("SELECT i.* FROM operations o JOIN upload_intakes i ON i.operation_id=o.operation_id WHERE o.principal_id=? AND o.scope_id=? AND o.idempotency_key=?", m.principalId, m.scopeId, m.idempotencyKey);
+				if (old) return intakeView(old);
+				if (get("SELECT 1 FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?", m.principalId, m.scopeId, m.idempotencyKey)) fail$24("IDEMPOTENCY_KEY_REUSED", 409, "Key belongs to another command");
+				const id = uid$4("intake"), op = uid$4("op"), time = now$10();
+				exec("INSERT INTO operations VALUES(?,?,?,?,?,'UPLOAD_INPUT','RUNNING',NULL,?,?)", op, m.principalId, m.scopeId, m.idempotencyKey, digest("intake.pending"), time, time);
+				exec("INSERT INTO upload_intakes(intake_id,operation_id,principal_id,claim_token,staging_key,state,created_at,updated_at) VALUES(?,?,?,?,?,'RECEIVING',?,?)", id, op, m.principalId, input.claimToken, `uploads/${id}.part`, time, time);
+				return intakeView(intake(m.principalId, id), true);
+			});
+		},
+		getUploadIntake(input) {
+			return intakeView(intake(input.principalId, input.intakeId));
+		},
+		validateUploadIntake(input) {
+			return transaction(db, () => {
+				const r = intake(input.principalId, input.intakeId);
+				if (digest(canonical({
+					clientAttachmentId: input.clientAttachmentId,
+					name: input.name,
+					byteSize: input.byteSize,
+					contentHash: input.contentHash
+				})) !== input.requestHash) fail$24("UPLOAD_HASH_INVALID", 422, "Request fingerprint is invalid");
+				if (r.request_hash !== null && r.request_hash !== input.requestHash) fail$24("IDEMPOTENCY_KEY_REUSED", 409, "Upload key belongs to different bytes or metadata");
+				if (r.state !== "RECEIVING") return intakeView(r);
+				if (r.claim_token !== input.claimToken) fail$24("UPLOAD_IN_PROGRESS", 409, "Original upload is still receiving");
+				const time = now$10();
+				exec("UPDATE upload_intakes SET state='VALIDATED',request_hash=?,expected_hash=?,byte_size=?,name=?,client_attachment_id=?,updated_at=? WHERE intake_id=?", input.requestHash, input.contentHash, input.byteSize, input.name, input.clientAttachmentId, time, input.intakeId);
+				exec("UPDATE operations SET request_hash=?,updated_at=? WHERE operation_id=?", input.requestHash, time, r.operation_id);
+				return intakeView(intake(input.principalId, input.intakeId));
+			});
+		},
+		commitUploadIntake(input) {
+			return transaction(db, () => {
+				const r = intake(input.principalId, input.intakeId);
+				if (r.state === "READY") {
+					if (r.attachment_id !== input.attachmentId || r.content_hash !== input.contentHash) fail$24("UPLOAD_CONTENT_CONFLICT", 409, "Upload already has a different result");
+					return intakeView(r);
+				}
+				if (r.state !== "VALIDATED" || r.claim_token !== input.claimToken || r.expected_hash !== input.contentHash) fail$24("UPLOAD_CLAIM_INVALID", 409, "Validated upload claim changed");
+				finishIntake(r, input.attachmentId);
+				return intakeView(intake(input.principalId, input.intakeId));
+			});
+		},
+		failUploadIntake(input) {
+			return transaction(db, () => {
+				const r = intake(input.principalId, input.intakeId);
+				if (r.claim_token !== input.claimToken) fail$24("UPLOAD_CLAIM_INVALID", 409, "Upload claim changed");
+				if (!["RECEIVING", "VALIDATED"].includes(String(r.state))) return intakeView(r);
+				if (r.state === "VALIDATED" && (get("SELECT 1 FROM object_write_operations WHERE owner_id=? AND owner_scope=? AND state IN ('RECEIVING','SEALED')", input.principalId, `upload.${r.intake_id}`) || get("SELECT 1 FROM attachments WHERE owner_id=? AND client_attachment_id=? AND content_hash=? AND name=? AND byte_size=? AND state='READY'", input.principalId, r.client_attachment_id, r.expected_hash, r.name, r.byte_size))) {
+					const time = now$10();
+					exec("UPDATE upload_intakes SET error_code='UPLOAD_FINALIZATION_UNKNOWN',updated_at=? WHERE intake_id=?", time, input.intakeId);
+					exec("UPDATE operations SET status='OUTCOME_UNKNOWN',result_json=?,updated_at=? WHERE operation_id=?", canonical({ errorCode: "UPLOAD_FINALIZATION_UNKNOWN" }), time, r.operation_id);
+					return intakeView(intake(input.principalId, input.intakeId));
+				}
+				const time = now$10();
+				exec("UPDATE upload_intakes SET state='FAILED',error_code=?,updated_at=? WHERE intake_id=?", input.errorCode, time, input.intakeId);
+				exec("UPDATE operations SET status='FAILED',result_json=?,updated_at=? WHERE operation_id=?", canonical({ errorCode: input.errorCode }), time, r.operation_id);
+				return intakeView(intake(input.principalId, input.intakeId));
+			});
+		},
+		recoverUploadIntakes() {
+			return transaction(db, () => {
+				let interrupted = 0;
+				for (const r of all("SELECT * FROM upload_intakes WHERE state IN ('RECEIVING','VALIDATED')")) {
+					if (r.state === "VALIDATED") {
+						const a = get("SELECT attachment_id FROM attachments WHERE owner_id=? AND client_attachment_id=? AND content_hash=? AND name=? AND byte_size=? AND state='READY'", r.principal_id, r.client_attachment_id, r.expected_hash, r.name, r.byte_size);
+						if (a) {
+							finishIntake(r, String(a.attachment_id));
+							continue;
+						}
+					}
+					const time = now$10();
+					exec("UPDATE upload_intakes SET state='INTERRUPTED',error_code='UPLOAD_INTERRUPTED',updated_at=? WHERE intake_id=?", time, r.intake_id);
+					exec("UPDATE operations SET status='FAILED',result_json=?,updated_at=? WHERE operation_id=?", canonical({ errorCode: "UPLOAD_INTERRUPTED" }), time, r.operation_id);
+					interrupted++;
+				}
+				return { interrupted };
+			});
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(inputRequests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+//#region src/understanding-domain.ts
+const preparationId = (prefix) => `${prefix}_${randomUUID().replaceAll("-", "")}`;
+const now$9 = () => (/* @__PURE__ */ new Date()).toISOString();
+const preparationFail = (code, status, message) => {
+	throw new StorageError(code, status, message);
+};
+function createUnderstandingDomain(db, h) {
+	const get = (sql, ...args) => db.prepare(sql).get(...args);
+	const all = (sql, ...args) => db.prepare(sql).all(...args);
+	const exec = (sql, ...args) => db.prepare(sql).run(...args);
+	const required = (r) => r ?? preparationFail("RESOURCE_NOT_FOUND", 404, "Preparation resource is not visible");
+	const parse = (v) => JSON.parse(String(v));
+	function authorize(principalId, runId, write = false) {
+		const run = required(get("SELECT r.*,m.role AS membership FROM runs r JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=? WHERE r.run_id=?", principalId, runId));
+		if (write && run.membership === "viewer") preparationFail("FORBIDDEN", 403, "Project membership is read only");
+		return run;
+	}
+	function jobView(row) {
+		return {
+			jobId: String(row.job_id),
+			runId: String(row.run_id),
+			operationId: String(row.operation_id),
+			principalId: String(row.principal_id),
+			purpose: String(row.purpose),
+			role: row.role,
+			state: String(row.state),
+			basisHash: row.basis_hash,
+			basis: row.basis_json === null ? null : parse(row.basis_json),
+			retryOf: row.retry_of,
+			errorCode: row.error_code,
+			resultArtifactId: row.result_artifact_id
+		};
+	}
+	const job = (jobId) => required(get("SELECT * FROM preparation_jobs WHERE job_id=?", jobId));
+	const ready = (hash) => required(get("SELECT * FROM content_objects WHERE content_hash=? AND state='READY'", hash));
+	function newJob(operationId, run, principalId, purpose, retryOf = null) {
+		const id = preparationId("job"), time = now$9();
+		exec("INSERT INTO preparation_jobs(job_id,run_id,operation_id,principal_id,purpose,role,retry_of,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)", id, run.run_id, operationId, principalId, purpose, purpose === "PLAN" ? "architect" : "product", retryOf, time, time);
+		exec("INSERT OR IGNORE INTO input_operation_resources VALUES(?,?,?)", operationId, run.project_id, run.run_id);
+		return job(id);
+	}
+	function createProcessing(run, principalId, purpose, key) {
+		const operationId = preparationId("op"), time = now$9();
+		exec("INSERT INTO operations VALUES(?,?,?,?,?,?,'WAITING',NULL,?,?)", operationId, principalId, run.run_id, key, digest(canonical({
+			purpose,
+			key
+		})), purpose === "PLAN" ? "PLAN_INPUT" : "INTERPRET_ANSWERS", time, time);
+		const row = newJob(operationId, run, principalId, purpose);
+		h.outbox(operationId, "understanding", {
+			schemaVersion: 1,
+			runId: run.run_id,
+			jobId: row.job_id
+		});
+		return row;
+	}
+	function sourceContext(row) {
+		const run = authorize(String(row.principal_id), String(row.run_id));
+		const messages = all("SELECT m.message_id,m.body_artifact_id,a.content_hash,a.byte_size FROM input_messages m JOIN artifacts a ON a.artifact_id=m.body_artifact_id WHERE m.run_id=? ORDER BY m.rowid LIMIT 201", run.run_id);
+		if (messages.length > 200) preparationFail("PREPARATION_INPUT_LIMIT", 422, "Preparation requires a bounded source selection");
+		const sources = messages.map((m) => ({
+			ref: {
+				kind: "message",
+				messageId: m.message_id
+			},
+			contentHash: String(m.content_hash),
+			byteSize: Number(m.byte_size),
+			label: `message:${m.message_id}`
+		}));
+		const attachments = all("SELECT DISTINCT a.* FROM input_message_attachments x JOIN input_messages m ON m.message_id=x.message_id JOIN attachments a ON a.attachment_id=x.attachment_id WHERE m.run_id=? ORDER BY a.attachment_id", run.run_id);
+		for (const a of attachments) {
+			if (a.state !== "READY") preparationFail("CONTENT_UNAVAILABLE", 409, "A bound source is unavailable");
+			const content = ready(String(a.content_hash)), artifactId = "artifact_" + digest(String(run.run_id) + ":" + String(a.attachment_id)).slice(0, 48);
+			exec("INSERT OR IGNORE INTO artifacts(artifact_id,project_id,run_id,attempt_id,kind,content_hash,byte_size,storage_key,state,created_at) VALUES(?,?,?,NULL,'INPUT_ATTACHMENT',?,?,?,'READY',?)", artifactId, run.project_id, run.run_id, a.content_hash, a.byte_size, content.storage_key, now$9());
+			sources.push({
+				ref: {
+					kind: "artifact",
+					artifactId,
+					sha256: a.content_hash
+				},
+				contentHash: String(a.content_hash),
+				byteSize: Number(a.byte_size),
+				label: String(a.name)
+			});
+		}
+		if (sources.length > 256) preparationFail("PREPARATION_INPUT_LIMIT", 422, "Too many preparation sources");
+		const answers = (row.purpose === "INTERPRET" ? all("SELECT a.* FROM interpretation_answers x JOIN clarification_answers a ON a.answer_id=x.answer_id WHERE x.job_id=? ORDER BY x.position", row.job_id) : all("SELECT a.* FROM clarification_current c JOIN clarification_answers a ON a.answer_id=c.answer_id WHERE c.run_id=? ORDER BY c.question_id", run.run_id)).map((a) => ({
+			answerId: String(a.answer_id),
+			questionId: String(a.question_id),
+			questionRevision: Number(a.question_revision),
+			value: JSON.parse(String(a.value_json))
+		}));
+		const requirements = run.current_requirement_revision === null ? null : parse(required(get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", run.run_id, run.current_requirement_revision)).content_json);
+		const baseCommit = String(required(get("SELECT base_commit FROM user_tasks WHERE task_id=?", run.task_id)).base_commit);
+		const basis = {
+			runId: run.run_id,
+			requirementRevision: run.current_requirement_revision,
+			baseCommit,
+			sources: sources.map((s) => ({
+				ref: s.ref,
+				contentHash: s.contentHash
+			})),
+			answerIds: answers.map((a) => a.answerId),
+			answerInterventions: run.answer_interventions
+		};
+		for (const a of all("SELECT b.path,a.artifact_id,a.content_hash,a.byte_size FROM preparation_bootstrap_sources b JOIN artifacts a ON a.artifact_id=b.artifact_id WHERE b.job_id=? ORDER BY b.path", row.job_id)) sources.push({
+			ref: {
+				kind: "artifact",
+				artifactId: a.artifact_id,
+				sha256: a.content_hash
+			},
+			contentHash: String(a.content_hash),
+			byteSize: Number(a.byte_size),
+			label: "git:" + String(a.path)
+		});
+		if (sources.length > 256) preparationFail("PREPARATION_INPUT_LIMIT", 422, "Too many preparation sources");
+		return {
+			job: jobView(row),
+			basisHash: digest(canonical(basis)),
+			basis,
+			baseCommit,
+			requirementRevision: run.current_requirement_revision,
+			sources,
+			requirements,
+			answers
+		};
+	}
+	function freezeBasis(row) {
+		const context = sourceContext(row);
+		exec("UPDATE preparation_jobs SET basis_hash=?,basis_json=?,updated_at=? WHERE job_id=?", context.basisHash, canonical(context.basis), now$9(), row.job_id);
+		return context;
+	}
+	function sameBasis(row) {
+		const context = sourceContext(row);
+		if (row.basis_hash !== context.basisHash) preparationFail("BASIS_SUPERSEDED", 409, "Preparation input changed");
+		return context;
+	}
+	function writable(principalId, runId, ifMatch) {
+		const run = authorize(principalId, runId, true);
+		assertResourceVersion(ifMatch, Number(run.resource_revision));
+		if (run.terminal_outcome !== null || run.control_gate === "CANCELLING") preparationFail("RUN_NOT_WRITABLE", 409, "Run cannot save answers");
+		return run;
+	}
+	function scope(meta, runId) {
+		if (meta.scopeId !== runId) preparationFail("OPERATION_SCOPE_INVALID", 422, "Invalid Run scope");
+	}
+	function assertPreparationPhase(run) {
+		if (![
+			"PREPARING",
+			"UNDERSTANDING",
+			"PLANNING"
+		].includes(String(run.phase)) || run.terminal_outcome !== null || get("SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=?", run.run_id, run.current_plan_revision ?? null)) preparationFail("PREPARATION_ADMISSION_CLOSED", 409, "Run has passed preparation");
+	}
+	const handlers = {
+		ensurePreparationJob(input) {
+			return transaction(db, () => {
+				const run = authorize(input.principalId, input.runId, true), previous = get("SELECT * FROM preparation_jobs WHERE operation_id=?", input.processingOperationId);
+				if (previous) {
+					if (previous.run_id !== input.runId || previous.principal_id !== input.principalId) preparationFail("RESOURCE_NOT_FOUND", 404, "Processing job is not visible");
+					return jobView(previous);
+				}
+				assertPreparationPhase(run);
+				required(get("SELECT o.operation_id FROM operations o JOIN input_processing x ON x.operation_id=o.operation_id JOIN input_messages m ON m.message_id=x.message_id WHERE o.operation_id=? AND o.principal_id=? AND m.run_id=? AND o.kind='PROCESS_INPUT' AND o.status='WAITING'", input.processingOperationId, input.principalId, input.runId));
+				return jobView(newJob(input.processingOperationId, run, input.principalId, "UNDERSTAND"));
+			});
+		},
+		getPreparationJob(input) {
+			const row = job(input.jobId);
+			authorize(input.principalId, String(row.run_id));
+			return jobView(row);
+		},
+		getPreparationContext(input) {
+			return transaction(db, () => {
+				const row = job(input.jobId);
+				authorize(input.principalId, String(row.run_id), true);
+				if (row.principal_id !== input.principalId) preparationFail("RESOURCE_NOT_FOUND", 404, "Preparation host is not visible");
+				return sourceContext(row);
+			});
+		},
+		registerPreparationBootstrap(input) {
+			return transaction(db, () => {
+				const row = job(input.jobId), run = authorize(input.principalId, String(row.run_id), true);
+				if (row.principal_id !== input.principalId || run.control_gate !== "OPEN" || run.terminal_outcome !== null) preparationFail("PREPARATION_ADMISSION_CLOSED", 409, "Preparation sources cannot be registered");
+				const old = get("SELECT a.artifact_id,a.content_hash FROM preparation_bootstrap_sources b JOIN artifacts a ON a.artifact_id=b.artifact_id WHERE b.job_id=? AND b.path=?", input.jobId, input.path);
+				if (old) {
+					if (old.content_hash !== input.contentHash) preparationFail("BASIS_SUPERSEDED", 409, "Bootstrap source already has a different immutable hash");
+					return {
+						artifactId: String(old.artifact_id),
+						sha256: input.contentHash
+					};
+				}
+				if (row.state !== "WAITING" || Number(get("SELECT count(*) AS n FROM preparation_bootstrap_sources WHERE job_id=?", input.jobId)?.n) >= 16) preparationFail("PREPARATION_INPUT_LIMIT", 422, "Bootstrap source selection is frozen or full");
+				const content = ready(input.contentHash), id = preparationId("artifact");
+				exec("INSERT INTO artifacts(artifact_id,project_id,run_id,attempt_id,kind,content_hash,byte_size,storage_key,state,created_at) VALUES(?,?,?,NULL,'BOOTSTRAP_INPUT',?,?,?,'READY',?)", id, run.project_id, run.run_id, input.contentHash, content.byte_size, content.storage_key, now$9());
+				exec("INSERT INTO preparation_bootstrap_sources VALUES(?,?,?,?)", run.run_id, input.jobId, input.path, id);
+				return {
+					artifactId: id,
+					sha256: input.contentHash
+				};
+			});
+		},
+		getUnderstanding(input) {
+			return transaction(db, () => {
+				const run = authorize(input.principalId, input.runId), revision = input.requirementRevision ?? run.current_requirement_revision;
+				const understanding = revision === null ? void 0 : get("SELECT content_json FROM understanding_revisions WHERE run_id=? AND requirement_revision=?", input.runId, revision);
+				if (input.requirementRevision !== void 0 && !understanding) preparationFail("RESOURCE_NOT_FOUND", 404, "Understanding revision is not visible");
+				const questions = revision === null ? [] : all(`SELECT q.*,c.state,a.answer_id,a.value_json,a.actor,a.created_at AS answered_at
+        FROM clarification_questions q LEFT JOIN clarification_current c ON c.run_id=q.run_id AND c.question_id=q.question_id AND c.question_revision=q.revision
+        LEFT JOIN clarification_answers a ON a.answer_id=COALESCE(c.answer_id,(SELECT old.answer_id FROM clarification_answers old
+          WHERE old.run_id=q.run_id AND old.question_id=q.question_id AND old.question_revision=q.revision ORDER BY old.rowid DESC LIMIT 1))
+        WHERE q.run_id=? AND q.requirement_basis=? ORDER BY q.question_id LIMIT 100`, input.runId, revision).map((q) => ({
+					questionId: q.question_id,
+					questionRevision: q.revision,
+					requirementBasis: q.requirement_basis,
+					state: q.state ?? "SUPERSEDED",
+					content: parse(q.content_json),
+					answer: q.answer_id == null ? null : {
+						answerId: q.answer_id,
+						value: JSON.parse(String(q.value_json)),
+						actor: q.actor,
+						createdAt: q.answered_at
+					}
+				}));
+				const jobs = all("SELECT * FROM preparation_jobs WHERE run_id=? ORDER BY created_at DESC,job_id DESC LIMIT 50", input.runId).map((row) => {
+					const { jobId, operationId, purpose, role, state, retryOf, errorCode, resultArtifactId } = jobView(row);
+					return {
+						jobId,
+						operationId,
+						purpose,
+						role,
+						state,
+						retryOf,
+						errorCode,
+						resultArtifactId
+					};
+				});
+				const pendingInputCount = Number(get(`SELECT COUNT(*) AS count FROM input_processing p JOIN input_messages m ON m.message_id=p.message_id
+        JOIN operations o ON o.operation_id=p.operation_id WHERE m.run_id=? AND o.status='WAITING'
+        AND NOT EXISTS(SELECT 1 FROM preparation_jobs j WHERE j.operation_id=o.operation_id)`, input.runId)?.count ?? 0);
+				return parseContract(understandingView, {
+					runId: input.runId,
+					requirementRevision: revision,
+					understanding: understanding ? parse(understanding.content_json) : null,
+					questions,
+					jobs,
+					pendingInputCount,
+					answerInterventions: Number(run.answer_interventions)
+				});
+			});
+		},
+		answerPreparationQuestions(input) {
+			scope(input.meta, input.runId);
+			const { meta, ifMatch, ...payload } = input;
+			return h.operation(meta, "AnswerQuestions", payload, (operationId) => {
+				const run = writable(meta.principalId, input.runId, ifMatch);
+				assertPreparationPhase(run);
+				for (const answer of input.body.answers) {
+					const q = required(get("SELECT q.content_json,c.question_revision,c.state FROM clarification_current c JOIN clarification_questions q ON q.run_id=c.run_id AND q.question_id=c.question_id AND q.revision=c.question_revision WHERE c.run_id=? AND c.question_id=?", input.runId, answer.questionId));
+					if (q.question_revision !== answer.questionRevision || q.state === "SUPERSEDED") preparationFail("QUESTION_SUPERSEDED", 409, "Question has changed; retain and reconcile the answer draft");
+					const options = parse(q.content_json).options;
+					if (options.length && (typeof answer.value !== "string" || !options.some((o) => o.id === answer.value))) preparationFail("ANSWER_INVALID", 422, "Select an available option explicitly");
+					if (answer.value === null || typeof answer.value === "string" && answer.value.trim() === "") preparationFail("ANSWER_INVALID", 422, "An answer cannot be empty");
+				}
+				for (const answer of input.body.answers) {
+					const answerId = preparationId("answer");
+					exec("INSERT INTO clarification_answers VALUES(?,?,?,?,?,?,?,?)", answerId, input.runId, answer.questionId, answer.questionRevision, canonical(answer.value), meta.principalId, operationId, now$9());
+					exec("UPDATE clarification_current SET state='ANSWERED',answer_id=? WHERE run_id=? AND question_id=?", answerId, input.runId, answer.questionId);
+				}
+				exec("UPDATE runs SET answer_interventions=answer_interventions+1,resource_revision=resource_revision+1 WHERE run_id=?", input.runId);
+				const next = createProcessing(run, meta.principalId, "INTERPRET", "answer." + operationId);
+				all("SELECT answer_id FROM clarification_current WHERE run_id=? AND state='ANSWERED' ORDER BY question_id", input.runId).forEach((a, i) => exec("INSERT INTO interpretation_answers VALUES(?,?,?,?)", input.runId, next.job_id, a.answer_id, i));
+				freezeBasis(next);
+				exec("INSERT INTO input_operation_resources VALUES(?,?,?)", operationId, run.project_id, input.runId);
+				for (const answer of input.body.answers) h.event(input.runId, operationId, "QuestionAnswered", {
+					questionId: answer.questionId,
+					questionRevision: answer.questionRevision
+				});
+				return {
+					projectId: run.project_id,
+					runId: input.runId,
+					revision: Number(run.resource_revision) + 1,
+					interpretationOperationId: next.operation_id
+				};
+			}, () => {
+				authorize(meta.principalId, input.runId, true);
+			});
+		},
+		retryPreparationInterpretation(input) {
+			scope(input.meta, input.runId);
+			const { meta, ifMatch, ...payload } = input;
+			return h.operation(meta, "RetryInterpretation", payload, (operationId) => {
+				const run = writable(meta.principalId, input.runId, ifMatch), previous = required(get("SELECT * FROM preparation_jobs WHERE run_id=? AND operation_id=? AND purpose='INTERPRET' AND principal_id=?", input.runId, input.failedInterpretationOperationId, meta.principalId));
+				assertPreparationPhase(run);
+				if (previous.state !== "FAILED") preparationFail("INTERPRETATION_NOT_FAILED", 409, "Only a definitely failed interpretation can be retried");
+				sameBasis(previous);
+				const next = createProcessing(run, meta.principalId, "INTERPRET", "interpretation.retry." + operationId);
+				exec("UPDATE preparation_jobs SET retry_of=?,basis_hash=?,basis_json=? WHERE job_id=?", previous.job_id, previous.basis_hash, previous.basis_json, next.job_id);
+				exec("INSERT INTO interpretation_answers SELECT run_id,?,answer_id,position FROM interpretation_answers WHERE job_id=?", next.job_id, previous.job_id);
+				exec("INSERT INTO input_operation_resources VALUES(?,?,?)", operationId, run.project_id, input.runId);
+				return {
+					projectId: run.project_id,
+					runId: input.runId,
+					revision: Number(run.resource_revision),
+					interpretationOperationId: next.operation_id
+				};
+			}, () => {
+				authorize(meta.principalId, input.runId, true);
+			});
+		}
+	};
+	function applyProduct(attempt, output, contentHash) {
+		const row = job(String(attempt.job_id)), context = sameBasis(row), run = authorize(String(row.principal_id), String(row.run_id), true), content = ready(contentHash);
+		const allowed = new Set(context.sources.map((s) => canonical(s.ref)));
+		const validRef = (ref) => {
+			if (allowed.has(canonical(ref))) return;
+			const r = ref;
+			if (r.kind === "requirement" && r.requirementRevision === context.requirementRevision && (context.requirements?.requirements)?.some((q) => q.id === r.requirementId)) return;
+			preparationFail("SOURCE_REFERENCE_INVALID", 422, "Output references a source outside the frozen authorized input");
+		};
+		for (const r of output.requirements) r.sourceRefs.forEach(validRef);
+		for (const q of output.questions) q.sourceRefs.forEach(validRef);
+		for (const c of output.conflicts) c.sourceRefs.forEach(validRef);
+		for (const pending of all("SELECT q.question_id FROM clarification_current c JOIN clarification_questions q ON q.run_id=c.run_id AND q.question_id=c.question_id AND q.revision=c.question_revision WHERE c.run_id=? AND c.state='OPEN' AND json_extract(q.content_json,'$.required')=1", run.run_id)) if (!output.questions.some((q) => q.id === pending.question_id && q.required)) preparationFail("REQUIRED_QUESTION_DROPPED", 422, "A required unanswered question cannot be removed by model output");
+		const revision = Number(run.current_requirement_revision ?? 0) + 1, artifactId = preparationId("artifact"), time = now$9();
+		const requirements = {
+			schemaVersion: "devmesh.requirements.v1",
+			role: "product",
+			requirements: output.requirements,
+			assumptions: output.assumptions,
+			questions: output.questions.map(({ id, required, reason, blockingScope, defaultOption }) => ({
+				id,
+				required,
+				reason,
+				blockingScope,
+				...defaultOption !== void 0 ? { defaultOption } : {}
+			}))
+		};
+		exec("INSERT INTO requirement_revisions VALUES(?,?,?,?,?)", run.run_id, revision, digest(canonical(requirements)), canonical(requirements), time);
+		exec("INSERT INTO artifacts(artifact_id,project_id,run_id,attempt_id,kind,content_hash,byte_size,storage_key,state,created_at) VALUES(?,?,?,NULL,'UNDERSTANDING',?,?,?,'READY',?)", artifactId, run.project_id, run.run_id, contentHash, content.byte_size, content.storage_key, time);
+		exec("INSERT INTO understanding_revisions VALUES(?,?,?,?,?,?,?)", run.run_id, revision, row.job_id, artifactId, contentHash, canonical(output), time);
+		exec("UPDATE clarification_current SET state='SUPERSEDED',answer_id=NULL WHERE run_id=?", run.run_id);
+		for (const q of output.questions) {
+			const questionRevision = Number(get("SELECT max(revision) AS n FROM clarification_questions WHERE run_id=? AND question_id=?", run.run_id, q.id)?.n ?? 0) + 1;
+			exec("INSERT INTO clarification_questions VALUES(?,?,?,?,?,?)", run.run_id, q.id, questionRevision, revision, canonical(q), time);
+			exec("INSERT INTO clarification_current VALUES(?,?,?,'OPEN',NULL) ON CONFLICT(run_id,question_id) DO UPDATE SET question_revision=excluded.question_revision,state='OPEN',answer_id=NULL", run.run_id, q.id, questionRevision);
+		}
+		exec("UPDATE runs SET current_requirement_revision=?,phase='UNDERSTANDING',resource_revision=resource_revision+1 WHERE run_id=?", revision, run.run_id);
+		h.event(String(run.run_id), String(row.operation_id), "UnderstandingUpdated", { understandingRef: {
+			artifactId,
+			sha256: contentHash
+		} });
+		freezeBasis(createProcessing(required(get("SELECT * FROM runs WHERE run_id=?", run.run_id)), String(row.principal_id), "PLAN", "planning." + row.job_id));
+		return {
+			artifactId,
+			sha256: contentHash,
+			requirementRevision: revision
+		};
+	}
+	return {
+		handlers,
+		authorize,
+		job,
+		jobView,
+		sourceContext,
+		freezeBasis,
+		sameBasis,
+		ready,
+		applyProduct,
+		assertPreparationPhase,
+		parseOutput: (value) => parseContract(understandingOutput, value)
+	};
+}
+//#endregion
+//#region src/preparation-domain.ts
+const now$8 = () => (/* @__PURE__ */ new Date()).toISOString();
+const terminal = /* @__PURE__ */ new Set([
+	"completed",
+	"failed",
+	"canceled",
+	"rejected"
+]);
+function createPreparationDomain(db, h) {
+	const understanding = createUnderstandingDomain(db, h);
+	const get = (sql, ...args) => db.prepare(sql).get(...args);
+	const all = (sql, ...args) => db.prepare(sql).all(...args);
+	const exec = (sql, ...args) => db.prepare(sql).run(...args);
+	const required = (r) => r ?? preparationFail("RESOURCE_NOT_FOUND", 404, "Preparation record is not visible");
+	const object = (value) => JSON.parse(String(value));
+	function authority(a, grant = false) {
+		const job = understanding.job(String(a.job_id)), run = understanding.authorize(String(job.principal_id), String(a.run_id), true);
+		if (run.terminal_outcome !== null || run.control_gate !== "OPEN" || run.run_epoch !== a.run_epoch || a.ended_at !== null) preparationFail("PREPARATION_ADMISSION_CLOSED", 409, "Preparation authority is no longer active");
+		understanding.assertPreparationPhase(run);
+		understanding.sameBasis(job);
+		if (grant && (String(a.grant_not_before) > now$8() || String(a.grant_expires_at) <= now$8())) preparationFail("PERMIT_EXPIRED", 403, "Preparation admission grant expired");
+		return {
+			run,
+			job
+		};
+	}
+	function attemptView(a) {
+		const delegation = parseContract(preparationDelegation, {
+			schemaVersion: "devmesh.preparation.v1",
+			operationId: understanding.job(String(a.job_id)).operation_id,
+			jobId: a.job_id,
+			preparationAttemptId: a.preparation_attempt_id,
+			runId: a.run_id,
+			runEpoch: a.run_epoch,
+			activationId: a.activation_id,
+			grantId: a.grant_id,
+			endpointId: a.endpoint_id,
+			endpointRevision: a.endpoint_revision,
+			role: a.role,
+			inputHash: a.input_hash,
+			profileHash: a.profile_hash,
+			basisHash: a.basis_hash
+		});
+		return {
+			preparationAttemptId: String(a.preparation_attempt_id),
+			jobId: String(a.job_id),
+			runId: String(a.run_id),
+			state: String(a.state),
+			delegation,
+			endpointId: String(a.endpoint_id),
+			endpointRevision: Number(a.endpoint_revision),
+			callerId: String(a.caller_id),
+			dispatchSent: a.dispatch_sent_at !== null
+		};
+	}
+	const attempt = (id) => required(get("SELECT * FROM preparation_attempts WHERE preparation_attempt_id=?", id));
+	function taskView(row) {
+		return {
+			endpointId: String(row.endpoint_id),
+			taskId: String(row.task_id),
+			contextId: String(row.context_id),
+			state: String(row.protocol_state),
+			revision: Number(row.status_revision),
+			snapshot: object(row.snapshot_json)
+		};
+	}
+	function task(callerId, endpointId, taskId) {
+		const row = required(get("SELECT * FROM preparation_a2a_tasks WHERE caller_id=? AND endpoint_id=? AND task_id=?", callerId, endpointId, taskId)), a = attempt(String(row.preparation_attempt_id));
+		understanding.authorize(String(understanding.job(String(a.job_id)).principal_id), String(a.run_id));
+		if (!object(required(get("SELECT config_json FROM endpoint_registrations WHERE endpoint_id=? AND revision=?", endpointId, row.endpoint_revision)).config_json).allowedCallers.includes(callerId)) preparationFail("FORBIDDEN", 403, "Service caller is no longer allowed");
+		return row;
+	}
+	function updateTask(row, state, metadata = {}) {
+		const snapshot = object(row.snapshot_json), revision = Number(row.status_revision) + 1, time = now$8();
+		const next = {
+			...snapshot,
+			status: {
+				state: "TASK_STATE_" + state.toUpperCase().replaceAll("-", "_"),
+				timestamp: time
+			},
+			metadata: {
+				...snapshot.metadata,
+				...metadata,
+				cancelRequested: row.cancel_requested === 1
+			}
+		};
+		exec("UPDATE preparation_a2a_tasks SET protocol_state=?,status_revision=?,snapshot_json=?,updated_at=? WHERE task_id=?", state, revision, canonical(next), time, row.task_id);
+		exec("INSERT INTO preparation_task_events VALUES(?,?,?,?)", row.task_id, revision, canonical(next), time);
+		return taskView(required(get("SELECT * FROM preparation_a2a_tasks WHERE task_id=?", row.task_id)));
+	}
+	function claim(input, active = true) {
+		const a = attempt(input.preparationAttemptId), t = required(get("SELECT * FROM preparation_a2a_tasks WHERE preparation_attempt_id=?", input.preparationAttemptId));
+		if (t.worker_id !== input.workerId || t.claim_token !== input.claimToken || terminal.has(String(t.protocol_state)) || active && a.ended_at !== null) preparationFail("PREPARATION_CLAIM_CHANGED", 409, "Preparation consumer claim changed");
+		return {
+			a,
+			t
+		};
+	}
+	function settle(a, t, state, reason = null) {
+		exec("UPDATE preparation_attempts SET state=?,ended_at=? WHERE preparation_attempt_id=?", state, now$8(), a.preparation_attempt_id);
+		exec("DELETE FROM preparation_slots WHERE preparation_attempt_id=?", a.preparation_attempt_id);
+		const job = understanding.job(String(a.job_id));
+		exec("UPDATE preparation_jobs SET state=?,error_code=?,updated_at=? WHERE job_id=?", state === "SUCCEEDED" ? "APPLIED" : state === "CANCELLED" ? "FAILED" : state, reason, now$8(), a.job_id);
+		exec("UPDATE operations SET status=?,result_json=?,updated_at=? WHERE operation_id=?", state === "SUCCEEDED" ? "SUCCEEDED" : "FAILED", canonical({
+			jobId: a.job_id,
+			...reason ? { errorCode: reason } : {}
+		}), now$8(), job.operation_id);
+		return updateTask(t, state === "SUCCEEDED" ? "completed" : state === "CANCELLED" ? "canceled" : "failed", reason ? { errorCode: reason } : {});
+	}
+	function releaseUnsent(a) {
+		const time = now$8();
+		exec("UPDATE preparation_attempts SET state='FAILED',ended_at=? WHERE preparation_attempt_id=? AND dispatch_sent_at IS NULL", time, a.preparation_attempt_id);
+		exec("DELETE FROM preparation_slots WHERE preparation_attempt_id=?", a.preparation_attempt_id);
+		exec("UPDATE preparation_jobs SET state='WAITING',updated_at=? WHERE job_id=?", time, a.job_id);
+	}
+	function closeUnreservedJob(job, code) {
+		const state = ["BASIS_SUPERSEDED", "PREPARATION_ADMISSION_CLOSED"].includes(code) ? "SUPERSEDED" : "FAILED", time = now$8();
+		exec("UPDATE preparation_jobs SET state=?,error_code=?,updated_at=? WHERE job_id=?", state, code, time, job.job_id);
+		exec("UPDATE operations SET status='FAILED',result_json=?,updated_at=? WHERE operation_id=?", canonical({
+			jobId: job.job_id,
+			errorCode: code
+		}), time, job.operation_id);
+	}
+	function registry(endpointId, endpointRevision, generationId, projectionRevision, callerId, role) {
+		required(get("SELECT * FROM registry_control WHERE active_generation_id=? AND projection_revision=?", generationId, projectionRevision));
+		required(get("SELECT * FROM role_endpoint_bindings WHERE generation_id=? AND role=? AND endpoint_id=? AND endpoint_revision=?", generationId, role, endpointId, endpointRevision));
+		const endpoint = required(get("SELECT e.config_json FROM endpoint_registrations e JOIN endpoint_runtime_state s ON s.endpoint_id=e.endpoint_id AND s.revision=e.revision JOIN endpoint_checks c ON c.check_id=s.latest_check_id WHERE e.endpoint_id=? AND e.revision=? AND s.lifecycle='ACTIVE' AND c.status='HEALTHY' AND c.expires_at>?", endpointId, endpointRevision, now$8())), config = object(endpoint.config_json);
+		if (config.enabled !== true || !config.allowedCallers.includes(callerId) || config.role !== role || !config.supportedSkills.includes("devmesh.prepare." + role)) preparationFail("FORBIDDEN", 403, "Preparation skill or service caller is not allowed");
+		return config;
+	}
+	const handlers = {
+		...understanding.handlers,
+		listPreparationJobs(input) {
+			const pending = all("SELECT x.operation_id,m.run_id,o.principal_id FROM input_processing x JOIN operations o ON o.operation_id=x.operation_id JOIN input_messages m ON m.message_id=x.message_id JOIN runs r ON r.run_id=m.run_id JOIN project_members p ON p.project_id=r.project_id AND p.principal_id=o.principal_id AND p.role<>'viewer' WHERE o.status='WAITING' AND r.phase IN ('PREPARING','UNDERSTANDING','PLANNING') AND r.control_gate='OPEN' AND r.terminal_outcome IS NULL AND NOT EXISTS(SELECT 1 FROM plan_confirmations c WHERE c.run_id=r.run_id AND c.plan_revision=r.current_plan_revision) AND NOT EXISTS(SELECT 1 FROM preparation_jobs j WHERE j.operation_id=o.operation_id) ORDER BY m.rowid LIMIT ?", input.limit);
+			for (const p of pending) understanding.handlers.ensurePreparationJob(parseContract(preparationRequests.ensurePreparationJob, {
+				principalId: p.principal_id,
+				runId: p.run_id,
+				processingOperationId: p.operation_id
+			}));
+			return transaction(db, () => {
+				for (const a of all("SELECT * FROM preparation_attempts WHERE state='RESERVED' AND dispatch_sent_at IS NULL AND grant_expires_at<=?", now$8())) releaseUnsent(a);
+				const candidates = all(`SELECT j.* FROM preparation_jobs j JOIN runs r ON r.run_id=j.run_id
+          JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=j.principal_id AND m.role<>'viewer'
+          WHERE j.state IN ('WAITING','READY') AND r.control_gate='OPEN' AND r.terminal_outcome IS NULL
+          AND NOT EXISTS(SELECT 1 FROM preparation_attempts a WHERE a.run_id=j.run_id AND a.role=j.role AND a.dispatch_sent_at IS NOT NULL AND a.ended_at IS NULL)
+          ORDER BY j.created_at,j.rowid LIMIT ?`, input.limit);
+				const jobs = [];
+				for (const j of candidates) try {
+					understanding.assertPreparationPhase(understanding.authorize(String(j.principal_id), String(j.run_id), true));
+					if (j.basis_hash !== null) understanding.sameBasis(j);
+					jobs.push(understanding.jobView(j));
+				} catch (error) {
+					if (!(error instanceof StorageError) || ![
+						"BASIS_SUPERSEDED",
+						"PREPARATION_ADMISSION_CLOSED",
+						"PREPARATION_INPUT_LIMIT",
+						"CONTENT_UNAVAILABLE"
+					].includes(error.code)) throw error;
+					const a = get("SELECT * FROM preparation_attempts WHERE job_id=? AND ended_at IS NULL AND dispatch_sent_at IS NULL", j.job_id);
+					if (a) releaseUnsent(a);
+					closeUnreservedJob(j, error.code);
+				}
+				return jobs;
+			});
+		},
+		failUnreservedPreparation(input) {
+			return transaction(db, () => {
+				const job = understanding.job(input.jobId);
+				if (job.principal_id !== input.principalId || job.state !== "WAITING" || get("SELECT 1 FROM preparation_attempts WHERE job_id=? AND ended_at IS NULL", input.jobId)) return { closed: false };
+				closeUnreservedJob(job, input.errorCode);
+				return { closed: true };
+			});
+		},
+		reservePreparation(input) {
+			return transaction(db, () => {
+				const job = understanding.job(input.jobId), run = understanding.authorize(input.principalId, String(job.run_id), true);
+				if (job.principal_id !== input.principalId || run.terminal_outcome !== null || run.control_gate !== "OPEN") preparationFail("PREPARATION_ADMISSION_CLOSED", 409, "Run does not admit preparation");
+				understanding.assertPreparationPhase(run);
+				const previous = get("SELECT * FROM preparation_attempts WHERE job_id=? AND ended_at IS NULL", input.jobId);
+				if (previous) {
+					if (previous.input_hash !== input.inputHash || previous.profile_hash !== input.profileHash || previous.endpoint_id !== input.endpointId || previous.endpoint_revision !== input.endpointRevision || previous.basis_hash !== input.basisHash || previous.caller_id !== input.callerId) preparationFail("PREPARATION_RESERVATION_CHANGED", 409, "An original reservation has a different immutable payload");
+					return attemptView(previous);
+				}
+				if (!["WAITING", "READY"].includes(String(job.state))) preparationFail("PREPARATION_NOT_WAITING", 409, "Preparation is not waiting for a new attempt");
+				if ((job.basis_hash === null ? understanding.freezeBasis(job) : understanding.sameBasis(job)).basisHash !== input.basisHash) preparationFail("BASIS_SUPERSEDED", 409, "Preparation input changed before reservation");
+				registry(input.endpointId, input.endpointRevision, input.registryGenerationId, input.projectionRevision, input.callerId, String(job.role));
+				if (digest(canonical(input.profile)) !== input.profileHash) preparationFail("PREPARATION_PROFILE_INVALID", 422, "Profile does not match its persisted hash");
+				understanding.ready(input.profileHash);
+				understanding.ready(input.inputHash);
+				understanding.ready(input.profile.promptHash);
+				if (run.preparation_token_limit === null) exec("UPDATE runs SET preparation_token_limit=? WHERE run_id=?", input.profile.tokenLimit, job.run_id);
+				else if (run.preparation_token_limit !== input.profile.tokenLimit) preparationFail("PREPARATION_BUDGET_CHANGED", 409, "Change preparation limits through an explicit configuration revision");
+				if (Number(run.preparation_tokens_used) >= input.profile.tokenLimit) preparationFail("PREPARATION_BUDGET_EXHAUSTED", 409, "Preparation token budget is exhausted");
+				const attemptNo = Number(get("SELECT max(attempt_no) AS n FROM preparation_attempts WHERE job_id=?", input.jobId)?.n ?? 0) + 1;
+				if (Number(get("SELECT count(*) AS n FROM preparation_attempts WHERE run_id=?", job.run_id)?.n) >= 200) preparationFail("PREPARATION_BUDGET_EXHAUSTED", 409, "Preparation attempt limit reached");
+				const id = preparationId("pattempt"), time = now$8();
+				exec("INSERT INTO preparation_attempts(preparation_attempt_id,run_id,job_id,attempt_no,run_epoch,role,activation_id,grant_id,grant_not_before,grant_expires_at,endpoint_id,endpoint_revision,registry_generation_id,caller_id,profile_hash,profile_json,input_hash,basis_hash,state,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'RESERVED',?)", id, job.run_id, input.jobId, attemptNo, run.run_epoch, job.role, preparationId("activation"), preparationId("grant"), time, new Date(Date.parse(time) + 15e3).toISOString(), input.endpointId, input.endpointRevision, input.registryGenerationId, input.callerId, input.profileHash, canonical(input.profile), input.inputHash, input.basisHash, time);
+				exec("INSERT INTO preparation_slots VALUES(?,?,?)", job.run_id, job.role, id);
+				exec("UPDATE preparation_jobs SET state='READY',updated_at=? WHERE job_id=?", time, input.jobId);
+				const result = attemptView(attempt(id));
+				h.outbox(String(job.operation_id), "preparation.a2a", result.delegation);
+				return result;
+			});
+		},
+		markPreparationDispatchSent(input) {
+			return transaction(db, () => {
+				const a = attempt(input.preparationAttemptId);
+				authority(a, true);
+				if (a.state !== "RESERVED" || a.dispatch_sent_at !== null) preparationFail("PREPARATION_NOT_SENDABLE", 409, "Original delegation already has a send record");
+				exec("UPDATE preparation_attempts SET dispatch_sent_at=? WHERE preparation_attempt_id=?", now$8(), input.preparationAttemptId);
+				return attemptView(attempt(input.preparationAttemptId));
+			});
+		},
+		lookupPreparationDispatch(input) {
+			const t = get("SELECT * FROM preparation_a2a_tasks WHERE preparation_attempt_id=?", input.preparationAttemptId);
+			return t ? taskView(t) : null;
+		},
+		reconcilePreparationDispatch(input) {
+			return transaction(db, () => {
+				const a = attempt(input.preparationAttemptId), t = get("SELECT * FROM preparation_a2a_tasks WHERE preparation_attempt_id=?", input.preparationAttemptId);
+				if (t) return taskView(t);
+				if (a.state === "RESERVED" && a.dispatch_sent_at !== null) {
+					exec("UPDATE preparation_attempts SET state='RECONCILE' WHERE preparation_attempt_id=?", input.preparationAttemptId);
+					exec("UPDATE preparation_jobs SET state='RECONCILE',error_code='PREPARATION_DISPATCH_UNKNOWN' WHERE job_id=?", a.job_id);
+					exec("UPDATE operations SET status='OUTCOME_UNKNOWN',updated_at=? WHERE operation_id=(SELECT operation_id FROM preparation_jobs WHERE job_id=?)", now$8(), a.job_id);
+				}
+				return null;
+			});
+		},
+		acceptPreparationTask(input) {
+			return transaction(db, () => {
+				const d = input.delegation, a = attempt(d.preparationAttemptId), job = understanding.job(String(a.job_id));
+				understanding.authorize(String(job.principal_id), String(a.run_id), true);
+				const requestHash = digest(canonical({
+					delegation: d,
+					message: input.message
+				})), old = get("SELECT * FROM preparation_inbox WHERE caller_id=? AND endpoint_id=? AND operation_id=?", input.callerId, input.endpointId, d.operationId);
+				if (old) {
+					if (old.request_hash !== requestHash) preparationFail("IDEMPOTENCY_KEY_REUSED", 409, "Preparation key belongs to a different payload");
+					return taskView(task(input.callerId, input.endpointId, String(old.task_id)));
+				}
+				authority(a, true);
+				registry(input.endpointId, input.endpointRevision, input.registryGenerationId, input.projectionRevision, input.callerId, String(a.role));
+				if (a.caller_id !== input.callerId || canonical(attemptView(a).delegation) !== canonical(d) || a.endpoint_id !== input.endpointId || a.endpoint_revision !== input.endpointRevision || a.registry_generation_id !== input.registryGenerationId || a.dispatch_sent_at === null || !["RESERVED", "RECONCILE"].includes(String(a.state))) preparationFail("PREPARATION_DELEGATION_INVALID", 403, "Delegation differs from committed preparation authority");
+				const id = preparationId("prepTask"), contextId = preparationId("prepContext"), time = now$8(), snapshot = {
+					id,
+					contextId,
+					status: {
+						state: "TASK_STATE_SUBMITTED",
+						timestamp: time
+					},
+					history: [input.message],
+					artifacts: [],
+					metadata: {
+						ownerKind: "preparation",
+						jobId: a.job_id,
+						preparationAttemptId: a.preparation_attempt_id
+					}
+				};
+				exec("INSERT INTO preparation_a2a_tasks(task_id,endpoint_id,endpoint_revision,preparation_attempt_id,caller_id,context_id,protocol_state,snapshot_json,created_at,updated_at) VALUES(?,?,?,?,?,?,'submitted',?,?,?)", id, input.endpointId, input.endpointRevision, d.preparationAttemptId, input.callerId, contextId, canonical(snapshot), time, time);
+				exec("INSERT INTO preparation_inbox VALUES(?,?,?,?,?)", input.callerId, input.endpointId, d.operationId, requestHash, id);
+				exec("INSERT INTO preparation_task_events VALUES(?,1,?,?)", id, canonical(snapshot), time);
+				exec("UPDATE preparation_attempts SET state='SUBMITTED' WHERE preparation_attempt_id=?", d.preparationAttemptId);
+				exec("UPDATE preparation_jobs SET state='ACTIVE',error_code=NULL,updated_at=? WHERE job_id=?", time, a.job_id);
+				exec("UPDATE operations SET status='RUNNING',updated_at=? WHERE operation_id=?", time, d.operationId);
+				return taskView(task(input.callerId, input.endpointId, id));
+			});
+		},
+		getPreparationTask(input) {
+			return taskView(task(input.callerId, input.endpointId, input.taskId));
+		},
+		listPreparationTasks(input) {
+			const rows = all("SELECT t.* FROM preparation_a2a_tasks t JOIN preparation_attempts a ON a.preparation_attempt_id=t.preparation_attempt_id JOIN preparation_jobs j ON j.job_id=a.job_id JOIN runs r ON r.run_id=a.run_id JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=j.principal_id WHERE t.caller_id=? AND t.endpoint_id=? AND t.task_id>? ORDER BY t.task_id LIMIT ?", input.callerId, input.endpointId, input.afterId ?? "", input.limit + 1), page = rows.slice(0, input.limit).map(taskView);
+			return {
+				tasks: page,
+				nextPageToken: rows.length > input.limit ? page.at(-1).taskId : "",
+				totalSize: Number(get("SELECT count(*) AS n FROM preparation_a2a_tasks t JOIN preparation_attempts a ON a.preparation_attempt_id=t.preparation_attempt_id JOIN preparation_jobs j ON j.job_id=a.job_id JOIN runs r ON r.run_id=a.run_id JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=j.principal_id WHERE t.caller_id=? AND t.endpoint_id=?", input.callerId, input.endpointId)?.n ?? 0)
+			};
+		},
+		listPreparationTaskEvents(input) {
+			task(input.callerId, input.endpointId, input.taskId);
+			return all("SELECT * FROM preparation_task_events WHERE task_id=? AND seq>? ORDER BY seq LIMIT 200", input.taskId, input.afterSeq).map((r) => ({
+				seq: Number(r.seq),
+				snapshot: object(r.snapshot_json)
+			}));
+		},
+		cancelPreparationTask(input) {
+			return transaction(db, () => {
+				const t = task(input.callerId, input.endpointId, input.taskId), a = attempt(String(t.preparation_attempt_id));
+				if (t.protocol_state === "canceled") return taskView(t);
+				if (terminal.has(String(t.protocol_state))) preparationFail("TASK_NOT_CANCELABLE", 409, "Preparation Task is already terminal");
+				exec("UPDATE preparation_a2a_tasks SET cancel_requested=1 WHERE task_id=?", input.taskId);
+				t.cancel_requested = 1;
+				const step = get("SELECT state FROM preparation_steps WHERE preparation_attempt_id=?", a.preparation_attempt_id);
+				if (!step || step.state === "PREPARED") return settle(a, t, "CANCELLED", "PREPARATION_CANCELLED_BEFORE_SEND");
+				return updateTask(t, String(t.protocol_state));
+			});
+		},
+		claimPreparationTasks(input) {
+			return transaction(db, () => {
+				const result = [];
+				for (const t of all("SELECT t.* FROM preparation_a2a_tasks t JOIN preparation_attempts a ON a.preparation_attempt_id=t.preparation_attempt_id JOIN runs r ON r.run_id=a.run_id WHERE t.endpoint_id=? AND r.control_gate='OPEN' AND (t.protocol_state='submitted' OR a.state='RESPONDED' AND t.worker_id IS NULL) ORDER BY t.created_at,t.task_id LIMIT ?", input.endpointId, input.limit)) {
+					const a = attempt(String(t.preparation_attempt_id));
+					try {
+						authority(a);
+					} catch (error) {
+						if (error instanceof Error && "code" in error && [
+							"BASIS_SUPERSEDED",
+							"PREPARATION_ADMISSION_CLOSED",
+							"RESOURCE_NOT_FOUND",
+							"FORBIDDEN"
+						].includes(String(error.code))) {
+							settle(a, t, "SUPERSEDED", String(error.code));
+							continue;
+						}
+						throw error;
+					}
+					if (t.cancel_requested === 1) {
+						settle(a, t, "CANCELLED", "PREPARATION_CANCELLED");
+						continue;
+					}
+					const token = preparationId("claim");
+					exec("UPDATE preparation_a2a_tasks SET worker_id=?,claim_token=? WHERE task_id=?", input.workerId, token, t.task_id);
+					if (a.state !== "RESPONDED") exec("UPDATE preparation_attempts SET state='WORKING' WHERE preparation_attempt_id=?", a.preparation_attempt_id);
+					exec("UPDATE preparation_jobs SET state='ACTIVE',updated_at=? WHERE job_id=?", now$8(), a.job_id);
+					exec("UPDATE operations SET status='RUNNING',updated_at=? WHERE operation_id=(SELECT operation_id FROM preparation_jobs WHERE job_id=?)", now$8(), a.job_id);
+					updateTask(t, "working");
+					result.push({
+						preparationAttemptId: String(a.preparation_attempt_id),
+						workerId: input.workerId,
+						claimToken: token
+					});
+				}
+				return result;
+			});
+		},
+		getPreparationHost(input) {
+			const { a } = claim(input), step = get("SELECT * FROM preparation_steps WHERE preparation_attempt_id=?", input.preparationAttemptId), job = understanding.job(String(a.job_id));
+			return {
+				claim: input,
+				attempt: attemptView(a),
+				job: understanding.jobView(job),
+				principalId: String(job.principal_id),
+				profile: object(a.profile_json),
+				profileHash: String(a.profile_hash),
+				inputHash: String(a.input_hash),
+				requestHash: step?.request_hash ?? null,
+				responseHash: step?.response_hash ?? null,
+				stepState: step?.state ?? null
+			};
+		},
+		preparePreparationStep(input) {
+			return transaction(db, () => {
+				const { a, t } = claim(input), { run } = authority(a);
+				if (t.cancel_requested === 1) preparationFail("PREPARATION_ADMISSION_CLOSED", 409, "Preparation cancellation was requested");
+				const previous = get("SELECT * FROM preparation_steps WHERE preparation_attempt_id=?", input.preparationAttemptId);
+				if (previous) {
+					if (previous.request_hash !== input.requestHash || previous.reserved_tokens !== input.reservedTokens) preparationFail("PREPARATION_REQUEST_IMMUTABLE", 409, "Model request is immutable");
+					return { state: String(previous.state) };
+				}
+				understanding.ready(input.requestHash);
+				const profile = parseContract(preparationProfile, object(a.profile_json));
+				if (Number(run.preparation_tokens_used) + input.reservedTokens > profile.tokenLimit) preparationFail("PREPARATION_BUDGET_EXHAUSTED", 409, "Insufficient remaining preparation tokens");
+				const time = now$8();
+				exec("INSERT INTO preparation_steps(preparation_attempt_id,step_no,request_hash,state,reserved_tokens,created_at,updated_at) VALUES(?,1,?,'PREPARED',?,?,?)", input.preparationAttemptId, input.requestHash, input.reservedTokens, time, time);
+				return { state: "PREPARED" };
+			});
+		},
+		markPreparationSent(input) {
+			return transaction(db, () => {
+				const { a, t } = claim(input), { run } = authority(a), step = required(get("SELECT * FROM preparation_steps WHERE preparation_attempt_id=?", input.preparationAttemptId));
+				if (t.cancel_requested === 1 || step.state !== "PREPARED") preparationFail("PREPARATION_NOT_SENDABLE", 409, "Original model request is not available for first send");
+				if (Number(run.preparation_tokens_used) + Number(step.reserved_tokens) > Number(run.preparation_token_limit)) preparationFail("PREPARATION_BUDGET_EXHAUSTED", 409, "Preparation token budget exhausted");
+				exec("UPDATE runs SET preparation_tokens_used=preparation_tokens_used+? WHERE run_id=?", step.reserved_tokens, a.run_id);
+				exec("UPDATE preparation_steps SET state='SENT',updated_at=? WHERE preparation_attempt_id=?", now$8(), input.preparationAttemptId);
+				return { state: "SENT" };
+			});
+		},
+		savePreparationResponse(input) {
+			return transaction(db, () => {
+				const { a } = claim(input), step = required(get("SELECT * FROM preparation_steps WHERE preparation_attempt_id=?", input.preparationAttemptId));
+				understanding.ready(input.responseHash);
+				if (step.state === "RESPONDED") {
+					if (step.response_hash !== input.responseHash) preparationFail("PREPARATION_RESPONSE_IMMUTABLE", 409, "Model response is immutable");
+					return { state: "RESPONDED" };
+				}
+				if (!["SENT", "RECONCILE"].includes(String(step.state))) preparationFail("PREPARATION_NOT_SENT", 409, "A response requires a recorded original send");
+				exec("UPDATE preparation_steps SET state='RESPONDED',response_hash=?,provider_request_id=?,input_tokens=?,output_tokens=?,usage_source=?,updated_at=? WHERE preparation_attempt_id=?", input.responseHash, input.providerRequestId, input.usage.inputTokens, input.usage.outputTokens, input.usage.source, now$8(), input.preparationAttemptId);
+				exec("UPDATE runs SET preparation_tokens_used=preparation_tokens_used-?+? WHERE run_id=?", step.reserved_tokens, input.usage.inputTokens + input.usage.outputTokens, a.run_id);
+				exec("UPDATE preparation_attempts SET state='RESPONDED' WHERE preparation_attempt_id=?", input.preparationAttemptId);
+				return { state: "RESPONDED" };
+			});
+		},
+		failPreparation(input) {
+			return transaction(db, () => {
+				const { a, t } = claim(input), step = get("SELECT * FROM preparation_steps WHERE preparation_attempt_id=?", input.preparationAttemptId);
+				if (input.unknown || step?.state === "SENT" && !input.knownFailure) {
+					exec("UPDATE preparation_attempts SET state='RECONCILE' WHERE preparation_attempt_id=?", input.preparationAttemptId);
+					exec("UPDATE preparation_jobs SET state='RECONCILE',error_code=?,updated_at=? WHERE job_id=?", input.errorCode, now$8(), a.job_id);
+					exec("UPDATE operations SET status='OUTCOME_UNKNOWN',updated_at=? WHERE operation_id=(SELECT operation_id FROM preparation_jobs WHERE job_id=?)", now$8(), a.job_id);
+					if (step?.state === "SENT") exec("UPDATE preparation_steps SET state='RECONCILE',error_code=?,updated_at=? WHERE preparation_attempt_id=?", input.errorCode, now$8(), input.preparationAttemptId);
+					return { state: "RECONCILE" };
+				}
+				if (step && step.state !== "RESPONDED") exec("UPDATE preparation_steps SET state='FAILED',error_code=?,updated_at=? WHERE preparation_attempt_id=?", input.errorCode, now$8(), input.preparationAttemptId);
+				const state = t.cancel_requested === 1 ? "CANCELLED" : ["BASIS_SUPERSEDED", "PREPARATION_ADMISSION_CLOSED"].includes(input.errorCode) ? "SUPERSEDED" : "FAILED";
+				settle(a, t, state, input.errorCode);
+				return { state };
+			});
+		},
+		applyPreparationResponse(input) {
+			return transaction(db, () => {
+				const { a, t } = claim(input), { job, run } = authority(a), step = required(get("SELECT * FROM preparation_steps WHERE preparation_attempt_id=? AND state='RESPONDED'", input.preparationAttemptId));
+				if (t.cancel_requested === 1) preparationFail("PREPARATION_ADMISSION_CLOSED", 409, "Preparation cancellation was requested");
+				if (!step.response_hash || digest(canonical(input.output)) !== input.outputHash) preparationFail("PREPARATION_OUTPUT_INVALID", 422, "Structured output hash differs");
+				understanding.ready(input.outputHash);
+				const result = a.role === "product" ? understanding.applyProduct(a, understanding.parseOutput(input.output), input.outputHash) : (() => {
+					const output = parseContract(architectOutput, input.output), context = understanding.sameBasis(job), draft = output.planDraft;
+					if (draft.requirementRevision !== context.requirementRevision || !input.planContentHash || digest(canonical(draft)) !== input.planContentHash) preparationFail("BASIS_SUPERSEDED", 409, "Draft is not bound to the current requirement basis");
+					const artifacts = new Set(context.sources.filter((s) => s.ref.kind === "artifact").map((s) => canonical({
+						artifactId: s.ref.artifactId,
+						sha256: s.contentHash
+					})));
+					for (const item of output.interfaces) if (!artifacts.has(canonical(item.specificationRef))) preparationFail("SOURCE_REFERENCE_INVALID", 422, "Interface source is outside frozen input");
+					const { issues } = inspectPlan(draft, {
+						requirementIds: new Set((context.requirements?.requirements)?.map((r) => r.id)),
+						hasArtifact: (ref) => artifacts.has(canonical({
+							artifactId: ref.artifactId,
+							sha256: ref.sha256
+						}))
+					});
+					if (issues.length) throw new StorageError("PLAN_INVALID", 422, "Draft references are invalid", { issues: issues.slice(0, 100) });
+					return h.publishPlanFacts(run, draft.requirementRevision, Number(run.current_plan_revision ?? 0) + 1, draft, input.planContentHash, String(job.operation_id));
+				})();
+				exec("UPDATE preparation_jobs SET result_artifact_id=? WHERE job_id=?", result.artifactId, a.job_id);
+				settle(a, t, "SUCCEEDED");
+				exec("UPDATE operations SET result_json=? WHERE operation_id=?", canonical(result), job.operation_id);
+				return result;
+			});
+		},
+		recoverPreparations() {
+			return transaction(db, () => {
+				let unresolved = 0, notSent = 0;
+				for (const a of all("SELECT * FROM preparation_attempts WHERE ended_at IS NULL")) {
+					const step = get("SELECT * FROM preparation_steps WHERE preparation_attempt_id=?", a.preparation_attempt_id), t = get("SELECT * FROM preparation_a2a_tasks WHERE preparation_attempt_id=?", a.preparation_attempt_id);
+					if (!t && a.dispatch_sent_at === null) {
+						releaseUnsent(a);
+						notSent++;
+						continue;
+					}
+					if (step?.state === "RESPONDED") {
+						exec("UPDATE preparation_a2a_tasks SET worker_id=NULL,claim_token=NULL WHERE preparation_attempt_id=?", a.preparation_attempt_id);
+						continue;
+					}
+					if (step?.state === "SENT" || step?.state === "RECONCILE" || !t) {
+						exec("UPDATE preparation_attempts SET state='RECONCILE' WHERE preparation_attempt_id=?", a.preparation_attempt_id);
+						exec("UPDATE preparation_jobs SET state='RECONCILE',error_code='PREPARATION_RECOVERY_REQUIRED' WHERE job_id=?", a.job_id);
+						exec("UPDATE operations SET status='OUTCOME_UNKNOWN' WHERE operation_id=(SELECT operation_id FROM preparation_jobs WHERE job_id=?)", a.job_id);
+						if (step?.state === "SENT") exec("UPDATE preparation_steps SET state='RECONCILE' WHERE preparation_attempt_id=?", a.preparation_attempt_id);
+						unresolved++;
+						continue;
+					}
+					if (t.protocol_state === "submitted") continue;
+					settle(a, t, "FAILED", "PREPARATION_INTERRUPTED_BEFORE_SEND");
+					notSent++;
+				}
+				return {
+					unresolved,
+					notSent
+				};
+			});
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(preparationRequests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+//#region src/candidate-basis.ts
+function fail$23(code) {
+	throw new StorageError(code, 409, "Current candidate source basis is unavailable");
+}
+const ordered = (items) => [...items].sort((a, b) => {
+	const x = canonical(a), y = canonical(b);
+	return x < y ? -1 : x > y ? 1 : 0;
+});
+const same$2 = (a, b) => canonical(a) === canonical(b);
+/** Worker-only qualification; no filesystem I/O and no authority from a caller SHA. */
+function createCandidateBasis(db, plans, resolveCandidate) {
+	const planResults = createPlanResults(db);
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	function freeze(input) {
+		const carriedDecisions = /* @__PURE__ */ new Map();
+		const run = plans.authorized(input.principalId, input.runId, true);
+		if (run.control_gate !== "OPEN" || run.terminal_outcome !== null || run.current_plan_revision === null || run.current_requirement_revision === null) fail$23("CANDIDATE_ADMISSION_CLOSED");
+		const planRow = get("SELECT * FROM plan_revisions WHERE run_id=? AND revision=?", input.runId, run.current_plan_revision), confirmation = get("SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?", input.runId, run.current_plan_revision, run.current_requirement_revision);
+		if (!planRow || !confirmation || planRow.requirement_revision !== run.current_requirement_revision) fail$23("CANDIDATE_PLAN_CHANGED");
+		const draft = parseContract(planDraft, JSON.parse(String(planRow.content_json))), graph = plans.inspect(run, draft);
+		if (graph.issues.length || plans.pendingQuestions(input.runId) || plans.pendingInterpretation(input.runId, draft.requirementRevision) || plans.pendingSource(input.runId, draft.requirementRevision)) fail$23("CANDIDATE_PLAN_UNRESOLVED");
+		const decision = get("SELECT decision_id FROM decisions WHERE run_id=? AND subject_kind='PLAN' AND subject_id=?", input.runId, String(run.current_plan_revision));
+		if (!decision) fail$23("CANDIDATE_PLAN_CHANGED");
+		const repository = get("SELECT * FROM managed_repositories WHERE project_id=? AND state='READY'", run.project_id);
+		if (!repository?.identity_json) fail$23("CANDIDATE_REPOSITORY_UNAVAILABLE");
+		const current = new Map(draft.works.map((work) => [work.workId, work])), epochs = /* @__PURE__ */ new Map(), blocked = /* @__PURE__ */ new Set(), facts = /* @__PURE__ */ new Map(), manifests = /* @__PURE__ */ new Map();
+		for (const work of draft.works) {
+			const state = get("SELECT work_epoch,blocked_reason FROM works WHERE run_id=? AND work_id=?", input.runId, work.workId);
+			if (!state) fail$23("CANDIDATE_WORK_CHANGED");
+			epochs.set(work.workId, Number(state.work_epoch));
+			if (state.blocked_reason !== null) blocked.add(work.workId);
+		}
+		const target = input.workId ? current.get(input.workId) : void 0;
+		if (input.purpose === "work-input" ? !target : input.workId !== void 0) fail$23("CANDIDATE_TARGET_INVALID");
+		if (target && blocked.has(target.workId)) fail$23("CANDIDATE_ADMISSION_CLOSED");
+		const ready = (artifactId, expectedHash) => {
+			const artifact = get("SELECT a.content_hash FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.project_id=? AND a.run_id=? AND a.state='READY' AND c.state='READY'", artifactId, run.project_id, input.runId);
+			if (!artifact || expectedHash !== void 0 && artifact.content_hash !== expectedHash) fail$23("CANDIDATE_EVIDENCE_UNAVAILABLE");
+			return String(artifact.content_hash);
+		};
+		function fact(work) {
+			const old = facts.get(work.workId);
+			if (old) return old;
+			const qualified = planResults.resolve(input.runId, Number(run.current_plan_revision), work.workId), row = qualified?.row;
+			if (!row || row.work_revision !== work.workRevision || row.role !== work.role || row.ended_at === null || row.blocked_reason !== null || row.admitted_work_epoch !== row.current_work_epoch || !(row.state === "SUCCEEDED" && row.outcome === "success" || row.state === "FAILED" && row.outcome === "completed-with-findings" && work.role === "tester")) fail$23("CANDIDATE_DEPENDENCY_UNSATISFIED");
+			if (qualified?.carry) carriedDecisions.set(work.workId, qualified.carry.sourcePlanDecisionId);
+			const outputs = JSON.parse(String(row.outputs_json));
+			for (const output of outputs) ready(output.ref.artifactId, output.ref.sha256);
+			const manifest = parseContract(inputManifest, JSON.parse(String(row.input_manifest_json))), value = {
+				workId: work.workId,
+				workRevision: work.workRevision,
+				workEpoch: Number(row.current_work_epoch),
+				attemptId: String(row.attempt_id),
+				role: work.role,
+				outcome: String(row.outcome),
+				admittedRunEpoch: Number(row.admitted_run_epoch),
+				codeCommit: row.code_commit,
+				inputManifestSha256: digest(canonical(manifest)),
+				evidence: {
+					artifactId: String(row.evidence_artifact_id),
+					sha256: ready(String(row.evidence_artifact_id))
+				},
+				outputs: ordered(outputs)
+			};
+			facts.set(work.workId, value);
+			manifests.set(work.workId, manifest);
+			return value;
+		}
+		const included = /* @__PURE__ */ new Set(), visiting = /* @__PURE__ */ new Set();
+		function visit(work, includeSelf) {
+			if (visiting.has(work.workId)) fail$23("CANDIDATE_PLAN_CHANGED");
+			visiting.add(work.workId);
+			for (const edge of work.dependencies) {
+				const predecessor = current.get(edge.workId);
+				if (!predecessor) fail$23("CANDIDATE_PLAN_CHANGED");
+				const result = fact(predecessor);
+				if (result.outcome !== "success" && !(result.outcome === "completed-with-findings" && edge.requiredOutcome === "completed-with-findings")) fail$23("CANDIDATE_DEPENDENCY_UNSATISFIED");
+				if (!included.has(edge.workId)) visit(predecessor, true);
+			}
+			visiting.delete(work.workId);
+			if (includeSelf) {
+				fact(work);
+				included.add(work.workId);
+			}
+		}
+		if (target) visit(target, false);
+		else for (const work of draft.works.filter((work) => work.role === "developer")) visit(work, true);
+		const workOrder = graph.topology.map((node) => node.workId).filter((id) => included.has(id)), sources = [], repositoryIdentity = JSON.parse(String(repository.identity_json));
+		for (const workId of workOrder) {
+			const value = facts.get(workId);
+			if (value.role !== "developer") continue;
+			if (value.outcome !== "success" || !value.codeCommit) fail$23("CANDIDATE_SOURCE_UNVERIFIED");
+			const row = get("SELECT * FROM source_archives WHERE project_id=? AND run_id=? AND attempt_id=? AND state='ACKNOWLEDGED' AND json_extract(manifest_json,'$.commit')=? ORDER BY rowid LIMIT 1", run.project_id, input.runId, value.attemptId, value.codeCommit);
+			if (!row?.manifest_json || !row.acknowledgement_json) fail$23("CANDIDATE_SOURCE_UNARCHIVED");
+			const manifest = parseContract(sourceManifest, JSON.parse(String(row.manifest_json))), ack = JSON.parse(String(row.acknowledgement_json)), original = JSON.parse(String(row.basis_json)), { sha256, ...body } = manifest;
+			if (sha256 !== digest(canonical(body)) || ack.commit !== value.codeCommit || ack.tree !== manifest.tree || ack.manifestSha256 !== sha256 || !same$2(ack.repositoryIdentity, repositoryIdentity) || !same$2(original.repository.identity, repositoryIdentity) || original.allocation.attemptId !== value.attemptId || original.commitOperation.prepared?.commit !== value.codeCommit || ack.archiveRef !== "refs/devmesh/source-archives/" + row.operation_id || ack.sourceRef !== "refs/devmesh/sources/" + value.codeCommit) fail$23("CANDIDATE_SOURCE_UNPROVEN");
+			sources.push({
+				workId,
+				attemptId: value.attemptId,
+				archiveOperationId: String(row.operation_id),
+				allocationOperationId: String(row.allocation_operation_id),
+				commitOperationId: String(row.commit_operation_id),
+				workspaceRef: String(row.workspace_ref),
+				baseCommit: original.allocation.baseCommit,
+				commit: value.codeCommit,
+				tree: manifest.tree,
+				manifestSha256: sha256,
+				archiveRef: ack.archiveRef,
+				sourceRef: ack.sourceRef
+			});
+		}
+		const byCommit = new Map(sources.map((source) => [source.commit, source])), byWork = new Map(sources.map((source) => [source.workId, source])), byArchive = new Map(sources.map((source) => [source.archiveOperationId, source]));
+		function ancestors(work) {
+			const result = /* @__PURE__ */ new Set();
+			function collect(node) {
+				for (const edge of node.dependencies) {
+					const parent = current.get(edge.workId);
+					if (result.has(parent.workId)) continue;
+					result.add(parent.workId);
+					collect(parent);
+				}
+			}
+			collect(work);
+			return [...result].map((id) => byWork.get(id)?.archiveOperationId).filter((id) => id !== void 0).sort();
+		}
+		function provenance(commit, stack = /* @__PURE__ */ new Set()) {
+			if (commit === run.base_commit) return [];
+			if (stack.has(commit)) fail$23("CANDIDATE_SOURCE_CYCLE");
+			const next = new Set(stack).add(commit), source = byCommit.get(commit);
+			if (source) return [.../* @__PURE__ */ new Set([...provenance(source.baseCommit, next), source.archiveOperationId])].sort();
+			const proof = resolveCandidate(commit);
+			if (!proof || proof.state !== "ACKNOWLEDGED" || proof.projectId !== run.project_id || proof.runId !== input.runId || proof.commit !== commit || proof.sourceArchiveOperationIds.some((id) => !byArchive.has(id)) || new Set(proof.sourceArchiveOperationIds).size !== proof.sourceArchiveOperationIds.length) fail$23("CANDIDATE_CODE_BASIS_UNPROVEN");
+			return [...proof.sourceArchiveOperationIds].sort();
+		}
+		const req = get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", input.runId, run.current_requirement_revision), requirements = parseContract(productOutput, JSON.parse(String(req?.content_json))).requirements;
+		for (const workId of workOrder) {
+			const work = current.get(workId), value = facts.get(workId), manifest = manifests.get(workId), expected = ancestors(work);
+			if (manifest.interfaces.length) fail$23("CANDIDATE_INTERFACE_BASIS_UNAVAILABLE");
+			if (!manifest.codeCommit) fail$23("CANDIDATE_CODE_BASIS_UNPROVEN");
+			if (!same$2(provenance(manifest.codeCommit), expected) || value.role === "developer" && byWork.get(workId)?.baseCommit !== manifest.codeCommit || value.role !== "developer" && value.codeCommit !== null && !same$2(provenance(value.codeCommit), expected)) fail$23("CANDIDATE_CODE_BASIS_CHANGED");
+			const assigned = requirements.filter((item) => work.requirementIds.includes(item.id)).map((item) => ({
+				requirementId: item.id,
+				sha256: digest(canonical(item))
+			}));
+			if (!same$2(ordered(assigned), ordered(manifest.requirements)) || !manifest.decisionIds.includes(parseContract(ids.decision, carriedDecisions.get(workId) ?? decision.decision_id))) fail$23("CANDIDATE_INPUT_BASIS_CHANGED");
+			const artifacts = /* @__PURE__ */ new Map();
+			for (const ref of work.inputRefs) {
+				const actual = ref.kind === "artifact" ? ref : facts.get(ref.workId)?.outputs.find((output) => output.slot === ref.outputSlot)?.ref;
+				if (!actual) fail$23("CANDIDATE_INPUT_BASIS_CHANGED");
+				ready(actual.artifactId, actual.sha256);
+				artifacts.set(actual.artifactId, {
+					artifactId: actual.artifactId,
+					sha256: actual.sha256
+				});
+			}
+			if (!same$2(ordered([...artifacts.values()]), ordered(manifest.artifacts))) fail$23("CANDIDATE_INPUT_BASIS_CHANGED");
+		}
+		if (!sources.length && !target) fail$23("CANDIDATE_SOURCE_UNAVAILABLE");
+		const basis = {
+			schemaVersion: "devmesh.candidate-basis.v1",
+			projectId: String(run.project_id),
+			runId: input.runId,
+			runEpoch: Number(run.run_epoch),
+			requirementRevision: Number(run.current_requirement_revision),
+			planRevision: Number(run.current_plan_revision),
+			planHash: String(planRow.content_hash),
+			planDecisionId: String(decision.decision_id),
+			purpose: input.purpose,
+			target: target ? {
+				workId: target.workId,
+				workRevision: target.workRevision,
+				workEpoch: epochs.get(target.workId)
+			} : null,
+			baseCommit: String(run.base_commit),
+			repository: {
+				resourceId: String(repository.resource_id),
+				identity: repositoryIdentity
+			},
+			works: workOrder.map((workId) => facts.get(workId)),
+			sources
+		};
+		return {
+			...basis,
+			sha256: digest(canonical(basis))
+		};
+	}
+	return {
+		freeze,
+		assertCurrent(original, principalId) {
+			const current = freeze({
+				principalId,
+				runId: original.runId,
+				purpose: original.purpose,
+				...original.target ? { workId: original.target.workId } : {}
+			});
+			if (!same$2(current, original)) fail$23("CANDIDATE_BASIS_CHANGED");
+			return current;
+		}
+	};
+}
+//#endregion
+//#region src/candidate-integration-domain.ts
+function fail$22(code, status = 409) {
+	throw new StorageError(code, status, "Candidate integration requires verified original facts");
+}
+const same$1 = (a, b) => canonical(a) === canonical(b);
+const closed = (state) => [
+	"ACKNOWLEDGED",
+	"CONFLICT",
+	"FAILED"
+].includes(state);
+/** Private Worker journal. Filesystem proofs are supplied only by the trusted Git adapter. */
+function createCandidateIntegrationDomain(db, plans) {
+	const get = (sql, ...params) => db.prepare(sql).get(...params);
+	const all = (sql, ...params) => db.prepare(sql).all(...params);
+	const exec = (sql, ...params) => db.prepare(sql).run(...params);
+	const required = (id) => get("SELECT * FROM candidate_integrations WHERE operation_id=?", id) ?? fail$22("CANDIDATE_INTEGRATION_NOT_FOUND", 404);
+	const originalStep = (id, ordinal) => get("SELECT * FROM candidate_integration_steps WHERE operation_id=? AND ordinal=?", id, ordinal);
+	const frozen = (r) => JSON.parse(String(r.basis_json));
+	const manifest = (r) => r.manifest_json ? JSON.parse(String(r.manifest_json)) : null;
+	const expectedHead = (r) => r.expected_head_json ? JSON.parse(String(r.expected_head_json)) : null;
+	const head = (runId) => {
+		const r = get("SELECT * FROM managed_candidate_heads WHERE run_id=?", runId);
+		return r ? {
+			operationId: String(r.operation_id),
+			commit: String(r.commit_sha)
+		} : null;
+	};
+	function proof(commit) {
+		const r = get("SELECT * FROM candidate_integrations WHERE state='ACKNOWLEDGED' AND json_extract(manifest_json,'$.commit')=? ORDER BY rowid LIMIT 1", commit);
+		return r ? {
+			projectId: String(r.project_id),
+			runId: String(r.run_id),
+			commit,
+			sourceArchiveOperationIds: all("SELECT archive_operation_id FROM candidate_integration_sources WHERE operation_id=? ORDER BY ordinal", r.operation_id).map((source) => String(source.archive_operation_id)),
+			state: "ACKNOWLEDGED"
+		} : null;
+	}
+	const basis = createCandidateBasis(db, plans, proof);
+	function owned(id, principalId) {
+		const r = required(id);
+		plans.authorized(principalId, String(r.run_id), true);
+		if (r.principal_id !== principalId) fail$22("CANDIDATE_INTEGRATION_NOT_FOUND", 404);
+		return r;
+	}
+	function bound(input) {
+		const r = owned(input.operationId, input.principalId);
+		if (r.request_hash !== input.requestHash) fail$22("CANDIDATE_REQUEST_CHANGED");
+		return r;
+	}
+	function current(r, principalId) {
+		basis.assertCurrent(frozen(r), principalId);
+	}
+	function updates(r) {
+		const m = manifest(r);
+		if (!m) return [];
+		const result = [{
+			ref: "refs/devmesh/integrations/" + r.operation_id,
+			commit: m.commit,
+			expected: null
+		}, {
+			ref: "refs/devmesh/candidate-snapshots/" + r.operation_id,
+			commit: m.commit,
+			expected: null
+		}];
+		if (r.purpose === "run-candidate") result.push({
+			ref: "refs/devmesh/candidates/" + r.run_id,
+			commit: m.commit,
+			expected: expectedHead(r)?.commit ?? null
+		});
+		return result;
+	}
+	function view(r) {
+		const m = manifest(r);
+		return {
+			operationId: String(r.operation_id),
+			projectId: String(r.project_id),
+			runId: String(r.run_id),
+			principalId: String(r.principal_id),
+			purpose: r.purpose,
+			workId: r.work_id,
+			originOperationId: r.origin_operation_id,
+			requestHash: String(r.request_hash),
+			basisSha256: String(r.basis_sha256),
+			expectedHead: expectedHead(r),
+			sourceCount: frozen(r).sources.length,
+			acknowledgedSteps: Number(get("SELECT count(*) n FROM candidate_integration_steps WHERE operation_id=? AND state='ACKNOWLEDGED'", r.operation_id).n),
+			state: r.state,
+			manifest: m ? {
+				commit: m.commit,
+				tree: m.tree,
+				sha256: m.sha256
+			} : null,
+			updates: updates(r),
+			acknowledgement: r.state === "ACKNOWLEDGED" && r.acknowledgement_json ? JSON.parse(String(r.acknowledgement_json)) : null,
+			conflictAcknowledgement: r.state === "CONFLICT" && r.acknowledgement_json ? JSON.parse(String(r.acknowledgement_json)) : null,
+			errorCode: r.error_code,
+			createdAt: String(r.created_at),
+			acknowledgedAt: r.acknowledged_at,
+			failureProof: r.failure_json ? JSON.parse(String(r.failure_json)) : null
+		};
+	}
+	const stepView = (r) => ({
+		operationId: String(r.operation_id),
+		ordinal: Number(r.ordinal),
+		ours: String(r.ours),
+		theirs: String(r.theirs),
+		state: r.state,
+		preparation: r.preparation_json ? JSON.parse(String(r.preparation_json)) : null,
+		acknowledgement: r.state === "ACKNOWLEDGED" && r.acknowledgement_json ? JSON.parse(String(r.acknowledgement_json)) : null,
+		conflictAcknowledgement: r.state === "CONFLICT" && r.acknowledgement_json ? JSON.parse(String(r.acknowledgement_json)) : null,
+		createdAt: String(r.created_at),
+		acknowledgedAt: r.acknowledged_at
+	});
+	function stepBound(input) {
+		const r = bound(input), s = originalStep(input.operationId, input.ordinal) ?? fail$22("CANDIDATE_STEP_NOT_FOUND", 404);
+		return {
+			r,
+			s,
+			step: stepView(s)
+		};
+	}
+	function equivalentSources(a, b) {
+		const scope = (v) => ({
+			projectId: v.projectId,
+			runId: v.runId,
+			runEpoch: v.runEpoch,
+			requirementRevision: v.requirementRevision,
+			planRevision: v.planRevision,
+			planHash: v.planHash,
+			planDecisionId: v.planDecisionId,
+			baseCommit: v.baseCommit,
+			repository: v.repository,
+			sources: v.sources,
+			developers: v.works.filter((w) => w.role === "developer")
+		});
+		return same$1(scope(a), scope(b));
+	}
+	function retainedOrigin(r) {
+		const origin = required(String(r.origin_operation_id));
+		if (r.purpose !== "run-candidate" || origin.purpose !== "work-input" || origin.state !== "ACKNOWLEDGED" || origin.origin_operation_id !== null || !manifest(origin) || !origin.acknowledgement_json || !equivalentSources(frozen(r), frozen(origin))) fail$22("CANDIDATE_PROMOTION_UNPROVEN");
+		return origin;
+	}
+	function allAcknowledged(r) {
+		if (r.origin_operation_id) {
+			if (get("SELECT 1 FROM candidate_integration_steps WHERE operation_id=?", r.operation_id)) fail$22("CANDIDATE_PROMOTION_UNPROVEN");
+			return allAcknowledged(retainedOrigin(r));
+		}
+		const count = frozen(r).sources.length, rows = all("SELECT * FROM candidate_integration_steps WHERE operation_id=? ORDER BY ordinal", r.operation_id);
+		if (rows.length !== count || rows.some((s, index) => s.ordinal !== index || s.state !== "ACKNOWLEDGED")) fail$22("CANDIDATE_STEPS_UNRESOLVED");
+		return rows;
+	}
+	function headUnchanged(r) {
+		if (r.purpose === "run-candidate" && !same$1(head(String(r.run_id)), expectedHead(r))) fail$22("CANDIDATE_HEAD_CHANGED");
+	}
+	function qualified(input) {
+		const admitted = basis.freeze(input), row = get("SELECT * FROM candidate_integrations WHERE run_id=? AND basis_sha256=? AND state='ACKNOWLEDGED' ORDER BY rowid DESC LIMIT 1", input.runId, admitted.sha256);
+		if (!row) fail$22("CANDIDATE_SNAPSHOT_UNAVAILABLE");
+		return view(row);
+	}
+	const handlers = {
+		beginCandidateIntegration(i) {
+			return transaction(db, () => {
+				const requestHash = digest(canonical({
+					principalId: i.principalId,
+					runId: i.runId,
+					purpose: i.purpose,
+					workId: i.workId ?? null,
+					...i.originOperationId ? { originOperationId: i.originOperationId } : {}
+				})), old = get("SELECT * FROM candidate_integrations WHERE operation_id=?", i.operationId);
+				if (old) {
+					owned(i.operationId, i.principalId);
+					if (old.request_hash !== requestHash) fail$22("IDEMPOTENCY_KEY_REUSED");
+					return {
+						...view(old),
+						created: false
+					};
+				}
+				const admitted = basis.freeze(i);
+				if (Buffer.byteLength(canonical(admitted)) > 192 * 1024 || admitted.sources.length > 30) fail$22("CANDIDATE_BASIS_TOO_LARGE");
+				if (get("SELECT 1 FROM candidate_integrations WHERE project_id=? AND state IN ('BUILDING','PREPARED','CAS_SENT','CONFLICT_PENDING')", admitted.projectId)) fail$22("CANDIDATE_RECONCILIATION_REQUIRED");
+				for (const table of [
+					"operations",
+					"repo_operations",
+					"repo_file_operations",
+					"workspace_allocations",
+					"source_archives",
+					"managed_repositories"
+				]) if (get("SELECT 1 FROM " + table + " WHERE operation_id=?", i.operationId)) fail$22("IDEMPOTENCY_KEY_REUSED");
+				if (i.originOperationId) {
+					const origin = owned(i.originOperationId, i.principalId);
+					if (origin.purpose !== "work-input" || origin.state !== "ACKNOWLEDGED" || origin.origin_operation_id !== null || !equivalentSources(admitted, frozen(origin))) fail$22("CANDIDATE_PROMOTION_UNPROVEN");
+					basis.assertCurrent(frozen(origin), i.principalId);
+					allAcknowledged(origin);
+				}
+				const oldHead = i.purpose === "run-candidate" ? head(i.runId) : null;
+				exec("INSERT INTO candidate_integrations(operation_id,project_id,run_id,principal_id,purpose,work_id,request_hash,basis_sha256,basis_json,expected_head_json,state,created_at,origin_operation_id) VALUES(?,?,?,?,?,?,?,?,?,?,'BUILDING',?,?)", i.operationId, admitted.projectId, i.runId, i.principalId, i.purpose, i.workId ?? null, requestHash, admitted.sha256, canonical(admitted), oldHead ? canonical(oldHead) : null, (/* @__PURE__ */ new Date()).toISOString(), i.originOperationId ?? null);
+				for (const [ordinal, source] of admitted.sources.entries()) exec("INSERT INTO candidate_integration_sources VALUES(?,?,?)", i.operationId, ordinal, source.archiveOperationId);
+				return {
+					...view(required(i.operationId)),
+					created: true
+				};
+			});
+		},
+		getCandidateIntegration(i) {
+			return view(owned(i.operationId, i.principalId));
+		},
+		getCandidateIntegrationBasis(i) {
+			return frozen(owned(i.operationId, i.principalId));
+		},
+		getCandidateIntegrationManifest(i) {
+			return manifest(owned(i.operationId, i.principalId));
+		},
+		getCandidateIntegrationStep(i) {
+			owned(i.operationId, i.principalId);
+			const s = originalStep(i.operationId, i.ordinal);
+			return s ? stepView(s) : null;
+		},
+		beginCandidateStep(i) {
+			return transaction(db, () => {
+				const r = bound(i), old = originalStep(i.operationId, i.ordinal);
+				if (r.origin_operation_id) fail$22("CANDIDATE_PROMOTION_HAS_ORIGINAL_STEPS");
+				if (old) return {
+					...stepView(old),
+					created: false
+				};
+				if (r.state !== "BUILDING") fail$22("CANDIDATE_INTEGRATION_CLOSED");
+				current(r, i.principalId);
+				const original = frozen(r), source = original.sources[i.ordinal];
+				if (!source) fail$22("CANDIDATE_STEP_ORDER_INVALID");
+				const earlier = all("SELECT * FROM candidate_integration_steps WHERE operation_id=? ORDER BY ordinal", i.operationId);
+				if (earlier.length !== i.ordinal || earlier.some((s, index) => s.ordinal !== index || s.state !== "ACKNOWLEDGED")) fail$22("CANDIDATE_STEP_ORDER_INVALID");
+				const ours = i.ordinal === 0 ? original.baseCommit : stepView(earlier.at(-1)).preparation.commit;
+				exec("INSERT INTO candidate_integration_steps(operation_id,ordinal,ours,theirs,state,created_at) VALUES(?,?,?,?,'COMPUTING',?)", i.operationId, i.ordinal, ours, source.commit, (/* @__PURE__ */ new Date()).toISOString());
+				return {
+					...stepView(originalStep(i.operationId, i.ordinal)),
+					created: true
+				};
+			});
+		},
+		prepareCandidateStep(i) {
+			return transaction(db, () => {
+				const { r, s, step } = stepBound(i), bases = [...new Set(i.bases)].sort();
+				if (bases.length !== i.bases.length) fail$22("CANDIDATE_MERGE_BASE_INVALID");
+				const source = frozen(r).sources[i.ordinal], identity = "DevMesh <devmesh@localhost> " + Math.floor(Date.parse(String(r.created_at)) / 1e3) + " +0000";
+				const body = i.clean ? `tree ${i.tree}\nparent ${step.ours}\nparent ${step.theirs}\nauthor ${identity}\ncommitter ${identity}\n\nDevMesh candidate integration\n\nDevMesh-Operation: ${i.operationId}\nDevMesh-Step: ${i.ordinal}\nDevMesh-Source: ${source.archiveOperationId}\n` : null;
+				const prepared = {
+					bases,
+					tree: i.tree,
+					clean: i.clean,
+					reportSha256: i.reportSha256,
+					commit: body ? createHash("sha1").update(Buffer.from("commit " + Buffer.byteLength(body) + "\0")).update(body).digest("hex") : null,
+					commitBody: body,
+					ref: i.clean ? "refs/devmesh/integration-steps/" + i.operationId + "/" + i.ordinal : null
+				};
+				if (step.preparation) {
+					if (!same$1(step.preparation, prepared)) fail$22("CANDIDATE_STEP_IMMUTABLE");
+					return step;
+				}
+				if (r.state !== "BUILDING" || s.state !== "COMPUTING") fail$22("CANDIDATE_INTEGRATION_CLOSED");
+				exec("UPDATE candidate_integration_steps SET state=?,preparation_json=? WHERE operation_id=? AND ordinal=?", i.clean ? "PREPARED" : "CONFLICT_PENDING", canonical(prepared), i.operationId, i.ordinal);
+				if (!i.clean) exec("UPDATE candidate_integrations SET state='CONFLICT_PENDING' WHERE operation_id=?", i.operationId);
+				return stepView(originalStep(i.operationId, i.ordinal));
+			});
+		},
+		markCandidateStepSent(i) {
+			return transaction(db, () => {
+				const { r, step } = stepBound(i);
+				if (["REF_SENT", "ACKNOWLEDGED"].includes(step.state)) return {
+					...step,
+					send: false
+				};
+				if (r.state !== "BUILDING" || step.state !== "PREPARED" || !step.preparation?.clean) fail$22("CANDIDATE_STEP_UNPREPARED");
+				current(r, i.principalId);
+				exec("UPDATE candidate_integration_steps SET state='REF_SENT' WHERE operation_id=? AND ordinal=?", i.operationId, i.ordinal);
+				return {
+					...stepView(originalStep(i.operationId, i.ordinal)),
+					send: true
+				};
+			});
+		},
+		acknowledgeCandidateStep(i) {
+			return transaction(db, () => {
+				const { r, step } = stepBound(i), p = step.preparation, a = i.proof;
+				if (!p?.clean || a.commit !== p.commit || a.tree !== p.tree || a.ref !== p.ref || !same$1(a.repositoryIdentity, frozen(r).repository.identity)) fail$22("CANDIDATE_STEP_ACK_UNPROVEN");
+				if (step.state === "ACKNOWLEDGED") {
+					if (!same$1(step.acknowledgement, a)) fail$22("CANDIDATE_STEP_IMMUTABLE");
+					return step;
+				}
+				if (r.state !== "BUILDING" || step.state !== "REF_SENT") fail$22("CANDIDATE_STEP_UNPREPARED");
+				exec("UPDATE candidate_integration_steps SET state='ACKNOWLEDGED',acknowledgement_json=?,acknowledged_at=? WHERE operation_id=? AND ordinal=?", canonical(a), (/* @__PURE__ */ new Date()).toISOString(), i.operationId, i.ordinal);
+				return stepView(originalStep(i.operationId, i.ordinal));
+			});
+		},
+		prepareCandidateIntegration(i) {
+			return transaction(db, () => {
+				const r = bound(i), old = manifest(r);
+				if (old) {
+					if (!same$1(old, i.manifest)) fail$22("CANDIDATE_MANIFEST_IMMUTABLE");
+					return view(r);
+				}
+				if (r.state !== "BUILDING") fail$22("CANDIDATE_INTEGRATION_CLOSED");
+				const steps = allAcknowledged(r), last = steps.length ? stepView(steps.at(-1)).preparation : null, commit = last?.commit ?? frozen(r).baseCommit, m = i.manifest, { sha256, ...facts } = m;
+				if (r.origin_operation_id && !same$1(manifest(retainedOrigin(r)), m)) fail$22("CANDIDATE_PROMOTION_MANIFEST_CHANGED");
+				if (m.commit !== commit || last && m.tree !== last.tree || sha256 !== digest(canonical(facts)) || m.byteSize !== m.files.reduce((n, file) => n + file.byteSize, 0) || new Set(m.files.map((file) => file.path.toLowerCase())).size !== m.files.length || Buffer.byteLength(canonical(m)) > 192 * 1024) fail$22("CANDIDATE_MANIFEST_UNPROVEN");
+				current(r, i.principalId);
+				headUnchanged(r);
+				exec("UPDATE candidate_integrations SET state='PREPARED',manifest_json=?,error_code=NULL WHERE operation_id=?", canonical(m), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		markCandidateIntegrationSent(i) {
+			return transaction(db, () => {
+				const r = bound(i);
+				if (["CAS_SENT", "ACKNOWLEDGED"].includes(String(r.state))) return {
+					...view(r),
+					send: false
+				};
+				if (r.state !== "PREPARED") fail$22("CANDIDATE_INTEGRATION_UNPREPARED");
+				current(r, i.principalId);
+				allAcknowledged(r);
+				headUnchanged(r);
+				exec("UPDATE candidate_integrations SET state='CAS_SENT',error_code=NULL WHERE operation_id=?", i.operationId);
+				return {
+					...view(required(i.operationId)),
+					send: true
+				};
+			});
+		},
+		acknowledgeCandidateIntegration(i) {
+			return transaction(db, () => {
+				const r = bound(i), m = manifest(r), a = i.acknowledgement;
+				if (!m || m.sha256 !== a.manifestSha256 || !same$1(a.repositoryIdentity, frozen(r).repository.identity) || !same$1(a.refs, updates(r).map(({ ref, commit }) => ({
+					ref,
+					commit
+				})))) fail$22("CANDIDATE_ACK_UNPROVEN");
+				if (r.state === "ACKNOWLEDGED") {
+					if (!same$1(a, JSON.parse(String(r.acknowledgement_json)))) fail$22("CANDIDATE_ACK_IMMUTABLE");
+					return view(r);
+				}
+				if (r.state !== "CAS_SENT") fail$22("CANDIDATE_INTEGRATION_UNPREPARED");
+				allAcknowledged(r);
+				headUnchanged(r);
+				exec("UPDATE candidate_integrations SET state='ACKNOWLEDGED',acknowledgement_json=?,acknowledged_at=?,error_code=NULL WHERE operation_id=?", canonical(a), (/* @__PURE__ */ new Date()).toISOString(), i.operationId);
+				if (r.purpose === "run-candidate") exec("INSERT INTO managed_candidate_heads VALUES(?,?,?,?) ON CONFLICT(run_id) DO UPDATE SET operation_id=excluded.operation_id,commit_sha=excluded.commit_sha", r.run_id, r.project_id, i.operationId, m.commit);
+				return view(required(i.operationId));
+			});
+		},
+		failUnsentCandidateIntegration(i) {
+			return transaction(db, () => {
+				const r = bound(i);
+				if (r.state === "FAILED") {
+					if (r.failure_json !== null || r.error_code !== i.errorCode) fail$22("CANDIDATE_FAILURE_IMMUTABLE");
+					return view(r);
+				}
+				if (!["BUILDING", "PREPARED"].includes(String(r.state)) || get("SELECT 1 FROM candidate_integration_steps WHERE operation_id=? AND state NOT IN ('ACKNOWLEDGED','PREPARED')", i.operationId)) fail$22("CANDIDATE_EFFECT_UNRESOLVED");
+				exec("UPDATE candidate_integration_steps SET state='ABANDONED' WHERE operation_id=? AND state='PREPARED'", i.operationId);
+				exec("UPDATE candidate_integrations SET state='FAILED',error_code=? WHERE operation_id=?", i.errorCode, i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		recordCandidateCasRejection(i) {
+			return transaction(db, () => {
+				const r = bound(i), failure = {
+					originalRefsAbsent: i.originalRefsAbsent,
+					gitChildExited: i.gitChildExited,
+					observedHead: i.observedHead
+				};
+				if (r.state === "FAILED") {
+					if (!r.failure_json || !same$1(JSON.parse(String(r.failure_json)), failure)) fail$22("CANDIDATE_FAILURE_IMMUTABLE");
+					return view(r);
+				}
+				if (r.state !== "CAS_SENT" || r.purpose === "run-candidate" && i.observedHead === manifest(r)?.commit || r.purpose === "work-input" && i.observedHead !== null) fail$22("CANDIDATE_EFFECT_UNRESOLVED");
+				exec("UPDATE candidate_integrations SET state='FAILED',failure_json=?,error_code='CANDIDATE_REF_CAS_REJECTED' WHERE operation_id=?", canonical(failure), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		markCandidateIntegrationUncertain(i) {
+			return transaction(db, () => {
+				const r = bound(i);
+				if (!closed(String(r.state))) exec("UPDATE candidate_integrations SET error_code=? WHERE operation_id=?", i.errorCode, i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		getQualifiedCandidateSnapshot(i) {
+			return transaction(db, () => {
+				return qualified(i);
+			});
+		}
+	};
+	return {
+		basis,
+		qualified,
+		execute(method, input) {
+			return handlers[method](parseContract(candidateIntegrationRequests[method], input));
+		}
+	};
+}
+//#endregion
+//#region src/scheduler-domain.ts
+function reject(code, message, status = 409) {
+	throw new StorageError(code, status, message);
+}
+const json$10 = (v) => JSON.parse(String(v));
+function createSchedulerDomain(db, plans, candidates) {
+	const planResults = createPlanResults(db);
+	const get = (sql, ...args) => db.prepare(sql).get(...args);
+	const all = (sql, ...args) => db.prepare(sql).all(...args);
+	const exec = (sql, ...args) => db.prepare(sql).run(...args);
+	const readyArtifact = (runId, ref) => !!get(`SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash
+    WHERE a.run_id=? AND a.artifact_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'`, runId, ref.artifactId, ref.sha256);
+	function workBasis(runId, planRevision, workId) {
+		const row = get(`SELECT w.work_epoch,w.blocked_reason,rev.definition_json FROM plan_works p JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id
+      JOIN work_revisions rev ON rev.run_id=p.run_id AND rev.work_id=p.work_id AND rev.revision=p.work_revision
+      WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=?`, runId, planRevision, workId);
+		if (!row) reject("WORK_BASIS_CHANGED", "Current plan no longer contains the work");
+		return row;
+	}
+	function dependencies(runId, planRevision, work) {
+		const results = /* @__PURE__ */ new Map();
+		for (const edge of work.dependencies) {
+			const result = planResults.resolve(runId, planRevision, edge.workId)?.row;
+			if (!(result && (result.state === "SUCCEEDED" && result.outcome === "success" || result.state === "FAILED" && result.outcome === "completed-with-findings" && edge.requiredOutcome === "completed-with-findings")) || !result) return null;
+			results.set(edge.workId, result);
+		}
+		return results;
+	}
+	function freeRoles(runId) {
+		return new Set(all("SELECT role FROM role_slots WHERE run_id=? UNION ALL SELECT role FROM preparation_slots WHERE run_id=?", runId, runId).map((r) => String(r.role)));
+	}
+	function hasAttempt(runId, work) {
+		return !!get("SELECT 1 FROM attempts WHERE run_id=? AND work_id=? AND (ended_at IS NULL OR work_revision=?)", runId, work.workId, work.workRevision);
+	}
+	function touch(projectId) {
+		const turn = Number(get("SELECT MAX(turn) AS turn FROM scheduler_project_turns")?.turn ?? 0) + 1;
+		exec("INSERT INTO scheduler_project_turns VALUES(?,?) ON CONFLICT(project_id) DO UPDATE SET turn=excluded.turn", projectId, turn);
+	}
+	function defer(input) {
+		const row = get("SELECT project_id FROM runs WHERE run_id=? AND resource_revision=? AND terminal_outcome IS NULL AND control_gate='OPEN'", input.runId, input.resourceRevision);
+		if (!row) return { deferred: false };
+		touch(String(row.project_id));
+		return { deferred: true };
+	}
+	function next(input) {
+		const candidates = [];
+		const runs = all(`SELECT r.*,p.owner_id,p.updated_at,pr.content_json
+      FROM runs r JOIN projects p ON p.project_id=r.project_id
+      JOIN project_members m ON m.project_id=p.project_id AND m.principal_id=p.owner_id AND m.role='owner'
+      JOIN plan_revisions pr ON pr.run_id=r.run_id AND pr.revision=r.current_plan_revision AND pr.requirement_revision=r.current_requirement_revision
+      JOIN plan_confirmations c ON c.run_id=r.run_id AND c.plan_revision=pr.revision AND c.requirement_revision=pr.requirement_revision
+      LEFT JOIN scheduler_project_turns q ON q.project_id=r.project_id
+      LEFT JOIN scheduler_run_budget b ON b.run_id=r.run_id
+      WHERE r.control_gate='OPEN' AND r.terminal_outcome IS NULL
+      AND (b.run_id IS NULL OR b.admitted_attempts<b.maximum_attempts AND b.reserved_ms<b.maximum_reserved_ms)
+      AND (SELECT COUNT(*) FROM role_slots WHERE run_id=r.run_id)+(SELECT COUNT(*) FROM preparation_slots WHERE run_id=r.run_id)<2
+      AND EXISTS(SELECT 1 FROM plan_works pw JOIN works w ON w.run_id=pw.run_id AND w.work_id=pw.work_id
+        WHERE pw.run_id=r.run_id AND pw.plan_revision=pr.revision AND w.blocked_reason IS NULL AND NOT EXISTS(
+          SELECT 1 FROM attempts a WHERE a.run_id=pw.run_id AND a.work_id=pw.work_id AND (a.ended_at IS NULL OR a.work_revision=pw.work_revision)))
+      ORDER BY COALESCE(q.turn,0),r.created_at,r.run_id LIMIT ?`, Math.min(input.limit * 4, 400));
+		for (const row of runs) {
+			const runId = String(row.run_id), planRevision = Number(row.current_plan_revision), occupied = freeRoles(runId);
+			if (plans.pendingQuestions(runId) || plans.pendingInterpretation(runId, Number(row.current_requirement_revision)) || plans.pendingSource(runId, Number(row.current_requirement_revision))) {
+				touch(String(row.project_id));
+				continue;
+			}
+			const plan = parseContract(planDraft, json$10(row.content_json)), graph = plans.inspect(row, plan);
+			if (graph.issues.length) {
+				touch(String(row.project_id));
+				continue;
+			}
+			const items = new Map(plan.works.map((w) => [w.workId, w]));
+			const before = candidates.length;
+			for (const { workId } of graph.topology) {
+				const work = items.get(workId);
+				if (occupied.has(work.role) || hasAttempt(runId, work) || !dependencies(runId, planRevision, work)) continue;
+				const w = workBasis(runId, planRevision, workId);
+				if (w.blocked_reason !== null) continue;
+				candidates.push({
+					projectId: String(row.project_id),
+					runId,
+					principalId: String(row.owner_id),
+					runEpoch: Number(row.run_epoch),
+					resourceRevision: Number(row.resource_revision),
+					planRevision,
+					workEpoch: Number(w.work_epoch),
+					work
+				});
+				break;
+			}
+			if (candidates.length === before) touch(String(row.project_id));
+			if (candidates.length >= input.limit) break;
+		}
+		return candidates;
+	}
+	function currentManifest(input, run) {
+		const plan = get("SELECT content_json FROM plan_revisions WHERE run_id=? AND revision=?", input.runId, input.planRevision);
+		if (!plan || run.current_plan_revision !== input.planRevision) reject("PLAN_SUPERSEDED", "Plan changed before scheduling");
+		if (!get("SELECT 1 FROM registry_control WHERE active_generation_id=?", input.work.endpoint.registryGenerationId)) reject("REGISTRY_BINDING_CHANGED", "Scheduler requires a committed endpoint generation");
+		const endpoint = get("SELECT config_json FROM endpoint_registrations WHERE endpoint_id=? AND revision=?", input.work.endpoint.endpointId, input.work.endpoint.revision);
+		const config = endpoint ? json$10(endpoint.config_json) : null;
+		if (config?.hosting !== "local" || !config.allowedCallers?.includes(input.callerId) || !config.supportedSkills?.includes("devmesh.work." + input.work.roleSnapshot.role)) reject("SCHEDULER_ENDPOINT_DENIED", "Endpoint is not enabled for this service and role");
+		const draft = parseContract(planDraft, json$10(plan.content_json)), graph = plans.inspect(run, draft);
+		if (graph.issues.length) throw new StorageError("PLAN_INVALID", 422, "Plan checks no longer pass", { issues: graph.issues.slice(0, 100) });
+		const work = draft.works.find((w) => w.workId === input.work.workId);
+		if (!work || work.workRevision !== input.work.workRevision || hasAttempt(input.runId, work)) reject("WORK_BASIS_CHANGED", "Original work already has an attempt or changed revision");
+		const repair = get("SELECT basis_json,plan_json FROM verified_repairs WHERE run_id=? AND published_plan_revision=? AND state='PUBLISHED'", input.runId, input.planRevision);
+		if (repair) {
+			if (planDraft.parse(json$10(repair.plan_json)).works.slice(-2).some((w) => w.workId === work.workId)) {
+				const basis = JSON.parse(String(repair.basis_json)), source = basis.carriedResults.find((f) => f.attemptId === basis.sourceAttemptId);
+				if (!source || source.checkConfigHash !== input.checkConfigHash || source.templateVersion !== input.templateVersion) reject("REPAIR_POLICY_CHANGED", "Repair admission must preserve the reviewed source policy and template");
+			}
+		}
+		const dep = dependencies(input.runId, input.planRevision, work), occupied = freeRoles(input.runId);
+		if (!dep) reject("DEPENDENCY_UNSATISFIED", "Current predecessor has no verified outcome");
+		if (occupied.size >= 2 || occupied.has(work.role)) reject("ROLE_CAPACITY_EXHAUSTED", "Run role slots are occupied");
+		const prompt = get(`SELECT a.content_hash FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.project_id=? AND
+      a.artifact_id=? AND a.state='READY' AND c.state='READY'`, run.project_id, input.work.roleSnapshot.promptArtifactId);
+		if (!prompt) reject("ROLE_PROMPT_UNAVAILABLE", "Role prompt must be a ready artifact in this project");
+		const refs = /* @__PURE__ */ new Map();
+		for (const ref of work.inputRefs) {
+			const source = ref.kind === "artifact" ? ref : json$10(dep.get(ref.workId).outputs_json).find((x) => x.slot === ref.outputSlot)?.ref;
+			if (!source || !readyArtifact(input.runId, source)) reject("WORK_INPUT_UNAVAILABLE", "A frozen Work input is unavailable");
+			refs.set(source.artifactId, {
+				artifactId: source.artifactId,
+				sha256: source.sha256
+			});
+		}
+		const bases = new Set([...dep.values()].map((r) => r.code_commit).filter((x) => x !== null));
+		let codeCommit;
+		if (get("SELECT 1 FROM managed_repositories WHERE project_id=? AND state='READY'", run.project_id)) {
+			const subject = {
+				principalId: input.meta.principalId,
+				runId: input.runId,
+				purpose: "work-input",
+				workId: work.workId
+			}, basis = candidates.basis.freeze(subject);
+			if (work.role === "tester" && basis.sources.length === 0) reject("VERIFICATION_BASIS_UNAVAILABLE", "Tester requires a verified development source");
+			const snapshot = basis.sources.length ? candidates.qualified(subject) : null;
+			if (snapshot && (!snapshot.manifest || snapshot.purpose !== "work-input" || snapshot.workId !== work.workId || snapshot.basisSha256 !== basis.sha256)) reject("CANDIDATE_SNAPSHOT_UNAVAILABLE", "Work requires its exact current dependency snapshot");
+			codeCommit = snapshot?.manifest?.commit ?? basis.baseCommit;
+		} else {
+			if (bases.size > 1) reject("CODE_BASIS_AMBIGUOUS", "Predecessor outputs require an integrated code snapshot");
+			codeCommit = [...bases][0] ?? String(get("SELECT base_commit FROM user_tasks WHERE task_id=?", run.task_id).base_commit);
+			if (work.role === "tester" && bases.size === 0) reject("VERIFICATION_BASIS_UNAVAILABLE", "Tester requires a verified code snapshot from its predecessor");
+		}
+		const req = get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", input.runId, draft.requirementRevision);
+		const requirements = parseContract(productOutput, json$10(req.content_json)).requirements;
+		const decision = get("SELECT decision_id FROM decisions WHERE run_id=? AND subject_kind='PLAN' AND subject_id=?", input.runId, String(input.planRevision));
+		if (!decision) reject("PLAN_NOT_CONFIRMED", "An explicit Plan decision is required");
+		return {
+			manifest: parseContract(inputManifest, {
+				schemaVersion: "devmesh.input-manifest.v1",
+				requirements: requirements.filter((r) => work.requirementIds.includes(r.id)).map((r) => ({
+					requirementId: r.id,
+					sha256: digest(canonical(r))
+				})),
+				interfaces: [],
+				artifacts: [...refs.values()],
+				codeCommit,
+				templateVersion: input.templateVersion,
+				checkConfigHash: input.checkConfigHash,
+				decisionIds: [decision.decision_id]
+			}),
+			work,
+			promptHash: String(prompt.content_hash)
+		};
+	}
+	function reserve(input, run, work, promptHash) {
+		const estimate = work.estimatedResources, limits = input.runnerLimits;
+		if (estimate.cpu > limits.cpu || estimate.memoryMiB > limits.memoryMiB || estimate.timeoutMs > limits.timeoutMs) reject("RUNNER_RESOURCE_UNAVAILABLE", "Work exceeds the configured Runner resource limits");
+		if (Number(get(`SELECT COUNT(*) AS n FROM scheduled_work s JOIN attempts a ON a.attempt_id=s.attempt_id
+      WHERE s.runner_id=? AND a.ended_at IS NULL`, input.runnerId)?.n ?? 0) >= input.runnerCapacity) reject("RUNNER_CAPACITY_EXHAUSTED", "Runner capacity is occupied");
+		exec("INSERT OR IGNORE INTO scheduler_run_budget(run_id,maximum_attempts,maximum_reserved_ms) VALUES(?,?,?)", input.runId, input.maximumAttempts, input.maximumReservedMs);
+		const budget = get("SELECT * FROM scheduler_run_budget WHERE run_id=?", input.runId);
+		if (budget.maximum_attempts !== input.maximumAttempts || budget.maximum_reserved_ms !== input.maximumReservedMs) reject("SCHEDULER_BUDGET_CHANGED", "Current Run has a frozen admission budget");
+		if (Number(budget.admitted_attempts) >= input.maximumAttempts || Number(budget.reserved_ms) + work.estimatedResources.timeoutMs > input.maximumReservedMs) reject("SCHEDULER_BUDGET_EXHAUSTED", "Run admission budget is exhausted");
+		const { promptArtifactId: _prompt, ...profile } = input.work.roleSnapshot;
+		const policyHash = digest(canonical({
+			profile,
+			promptHash,
+			endpoint: input.work.endpoint,
+			callerId: input.callerId,
+			templateVersion: input.templateVersion,
+			checkConfigHash: input.checkConfigHash,
+			runnerId: input.runnerId,
+			runnerLimits: input.runnerLimits
+		}));
+		exec("INSERT OR IGNORE INTO scheduler_run_roles VALUES(?,?,?)", input.runId, work.role, policyHash);
+		if (get("SELECT policy_hash FROM scheduler_run_roles WHERE run_id=? AND role=?", input.runId, work.role)?.policy_hash !== policyHash) reject("SCHEDULER_ROLE_POLICY_CHANGED", "Current Run role policy is frozen");
+		exec("UPDATE scheduler_run_budget SET admitted_attempts=admitted_attempts+1,reserved_ms=reserved_ms+? WHERE run_id=?", work.estimatedResources.timeoutMs, input.runId);
+		touch(String(run.project_id));
+	}
+	function verify(input) {
+		const a = get("SELECT a.* FROM attempts a JOIN scheduled_work s ON s.attempt_id=a.attempt_id WHERE a.attempt_id=? AND a.run_id=?", input.attemptId, input.runId);
+		if (!a || a.state !== "VERIFYING" || a.ended_at !== null) reject("ATTEMPT_STATE_CONFLICT", "Only a scheduled verifying attempt can receive a final verification");
+		if (!readyArtifact(input.runId, input.evidence)) reject("VERIFICATION_EVIDENCE_UNAVAILABLE", "Verification requires a ready evidence artifact");
+		const w = get("SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", input.runId, a.work_id, a.work_revision);
+		if (!get(`SELECT 1 FROM scheduled_work s JOIN runs r ON r.run_id=s.run_id JOIN works w ON w.run_id=r.run_id
+      AND w.work_id=? WHERE s.attempt_id=? AND r.current_plan_revision=s.plan_revision AND w.work_epoch=? AND w.blocked_reason IS NULL`, a.work_id, input.attemptId, a.admitted_work_epoch)) reject("WORK_BASIS_CHANGED", "Verification belongs to an obsolete work basis");
+		const work = parseContract(planDraft, {
+			requirementRevision: 1,
+			works: [json$10(w.definition_json)]
+		}).works[0];
+		const slots = new Set(work.outputSpec.map((s) => s.slot));
+		if (new Set(input.outputs.map((x) => x.slot)).size !== input.outputs.length || input.outputs.some((x) => !slots.has(x.slot) || !readyArtifact(input.runId, x.ref)) || input.outcome === "success" && input.outputs.length !== slots.size || input.outcome === "completed-with-findings" && work.role !== "tester") reject("VERIFICATION_OUTPUT_INVALID", "Verified outputs do not match their Work definition", 422);
+		if (work.role === "developer" && input.outcome === "success" && !input.codeCommit) reject("VERIFICATION_BASIS_UNAVAILABLE", "Verified development requires the resolved code commit");
+		exec("INSERT INTO verified_work_results VALUES(?,?,?,?,?,?)", input.attemptId, input.outcome, input.evidence.artifactId, canonical(input.outputs), input.codeCommit, (/* @__PURE__ */ new Date()).toISOString());
+		return {
+			a,
+			workId: parseContract(ids.work, a.work_id)
+		};
+	}
+	return {
+		next,
+		defer,
+		currentManifest,
+		reserve,
+		verify
+	};
+}
+//#endregion
+//#region src/dispatch-domain.ts
+const now$7 = () => (/* @__PURE__ */ new Date()).toISOString();
+const join$1 = ` FROM scheduled_work s JOIN attempts a ON a.attempt_id=s.attempt_id
+  JOIN runs r ON r.run_id=a.run_id JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id
+  JOIN plan_revisions p ON p.run_id=s.run_id AND p.revision=s.plan_revision
+  JOIN attempt_dispatch_bindings b ON b.attempt_id=a.attempt_id
+  JOIN execution_grants g ON g.attempt_id=a.attempt_id
+  JOIN endpoint_registrations e ON e.endpoint_id=b.endpoint_id AND e.revision=b.endpoint_revision
+  JOIN outbox o ON o.operation_id=a.dispatch_operation_id AND o.destination=b.endpoint_id
+  LEFT JOIN scheduled_dispatch_delivery d ON d.attempt_id=a.attempt_id`;
+const fields = `SELECT s.*,a.role,a.work_id,a.work_revision,a.state AS attempt_state,a.admitted_run_epoch,a.admitted_work_epoch,a.ended_at,
+  a.role_snapshot_json,a.dispatch_operation_id,r.control_gate,r.run_epoch,r.terminal_outcome,r.current_plan_revision,
+  r.current_requirement_revision,w.work_epoch,p.requirement_revision,b.endpoint_id,b.endpoint_revision,b.input_manifest_id,b.role_snapshot_id,
+  g.grant_id,g.activation_id,g.expires_at,g.status AS grant_status,e.config_json,o.outbox_id,d.state AS delivery_state,d.sent_at,d.checked_at`;
+function createDispatchDomain(db, changed) {
+	const get = (sql, ...params) => db.prepare(sql).get(...params);
+	const all = (sql, ...params) => db.prepare(sql).all(...params);
+	const exec = (sql, ...params) => db.prepare(sql).run(...params);
+	function row(input) {
+		const r = get(fields + join$1 + " WHERE s.attempt_id=? AND s.caller_id=?", input.attemptId, input.callerId);
+		if (!r) throw new StorageError("RESOURCE_NOT_FOUND", 404, "Scheduled dispatch is not visible");
+		return r;
+	}
+	function sendable(r) {
+		return r.attempt_state === "RESERVED" && r.ended_at === null && r.terminal_outcome === null && r.control_gate === "OPEN" && r.admitted_run_epoch === r.run_epoch && r.admitted_work_epoch === r.work_epoch && r.plan_revision === r.current_plan_revision && r.requirement_revision === r.current_requirement_revision && r.grant_status === "ACTIVE" && String(r.expires_at) > now$7();
+	}
+	function list(input) {
+		return all(fields + join$1 + ` WHERE d.state IS NULL OR d.state IN ('SENT','RECONCILE')
+      ORDER BY d.state IS NOT NULL,COALESCE(d.checked_at,a.created_at),a.attempt_id LIMIT ?`, input.limit).map((r) => {
+			const role = JSON.parse(String(r.role_snapshot_json));
+			return {
+				attemptId: String(r.attempt_id),
+				callerId: String(r.caller_id),
+				state: r.delivery_state ?? "PENDING",
+				endpoint: parseContract(endpointConfig, JSON.parse(String(r.config_json))),
+				delegation: parseContract(workDelegation, {
+					schemaVersion: "devmesh.work.v1",
+					operationId: r.dispatch_operation_id,
+					runId: r.run_id,
+					workId: r.work_id,
+					workRevision: r.work_revision,
+					attemptId: r.attempt_id,
+					endpointId: r.endpoint_id,
+					endpointRevision: r.endpoint_revision,
+					grantId: r.grant_id,
+					activationId: r.activation_id,
+					runEpoch: r.admitted_run_epoch,
+					workEpoch: r.admitted_work_epoch,
+					requirementRevision: r.requirement_revision,
+					planRevision: r.plan_revision,
+					inputManifestId: r.input_manifest_id,
+					roleSnapshotId: r.role_snapshot_id,
+					originRole: "architect",
+					targetRole: r.role,
+					requestedOutputSchema: role.outputSchemaId
+				})
+			};
+		});
+	}
+	function notSent(r) {
+		const time = now$7();
+		exec("INSERT INTO scheduled_dispatch_delivery(attempt_id,operation_id,outbox_id,state,endpoint_id,checked_at) VALUES(?,?,?,?,?,?)", r.attempt_id, r.dispatch_operation_id, r.outbox_id, "NOT_SENT", r.endpoint_id, time);
+		exec("UPDATE outbox SET status='FAILED' WHERE outbox_id=?", r.outbox_id);
+		exec("UPDATE operations SET status='FAILED',result_json=?,updated_at=? WHERE operation_id=?", canonical({ errorCode: "DISPATCH_NOT_SENT" }), time, r.dispatch_operation_id);
+		if (r.attempt_state === "RESERVED") {
+			exec("UPDATE attempts SET state='FAILED',ended_at=? WHERE attempt_id=?", time, r.attempt_id);
+			exec("DELETE FROM role_slots WHERE attempt_id=?", r.attempt_id);
+			exec("UPDATE execution_grants SET status='REVOKED' WHERE attempt_id=?", r.attempt_id);
+			changed(String(r.run_id), String(r.dispatch_operation_id), String(r.work_id), String(r.attempt_id), "FAILED");
+		}
+		return {
+			state: "NOT_SENT",
+			taskId: null
+		};
+	}
+	function mark(input) {
+		const r = row(input);
+		if (r.delivery_state) return {
+			send: false,
+			state: String(r.delivery_state)
+		};
+		if (!sendable(r)) return {
+			send: false,
+			state: notSent(r).state
+		};
+		const time = now$7();
+		exec("INSERT INTO scheduled_dispatch_delivery(attempt_id,operation_id,outbox_id,state,endpoint_id,sent_at,checked_at) VALUES(?,?,?,?,?,?,?)", r.attempt_id, r.dispatch_operation_id, r.outbox_id, "SENT", r.endpoint_id, time, time);
+		exec("UPDATE outbox SET status='RECONCILE',delivery_attempts=delivery_attempts+1 WHERE outbox_id=?", r.outbox_id);
+		return {
+			send: true,
+			state: "SENT"
+		};
+	}
+	function reconcile(input) {
+		const r = row(input), time = now$7();
+		if (r.delivery_state === null) return sendable(r) ? {
+			state: "PENDING",
+			taskId: null
+		} : notSent(r);
+		if (r.delivery_state === "NOT_SENT") return {
+			state: "NOT_SENT",
+			taskId: null
+		};
+		const task = get(`SELECT i.task_id FROM delegation_inbox i JOIN a2a_tasks t ON t.endpoint_id=i.endpoint_id AND t.task_id=i.task_id
+      WHERE i.caller_id=? AND i.operation_id=? AND i.endpoint_id=? AND t.attempt_id=?`, r.caller_id, r.dispatch_operation_id, r.endpoint_id, r.attempt_id);
+		if (task) {
+			exec("UPDATE scheduled_dispatch_delivery SET state='ACKED',task_id=?,checked_at=? WHERE attempt_id=?", task.task_id, time, r.attempt_id);
+			exec("UPDATE outbox SET status='ACKED' WHERE outbox_id=?", r.outbox_id);
+			exec("UPDATE operations SET status='SUCCEEDED',result_json=?,updated_at=? WHERE operation_id=?", canonical({ taskId: task.task_id }), time, r.dispatch_operation_id);
+			return {
+				state: "ACKED",
+				taskId: String(task.task_id)
+			};
+		}
+		exec("UPDATE scheduled_dispatch_delivery SET state='RECONCILE',checked_at=? WHERE attempt_id=?", time, r.attempt_id);
+		exec("UPDATE operations SET status='OUTCOME_UNKNOWN',updated_at=? WHERE operation_id=?", time, r.dispatch_operation_id);
+		if (r.attempt_state === "RESERVED") {
+			exec("UPDATE attempts SET state='OUTCOME_UNKNOWN' WHERE attempt_id=?", r.attempt_id);
+			changed(String(r.run_id), String(r.dispatch_operation_id), String(r.work_id), String(r.attempt_id), "OUTCOME_UNKNOWN");
+		}
+		return {
+			state: "RECONCILE",
+			taskId: null
+		};
+	}
+	return {
+		list,
+		mark,
+		reconcile
+	};
+}
+//#endregion
+//#region src/tool-domain.ts
+function fail$21(code, status = 409) {
+	throw new StorageError(code, status, "Issue command could not be applied");
+}
+function createToolDomain(db, changed) {
+	const authority = createToolAuthorityDomain(db);
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	const all = (sql, ...p) => db.prepare(sql).all(...p);
+	const exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const ready = (runId, ref) => {
+		if (!get(`SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash
+      WHERE a.run_id=? AND a.artifact_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'`, runId, ref.artifactId, ref.sha256)) fail$21("ISSUE_EVIDENCE_UNAVAILABLE", 422);
+	};
+	const result = (r) => ({
+		operationId: String(r.operation_id),
+		toolName: String(r.tool_name),
+		issueId: String(r.issue_id),
+		issueRevision: Number(r.issue_revision),
+		state: "SUCCEEDED"
+	});
+	function original(input) {
+		authority.check(input.permit, "issues.by-operation", "read");
+		if (input.permit.ownerKind !== "workflowAttempt") fail$21("MCP_AUTHORITY_DENIED", 403);
+		return get("SELECT * FROM issue_operations WHERE operation_id=? AND run_id=? AND attempt_id=? AND activation_id=? AND grant_id=?", input.operationId, input.permit.runId, input.permit.attemptId, input.permit.activationId, input.permit.grantId);
+	}
+	function mutation(input, toolName, kind, act) {
+		return transaction(db, () => {
+			const prior = original(input), requestHash = digest(canonical({
+				toolName,
+				args: input.args
+			}));
+			if (prior) {
+				if (prior.request_hash !== requestHash || prior.tool_name !== toolName) fail$21("IDEMPOTENCY_KEY_REUSED");
+				return result(prior);
+			}
+			if (get("SELECT 1 FROM issue_operations WHERE operation_id=?", input.operationId)) fail$21("MCP_AUTHORITY_DENIED", 403);
+			const host = authority.check(input.permit, toolName, "write"), r = act(host), time = (/* @__PURE__ */ new Date()).toISOString(), p = input.permit;
+			if (p.ownerKind !== "workflowAttempt") fail$21("MCP_AUTHORITY_DENIED", 403);
+			exec("INSERT INTO issue_operations VALUES(?,?,?,?,?,?,?,?,?,?)", input.operationId, p.runId, p.attemptId, p.activationId, p.grantId, toolName, requestHash, r.issue_id, r.revision, time);
+			const args = input.args;
+			exec("INSERT INTO issue_revisions VALUES(?,?,?,?,?,?,?,?,?)", r.issue_id, r.revision, input.operationId, kind, canonical(args), "evidence" in args ? args.evidence.artifactId : null, "fixAttemptId" in args ? args.fixAttemptId : null, "verificationAttemptId" in args ? args.verificationAttemptId : null, time);
+			changed(p.runId, get("SELECT 1 FROM operations WHERE operation_id=?", input.operationId) ? input.operationId : String(host.host.dispatch_operation_id), p.attemptId, {
+				issueId: r.issue_id,
+				issueRevision: r.revision,
+				toolOperationId: input.operationId,
+				toolName
+			});
+			return result(get("SELECT * FROM issue_operations WHERE operation_id=?", input.operationId));
+		});
+	}
+	const current = (runId, id, revision) => {
+		const r = get("SELECT * FROM issues WHERE issue_id=? AND run_id=?", id, runId);
+		if (!r) fail$21("ISSUE_NOT_FOUND", 404);
+		if (r.revision !== revision) fail$21("ISSUE_REVISION_CHANGED");
+		return r;
+	};
+	const handlers = {
+		authorizeMcpAction(input) {
+			return transaction(db, () => {
+				const { host: _host, ...publicValue } = authority.check(input.permit, input.toolName, input.action);
+				return publicValue;
+			});
+		},
+		refreshMcpPermit(input) {
+			return transaction(db, () => authority.refresh(input.permit, input.toolName, input.action));
+		},
+		createIssue(input) {
+			return mutation(input, "issues.create", "CREATED", (h) => {
+				ready(h.runId, input.args.evidence);
+				const id = "issue_" + randomUUID().replaceAll("-", ""), time = (/* @__PURE__ */ new Date()).toISOString();
+				exec("INSERT INTO issues VALUES(?,?,?,?,1,'OPEN',?,?,?,?,NULL,?,?)", id, h.projectId, h.runId, h.host.attempt_id, input.args.title, input.args.description, input.args.severity, input.args.evidence.artifactId, time, time);
+				return get("SELECT * FROM issues WHERE issue_id=?", id);
+			});
+		},
+		linkIssueFix(input) {
+			return mutation(input, "issues.linkFix", "FIX_LINKED", (h) => {
+				const a = input.args, r = current(h.runId, a.issueId, a.issueRevision);
+				if (get("SELECT 1 FROM verified_findings WHERE issue_id=?", a.issueId)) fail$21("ISSUE_TRUSTED_COMMAND_REQUIRED");
+				if (r.state === "VERIFIED") fail$21("ISSUE_ALREADY_VERIFIED");
+				if (!get(`SELECT 1 FROM works w JOIN runs r ON r.run_id=w.run_id JOIN plan_works p ON p.run_id=w.run_id AND p.work_id=w.work_id AND p.plan_revision=r.current_plan_revision
+        JOIN plan_confirmations c ON c.run_id=r.run_id AND c.plan_revision=p.plan_revision AND c.requirement_revision=r.current_requirement_revision
+        JOIN work_revisions v ON v.run_id=p.run_id AND v.work_id=p.work_id AND v.revision=p.work_revision WHERE w.run_id=? AND w.work_id=? AND v.role='developer'`, h.runId, a.fixWorkId)) fail$21("ISSUE_FIX_WORK_INVALID", 422);
+				exec("UPDATE issues SET revision=revision+1,state='FIX_LINKED',fix_work_id=?,updated_at=? WHERE issue_id=?", a.fixWorkId, (/* @__PURE__ */ new Date()).toISOString(), a.issueId);
+				return get("SELECT * FROM issues WHERE issue_id=?", a.issueId);
+			});
+		},
+		recordIssueVerification(input) {
+			return mutation(input, "issues.recordVerification", "VERIFICATION_RECORDED", (h) => {
+				const a = input.args, r = current(h.runId, a.issueId, a.issueRevision);
+				ready(h.runId, a.evidence);
+				if (get("SELECT 1 FROM verified_findings WHERE issue_id=?", a.issueId)) fail$21("ISSUE_TRUSTED_COMMAND_REQUIRED");
+				if (!get("SELECT * FROM attempts WHERE attempt_id=? AND run_id=? AND work_id=?", a.fixAttemptId, h.runId, r.fix_work_id ?? null)) fail$21("ISSUE_FIX_ATTEMPT_INVALID", 422);
+				if (a.outcome !== "NOT_VERIFIED") {
+					const dev = get("SELECT * FROM verified_work_results WHERE attempt_id=? AND outcome='success'", a.fixAttemptId);
+					const verification = get(`SELECT v.*,t.role,t.input_manifest_json,t.ended_at,t.state FROM verified_work_results v
+          JOIN attempts t ON t.attempt_id=v.attempt_id WHERE t.attempt_id=? AND t.run_id=?`, a.verificationAttemptId, h.runId);
+					const expected = a.outcome === "PASSED" ? "success" : "completed-with-findings";
+					if (!dev?.code_commit || !verification || verification.role !== "tester" || verification.ended_at === null || verification.outcome !== expected || verification.state !== (a.outcome === "PASSED" ? "SUCCEEDED" : "FAILED") || verification.evidence_artifact_id !== a.evidence.artifactId || JSON.parse(String(verification.input_manifest_json)).codeCommit !== dev.code_commit) fail$21("ISSUE_VERIFICATION_UNPROVEN", 422);
+				}
+				exec("UPDATE issues SET revision=revision+1,state=?,updated_at=? WHERE issue_id=?", a.outcome === "PASSED" ? "VERIFIED" : "FIX_LINKED", (/* @__PURE__ */ new Date()).toISOString(), a.issueId);
+				return get("SELECT * FROM issues WHERE issue_id=?", a.issueId);
+			});
+		},
+		getIssue(input) {
+			return transaction(db, () => {
+				const h = authority.check(input.permit, "issues.get", "read"), r = get("SELECT * FROM issues WHERE issue_id=? AND run_id=?", input.issueId, h.runId);
+				if (!r) fail$21("ISSUE_NOT_FOUND", 404);
+				const revisions = all("SELECT * FROM issue_revisions WHERE issue_id=? AND revision>? ORDER BY revision LIMIT ?", input.issueId, input.afterRevision, input.limit + 1), page = revisions.slice(0, input.limit);
+				return {
+					issueId: String(r.issue_id),
+					projectId: String(r.project_id),
+					runId: String(r.run_id),
+					sourceAttemptId: String(r.source_attempt_id),
+					revision: Number(r.revision),
+					state: String(r.state),
+					title: String(r.title),
+					description: String(r.description),
+					severity: String(r.severity),
+					fixWorkId: r.fix_work_id,
+					history: page.map((x) => ({
+						revision: Number(x.revision),
+						kind: String(x.kind),
+						operationId: String(x.operation_id),
+						value: JSON.parse(String(x.value_json)),
+						createdAt: String(x.created_at)
+					})),
+					nextRevision: revisions.length > input.limit ? Number(page.at(-1).revision) : null
+				};
+			});
+		},
+		getIssueOperation(input) {
+			return transaction(db, () => {
+				const r = original(input);
+				if (!r) fail$21("ISSUE_OPERATION_NOT_FOUND", 404);
+				return result(r);
+			});
+		}
+	};
+	return { execute(method, input) {
+		const p = parseContract(toolRequests[method], input);
+		return handlers[method](p);
+	} };
+}
+//#endregion
+//#region src/pipeline-domain.ts
+const uid$3 = (kind) => kind + "_" + randomUUID().replaceAll("-", "");
+const now$6 = () => (/* @__PURE__ */ new Date()).toISOString();
+function fail$20(code, status = 409) {
+	throw new StorageError(code, status, "Pipeline action could not be applied");
+}
+function createPipelineDomain(db, changed, assertQualityPrepared) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	const all = (sql, ...p) => db.prepare(sql).all(...p);
+	const exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const authority = createToolAuthorityDomain(db);
+	const pipeline = (id) => get("SELECT * FROM pipelines WHERE pipeline_id=?", id) ?? fail$20("PIPELINE_NOT_FOUND", 404);
+	const stage = (id, n) => get("SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal=?", id, n) ?? fail$20("PIPELINE_STAGE_NOT_FOUND", 404);
+	function view(p) {
+		return {
+			pipelineId: String(p.pipeline_id),
+			operationId: String(p.operation_id),
+			runId: String(p.run_id),
+			attemptId: String(p.attempt_id),
+			definitionId: String(p.definition_id),
+			definitionVersion: String(p.definition_version),
+			definitionHash: String(p.definition_hash),
+			workspaceRef: String(p.workspace_ref),
+			state: String(p.state),
+			stopRequested: p.stop_requested === 1,
+			stages: all("SELECT * FROM pipeline_stages WHERE pipeline_id=? ORDER BY ordinal", p.pipeline_id).map((s) => {
+				const job = s.job_json ? JSON.parse(String(s.job_json)) : null;
+				return {
+					ordinal: Number(s.ordinal),
+					stageId: String(s.stage_id),
+					operationId: String(s.operation_id),
+					state: String(s.state),
+					jobId: s.job_id,
+					exitCode: job?.exitCode ?? null,
+					errorCode: s.error_code,
+					logCursor: job?.logCursor ?? 0,
+					outputRefs: job?.outputRefs ?? []
+				};
+			})
+		};
+	}
+	function owned(p, permit, toolName, action) {
+		authority.check(permit, toolName, action);
+		if (permit.ownerKind !== "workflowAttempt" || p.run_id !== permit.runId || p.attempt_id !== permit.attemptId || p.activation_id !== permit.activationId || p.grant_id !== permit.grantId) fail$20("PIPELINE_NOT_FOUND", 404);
+		return p;
+	}
+	function notify(p) {
+		changed(String(p.run_id), String(p.operation_id), String(p.attempt_id), {
+			pipelineId: p.pipeline_id,
+			toolOperationId: p.operation_id,
+			state: p.state
+		});
+	}
+	function refresh(p) {
+		const stages = all("SELECT * FROM pipeline_stages WHERE pipeline_id=? ORDER BY ordinal", p.pipeline_id);
+		const failure = stages.some((s) => s.state === "EXITED" && (() => {
+			const j = JSON.parse(String(s.job_json));
+			return j.exitCode !== 0 || j.errorCode !== null || j.stopRequested;
+		})());
+		if (failure || p.stop_requested === 1) exec("UPDATE pipeline_stages SET state='SKIPPED',checked_at=? WHERE pipeline_id=? AND state='PENDING'", now$6(), p.pipeline_id);
+		const pending = stages.some((s) => [
+			"SENT",
+			"ACKED",
+			"UNKNOWN"
+		].includes(String(s.state)));
+		const state = stages.some((s) => s.state === "UNKNOWN") ? "OUTCOME_UNKNOWN" : p.stop_requested === 1 ? pending ? "STOPPING" : "CANCELLED" : failure ? "FAILED" : stages.every((s) => s.state === "EXITED") ? "SUCCEEDED" : stages.some((s) => s.state !== "PENDING") ? "RUNNING" : "QUEUED";
+		if (state !== p.state) {
+			exec("UPDATE pipelines SET state=?,updated_at=? WHERE pipeline_id=?", state, now$6(), p.pipeline_id);
+			notify(pipeline(String(p.pipeline_id)));
+		}
+		return pipeline(String(p.pipeline_id));
+	}
+	function livePermit(p) {
+		const original = parseContract(executionPermit, JSON.parse(String(p.permit_json))), grant = get("SELECT permit_json FROM execution_grants WHERE grant_id=?", p.grant_id);
+		if (!grant) fail$20("MCP_AUTHORITY_DENIED", 403);
+		const current = parseContract(executionPermit, JSON.parse(String(grant.permit_json)));
+		if (original.ownerKind !== "workflowAttempt" || current.ownerKind !== "workflowAttempt" || original.runEpoch !== current.runEpoch || original.workEpoch !== current.workEpoch) fail$20("MCP_AUTHORITY_DENIED", 403);
+		const permit = parseContract(executionPermit, {
+			...current,
+			notBefore: new Date(Math.max(Date.parse(current.notBefore), Date.parse(current.expiresAt) - 15e3)).toISOString(),
+			resources: original.resources
+		});
+		owned(p, permit, "pipeline.start", "write");
+		return permit;
+	}
+	const handlers = {
+		createPipeline(input) {
+			return transaction(db, () => {
+				const prior = get("SELECT * FROM pipelines WHERE operation_id=?", input.operationId), requestHash = digest(canonical({
+					definition: input.definition,
+					workspaceRef: input.workspaceRef
+				}));
+				if (prior) {
+					owned(prior, input.permit, "pipeline.by-operation", "read");
+					if (prior.request_hash !== requestHash) fail$20("IDEMPOTENCY_KEY_REUSED");
+					return view(prior);
+				}
+				const h = authority.check(input.permit, "pipeline.start", "write"), p = input.permit;
+				if (p.ownerKind !== "workflowAttempt" || !p.resources.some((r) => r.kind === "workspace" && r.resourceId === input.workspaceRef && r.access === "write")) fail$20("MCP_AUTHORITY_DENIED", 403);
+				const id = uid$3("pipeline"), time = now$6(), definition = input.definition;
+				exec("INSERT INTO pipelines VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,'QUEUED',0,?,?)", id, input.operationId, h.runId, p.attemptId, p.activationId, p.grantId, canonical(p), definition.definitionId, definition.version, digest(canonical(definition)), canonical(definition), input.workspaceRef, requestHash, time, time);
+				for (const [n, s] of definition.stages.entries()) exec("INSERT INTO pipeline_stages VALUES(?,?,?,?,'PENDING',NULL,NULL,NULL,NULL,?)", id, n, s.stageId, uid$3("op"), time);
+				const created = pipeline(id);
+				notify(created);
+				return view(created);
+			});
+		},
+		getPipeline(input) {
+			return transaction(db, () => view(owned(pipeline(input.pipelineId), input.permit, "pipeline.get", "read")));
+		},
+		getPipelineOperation(input) {
+			return transaction(db, () => {
+				const p = get("SELECT * FROM pipelines WHERE operation_id=?", input.operationId);
+				if (!p) fail$20("PIPELINE_OPERATION_NOT_FOUND", 404);
+				return view(owned(p, input.permit, "pipeline.by-operation", "read"));
+			});
+		},
+		stopPipeline(input) {
+			return transaction(db, () => {
+				const p = owned(pipeline(input.pipelineId), input.permit, "pipeline.stop", "stop");
+				if ([
+					"SUCCEEDED",
+					"FAILED",
+					"CANCELLED"
+				].includes(String(p.state))) return view(p);
+				exec("UPDATE pipelines SET stop_requested=1,updated_at=? WHERE pipeline_id=?", now$6(), input.pipelineId);
+				return view(refresh(pipeline(input.pipelineId)));
+			});
+		},
+		listPipelineStages(input) {
+			return all(`SELECT s.*,p.stop_requested FROM pipeline_stages s JOIN pipelines p ON p.pipeline_id=s.pipeline_id
+        WHERE s.state IN ('PENDING','SENT','ACKED','UNKNOWN') AND p.state NOT IN ('SUCCEEDED','FAILED','CANCELLED')
+        AND NOT EXISTS(SELECT 1 FROM pipeline_stages prior WHERE prior.pipeline_id=s.pipeline_id AND prior.ordinal<s.ordinal AND prior.state<>'EXITED')
+        ORDER BY s.checked_at,s.pipeline_id,s.ordinal LIMIT ?`, input.limit).map((s) => ({
+				pipelineId: String(s.pipeline_id),
+				ordinal: Number(s.ordinal),
+				operationId: String(s.operation_id),
+				state: String(s.state),
+				jobId: s.job_id,
+				stopRequested: s.stop_requested === 1,
+				request: s.request_json ? JSON.parse(String(s.request_json)) : null
+			}));
+		},
+		markPipelineStageSent(input) {
+			return transaction(db, () => {
+				const p = pipeline(input.pipelineId), s = stage(input.pipelineId, input.ordinal);
+				if (s.state !== "PENDING") return {
+					send: false,
+					request: s.request_json ? JSON.parse(String(s.request_json)) : null
+				};
+				if (p.stop_requested === 1 || [
+					"SUCCEEDED",
+					"FAILED",
+					"CANCELLED",
+					"OUTCOME_UNKNOWN"
+				].includes(String(p.state))) fail$20("PIPELINE_ADMISSION_CLOSED");
+				assertQualityPrepared(String(p.attempt_id), String(p.workspace_ref));
+				if (all("SELECT * FROM pipeline_stages WHERE pipeline_id=? AND ordinal<?", input.pipelineId, input.ordinal).some((v) => v.state !== "EXITED" || (() => {
+					const j = JSON.parse(String(v.job_json));
+					return j.exitCode !== 0 || j.errorCode !== null || j.stopRequested;
+				})())) fail$20("PIPELINE_DEPENDENCY_UNSATISFIED");
+				const spec = parseContract(pipelineDefinition, JSON.parse(String(p.definition_json))).stages[input.ordinal];
+				if (!spec) fail$20("PIPELINE_STAGE_NOT_FOUND", 404);
+				const request = {
+					schemaVersion: "devmesh.runner-job.v1",
+					operationId: s.operation_id,
+					permit: livePermit(p),
+					imageDigest: spec.imageDigest,
+					workspaceRef: p.workspace_ref,
+					commandSpec: { kind: spec.kind },
+					resourceLimits: spec.resourceLimits,
+					networkPolicyRef: spec.networkPolicyRef,
+					outputSpec: spec.outputSpec
+				};
+				exec("UPDATE pipeline_stages SET state='SENT',request_json=?,checked_at=? WHERE pipeline_id=? AND ordinal=?", canonical(request), now$6(), input.pipelineId, input.ordinal);
+				refresh(p);
+				return {
+					send: true,
+					request
+				};
+			});
+		},
+		getPipelineStagePermit(input) {
+			return transaction(db, () => {
+				const p = pipeline(input.pipelineId), s = stage(input.pipelineId, input.ordinal);
+				if (p.stop_requested === 1 || ![
+					"SENT",
+					"ACKED",
+					"UNKNOWN"
+				].includes(String(s.state))) fail$20("PIPELINE_ADMISSION_CLOSED");
+				return livePermit(p);
+			});
+		},
+		recordPipelineStage(input) {
+			return transaction(db, () => {
+				const p = pipeline(input.pipelineId), s = stage(input.pipelineId, input.ordinal), j = input.job;
+				if (!s.request_json || s.operation_id !== j.operationId || digest(String(s.request_json)) !== j.requestHash || canonical(j.request) !== s.request_json || s.job_id !== null && s.job_id !== j.jobId) fail$20("PIPELINE_JOB_BASIS_CHANGED");
+				if (s.state === "EXITED") {
+					const saved = JSON.parse(String(s.job_json)), comparison = { ...j };
+					for (const field of ["executionProfile", "endedAt"]) if (!Object.hasOwn(saved, field)) delete comparison[field];
+					if (s.job_json !== canonical(comparison)) fail$20("PIPELINE_STAGE_RESULT_IMMUTABLE");
+					return view(p);
+				}
+				const neverDispatched = j.stopRequested && j.containerId === null && j.startedAt === null && j.stopEvidence?.neverDispatched === true && typeof j.stopEvidence.verifiedAt === "string" && Number.isFinite(Date.parse(j.stopEvidence.verifiedAt)) && j.logCursor === 0 && j.outputRefs.length === 0;
+				if (j.state === "EXITED" && j.exitCode === null && !neverDispatched) fail$20("PIPELINE_EXIT_UNPROVEN");
+				const state = j.state === "EXITED" ? "EXITED" : j.state === "OUTCOME_UNKNOWN" ? "UNKNOWN" : "ACKED";
+				exec("UPDATE pipeline_stages SET state=?,job_id=?,job_json=?,error_code=?,checked_at=? WHERE pipeline_id=? AND ordinal=?", state, j.jobId, canonical(j), j.errorCode, now$6(), input.pipelineId, input.ordinal);
+				const updated = refresh(p);
+				if (updated.state === p.state && s.job_json !== canonical(j)) notify(updated);
+				return view(updated);
+			});
+		},
+		markPipelineStageUnknown(input) {
+			return transaction(db, () => {
+				const p = pipeline(input.pipelineId), s = stage(input.pipelineId, input.ordinal);
+				if ([
+					"SENT",
+					"ACKED",
+					"UNKNOWN"
+				].includes(String(s.state))) exec("UPDATE pipeline_stages SET state='UNKNOWN',error_code=?,checked_at=? WHERE pipeline_id=? AND ordinal=?", input.errorCode, now$6(), input.pipelineId, input.ordinal);
+				else if (s.state === "PENDING") exec("UPDATE pipeline_stages SET error_code=?,checked_at=? WHERE pipeline_id=? AND ordinal=?", input.errorCode, now$6(), input.pipelineId, input.ordinal);
+				return view(refresh(p));
+			});
+		}
+	};
+	return { execute(method, input) {
+		const p = parseContract(pipelineRequests[method], input);
+		return handlers[method](p);
+	} };
+}
+//#endregion
+//#region src/repo-file-domain.ts
+function fail$19(code, status = 409) {
+	throw new StorageError(code, status, "Repository file action could not be applied");
+}
+function assertRepoFilesSettled(db, workspaceRef) {
+	if (db.prepare("SELECT 1 FROM repo_file_operations WHERE workspace_ref=? AND cleanup_confirmed=0 LIMIT 1").get(workspaceRef)) fail$19("REPO_FILE_RECONCILIATION_REQUIRED");
+}
+function createRepoFileDomain(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), authority = createToolAuthorityDomain(db);
+	const exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const required = (id) => get("SELECT * FROM repo_file_operations WHERE operation_id=?", id) ?? fail$19("REPO_FILE_OPERATION_NOT_FOUND", 404);
+	const view = (r) => ({
+		operationId: String(r.operation_id),
+		toolName: r.tool_name,
+		requestHash: String(r.request_hash),
+		state: String(r.state),
+		cleanupConfirmed: r.cleanup_confirmed === 1,
+		scope: JSON.parse(String(r.scope_json)),
+		request: JSON.parse(String(r.request_json)),
+		proof: r.prepared_json ? JSON.parse(String(r.prepared_json)) : null,
+		result: r.result_json ? JSON.parse(String(r.result_json)) : null
+	});
+	function owned(r, p) {
+		authority.check(p, "repo.fileByOperation", "read");
+		if (p.ownerKind !== "workflowAttempt" || r.run_id !== p.runId || r.attempt_id !== p.attemptId || r.activation_id !== p.activationId || r.grant_id !== p.grantId) fail$19("REPO_FILE_OPERATION_NOT_FOUND", 404);
+		return r;
+	}
+	const handlers = {
+		beginRepoFileOperation(i) {
+			return transaction(db, () => {
+				const args = i.toolName === "repo.writeFile" ? parseContract(repoWriteFileArgs, i.args) : parseContract(repoDeleteFileArgs, i.args), request = {
+					args,
+					binding: i.binding
+				}, requestHash = digest(canonical({
+					toolName: i.toolName,
+					...request
+				})), old = get("SELECT * FROM repo_file_operations WHERE operation_id=?", i.operationId);
+				if (get("SELECT 1 FROM repo_operations WHERE operation_id=?", i.operationId)) fail$19("IDEMPOTENCY_KEY_REUSED");
+				if (old) {
+					owned(old, i.permit);
+					if (old.request_hash !== requestHash) fail$19("IDEMPOTENCY_KEY_REUSED");
+					return {
+						...view(old),
+						created: false
+					};
+				}
+				const h = authority.check(i.permit, i.toolName, "write"), p = i.permit, b = i.binding;
+				if (p.ownerKind !== "workflowAttempt" || b.projectId !== h.projectId || b.runId !== p.runId || b.attemptId !== p.attemptId || args.workspaceRef !== b.workspaceRef || args.baseCommit !== b.baseCommit) fail$19("REPO_BINDING_DENIED", 403);
+				if (JSON.parse(String(h.host.input_manifest_json)).codeCommit !== b.baseCommit) fail$19("REPO_BASE_CHANGED");
+				if (!p.resources.some((r) => r.kind === "workspace" && r.resourceId === b.resourceId && r.access === "write")) fail$19("REPO_RESOURCE_DENIED", 403);
+				const w = get("SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", p.runId, p.workId, Number(h.host.work_revision)), scope = JSON.parse(String(w?.definition_json)).writeScope;
+				if (!scope.some((s) => args.path === s || args.path.startsWith(s + "/"))) fail$19("REPO_FILE_SCOPE_DENIED", 403);
+				assertRepoFilesSettled(db, b.workspaceRef);
+				if (get("SELECT 1 FROM repo_operations WHERE attempt_id=? AND state IN ('SENT','PREPARED') LIMIT 1", p.attemptId)) fail$19("REPO_GIT_RECONCILIATION_REQUIRED");
+				const time = (/* @__PURE__ */ new Date()).toISOString();
+				exec("INSERT INTO repo_file_operations VALUES(?,?,?,?,?,?,?,?,?,?,'SENT',NULL,NULL,0,?,?)", i.operationId, p.runId, p.attemptId, p.activationId, p.grantId, b.workspaceRef, i.toolName, requestHash, canonical(request), canonical(scope), time, time);
+				return {
+					...view(required(i.operationId)),
+					created: true
+				};
+			});
+		},
+		getRepoFileOperation(i) {
+			return transaction(db, () => view(owned(required(i.operationId), i.permit)));
+		},
+		prepareRepoFileOperation(i) {
+			return transaction(db, () => {
+				const r = owned(required(i.operationId), i.permit);
+				authority.check(i.permit, String(r.tool_name), "write");
+				if (r.request_hash !== i.requestHash) fail$19("REPO_FILE_BASIS_CHANGED");
+				const request = view(r).request.args;
+				if (r.tool_name === "repo.writeFile") {
+					const text = request.text;
+					if (i.proof.sha256 !== digest(text) || i.proof.byteSize !== Buffer.byteLength(text)) fail$19("REPO_FILE_PROOF_MISMATCH");
+				} else if (i.proof.sha256 !== request.expectedSha256) fail$19("REPO_FILE_PROOF_MISMATCH");
+				if (r.prepared_json) {
+					if (r.prepared_json !== canonical(i.proof)) fail$19("REPO_FILE_BASIS_CHANGED");
+					return view(r);
+				}
+				if (r.state !== "SENT") fail$19("REPO_FILE_OPERATION_CLOSED");
+				exec("UPDATE repo_file_operations SET state='PREPARED',prepared_json=?,updated_at=? WHERE operation_id=?", canonical(i.proof), (/* @__PURE__ */ new Date()).toISOString(), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		finishRepoFileOperation(i) {
+			return transaction(db, () => {
+				const r = required(i.operationId);
+				if (r.request_hash !== i.requestHash) fail$19("REPO_FILE_BASIS_CHANGED");
+				if (r.result_json) {
+					if (r.state !== i.state || r.result_json !== canonical(i.result)) fail$19("REPO_FILE_RESULT_IMMUTABLE");
+					return view(r);
+				}
+				if (i.state === "SUCCEEDED" && !r.prepared_json) fail$19("REPO_FILE_EFFECT_UNPROVEN");
+				exec("UPDATE repo_file_operations SET state=?,result_json=?,cleanup_confirmed=?,updated_at=? WHERE operation_id=?", i.state, canonical(i.result), i.state === "FAILED" ? 1 : 0, (/* @__PURE__ */ new Date()).toISOString(), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		confirmRepoFileCleanup(i) {
+			return transaction(db, () => {
+				const r = required(i.operationId);
+				if (r.request_hash !== i.requestHash || r.state !== "SUCCEEDED") fail$19("REPO_FILE_CLEANUP_DENIED");
+				exec("UPDATE repo_file_operations SET cleanup_confirmed=1 WHERE operation_id=?", i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		assertRepoWorkspaceSettled(i) {
+			return transaction(db, () => {
+				authority.check(i.permit, "repo.by-operation", "read");
+				assertRepoFilesSettled(db, i.workspaceRef);
+				return { settled: true };
+			});
+		}
+	};
+	return {
+		getOriginal(permit, operationId) {
+			return view(owned(required(operationId), permit));
+		},
+		execute(method, input) {
+			return handlers[method](parseContract(repoFileRequests[method], input));
+		}
+	};
+}
+//#endregion
+//#region src/repo-domain.ts
+function fail$18(code, status = 409) {
+	throw new StorageError(code, status, "Repository action could not be applied");
+}
+function createRepoDomain(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	const exec = (sql, ...p) => db.prepare(sql).run(...p), authority = createToolAuthorityDomain(db);
+	const required = (id) => get("SELECT * FROM repo_operations WHERE operation_id=?", id) ?? fail$18("REPO_OPERATION_NOT_FOUND", 404);
+	const view = (r) => ({
+		operationId: String(r.operation_id),
+		toolName: r.tool_name,
+		requestHash: String(r.request_hash),
+		state: String(r.state),
+		createdAt: String(r.created_at),
+		scope: JSON.parse(String(r.scope_json)),
+		request: JSON.parse(String(r.request_json)),
+		prepared: r.prepared_json ? JSON.parse(String(r.prepared_json)) : null,
+		result: r.result_json ? JSON.parse(String(r.result_json)) : null
+	});
+	function owned(r, p) {
+		authority.check(p, "repo.by-operation", "read");
+		if (p.ownerKind !== "workflowAttempt" || r.run_id !== p.runId || r.attempt_id !== p.attemptId || r.activation_id !== p.activationId || r.grant_id !== p.grantId) fail$18("REPO_OPERATION_NOT_FOUND", 404);
+		return r;
+	}
+	const handlers = {
+		beginRepoOperation(i) {
+			return transaction(db, () => {
+				const args = i.toolName === "repo.commit" ? parseContract(repoCommitArgs, i.args) : parseContract(repoIntegrateArgs, i.args);
+				const request = {
+					args,
+					binding: i.binding
+				}, requestHash = digest(canonical({
+					toolName: i.toolName,
+					...request
+				})), old = get("SELECT * FROM repo_operations WHERE operation_id=?", i.operationId);
+				if (get("SELECT 1 FROM repo_file_operations WHERE operation_id=?", i.operationId)) fail$18("IDEMPOTENCY_KEY_REUSED");
+				if (old) {
+					owned(old, i.permit);
+					if (old.request_hash !== requestHash) fail$18("IDEMPOTENCY_KEY_REUSED");
+					return {
+						...view(old),
+						created: false
+					};
+				}
+				assertRepoFilesSettled(db, i.binding.workspaceRef);
+				const h = authority.check(i.permit, i.toolName, "write"), p = i.permit, b = i.binding;
+				if (p.ownerKind !== "workflowAttempt" || b.projectId !== h.projectId || b.runId !== p.runId || b.attemptId !== p.attemptId || args.workspaceRef !== b.workspaceRef || args.baseCommit !== b.baseCommit) fail$18("REPO_BINDING_DENIED", 403);
+				if (JSON.parse(String(h.host.input_manifest_json)).codeCommit !== b.baseCommit) fail$18("REPO_BASE_CHANGED");
+				const kind = i.toolName === "repo.commit" ? "workspace" : "projectRepository", resource = i.toolName === "repo.commit" ? b.resourceId : b.projectResourceId;
+				if (!p.resources.some((r) => r.kind === kind && r.resourceId === resource && r.access === "write")) fail$18("REPO_RESOURCE_DENIED", 403);
+				const w = get("SELECT definition_json FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", p.runId, p.workId, Number(h.host.work_revision));
+				const scope = JSON.parse(String(w?.definition_json)).writeScope;
+				if (!scope.length) fail$18("REPO_WRITE_SCOPE_EMPTY", 403);
+				const time = (/* @__PURE__ */ new Date()).toISOString();
+				exec("INSERT INTO repo_operations VALUES(?,?,?,?,?,?,?,?,?,'SENT',NULL,NULL,?,?)", i.operationId, p.runId, p.attemptId, p.activationId, p.grantId, i.toolName, requestHash, canonical(request), canonical(scope), time, time);
+				return {
+					...view(required(i.operationId)),
+					created: true
+				};
+			});
+		},
+		getRepoOperation(i) {
+			return transaction(db, () => view(owned(required(i.operationId), i.permit)));
+		},
+		prepareRepoOperation(i) {
+			return transaction(db, () => {
+				const r = owned(required(i.operationId), i.permit);
+				authority.check(i.permit, String(r.tool_name), "write");
+				if (r.request_hash !== i.requestHash) fail$18("REPO_OPERATION_BASIS_CHANGED");
+				if (r.prepared_json) {
+					if (r.prepared_json !== canonical(i.prepared)) fail$18("REPO_OPERATION_BASIS_CHANGED");
+					return view(r);
+				}
+				if (r.state !== "SENT") fail$18("REPO_OPERATION_CLOSED");
+				exec("UPDATE repo_operations SET state='PREPARED',prepared_json=?,updated_at=? WHERE operation_id=?", canonical(i.prepared), (/* @__PURE__ */ new Date()).toISOString(), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		finishRepoOperation(i) {
+			return transaction(db, () => {
+				const r = required(i.operationId);
+				if (r.request_hash !== i.requestHash) fail$18("REPO_OPERATION_BASIS_CHANGED");
+				if (r.result_json) {
+					if (r.state !== i.state || r.result_json !== canonical(i.result)) fail$18("REPO_OPERATION_RESULT_IMMUTABLE");
+					return view(r);
+				}
+				if (i.state === "SUCCEEDED" && r.prepared_json === null) fail$18("REPO_COMMIT_UNPROVEN");
+				exec("UPDATE repo_operations SET state=?,result_json=?,updated_at=? WHERE operation_id=?", i.state, canonical(i.result), (/* @__PURE__ */ new Date()).toISOString(), i.operationId);
+				return view(required(i.operationId));
+			});
+		}
+	};
+	return {
+		getOriginal(permit, operationId) {
+			return view(owned(required(operationId), permit));
+		},
+		execute(method, input) {
+			return handlers[method](parseContract(repoRequests[method], input));
+		}
+	};
+}
+//#endregion
+//#region src/source-archive-domain.ts
+function fail$17(code, status = 409) {
+	throw new StorageError(code, status, "Source archive could not be verified");
+}
+function createSourceArchiveDomain(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const authority = createToolAuthorityDomain(db), workspaces = createWorkspaceDomain(db);
+	const required = (id) => get("SELECT * FROM source_archives WHERE operation_id=?", id) ?? fail$17("SOURCE_ARCHIVE_NOT_FOUND", 404);
+	const view = (r) => ({
+		operationId: String(r.operation_id),
+		allocationOperationId: String(r.allocation_operation_id),
+		commitOperationId: String(r.commit_operation_id),
+		workspaceRef: String(r.workspace_ref),
+		requestHash: String(r.request_hash),
+		state: r.state,
+		basis: JSON.parse(String(r.basis_json)),
+		manifest: r.manifest_json ? JSON.parse(String(r.manifest_json)) : null,
+		acknowledgement: r.acknowledgement_json ? JSON.parse(String(r.acknowledgement_json)) : null,
+		errorCode: r.error_code,
+		acknowledgedAt: r.acknowledged_at
+	});
+	function owned(r, p) {
+		authority.check(p, "repo.by-operation", "read");
+		if (p.ownerKind !== "workflowAttempt" || p.runId !== r.run_id || p.attemptId !== r.attempt_id || p.activationId !== r.activation_id || p.grantId !== r.grant_id || !p.resources.some((v) => v.kind === "workspace" && v.resourceId === r.workspace_ref && v.access === "write")) fail$17("SOURCE_ARCHIVE_NOT_FOUND", 404);
+		return r;
+	}
+	function basis(input) {
+		const p = input.permit, h = authority.check(p, "repo.by-operation", "read");
+		if (p.ownerKind !== "workflowAttempt" || h.host.role !== "developer") fail$17("SOURCE_ARCHIVE_OWNER_DENIED", 403);
+		const allocation = workspaces.execute("getWorkspaceAllocation", {
+			permit: p,
+			operationId: input.allocationOperationId
+		}), repository = workspaces.execute("getAllocationRepository", {
+			permit: p,
+			operationId: input.allocationOperationId
+		});
+		if (allocation.state !== "READY" || allocation.kind !== "development" || !allocation.identity || repository.state !== "READY" || !repository.identity) fail$17("SOURCE_ARCHIVE_SOURCE_NOT_READY");
+		const r = get("SELECT * FROM repo_operations WHERE operation_id=?", input.commitOperationId) ?? fail$17("SOURCE_ARCHIVE_COMMIT_NOT_FOUND", 404);
+		if (r.run_id !== p.runId || r.attempt_id !== p.attemptId || r.activation_id !== p.activationId || r.grant_id !== p.grantId || r.tool_name !== "repo.commit" || r.state !== "SUCCEEDED" || !r.prepared_json) fail$17("SOURCE_ARCHIVE_COMMIT_UNPROVEN");
+		const commitOperation = {
+			operationId: String(r.operation_id),
+			toolName: "repo.commit",
+			requestHash: String(r.request_hash),
+			state: String(r.state),
+			createdAt: String(r.created_at),
+			scope: JSON.parse(String(r.scope_json)),
+			request: JSON.parse(String(r.request_json)),
+			prepared: JSON.parse(String(r.prepared_json)),
+			result: r.result_json ? JSON.parse(String(r.result_json)) : null
+		}, b = commitOperation.request.binding, prepared = commitOperation.prepared;
+		if (b.projectId !== allocation.projectId || b.runId !== allocation.runId || b.attemptId !== allocation.attemptId || b.workspaceRef !== allocation.workspaceRef || b.resourceId !== allocation.workspaceRef || b.projectResourceId !== repository.resourceId || b.baseCommit !== allocation.baseCommit || commitOperation.request.args.baseCommit !== allocation.baseCommit || canonical(commitOperation.scope) !== canonical(allocation.scope) || prepared.ref !== "refs/devmesh/operations/" + input.commitOperationId || prepared.expected !== null || !prepared.commitBody || commitOperation.result?.commit !== prepared.commit) fail$17("SOURCE_ARCHIVE_BINDING_CHANGED");
+		if (!p.resources.some((v) => v.kind === "workspace" && v.resourceId === allocation.workspaceRef && v.access === "write") || !p.resources.some((v) => v.kind === "projectRepository" && v.resourceId === repository.resourceId)) fail$17("SOURCE_ARCHIVE_RESOURCE_DENIED", 403);
+		assertRepoFilesSettled(db, allocation.workspaceRef);
+		return {
+			allocation,
+			repository,
+			commitOperation
+		};
+	}
+	const handlers = {
+		beginSourceArchive(i) {
+			return transaction(db, () => {
+				const p = i.permit, hash = digest(canonical({
+					allocationOperationId: i.allocationOperationId,
+					commitOperationId: i.commitOperationId,
+					owner: {
+						runId: p.ownerKind === "workflowAttempt" ? p.runId : null,
+						attemptId: p.ownerKind === "workflowAttempt" ? p.attemptId : null,
+						activationId: p.activationId,
+						grantId: p.grantId
+					}
+				})), old = get("SELECT * FROM source_archives WHERE operation_id=?", i.operationId);
+				if (old) {
+					owned(old, p);
+					if (old.request_hash !== hash) fail$17("IDEMPOTENCY_KEY_REUSED");
+					return {
+						...view(old),
+						created: false
+					};
+				}
+				if (get("SELECT 1 FROM repo_operations WHERE operation_id=?", i.operationId) || get("SELECT 1 FROM repo_file_operations WHERE operation_id=?", i.operationId) || get("SELECT 1 FROM workspace_allocations WHERE operation_id=?", i.operationId)) fail$17("IDEMPOTENCY_KEY_REUSED");
+				const frozen = basis(i), a = frozen.allocation;
+				if (get("SELECT 1 FROM source_archives WHERE workspace_ref=? AND state IN ('SENT','PREPARED')", a.workspaceRef)) fail$17("SOURCE_ARCHIVE_RECONCILIATION_REQUIRED");
+				exec("INSERT INTO source_archives(operation_id,allocation_operation_id,commit_operation_id,workspace_ref,project_id,run_id,attempt_id,activation_id,grant_id,request_hash,basis_json,state,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,'SENT',?)", i.operationId, i.allocationOperationId, i.commitOperationId, a.workspaceRef, a.projectId, a.runId, a.attemptId, a.activationId, a.grantId, hash, canonical(frozen), (/* @__PURE__ */ new Date()).toISOString());
+				return {
+					...view(required(i.operationId)),
+					created: true
+				};
+			});
+		},
+		getSourceArchive(i) {
+			return view(owned(required(i.operationId), i.permit));
+		},
+		prepareSourceArchive(i) {
+			return transaction(db, () => {
+				const r = owned(required(i.operationId), i.permit), original = view(r);
+				if (r.request_hash !== i.requestHash) fail$17("SOURCE_ARCHIVE_BASIS_CHANGED");
+				const { sha256, ...facts } = i.manifest, prepared = original.basis.commitOperation.prepared;
+				if (i.manifest.commit !== prepared.commit || i.manifest.tree !== prepared.tree || sha256 !== digest(canonical(facts)) || i.manifest.byteSize !== i.manifest.files.reduce((n, f) => n + f.byteSize, 0) || new Set(i.manifest.files.map((f) => f.path.toLowerCase())).size !== i.manifest.files.length || Buffer.byteLength(canonical(i.manifest)) > 192 * 1024) fail$17("SOURCE_ARCHIVE_MANIFEST_INVALID");
+				if (r.manifest_json) {
+					if (r.manifest_json !== canonical(i.manifest)) fail$17("SOURCE_ARCHIVE_BASIS_CHANGED");
+					return original;
+				}
+				if (r.state !== "SENT") fail$17("SOURCE_ARCHIVE_CLOSED");
+				assertRepoFilesSettled(db, String(r.workspace_ref));
+				exec("UPDATE source_archives SET state='PREPARED',manifest_json=?,error_code=NULL WHERE operation_id=?", canonical(i.manifest), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		completeSourceArchive(i) {
+			return transaction(db, () => {
+				const r = owned(required(i.operationId), i.permit), original = view(r), a = i.acknowledgement, m = original.manifest;
+				if (r.request_hash !== i.requestHash || !m || a.commit !== m.commit || a.tree !== m.tree || a.manifestSha256 !== m.sha256 || canonical(a.repositoryIdentity) !== canonical(original.basis.repository.identity) || a.archiveRef !== "refs/devmesh/source-archives/" + i.operationId || a.sourceRef !== "refs/devmesh/sources/" + m.commit) fail$17("SOURCE_ARCHIVE_ACK_UNPROVEN");
+				if (original.state === "ACKNOWLEDGED") {
+					if (canonical(original.acknowledgement) !== canonical(a)) fail$17("SOURCE_ARCHIVE_ACK_IMMUTABLE");
+					return original;
+				}
+				if (original.state !== "PREPARED") fail$17("SOURCE_ARCHIVE_CLOSED");
+				exec("UPDATE source_archives SET state='ACKNOWLEDGED',acknowledgement_json=?,acknowledged_at=?,error_code=NULL WHERE operation_id=?", canonical(a), (/* @__PURE__ */ new Date()).toISOString(), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		markSourceArchiveUncertain(i) {
+			return transaction(db, () => {
+				const r = owned(required(i.operationId), i.permit);
+				if (r.request_hash !== i.requestHash) fail$17("SOURCE_ARCHIVE_BASIS_CHANGED");
+				if (["SENT", "PREPARED"].includes(String(r.state))) exec("UPDATE source_archives SET error_code=? WHERE operation_id=?", i.errorCode, i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		failSourceArchive(i) {
+			return transaction(db, () => {
+				const r = owned(required(i.operationId), i.permit);
+				if (r.request_hash !== i.requestHash || r.state !== "SENT") fail$17("SOURCE_ARCHIVE_CLOSED");
+				exec("UPDATE source_archives SET state='FAILED',error_code=? WHERE operation_id=?", i.errorCode, i.operationId);
+				return view(required(i.operationId));
+			});
+		}
+	};
+	return { execute(method, input) {
+		return handlers[method](parseContract(sourceArchiveRequests[method], input));
+	} };
+}
+//#endregion
+//#region src/workspace-reclamation-domain.ts
+function fail$16(code, status = 409) {
+	throw new StorageError(code, status, "Only the exact original preserved workspace can be reclaimed");
+}
+const same = (a, b) => canonical(a) === canonical(b);
+/** Shared synchronous preservation guards run inside the caller transaction. */
+function createWorkspaceReclamationDomain(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), exec = (sql, ...p) => db.prepare(sql).run(...p), preservations = createWorkspacePreservationDomain(db);
+	const required = (id) => get("SELECT * FROM workspace_reclamations WHERE operation_id=?", id) ?? fail$16("WORKSPACE_RECLAMATION_NOT_FOUND", 404);
+	const view = (r) => ({
+		operationId: String(r.operation_id),
+		preservationOperationId: String(r.preservation_operation_id),
+		workspaceRef: String(r.workspace_ref),
+		projectId: String(r.project_id),
+		principalId: String(r.principal_id),
+		requestHash: String(r.request_hash),
+		createdAt: String(r.created_at),
+		state: r.state,
+		basis: JSON.parse(String(r.basis_json)),
+		isolationIntentSha256: r.isolation_intent_hash,
+		isolationProof: r.isolation_proof_json ? JSON.parse(String(r.isolation_proof_json)) : null,
+		deleteIntentSha256: r.delete_intent_hash,
+		deletionProof: r.deletion_proof_json ? JSON.parse(String(r.deletion_proof_json)) : null,
+		errorCode: r.error_code
+	});
+	function archive(permit, operationId, write) {
+		const record = preservations.execute("getWorkspacePreservation", {
+			permit,
+			operationId
+		});
+		if (write) {
+			preservations.assertReclaimable({
+				permit,
+				operationId,
+				manifestSha256: record.acknowledgement?.manifestSha256 ?? ""
+			});
+			if (get("SELECT status FROM execution_grants WHERE grant_id=?", record.basis.allocation.grantId)?.status !== "REVOKED") fail$16("WORKSPACE_RECLAMATION_ADMISSION_OPEN");
+		}
+		return record;
+	}
+	function owned(r, p, write = false) {
+		const frozen = view(r), current = archive(p, frozen.preservationOperationId, write);
+		if (current.principalId !== frozen.principalId || current.workspaceRef !== frozen.workspaceRef || !same(current.acknowledgement, frozen.basis.preservation.acknowledgement)) fail$16("WORKSPACE_RECLAMATION_BASIS_CHANGED");
+		return frozen;
+	}
+	function bound(i) {
+		const r = required(i.operationId), record = owned(r, i.permit, true);
+		if (r.request_hash !== i.requestHash) fail$16("WORKSPACE_RECLAMATION_REQUEST_CHANGED");
+		return {
+			r,
+			record
+		};
+	}
+	const handlers = {
+		beginWorkspaceReclamation(i) {
+			return transaction(db, () => {
+				const previous = get("SELECT * FROM workspace_reclamations WHERE operation_id=?", i.operationId);
+				if (previous) {
+					const original = owned(previous, i.permit);
+					if (original.preservationOperationId !== i.preservationOperationId) fail$16("IDEMPOTENCY_KEY_REUSED");
+					return {
+						...original,
+						created: false
+					};
+				}
+				const p = archive(i.permit, i.preservationOperationId, true), m = p.manifest;
+				if (!isAbsolute(m.snapshot.root) || p.basis.allocation.attemptId !== m.snapshot.root.split(/[\\/]/).at(-1)) fail$16("WORKSPACE_RECLAMATION_PATH_INVALID");
+				const sourcePath = m.snapshot.root, basis = {
+					preservation: p,
+					sourcePath,
+					trashPath: join(dirname(dirname(sourcePath)), "trash", i.operationId)
+				};
+				if (get("SELECT 1 FROM workspace_reclamations WHERE workspace_ref=?", p.workspaceRef)) fail$16("WORKSPACE_RECLAMATION_RECONCILIATION_REQUIRED");
+				if ([
+					"repo_operations",
+					"repo_file_operations",
+					"workspace_allocations",
+					"source_archives",
+					"candidate_integrations",
+					"workspace_preservations"
+				].some((table) => get("SELECT 1 FROM " + table + " WHERE operation_id=?", i.operationId))) fail$16("IDEMPOTENCY_KEY_REUSED");
+				const requestHash = digest(canonical({
+					preservationOperationId: i.preservationOperationId,
+					principalId: p.principalId,
+					workspaceRef: p.workspaceRef,
+					manifestSha256: p.acknowledgement.manifestSha256
+				}));
+				exec("INSERT INTO workspace_reclamations(operation_id,preservation_operation_id,workspace_ref,project_id,principal_id,request_hash,basis_json,state,created_at) VALUES(?,?,?,?,?,?,?,'PREPARED',?)", i.operationId, i.preservationOperationId, p.workspaceRef, p.basis.allocation.projectId, p.principalId, requestHash, canonical(basis), (/* @__PURE__ */ new Date()).toISOString());
+				return {
+					...view(required(i.operationId)),
+					created: true
+				};
+			});
+		},
+		getWorkspaceReclamation(i) {
+			return owned(required(i.operationId), i.permit);
+		},
+		assertWorkspaceReclamationReady(i) {
+			return owned(required(i.operationId), i.permit, true);
+		},
+		markWorkspaceIsolationSent(i) {
+			return transaction(db, () => {
+				const { record } = bound(i);
+				if (record.isolationIntentSha256) {
+					if (record.isolationIntentSha256 !== i.receiptSha256) fail$16("WORKSPACE_RECLAMATION_INTENT_CHANGED");
+					return record;
+				}
+				if (record.state !== "PREPARED") fail$16("WORKSPACE_RECLAMATION_CLOSED");
+				exec("UPDATE workspace_reclamations SET state='ISOLATION_SENT',isolation_intent_hash=?,error_code=NULL WHERE operation_id=?", i.receiptSha256, i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		acknowledgeWorkspaceIsolation(i) {
+			return transaction(db, () => {
+				const { record } = bound(i);
+				if (!record.isolationIntentSha256 || !same(i.proof.trashIdentity, record.basis.preservation.manifest.snapshot.identity) || i.proof.manifestSha256 !== record.basis.preservation.acknowledgement.manifestSha256) fail$16("WORKSPACE_RECLAMATION_ISOLATION_UNPROVEN");
+				if (record.isolationProof) {
+					if (!same(record.isolationProof, i.proof)) fail$16("WORKSPACE_RECLAMATION_PROOF_IMMUTABLE");
+					return record;
+				}
+				if (record.state !== "ISOLATION_SENT") fail$16("WORKSPACE_RECLAMATION_CLOSED");
+				exec("UPDATE workspace_reclamations SET state='ISOLATED',isolation_proof_json=?,error_code=NULL WHERE operation_id=?", canonical(i.proof), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		markWorkspaceDeletionSent(i) {
+			return transaction(db, () => {
+				const { record } = bound(i);
+				if (record.deleteIntentSha256) {
+					if (record.deleteIntentSha256 !== i.receiptSha256) fail$16("WORKSPACE_RECLAMATION_INTENT_CHANGED");
+					return record;
+				}
+				if (record.state !== "ISOLATED") fail$16("WORKSPACE_RECLAMATION_CLOSED");
+				exec("UPDATE workspace_reclamations SET state='DELETE_SENT',delete_intent_hash=?,error_code=NULL WHERE operation_id=?", i.receiptSha256, i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		acknowledgeWorkspaceDeletion(i) {
+			return transaction(db, () => {
+				const { record } = bound(i);
+				if (!record.deleteIntentSha256) fail$16("WORKSPACE_RECLAMATION_DELETION_UNPROVEN");
+				if (record.deletionProof) {
+					if (!same(record.deletionProof, i.proof)) fail$16("WORKSPACE_RECLAMATION_PROOF_IMMUTABLE");
+					return record;
+				}
+				if (record.state !== "DELETE_SENT") fail$16("WORKSPACE_RECLAMATION_CLOSED");
+				exec("UPDATE workspace_reclamations SET state='DELETED',deletion_proof_json=?,error_code=NULL WHERE operation_id=?", canonical(i.proof), i.operationId);
+				return view(required(i.operationId));
+			});
+		},
+		markWorkspaceReclamationUncertain(i) {
+			return transaction(db, () => {
+				const { record } = bound(i);
+				if (record.state !== "DELETED") exec("UPDATE workspace_reclamations SET error_code=? WHERE operation_id=?", i.errorCode, i.operationId);
+				return view(required(i.operationId));
+			});
+		}
+	};
+	return { execute(method, input) {
+		return handlers[method](parseContract(workspaceReclamationRequests[method], input));
+	} };
+}
+//#endregion
+//#region src/workspace-maintenance-domain.ts
+function fail$15(code = "WORKSPACE_MAINTENANCE_DENIED") {
+	throw new StorageError(code, 403, "Original workspace maintenance authority is unavailable");
+}
+function createWorkspaceMaintenanceDomain(db) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), authority = createToolAuthorityDomain(db), workspaces = createWorkspaceDomain(db), repo = createRepoDomain(db), files = createRepoFileDomain(db), sources = createSourceArchiveDomain(db), preservations = createWorkspacePreservationDomain(db), reclamations = createWorkspaceReclamationDomain(db);
+	return { execute(method, input) {
+		if (method === "getManagedWorkspaceBinding") {
+			const i = parseContract(workspaceMaintenanceRequests.getManagedWorkspaceBinding, input);
+			return transaction(db, () => {
+				const h = authority.workspaceMaintenance(i.permit), row = get("SELECT * FROM workspace_allocations WHERE workspace_ref=?", i.workspaceRef);
+				if (!row) fail$15("WORKSPACE_BINDING_NOT_FOUND");
+				const allocation = workspaces.execute("getWorkspaceAllocation", {
+					permit: i.permit,
+					operationId: row.operation_id
+				}), repository = workspaces.execute("getAllocationRepository", {
+					permit: i.permit,
+					operationId: row.operation_id
+				});
+				if (allocation.runnerId !== i.runnerId || allocation.projectId !== h.projectId || allocation.state !== "READY" || !allocation.identity || !allocation.manifest || repository.state !== "READY" || !repository.identity || !i.permit.resources.some((r) => r.kind === "projectRepository" && r.resourceId === repository.resourceId)) fail$15("WORKSPACE_BINDING_UNAVAILABLE");
+				return {
+					allocation,
+					repository
+				};
+			});
+		}
+		if (method === "authorizeManagedWorkspaceAccess") {
+			const i = parseContract(workspaceMaintenanceRequests.authorizeManagedWorkspaceAccess, input), row = get("SELECT * FROM workspace_allocations WHERE workspace_ref=?", i.workspaceRef);
+			if (!row || row.runner_id !== i.runnerId) fail$15();
+			const allocation = workspaces.execute("authorizeWorkspaceAllocation", {
+				permit: i.permit,
+				operationId: row.operation_id
+			});
+			if (i.purpose === "execution") {
+				if (allocation.state !== "READY") fail$15("WORKSPACE_EXECUTION_NOT_READY");
+				if (!get("SELECT 1 FROM accepted_work w JOIN a2a_tasks t ON t.endpoint_id=w.endpoint_id AND t.task_id=w.task_id JOIN a2a_task_ownership o ON o.endpoint_id=w.endpoint_id AND o.task_id=w.task_id WHERE w.activation_id=? AND t.attempt_id=? AND w.state='ACTIVE' AND w.claim_token IS NOT NULL AND o.cancel_requested=0", allocation.activationId, allocation.attemptId)) fail$15("WORKSPACE_EXECUTION_HOST_CLOSED");
+			}
+			return allocation;
+		}
+		const i = parseContract(workspaceMaintenanceRequests.authorizeWorkspaceMaintenance, input);
+		return transaction(db, () => {
+			const p = i.permit;
+			if (p.ownerKind !== "workflowAttempt") fail$15();
+			const current = authority.workspaceMaintenance(p), found = [
+				["allocation", "workspace_allocations"],
+				["repoGit", "repo_operations"],
+				["repoFile", "repo_file_operations"],
+				["sourceArchive", "source_archives"],
+				["preservation", "workspace_preservations"],
+				["reclamation", "workspace_reclamations"]
+			].filter(([, table]) => get("SELECT 1 FROM " + table + " WHERE operation_id=?", i.operationId));
+			if (found.length !== 1) fail$15(found.length ? "WORKSPACE_MAINTENANCE_OPERATION_AMBIGUOUS" : "WORKSPACE_MAINTENANCE_OPERATION_NOT_FOUND");
+			const kind = found[0][0];
+			let ref;
+			switch (kind) {
+				case "allocation":
+					ref = workspaces.execute("getWorkspaceAllocation", {
+						permit: p,
+						operationId: i.operationId
+					}).workspaceRef;
+					break;
+				case "repoGit":
+					ref = repo.getOriginal(p, i.operationId).request.binding.workspaceRef;
+					break;
+				case "repoFile":
+					ref = files.getOriginal(p, i.operationId).request.binding.workspaceRef;
+					break;
+				case "sourceArchive":
+					ref = sources.execute("getSourceArchive", {
+						permit: p,
+						operationId: i.operationId
+					}).workspaceRef;
+					break;
+				case "preservation":
+					ref = preservations.execute("getWorkspacePreservation", {
+						permit: p,
+						operationId: i.operationId
+					}).workspaceRef;
+					break;
+				case "reclamation":
+					ref = reclamations.execute("assertWorkspaceReclamationReady", {
+						permit: p,
+						operationId: i.operationId
+					}).workspaceRef;
+					break;
+			}
+			if (ref !== i.workspaceRef) fail$15();
+			const row = get("SELECT * FROM workspace_allocations WHERE workspace_ref=?", ref);
+			if (!row) fail$15();
+			const allocation = workspaces.execute("getWorkspaceAllocation", {
+				permit: p,
+				operationId: row.operation_id
+			}), repository = get("SELECT * FROM managed_repositories WHERE project_id=?", allocation.projectId);
+			if (!repository || allocation.projectId !== current.projectId || allocation.runnerId !== i.runnerId || allocation.runId !== p.runId || allocation.attemptId !== p.attemptId || allocation.activationId !== p.activationId || allocation.grantId !== p.grantId || !p.resources.some((r) => r.kind === "workspace" && r.resourceId === ref) || !p.resources.some((r) => r.kind === "projectRepository" && r.resourceId === repository.resource_id)) fail$15();
+			return {
+				operationId: i.operationId,
+				operationKind: kind,
+				workspaceRef: ref,
+				allocationOperationId: allocation.operationId,
+				projectId: allocation.projectId,
+				runnerId: allocation.runnerId,
+				attemptId: allocation.attemptId,
+				activationId: allocation.activationId,
+				grantId: allocation.grantId
+			};
+		});
+	} };
+}
+//#endregion
+//#region src/verified-finding-domain.ts
+const json$9 = (v) => JSON.parse(String(v));
+const uid$2 = (prefix) => prefix + "_" + randomUUID().replaceAll("-", "");
+function fail$14(code, status = 409) {
+	throw new StorageError(code, status, "Verified finding requires original failure and exact fix verification");
+}
+function createVerifiedFindingDomain(db, quality, candidates, changed) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	function member(principalId, runId, write = false) {
+		const r = get("SELECT r.*,p.owner_id,m.role FROM runs r JOIN projects p ON p.project_id=r.project_id JOIN project_members m ON m.project_id=p.project_id AND m.principal_id=? WHERE r.run_id=?", principalId, runId);
+		if (!r || write && (r.owner_id !== principalId || r.role !== "owner")) fail$14("VERIFIED_FINDING_NOT_FOUND", 404);
+		return r;
+	}
+	const original = (issueId, runId) => get("SELECT i.*,f.work_verification_id,f.quality_operation_id,f.check_id,f.failure_json,f.failure_sha256 FROM issues i JOIN verified_findings f ON f.issue_id=i.issue_id WHERE i.issue_id=? AND i.run_id=?", issueId, runId) ?? fail$14("VERIFIED_FINDING_NOT_FOUND", 404);
+	function view(row, afterRevision = 0, limit = 20) {
+		const revisions = all("SELECT * FROM issue_revisions WHERE issue_id=? AND revision>? ORDER BY revision LIMIT ?", row.issue_id, afterRevision, limit + 1), page = revisions.slice(0, limit);
+		return {
+			issueId: String(row.issue_id),
+			projectId: String(row.project_id),
+			runId: String(row.run_id),
+			sourceAttemptId: String(row.source_attempt_id),
+			revision: Number(row.revision),
+			state: String(row.state),
+			title: String(row.title),
+			description: String(row.description),
+			severity: String(row.severity),
+			fixWorkId: row.fix_work_id,
+			failure: json$9(row.failure_json),
+			failureSha256: String(row.failure_sha256),
+			history: page.map((r) => ({
+				revision: Number(r.revision),
+				kind: String(r.kind),
+				operationId: String(r.operation_id),
+				value: json$9(r.value_json),
+				createdAt: String(r.created_at)
+			})),
+			nextRevision: revisions.length > limit ? Number(page.at(-1).revision) : null
+		};
+	}
+	function history(row, operationId, kind, value, evidence, fixAttemptId, verificationAttemptId) {
+		const host = get("SELECT a.dispatch_operation_id,ra.activation_id,ra.grant_id FROM attempts a JOIN runtime_activations ra ON ra.attempt_id=a.attempt_id WHERE a.attempt_id=?", row.source_attempt_id) ?? fail$14("VERIFIED_FINDING_SOURCE_MISSING"), toolName = kind === "CREATED" ? "issues.create" : kind === "FIX_LINKED" ? "issues.linkFix" : "issues.recordVerification", time = (/* @__PURE__ */ new Date()).toISOString();
+		exec("INSERT INTO issue_operations VALUES(?,?,?,?,?,?,?,?,?,?)", operationId, row.run_id, row.source_attempt_id, host.activation_id, host.grant_id, toolName, digest(canonical({
+			toolName,
+			args: value
+		})), row.issue_id, row.revision, time);
+		exec("INSERT INTO issue_revisions VALUES(?,?,?,?,?,?,?,?,?)", row.issue_id, row.revision, operationId, kind, canonical(value), evidence, fixAttemptId, verificationAttemptId, time);
+		changed(String(row.run_id), String(host.dispatch_operation_id), String(row.source_attempt_id), {
+			issueId: row.issue_id,
+			issueRevision: row.revision,
+			toolOperationId: operationId,
+			toolName
+		});
+		return {
+			operationId,
+			toolName,
+			issueId: String(row.issue_id),
+			issueRevision: Number(row.revision),
+			state: "SUCCEEDED"
+		};
+	}
+	function capture(workVerificationId) {
+		const work = get("SELECT * FROM work_verifications WHERE operation_id=? AND state='APPLIED'", workVerificationId) ?? fail$14("VERIFIED_FINDING_SOURCE_MISSING"), assessment = json$9(work.evaluation_json);
+		if (assessment.outcome !== "completed-with-findings" || !work.quality_operation_id) return [];
+		const facts = quality.completionFacts(String(work.quality_operation_id), String(work.principal_id), String(work.attempt_id)), evaluation = facts.verification.evaluation, result = [];
+		for (const check of facts.policy.checks) {
+			const measured = evaluation.checks.find((c) => c.checkId === check.checkId);
+			const reproducible = measured.status === "FAIL" && (check.kind === "tests" && !!measured.tests && (measured.tests.failed > 0 || measured.tests.skipped > 0 || measured.codes.includes("TEST_RUN_FAILED")) || check.kind === "coverage" && !!measured.coverage && measured.codes.some((c) => c === "COVERAGE_LINES_BELOW_MINIMUM" || c === "COVERAGE_BRANCHES_BELOW_MINIMUM") || check.kind === "command" && measured.codes.includes("EXECUTION_FAILED") && check.producerIds.every((id) => {
+				const e = facts.verification.origins.find((o) => o.producerId === id)?.execution;
+				return e?.state === "EXITED" && e.exitCode !== null && e.exitCode !== 0 && !e.errorCode && !e.stopRequested;
+			}));
+			const normalOrigins = check.producerIds.every((id) => {
+				const e = facts.verification.origins.find((o) => o.producerId === id)?.execution;
+				return e?.state === "EXITED" && e.exitCode !== null && !e.errorCode && !e.stopRequested && !!e.startedAt && !!e.finishedAt && Date.parse(e.startedAt) <= Date.parse(e.finishedAt);
+			});
+			if (!reproducible || !normalOrigins) continue;
+			const old = get("SELECT issue_id FROM verified_findings WHERE work_verification_id=? AND check_id=?", workVerificationId, check.checkId);
+			if (old) {
+				result.push(String(old.issue_id));
+				continue;
+			}
+			const failure = {
+				schemaVersion: "devmesh.original-failure.v1",
+				workVerificationId,
+				qualityOperationId: String(work.quality_operation_id),
+				attemptId: String(work.attempt_id),
+				workId: assessment.workId,
+				targetCommit: evaluation.targetCommit,
+				checkConfigHash: evaluation.checkConfigHash,
+				sourceManifestSha256: evaluation.sourceManifestSha256,
+				topologySha256: evaluation.topologySha256,
+				check,
+				result: measured,
+				reproduction: check.producerIds.map((id) => ({
+					producer: facts.policy.producers.find((p) => p.producerId === id),
+					origin: facts.verification.origins.find((o) => o.producerId === id)
+				})),
+				expectedRequirements: inputManifest.parse(facts.verification.basis.inputManifest).requirements,
+				expectedAcceptance: productOutput.parse(json$9(get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", work.run_id, facts.verification.basis.requirementRevision).content_json)).requirements.filter((r) => inputManifest.parse(facts.verification.basis.inputManifest).requirements.some((x) => x.requirementId === r.id)).map((r) => ({
+					requirementId: r.id,
+					statement: r.statement,
+					acceptance: r.acceptance
+				})),
+				materials: facts.materials.map((m) => ({
+					key: m.materialKey,
+					sha256: m.contentHash,
+					byteSize: m.descriptor.byteSize
+				})),
+				evidence: {
+					artifactId: String(work.artifact_id),
+					sha256: String(work.content_hash)
+				}
+			};
+			const body = canonical(failure);
+			if (Buffer.byteLength(body) > 240 * 1024) fail$14("VERIFIED_FINDING_TOO_LARGE");
+			const id = uid$2("issue"), time = (/* @__PURE__ */ new Date()).toISOString();
+			exec("INSERT INTO issues VALUES(?,?,?,?,1,'OPEN',?,?, 'HIGH',?,NULL,?,?)", id, facts.verification.projectId, work.run_id, work.attempt_id, "Original check failed: " + check.checkId, "Required " + check.kind + " check failed on " + failure.targetCommit + "; reproduce using the frozen command and original inputs. " + measured.codes.join(", "), work.artifact_id, time, time);
+			exec("INSERT INTO verified_findings VALUES(?,?,?,?,?,?,?)", id, workVerificationId, work.quality_operation_id, check.checkId, body, digest(body), time);
+			history(original(id, String(work.run_id)), uid$2("op"), "CREATED", {
+				origin: "independent-quality",
+				failureSha256: digest(body),
+				failure
+			}, String(work.artifact_id), null, null);
+			result.push(id);
+		}
+		return result;
+	}
+	function active(run) {
+		if (run.control_gate !== "OPEN" || run.terminal_outcome !== null) fail$14("VERIFIED_FINDING_ADMISSION_CLOSED");
+	}
+	function confirmedWork(run, workId) {
+		const row = get(`SELECT v.definition_json FROM plan_works p JOIN work_revisions v ON v.run_id=p.run_id AND v.work_id=p.work_id AND v.revision=p.work_revision JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN plan_confirmations c ON c.run_id=p.run_id AND c.plan_revision=p.plan_revision AND c.requirement_revision=? WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND w.blocked_reason IS NULL`, run.current_requirement_revision, run.run_id, run.current_plan_revision, workId) ?? fail$14("VERIFIED_FINDING_FIX_WORK_INVALID", 422);
+		return workRevision.parse(json$9(row.definition_json));
+	}
+	function findingDependency(run, work, originalWorkId) {
+		if (work.role !== "developer") return false;
+		const results = createPlanResults(db);
+		for (const edge of work.dependencies) {
+			if (edge.requiredOutcome !== "completed-with-findings") continue;
+			const result = results.resolve(String(run.run_id), Number(run.current_plan_revision), edge.workId);
+			if (!result || result.row.role !== "tester" || result.row.outcome !== "completed-with-findings" || !get("SELECT 1 FROM verified_findings f JOIN issues i ON i.issue_id=f.issue_id WHERE i.run_id=? AND i.source_attempt_id=?", run.run_id, result.row.attempt_id)) continue;
+			const visited = /* @__PURE__ */ new Set();
+			function reaches(workId) {
+				if (workId === originalWorkId) return true;
+				if (visited.has(workId) || visited.size >= 30) return false;
+				visited.add(workId);
+				return confirmedWork(run, workId).dependencies.some((parent) => reaches(parent.workId));
+			}
+			if (reaches(edge.workId)) return true;
+		}
+		return false;
+	}
+	function mutate(method, i, act) {
+		return transaction(db, () => {
+			const run = member(i.principalId, i.runId, true), hash = digest(canonical({
+				method,
+				...i
+			})), old = get("SELECT * FROM verified_issue_commands WHERE operation_id=?", i.operationId);
+			if (old) {
+				if (old.principal_id !== i.principalId) fail$14("VERIFIED_FINDING_NOT_FOUND", 404);
+				if (old.request_hash !== hash) fail$14("IDEMPOTENCY_KEY_REUSED");
+				return json$9(old.result_json);
+			}
+			if (get("SELECT 1 FROM issue_operations WHERE operation_id=?", i.operationId) || get("SELECT 1 FROM operations WHERE operation_id=?", i.operationId)) fail$14("IDEMPOTENCY_KEY_REUSED");
+			active(run);
+			const row = original(i.issueId, i.runId);
+			if (row.revision !== i.issueRevision) fail$14("ISSUE_REVISION_CHANGED");
+			if (row.state === "VERIFIED") fail$14("ISSUE_ALREADY_VERIFIED");
+			const result = act(run, row);
+			exec("INSERT INTO verified_issue_commands VALUES(?,?,?,?)", i.operationId, i.principalId, hash, canonical(result));
+			return result;
+		});
+	}
+	function applied(attemptId, runId, role) {
+		return get(`SELECT a.*,v.outcome,v.code_commit,v.evidence_artifact_id,wv.operation_id work_verification_id,wv.quality_operation_id,wv.artifact_id,wv.content_hash,wv.evaluation_json FROM attempts a JOIN verified_work_results v ON v.attempt_id=a.attempt_id JOIN work_verifications wv ON wv.attempt_id=a.attempt_id AND wv.state='APPLIED' AND wv.artifact_id=v.evidence_artifact_id WHERE a.attempt_id=? AND a.run_id=? AND a.role=? AND a.ended_at IS NOT NULL`, attemptId, runId, role) ?? fail$14("VERIFIED_FINDING_RESULT_UNPROVEN", 422);
+	}
+	const handlers = {
+		getVerifiedFinding(i) {
+			member(i.principalId, i.runId);
+			return view(original(i.issueId, i.runId), i.afterRevision, i.limit);
+		},
+		listVerifiedFindings(i) {
+			member(i.principalId, i.runId);
+			return all("SELECT i.*,f.failure_json,f.failure_sha256 FROM issues i JOIN verified_findings f ON f.issue_id=i.issue_id WHERE i.run_id=? AND i.issue_id>? ORDER BY i.issue_id LIMIT ?", i.runId, i.afterIssueId, i.limit).map((r) => view(r));
+		},
+		linkVerifiedFindingFix(i) {
+			return mutate("linkVerifiedFindingFix", i, (run, row) => {
+				const work = confirmedWork(run, i.fixWorkId), failure = json$9(row.failure_json);
+				if (!findingDependency(run, work, failure.workId) || work.workId === failure.workId) fail$14("VERIFIED_FINDING_FIX_WORK_INVALID", 422);
+				exec("UPDATE issues SET revision=revision+1,state='FIX_LINKED',fix_work_id=?,updated_at=? WHERE issue_id=?", i.fixWorkId, (/* @__PURE__ */ new Date()).toISOString(), i.issueId);
+				return history(original(i.issueId, i.runId), i.operationId, "FIX_LINKED", {
+					issueId: i.issueId,
+					issueRevision: i.issueRevision,
+					fixWorkId: i.fixWorkId,
+					origin: "trusted-verification"
+				}, null, null, null);
+			});
+		},
+		recordVerifiedFindingResult(i) {
+			return mutate("recordVerifiedFindingResult", i, (run, row) => {
+				const failure = json$9(row.failure_json), fix = applied(i.fixAttemptId, i.runId, "developer"), verification = applied(i.verificationAttemptId, i.runId, "tester"), fixWork = confirmedWork(run, String(fix.work_id)), tester = confirmedWork(run, String(verification.work_id));
+				if (row.state !== "FIX_LINKED" || row.fix_work_id !== fix.work_id || fix.work_revision !== fixWork.workRevision || verification.work_revision !== tester.workRevision || fix.outcome !== "success" || fix.state !== "SUCCEEDED" || !fix.code_commit || !verification.quality_operation_id || verification.state !== (verification.outcome === "success" ? "SUCCEEDED" : "FAILED") || !tester.dependencies.some((e) => e.workId === fix.work_id && e.requiredOutcome === "success")) fail$14("VERIFIED_FINDING_RESULT_UNPROVEN", 422);
+				const fixAssessment = json$9(fix.evaluation_json), fixInput = inputManifest.parse(json$9(fix.input_manifest_json));
+				if (fixAssessment.automaticStatus !== "PASS" || fixAssessment.outcome !== "success" || fixAssessment.codeCommit !== fix.code_commit || fixInput.checkConfigHash !== failure.checkConfigHash) fail$14("VERIFIED_FINDING_RESULT_UNPROVEN", 422);
+				const facts = quality.completionFacts(String(verification.quality_operation_id), i.principalId, i.verificationAttemptId), measured = facts.verification.evaluation, check = qualityPolicy.parse(facts.policy).checks.find((c) => c.checkId === failure.check.checkId), manifest = inputManifest.parse(json$9(verification.input_manifest_json));
+				if (facts.verification.configHash !== failure.checkConfigHash || canonical(check) !== canonical(failure.check) || canonical(manifest.requirements) !== canonical(failure.expectedRequirements) || facts.verification.basis.targetCommit !== manifest.codeCommit || measured.targetCommit !== manifest.codeCommit) fail$14("VERIFIED_FINDING_RECHECK_CHANGED", 422);
+				const subject = {
+					principalId: i.principalId,
+					runId: i.runId,
+					purpose: "work-input",
+					workId: String(verification.work_id)
+				}, basis = candidates.basis.freeze(subject), candidate = candidates.qualified(subject), source = basis.sources.find((s) => s.attemptId === i.fixAttemptId && s.workId === fix.work_id && s.commit === fix.code_commit);
+				if (!source || candidate.basisSha256 !== basis.sha256 || candidate.operationId !== facts.verification.basis.sourceIntegrationOperationId || candidate.state !== "ACKNOWLEDGED" || candidate.manifest?.commit !== manifest.codeCommit || candidate.manifest.sha256 !== facts.verification.basis.allocationManifestSha256 || manifest.codeCommit === failure.targetCommit) fail$14("VERIFIED_FINDING_FIX_SOURCE_UNPROVEN", 422);
+				const assessment = json$9(verification.evaluation_json), passed = verification.outcome === "success" && assessment.automaticStatus === "PASS" && assessment.outcome === "success" && measured.automaticStatus === "PASS" && measured.reviewStatus === "NOT_REQUIRED" && measured.checks.find((c) => c.checkId === failure.check.checkId)?.status === "PASS";
+				const evidence = {
+					artifactId: String(verification.artifact_id),
+					sha256: String(verification.content_hash)
+				}, value = {
+					issueId: i.issueId,
+					issueRevision: i.issueRevision,
+					fixAttemptId: i.fixAttemptId,
+					verificationAttemptId: i.verificationAttemptId,
+					outcome: passed ? "PASSED" : measured.automaticStatus === "FAIL" && measured.checks.find((c) => c.checkId === failure.check.checkId)?.status === "FAIL" ? "FAILED" : "NOT_VERIFIED",
+					evidence,
+					origin: "trusted-verification",
+					targetCommit: manifest.codeCommit,
+					fixCommit: fix.code_commit,
+					fixArchiveOperationId: source.archiveOperationId,
+					candidateIntegrationOperationId: candidate.operationId,
+					workVerificationId: verification.work_verification_id,
+					qualityOperationId: verification.quality_operation_id,
+					originalFailureSha256: row.failure_sha256
+				};
+				exec("UPDATE issues SET revision=revision+1,state=?,updated_at=? WHERE issue_id=?", passed ? "VERIFIED" : "FIX_LINKED", (/* @__PURE__ */ new Date()).toISOString(), i.issueId);
+				return history(original(i.issueId, i.runId), i.operationId, "VERIFICATION_RECORDED", value, evidence.artifactId, i.fixAttemptId, i.verificationAttemptId);
+			});
+		}
+	};
+	return {
+		capture,
+		linkApprovedRepair(run, issueIds, fixWorkId) {
+			const work = confirmedWork(run, fixWorkId);
+			for (const issueId of issueIds) {
+				const row = original(issueId, String(run.run_id)), failure = json$9(row.failure_json);
+				if (row.state === "VERIFIED" || work.role !== "developer" || !work.dependencies.some((e) => e.workId === failure.workId && e.requiredOutcome === "completed-with-findings")) fail$14("VERIFIED_FINDING_FIX_WORK_INVALID");
+				exec("UPDATE issues SET revision=revision+1,state='FIX_LINKED',fix_work_id=?,updated_at=? WHERE issue_id=?", fixWorkId, (/* @__PURE__ */ new Date()).toISOString(), issueId);
+				history(original(issueId, String(run.run_id)), uid$2("op"), "FIX_LINKED", {
+					issueId,
+					issueRevision: row.revision,
+					fixWorkId,
+					origin: "confirmed-forward-repair"
+				}, null, null, null);
+			}
+		},
+		execute(method, input) {
+			const parsed = parseContract(verifiedFindingRequests[method], input);
+			return handlers[method](parsed);
+		}
+	};
+}
+//#endregion
+//#region src/release-freeze-domain.ts
+const json$8 = (value) => JSON.parse(String(value));
+function fail$13(code, status = 409) {
+	throw new StorageError(code, status, "Release candidate requires complete exact original proofs");
+}
+function createReleaseFreezeDomain(db, plans, candidates, deliveries, works, quality, hooks) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p), results = createPlanResults(db);
+	function member(principalId, runId) {
+		if (!get("SELECT 1 FROM runs r JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=? WHERE r.run_id=?", principalId, runId)) fail$13("RELEASE_CANDIDATE_NOT_FOUND", 404);
+	}
+	function capture(i) {
+		const principalId = i.meta.principalId, run = plans.authorized(principalId, i.runId, true), source = candidates.qualified({
+			principalId,
+			runId: i.runId,
+			purpose: "run-candidate"
+		}), basis = candidates.basis.freeze({
+			principalId,
+			runId: i.runId,
+			purpose: "run-candidate"
+		}), head = get("SELECT * FROM managed_candidate_heads WHERE run_id=?", i.runId);
+		if (source.operationId !== i.integrationOperationId || source.state !== "ACKNOWLEDGED" || !source.manifest || head?.operation_id !== source.operationId || head.commit_sha !== source.manifest.commit || source.basisSha256 !== basis.sha256) fail$13("RELEASE_CANDIDATE_SOURCE_CHANGED");
+		if (get("SELECT 1 FROM candidate_integrations WHERE project_id=? AND state NOT IN ('ACKNOWLEDGED','CONFLICT','FAILED')", run.project_id)) fail$13("RELEASE_CANDIDATE_EFFECT_UNKNOWN");
+		const delivery = deliveries.completionFacts(principalId, i.deliveryOperationId), d = delivery.delivery, b = d.basis;
+		if (d.runId !== i.runId || b.runEpoch !== run.run_epoch || b.planRevision !== run.current_plan_revision || b.requirementRevision !== run.current_requirement_revision || b.targetCommit !== source.manifest.commit || b.sourceManifestSha256 !== source.manifest.sha256) fail$13("RELEASE_CANDIDATE_DELIVERY_CHANGED");
+		const plan = planDraft.parse(json$8(get("SELECT content_json FROM plan_revisions WHERE run_id=? AND revision=?", i.runId, run.current_plan_revision).content_json)), proofs = [], manual = /* @__PURE__ */ new Set(), qualityFacts = [];
+		const ancestors = (workId) => {
+			const found = /* @__PURE__ */ new Set();
+			function visit(id) {
+				const w = plan.works.find((w) => w.workId === id);
+				for (const edge of w.dependencies) if (!found.has(edge.workId)) {
+					found.add(edge.workId);
+					visit(edge.workId);
+				}
+			}
+			visit(workId);
+			return found;
+		};
+		const testers = plan.works.filter((w) => w.role === "tester"), finalTesters = new Set(testers.filter((w) => !testers.some((other) => other.workId !== w.workId && ancestors(other.workId).has(w.workId))).map((w) => w.workId));
+		if (!finalTesters.size) fail$13("RELEASE_CANDIDATE_QUALITY_MISSING");
+		for (const work of plan.works) {
+			const resolved = results.resolve(i.runId, Number(run.current_plan_revision), work.workId), carried = resolved?.carry ?? null;
+			let row = resolved?.row, proof;
+			if (row) proof = get("SELECT * FROM work_verifications WHERE attempt_id=? AND state='APPLIED' AND artifact_id=?", row.attempt_id, row.evidence_artifact_id);
+			else {
+				row = get("SELECT a.*,w.work_epoch current_work_epoch,w.blocked_reason,s.plan_revision source_plan_revision FROM attempts a JOIN works w ON w.run_id=a.run_id AND w.work_id=a.work_id JOIN scheduled_work s ON s.attempt_id=a.attempt_id WHERE a.run_id=? AND a.work_id=? ORDER BY attempt_no DESC LIMIT 1", i.runId, work.workId);
+				if (row) proof = get("SELECT * FROM work_verifications WHERE attempt_id=? AND state='READY' ORDER BY rowid DESC LIMIT 1", row.attempt_id);
+			}
+			if (!row || !proof || row.work_revision !== work.workRevision || row.admitted_work_epoch !== row.current_work_epoch || row.blocked_reason !== null || row.role !== work.role) fail$13("RELEASE_CANDIDATE_WORK_UNVERIFIED");
+			const fact = works.frozenFacts(principalId, String(proof.operation_id), !!carried), a = fact.assessment, manifest = inputManifest.parse(json$8(row.input_manifest_json));
+			let relation = carried ? "CARRIED" : "CURRENT";
+			if (fact.runId !== i.runId || a.workId !== work.workId || a.workRevision !== work.workRevision || a.inputFingerprint !== row.input_fingerprint || fact.attemptId !== row.attempt_id) fail$13("RELEASE_CANDIDATE_WORK_CHANGED");
+			if (carried && (!carried.workVerification || carried.workVerification.operationId !== fact.operationId || carried.workVerification.sha256 !== fact.evidence.sha256)) fail$13("RELEASE_CANDIDATE_WORK_UNVERIFIED");
+			if (fact.state === "READY") {
+				if (work.role !== "tester" || !finalTesters.has(work.workId) || carried || row.ended_at !== null || row.state !== "VERIFYING" || a.automaticStatus !== "PENDING" || a.outcome !== null || !a.checks.some((c) => c.status === "PENDING") || a.checks.some((c) => c.status !== "PASS" && !(c.status === "PENDING" && ["human-decision", "quality-review"].includes(c.kind) && c.code === "HUMAN_DECISION_REQUIRED"))) fail$13("RELEASE_CANDIDATE_WORK_UNVERIFIED");
+				relation = "MANUAL_PENDING";
+				manual.add(String(row.attempt_id));
+			} else if (row.ended_at === null || !(row.state === "SUCCEEDED" && a.outcome === "success" && a.automaticStatus === "PASS" || work.role === "tester" && !finalTesters.has(work.workId) && row.state === "FAILED" && a.outcome === "completed-with-findings")) fail$13("RELEASE_CANDIDATE_WORK_UNVERIFIED");
+			if (!carried && (row.admitted_run_epoch !== run.run_epoch || row.source_plan_revision !== run.current_plan_revision)) fail$13("RELEASE_CANDIDATE_WORK_CHANGED");
+			if (["developer", "tester"].includes(work.role) && (manifest.checkConfigHash !== b.checkConfigHash || manifest.templateVersion !== b.templateVersion)) fail$13("RELEASE_CANDIDATE_CONFIG_CHANGED");
+			proofs.push({
+				workId: work.workId,
+				workRevision: work.workRevision,
+				workEpoch: Number(row.current_work_epoch),
+				attemptId: String(row.attempt_id),
+				role: work.role,
+				relation,
+				operationId: fact.operationId,
+				evidence: fact.evidence,
+				assessment: a,
+				inputManifestHash: digest(canonical(manifest)),
+				roleSnapshotHash: digest(String(row.role_snapshot_json)),
+				carryHash: carried ? digest(canonical(carried)) : null
+			});
+			if (finalTesters.has(work.workId)) {
+				if (carried || !a.qualityOperationId) fail$13("RELEASE_CANDIDATE_QUALITY_STALE");
+				const q = quality.completionFacts(a.qualityOperationId, principalId, String(row.attempt_id)), v = q.verification;
+				if (v.evaluation?.automaticStatus !== "PASS" || v.basis.targetCommit !== b.targetCommit || v.basis.allocationManifestSha256 !== b.sourceManifestSha256 || v.configHash !== b.checkConfigHash || q.policy.templateVersion !== b.templateVersion) fail$13("RELEASE_CANDIDATE_QUALITY_STALE");
+				qualityFacts.push({
+					verification: v,
+					materials: q.materials
+				});
+			}
+		}
+		if (!qualityFacts.some((q) => q.verification.operationId === b.qualityOperationId)) fail$13("RELEASE_CANDIDATE_DELIVERY_CHANGED");
+		for (const a of all("SELECT attempt_id,ended_at FROM attempts WHERE run_id=?", i.runId)) if (a.ended_at === null && !manual.has(String(a.attempt_id)) || !knownAttemptEffects(db, String(a.attempt_id))) fail$13("RELEASE_CANDIDATE_EFFECT_UNKNOWN");
+		if (get("SELECT 1 FROM runtime_activations r JOIN attempts a ON a.attempt_id=r.attempt_id WHERE a.run_id=? AND r.state NOT IN ('FINISHED','FAILED')", i.runId) || get("SELECT 1 FROM preparation_jobs WHERE run_id=? AND state NOT IN ('APPLIED','FAILED','SUPERSEDED')", i.runId) || get("SELECT 1 FROM preparation_attempts WHERE run_id=? AND ended_at IS NULL", i.runId) || get("SELECT 1 FROM preparation_steps s JOIN preparation_attempts a ON a.preparation_attempt_id=s.preparation_attempt_id WHERE a.run_id=? AND s.state IN ('SENT','RECONCILE')", i.runId)) fail$13("RELEASE_CANDIDATE_EFFECT_UNKNOWN");
+		const issues = all("SELECT issue_id,revision,state,severity FROM issues WHERE run_id=? ORDER BY issue_id", i.runId);
+		if (issues.some((v) => ["HIGH", "CRITICAL"].includes(String(v.severity)) && v.state !== "VERIFIED")) fail$13("RELEASE_CANDIDATE_FINDING_UNRESOLVED");
+		return {
+			schemaVersion: "devmesh.release-candidate-manifest.v1",
+			projectId: String(run.project_id),
+			runId: i.runId,
+			runEpoch: Number(run.run_epoch),
+			requirementRevision: Number(run.current_requirement_revision),
+			planRevision: Number(run.current_plan_revision),
+			checkConfigHash: b.checkConfigHash,
+			templateVersion: b.templateVersion,
+			codeCommit: b.targetCommit,
+			automaticStatus: "PASS",
+			reviewStatus: manual.size || qualityFacts.some((q) => q.verification.evaluation?.reviewStatus === "PENDING") ? "PENDING" : "NOT_REQUIRED",
+			source: {
+				operationId: source.operationId,
+				basis,
+				manifestSha256: source.manifest.sha256
+			},
+			works: proofs,
+			quality: qualityFacts,
+			delivery: {
+				record: d,
+				materials: delivery.materials
+			},
+			issues: issues.map((v) => ({
+				issueId: String(v.issue_id),
+				revision: Number(v.revision),
+				state: String(v.state),
+				severity: String(v.severity)
+			}))
+		};
+	}
+	const frozen = (candidateId, runId) => get("SELECT f.*,c.manifest_json,c.manifest_hash FROM candidate_freezes f JOIN release_candidates c ON c.candidate_id=f.candidate_id WHERE f.candidate_id=? AND f.run_id=?", candidateId, runId) ?? fail$13("RELEASE_CANDIDATE_NOT_FOUND", 404);
+	function current(r) {
+		if (get("SELECT 1 FROM candidate_freezes WHERE run_id=? AND revision>?", r.run_id, r.revision) || get("SELECT 1 FROM candidate_freeze_materials m JOIN content_objects c ON c.content_hash=m.content_hash WHERE m.candidate_id=? AND c.state<>'READY'", r.candidate_id)) return false;
+		try {
+			return digest(canonical(capture(json$8(r.request_json)))) === r.basis_hash;
+		} catch (error) {
+			if (error instanceof StorageError) return false;
+			throw error;
+		}
+	}
+	const view = (r) => ({
+		candidateId: String(r.candidate_id),
+		operationId: String(r.operation_id),
+		runId: String(r.run_id),
+		projectId: String(r.project_id),
+		revision: Number(r.revision),
+		manifestHash: String(r.manifest_hash),
+		createdAt: String(r.created_at),
+		qualification: current(r) ? "CURRENT" : "STALE",
+		manifest: json$8(r.manifest_json),
+		preflightHashes: json$8(r.request_json).contentHashes
+	});
+	const handlers = {
+		prepareReleaseCandidateFreeze(i) {
+			const manifest = capture({
+				...i,
+				meta: { principalId: i.principalId }
+			}), text = canonical(manifest);
+			if (Buffer.byteLength(text) > 192 * 1024) fail$13("RELEASE_CANDIDATE_TOO_LARGE");
+			return {
+				manifest,
+				manifestHash: digest(text)
+			};
+		},
+		freezeReleaseCandidate(i) {
+			if (i.meta.scopeId !== i.runId) fail$13("OPERATION_SCOPE_INVALID", 422);
+			const { meta, ifMatch: _match, ...payload } = i;
+			const op = hooks.operation(meta, "FreezeReleaseCandidate", payload, (operationId) => {
+				const run = plans.authorized(meta.principalId, i.runId, true);
+				assertResourceVersion(i.ifMatch, Number(run.resource_revision));
+				const body = capture(i), text = canonical(body), hash = digest(text), id = "candidate_" + randomUUID().replaceAll("-", ""), revision = Number(get("SELECT COALESCE(MAX(revision),0) n FROM release_candidates WHERE run_id=?", i.runId).n) + 1;
+				if (Buffer.byteLength(text) > 192 * 1024 || Buffer.byteLength(canonical({
+					manifest: body,
+					preflightHashes: i.contentHashes
+				})) > 240 * 1024) fail$13("RELEASE_CANDIDATE_TOO_LARGE");
+				if (hash !== i.basisHash) fail$13("RELEASE_CANDIDATE_BASIS_CHANGED");
+				if (canonical(i.contentHashes) !== canonical([...new Set(i.contentHashes)].sort())) fail$13("RELEASE_CANDIDATE_CONTENT_CHANGED");
+				const supplied = new Set(i.contentHashes);
+				if ([.../* @__PURE__ */ new Set([
+					...body.works.flatMap((w) => [
+						w.evidence.sha256,
+						w.assessment.candidate.sha256,
+						...w.assessment.outputs.map((o) => o.ref.sha256)
+					]),
+					...body.quality.flatMap((q) => q.materials.map((m) => m.contentHash)),
+					...body.delivery.materials.map((m) => m.contentHash)
+				])].some((h) => !supplied.has(h))) fail$13("RELEASE_CANDIDATE_CONTENT_CHANGED");
+				for (const h of supplied) if (!get("SELECT 1 FROM content_objects c WHERE c.content_hash=? AND c.state='READY' AND (EXISTS(SELECT 1 FROM artifacts a WHERE a.content_hash=c.content_hash AND a.project_id=? AND a.run_id=? AND a.state='READY') OR EXISTS(SELECT 1 FROM quality_materials m JOIN quality_verifications q ON q.operation_id=m.operation_id WHERE m.content_hash=c.content_hash AND q.run_id=?) OR EXISTS(SELECT 1 FROM release_delivery_materials m JOIN release_deliveries d ON d.operation_id=m.operation_id WHERE m.content_hash=c.content_hash AND d.run_id=?))", h, body.projectId, i.runId, i.runId, i.runId)) fail$13("RELEASE_CANDIDATE_CONTENT_CHANGED");
+				exec("INSERT INTO release_candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,'READY')", id, body.projectId, i.runId, revision, body.codeCommit, body.requirementRevision, body.planRevision, hash, body.checkConfigHash, digest(canonical(body.delivery.record.dataPlan)), text);
+				exec("INSERT INTO candidate_freezes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", operationId, meta.principalId, body.projectId, i.runId, id, revision, i.integrationOperationId, i.deliveryOperationId, digest(canonical(payload)), canonical(i), hash, (/* @__PURE__ */ new Date()).toISOString());
+				for (const w of body.works) exec("INSERT INTO candidate_freeze_work_proofs VALUES(?,?,?,?,?)", id, w.workId, w.operationId, w.evidence.sha256, w.relation);
+				const materials = /* @__PURE__ */ new Map();
+				for (const q of body.quality) for (const m of q.materials) materials.set("quality." + q.verification.operationId + "." + m.materialKey, m.contentHash);
+				for (const m of body.delivery.materials) materials.set("delivery." + m.materialKey, m.contentHash);
+				for (const [key, contentHash] of materials) exec("INSERT INTO candidate_freeze_materials VALUES(?,?,?)", id, key, contentHash);
+				for (const [index, h] of i.contentHashes.entries()) exec("INSERT INTO candidate_freeze_materials VALUES(?,?,?)", id, "preflight." + index, h);
+				hooks.changed(i.runId, operationId, id);
+				return {
+					candidateId: id,
+					revision,
+					manifestHash: hash
+				};
+			}, () => {
+				plans.authorized(meta.principalId, i.runId, true);
+			});
+			return view(frozen(String(op.result.candidateId), i.runId));
+		},
+		getReleaseCandidate(i) {
+			member(i.principalId, i.runId);
+			return view(frozen(i.candidateId, i.runId));
+		},
+		getCurrentReleaseCandidate(i) {
+			member(i.principalId, i.runId);
+			const r = get("SELECT candidate_id FROM candidate_freezes WHERE run_id=? ORDER BY revision DESC LIMIT 1", i.runId);
+			return r ? view(frozen(String(r.candidate_id), i.runId)) : null;
+		},
+		listReleaseCandidates(i) {
+			member(i.principalId, i.runId);
+			const rows = all("SELECT candidate_id,revision FROM candidate_freezes WHERE run_id=? AND revision>? ORDER BY revision LIMIT ?", i.runId, i.afterRevision, i.limit + 1), page = rows.slice(0, i.limit);
+			return {
+				items: page.map((r) => {
+					const v = view(frozen(String(r.candidate_id), i.runId));
+					return {
+						candidateId: v.candidateId,
+						operationId: v.operationId,
+						revision: v.revision,
+						manifestHash: v.manifestHash,
+						createdAt: v.createdAt,
+						qualification: v.qualification,
+						codeCommit: v.manifest.codeCommit,
+						automaticStatus: v.manifest.automaticStatus,
+						reviewStatus: v.manifest.reviewStatus
+					};
+				}),
+				nextRevision: rows.length > i.limit ? Number(page.at(-1).revision) : null
+			};
+		}
+	};
+	return {
+		getCandidate: handlers.getReleaseCandidate,
+		execute(method, input) {
+			const parsed = parseContract(releaseFreezeRequests[method], input), call = () => handlers[method](parsed);
+			return method === "freezeReleaseCandidate" ? call() : transaction(db, call);
+		}
+	};
+}
+//#endregion
+//#region src/candidate-review-domain.ts
+function fail$12(code, status = 409) {
+	throw new StorageError(code, status, "Review requires an exact current candidate and explicit observations");
+}
+const json$7 = (v) => JSON.parse(String(v));
+function createCandidateReviewDomain(db, plans, freezes, hooks) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	function authorized(principalId, runId, write = false) {
+		const run = plans.authorized(principalId, runId);
+		if (write && run.membership !== "owner") fail$12("FORBIDDEN", 403);
+		return run;
+	}
+	function definitions(i) {
+		const run = authorized(i.principalId, i.runId), candidate = freezes.getCandidate(i), body = candidate.manifest;
+		const requirementRow = get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", i.runId, body.requirementRevision), planRow = get("SELECT content_json FROM plan_revisions WHERE run_id=? AND revision=?", i.runId, body.planRevision);
+		if (!requirementRow || !planRow) fail$12("CANDIDATE_REVIEW_BASIS_MISSING");
+		const requirements = parseContract(productOutput, json$7(requirementRow.content_json)), plan = parseContract(planDraft, json$7(planRow.content_json)), items = [];
+		const add = (value) => {
+			const itemHash = digest(canonical(value));
+			items.push({
+				...value,
+				itemHash,
+				itemId: "review_" + digest(canonical({
+					candidateId: i.candidateId,
+					itemHash
+				}))
+			});
+		};
+		for (const r of requirements.requirements) for (const [index, expected] of r.acceptance.entries()) add({
+			kind: "requirement",
+			requirementIds: [r.id],
+			subjectId: r.id,
+			checkId: "acceptance." + index,
+			expected
+		});
+		for (const w of body.works.filter((w) => w.relation === "MANUAL_PENDING")) {
+			const definition = plan.works.find((p) => p.workId === w.workId && p.workRevision === w.workRevision);
+			if (!definition) fail$12("CANDIDATE_REVIEW_BASIS_MISSING");
+			for (const check of definition.completionChecks) if (check.kind === "human-decision") add({
+				kind: "work-human",
+				requirementIds: [...definition.requirementIds].sort(),
+				subjectId: w.operationId,
+				checkId: check.checkId,
+				expected: "确认工作 " + w.workId + " 的人工检查 " + check.checkId + " 满足已确认计划。"
+			});
+		}
+		const automaticChecks = [];
+		for (const q of body.quality) {
+			const saved = get("SELECT policy_json FROM quality_policies WHERE config_hash=? AND project_id=?", q.verification.configHash, body.projectId);
+			if (!saved) fail$12("CANDIDATE_REVIEW_BASIS_MISSING");
+			const policy = parseContract(qualityPolicy, json$7(saved.policy_json));
+			for (const c of q.verification.evaluation.checks) {
+				const check = policy.checks.find((p) => p.checkId === c.checkId);
+				if (!check) fail$12("CANDIDATE_REVIEW_BASIS_MISSING");
+				if (check.kind === "human") add({
+					kind: "quality-human",
+					requirementIds: [...new Set(body.works.filter((w) => w.assessment.qualityOperationId === q.verification.operationId).flatMap((w) => plan.works.find((p) => p.workId === w.workId).requirementIds))].sort(),
+					subjectId: q.verification.operationId,
+					checkId: c.checkId,
+					expected: "确认质量检查 " + c.checkId + " 满足本候选已冻结的需求与质量策略。"
+				});
+				else automaticChecks.push({
+					operationId: q.verification.operationId,
+					checkId: c.checkId,
+					status: c.status,
+					codes: c.codes
+				});
+			}
+		}
+		items.sort((a, b) => a.itemId < b.itemId ? -1 : a.itemId > b.itemId ? 1 : 0);
+		if (!items.length || items.length > 2048 || new Set(items.map((v) => v.itemId)).size !== items.length || Buffer.byteLength(canonical(items)) > 512 * 1024) fail$12("CANDIDATE_REVIEW_LIMIT");
+		return {
+			run,
+			candidate,
+			items,
+			automaticChecks
+		};
+	}
+	const result = (id) => json$7((get("SELECT result_json FROM candidate_review_results WHERE result_id=?", id) ?? fail$12("CANDIDATE_REVIEW_NOT_FOUND", 404)).result_json);
+	const rejection = (id) => json$7((get("SELECT result_json FROM candidate_rejection_results WHERE result_id=?", id) ?? fail$12("CANDIDATE_REJECTION_NOT_FOUND", 404)).result_json);
+	function view(i) {
+		const d = definitions(i), saved = new Map(all("SELECT item_id,result_id FROM candidate_review_current WHERE candidate_id=?", i.candidateId).map((r) => [String(r.item_id), String(r.result_id)]));
+		const items = d.items.map((item) => {
+			const r = saved.has(item.itemId) ? result(saved.get(item.itemId)) : null;
+			const available = !r || r.evidence.every((ref) => !!get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.content_hash=? AND a.project_id=? AND a.run_id=? AND a.state='READY' AND c.state='READY'", ref.artifactId, ref.sha256, d.candidate.projectId, i.runId));
+			return {
+				...item,
+				status: d.candidate.qualification === "STALE" || r && (!available || r.item.itemHash !== item.itemHash) ? "STALE" : r?.verdict ?? "MISSING",
+				result: r
+			};
+		});
+		const humanStatus = items.some((i) => i.status === "STALE") ? "STALE" : items.some((i) => i.status === "FAIL") ? "FAIL" : items.some((i) => i.status === "MISSING") ? "MISSING" : "PASS";
+		const rejections = all("SELECT c.result_id FROM candidate_rejection_current c JOIN candidate_rejection_results r ON r.result_id=c.result_id WHERE r.run_id=? ORDER BY c.rejection_id", i.runId).map((r) => rejection(String(r.result_id)));
+		if (rejections.length > 100) fail$12("CANDIDATE_REVIEW_LIMIT");
+		const rejectionStatus = rejections.some((r) => r.state === "OPEN") ? "OPEN" : "NONE";
+		const basis = {
+			candidateId: i.candidateId,
+			candidateRevision: d.candidate.revision,
+			manifestHash: d.candidate.manifestHash,
+			qualification: d.candidate.qualification,
+			items: items.map(({ itemId, itemHash, status, result }) => ({
+				itemId,
+				itemHash,
+				status,
+				resultId: result?.resultId ?? null
+			})),
+			automaticChecks: d.automaticChecks,
+			rejections: rejections.map((r) => ({
+				candidateId: r.candidateId,
+				rejectionId: r.rejectionId,
+				resultId: r.resultId,
+				classification: r.classification,
+				state: r.state
+			}))
+		};
+		const canRecord = d.candidate.qualification === "CURRENT" && d.run.terminal_outcome === null && d.run.phase === "REVIEW" && d.run.control_gate === "OPEN" && d.run.membership === "owner";
+		const value = {
+			...basis,
+			resourceRevision: Number(d.run.resource_revision),
+			automaticStatus: "PASS",
+			humanStatus,
+			reviewHash: digest(canonical(basis)),
+			items,
+			automaticChecks: d.automaticChecks,
+			rejections,
+			rejectionStatus,
+			canRecord,
+			canPrepareAcceptance: canRecord && humanStatus === "PASS" && rejectionStatus === "NONE",
+			canWithdrawRejections: d.run.terminal_outcome === null && d.run.phase === "REVIEW" && d.run.control_gate === "OPEN" && d.run.membership === "owner"
+		};
+		if (Buffer.byteLength(canonical(value)) > 1024 * 1024) fail$12("CANDIDATE_REVIEW_LIMIT");
+		return value;
+	}
+	const handlers = {
+		getCandidateReview: view,
+		recordCandidateRejection(i) {
+			if (i.meta.scopeId !== i.runId) fail$12("OPERATION_SCOPE_INVALID", 422);
+			const { meta, ifMatch: _match, ...payload } = i;
+			const op = hooks.operation(meta, "RecordCandidateRejection", payload, (operationId) => {
+				const principalId = meta.principalId, run = authorized(principalId, i.runId, true);
+				assertResourceVersion(i.ifMatch, Number(run.resource_revision));
+				const v = view({
+					principalId,
+					runId: i.runId,
+					candidateId: i.candidateId
+				}), previous = get("SELECT candidate_id,result_id FROM candidate_rejection_current WHERE rejection_id=?", i.rejectionId);
+				if (previous && previous.candidate_id !== i.candidateId) fail$12("CANDIDATE_REJECTION_NOT_FOUND", 404);
+				if ((previous?.result_id ?? null) !== i.previousResultId) fail$12("CANDIDATE_REVIEW_CONFLICT");
+				if (run.terminal_outcome !== null || run.phase !== "REVIEW" || run.control_gate !== "OPEN" || v.manifestHash !== i.manifestHash || i.state === "OPEN" && !v.canRecord) fail$12("CANDIDATE_REVIEW_STALE");
+				if (i.state === "WITHDRAWN" && !previous) fail$12("CANDIDATE_REJECTION_INVALID", 422);
+				const item = i.itemId ? v.items.find((item) => item.itemId === i.itemId) : null;
+				if (Boolean(i.itemId) !== Boolean(i.itemHash) || i.itemId && (!item || item.itemHash !== i.itemHash) || i.classification === "IN_SCOPE_DEFECT" && !item) fail$12("CANDIDATE_REVIEW_ITEM_CHANGED");
+				if (new Set(i.evidence.map((r) => r.artifactId)).size !== i.evidence.length) fail$12("CANDIDATE_REVIEW_EVIDENCE_INVALID", 422);
+				for (const ref of i.evidence) if (!get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.project_id=? AND a.run_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'", ref.artifactId, run.project_id, i.runId, ref.sha256)) fail$12("CANDIDATE_REVIEW_EVIDENCE_INVALID");
+				const definition = item ? (({ status: _status, result: _result, ...definition }) => definition)(item) : null, resultId = "rejection_result_" + randomUUID().replaceAll("-", ""), createdAt = (/* @__PURE__ */ new Date()).toISOString(), record = {
+					resultId,
+					operationId,
+					candidateId: i.candidateId,
+					candidateRevision: v.candidateRevision,
+					manifestHash: v.manifestHash,
+					rejectionId: i.rejectionId,
+					previousResultId: i.previousResultId,
+					classification: i.classification,
+					state: i.state,
+					item: definition,
+					description: i.description,
+					reason: i.reason,
+					evidence: i.evidence,
+					principalId,
+					createdAt,
+					nextAction: i.state === "WITHDRAWN" ? "NONE" : i.classification === "IN_SCOPE_DEFECT" ? "REPAIR_REVIEW_REQUIRED" : "CHANGE_REVIEW_REQUIRED",
+					applicationState: "NOT_APPLIED"
+				};
+				exec("INSERT INTO candidate_rejection_results VALUES(?,?,?,?,?,?,?,?,?,?,?)", resultId, operationId, run.project_id, i.runId, i.candidateId, i.rejectionId, i.previousResultId, i.classification, i.state, canonical(record), createdAt);
+				for (const ref of i.evidence) exec("INSERT INTO candidate_rejection_evidence VALUES(?,?,?)", resultId, ref.artifactId, ref.sha256);
+				exec("INSERT INTO candidate_rejection_current VALUES(?,?,?) ON CONFLICT(rejection_id) DO UPDATE SET result_id=excluded.result_id", i.rejectionId, i.candidateId, resultId);
+				view({
+					principalId,
+					runId: i.runId,
+					candidateId: i.candidateId
+				});
+				const latest = get("SELECT candidate_id FROM candidate_freezes WHERE run_id=? ORDER BY revision DESC LIMIT 1", i.runId);
+				if (latest && latest.candidate_id !== i.candidateId) view({
+					principalId,
+					runId: i.runId,
+					candidateId: ids.candidate.parse(latest.candidate_id)
+				});
+				hooks.rejected(i.runId, operationId, i.candidateId, i.rejectionId, resultId, i.state);
+				return { resultId };
+			}, () => {
+				authorized(meta.principalId, i.runId, true);
+			});
+			return rejection(String(op.result.resultId));
+		},
+		recordCandidateReview(i) {
+			if (i.meta.scopeId !== i.runId) fail$12("OPERATION_SCOPE_INVALID", 422);
+			const { meta, ifMatch: _match, ...payload } = i;
+			const op = hooks.operation(meta, "RecordCandidateReview", payload, (operationId) => {
+				const principalId = meta.principalId, run = authorized(principalId, i.runId, true);
+				assertResourceVersion(i.ifMatch, Number(run.resource_revision));
+				const v = view({
+					principalId,
+					runId: i.runId,
+					candidateId: i.candidateId
+				});
+				if (!v.canRecord || v.manifestHash !== i.manifestHash) fail$12("CANDIDATE_REVIEW_STALE");
+				const item = v.items.find((item) => item.itemId === i.itemId);
+				if (!item || item.itemHash !== i.itemHash) fail$12("CANDIDATE_REVIEW_ITEM_CHANGED");
+				if (item.expected !== i.expected) fail$12("CANDIDATE_REVIEW_EXPECTED_CHANGED");
+				if ((item.result?.resultId ?? null) !== i.previousResultId) fail$12("CANDIDATE_REVIEW_CONFLICT");
+				if (new Set(i.evidence.map((r) => r.artifactId)).size !== i.evidence.length) fail$12("CANDIDATE_REVIEW_EVIDENCE_INVALID", 422);
+				for (const ref of i.evidence) if (!get("SELECT 1 FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.project_id=? AND a.run_id=? AND a.content_hash=? AND a.state='READY' AND c.state='READY'", ref.artifactId, run.project_id, i.runId, ref.sha256)) fail$12("CANDIDATE_REVIEW_EVIDENCE_INVALID");
+				const { status: _status, result: _result, ...definition } = item, resultId = "review_result_" + randomUUID().replaceAll("-", ""), createdAt = (/* @__PURE__ */ new Date()).toISOString(), record = {
+					resultId,
+					operationId,
+					candidateId: i.candidateId,
+					candidateRevision: v.candidateRevision,
+					manifestHash: v.manifestHash,
+					item: definition,
+					previousResultId: i.previousResultId,
+					principalId,
+					verdict: i.verdict,
+					procedure: i.procedure,
+					expected: i.expected,
+					observed: i.observed,
+					evidence: i.evidence,
+					createdAt
+				};
+				exec("INSERT INTO candidate_review_results VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", resultId, operationId, run.project_id, i.runId, i.candidateId, i.itemId, i.itemHash, i.previousResultId, principalId, i.verdict, canonical(record), createdAt);
+				for (const ref of i.evidence) exec("INSERT INTO candidate_review_evidence VALUES(?,?,?)", resultId, ref.artifactId, ref.sha256);
+				exec("INSERT INTO candidate_review_current VALUES(?,?,?) ON CONFLICT(candidate_id,item_id) DO UPDATE SET result_id=excluded.result_id", i.candidateId, i.itemId, resultId);
+				view({
+					principalId,
+					runId: i.runId,
+					candidateId: i.candidateId
+				});
+				hooks.changed(i.runId, operationId, i.candidateId, resultId);
+				return { resultId };
+			}, () => {
+				authorized(meta.principalId, i.runId, true);
+			});
+			return result(String(op.result.resultId));
+		},
+		listCandidateReviewHistory(i) {
+			authorized(i.principalId, i.runId);
+			freezes.getCandidate({
+				principalId: i.principalId,
+				runId: i.runId,
+				candidateId: i.candidateId
+			});
+			const rows = all("SELECT rowid sequence,result_id FROM candidate_review_results WHERE candidate_id=? AND rowid>? AND (? IS NULL OR item_id=?) ORDER BY rowid LIMIT ?", i.candidateId, i.afterSequence, i.itemId ?? null, i.itemId ?? null, i.limit + 1), items = [];
+			let size = 0;
+			for (const row of rows.slice(0, i.limit)) {
+				const item = {
+					sequence: Number(row.sequence),
+					result: result(String(row.result_id))
+				}, length = Buffer.byteLength(canonical(item));
+				if (size + length > 1024 * 1024) break;
+				items.push(item);
+				size += length;
+			}
+			return {
+				items,
+				nextSequence: rows.length > items.length ? items.at(-1).sequence : null
+			};
+		},
+		listCandidateRejectionHistory(i) {
+			authorized(i.principalId, i.runId);
+			freezes.getCandidate({
+				principalId: i.principalId,
+				runId: i.runId,
+				candidateId: i.candidateId
+			});
+			const rows = all("SELECT rowid sequence,result_id FROM candidate_rejection_results WHERE candidate_id=? AND rowid>? AND (? IS NULL OR rejection_id=?) ORDER BY rowid LIMIT ?", i.candidateId, i.afterSequence, i.rejectionId ?? null, i.rejectionId ?? null, i.limit + 1), items = [];
+			let size = 0;
+			for (const row of rows.slice(0, i.limit)) {
+				const item = {
+					sequence: Number(row.sequence),
+					result: rejection(String(row.result_id))
+				}, length = Buffer.byteLength(canonical(item));
+				if (size + length > 1024 * 1024) break;
+				items.push(item);
+				size += length;
+			}
+			return {
+				items,
+				nextSequence: rows.length > items.length ? items.at(-1).sequence : null
+			};
+		}
+	};
+	return {
+		getReview: view,
+		execute(method, input) {
+			const parsed = parseContract(candidateReviewRequests[method], input), call = () => handlers[method](parsed);
+			return ["recordCandidateReview", "recordCandidateRejection"].includes(method) ? call() : transaction(db, call);
+		}
+	};
+}
+//#endregion
+//#region src/preview-domain.ts
+const json$6 = (v) => JSON.parse(String(v));
+const uid$1 = (prefix) => prefix + "_" + randomUUID().replaceAll("-", "");
+const now$5 = () => (/* @__PURE__ */ new Date()).toISOString();
+function fail$11(code, status = 409) {
+	throw new StorageError(code, status, "Preview operations require the exact durable identity and trusted original backend evidence");
+}
+function createPreviewDomain(db, plans, freezes, hooks) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	function authorized(principalId, runId, write = false) {
+		const r = plans.authorized(principalId, runId);
+		if (write && r.membership !== "owner") fail$11("FORBIDDEN", 403);
+		return r;
+	}
+	function member(principalId, projectId, write = false) {
+		const r = get("SELECT m.role FROM project_members m WHERE m.project_id=? AND m.principal_id=?", projectId, principalId);
+		if (!r) fail$11("PREVIEW_NOT_FOUND", 404);
+		if (write && r.role !== "owner") fail$11("FORBIDDEN", 403);
+	}
+	const policy = (projectId, policyHash) => previewBackendPolicy.parse(json$6(get("SELECT policy_json FROM preview_backend_policies WHERE project_id=? AND policy_hash=?", projectId, policyHash)?.policy_json ?? fail$11("PREVIEW_BACKEND_NOT_CONFIGURED", 503)));
+	const dataset = (id) => get("SELECT * FROM datasets WHERE dataset_id=?", id) ?? fail$11("PREVIEW_DATASET_NOT_FOUND", 404);
+	const preview = (id) => get("SELECT * FROM previews WHERE preview_id=?", id) ?? fail$11("PREVIEW_NOT_FOUND", 404);
+	const effect = (id) => get("SELECT * FROM preview_effects WHERE operation_id=?", id) ?? fail$11("PREVIEW_EFFECT_NOT_FOUND", 404);
+	const datasetView = (r) => ({
+		datasetId: String(r.dataset_id),
+		projectId: String(r.project_id),
+		runId: String(r.run_id),
+		candidateId: String(r.candidate_id),
+		operationId: String(r.operation_id),
+		policyHash: String(r.policy_hash),
+		sourceDatasetId: r.source_dataset_id,
+		sourceReleaseId: r.source_release_id,
+		storageKey: String(r.storage_key),
+		schemaRevision: String(r.schema_revision),
+		state: r.state,
+		revision: Number(r.revision),
+		snapshotAt: r.snapshot_at,
+		retentionUntil: String(r.retention_until),
+		createdAt: String(r.created_at)
+	});
+	const effectView = (r) => ({
+		operationId: String(r.operation_id),
+		projectId: String(r.project_id),
+		runId: String(r.run_id),
+		candidateId: String(r.candidate_id),
+		datasetId: String(r.dataset_id),
+		previewId: r.preview_id,
+		policyHash: String(r.policy_hash),
+		kind: r.kind,
+		remoteKey: String(r.remote_key),
+		requestHash: String(r.request_hash),
+		request: json$6(r.request_json),
+		state: r.state,
+		revision: Number(r.revision),
+		receipt: r.receipt_json ? json$6(r.receipt_json) : null,
+		errorCode: r.error_code,
+		createdAt: String(r.created_at)
+	});
+	const accepted = (r) => !!get("SELECT 1 FROM releases WHERE project_id=? AND (candidate_id=? OR prepared_data_ref=?)", r.project_id, r.candidate_id, r.dataset_id);
+	const runtimeView = (r) => ({
+		sequence: Number(r.sequence),
+		fact: json$6(r.fact_json),
+		observedAt: String(r.observed_at)
+	});
+	const latestRuntime = (previewId) => {
+		const r = get("SELECT * FROM preview_runtime_observations WHERE preview_id=? ORDER BY sequence DESC LIMIT 1", previewId);
+		return r ? runtimeView(r) : null;
+	};
+	function previewView(r) {
+		const d = dataset(String(r.dataset_id)), stop = get("SELECT operation_id FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'", r.preview_id), runtime = latestRuntime(String(r.preview_id));
+		const basis = {
+			previewId: r.preview_id,
+			previewRevision: r.revision,
+			datasetId: r.dataset_id,
+			datasetRevision: d.revision,
+			imageDigest: r.image_digest,
+			instanceId: r.instance_id,
+			accepted: accepted(r)
+		};
+		const healthAge = runtime ? Date.now() - Date.parse(runtime.fact.checkedAt) : null;
+		const fresh = runtime?.fact.state === "HEALTHY" && runtime.fact.instanceId === r.instance_id && healthAge !== null && healthAge >= 0 && healthAge <= 3e4;
+		return {
+			previewId: String(r.preview_id),
+			projectId: String(r.project_id),
+			runId: String(r.run_id),
+			candidateId: String(r.candidate_id),
+			operationId: String(r.operation_id),
+			datasetId: String(r.dataset_id),
+			policyHash: String(r.policy_hash),
+			imageDigest: String(r.image_digest),
+			state: r.state,
+			revision: Number(r.revision),
+			instanceId: r.instance_id,
+			expiresAt: String(r.expires_at),
+			createdAt: String(r.created_at),
+			impactReviewHash: digest(canonical(basis)),
+			stopOperationId: stop ? String(stop.operation_id) : null,
+			availability: r.state === "READY" && String(r.expires_at) > now$5() && d.state === "READY" && fresh ? "AVAILABLE" : "UNAVAILABLE",
+			healthState: runtime?.fact.state ?? "UNKNOWN",
+			healthCheckedAt: runtime?.fact.checkedAt ?? null
+		};
+	}
+	function scoped(principalId, runId, r, write = false) {
+		const run = authorized(principalId, runId, write);
+		if (r.run_id !== runId || r.project_id !== run.project_id) fail$11("PREVIEW_NOT_FOUND", 404);
+		return run;
+	}
+	function current(i) {
+		const run = authorized(i.meta.principalId, i.runId, true);
+		assertResourceVersion(i.ifMatch, Number(run.resource_revision));
+		const c = freezes.getCandidate({
+			principalId: i.meta.principalId,
+			runId: ids.run.parse(i.runId),
+			candidateId: i.candidateId
+		});
+		if (c.qualification !== "CURRENT" || c.manifestHash !== i.manifestHash || run.terminal_outcome !== null || run.control_gate !== "OPEN" || run.phase !== "REVIEW") fail$11("PREVIEW_CANDIDATE_STALE");
+		return {
+			run,
+			c
+		};
+	}
+	function backend(i) {
+		const e = effect(i.operationId);
+		if (policy(String(e.project_id), String(e.policy_hash)).backendPrincipalId !== i.principalId) fail$11("FORBIDDEN", 403);
+		if (i.requestHash !== void 0 && e.request_hash !== i.requestHash) fail$11("PREVIEW_REQUEST_CHANGED");
+		return e;
+	}
+	function backendPreview(principalId, previewId) {
+		const p = preview(previewId);
+		backend({
+			principalId,
+			operationId: String(p.operation_id)
+		});
+		return p;
+	}
+	function lifecycle(p) {
+		const d = dataset(String(p.dataset_id)), stop = get("SELECT * FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'", p.preview_id);
+		return {
+			preview: previewView(p),
+			startEffect: effectView(effect(String(p.operation_id))),
+			datasetEffect: effectView(effect(String(d.operation_id))),
+			stopEffect: stop ? effectView(stop) : null,
+			runtime: latestRuntime(String(p.preview_id)),
+			accepted: accepted(p)
+		};
+	}
+	function dispatchAllowed(r) {
+		if (r.kind === "PREVIEW_START" && (String(preview(String(r.preview_id)).expires_at) <= now$5() || get("SELECT 1 FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'", r.preview_id))) fail$11("PREVIEW_EXPIRED_BEFORE_DISPATCH");
+		if (r.kind !== "PREVIEW_STOP") {
+			const owner = get("SELECT principal_id FROM operations WHERE operation_id=?", r.operation_id), request = json$6(r.request_json), run = authorized(String(owner.principal_id), String(r.run_id), true), c = freezes.getCandidate({
+				principalId: String(owner.principal_id),
+				runId: ids.run.parse(r.run_id),
+				candidateId: ids.candidate.parse(r.candidate_id)
+			});
+			if (run.terminal_outcome !== null || run.control_gate !== "OPEN" || run.phase !== "REVIEW" || c.qualification !== "CURRENT" || c.manifestHash !== request.manifestHash) fail$11("PREVIEW_CANDIDATE_STALE");
+			if (r.kind === "DATASET_PREPARE" && (get("SELECT accepted_release_id FROM projects WHERE project_id=?", r.project_id).accepted_release_id ?? null) !== (request.sourceReleaseId ?? null)) fail$11("PREVIEW_SOURCE_RELEASE_CHANGED");
+		} else if (accepted(preview(String(r.preview_id)))) fail$11("PREVIEW_OWNED_BY_RELEASE");
+	}
+	function addStop(operationId, r, reason) {
+		const v = previewView(r);
+		if (accepted(r)) fail$11("PREVIEW_OWNED_BY_RELEASE");
+		if (!r.instance_id || ![
+			"READY",
+			"STARTING",
+			"UNKNOWN"
+		].includes(String(r.state))) fail$11("PREVIEW_ORIGINAL_INSTANCE_UNKNOWN");
+		if (reason === "EXPIRED" && String(r.expires_at) > now$5()) fail$11("PREVIEW_NOT_EXPIRED");
+		if (v.stopOperationId) fail$11("PREVIEW_STOP_ALREADY_REQUESTED");
+		const p = policy(v.projectId, v.policyHash), d = dataset(v.datasetId), start = effect(v.operationId);
+		addEffect(operationId, d, "PREVIEW_STOP", v.previewId, {
+			schemaVersion: "devmesh.preview-stop.v1",
+			operationId,
+			projectId: v.projectId,
+			runId: v.runId,
+			candidateId: v.candidateId,
+			policyHash: v.policyHash,
+			backendRef: p.backendRef,
+			runnerId: p.runnerId,
+			previewId: v.previewId,
+			datasetId: v.datasetId,
+			imageDigest: v.imageDigest,
+			startOperationId: v.operationId,
+			startRequestHash: start.request_hash,
+			instanceId: v.instanceId,
+			reason
+		}, v.previewId);
+		exec("UPDATE previews SET state='STOPPING',revision=revision+1 WHERE preview_id=?", v.previewId);
+		hooks.changed(v.runId, operationId, {
+			previewId: v.previewId,
+			state: "STOPPING"
+		});
+		return { previewId: v.previewId };
+	}
+	function known(runId) {
+		if (get("SELECT 1 FROM preview_effects WHERE run_id=? AND state IN ('PREPARED','SENT','UNKNOWN')", runId)) fail$11("PREVIEW_ORIGINAL_EFFECT_UNRESOLVED");
+	}
+	function addEffect(operationId, r, kind, remoteKey, request, previewId = null) {
+		const body = canonical(request);
+		exec("INSERT INTO preview_effects VALUES(?,?,?,?,?,?,?,?,?,?,?,'PREPARED',1,NULL,NULL,?)", operationId, r.project_id, r.run_id, r.candidate_id, r.dataset_id, previewId, r.policy_hash, kind, remoteKey, digest(body), body, now$5());
+	}
+	function operation(i, kind, payload, action) {
+		if (i.meta.scopeId !== i.runId) fail$11("OPERATION_SCOPE_INVALID", 422);
+		return hooks.operation(i.meta, kind, payload, action, () => {
+			authorized(i.meta.principalId, i.runId, true);
+		});
+	}
+	function managementContext(i) {
+		const run = authorized(i.principalId, i.runId), c = freezes.getCandidate(i), data = c.manifest.delivery.record.dataPlan, selected = i.policyHash ? get("SELECT policy_json FROM preview_backend_policies WHERE project_id=? AND policy_hash=?", c.projectId, i.policyHash) : void 0, p = selected ? previewBackendPolicy.parse(json$6(selected.policy_json)) : null, canManage = run.membership === "owner", pending = !!get("SELECT 1 FROM preview_effects WHERE run_id=? AND state IN ('PREPARED','SENT','UNKNOWN')", i.runId), current = canManage && c.qualification === "CURRENT" && run.terminal_outcome === null && run.control_gate === "OPEN" && run.phase === "REVIEW", source = get("SELECT accepted_release_id FROM projects WHERE project_id=?", c.projectId).accepted_release_id ?? null;
+		const sourceData = data.sourceReleaseId ? get("SELECT d.* FROM releases r JOIN datasets d ON d.dataset_id=r.prepared_data_ref WHERE r.project_id=? AND r.release_id=?", c.projectId, data.sourceReleaseId) : null;
+		const supported = p && p.templateVersion === data.templateVersion && (data.sourceReleaseId ? Boolean(p.allowSnapshots && sourceData && ["READY", "WRITE_FROZEN"].includes(String(sourceData.state)) && sourceData.schema_revision === p.schemaRevision) : data.strategy === "INITIAL" && p.initialModes.includes(data.initialData));
+		return {
+			run,
+			c,
+			data,
+			canManage,
+			pending,
+			configured: p !== null,
+			policyHash: p ? i.policyHash : null,
+			newAllowed: Boolean(current && source === data.sourceReleaseId && !pending),
+			canCreateDataset: Boolean(current && source === data.sourceReleaseId && !pending && supported)
+		};
+	}
+	function managementDataset(r, context) {
+		const d = datasetView(r), e = effect(String(r.operation_id));
+		return parseContract(previewDatasetManagement, {
+			datasetId: d.datasetId,
+			runId: d.runId,
+			candidateId: d.candidateId,
+			operationId: d.operationId,
+			state: d.state,
+			operationState: e.state,
+			revision: d.revision,
+			sourceDatasetId: d.sourceDatasetId,
+			sourceReleaseId: d.sourceReleaseId,
+			schemaRevision: d.schemaRevision,
+			snapshotAt: d.snapshotAt,
+			retentionUntil: d.retentionUntil,
+			createdAt: d.createdAt,
+			canStart: context.newAllowed && context.configured && context.policyHash === d.policyHash && d.state === "READY" && e.state === "SUCCEEDED" && !get("SELECT 1 FROM previews WHERE dataset_id=?", d.datasetId)
+		});
+	}
+	function managementPreview(r, principalId, runId) {
+		const run = scoped(principalId, runId, r), p = previewView(r);
+		return parseContract(previewManagement, {
+			previewId: p.previewId,
+			runId: p.runId,
+			candidateId: p.candidateId,
+			datasetId: p.datasetId,
+			revision: p.revision,
+			state: p.state,
+			expiresAt: p.expiresAt,
+			healthState: p.healthState,
+			healthCheckedAt: p.healthCheckedAt,
+			operationId: p.operationId,
+			impactReviewHash: p.impactReviewHash,
+			stopOperationId: p.stopOperationId,
+			canStop: run.membership === "owner" && !accepted(r) && p.instanceId !== null && [
+				"READY",
+				"STARTING",
+				"UNKNOWN"
+			].includes(p.state) && p.stopOperationId === null
+		});
+	}
+	const handlers = {
+		getCandidatePreviewWorkspace(i) {
+			const x = managementContext(i), page = (table, after) => {
+				const rows = all("SELECT rowid sequence,* FROM " + table + " WHERE run_id=? AND candidate_id=? AND rowid>? ORDER BY rowid LIMIT ?", i.runId, i.candidateId, after, i.limit + 1), more = rows.length > i.limit;
+				if (more) rows.pop();
+				return {
+					rows,
+					next: more ? Number(rows.at(-1).sequence) : null
+				};
+			}, d = page("datasets", i.afterDatasetSequence), p = page("previews", i.afterPreviewSequence);
+			return parseContract(candidatePreviewWorkspace, {
+				projectId: x.c.projectId,
+				runId: i.runId,
+				candidateId: i.candidateId,
+				candidateRevision: x.c.revision,
+				manifestHash: x.c.manifestHash,
+				qualification: x.c.qualification,
+				resourceRevision: Number(x.run.resource_revision),
+				dataPlan: x.data,
+				canManage: x.canManage,
+				configured: x.configured,
+				policyHash: x.policyHash,
+				canCreateDataset: x.canCreateDataset,
+				hasPendingEffects: x.pending,
+				datasets: d.rows.map((r) => ({
+					sequence: Number(r.sequence),
+					dataset: managementDataset(r, x)
+				})),
+				nextDatasetSequence: d.next,
+				previews: p.rows.map((r) => ({
+					sequence: Number(r.sequence),
+					preview: managementPreview(r, i.principalId, i.runId)
+				})),
+				nextPreviewSequence: p.next
+			});
+		},
+		getCandidatePreviewDataset(i) {
+			const x = managementContext(i), d = dataset(i.datasetId);
+			scoped(i.principalId, i.runId, d);
+			if (d.candidate_id !== i.candidateId) fail$11("PREVIEW_NOT_FOUND", 404);
+			return managementDataset(d, x);
+		},
+		getCandidatePreview(i) {
+			freezes.getCandidate(i);
+			const p = preview(i.previewId);
+			if (p.candidate_id !== i.candidateId) fail$11("PREVIEW_NOT_FOUND", 404);
+			return managementPreview(p, i.principalId, i.runId);
+		},
+		registerPreviewBackendPolicy(i) {
+			return transaction(db, () => {
+				member(i.principalId, i.projectId, true);
+				const body = canonical(i.policy), policyHash = digest(body);
+				exec("INSERT OR IGNORE INTO preview_backend_policies VALUES(?,?,?,?,?)", i.projectId, policyHash, body, i.principalId, now$5());
+				return {
+					policyHash,
+					policy: i.policy
+				};
+			});
+		},
+		getPreviewBackendPolicy(i) {
+			member(i.principalId, i.projectId);
+			return {
+				policyHash: i.policyHash,
+				policy: policy(i.projectId, i.policyHash)
+			};
+		},
+		createPreviewDataset(i) {
+			const { meta: _meta, ifMatch: _match, ...payload } = i;
+			const op = operation(i, "CreatePreviewDataset", payload, (operationId) => {
+				const { run, c } = current(i), p = policy(c.projectId, i.policyHash), data = c.manifest.delivery.record.dataPlan;
+				known(i.runId);
+				if (p.templateVersion !== data.templateVersion) fail$11("PREVIEW_TEMPLATE_CHANGED");
+				if ((get("SELECT accepted_release_id FROM projects WHERE project_id=?", c.projectId).accepted_release_id ?? null) !== data.sourceReleaseId) fail$11("PREVIEW_SOURCE_RELEASE_CHANGED");
+				let sourceDatasetId = null;
+				if (data.sourceReleaseId) {
+					const release = get("SELECT prepared_data_ref FROM releases WHERE project_id=? AND release_id=?", c.projectId, data.sourceReleaseId) ?? fail$11("PREVIEW_SOURCE_RELEASE_MISSING"), source = dataset(String(release.prepared_data_ref));
+					if (source.project_id !== c.projectId || !["READY", "WRITE_FROZEN"].includes(String(source.state))) fail$11("PREVIEW_SOURCE_DATASET_UNAVAILABLE");
+					if (!p.allowSnapshots) fail$11("PREVIEW_SNAPSHOT_NOT_CONFIGURED", 503);
+					if (source.schema_revision !== p.schemaRevision) fail$11("PREVIEW_MIGRATION_NOT_CONFIGURED", 503);
+					sourceDatasetId = String(source.dataset_id);
+				} else if (data.strategy !== "INITIAL" || !p.initialModes.includes(data.initialData)) fail$11("PREVIEW_INITIAL_DATA_NOT_CONFIGURED", 503);
+				const datasetId = uid$1("dataset"), createdAt = now$5(), retentionUntil = new Date(Date.now() + p.retentionDays * 864e5).toISOString(), storageKey = c.projectId + "/" + datasetId + "/app.sqlite";
+				exec("INSERT INTO datasets VALUES(?,?,?,?,?,?,?,?,?,?,'PREPARING',1,NULL,?,?)", datasetId, c.projectId, i.runId, i.candidateId, operationId, i.policyHash, sourceDatasetId, data.sourceReleaseId, storageKey, p.schemaRevision, retentionUntil, createdAt);
+				addEffect(operationId, dataset(datasetId), "DATASET_PREPARE", datasetId, {
+					schemaVersion: "devmesh.dataset-prepare.v1",
+					operationId,
+					projectId: c.projectId,
+					runId: i.runId,
+					candidateId: i.candidateId,
+					manifestHash: c.manifestHash,
+					policyHash: i.policyHash,
+					backendRef: p.backendRef,
+					runnerId: p.runnerId,
+					datasetId,
+					storageKey,
+					schemaRevision: p.schemaRevision,
+					sourceDatasetId,
+					sourceStorageKey: sourceDatasetId ? dataset(sourceDatasetId).storage_key : null,
+					sourceReleaseId: data.sourceReleaseId,
+					initialData: sourceDatasetId ? null : data.initialData,
+					templateVersion: p.templateVersion
+				});
+				hooks.changed(String(run.run_id), operationId, {
+					datasetId,
+					state: "PREPARING"
+				});
+				return { datasetId };
+			});
+			return datasetView(dataset(String(op.result.datasetId)));
+		},
+		getPreviewDataset(i) {
+			const d = dataset(i.datasetId);
+			scoped(i.principalId, i.runId, d);
+			return datasetView(d);
+		},
+		createPreviewIntent(i) {
+			const { meta: _meta, ifMatch: _match, ...payload } = i;
+			const op = operation(i, "CreatePreviewIntent", payload, (operationId) => {
+				const { c } = current(i), d = dataset(i.datasetId);
+				scoped(i.meta.principalId, i.runId, d, true);
+				known(i.runId);
+				if (d.candidate_id !== i.candidateId || d.state !== "READY" || effect(String(d.operation_id)).state !== "SUCCEEDED") fail$11("PREVIEW_DATASET_UNAVAILABLE");
+				if (get("SELECT 1 FROM previews WHERE dataset_id=?", i.datasetId)) fail$11("PREVIEW_DATASET_ALREADY_BOUND");
+				const lifetime = Date.parse(i.expiresAt) - Date.now();
+				if (lifetime < 6e4 || lifetime > 864e5) fail$11("PREVIEW_EXPIRY_INVALID", 422);
+				const p = policy(c.projectId, String(d.policy_hash)), previewId = uid$1("preview"), image = c.manifest.delivery.record.image;
+				exec("INSERT INTO previews VALUES(?,?,?,?,?,?,?,?,'STARTING',1,NULL,?,?)", previewId, c.projectId, i.runId, i.candidateId, operationId, i.datasetId, d.policy_hash, image.imageDigest, i.expiresAt, now$5());
+				addEffect(operationId, d, "PREVIEW_START", previewId, {
+					schemaVersion: "devmesh.preview-start.v1",
+					operationId,
+					projectId: c.projectId,
+					runId: i.runId,
+					candidateId: i.candidateId,
+					manifestHash: c.manifestHash,
+					policyHash: d.policy_hash,
+					backendRef: p.backendRef,
+					runnerId: p.runnerId,
+					previewId,
+					datasetId: i.datasetId,
+					storageKey: d.storage_key,
+					datasetOperationId: d.operation_id,
+					templateVersion: p.templateVersion,
+					schemaRevision: p.schemaRevision,
+					imageDigest: image.imageDigest,
+					imageIdentity: image,
+					expiresAt: i.expiresAt
+				}, previewId);
+				hooks.changed(i.runId, operationId, {
+					previewId,
+					state: "STARTING"
+				});
+				return { previewId };
+			});
+			return previewView(preview(String(op.result.previewId)));
+		},
+		getPreview(i) {
+			const p = preview(i.previewId);
+			scoped(i.principalId, i.runId, p);
+			return previewView(p);
+		},
+		getPreviewLifecycle(i) {
+			return lifecycle(backendPreview(i.principalId, i.previewId));
+		},
+		getPreviewLifecycleScope(i) {
+			const p = policy(i.projectId, i.policyHash);
+			if (p.backendPrincipalId !== i.principalId) fail$11("FORBIDDEN", 403);
+			return {
+				policyHash: i.policyHash,
+				policy: p
+			};
+		},
+		listPreviewLifecycles(i) {
+			if (policy(i.projectId, i.policyHash).backendPrincipalId !== i.principalId) fail$11("FORBIDDEN", 403);
+			const rows = all("SELECT rowid sequence,* FROM previews p WHERE project_id=? AND policy_hash=? AND rowid>? AND (state NOT IN ('STOPPED','EXPIRED') OR EXISTS(SELECT 1 FROM preview_effects e WHERE e.preview_id=p.preview_id AND e.state IN ('PREPARED','SENT','UNKNOWN'))) ORDER BY rowid LIMIT ?", i.projectId, i.policyHash, i.afterSequence, i.limit + 1), more = rows.length > i.limit;
+			if (more) rows.pop();
+			return {
+				items: rows.map((r) => ({
+					sequence: Number(r.sequence),
+					lifecycle: lifecycle(r)
+				})),
+				nextSequence: more ? Number(rows.at(-1).sequence) : null
+			};
+		},
+		verifyPreviewExecution(i) {
+			const r = backend(i);
+			if (!["SENT", "UNKNOWN"].includes(String(r.state))) return {
+				allowed: false,
+				reasonCode: "PREVIEW_EFFECT_NOT_EXECUTABLE"
+			};
+			try {
+				dispatchAllowed(r);
+				return {
+					allowed: true,
+					reasonCode: null
+				};
+			} catch (error) {
+				if (error instanceof StorageError) return {
+					allowed: false,
+					reasonCode: error.code
+				};
+				throw error;
+			}
+		},
+		recordPreviewRuntimeObservation(i) {
+			return transaction(db, () => {
+				const start = backend(i), fact = i.fact;
+				if (start.kind !== "PREVIEW_START" || start.state === "PREPARED") fail$11("PREVIEW_START_NOT_SENT");
+				const p = preview(String(start.preview_id)), last = latestRuntime(String(p.preview_id)), body = canonical(fact);
+				if (last && canonical(last.fact) === body) return last;
+				if ((last?.sequence ?? 0) !== i.expectedSequence) fail$11("PREVIEW_RUNTIME_REVISION_CHANGED");
+				if (fact.previewId !== p.preview_id || fact.datasetId !== p.dataset_id || fact.imageDigest !== p.image_digest || p.instance_id !== null && fact.instanceId !== null && p.instance_id !== fact.instanceId) fail$11("PREVIEW_RUNTIME_IDENTITY_CHANGED");
+				if (fact.checkedAt < String(start.created_at) || fact.checkedAt > now$5() || last && fact.checkedAt < last.fact.checkedAt) fail$11("PREVIEW_RUNTIME_TIME_INVALID");
+				if ((start.state === "FAILED" || ["STOPPED", "EXPIRED"].includes(String(p.state))) && ![
+					"EXITED",
+					"REMOVED",
+					"UNKNOWN"
+				].includes(fact.state)) fail$11("PREVIEW_RUNTIME_TERMINAL");
+				if (!["REMOVED", "UNKNOWN"].includes(fact.state) && get("SELECT 1 FROM preview_runtime_observations WHERE preview_id=? AND json_extract(fact_json,'$.state')='REMOVED' LIMIT 1", p.preview_id)) fail$11("PREVIEW_RUNTIME_TERMINAL");
+				const pinned = get("SELECT fact_json FROM preview_runtime_observations WHERE preview_id=? AND json_extract(fact_json,'$.endpoint') IS NOT NULL ORDER BY sequence LIMIT 1", p.preview_id);
+				if (pinned && fact.endpoint !== null && canonical(json$6(pinned.fact_json).endpoint) !== canonical(fact.endpoint)) fail$11("PREVIEW_RUNTIME_ENDPOINT_CHANGED");
+				const stop = get("SELECT 1 FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'", p.preview_id);
+				const next = ["STOPPED", "EXPIRED"].includes(String(p.state)) ? p.state : stop ? "STOPPING" : ["EXITED", "REMOVED"].includes(fact.state) ? String(p.expires_at) <= now$5() ? "EXPIRED" : "STOPPED" : fact.state === "HEALTHY" ? start.state === "SUCCEEDED" ? "READY" : "STARTING" : "UNKNOWN";
+				const sequence = (last?.sequence ?? 0) + 1, observedAt = now$5();
+				exec("INSERT INTO preview_runtime_observations VALUES(?,?,?,?,?,?,?)", p.preview_id, sequence, start.operation_id, start.request_hash, body, fact.checkedAt, observedAt);
+				if (next !== p.state || p.instance_id === null && fact.instanceId !== null) {
+					exec("UPDATE previews SET state=?,instance_id=coalesce(instance_id,?),revision=revision+1 WHERE preview_id=?", next, fact.instanceId, p.preview_id);
+					hooks.changed(String(p.run_id), String(start.operation_id), {
+						previewId: String(p.preview_id),
+						state: next
+					});
+				}
+				return {
+					sequence,
+					fact,
+					observedAt
+				};
+			});
+		},
+		listPreviewRuntimeHistory(i) {
+			const e = backend(i);
+			if (e.kind !== "PREVIEW_START") fail$11("PREVIEW_START_REQUIRED", 422);
+			const rows = all("SELECT * FROM preview_runtime_observations WHERE preview_id=? AND sequence>? ORDER BY sequence LIMIT ?", e.preview_id, i.afterSequence, i.limit + 1), more = rows.length > i.limit;
+			if (more) rows.pop();
+			return {
+				items: rows.map(runtimeView),
+				nextSequence: more ? Number(rows.at(-1).sequence) : null
+			};
+		},
+		preparePreviewExpiry(i) {
+			const p = backendPreview(i.principalId, i.previewId);
+			if (accepted(p)) fail$11("PREVIEW_OWNED_BY_RELEASE");
+			if (String(p.expires_at) > now$5()) fail$11("PREVIEW_NOT_EXPIRED");
+			if (get("SELECT operation_id FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'", i.previewId)) return previewView(p);
+			const key = digest(i.previewId + ":expiry"), idempotencyKey = key.slice(0, 8) + "-" + key.slice(8, 12) + "-4" + key.slice(13, 16) + "-8" + key.slice(17, 20) + "-" + key.slice(20, 32), meta = {
+				principalId: i.principalId,
+				scopeId: i.previewId,
+				idempotencyKey
+			};
+			hooks.operation(meta, "ExpirePreview", { previewId: i.previewId }, (operationId) => addStop(operationId, backendPreview(i.principalId, i.previewId), "EXPIRED"), () => {
+				backendPreview(i.principalId, i.previewId);
+			});
+			return previewView(preview(i.previewId));
+		},
+		stopPreviewIntent(i) {
+			if (i.meta.scopeId !== i.previewId) fail$11("OPERATION_SCOPE_INVALID", 422);
+			const { meta: _meta, ...payload } = i;
+			const op = hooks.operation(i.meta, "StopPreviewIntent", payload, (operationId) => {
+				const r = preview(i.previewId);
+				scoped(i.meta.principalId, i.runId, r, true);
+				const v = previewView(r);
+				if (v.revision !== i.previewRevision || v.impactReviewHash !== i.impactReviewHash) fail$11("PREVIEW_REVISION_CHANGED");
+				return addStop(operationId, r, i.reason);
+			}, () => {
+				scoped(i.meta.principalId, i.runId, preview(i.previewId), true);
+			});
+			return previewView(preview(String(op.result.previewId)));
+		},
+		getPreviewEffect(i) {
+			return effectView(backend(i));
+		},
+		listPreviewEffects(i) {
+			if (policy(i.projectId, i.policyHash).backendPrincipalId !== i.principalId) fail$11("FORBIDDEN", 403);
+			const rows = all("SELECT rowid sequence,* FROM preview_effects WHERE project_id=? AND policy_hash=? AND rowid>? AND state IN (" + i.states.map(() => "?").join(",") + ") ORDER BY rowid LIMIT ?", i.projectId, i.policyHash, i.afterSequence, ...i.states, i.limit + 1), more = rows.length > i.limit;
+			if (more) rows.pop();
+			return {
+				items: rows.map((r) => ({
+					sequence: Number(r.sequence),
+					effect: effectView(r)
+				})),
+				nextSequence: more ? Number(rows.at(-1).sequence) : null
+			};
+		},
+		listPreviewDatasetWork(i) {
+			if (policy(i.projectId, i.policyHash).backendPrincipalId !== i.principalId) fail$11("FORBIDDEN", 403);
+			const rows = all("SELECT rowid sequence,* FROM preview_effects WHERE project_id=? AND policy_hash=? AND rowid>? AND kind='DATASET_PREPARE' AND state IN ('PREPARED','SENT','UNKNOWN') ORDER BY rowid LIMIT ?", i.projectId, i.policyHash, i.afterSequence, i.limit + 1), more = rows.length > i.limit;
+			if (more) rows.pop();
+			return {
+				items: rows.map((r) => ({
+					sequence: Number(r.sequence),
+					effect: effectView(r)
+				})),
+				nextSequence: more ? Number(rows.at(-1).sequence) : null
+			};
+		},
+		markPreviewEffectSent(i) {
+			return transaction(db, () => {
+				const r = backend(i);
+				if (r.state !== "PREPARED") return {
+					dispatch: false,
+					effect: effectView(r)
+				};
+				if (r.revision !== i.expectedRevision) fail$11("PREVIEW_EFFECT_REVISION_CHANGED");
+				dispatchAllowed(r);
+				exec("UPDATE preview_effects SET state='SENT',revision=revision+1 WHERE operation_id=?", i.operationId);
+				return {
+					dispatch: true,
+					effect: effectView(effect(i.operationId))
+				};
+			});
+		},
+		recordPreviewEffectObservation(i) {
+			return transaction(db, () => {
+				const r = backend(i), o = i.observation, body = canonical(o);
+				if (get("SELECT observation_json FROM preview_effect_observations WHERE operation_id=? ORDER BY sequence DESC LIMIT 1", i.operationId)?.observation_json === body) return effectView(r);
+				if (r.state === "SUCCEEDED" || r.state === "FAILED") fail$11("PREVIEW_EFFECT_IMMUTABLE");
+				if (r.state === "PREPARED" && !(o.state === "FAILED" && r.kind !== "PREVIEW_STOP") || r.revision !== i.expectedRevision) fail$11("PREVIEW_EFFECT_REVISION_CHANGED");
+				if (o.state === "FAILED" && r.kind === "PREVIEW_STOP") fail$11("PREVIEW_STOP_REQUIRES_EXIT_EVIDENCE");
+				const d = dataset(String(r.dataset_id)), p = r.preview_id ? preview(String(r.preview_id)) : null;
+				if (o.state === "SUCCEEDED") {
+					const receipt = o.receipt;
+					if (r.kind === "DATASET_PREPARE") {
+						if (receipt.kind !== "DATASET_READY" || receipt.datasetId !== r.dataset_id || receipt.storageKey !== d.storage_key || receipt.originDatasetId !== d.source_dataset_id || receipt.schemaRevision !== d.schema_revision || receipt.snapshotAt < String(r.created_at) || receipt.snapshotAt > now$5()) fail$11("PREVIEW_RECEIPT_CHANGED");
+						exec("UPDATE datasets SET state='READY',revision=revision+1,snapshot_at=? WHERE dataset_id=?", receipt.snapshotAt, r.dataset_id);
+					} else if (r.kind === "PREVIEW_START") {
+						if (receipt.kind !== "PREVIEW_READY" || receipt.previewId !== r.preview_id || receipt.datasetId !== r.dataset_id || receipt.imageDigest !== p.image_digest || p.instance_id !== null && p.instance_id !== receipt.instanceId || receipt.checkedAt < String(r.created_at) || receipt.checkedAt > now$5()) fail$11("PREVIEW_RECEIPT_CHANGED");
+						const runtime = latestRuntime(String(r.preview_id));
+						if (runtime?.fact.state !== "HEALTHY" || runtime.fact.instanceId !== receipt.instanceId || runtime.fact.checkedAt !== receipt.checkedAt || Date.now() - Date.parse(receipt.checkedAt) > 3e4 || get("SELECT 1 FROM preview_effects WHERE preview_id=? AND kind='PREVIEW_STOP'", r.preview_id)) fail$11("PREVIEW_HEALTH_NOT_VERIFIED");
+						exec("UPDATE previews SET state='READY',revision=revision+1,instance_id=? WHERE preview_id=?", receipt.instanceId, r.preview_id);
+					} else {
+						if (receipt.kind !== "PREVIEW_STOPPED" && receipt.kind !== "PREVIEW_REMOVED" || receipt.previewId !== r.preview_id || receipt.instanceId !== p.instance_id || receipt.checkedAt < String(r.created_at) || receipt.checkedAt > now$5()) fail$11("PREVIEW_RECEIPT_CHANGED");
+						const runtime = latestRuntime(String(r.preview_id));
+						if (runtime?.fact.state !== (receipt.kind === "PREVIEW_REMOVED" ? "REMOVED" : "EXITED") || runtime.fact.instanceId !== receipt.instanceId || runtime.fact.checkedAt !== receipt.checkedAt) fail$11("PREVIEW_EXIT_NOT_VERIFIED");
+						const request = json$6(r.request_json);
+						exec("UPDATE previews SET state=?,revision=revision+1 WHERE preview_id=?", request.reason === "EXPIRED" ? "EXPIRED" : "STOPPED", r.preview_id);
+					}
+				} else if (r.kind === "DATASET_PREPARE") {
+					if (o.state === "FAILED") exec("UPDATE datasets SET state='MISSING',revision=revision+1 WHERE dataset_id=?", r.dataset_id);
+				} else exec("UPDATE previews SET state=?,revision=revision+1 WHERE preview_id=?", o.state === "FAILED" ? "STOPPED" : "UNKNOWN", r.preview_id);
+				const sequence = Number(r.revision) + 1;
+				exec("INSERT INTO preview_effect_observations VALUES(?,?,?,?)", i.operationId, sequence, body, now$5());
+				exec("UPDATE preview_effects SET state=?,revision=?,receipt_json=?,error_code=? WHERE operation_id=?", o.state, sequence, o.state === "SUCCEEDED" ? canonical(o.receipt) : null, o.state === "SUCCEEDED" ? null : o.errorCode, i.operationId);
+				if (p) hooks.changed(String(r.run_id), i.operationId, {
+					previewId: String(r.preview_id),
+					state: preview(String(r.preview_id)).state
+				});
+				else hooks.changed(String(r.run_id), i.operationId, {
+					datasetId: String(r.dataset_id),
+					state: dataset(String(r.dataset_id)).state
+				});
+				return effectView(effect(i.operationId));
+			});
+		},
+		listPreviewEffectHistory(i) {
+			backend(i);
+			const rows = all("SELECT * FROM preview_effect_observations WHERE operation_id=? AND sequence>? ORDER BY sequence LIMIT ?", i.operationId, i.afterSequence, i.limit + 1), more = rows.length > i.limit;
+			if (more) rows.pop();
+			return {
+				items: rows.map((r) => ({
+					sequence: Number(r.sequence),
+					observation: json$6(r.observation_json),
+					observedAt: String(r.observed_at)
+				})),
+				nextSequence: more ? Number(rows.at(-1).sequence) : null
+			};
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(previewRequests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+//#region src/preview-access-domain.ts
+const now$4 = () => (/* @__PURE__ */ new Date()).toISOString();
+const hash$2 = (v) => digest(canonical(v));
+const json$5 = (v) => JSON.parse(String(v));
+function fail$10(code, status = 409) {
+	throw new StorageError(code, status, "Preview access requires current membership, original target, gate fencing and its configured gateway");
+}
+function createPreviewAccessDomain(db, previews) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p), tx = (f) => transaction(db, f);
+	const member = (subject, project) => get("SELECT role FROM project_members WHERE principal_id=? AND project_id=?", subject, project) ?? fail$10("PREVIEW_NOT_FOUND", 404);
+	const gateway = (i, projectId) => {
+		const p = get("SELECT * FROM preview_access_policies WHERE project_id=? AND gateway_id=?", projectId, i.gatewayId) ?? fail$10("PREVIEW_ACCESS_NOT_CONFIGURED", 503);
+		if (p.principal_id !== i.principalId || p.configuration_hash !== i.configurationHash) fail$10("FORBIDDEN", 403);
+		return p;
+	};
+	const data = (i) => {
+		const d = get("SELECT d.*,e.request_hash,e.state effect_state,e.kind effect_kind,e.receipt_json FROM datasets d JOIN preview_effects e ON e.operation_id=d.operation_id WHERE d.operation_id=?", i.datasetOperationId) ?? fail$10("PREVIEW_DATASET_NOT_FOUND", 404);
+		if (previewBackendPolicy.parse(json$5(get("SELECT policy_json FROM preview_backend_policies WHERE project_id=? AND policy_hash=?", d.project_id, d.policy_hash)?.policy_json ?? fail$10("PREVIEW_BACKEND_NOT_CONFIGURED", 503))).backendPrincipalId !== i.principalId) fail$10("FORBIDDEN", 403);
+		if (d.request_hash !== i.datasetRequestHash || d.effect_kind !== "DATASET_PREPARE") fail$10("PREVIEW_REQUEST_CHANGED");
+		return d;
+	};
+	const gate = (id) => {
+		const r = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", id) ?? fail$10("PREVIEW_WRITE_GATE_NOT_CONFIGURED", 503), count = get("SELECT count(*) n FROM business_pending_writes WHERE dataset_id=?", id);
+		return {
+			datasetId: id,
+			projectId: String(r.project_id),
+			datasetOperationId: String(r.dataset_operation_id),
+			datasetRequestHash: String(r.dataset_request_hash),
+			state: r.state,
+			fence: Number(r.fence),
+			revision: Number(r.revision),
+			closeOperationId: r.close_operation_id,
+			closeRequestHash: r.close_request_hash,
+			pendingWrites: Number(count.n),
+			createdAt: String(r.created_at),
+			updatedAt: String(r.updated_at)
+		};
+	};
+	const gateEvent = (id) => {
+		const g = gate(id);
+		exec("INSERT INTO preview_write_gate_events VALUES(?,?,?,?)", id, g.revision, canonical(g), g.updatedAt);
+		return g;
+	};
+	function binding(i) {
+		const p = get("SELECT * FROM previews WHERE preview_id=?", i.previewId) ?? fail$10("PREVIEW_NOT_FOUND", 404);
+		gateway(i, String(p.project_id));
+		const role = member(i.subjectPrincipalId, String(p.project_id));
+		const v = previews.execute("getPreview", {
+			principalId: i.subjectPrincipalId,
+			runId: i.runId,
+			previewId: i.previewId
+		});
+		if (v.availability !== "AVAILABLE") fail$10("PREVIEW_UNAVAILABLE", 503);
+		const d = get("SELECT * FROM datasets WHERE dataset_id=?", v.datasetId), s = get("SELECT * FROM preview_effects WHERE operation_id=?", v.operationId), de = get("SELECT * FROM preview_effects WHERE operation_id=?", d.operation_id), request = json$5(s.request_json), fact = previewRuntimeFact.parse(json$5(get("SELECT fact_json FROM preview_runtime_observations WHERE preview_id=? ORDER BY sequence DESC LIMIT 1", v.previewId).fact_json)), g = gate(v.datasetId);
+		if (!fact.endpoint || fact.state !== "HEALTHY" || fact.instanceId !== v.instanceId || g.projectId !== v.projectId || g.datasetOperationId !== d.operation_id || g.datasetRequestHash !== de.request_hash) fail$10("PREVIEW_ACCESS_TARGET_CHANGED");
+		return {
+			target: {
+				projectId: v.projectId,
+				runId: v.runId,
+				previewId: v.previewId,
+				candidateId: v.candidateId,
+				manifestHash: request.manifestHash,
+				policyHash: v.policyHash,
+				datasetId: v.datasetId,
+				datasetOperationId: String(d.operation_id),
+				datasetRequestHash: String(de.request_hash),
+				imageDigest: v.imageDigest,
+				instanceId: v.instanceId,
+				startOperationId: v.operationId,
+				startRequestHash: String(s.request_hash),
+				runnerId: request.runnerId,
+				backendRef: request.backendRef,
+				endpoint: fact.endpoint,
+				expiresAt: v.expiresAt
+			},
+			gate: g,
+			canWrite: role.role !== "viewer" && g.state === "OPEN",
+			healthCheckedAt: fact.checkedAt
+		};
+	}
+	const row = (id) => get("SELECT * FROM preview_access_requests WHERE access_request_id=?", id) ?? fail$10("PREVIEW_ACCESS_REQUEST_NOT_FOUND", 404);
+	const record = (r) => {
+		const original = json$5(r.request_json);
+		return {
+			accessRequestId: String(r.access_request_id),
+			gatewayId: String(r.gateway_id),
+			configurationHash: String(r.configuration_hash),
+			subjectPrincipalId: String(r.subject_principal_id),
+			...original,
+			requestHash: String(r.request_hash),
+			state: r.state,
+			revision: Number(r.revision),
+			observation: r.observation_json ? json$5(r.observation_json) : null,
+			createdAt: String(r.created_at),
+			dispatchedAt: r.dispatched_at,
+			finishedAt: r.finished_at
+		};
+	};
+	const owned = (i) => {
+		const r = row(i.accessRequestId);
+		if (r.gateway_id !== i.gatewayId) fail$10("PREVIEW_ACCESS_REQUEST_NOT_FOUND", 404);
+		gateway(i, String(r.project_id));
+		if (r.request_hash !== i.requestHash || r.configuration_hash !== i.configurationHash) fail$10("PREVIEW_ACCESS_REQUEST_CHANGED");
+		return r;
+	};
+	const event = (id) => {
+		const r = row(id), v = record(r);
+		exec("INSERT INTO preview_access_request_events VALUES(?,?,?,?)", id, v.revision, canonical(v), now$4());
+		return v;
+	};
+	const current = (i, r) => {
+		const old = record(r), b = binding({
+			...i,
+			subjectPrincipalId: old.subjectPrincipalId,
+			runId: old.target.runId,
+			previewId: old.target.previewId
+		});
+		if (canonical(old.target) !== canonical(b.target)) fail$10("PREVIEW_ACCESS_TARGET_CHANGED");
+		if (old.gateFence !== b.gate.fence) fail$10("PREVIEW_WRITE_FENCE_CHANGED");
+		if (r.is_write === 1 && !b.canWrite) fail$10(b.gate.state === "CLOSED" ? "PREVIEW_WRITE_GATE_CLOSED" : "FORBIDDEN", b.gate.state === "CLOSED" ? 409 : 403);
+		return b;
+	};
+	const handlers = {
+		registerPreviewAccessPolicy(i) {
+			return tx(() => {
+				if (member(i.principalId, i.projectId).role !== "owner") fail$10("FORBIDDEN", 403);
+				const old = get("SELECT * FROM preview_access_policies WHERE project_id=? AND gateway_id=?", i.projectId, i.policy.gatewayId), body = canonical(i.policy);
+				if (old) {
+					if (old.policy_json !== body) fail$10("PREVIEW_ACCESS_POLICY_CHANGED");
+					return { policy: previewAccessPolicy.parse(json$5(old.policy_json)) };
+				}
+				exec("INSERT INTO preview_access_policies VALUES(?,?,?,?,?,?)", i.projectId, i.policy.gatewayId, i.policy.gatewayPrincipalId, i.policy.configurationHash, body, now$4());
+				return { policy: i.policy };
+			});
+		},
+		enrollPreviewWriteGate(i) {
+			return tx(() => {
+				const d = data(i), id = String(d.dataset_id);
+				if (get("SELECT 1 FROM preview_write_gates WHERE dataset_id=?", id)) return gate(id);
+				if (d.state !== "READY" || d.effect_state !== "SUCCEEDED" || !d.receipt_json) fail$10("PREVIEW_DATASET_UNVERIFIED");
+				const at = now$4();
+				exec("INSERT INTO preview_write_gates VALUES(?,?,?,?,'OPEN',0,0,NULL,NULL,?,?)", id, d.project_id, i.datasetOperationId, i.datasetRequestHash, at, at);
+				return gateEvent(id);
+			});
+		},
+		getPreviewWriteGate(i) {
+			return gate(String(data(i).dataset_id));
+		},
+		closePreviewWriteGate(i) {
+			return tx(() => {
+				const r = i.request, d = data({
+					...r,
+					principalId: i.principalId
+				});
+				if (hash$2(r) !== i.requestHash || d.project_id !== r.projectId || d.dataset_id !== r.datasetId) fail$10("PREVIEW_WRITE_CLOSE_CHANGED");
+				const old = get("SELECT * FROM preview_write_closures WHERE operation_id=?", r.operationId);
+				if (old) {
+					if (old.request_hash !== i.requestHash || old.request_json !== canonical(r)) fail$10("PREVIEW_WRITE_CLOSE_CHANGED");
+					const g = gate(r.datasetId);
+					return {
+						gate: g,
+						closeRequest: r,
+						current: g.closeOperationId === r.operationId && g.closeRequestHash === i.requestHash
+					};
+				}
+				const g = gate(r.datasetId);
+				if (g.state !== "OPEN" || g.fence !== r.expectedFence) fail$10("PREVIEW_WRITE_FENCE_CHANGED");
+				const at = now$4();
+				exec("INSERT INTO preview_write_closures VALUES(?,?,?,?,?)", r.operationId, r.datasetId, i.requestHash, canonical(r), at);
+				exec("UPDATE preview_write_gates SET state='CLOSED',fence=fence+1,revision=revision+1,close_operation_id=?,close_request_hash=?,updated_at=? WHERE dataset_id=?", r.operationId, i.requestHash, at, r.datasetId);
+				return {
+					gate: gateEvent(r.datasetId),
+					closeRequest: r,
+					current: true
+				};
+			});
+		},
+		resolvePreviewAccess(i) {
+			return binding(i);
+		},
+		preparePreviewAccessRequest(i) {
+			return tx(() => {
+				const p = get("SELECT project_id,run_id FROM previews WHERE preview_id=?", i.previewId) ?? fail$10("PREVIEW_NOT_FOUND", 404);
+				gateway(i, String(p.project_id));
+				member(i.subjectPrincipalId, String(p.project_id));
+				if (p.run_id !== i.runId) fail$10("PREVIEW_NOT_FOUND", 404);
+				const { principalId: _principal, ...intent } = i, intentHash = hash$2(intent), old = get("SELECT * FROM preview_access_requests WHERE access_request_id=?", i.accessRequestId);
+				if (old) {
+					if (old.gateway_id !== i.gatewayId || old.configuration_hash !== i.configurationHash || old.intent_hash !== intentHash) fail$10("PREVIEW_ACCESS_REQUEST_CHANGED");
+					return record(old);
+				}
+				const b = binding(i), write = !["GET", "HEAD"].includes(i.request.method);
+				if (write && !b.canWrite) fail$10(b.gate.state === "CLOSED" ? "PREVIEW_WRITE_GATE_CLOSED" : "FORBIDDEN", b.gate.state === "CLOSED" ? 409 : 403);
+				const original = {
+					target: b.target,
+					request: i.request,
+					gateFence: b.gate.fence
+				};
+				exec("INSERT INTO preview_access_requests(access_request_id,project_id,preview_id,dataset_id,gateway_id,configuration_hash,subject_principal_id,intent_hash,request_hash,request_json,is_write,state,revision,observation_json,created_at,dispatched_at,finished_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,'PREPARED',0,NULL,?,NULL,NULL)", i.accessRequestId, b.target.projectId, b.target.previewId, b.target.datasetId, i.gatewayId, i.configurationHash, i.subjectPrincipalId, intentHash, hash$2(original), canonical(original), write ? 1 : 0, now$4());
+				return event(i.accessRequestId);
+			});
+		},
+		beginPreviewAccessRequest(i) {
+			return tx(() => {
+				const r = owned(i);
+				if (r.state !== "PREPARED") return {
+					dispatch: false,
+					record: record(r)
+				};
+				current(i, r);
+				exec("UPDATE preview_access_requests SET state='DISPATCHED',revision=revision+1,dispatched_at=? WHERE access_request_id=?", now$4(), i.accessRequestId);
+				return {
+					dispatch: true,
+					record: event(i.accessRequestId)
+				};
+			});
+		},
+		previewAccessRequestAuthorized(i) {
+			const r = owned(i);
+			if (r.state !== "DISPATCHED") return { allowed: false };
+			try {
+				current(i, r);
+				return { allowed: true };
+			} catch (error) {
+				if (error instanceof StorageError) return { allowed: false };
+				throw error;
+			}
+		},
+		getPreviewAccessRequest(i) {
+			return record(owned(i));
+		},
+		recordPreviewAccessObservation(i) {
+			return tx(() => {
+				const r = owned(i), o = i.observation, body = canonical(o);
+				if (r.observation_json === body) return record(r);
+				if (!["DISPATCHED", "UNKNOWN"].includes(String(r.state))) fail$10("PREVIEW_ACCESS_OBSERVATION_CONFLICT");
+				if (r.state === "UNKNOWN" && o.state === "NOT_SENT") fail$10("PREVIEW_ACCESS_OBSERVATION_CONFLICT");
+				if (o.checkedAt < String(r.dispatched_at) || o.checkedAt > now$4() || r.observation_json && o.checkedAt < json$5(r.observation_json).checkedAt) fail$10("PREVIEW_ACCESS_OBSERVATION_STALE");
+				exec("UPDATE preview_access_requests SET state=?,revision=revision+1,observation_json=?,finished_at=? WHERE access_request_id=?", o.state, body, o.state === "UNKNOWN" ? null : now$4(), i.accessRequestId);
+				return event(i.accessRequestId);
+			});
+		},
+		listPreviewAccessRequests(i) {
+			gateway(i, i.projectId);
+			const rows = all("SELECT * FROM preview_access_requests WHERE project_id=? AND gateway_id=? AND configuration_hash=? AND sequence>? AND state IN ('PREPARED','DISPATCHED','UNKNOWN') ORDER BY sequence LIMIT ?", i.projectId, i.gatewayId, i.configurationHash, i.afterSequence, i.limit + 1), more = rows.length > i.limit;
+			if (more) rows.pop();
+			return {
+				items: rows.map((r) => ({
+					sequence: Number(r.sequence),
+					record: record(r)
+				})),
+				nextSequence: more ? Number(rows.at(-1).sequence) : null
+			};
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(previewAccessRequests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+//#region src/preview-session-domain.ts
+function fail$9(code = "PREVIEW_CREDENTIAL_INVALID", status = 401) {
+	throw new StorageError(code, status, "Preview credential requires its exact purpose, origin, original target and current member");
+}
+const now$3 = () => (/* @__PURE__ */ new Date()).toISOString();
+const json$4 = (v) => JSON.parse(String(v));
+function createPreviewSessionDomain(db, access) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), exec = (sql, ...p) => db.prepare(sql).run(...p), tx = (f) => transaction(db, f);
+	const policy = (i, project) => {
+		const p = get("SELECT principal_id,configuration_hash FROM preview_access_policies WHERE project_id=? AND gateway_id=?", project, i.gatewayId);
+		if (!p || p.principal_id !== i.principalId || p.configuration_hash !== i.configurationHash) fail$9();
+	};
+	const common = (r) => ({
+		projectId: String(r.project_id),
+		gatewayId: String(r.gateway_id),
+		subjectPrincipalId: String(r.subject_principal_id),
+		target: json$4(r.target_json),
+		platformOrigin: String(r.platform_origin),
+		previewOrigin: String(r.preview_origin),
+		createdAt: String(r.created_at),
+		expiresAt: String(r.expires_at)
+	});
+	const ticket = (r) => ({
+		...common(r),
+		ticketId: String(r.ticket_id),
+		state: r.state,
+		sessionId: r.session_id
+	});
+	const session = (r) => ({
+		...common(r),
+		sessionId: String(r.session_id),
+		ticketId: String(r.ticket_id),
+		state: r.state,
+		revokedAt: r.revoked_at
+	});
+	const gateway = (i) => ({
+		principalId: i.principalId,
+		gatewayId: i.gatewayId,
+		configurationHash: i.configurationHash
+	});
+	const current = (i, r) => {
+		policy(i, String(r.project_id));
+		if (r.gateway_id !== i.gatewayId || r.configuration_hash !== i.configurationHash) fail$9();
+		const target = json$4(r.target_json), binding = access.execute("resolvePreviewAccess", {
+			...gateway(i),
+			subjectPrincipalId: r.subject_principal_id,
+			runId: target.runId,
+			previewId: target.previewId
+		});
+		if (canonical(binding.target) !== r.target_json) fail$9("PREVIEW_CREDENTIAL_TARGET_CHANGED", 409);
+		return binding;
+	};
+	const live = (r, at) => {
+		if (Date.parse(String(r.created_at)) > Date.parse(at) || Date.parse(String(r.expires_at)) <= Date.parse(at)) fail$9("PREVIEW_CREDENTIAL_EXPIRED");
+	};
+	const expiry = (value, maximumMs, at, target) => {
+		const delta = Date.parse(value) - Date.parse(at);
+		if (delta <= 0 || delta > maximumMs || Date.parse(value) > Date.parse(target.expiresAt)) fail$9("PREVIEW_CREDENTIAL_EXPIRY_INVALID", 422);
+	};
+	const distinct = (platform, preview) => {
+		if (platform === preview || new URL(platform).hostname === new URL(preview).hostname) fail$9("PREVIEW_CREDENTIAL_ORIGIN_INVALID", 422);
+	};
+	const event = (kind, id, revision, snapshot, at) => exec("INSERT INTO preview_credential_events VALUES(?,?,?,?,?)", kind, id, revision, canonical(snapshot), at);
+	const ownedSession = (i) => {
+		const r = get("SELECT * FROM preview_sessions WHERE token_sha256=?", i.tokenSha256) ?? fail$9();
+		policy(i, String(r.project_id));
+		if (r.gateway_id !== i.gatewayId || r.configuration_hash !== i.configurationHash || r.preview_origin !== i.previewOrigin) fail$9();
+		return r;
+	};
+	const handlers = {
+		issuePreviewTicket(i) {
+			return tx(() => {
+				distinct(i.platformOrigin, i.previewOrigin);
+				const binding = access.execute("resolvePreviewAccess", {
+					...gateway(i),
+					subjectPrincipalId: i.subjectPrincipalId,
+					runId: i.runId,
+					previewId: i.previewId
+				}), old = get("SELECT * FROM preview_tickets WHERE ticket_id=?", i.ticketId);
+				if (old) {
+					if (old.token_sha256 !== i.tokenSha256 || old.gateway_id !== i.gatewayId || old.configuration_hash !== i.configurationHash || old.subject_principal_id !== i.subjectPrincipalId || old.platform_origin !== i.platformOrigin || old.preview_origin !== i.previewOrigin || old.expires_at !== i.expiresAt || old.target_json !== canonical(binding.target)) fail$9("PREVIEW_CREDENTIAL_CONFLICT", 409);
+					return ticket(old);
+				}
+				const at = now$3();
+				expiry(i.expiresAt, 6e4, at, binding.target);
+				if (get("SELECT 1 FROM preview_sessions WHERE token_sha256=?", i.tokenSha256)) fail$9("PREVIEW_CREDENTIAL_CONFLICT", 409);
+				const count = get("SELECT count(*) n FROM preview_tickets WHERE project_id=? AND subject_principal_id=? AND state='ISSUED' AND expires_at>?", binding.target.projectId, i.subjectPrincipalId, at);
+				if (Number(count.n) >= 20) fail$9("PREVIEW_TICKET_CAPACITY", 429);
+				exec("INSERT INTO preview_tickets VALUES(?,?,?,?,?,?,?,?,?,?,?,'ISSUED',NULL,NULL,?)", i.ticketId, binding.target.projectId, i.gatewayId, i.configurationHash, i.subjectPrincipalId, i.tokenSha256, canonical(binding.target), i.platformOrigin, i.previewOrigin, at, i.expiresAt, "devmesh.preview.ticket.v1");
+				const value = ticket(get("SELECT * FROM preview_tickets WHERE ticket_id=?", i.ticketId));
+				event("ticket", i.ticketId, 0, value, at);
+				return value;
+			});
+		},
+		exchangePreviewTicket(i) {
+			return tx(() => {
+				const r = get("SELECT * FROM preview_tickets WHERE token_sha256=?", i.ticketTokenSha256) ?? fail$9();
+				if (r.preview_origin !== i.previewOrigin || r.platform_origin !== i.platformOrigin) fail$9();
+				const at = now$3();
+				live(r, at);
+				const binding = current(i, r);
+				if (r.state === "CONSUMED") {
+					const s = get("SELECT * FROM preview_sessions WHERE session_id=?", r.session_id);
+					if (s.session_id !== i.sessionId || s.token_sha256 !== i.sessionTokenSha256 || s.expires_at !== i.expiresAt) fail$9("PREVIEW_TICKET_CONSUMED", 409);
+					live(s, at);
+					if (s.state !== "ACTIVE") fail$9("PREVIEW_SESSION_REVOKED");
+					return session(s);
+				}
+				expiry(i.expiresAt, 3e5, at, binding.target);
+				if (get("SELECT 1 FROM preview_tickets WHERE token_sha256=?", i.sessionTokenSha256)) fail$9("PREVIEW_CREDENTIAL_CONFLICT", 409);
+				const count = get("SELECT count(*) n FROM preview_sessions WHERE project_id=? AND subject_principal_id=? AND state='ACTIVE' AND expires_at>?", r.project_id, r.subject_principal_id, at);
+				if (Number(count.n) >= 20) fail$9("PREVIEW_SESSION_CAPACITY", 429);
+				exec("INSERT INTO preview_sessions VALUES(?,?,?,?,?,?,?,?,?,?,?,?,'ACTIVE',NULL,?)", i.sessionId, r.ticket_id, r.project_id, r.gateway_id, r.configuration_hash, r.subject_principal_id, i.sessionTokenSha256, r.target_json, r.platform_origin, r.preview_origin, at, i.expiresAt, "devmesh.preview.session.v1");
+				exec("UPDATE preview_tickets SET state='CONSUMED',session_id=?,consumed_at=? WHERE ticket_id=?", i.sessionId, at, r.ticket_id);
+				const value = session(get("SELECT * FROM preview_sessions WHERE session_id=?", i.sessionId));
+				event("ticket", String(r.ticket_id), 1, ticket(get("SELECT * FROM preview_tickets WHERE ticket_id=?", r.ticket_id)), at);
+				event("session", i.sessionId, 0, value, at);
+				return value;
+			});
+		},
+		authenticatePreviewSession(i) {
+			const r = ownedSession(i);
+			live(r, now$3());
+			if (r.state !== "ACTIVE") fail$9("PREVIEW_SESSION_REVOKED");
+			return {
+				session: session(r),
+				binding: current(i, r)
+			};
+		},
+		revokePreviewSession(i) {
+			return tx(() => {
+				const r = ownedSession(i);
+				if (r.state === "REVOKED") return session(r);
+				const at = now$3();
+				exec("UPDATE preview_sessions SET state='REVOKED',revoked_at=? WHERE session_id=?", at, r.session_id);
+				const value = session(get("SELECT * FROM preview_sessions WHERE session_id=?", r.session_id));
+				event("session", String(r.session_id), 1, value, at);
+				return value;
+			});
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(previewSessionRequests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+//#region src/acceptance-domain.ts
+function fail$8(code, status = 409) {
+	throw new StorageError(code, status, "Acceptance preparation requires exact current review, original accepted data and configured authority");
+}
+const json$3 = (value) => JSON.parse(String(value));
+function createAcceptanceDomain(db, plans, freezes, reviews, hooks) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p), now = () => (/* @__PURE__ */ new Date()).toISOString(), uid = (kind) => kind + "_" + randomUUID().replaceAll("-", "");
+	function owner(principalId, runId) {
+		const r = plans.authorized(principalId, runId);
+		if (r.membership !== "owner") fail$8("FORBIDDEN", 403);
+		return r;
+	}
+	const policy = (projectId, hash) => acceptanceBackendPolicy.parse(json$3(get("SELECT policy_json FROM acceptance_backend_policies WHERE project_id=? AND policy_hash=?", projectId, hash)?.policy_json ?? fail$8("ACCEPTANCE_BACKEND_NOT_CONFIGURED", 503)));
+	const row = (id) => get("SELECT * FROM acceptance_preparations WHERE operation_id=?", id) ?? fail$8("ACCEPTANCE_PREPARATION_NOT_FOUND", 404);
+	function backend(principalId, r) {
+		if (policy(String(r.project_id), String(r.policy_hash)).backendPrincipalId !== principalId) fail$8("FORBIDDEN", 403);
+	}
+	function scoped(principalId, r) {
+		if (policy(String(r.project_id), String(r.policy_hash)).backendPrincipalId !== principalId) plans.authorized(principalId, String(r.run_id));
+		return r;
+	}
+	function basis(principalId, i) {
+		const run = owner(principalId, i.runId), candidate = freezes.getCandidate({
+			principalId,
+			runId: i.runId,
+			candidateId: i.candidateId
+		});
+		const review = reviews.getReview({
+			principalId,
+			runId: i.runId,
+			candidateId: i.candidateId
+		});
+		if (!review.canPrepareAcceptance || candidate.qualification !== "CURRENT" || candidate.revision !== i.candidateRevision || candidate.manifestHash !== i.manifestHash || review.reviewHash !== i.reviewHash) fail$8("ACCEPTANCE_BASIS_CHANGED");
+		const data = candidate.manifest.delivery.record.dataPlan;
+		if (digest(canonical(data)) !== i.dataPlanHash || data.sourceReleaseId !== i.expectedAcceptedReleaseId || (get("SELECT accepted_release_id FROM projects WHERE project_id=?", candidate.projectId).accepted_release_id ?? null) !== i.expectedAcceptedReleaseId) fail$8("ACCEPTANCE_SOURCE_CHANGED");
+		let source = null;
+		if (i.expectedAcceptedReleaseId) {
+			const release = get("SELECT prepared_data_ref FROM releases WHERE project_id=? AND release_id=?", candidate.projectId, i.expectedAcceptedReleaseId) ?? fail$8("ACCEPTANCE_SOURCE_CHANGED"), d = get("SELECT * FROM datasets WHERE project_id=? AND dataset_id=?", candidate.projectId, release.prepared_data_ref) ?? fail$8("ACCEPTANCE_SOURCE_UNAVAILABLE");
+			if (!["READY", "WRITE_FROZEN"].includes(String(d.state))) fail$8("ACCEPTANCE_SOURCE_UNAVAILABLE");
+			source = {
+				releaseId: i.expectedAcceptedReleaseId,
+				datasetId: ids.dataset.parse(d.dataset_id),
+				datasetOperationId: ids.operation.parse(d.operation_id),
+				storageKey: String(d.storage_key),
+				schemaRevision: String(d.schema_revision)
+			};
+		} else if (data.strategy !== "INITIAL") fail$8("ACCEPTANCE_SOURCE_CHANGED");
+		return {
+			run,
+			candidate,
+			data,
+			source
+		};
+	}
+	function current(r, cache) {
+		const request = acceptancePreparationRequest.parse(json$3(r.request_json));
+		const key = cache ? canonical({
+			principalId: r.principal_id,
+			runId: request.runId,
+			candidateId: request.candidateId,
+			candidateRevision: request.candidateRevision,
+			manifestHash: request.manifestHash,
+			reviewHash: request.reviewHash,
+			expectedAcceptedReleaseId: request.expectedAcceptedReleaseId,
+			dataPlanHash: request.dataPlanHash,
+			runEpoch: request.runEpoch,
+			source: request.source
+		}) : void 0;
+		if (key !== void 0 && cache.has(key)) return cache.get(key);
+		let result;
+		try {
+			const b = basis(String(r.principal_id), request);
+			result = canonical(b.source) === canonical(request.source) && b.run.run_epoch === request.runEpoch;
+		} catch (error) {
+			if (error instanceof StorageError) result = false;
+			else throw error;
+		}
+		if (key !== void 0) cache.set(key, result);
+		return result;
+	}
+	const view = (r, qualifications) => {
+		const commit = get("SELECT acceptance_operation_id FROM acceptance_commits WHERE preparation_operation_id=?", r.operation_id), abort = get("SELECT 1 FROM acceptance_abort_decisions WHERE preparation_operation_id=?", r.operation_id), aborted = get("SELECT 1 FROM acceptance_abort_completions WHERE preparation_operation_id=?", r.operation_id);
+		return {
+			operationId: String(r.operation_id),
+			projectId: String(r.project_id),
+			runId: String(r.run_id),
+			candidateId: String(r.candidate_id),
+			policyHash: String(r.policy_hash),
+			releaseId: String(r.release_id),
+			requestHash: String(r.request_hash),
+			request: acceptancePreparationRequest.parse(json$3(r.request_json)),
+			state: r.state,
+			revision: Number(r.revision),
+			qualification: current(r, qualifications) ? "CURRENT" : "STALE",
+			errorCode: r.error_code,
+			createdAt: String(r.created_at),
+			updatedAt: String(r.updated_at),
+			resolution: commit ? "COMMITTED" : aborted ? "ABORTED" : abort ? "ABORTING" : r.state === "FAILED" ? "UNSENT_FAILED" : "UNRESOLVED",
+			acceptanceOperationId: commit ? String(commit.acceptance_operation_id) : null
+		};
+	};
+	function writeGate(datasetId) {
+		const g = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", datasetId) ?? fail$8("ACCEPTANCE_WRITE_GATE_MISSING");
+		return {
+			datasetId,
+			projectId: String(g.project_id),
+			datasetOperationId: String(g.dataset_operation_id),
+			datasetRequestHash: String(g.dataset_request_hash),
+			state: g.state,
+			fence: Number(g.fence),
+			revision: Number(g.revision),
+			closeOperationId: g.close_operation_id,
+			closeRequestHash: g.close_request_hash,
+			pendingWrites: Number(get("SELECT count(*) n FROM business_pending_writes WHERE dataset_id=?", datasetId).n),
+			createdAt: String(g.created_at),
+			updatedAt: String(g.updated_at)
+		};
+	}
+	function bound(i, trusted = false) {
+		const r = scoped(i.principalId, row(i.operationId));
+		if (trusted) backend(i.principalId, r);
+		if (r.request_hash !== i.requestHash) fail$8("ACCEPTANCE_REQUEST_CHANGED");
+		return r;
+	}
+	function history(r, operationId = String(r.operation_id)) {
+		const snapshot = {
+			state: r.state,
+			revision: r.revision,
+			errorCode: r.error_code,
+			observedAt: r.updated_at
+		};
+		exec("INSERT INTO acceptance_preparation_history VALUES(?,?,?,?)", r.operation_id, r.revision, canonical(snapshot), r.updated_at);
+		hooks.changed(String(r.run_id), operationId, String(r.operation_id), r.state);
+		return view(r);
+	}
+	function candidateBasis(i) {
+		const run = plans.authorized(i.principalId, i.runId), candidate = freezes.getCandidate(i), review = reviews.getReview(i), data = candidate.manifest.delivery.record.dataPlan;
+		const currentAcceptedReleaseId = get("SELECT accepted_release_id FROM projects WHERE project_id=?", candidate.projectId).accepted_release_id ?? null, dataPlanHash = digest(canonical(data));
+		const keys = {
+			candidateId: i.candidateId,
+			candidateRevision: candidate.revision,
+			manifestHash: candidate.manifestHash,
+			reviewHash: review.reviewHash,
+			expectedAcceptedReleaseId: data.sourceReleaseId,
+			dataPlanHash
+		};
+		const stored = i.policyHash ? get("SELECT policy_json FROM acceptance_backend_policies WHERE project_id=? AND policy_hash=?", candidate.projectId, i.policyHash) : void 0, p = stored ? acceptanceBackendPolicy.parse(json$3(stored.policy_json)) : null;
+		const configured = Boolean(p && p.templateVersion === data.templateVersion && (data.strategy === "INITIAL" ? p.initialModes.includes(data.initialData) : data.strategy === "PRESERVE_MIGRATE" ? p.allowPreserveMigration : p.allowReplacement && p.initialModes.includes(data.initialData)));
+		const replacementConfirmed = data.strategy === "REPLACE" && Boolean(get("SELECT 1 FROM acceptance_data_decisions WHERE decision_id=? AND project_id=? AND run_id=? AND candidate_id=? AND manifest_hash=? AND review_hash=? AND source_release_id=? AND data_plan_hash=? AND actor_id=?", data.replacementDecisionId, candidate.projectId, i.runId, i.candidateId, candidate.manifestHash, review.reviewHash, data.sourceReleaseId, dataPlanHash, i.principalId));
+		const unresolved = get("SELECT operation_id FROM acceptance_preparations p WHERE project_id=? AND state<>'FAILED' AND NOT EXISTS(SELECT 1 FROM acceptance_commits c WHERE c.preparation_operation_id=p.operation_id) AND NOT EXISTS(SELECT 1 FROM acceptance_abort_completions a WHERE a.preparation_operation_id=p.operation_id) ORDER BY rowid LIMIT 1", candidate.projectId);
+		let reason = null;
+		if (run.membership !== "owner") reason = "NOT_OWNER";
+		else if (candidate.qualification !== "CURRENT") reason = "CANDIDATE_STALE";
+		else if (!review.canPrepareAcceptance) reason = "REVIEW_REQUIRED";
+		else if (currentAcceptedReleaseId !== data.sourceReleaseId) reason = "SOURCE_CHANGED";
+		else try {
+			basis(i.principalId, {
+				...i,
+				...keys
+			});
+		} catch (error) {
+			if (error instanceof StorageError) reason = "SOURCE_CHANGED";
+			else throw error;
+		}
+		const canConfirmReplacement = reason === null && data.strategy === "REPLACE" && !replacementConfirmed;
+		if (reason === null) {
+			if (!configured) reason = "BACKEND_UNAVAILABLE";
+			else if (unresolved) reason = "PREPARATION_UNRESOLVED";
+			else if (get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')", candidate.projectId)) reason = "EFFECT_UNRESOLVED";
+			else if (data.strategy === "REPLACE" && !replacementConfirmed) reason = "REPLACEMENT_CONFIRMATION_REQUIRED";
+		}
+		return parseContract(acceptanceBasisView, {
+			...keys,
+			projectId: candidate.projectId,
+			runId: i.runId,
+			codeCommit: candidate.manifest.codeCommit,
+			dataPlan: data,
+			currentAcceptedReleaseId,
+			resourceRevision: Number(run.resource_revision),
+			qualification: candidate.qualification,
+			configured,
+			policyHash: configured ? i.policyHash : null,
+			replacementConfirmed,
+			blockedByPreparationOperationId: unresolved ? String(unresolved.operation_id) : null,
+			canManage: run.membership === "owner",
+			canPrepare: reason === null,
+			canConfirmReplacement,
+			reason
+		});
+	}
+	function listCandidatePreparations(i) {
+		const qualifications = /* @__PURE__ */ new Map();
+		plans.authorized(i.principalId, i.runId);
+		freezes.getCandidate(i);
+		const rows = all("SELECT rowid sequence,* FROM acceptance_preparations WHERE run_id=? AND candidate_id=? AND rowid>? ORDER BY rowid LIMIT ?", i.runId, i.candidateId, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+		return {
+			items: page.map((r) => ({
+				sequence: Number(r.sequence),
+				preparation: view(r, qualifications)
+			})),
+			nextSequence: rows.length > i.limit ? Number(page.at(-1).sequence) : null
+		};
+	}
+	const handlers = {
+		getAcceptancePreparationScope(i) {
+			const value = policy(i.projectId, i.policyHash);
+			if (value.backendPrincipalId !== i.principalId) fail$8("FORBIDDEN", 403);
+			return {
+				policyHash: i.policyHash,
+				policy: value
+			};
+		},
+		listAcceptancePreparationWork(i) {
+			return transaction(db, () => {
+				if (policy(i.projectId, i.policyHash).backendPrincipalId !== i.principalId) fail$8("FORBIDDEN", 403);
+				const rows = all("SELECT p.rowid sequence,p.* FROM acceptance_preparations p WHERE p.project_id=? AND p.policy_hash=? AND p.rowid>? AND p.state IN ('PREPARED','SENT','UNKNOWN') AND NOT EXISTS(SELECT 1 FROM acceptance_commits c WHERE c.preparation_operation_id=p.operation_id) AND NOT EXISTS(SELECT 1 FROM acceptance_abort_decisions a WHERE a.preparation_operation_id=p.operation_id) AND NOT EXISTS(SELECT 1 FROM acceptance_abort_completions a WHERE a.preparation_operation_id=p.operation_id) ORDER BY p.rowid LIMIT ?", i.projectId, i.policyHash, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit), qualifications = /* @__PURE__ */ new Map();
+				return {
+					items: page.map((r) => ({
+						sequence: Number(r.sequence),
+						preparation: view(r, qualifications)
+					})),
+					nextSequence: rows.length > i.limit ? Number(page.at(-1).sequence) : null
+				};
+			});
+		},
+		getCandidateAcceptanceBasis(i) {
+			return transaction(db, () => candidateBasis(i));
+		},
+		listCandidateAcceptancePreparations(i) {
+			return transaction(db, () => listCandidatePreparations(i));
+		},
+		registerAcceptanceBackendPolicy(i) {
+			return transaction(db, () => {
+				if ((get("SELECT role FROM project_members WHERE project_id=? AND principal_id=?", i.projectId, i.principalId) ?? fail$8("RESOURCE_NOT_FOUND", 404)).role !== "owner") fail$8("FORBIDDEN", 403);
+				const body = canonical(i.policy), policyHash = digest(body);
+				exec("INSERT OR IGNORE INTO acceptance_backend_policies VALUES(?,?,?,?,?)", i.projectId, policyHash, body, i.principalId, now());
+				return {
+					policyHash,
+					policy: i.policy
+				};
+			});
+		},
+		recordAcceptanceReplacementDecision(i) {
+			if (i.meta.scopeId !== i.runId) fail$8("OPERATION_SCOPE_INVALID", 422);
+			const { meta, ifMatch: _match, ...payload } = i;
+			const op = hooks.operation(meta, "ConfirmAcceptanceReplacement", payload, (operationId) => {
+				const b = basis(meta.principalId, i);
+				assertResourceVersion(i.ifMatch, Number(b.run.resource_revision));
+				if (b.data.strategy !== "REPLACE" || b.data.replacementDecisionId !== i.decisionId || !i.expectedAcceptedReleaseId) fail$8("ACCEPTANCE_REPLACEMENT_NOT_APPLICABLE");
+				exec("INSERT INTO acceptance_data_decisions VALUES(?,?,?,?,?,?,?,?,?,?,?)", i.decisionId, operationId, b.candidate.projectId, i.runId, i.candidateId, i.manifestHash, i.reviewHash, i.expectedAcceptedReleaseId, i.dataPlanHash, meta.principalId, now());
+				hooks.decision(i.runId, operationId, i.decisionId);
+				return { decisionId: i.decisionId };
+			}, () => {
+				owner(meta.principalId, i.runId);
+			});
+			return {
+				decisionId: String(op.result.decisionId),
+				operationId: op.operationId
+			};
+		},
+		beginAcceptancePreparation(i) {
+			if (i.meta.scopeId !== i.runId) fail$8("OPERATION_SCOPE_INVALID", 422);
+			const { meta, ifMatch: _match, ...payload } = i;
+			const op = hooks.operation(meta, "BeginAcceptancePreparation", payload, (operationId) => {
+				const b = basis(meta.principalId, i);
+				assertResourceVersion(i.ifMatch, Number(b.run.resource_revision));
+				const p = policy(b.candidate.projectId, i.policyHash);
+				if (get("SELECT 1 FROM acceptance_preparations p WHERE project_id=? AND state<>'FAILED' AND NOT EXISTS(SELECT 1 FROM acceptance_commits c WHERE c.preparation_operation_id=p.operation_id) AND NOT EXISTS(SELECT 1 FROM acceptance_abort_completions a WHERE a.preparation_operation_id=p.operation_id)", b.candidate.projectId)) fail$8("ACCEPTANCE_PREPARATION_UNRESOLVED");
+				if (get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')", b.candidate.projectId)) fail$8("ACCEPTANCE_EFFECT_UNRESOLVED");
+				if (p.templateVersion !== b.data.templateVersion || b.data.strategy === "INITIAL" && !p.initialModes.includes(b.data.initialData) || b.data.strategy === "PRESERVE_MIGRATE" && !p.allowPreserveMigration || b.data.strategy === "REPLACE" && (!p.allowReplacement || !p.initialModes.includes(b.data.initialData))) fail$8("ACCEPTANCE_BACKEND_NOT_CONFIGURED", 503);
+				if (b.data.strategy === "REPLACE") {
+					const d = get("SELECT * FROM acceptance_data_decisions WHERE decision_id=?", b.data.replacementDecisionId);
+					if (!d || d.project_id !== b.candidate.projectId || d.run_id !== i.runId || d.candidate_id !== i.candidateId || d.manifest_hash !== i.manifestHash || d.review_hash !== i.reviewHash || d.source_release_id !== i.expectedAcceptedReleaseId || d.data_plan_hash !== i.dataPlanHash || d.actor_id !== meta.principalId) fail$8("ACCEPTANCE_REPLACEMENT_UNCONFIRMED");
+				}
+				const releaseId = uid("release"), datasetId = uid("dataset"), body = canonical(acceptancePreparationRequest.parse({
+					schemaVersion: "devmesh.acceptance-prepare.v1",
+					operationId,
+					releaseId,
+					projectId: b.candidate.projectId,
+					runId: i.runId,
+					candidateId: i.candidateId,
+					candidateRevision: i.candidateRevision,
+					manifestHash: i.manifestHash,
+					reviewHash: i.reviewHash,
+					expectedAcceptedReleaseId: i.expectedAcceptedReleaseId,
+					dataPlanHash: i.dataPlanHash,
+					runEpoch: b.candidate.manifest.runEpoch,
+					requirementRevision: b.candidate.manifest.requirementRevision,
+					planRevision: b.candidate.manifest.planRevision,
+					codeCommit: b.candidate.manifest.codeCommit,
+					image: b.candidate.manifest.delivery.record.image,
+					dataPlan: b.data,
+					policyHash: i.policyHash,
+					backendPrincipalId: p.backendPrincipalId,
+					backendRef: p.backendRef,
+					runnerId: p.runnerId,
+					source: b.source,
+					target: {
+						datasetId,
+						storageKey: b.candidate.projectId + "/" + datasetId + "/app.sqlite",
+						schemaRevision: p.schemaRevision
+					}
+				})), at = now();
+				if (Buffer.byteLength(body) > 256 * 1024) fail$8("ACCEPTANCE_REQUEST_TOO_LARGE");
+				exec("INSERT INTO acceptance_preparations VALUES(?,?,?,?,?,?,?,?,?,?,'PREPARED',1,NULL,?,?)", operationId, meta.principalId, b.candidate.projectId, i.runId, i.candidateId, i.policyHash, releaseId, datasetId, digest(body), body, at, at);
+				history(row(operationId));
+				return { preparationId: operationId };
+			}, () => {
+				owner(meta.principalId, i.runId);
+			});
+			return view(row(String(op.result.preparationId)));
+		},
+		getAcceptancePreparation(i) {
+			return transaction(db, () => view(scoped(i.principalId, row(i.operationId))));
+		},
+		getAcceptanceDataset(i) {
+			return transaction(db, () => {
+				const p = bound(i), d = get("SELECT d.*,p.request_hash,p.base_release_id FROM datasets d JOIN dataset_preparations p ON p.dataset_id=d.dataset_id WHERE p.operation_id=? AND p.purpose='ACCEPTANCE'", i.operationId) ?? fail$8("ACCEPTANCE_DATASET_MISSING");
+				return {
+					dataset: {
+						datasetId: String(d.dataset_id),
+						projectId: String(d.project_id),
+						runId: String(d.run_id),
+						candidateId: String(d.candidate_id),
+						operationId: String(d.operation_id),
+						policyHash: String(d.policy_hash),
+						sourceDatasetId: d.source_dataset_id,
+						sourceReleaseId: d.source_release_id,
+						storageKey: String(d.storage_key),
+						schemaRevision: String(d.schema_revision),
+						state: d.state,
+						revision: Number(d.revision),
+						snapshotAt: d.snapshot_at,
+						retentionUntil: String(d.retention_until),
+						createdAt: String(d.created_at)
+					},
+					purpose: "ACCEPTANCE",
+					baseReleaseId: d.base_release_id,
+					requestHash: String(p.request_hash),
+					gate: writeGate(String(d.dataset_id))
+				};
+			});
+		},
+		closeAcceptanceSourceWriteGate(i) {
+			return transaction(db, () => {
+				const p = bound(i, true), r = acceptancePreparationRequest.parse(json$3(p.request_json));
+				if (["ABORTING", "ABORTED"].includes(view(p).resolution)) fail$8("ACCEPTANCE_ABORT_REQUESTED");
+				if (!r.source) fail$8("ACCEPTANCE_SOURCE_NOT_APPLICABLE");
+				const d = get("SELECT * FROM dataset_preparations WHERE dataset_id=? AND project_id=? AND operation_id=?", r.source.datasetId, r.projectId, r.source.datasetOperationId) ?? fail$8("ACCEPTANCE_SOURCE_CHANGED");
+				const request = previewWriteCloseRequest.parse({
+					schemaVersion: "devmesh.preview-write-close.v1",
+					operationId: i.operationId,
+					projectId: r.projectId,
+					datasetId: r.source.datasetId,
+					datasetOperationId: r.source.datasetOperationId,
+					datasetRequestHash: d.request_hash,
+					expectedFence: i.expectedFence
+				}), body = canonical(request), requestHash = digest(body), old = get("SELECT * FROM preview_write_closures WHERE operation_id=?", i.operationId);
+				if (old) {
+					if (old.request_json !== body || old.request_hash !== requestHash) fail$8("ACCEPTANCE_SOURCE_CLOSE_CHANGED");
+					const gate = writeGate(r.source.datasetId);
+					return {
+						gate,
+						closeRequest: request,
+						current: gate.closeOperationId === i.operationId && gate.closeRequestHash === requestHash
+					};
+				}
+				if (p.revision !== i.expectedRevision || !["SENT", "UNKNOWN"].includes(String(p.state))) fail$8("ACCEPTANCE_REVISION_CHANGED");
+				if (!current(p)) fail$8("ACCEPTANCE_BASIS_CHANGED");
+				const g = writeGate(r.source.datasetId);
+				if (g.datasetOperationId !== r.source.datasetOperationId || g.datasetRequestHash !== d.request_hash || g.state !== "OPEN" || g.fence !== i.expectedFence) fail$8("ACCEPTANCE_SOURCE_FENCE_CHANGED");
+				const at = now();
+				exec("INSERT INTO preview_write_closures VALUES(?,?,?,?,?)", i.operationId, g.datasetId, requestHash, body, at);
+				exec("UPDATE preview_write_gates SET state='CLOSED',fence=fence+1,revision=revision+1,close_operation_id=?,close_request_hash=?,updated_at=? WHERE dataset_id=?", i.operationId, requestHash, at, g.datasetId);
+				const gate = writeGate(g.datasetId);
+				exec("INSERT INTO preview_write_gate_events VALUES(?,?,?,?)", gate.datasetId, gate.revision, canonical(gate), at);
+				hooks.sourceClosed(r.runId, i.operationId, gate.datasetId, gate.fence);
+				return {
+					gate,
+					closeRequest: request,
+					current: true
+				};
+			});
+		},
+		listAcceptancePreparations(i) {
+			return transaction(db, () => {
+				if (policy(i.projectId, i.policyHash).backendPrincipalId !== i.principalId) fail$8("FORBIDDEN", 403);
+				const rows = all("SELECT rowid sequence,* FROM acceptance_preparations WHERE project_id=? AND policy_hash=? AND rowid>? ORDER BY rowid LIMIT ?", i.projectId, i.policyHash, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+				return {
+					items: page.map((r) => ({
+						sequence: Number(r.sequence),
+						preparation: view(r)
+					})),
+					nextSequence: rows.length > i.limit ? Number(page.at(-1).sequence) : null
+				};
+			});
+		},
+		markAcceptancePreparationSent(i) {
+			return transaction(db, () => {
+				const r = row(i.operationId);
+				backend(i.principalId, r);
+				if (r.request_hash !== i.requestHash) fail$8("ACCEPTANCE_REQUEST_CHANGED");
+				if (r.state !== "PREPARED") return {
+					dispatch: false,
+					preparation: view(r)
+				};
+				if (r.revision !== i.expectedRevision) fail$8("ACCEPTANCE_REVISION_CHANGED");
+				if (!current(r)) fail$8("ACCEPTANCE_BASIS_CHANGED");
+				if (get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')", r.project_id)) fail$8("ACCEPTANCE_EFFECT_UNRESOLVED");
+				exec("UPDATE acceptance_preparations SET state='SENT',revision=revision+1,updated_at=? WHERE operation_id=?", now(), i.operationId);
+				return {
+					dispatch: true,
+					preparation: history(row(i.operationId))
+				};
+			});
+		},
+		markAcceptancePreparationUnknown(i) {
+			return transaction(db, () => {
+				const r = row(i.operationId);
+				backend(i.principalId, r);
+				if (r.request_hash !== i.requestHash) fail$8("ACCEPTANCE_REQUEST_CHANGED");
+				if (get("SELECT 1 FROM acceptance_abort_decisions WHERE preparation_operation_id=?", i.operationId)) fail$8("ACCEPTANCE_ABORT_REQUESTED");
+				if (get("SELECT 1 FROM acceptance_commits WHERE preparation_operation_id=?", i.operationId)) fail$8("ACCEPTANCE_ALREADY_COMMITTED");
+				if (r.state === "UNKNOWN" && r.error_code === i.errorCode) return view(r);
+				if (!["SENT", "UNKNOWN"].includes(String(r.state)) || r.revision !== i.expectedRevision) fail$8("ACCEPTANCE_REVISION_CHANGED");
+				exec("UPDATE acceptance_preparations SET state='UNKNOWN',revision=revision+1,error_code=?,updated_at=? WHERE operation_id=?", i.errorCode, now(), i.operationId);
+				return history(row(i.operationId));
+			});
+		},
+		failUnsentAcceptancePreparation(i) {
+			if (i.meta.scopeId !== i.runId) fail$8("OPERATION_SCOPE_INVALID", 422);
+			const { meta, ifMatch: _match, ...payload } = i;
+			hooks.operation(meta, "FailUnsentAcceptancePreparation", payload, (operationId) => {
+				const run = owner(meta.principalId, i.runId), r = row(i.operationId);
+				assertResourceVersion(i.ifMatch, Number(run.resource_revision));
+				if (r.run_id !== i.runId || r.request_hash !== i.requestHash) fail$8("ACCEPTANCE_PREPARATION_NOT_FOUND", 404);
+				if (r.state !== "PREPARED") fail$8("ACCEPTANCE_EFFECT_UNRESOLVED");
+				exec("UPDATE acceptance_preparations SET state='FAILED',revision=revision+1,error_code='ACCEPTANCE_NOT_SENT',updated_at=? WHERE operation_id=?", now(), i.operationId);
+				history(row(i.operationId), operationId);
+				return { preparationId: i.operationId };
+			}, () => {
+				owner(meta.principalId, i.runId);
+			});
+			return view(row(i.operationId));
+		},
+		listAcceptancePreparationHistory(i) {
+			return transaction(db, () => {
+				if (scoped(i.principalId, row(i.operationId)).request_hash !== i.requestHash) fail$8("ACCEPTANCE_REQUEST_CHANGED");
+				const rows = all("SELECT * FROM acceptance_preparation_history WHERE operation_id=? AND sequence>? ORDER BY sequence LIMIT ?", i.operationId, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+				return {
+					items: page.map((r) => ({
+						sequence: Number(r.sequence),
+						snapshot: json$3(r.snapshot_json)
+					})),
+					nextSequence: rows.length > i.limit ? Number(page.at(-1).sequence) : null
+				};
+			});
+		}
+	};
+	return {
+		getCandidateBasis: candidateBasis,
+		listCandidatePreparations,
+		getPreparation: (i) => view(scoped(i.principalId, row(i.operationId))),
+		execute(method, input) {
+			const parsed = parseContract(acceptanceRequests[method], input);
+			return handlers[method](parsed);
+		}
+	};
+}
+//#endregion
+//#region src/acceptance-readiness-domain.ts
+const json$2 = (v) => JSON.parse(String(v));
+const hash$1 = (v) => digest(canonical(v));
+function fail$7(code, status = 409) {
+	throw new StorageError(code, status, "Acceptance readiness requires the original trusted preparation, current fences and exact held service");
+}
+function createAcceptanceReadinessDomain(db, acceptances, changed) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), all = (sql, ...p) => db.prepare(sql).all(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	const original = (i) => {
+		const p = acceptances.getPreparation(i);
+		if (p.requestHash !== i.requestHash) fail$7("ACCEPTANCE_REQUEST_CHANGED");
+		return p;
+	};
+	const service = (i) => {
+		const p = original(i);
+		if (i.principalId !== p.request.backendPrincipalId) fail$7("FORBIDDEN", 403);
+		return p;
+	};
+	const latest = (id) => get("SELECT * FROM acceptance_preparation_observations WHERE operation_id=? ORDER BY sequence DESC LIMIT 1", id);
+	const pending = (projectId) => !!get("SELECT 1 FROM business_pending_writes WHERE project_id=?", projectId) || !!get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')", projectId);
+	function validate(p, proof, o) {
+		const r = p.request, d = proof.data, s = proof.sourceFence, c = proof.service.claim, h = o.health;
+		const target = get("SELECT d.*,p.request_hash,p.purpose FROM datasets d JOIN dataset_preparations p ON p.dataset_id=d.dataset_id WHERE d.dataset_id=?", r.target.datasetId), targetGate = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", r.target.datasetId);
+		if (!target || target.project_id !== p.projectId || target.operation_id !== p.operationId || target.policy_hash !== p.policyHash || target.request_hash !== p.requestHash || target.purpose !== "ACCEPTANCE" || !["PREPARING", "WRITE_FROZEN"].includes(String(target.state)) || !targetGate || targetGate.state !== "CLOSED" || targetGate.dataset_operation_id !== p.operationId || targetGate.dataset_request_hash !== p.requestHash) fail$7("ACCEPTANCE_TARGET_GATE_CHANGED");
+		if (get("SELECT 1 FROM acceptance_prepared_proofs WHERE operation_id=?", p.operationId) && (target.state !== "WRITE_FROZEN" || target.snapshot_at !== d.snapshotAt)) fail$7("ACCEPTANCE_TARGET_DATA_CHANGED");
+		if (p.qualification !== "CURRENT") fail$7("ACCEPTANCE_BASIS_CHANGED");
+		for (const k of [
+			"operationId",
+			"releaseId",
+			"projectId",
+			"runId",
+			"candidateId",
+			"manifestHash",
+			"reviewHash",
+			"dataPlanHash",
+			"runnerId",
+			"backendRef"
+		]) if (proof[k] !== r[k]) fail$7("ACCEPTANCE_PROOF_CHANGED");
+		if (proof.requestHash !== p.requestHash || d.datasetId !== r.target.datasetId || d.storageKey !== r.target.storageKey || d.schemaRevision !== r.target.schemaRevision || d.originDatasetId !== (r.dataPlan.strategy === "PRESERVE_MIGRATE" ? r.source.datasetId : null) || d.sourceReleaseId !== r.expectedAcceptedReleaseId || canonical(d.migrationRef) !== canonical(r.dataPlan.migrationRef)) fail$7("ACCEPTANCE_DATA_PROOF_CHANGED");
+		if (r.source === null !== (s === null)) fail$7("ACCEPTANCE_SOURCE_FENCE_REQUIRED");
+		if (s) {
+			if (s.datasetId !== r.source.datasetId || s.datasetOperationId !== r.source.datasetOperationId || s.closeOperationId !== p.operationId) fail$7("ACCEPTANCE_SOURCE_FENCE_CHANGED");
+			const g = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", s.datasetId), closure = get("SELECT * FROM preview_write_closures WHERE operation_id=?", s.closeOperationId);
+			if (!g || g.project_id !== p.projectId || g.dataset_operation_id !== s.datasetOperationId || g.state !== "CLOSED" || g.close_operation_id !== s.closeOperationId || g.close_request_hash !== s.closeRequestHash || g.fence !== s.gateFence || !closure || closure.dataset_id !== s.datasetId || closure.request_hash !== s.closeRequestHash || hash$1(json$2(closure.request_json)) !== s.closeRequestHash) fail$7("ACCEPTANCE_SOURCE_FENCE_CHANGED");
+			if (String(g.updated_at) > s.physical.heldAt || s.physical.heldAt > d.snapshotAt) fail$7("ACCEPTANCE_SNAPSHOT_PRECEDES_FENCE");
+		}
+		if (proof.targetFence.datasetId !== r.target.datasetId || proof.targetFence.physical.heldAt > proof.preparedAt || s && s.physical.fenceId === proof.targetFence.physical.fenceId) fail$7("ACCEPTANCE_TARGET_FENCE_CHANGED");
+		if (c.operationId !== p.operationId || c.acceptanceRequestHash !== p.requestHash || c.releaseId !== r.releaseId || c.candidateId !== r.candidateId || c.manifestHash !== r.manifestHash || c.datasetId !== r.target.datasetId || c.imageDigest !== r.image.imageDigest || hash$1(c) !== proof.service.claimHash) fail$7("ACCEPTANCE_SERVICE_PROOF_CHANGED");
+		if (c.schemaVersion === "devmesh.acceptance-service-claim.v1" && (c.projectId !== p.projectId || c.runId !== p.runId || c.reviewHash !== r.reviewHash || c.dataPlanHash !== r.dataPlanHash || c.reservationId !== proof.service.reservationId || c.profileHash !== proof.service.profileHash)) fail$7("ACCEPTANCE_SERVICE_PROOF_CHANGED");
+		if (h.instanceId !== c.instanceId || h.datasetId !== c.datasetId || h.imageDigest !== c.imageDigest || canonical(h.endpoint) !== canonical(proof.service.endpoint) || h.claimHash !== proof.service.claimHash || h.custodyRevision < proof.service.custodyRevision) fail$7("ACCEPTANCE_HEALTH_PROOF_CHANGED");
+		if (o.fences.sourceProofHash !== (s?.physical.proofHash ?? null) || o.fences.targetProofHash !== proof.targetFence.physical.proofHash) fail$7("ACCEPTANCE_CURRENT_FENCE_CHANGED");
+		if (d.snapshotAt < p.createdAt || d.snapshotAt > proof.preparedAt || proof.preparedAt < p.createdAt || proof.preparedAt > o.checkedAt) fail$7("ACCEPTANCE_PROOF_TIME_INVALID");
+		const age = Date.now() - Date.parse(o.checkedAt);
+		if (age < 0 || age > 3e4) fail$7("ACCEPTANCE_HEALTH_EXPIRED");
+		if (pending(p.projectId)) fail$7("ACCEPTANCE_EFFECT_UNRESOLVED");
+	}
+	function view(p) {
+		const row = latest(p.operationId), stored = get("SELECT * FROM acceptance_prepared_proofs WHERE operation_id=?", p.operationId), proof = stored ? acceptancePreparedProof.parse(json$2(stored.proof_json)) : null, o = row ? acceptancePreparationObservation.parse(json$2(row.observation_json)) : null;
+		const value = {
+			operationId: p.operationId,
+			requestHash: p.requestHash,
+			sequence: Number(row?.sequence ?? 0),
+			state: "UNPREPARED",
+			reasonCode: null,
+			proofHash: stored ? String(stored.proof_hash) : null,
+			proof,
+			observation: o
+		};
+		if (p.resolution === "ABORTING" || p.resolution === "ABORTED") return {
+			...value,
+			state: "UNAVAILABLE",
+			reasonCode: "ACCEPTANCE_ABORT_REQUESTED"
+		};
+		if (p.qualification !== "CURRENT") return {
+			...value,
+			state: "STALE",
+			reasonCode: "ACCEPTANCE_BASIS_CHANGED"
+		};
+		if (!o) return value;
+		if (o.state === "UNKNOWN") return {
+			...value,
+			state: "UNAVAILABLE",
+			reasonCode: o.errorCode
+		};
+		try {
+			if (!proof || stored.request_hash !== p.requestHash || hash$1(proof) !== stored.proof_hash || canonical(proof) !== canonical(o.proof)) fail$7("ACCEPTANCE_PROOF_CHANGED");
+			validate(p, proof, o);
+			if (p.state === "UNKNOWN" && p.revision > Number(row.preparation_revision)) fail$7("ACCEPTANCE_BACKEND_UNCERTAIN");
+			return {
+				...value,
+				state: "READY"
+			};
+		} catch (error) {
+			if (error instanceof StorageError) return {
+				...value,
+				state: "UNAVAILABLE",
+				reasonCode: error.code
+			};
+			throw error;
+		}
+	}
+	const handlers = {
+		getCandidateAcceptancePreparationPage(i) {
+			const b = acceptances.getCandidateBasis(i), page = acceptances.listCandidatePreparations(i);
+			return parseContract(acceptancePreparationList, {
+				items: page.items.map(({ sequence, preparation: p }) => {
+					const ready = view(p), unresolved = p.resolution === "UNRESOLVED", policyCurrent = b.configured && b.policyHash === p.policyHash;
+					return {
+						sequence,
+						preparation: {
+							operationId: p.operationId,
+							runId: p.runId,
+							candidateId: p.candidateId,
+							releaseId: p.releaseId,
+							requestHash: p.requestHash,
+							revision: p.revision,
+							state: p.state,
+							resolution: p.resolution,
+							qualification: p.qualification,
+							basis: Object.fromEntries([
+								"candidateRevision",
+								"manifestHash",
+								"reviewHash",
+								"expectedAcceptedReleaseId",
+								"dataPlanHash"
+							].map((k) => [k, p.request[k]])),
+							createdAt: p.createdAt,
+							updatedAt: p.updatedAt,
+							acceptanceOperationId: p.acceptanceOperationId,
+							readiness: {
+								state: ready.state,
+								sequence: ready.sequence,
+								proofHash: ready.proofHash,
+								checkedAt: ready.observation?.checkedAt ?? null
+							},
+							resourceRevision: b.resourceRevision,
+							canCommit: Boolean(unresolved && b.canManage && policyCurrent && p.qualification === "CURRENT" && ready.state === "READY" && ready.proof?.service.claim.schemaVersion === "devmesh.acceptance-service-claim.v1"),
+							canCloseUnsent: unresolved && b.canManage && p.state === "PREPARED",
+							canAbort: unresolved && b.canManage && ["SENT", "UNKNOWN"].includes(p.state) && b.currentAcceptedReleaseId === p.request.expectedAcceptedReleaseId
+						}
+					};
+				}),
+				nextSequence: page.nextSequence
+			});
+		},
+		verifyAcceptancePreparation(i) {
+			const p = service(i);
+			if (p.resolution !== "UNRESOLVED" || !["SENT", "UNKNOWN"].includes(p.state) || get("SELECT 1 FROM acceptance_prepared_proofs WHERE operation_id=?", p.operationId)) return {
+				allowed: false,
+				reasonCode: "ACCEPTANCE_DISPATCH_CLOSED"
+			};
+			if (p.qualification !== "CURRENT") return {
+				allowed: false,
+				reasonCode: "ACCEPTANCE_BASIS_CHANGED"
+			};
+			if (pending(p.projectId)) return {
+				allowed: false,
+				reasonCode: "ACCEPTANCE_EFFECT_UNRESOLVED"
+			};
+			return {
+				allowed: true,
+				reasonCode: null
+			};
+		},
+		getAcceptanceReadiness(i) {
+			return view(original(i));
+		},
+		recordAcceptancePreparationObservation(i) {
+			const p = service(i), o = i.observation, body = canonical(o);
+			if (!["SENT", "UNKNOWN"].includes(p.state)) fail$7("ACCEPTANCE_NOT_DISPATCHED");
+			if (get("SELECT 1 FROM acceptance_preparation_observations WHERE operation_id=? AND observation_hash=?", p.operationId, digest(body))) return view(p);
+			if (p.resolution === "ABORTING" || p.resolution === "ABORTED") fail$7("ACCEPTANCE_ABORT_REQUESTED");
+			if (p.resolution === "COMMITTED") fail$7("ACCEPTANCE_ALREADY_COMMITTED");
+			if (p.revision !== i.expectedPreparationRevision) fail$7("ACCEPTANCE_PREPARATION_CHANGED");
+			const last = latest(p.operationId), prior = last ? acceptancePreparationObservation.parse(json$2(last.observation_json)) : null;
+			if (Number(last?.sequence ?? 0) !== i.expectedSequence) fail$7("ACCEPTANCE_OBSERVATION_CHANGED");
+			if (o.checkedAt < p.createdAt || o.checkedAt > (/* @__PURE__ */ new Date()).toISOString() || prior && o.checkedAt < prior.checkedAt) fail$7("ACCEPTANCE_OBSERVATION_STALE");
+			if (o.state === "READY") {
+				validate(p, o.proof, o);
+				const highWater = get("SELECT max(json_extract(observation_json,'$.health.custodyRevision')) n FROM acceptance_preparation_observations WHERE operation_id=? AND json_extract(observation_json,'$.state')='READY'", p.operationId);
+				if (highWater?.n !== null && highWater?.n !== void 0 && o.health.custodyRevision < Number(highWater.n)) fail$7("ACCEPTANCE_OBSERVATION_STALE");
+				const proofBody = canonical(o.proof), old = get("SELECT * FROM acceptance_prepared_proofs WHERE operation_id=?", p.operationId);
+				if (old && (old.request_hash !== p.requestHash || old.proof_hash !== digest(proofBody) || old.proof_json !== proofBody)) fail$7("ACCEPTANCE_PROOF_IMMUTABLE");
+				if (!old) exec("INSERT INTO acceptance_prepared_proofs VALUES(?,?,?,?,?)", p.operationId, p.requestHash, digest(proofBody), proofBody, (/* @__PURE__ */ new Date()).toISOString());
+			}
+			const sequence = i.expectedSequence + 1;
+			exec("INSERT INTO acceptance_preparation_observations VALUES(?,?,?,?,?,?)", p.operationId, p.revision, sequence, digest(body), body, (/* @__PURE__ */ new Date()).toISOString());
+			changed(p.runId, p.operationId, sequence, o.state);
+			return view(original(i));
+		},
+		listAcceptancePreparationObservations(i) {
+			original(i);
+			const rows = all("SELECT * FROM acceptance_preparation_observations WHERE operation_id=? AND sequence>? ORDER BY sequence LIMIT ?", i.operationId, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+			return {
+				items: page.map((r) => ({
+					sequence: Number(r.sequence),
+					observation: acceptancePreparationObservation.parse(json$2(r.observation_json)),
+					observedAt: String(r.observed_at)
+				})),
+				nextSequence: rows.length > i.limit ? Number(page.at(-1).sequence) : null
+			};
+		}
+	};
+	return {
+		getReadiness: handlers.getAcceptanceReadiness,
+		execute(method, input) {
+			const parsed = parseContract(acceptanceReadinessRequests[method], input);
+			return transaction(db, () => handlers[method](parsed));
+		}
+	};
+}
+//#endregion
+//#region src/acceptance-commit-domain.ts
+function fail$6(code, status = 409) {
+	throw new StorageError(code, status, "Acceptance commit requires the exact current prepared and reviewed candidate");
+}
+function createAcceptanceCommitDomain(db, plans, freezes, reviews, acceptances, readiness, hooks) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), exec = (sql, ...p) => db.prepare(sql).run(...p);
+	function owner(principalId, runId) {
+		const r = plans.authorized(principalId, runId);
+		if (r.membership !== "owner") fail$6("FORBIDDEN", 403);
+		return r;
+	}
+	const handlers = {
+		commitReleaseAcceptance(i) {
+			if (i.meta.scopeId !== i.runId) fail$6("OPERATION_SCOPE_INVALID", 422);
+			const { meta, ifMatch: _match, ...payload } = i;
+			return hooks.operation(meta, "CommitReleaseAcceptance", payload, (operationId) => {
+				const principalId = meta.principalId, run = owner(principalId, i.runId);
+				assertResourceVersion(i.ifMatch, Number(run.resource_revision));
+				if (run.terminal_outcome !== null || run.phase !== "REVIEW" || run.control_gate !== "OPEN") fail$6("ACCEPTANCE_ADMISSION_CLOSED");
+				const p = acceptances.getPreparation({
+					principalId,
+					operationId: i.preparationOperationId
+				}), r = p.request;
+				if (p.resolution === "ABORTING" || p.resolution === "ABORTED") fail$6("ACCEPTANCE_ABORT_REQUESTED");
+				if (p.runId !== i.runId || p.requestHash !== i.requestHash) fail$6("ACCEPTANCE_REQUEST_CHANGED");
+				if (get("SELECT 1 FROM acceptance_commits WHERE preparation_operation_id=?", p.operationId)) fail$6("ACCEPTANCE_ALREADY_COMMITTED");
+				if (p.revision !== i.expectedPreparationRevision || !["SENT", "UNKNOWN"].includes(p.state)) fail$6("ACCEPTANCE_REVISION_CHANGED");
+				for (const key of [
+					"candidateId",
+					"candidateRevision",
+					"manifestHash",
+					"reviewHash",
+					"expectedAcceptedReleaseId",
+					"dataPlanHash"
+				]) if (i[key] !== r[key]) fail$6("ACCEPTANCE_BASIS_CHANGED");
+				if (run.run_epoch !== r.runEpoch || run.current_plan_revision !== r.planRevision || run.current_requirement_revision !== r.requirementRevision) fail$6("ACCEPTANCE_BASIS_CHANGED");
+				if ((get("SELECT accepted_release_id FROM projects WHERE project_id=?", p.projectId).accepted_release_id ?? null) !== r.expectedAcceptedReleaseId) fail$6("ACCEPTANCE_SOURCE_CHANGED");
+				const target = {
+					principalId,
+					runId: i.runId,
+					candidateId: i.candidateId
+				}, candidate = freezes.getCandidate(target), review = reviews.getReview(target);
+				if (p.qualification !== "CURRENT" || candidate.qualification !== "CURRENT" || candidate.revision !== r.candidateRevision || candidate.manifestHash !== r.manifestHash || !review.canPrepareAcceptance || review.reviewHash !== r.reviewHash) fail$6("ACCEPTANCE_BASIS_CHANGED");
+				if (candidate.manifest.codeCommit !== r.codeCommit || digest(canonical(candidate.manifest.delivery.record.dataPlan)) !== r.dataPlanHash || canonical(candidate.manifest.delivery.record.image) !== canonical(r.image)) fail$6("ACCEPTANCE_BASIS_CHANGED");
+				const ready = readiness.getReadiness({
+					principalId,
+					operationId: i.preparationOperationId,
+					requestHash: p.requestHash
+				});
+				if (ready.sequence !== i.expectedObservationSequence || ready.proofHash !== i.proofHash) fail$6("ACCEPTANCE_OBSERVATION_CHANGED");
+				if (ready.state !== "READY" || !ready.proof) fail$6(ready.reasonCode ?? "ACCEPTANCE_NOT_READY");
+				if (ready.proof.service.claim.schemaVersion !== "devmesh.acceptance-service-claim.v1") fail$6("ACCEPTANCE_SERVICE_PURPOSE_REQUIRED");
+				for (const hash of candidate.preflightHashes) if (!get("SELECT 1 FROM content_objects WHERE content_hash=? AND state='READY'", hash)) fail$6("ACCEPTANCE_CONTENT_UNAVAILABLE");
+				const acceptedAt = (/* @__PURE__ */ new Date()).toISOString(), receipt = {
+					releaseId: r.releaseId,
+					projectId: p.projectId,
+					runId: i.runId,
+					candidateId: r.candidateId,
+					candidateRevision: r.candidateRevision,
+					manifestHash: r.manifestHash,
+					reviewHash: r.reviewHash,
+					preparationOperationId: p.operationId,
+					acceptanceOperationId: operationId,
+					requestHash: p.requestHash,
+					proofHash: i.proofHash,
+					datasetId: r.target.datasetId,
+					previousReleaseId: r.expectedAcceptedReleaseId,
+					acceptedBy: principalId,
+					acceptedAt,
+					acceptanceState: "ACCEPTED",
+					publicationState: "PENDING"
+				};
+				exec("INSERT INTO releases VALUES(?,?,?,?,?,?,?,?,?,?)", r.releaseId, p.projectId, i.runId, r.candidateId, r.candidateRevision, operationId, r.manifestHash, r.target.datasetId, principalId, acceptedAt);
+				const switched = exec("UPDATE projects SET accepted_release_id=?,revision=revision+1,updated_at=? WHERE project_id=? AND accepted_release_id IS ?", r.releaseId, acceptedAt, p.projectId, r.expectedAcceptedReleaseId);
+				if (Number(switched.changes) !== 1) fail$6("ACCEPTANCE_SOURCE_CHANGED");
+				exec("INSERT INTO acceptance_commits VALUES(?,?,?,?,?,?,?,?,?)", r.releaseId, p.operationId, operationId, i.proofHash, ready.sequence, p.revision, r.reviewHash, canonical(receipt), acceptedAt);
+				const completed = [];
+				for (const w of candidate.manifest.works.filter((w) => w.relation === "MANUAL_PENDING")) {
+					const a = w.assessment, results = review.items.filter((item) => item.kind === "work-human" && item.subjectId === w.operationId || item.kind === "quality-human" && item.subjectId === a.qualityOperationId);
+					if (!results.length || results.some((item) => item.status !== "PASS" || !item.result)) fail$6("ACCEPTANCE_HUMAN_COMPLETION_MISSING");
+					if (a.automaticStatus !== "PENDING" || a.outcome !== null || a.checks.some((c) => c.status !== "PASS" && !(c.status === "PENDING" && ["human-decision", "quality-review"].includes(c.kind) && c.code === "HUMAN_DECISION_REQUIRED"))) fail$6("ACCEPTANCE_HUMAN_COMPLETION_INVALID");
+					exec("INSERT INTO work_acceptance_completions VALUES(?,?,?,?,?,?,?,?,?)", w.operationId, w.attemptId, r.releaseId, operationId, r.candidateId, w.evidence.artifactId, r.reviewHash, canonical(results.map((item) => item.result.resultId).sort()), acceptedAt);
+					exec("INSERT INTO verified_work_results VALUES(?,'success',?,?,?,?)", w.attemptId, w.evidence.artifactId, canonical(a.outputs), a.codeCommit, acceptedAt);
+					if (Number(exec("UPDATE attempts SET state='SUCCEEDED',ended_at=? WHERE attempt_id=? AND state='VERIFYING' AND ended_at IS NULL", acceptedAt, w.attemptId).changes) !== 1) fail$6("ACCEPTANCE_HUMAN_COMPLETION_INVALID");
+					exec("DELETE FROM role_slots WHERE attempt_id=?", w.attemptId);
+					exec("UPDATE execution_grants SET status='REVOKED' WHERE attempt_id=?", w.attemptId);
+					if (Number(exec("UPDATE work_verifications SET state='APPLIED',applied_at=? WHERE operation_id=? AND state='READY'", acceptedAt, w.operationId).changes) !== 1) fail$6("ACCEPTANCE_HUMAN_COMPLETION_INVALID");
+					completed.push({
+						workId: w.workId,
+						attemptId: w.attemptId
+					});
+				}
+				if (get("SELECT 1 FROM attempts WHERE run_id=? AND ended_at IS NULL", i.runId) || get("SELECT 1 FROM role_slots WHERE run_id=?", i.runId)) fail$6("ACCEPTANCE_ATTEMPT_UNFINISHED");
+				if (Number(exec("UPDATE runs SET terminal_outcome='COMPLETED',ended_at=? WHERE run_id=? AND terminal_outcome IS NULL AND control_gate='OPEN' AND run_epoch=?", acceptedAt, i.runId, r.runEpoch).changes) !== 1) fail$6("ACCEPTANCE_ADMISSION_CLOSED");
+				const body = canonical(releasePromotionRequest.parse({
+					schemaVersion: "devmesh.release-promotion.v1",
+					acceptanceOperationId: operationId,
+					preparation: r,
+					preparedProof: ready.proof,
+					proofHash: ready.proofHash
+				}));
+				exec("INSERT INTO release_promotion_outbox VALUES(?,?,?,?,?)", r.releaseId, operationId, digest(body), body, acceptedAt);
+				hooks.completed(i.runId, operationId, r.candidateId, r.releaseId, completed);
+				return { ...receipt };
+			}, () => {
+				owner(meta.principalId, i.runId);
+			});
+		},
+		getAcceptedRelease(i) {
+			const row = get("SELECT c.receipt_json,r.run_id FROM acceptance_commits c JOIN releases r ON r.release_id=c.release_id WHERE r.release_id=?", i.releaseId) ?? fail$6("ACCEPTED_RELEASE_NOT_FOUND", 404);
+			plans.authorized(i.principalId, String(row.run_id));
+			return JSON.parse(String(row.receipt_json));
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(acceptanceCommitRequests[method], input), call = () => handlers[method](parsed);
+		return method === "commitReleaseAcceptance" ? call() : transaction(db, call);
+	} };
+}
+//#endregion
+//#region src/acceptance-abort-domain.ts
+function fail$5(code, status = 409) {
+	throw new StorageError(code, status, "Abort requires the exact uncommitted preparation and a current owner decision");
+}
+function createAcceptanceAbortDomain(db, plans, acceptances, hooks) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p);
+	function owner(principalId, runId) {
+		const r = plans.authorized(principalId, runId);
+		if (r.membership !== "owner") fail$5("FORBIDDEN", 403);
+		return r;
+	}
+	function record(id) {
+		const row = get("SELECT * FROM acceptance_abort_decisions WHERE preparation_operation_id=?", id);
+		if (!row) return null;
+		const decision = acceptanceAbortDecision.parse(JSON.parse(String(row.decision_json)));
+		if (decision.preparation.operationId !== id || digest(canonical(decision)) !== row.decision_hash) fail$5("ACCEPTANCE_ABORT_DECISION_CHANGED");
+		return {
+			decision,
+			decisionHash: String(row.decision_hash)
+		};
+	}
+	const handlers = {
+		listAcceptanceAbortWork(i) {
+			if (acceptanceBackendPolicy.parse(JSON.parse(String(get("SELECT policy_json FROM acceptance_backend_policies WHERE project_id=? AND policy_hash=?", i.projectId, i.policyHash)?.policy_json ?? fail$5("ACCEPTANCE_BACKEND_NOT_CONFIGURED", 503)))).backendPrincipalId !== i.principalId) fail$5("FORBIDDEN", 403);
+			const rows = db.prepare("SELECT p.rowid sequence,p.operation_id FROM acceptance_preparations p JOIN acceptance_abort_decisions d ON d.preparation_operation_id=p.operation_id LEFT JOIN acceptance_abort_completions c ON c.preparation_operation_id=p.operation_id WHERE p.project_id=? AND p.policy_hash=? AND c.preparation_operation_id IS NULL AND p.rowid>? ORDER BY p.rowid LIMIT ?").all(i.projectId, i.policyHash, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+			return {
+				items: page.map((r) => ({
+					sequence: Number(r.sequence),
+					preparation: acceptances.getPreparation({
+						principalId: i.principalId,
+						operationId: ids.operation.parse(r.operation_id)
+					}),
+					record: record(String(r.operation_id))
+				})),
+				nextSequence: rows.length > i.limit ? Number(page.at(-1).sequence) : null
+			};
+		},
+		requestAcceptanceAbort(i) {
+			if (i.meta.scopeId !== i.runId) fail$5("OPERATION_SCOPE_INVALID", 422);
+			const { meta, ifMatch: _match, ...payload } = i;
+			return hooks.operation(meta, "RequestAcceptanceAbort", payload, (operationId) => {
+				const run = owner(meta.principalId, i.runId);
+				assertResourceVersion(i.ifMatch, Number(run.resource_revision));
+				const p = acceptances.getPreparation({
+					principalId: meta.principalId,
+					operationId: i.preparationOperationId
+				});
+				if (p.runId !== i.runId || p.requestHash !== i.requestHash) fail$5("ACCEPTANCE_REQUEST_CHANGED");
+				if (p.resolution === "COMMITTED") fail$5("ACCEPTANCE_ALREADY_COMMITTED");
+				if (p.resolution === "ABORTING" || p.resolution === "ABORTED") fail$5("ACCEPTANCE_ABORT_ALREADY_REQUESTED");
+				if (!["SENT", "UNKNOWN"].includes(p.state)) fail$5("ACCEPTANCE_NOT_DISPATCHED");
+				if (p.revision !== i.expectedPreparationRevision) fail$5("ACCEPTANCE_PREPARATION_CHANGED");
+				if (get("SELECT accepted_release_id FROM projects WHERE project_id=?", p.projectId).accepted_release_id !== p.request.expectedAcceptedReleaseId) fail$5("ACCEPTANCE_SOURCE_CHANGED");
+				if (get("SELECT 1 FROM releases WHERE release_id=? OR prepared_data_ref=?", p.releaseId, p.request.target.datasetId)) fail$5("ACCEPTANCE_ALREADY_COMMITTED");
+				const proof = get("SELECT proof_hash FROM acceptance_prepared_proofs WHERE operation_id=?", p.operationId);
+				const decision = acceptanceAbortDecision.parse({
+					schemaVersion: "devmesh.acceptance-abort-decision.v1",
+					operationId,
+					preparation: p.request,
+					preparationRequestHash: p.requestHash,
+					preparationRevision: p.revision,
+					preparedProofHash: proof?.proof_hash ?? null,
+					requestedBy: meta.principalId,
+					reason: i.reason,
+					decidedAt: (/* @__PURE__ */ new Date()).toISOString()
+				}), body = canonical(decision), decisionHash = digest(body);
+				db.prepare("INSERT INTO acceptance_abort_decisions VALUES(?,?,?,?,?,?,?)").run(p.operationId, operationId, p.requestHash, decisionHash, body, decision.preparedProofHash, decision.decidedAt);
+				hooks.requested(i.runId, operationId, p.operationId);
+				return {
+					decision,
+					decisionHash
+				};
+			}, () => {
+				owner(meta.principalId, i.runId);
+			}).result;
+		},
+		getAcceptanceAbortDecision(i) {
+			const p = acceptances.getPreparation({
+				principalId: i.principalId,
+				operationId: i.preparationOperationId
+			});
+			if (p.requestHash !== i.requestHash) fail$5("ACCEPTANCE_REQUEST_CHANGED");
+			return record(p.operationId);
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(acceptanceAbortRequests[method], input), call = () => handlers[method](parsed);
+		return method === "requestAcceptanceAbort" ? call() : transaction(db, call);
+	} };
+}
+//#endregion
+//#region src/acceptance-abort-recovery-domain.ts
+function fail$4(code, status = 409) {
+	throw new StorageError(code, status, "Abort completion requires original cleanup, permanent revocation and exact restored source ownership");
+}
+function createAcceptanceAbortRecoveryDomain(db, completed) {
+	const get = (sql, ...args) => db.prepare(sql).get(...args), exec = (sql, ...args) => db.prepare(sql).run(...args);
+	function bound(i) {
+		const row = get("SELECT * FROM acceptance_preparations WHERE operation_id=?", i.preparationOperationId) ?? fail$4("ACCEPTANCE_PREPARATION_NOT_FOUND", 404), request = acceptancePreparationRequest.parse(JSON.parse(String(row.request_json))), policy = acceptanceBackendPolicy.parse(JSON.parse(String(get("SELECT policy_json FROM acceptance_backend_policies WHERE project_id=? AND policy_hash=?", row.project_id, row.policy_hash)?.policy_json ?? fail$4("ACCEPTANCE_BACKEND_NOT_CONFIGURED", 503))));
+		if (i.principalId !== policy.backendPrincipalId || i.principalId !== request.backendPrincipalId) fail$4("FORBIDDEN", 403);
+		const p = {
+			operationId: String(row.operation_id),
+			requestHash: String(row.request_hash),
+			projectId: String(row.project_id),
+			runId: String(row.run_id),
+			releaseId: String(row.release_id),
+			request
+		};
+		if (p.requestHash !== i.requestHash || digest(canonical(request)) !== p.requestHash) fail$4("ACCEPTANCE_REQUEST_CHANGED");
+		const a = get("SELECT * FROM acceptance_abort_decisions WHERE preparation_operation_id=?", p.operationId) ?? fail$4("ACCEPTANCE_ABORT_NOT_REQUESTED");
+		const d = acceptanceAbortDecision.parse(JSON.parse(String(a.decision_json)));
+		if (a.decision_hash !== i.decisionHash || digest(canonical(d)) !== i.decisionHash || canonical(d.preparation) !== canonical(p.request)) fail$4("ACCEPTANCE_ABORT_DECISION_CHANGED");
+		return {
+			p,
+			d
+		};
+	}
+	function existing(id) {
+		const r = get("SELECT * FROM acceptance_abort_completions WHERE preparation_operation_id=?", id);
+		if (!r) return null;
+		const evidence = acceptanceAbortCompletionEvidence.parse(JSON.parse(String(r.evidence_json)));
+		if (digest(canonical(evidence)) !== r.evidence_hash) fail$4("ACCEPTANCE_ABORT_COMPLETION_CHANGED");
+		return {
+			evidence,
+			evidenceHash: String(r.evidence_hash),
+			completedAt: String(r.completed_at)
+		};
+	}
+	function gate(datasetId) {
+		const r = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", datasetId) ?? fail$4("ACCEPTANCE_WRITE_GATE_MISSING");
+		return acceptanceAbortSourceGate.parse({
+			datasetId,
+			datasetOperationId: r.dataset_operation_id,
+			datasetRequestHash: r.dataset_request_hash,
+			state: r.state,
+			fence: r.fence,
+			revision: r.revision,
+			closeOperationId: r.close_operation_id,
+			closeRequestHash: r.close_request_hash
+		});
+	}
+	function sourceImage(q) {
+		if (!q.source) return null;
+		const r = get("SELECT r.*,c.manifest_json,c.manifest_hash candidate_manifest_hash,c.revision frozen_revision FROM releases r JOIN release_candidates c ON c.candidate_id=r.candidate_id WHERE r.project_id=? AND r.release_id=?", q.projectId, q.source.releaseId) ?? fail$4("ACCEPTANCE_SOURCE_CHANGED");
+		if (r.prepared_data_ref !== q.source.datasetId || r.manifest_hash !== r.candidate_manifest_hash || r.candidate_revision !== r.frozen_revision) fail$4("ACCEPTANCE_SOURCE_CHANGED");
+		const manifest = JSON.parse(String(r.manifest_json));
+		if (digest(canonical(manifest)) !== r.manifest_hash) fail$4("ACCEPTANCE_SOURCE_CHANGED");
+		const image = manifest.delivery?.record?.image?.imageDigest;
+		if (!image) fail$4("ACCEPTANCE_SOURCE_IMAGE_UNAVAILABLE");
+		return image;
+	}
+	const handlers = {
+		getAcceptanceAbortRecovery(i) {
+			const { p } = bound(i);
+			return {
+				completion: existing(p.operationId),
+				sourceGate: p.request.source ? gate(p.request.source.datasetId) : null,
+				sourceImageDigest: sourceImage(p.request)
+			};
+		},
+		completeAcceptanceAbort(i) {
+			const { p, d } = bound(i), e = i.evidence, q = p.request, body = canonical(e), evidenceHash = digest(body), old = existing(p.operationId);
+			if (old) {
+				if (old.evidenceHash !== evidenceHash) fail$4("ACCEPTANCE_ABORT_COMPLETION_CHANGED");
+				return old;
+			}
+			const proof = e.data.proof, f = proof.originalFences, s = q.source;
+			const abortRequestHash = digest(canonical(acceptanceDatasetAbortRequest.parse({
+				schemaVersion: "devmesh.acceptance-dataset-abort.v1",
+				decision: d,
+				decisionHash: i.decisionHash,
+				controllerId: e.service.controllerId,
+				serviceCleanupHash: e.service.cleanupHash
+			})));
+			if (e.operationId !== p.operationId || e.requestHash !== p.requestHash || e.decisionHash !== i.decisionHash || e.data.requestHash !== abortRequestHash || proof.requestHash !== abortRequestHash || proof.operationId !== p.operationId || proof.abortOperationId !== d.operationId || proof.decisionHash !== i.decisionHash || proof.target.datasetId !== q.target.datasetId) fail$4("ACCEPTANCE_ABORT_PROOF_CHANGED");
+			const follows = (n, h) => h ? n.fenceId === h.fenceId && n.generation > h.generation && n.previousHoldHash === h.proofHash : n.previousHoldHash === null;
+			if (f && (f.operationId !== p.operationId || f.requestHash !== p.requestHash || f.targetFence.datasetId !== q.target.datasetId || (s ? f.sourceFence?.datasetId !== s.datasetId || f.sourceFence.datasetOperationId !== s.datasetOperationId : f.sourceFence !== null)) || !follows(proof.target, f?.targetFence.physical ?? null)) fail$4("ACCEPTANCE_ABORT_CUSTODY_CHANGED");
+			const at = (/* @__PURE__ */ new Date()).toISOString();
+			if (Date.parse(proof.settledAt) < Date.parse(d.decidedAt) || Date.parse(proof.settledAt) > Date.parse(at)) fail$4("ACCEPTANCE_ABORT_PROOF_CHANGED");
+			const stored = get("SELECT * FROM acceptance_prepared_proofs WHERE operation_id=?", p.operationId);
+			if (d.preparedProofHash !== null) {
+				if (!stored || stored.proof_hash !== d.preparedProofHash) fail$4("ACCEPTANCE_ABORT_PROOF_CHANGED");
+				const prepared = acceptancePreparedProof.parse(JSON.parse(String(stored.proof_json)));
+				if (!f || canonical(f.sourceFence) !== canonical(prepared.sourceFence) || canonical(f.targetFence) !== canonical(prepared.targetFence) || e.service.reservationId !== prepared.service.reservationId || e.service.profileHash !== prepared.service.profileHash || e.service.instanceId !== prepared.service.claim.instanceId) fail$4("ACCEPTANCE_ABORT_CUSTODY_CHANGED");
+			}
+			if ((get("SELECT accepted_release_id FROM projects WHERE project_id=?", p.projectId).accepted_release_id ?? null) !== q.expectedAcceptedReleaseId) fail$4("ACCEPTANCE_SOURCE_CHANGED");
+			if (get("SELECT 1 FROM acceptance_commits WHERE preparation_operation_id=?", p.operationId) || get("SELECT 1 FROM releases WHERE release_id=? OR prepared_data_ref=?", p.releaseId, q.target.datasetId)) fail$4("ACCEPTANCE_ALREADY_COMMITTED");
+			const target = gate(q.target.datasetId);
+			if (target.state !== "CLOSED" || target.datasetOperationId !== p.operationId || target.datasetRequestHash !== p.requestHash) fail$4("ACCEPTANCE_TARGET_FENCE_CHANGED");
+			let sourceGate = null;
+			if (s) {
+				sourceGate = gate(s.datasetId);
+				const r = e.sourceRecovery, ps = proof.source;
+				if (!e.sourceGate || canonical(e.sourceGate) !== canonical(sourceGate) || sourceGate.datasetOperationId !== s.datasetOperationId) fail$4("ACCEPTANCE_SOURCE_FENCE_CHANGED");
+				if (!ps || ps.releaseId !== s.releaseId || ps.datasetId !== s.datasetId || ps.datasetOperationId !== s.datasetOperationId || !follows({
+					...ps,
+					datasetId: s.datasetId,
+					writeState: "CLOSED"
+				}, f?.sourceFence?.physical ?? null)) fail$4("ACCEPTANCE_ABORT_CUSTODY_CHANGED");
+				if (!r || r.decisionHash !== i.decisionHash || r.releaseId !== s.releaseId || r.datasetId !== s.datasetId || r.datasetOperationId !== s.datasetOperationId || r.runnerId !== q.runnerId || r.imageDigest !== sourceImage(q) || canonical(r.fence) !== canonical({
+					fenceId: ps.fenceId,
+					generation: ps.generation,
+					proofHash: ps.proofHash,
+					previousHoldHash: ps.previousHoldHash
+				}) || r.revocationProofHash !== proof.revocation.proofHash) fail$4("ACCEPTANCE_SOURCE_RECOVERY_CHANGED");
+				const age = Date.parse(at) - Date.parse(r.checkedAt);
+				if (age < 0 || age > 3e4 || Date.parse(r.checkedAt) < Date.parse(proof.settledAt)) fail$4("ACCEPTANCE_SOURCE_HEALTH_STALE");
+				if (get("SELECT 1 FROM business_pending_writes WHERE dataset_id=?", s.datasetId)) fail$4("ACCEPTANCE_SOURCE_WRITES_UNRESOLVED");
+				if (sourceGate.state === "CLOSED") {
+					const c = get("SELECT * FROM preview_write_closures WHERE operation_id=?", p.operationId);
+					if (!c || sourceGate.closeOperationId !== p.operationId || sourceGate.closeRequestHash !== c.request_hash || digest(String(c.request_json)) !== c.request_hash || c.dataset_id !== s.datasetId) fail$4("ACCEPTANCE_SOURCE_FENCE_CHANGED");
+					if (f?.sourceFence && (f.sourceFence.closeOperationId !== sourceGate.closeOperationId || f.sourceFence.closeRequestHash !== sourceGate.closeRequestHash || f.sourceFence.gateFence !== sourceGate.fence)) fail$4("ACCEPTANCE_SOURCE_FENCE_CHANGED");
+				} else if (f?.sourceFence) fail$4("ACCEPTANCE_SOURCE_FENCE_CHANGED");
+			} else if (proof.source !== null || e.sourceGate !== null || e.sourceRecovery !== null) fail$4("ACCEPTANCE_SOURCE_NOT_APPLICABLE");
+			exec("INSERT INTO acceptance_abort_completions VALUES(?,?,?,?,?,?,?,?,?,?)", p.operationId, i.decisionHash, evidenceHash, body, sourceGate?.datasetId ?? null, sourceGate?.revision ?? null, sourceGate?.fence ?? null, sourceGate?.closeOperationId ?? null, sourceGate?.closeRequestHash ?? null, at);
+			if (sourceGate?.state === "CLOSED") {
+				exec("UPDATE preview_write_gates SET state='OPEN',fence=fence+1,revision=revision+1,close_operation_id=NULL,close_request_hash=NULL,updated_at=? WHERE dataset_id=?", at, sourceGate.datasetId);
+				const g = gate(sourceGate.datasetId), row = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", g.datasetId);
+				exec("INSERT INTO preview_write_gate_events VALUES(?,?,?,?)", g.datasetId, g.revision, canonical({
+					...g,
+					projectId: p.projectId,
+					pendingWrites: 0,
+					createdAt: row.created_at,
+					updatedAt: row.updated_at
+				}), at);
+			}
+			completed(p.runId, d.operationId, p.operationId);
+			return {
+				evidence: e,
+				evidenceHash,
+				completedAt: at
+			};
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(acceptanceAbortRecoveryRequests[method], input);
+		return transaction(db, () => handlers[method](parsed));
+	} };
+}
+//#endregion
+//#region src/release-publication-validation.ts
+const fail$3 = (code) => {
+	throw new StorageError(code, 409, "Publication requires the exact original accepted release, distinct writable service and fresh fenced route");
+};
+function validateReleasePublication(publication, o, now) {
+	const request = publication.request, q = request.preparation, prepared = request.preparedProof, p = o.proof, claim = p.service.claim, route = p.route, old = prepared.service.claim;
+	if (old.schemaVersion !== "devmesh.acceptance-service-claim.v1") return fail$3("RELEASE_PUBLICATION_PURPOSE_REQUIRED");
+	if (p.releaseId !== q.releaseId || p.acceptanceOperationId !== request.acceptanceOperationId || p.preparationOperationId !== q.operationId || p.promotionRequestHash !== publication.requestHash || p.preparedProofHash !== request.proofHash || p.runnerId !== q.runnerId || p.backendRef !== q.backendRef || canonical(p.gates) !== canonical(publication.basis)) fail$3("RELEASE_PUBLICATION_PROOF_CHANGED");
+	const retired = p.readonlyRetirement;
+	if (retired.reservationId !== prepared.service.reservationId || retired.profileHash !== prepared.service.profileHash || retired.serviceRequestHash !== old.serviceRequestHash || retired.instanceId !== old.instanceId) fail$3("RELEASE_PUBLICATION_RETIREMENT_CHANGED");
+	if (claim.reservationId === retired.reservationId || claim.profileHash === retired.profileHash || claim.instanceId === retired.instanceId || claim.networkId === retired.networkId) fail$3("RELEASE_PUBLICATION_DISTINCT_SERVICE_REQUIRED");
+	const follows = (next, held) => next.fenceId === held.fenceId && next.generation > held.generation && next.previousHoldHash === held.proofHash;
+	if (p.target.datasetId !== q.target.datasetId || !follows(p.target, prepared.targetFence.physical)) fail$3("RELEASE_PUBLICATION_FENCE_CHANGED");
+	if (q.source) {
+		if (!p.source || !prepared.sourceFence || p.source.releaseId !== q.source.releaseId || p.source.datasetId !== q.source.datasetId || p.source.datasetOperationId !== q.source.datasetOperationId || !follows(p.source, prepared.sourceFence.physical)) fail$3("RELEASE_PUBLICATION_FENCE_CHANGED");
+	} else if (p.source !== null) fail$3("RELEASE_PUBLICATION_SOURCE_NOT_APPLICABLE");
+	const expectedClaim = {
+		releaseId: q.releaseId,
+		projectId: q.projectId,
+		runId: q.runId,
+		candidateId: q.candidateId,
+		acceptanceOperationId: request.acceptanceOperationId,
+		preparationOperationId: q.operationId,
+		promotionRequestHash: publication.requestHash,
+		preparedProofHash: request.proofHash,
+		runnerId: q.runnerId,
+		datasetId: q.target.datasetId,
+		imageDigest: q.image.imageDigest
+	};
+	for (const key of Object.keys(expectedClaim)) if (claim[key] !== expectedClaim[key]) fail$3("RELEASE_PUBLICATION_CLAIM_CHANGED");
+	const targetFence = {
+		fenceId: p.target.fenceId,
+		generation: p.target.generation,
+		proofHash: p.target.proofHash,
+		previousHoldHash: p.target.previousHoldHash
+	};
+	if (canonical(claim.targetFence) !== canonical(targetFence) || p.service.claimHash !== digest(canonical(claim))) fail$3("RELEASE_PUBLICATION_CLAIM_CHANGED");
+	if (route.routeId !== "release." + q.projectId || route.projectId !== q.projectId || route.releaseId !== q.releaseId || route.previousReleaseId !== q.expectedAcceptedReleaseId || route.generation !== (publication.basis?.previousRoute?.generation ?? 0) + 1 || route.datasetId !== q.target.datasetId || route.imageDigest !== q.image.imageDigest || route.instanceId !== claim.instanceId || canonical(route.endpoint) !== canonical(p.service.endpoint) || route.serviceClaimHash !== p.service.claimHash || p.routeHash !== digest(canonical(route))) fail$3("RELEASE_PUBLICATION_ROUTE_CHANGED");
+	const current = o.current, s = current.service, r = current.route, f = current.fences;
+	if (s.instanceId !== claim.instanceId || s.datasetId !== claim.datasetId || s.imageDigest !== claim.imageDigest || s.profileHash !== claim.profileHash || s.claimHash !== p.service.claimHash || canonical(s.endpoint) !== canonical(p.service.endpoint)) fail$3("RELEASE_PUBLICATION_HEALTH_CHANGED");
+	if (r.routeId !== route.routeId || r.routeHash !== p.routeHash || r.generation !== route.generation || r.instanceId !== claim.instanceId) fail$3("RELEASE_PUBLICATION_ROUTE_CHANGED");
+	if (f.targetProofHash !== p.target.proofHash || f.sourceProofHash !== (p.source?.proofHash ?? null) || f.revocationProofHash !== p.revocation.proofHash) fail$3("RELEASE_PUBLICATION_FENCE_CHANGED");
+	const dispatched = Date.parse(publication.dispatchedAt ?? ""), published = Date.parse(p.publishedAt), checked = Date.parse(o.checkedAt), retiredAt = Date.parse(retired.verifiedAt);
+	if (!Number.isFinite(dispatched) || published < dispatched || published > checked || retiredAt < dispatched || retiredAt > published || checked > now || now - checked > 3e4) fail$3("RELEASE_PUBLICATION_OBSERVATION_STALE");
+	return p;
+}
+//#endregion
+//#region src/release-publication-domain.ts
+const fail$2 = (code, status = 409) => {
+	throw new StorageError(code, status, "Publication requires the original committed outbox, configured backend and exact closed write gates");
+};
+function createReleasePublicationDomain(db, plans, changed) {
+	const get = (sql, ...args) => db.prepare(sql).get(...args), all = (sql, ...args) => db.prepare(sql).all(...args), exec = (sql, ...args) => db.prepare(sql).run(...args);
+	const row = (releaseId) => get("SELECT p.*,o.request_hash,o.request_json,o.acceptance_operation_id,c.proof_hash accepted_proof_hash,c.preparation_operation_id,r.project_id,r.run_id,r.candidate_id,r.prepared_data_ref,r.accepted_at,j.accepted_release_id FROM release_publications p JOIN release_promotion_outbox o ON o.release_id=p.release_id JOIN acceptance_commits c ON c.release_id=p.release_id JOIN releases r ON r.release_id=p.release_id JOIN projects j ON j.project_id=r.project_id WHERE p.release_id=?", releaseId) ?? fail$2("RELEASE_PUBLICATION_NOT_FOUND", 404);
+	function original(r) {
+		const request = releasePromotionRequest.parse(JSON.parse(String(r.request_json))), q = request.preparation, p = request.preparedProof;
+		if (digest(canonical(request)) !== r.request_hash || digest(canonical(p)) !== request.proofHash || request.proofHash !== r.accepted_proof_hash || request.acceptanceOperationId !== r.acceptance_operation_id || q.operationId !== r.preparation_operation_id || q.releaseId !== r.release_id || q.projectId !== r.project_id || q.runId !== r.run_id || q.candidateId !== r.candidate_id || q.target.datasetId !== r.prepared_data_ref || p.requestHash !== digest(canonical(q))) fail$2("RELEASE_PUBLICATION_REQUEST_CHANGED");
+		for (const k of [
+			"operationId",
+			"releaseId",
+			"projectId",
+			"runId",
+			"candidateId",
+			"manifestHash",
+			"reviewHash",
+			"dataPlanHash",
+			"runnerId",
+			"backendRef"
+		]) if (p[k] !== q[k]) fail$2("RELEASE_PUBLICATION_REQUEST_CHANGED");
+		return request;
+	}
+	function policy(projectId, hash) {
+		return acceptanceBackendPolicy.parse(JSON.parse(String(get("SELECT policy_json FROM acceptance_backend_policies WHERE project_id=? AND policy_hash=?", projectId, hash)?.policy_json ?? fail$2("RELEASE_PUBLICATION_BACKEND_NOT_CONFIGURED", 503))));
+	}
+	function scoped(principalId, r, trusted = false) {
+		const q = original(r).preparation, p = policy(q.projectId, q.policyHash);
+		if (q.backendPrincipalId !== p.backendPrincipalId || q.backendRef !== p.backendRef || q.runnerId !== p.runnerId) fail$2("RELEASE_PUBLICATION_REQUEST_CHANGED");
+		if (principalId !== p.backendPrincipalId) {
+			if (trusted) fail$2("FORBIDDEN", 403);
+			plans.authorized(principalId, q.runId);
+		}
+		return r;
+	}
+	function bound(i, trusted = false) {
+		const r = scoped(i.principalId, row(i.releaseId), trusted);
+		if (r.request_hash !== i.requestHash) fail$2("RELEASE_PUBLICATION_REQUEST_CHANGED");
+		return r;
+	}
+	function view(r) {
+		const saved = get("SELECT * FROM release_publication_proofs WHERE release_id=?", r.release_id), proof = saved ? releasePublicationProof.parse(JSON.parse(String(saved.proof_json))) : null;
+		if (saved && digest(canonical(proof)) !== saved.proof_hash) fail$2("RELEASE_PUBLICATION_PROOF_CHANGED");
+		return {
+			releaseId: String(r.release_id),
+			projectId: String(r.project_id),
+			runId: String(r.run_id),
+			requestHash: String(r.request_hash),
+			request: original(r),
+			state: r.state,
+			revision: Number(r.revision),
+			sequence: Number(r.observation_sequence),
+			errorCode: r.error_code,
+			basis: r.basis_json ? releasePublicationBasis.parse(JSON.parse(String(r.basis_json))) : null,
+			proof,
+			proofHash: r.proof_hash,
+			acceptedAt: String(r.accepted_at),
+			dispatchedAt: r.dispatched_at,
+			updatedAt: String(r.updated_at),
+			publishedAt: r.published_at,
+			isCurrentAccepted: r.accepted_release_id === r.release_id
+		};
+	}
+	function gate(datasetId) {
+		const g = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", datasetId) ?? fail$2("RELEASE_PUBLICATION_GATE_MISSING");
+		return releasePublicationGate.parse({
+			datasetId,
+			datasetOperationId: g.dataset_operation_id,
+			datasetRequestHash: g.dataset_request_hash,
+			state: g.state,
+			fence: g.fence,
+			revision: g.revision,
+			closeOperationId: g.close_operation_id,
+			closeRequestHash: g.close_request_hash
+		});
+	}
+	function eligible(r) {
+		const request = original(r), q = request.preparation, p = request.preparedProof;
+		if (r.accepted_release_id !== r.release_id) fail$2("RELEASE_PUBLICATION_SUPERSEDED");
+		if (p.service.claim.schemaVersion !== "devmesh.acceptance-service-claim.v1") fail$2("RELEASE_PUBLICATION_PURPOSE_REQUIRED");
+		if (get("SELECT 1 FROM acceptance_abort_decisions WHERE preparation_operation_id=?", q.operationId)) fail$2("ACCEPTANCE_ABORT_REQUESTED");
+		const target = get("SELECT * FROM datasets WHERE dataset_id=?", q.target.datasetId);
+		if (!target || target.project_id !== q.projectId || target.operation_id !== q.operationId || target.policy_hash !== q.policyHash || target.state !== "WRITE_FROZEN" || target.snapshot_at !== p.data.snapshotAt) fail$2("RELEASE_PUBLICATION_TARGET_DATA_CHANGED");
+		const targetGate = gate(q.target.datasetId);
+		if (targetGate.state !== "CLOSED" || targetGate.datasetOperationId !== q.operationId || targetGate.datasetRequestHash !== p.requestHash || targetGate.closeOperationId !== null || targetGate.closeRequestHash !== null) fail$2("RELEASE_PUBLICATION_TARGET_GATE_CHANGED");
+		let sourceGate = null;
+		if (q.source) {
+			sourceGate = gate(q.source.datasetId);
+			const f = p.sourceFence;
+			if (!f || sourceGate.state !== "CLOSED" || sourceGate.datasetOperationId !== q.source.datasetOperationId || sourceGate.closeOperationId !== q.operationId || sourceGate.closeOperationId !== f.closeOperationId || sourceGate.closeRequestHash !== f.closeRequestHash || sourceGate.fence !== f.gateFence) fail$2("RELEASE_PUBLICATION_SOURCE_GATE_CHANGED");
+			const d = get("SELECT request_hash FROM dataset_preparations WHERE operation_id=? AND dataset_id=?", q.source.datasetOperationId, q.source.datasetId);
+			if (!d || d.request_hash !== sourceGate.datasetRequestHash) fail$2("RELEASE_PUBLICATION_SOURCE_GATE_CHANGED");
+		} else if (p.sourceFence !== null) fail$2("RELEASE_PUBLICATION_SOURCE_NOT_APPLICABLE");
+		for (const id of [q.target.datasetId, ...q.source ? [q.source.datasetId] : []]) if (get("SELECT 1 FROM business_pending_writes WHERE dataset_id=?", id)) fail$2("RELEASE_PUBLICATION_WRITES_UNRESOLVED");
+		const route = get("SELECT * FROM release_route_bindings WHERE project_id=?", q.projectId);
+		if (q.expectedAcceptedReleaseId === null !== !route || route && route.release_id !== q.expectedAcceptedReleaseId) fail$2("RELEASE_PUBLICATION_PREVIOUS_ROUTE_CHANGED");
+		return {
+			sourceGate,
+			targetGate,
+			previousRoute: route ? {
+				releaseId: String(route.release_id),
+				routeHash: String(route.route_hash),
+				generation: Number(route.generation)
+			} : null
+		};
+	}
+	function history(r) {
+		exec("INSERT INTO release_publication_events VALUES(?,?,?,?,?)", r.release_id, r.revision, r.state, r.error_code ?? null, String(r.updated_at));
+		const result = view(r);
+		changed(result);
+		return result;
+	}
+	const handlers = {
+		getReleasePublication(i) {
+			return view(scoped(i.principalId, row(i.releaseId)));
+		},
+		listReleasePublicationWork(i) {
+			if (policy(i.projectId, i.policyHash).backendPrincipalId !== i.principalId) fail$2("FORBIDDEN", 403);
+			const rows = all("SELECT p.sequence,p.release_id FROM release_publications p JOIN releases r ON r.release_id=p.release_id JOIN projects j ON j.project_id=r.project_id JOIN release_promotion_outbox o ON o.release_id=p.release_id WHERE r.project_id=? AND json_extract(o.request_json,'$.preparation.policyHash')=? AND j.accepted_release_id=p.release_id AND p.state IN ('PENDING','SENT','UNKNOWN') AND p.sequence>? ORDER BY p.sequence LIMIT ?", i.projectId, i.policyHash, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+			return {
+				items: page.map((r) => ({
+					sequence: Number(r.sequence),
+					publication: view(scoped(i.principalId, row(String(r.release_id)), true))
+				})),
+				nextSequence: rows.length > i.limit ? Number(page.at(-1).sequence) : null
+			};
+		},
+		listReleasePublications(i) {
+			if (policy(i.projectId, i.policyHash).backendPrincipalId !== i.principalId) fail$2("FORBIDDEN", 403);
+			const rows = all("SELECT p.sequence,p.release_id FROM release_publications p JOIN release_promotion_outbox o ON o.release_id=p.release_id WHERE json_extract(o.request_json,'$.preparation.projectId')=? AND json_extract(o.request_json,'$.preparation.policyHash')=? AND p.sequence>? ORDER BY p.sequence LIMIT ?", i.projectId, i.policyHash, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+			return {
+				items: page.map((r) => ({
+					sequence: Number(r.sequence),
+					publication: view(scoped(i.principalId, row(String(r.release_id)), true))
+				})),
+				nextSequence: rows.length > i.limit ? Number(page.at(-1).sequence) : null
+			};
+		},
+		beginReleasePublication(i) {
+			const r = bound(i, true);
+			if (r.state !== "PENDING") return {
+				dispatch: false,
+				publication: view(r)
+			};
+			if (r.revision !== i.expectedRevision) fail$2("RELEASE_PUBLICATION_REVISION_CHANGED");
+			const basis = eligible(r), at = (/* @__PURE__ */ new Date()).toISOString();
+			exec("UPDATE release_publications SET state='SENT',revision=revision+1,basis_json=?,dispatched_at=?,updated_at=? WHERE release_id=?", canonical(basis), at, at, i.releaseId);
+			return {
+				dispatch: true,
+				publication: history(row(i.releaseId))
+			};
+		},
+		verifyReleasePublication(i) {
+			const r = bound(i, true);
+			if (r.state !== "SENT") return {
+				allowed: false,
+				reasonCode: "RELEASE_PUBLICATION_DISPATCH_CLOSED"
+			};
+			try {
+				if (canonical(eligible(r)) !== r.basis_json) fail$2("RELEASE_PUBLICATION_GATE_CHANGED");
+				return {
+					allowed: true,
+					reasonCode: null
+				};
+			} catch (e) {
+				if (e instanceof StorageError) return {
+					allowed: false,
+					reasonCode: e.code
+				};
+				throw e;
+			}
+		},
+		verifyReleasePublicationContinuation(i) {
+			const r = bound(i, true);
+			if (!["SENT", "UNKNOWN"].includes(String(r.state))) return {
+				allowed: false,
+				reasonCode: "RELEASE_PUBLICATION_CONTINUATION_CLOSED"
+			};
+			try {
+				if (canonical(eligible(r)) !== r.basis_json) fail$2("RELEASE_PUBLICATION_GATE_CHANGED");
+				return {
+					allowed: true,
+					reasonCode: null
+				};
+			} catch (e) {
+				if (e instanceof StorageError) return {
+					allowed: false,
+					reasonCode: e.code
+				};
+				throw e;
+			}
+		},
+		recordReleasePublicationObservation(i) {
+			const r = bound(i, true), o = i.observation, body = canonical(o), observationHash = digest(body), sequence = i.expectedSequence + 1, old = get("SELECT * FROM release_publication_observations WHERE release_id=? AND sequence=?", i.releaseId, sequence);
+			if (old) {
+				if (old.expected_revision !== i.expectedRevision || old.observation_hash !== observationHash) fail$2("RELEASE_PUBLICATION_OBSERVATION_CHANGED");
+				return view(r);
+			}
+			if (r.state === "PUBLISHED") fail$2("RELEASE_PUBLICATION_IMMUTABLE");
+			if (!["SENT", "UNKNOWN"].includes(String(r.state))) fail$2("RELEASE_PUBLICATION_NOT_DISPATCHED");
+			if (r.revision !== i.expectedRevision || r.observation_sequence !== i.expectedSequence) fail$2("RELEASE_PUBLICATION_REVISION_CHANGED");
+			const at = (/* @__PURE__ */ new Date()).toISOString(), checked = Date.parse(o.checkedAt);
+			if (checked < Date.parse(String(r.dispatched_at)) || checked > Date.parse(at)) fail$2("RELEASE_PUBLICATION_OBSERVATION_STALE");
+			let proofHash = null;
+			if (o.state === "PUBLISHED") {
+				if (canonical(eligible(r)) !== r.basis_json) fail$2("RELEASE_PUBLICATION_GATE_CHANGED");
+				proofHash = digest(canonical(validateReleasePublication(view(r), o, Date.parse(at))));
+			}
+			exec("INSERT INTO release_publication_observations VALUES(?,?,?,?,?,?)", i.releaseId, sequence, i.expectedRevision, observationHash, body, at);
+			if (o.state === "PUBLISHED") {
+				const p = o.proof, g = p.gates.targetGate;
+				exec("INSERT INTO release_publication_proofs VALUES(?,?,?,?,?,?,?,?)", i.releaseId, i.requestHash, proofHash, canonical(p), g.datasetId, g.fence, g.revision, p.publishedAt);
+				exec("INSERT INTO release_route_bindings VALUES(?,?,?,?,?) ON CONFLICT(project_id) DO UPDATE SET release_id=excluded.release_id,route_hash=excluded.route_hash,generation=excluded.generation,updated_at=excluded.updated_at", r.project_id, i.releaseId, p.routeHash, p.route.generation, at);
+				exec("UPDATE datasets SET state='READY',revision=revision+1 WHERE dataset_id=?", g.datasetId);
+				if (p.source) exec("UPDATE datasets SET state='RETIRED',revision=revision+1 WHERE dataset_id=?", p.source.datasetId);
+				exec("UPDATE preview_write_gates SET state='OPEN',fence=fence+1,revision=revision+1,close_operation_id=NULL,close_request_hash=NULL,updated_at=? WHERE dataset_id=?", at, g.datasetId);
+				const opened = gate(g.datasetId), stored = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", g.datasetId);
+				exec("INSERT INTO preview_write_gate_events VALUES(?,?,?,?)", g.datasetId, opened.revision, canonical({
+					...opened,
+					projectId: r.project_id,
+					pendingWrites: 0,
+					createdAt: stored.created_at,
+					updatedAt: stored.updated_at
+				}), at);
+			}
+			exec("UPDATE release_publications SET state=?,revision=revision+1,observation_sequence=?,proof_hash=?,error_code=?,updated_at=?,published_at=? WHERE release_id=?", o.state, sequence, proofHash, o.state === "UNKNOWN" ? o.errorCode : null, at, o.state === "PUBLISHED" ? at : null, i.releaseId);
+			return history(row(i.releaseId));
+		},
+		listReleasePublicationHistory(i) {
+			bound(i);
+			const rows = all("SELECT * FROM release_publication_events WHERE release_id=? AND revision>? ORDER BY revision LIMIT ?", i.releaseId, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+			return {
+				items: page.map((r) => ({
+					sequence: Number(r.revision),
+					revision: Number(r.revision),
+					state: r.state,
+					errorCode: r.error_code,
+					observedAt: r.observed_at
+				})),
+				nextSequence: rows.length > i.limit ? Number(page.at(-1).revision) : null
+			};
+		}
+	};
+	return {
+		getForAccess(principalId, releaseId) {
+			return view(scoped(principalId, row(releaseId)));
+		},
+		execute(method, input) {
+			const parsed = parseContract(releasePublicationRequests[method], input);
+			return transaction(db, () => handlers[method](parsed));
+		}
+	};
+}
+//#endregion
+//#region src/release-access-domain.ts
+const now$2 = () => (/* @__PURE__ */ new Date()).toISOString();
+const hash = (v) => digest(canonical(v));
+const json$1 = (v) => JSON.parse(String(v));
+function fail$1(code, status = 409) {
+	throw new StorageError(code, status, "Release access requires the current member, exact published route and original write gate");
+}
+function createReleaseAccessDomain(db, publications) {
+	const get = (s, ...p) => db.prepare(s).get(...p), all = (s, ...p) => db.prepare(s).all(...p), exec = (s, ...p) => db.prepare(s).run(...p), tx = (f) => transaction(db, f);
+	const member = (subject, project) => get("SELECT role FROM project_members WHERE principal_id=? AND project_id=?", subject, project) ?? fail$1("RELEASE_NOT_FOUND", 404);
+	const gateway = (i, project) => {
+		const p = get("SELECT * FROM release_access_policies WHERE project_id=? AND gateway_id=?", project, i.gatewayId) ?? fail$1("RELEASE_ACCESS_NOT_CONFIGURED", 503);
+		if (p.principal_id !== i.principalId || p.configuration_hash !== i.configurationHash) fail$1("FORBIDDEN", 403);
+		return p;
+	};
+	const publication = (principalId, releaseId) => publications.getForAccess(principalId, releaseId);
+	const gate = (id) => {
+		const r = get("SELECT * FROM preview_write_gates WHERE dataset_id=?", id) ?? fail$1("RELEASE_ACCESS_GATE_MISSING", 503), count = get("SELECT count(*) n FROM business_pending_writes WHERE dataset_id=?", id);
+		return {
+			datasetId: id,
+			projectId: String(r.project_id),
+			datasetOperationId: String(r.dataset_operation_id),
+			datasetRequestHash: String(r.dataset_request_hash),
+			state: r.state,
+			fence: Number(r.fence),
+			revision: Number(r.revision),
+			closeOperationId: r.close_operation_id,
+			closeRequestHash: r.close_request_hash,
+			pendingWrites: Number(count.n),
+			createdAt: String(r.created_at),
+			updatedAt: String(r.updated_at)
+		};
+	};
+	function binding(i) {
+		const release = get("SELECT project_id,run_id FROM releases WHERE release_id=?", i.releaseId) ?? fail$1("RELEASE_NOT_FOUND", 404), role = member(i.subjectPrincipalId, String(release.project_id));
+		if (release.run_id !== i.runId) fail$1("RELEASE_NOT_FOUND", 404);
+		gateway(i, String(release.project_id));
+		const p = publication(i.subjectPrincipalId, i.releaseId), target = releaseTargetForPublication(p), route = get("SELECT * FROM release_route_bindings WHERE project_id=?", target.projectId), d = get("SELECT * FROM datasets WHERE dataset_id=?", target.datasetId), g = gate(target.datasetId), base = p.proof.gates.targetGate;
+		if (!route || route.release_id !== target.releaseId || route.route_hash !== target.routeHash || route.generation !== target.routeGeneration || !d || d.project_id !== target.projectId || d.operation_id !== target.datasetOperationId || d.policy_hash !== target.policyHash || d.state !== "READY" || g.projectId !== target.projectId || g.datasetOperationId !== target.datasetOperationId || g.datasetRequestHash !== target.datasetRequestHash) fail$1("RELEASE_ACCESS_TARGET_CHANGED");
+		if (g.state === "OPEN" && (g.fence !== base.fence + 1 || g.revision !== base.revision + 1 || g.closeOperationId !== null || g.closeRequestHash !== null) || g.state === "CLOSED" && (g.fence <= base.fence + 1 || g.revision <= base.revision + 1 || g.closeOperationId === null || g.closeRequestHash === null)) fail$1("RELEASE_ACCESS_GATE_CHANGED");
+		return {
+			target,
+			gate: g,
+			canWrite: role.role !== "viewer" && g.state === "OPEN"
+		};
+	}
+	const row = (id) => get("SELECT * FROM release_access_requests WHERE access_request_id=?", id) ?? fail$1("RELEASE_ACCESS_REQUEST_NOT_FOUND", 404);
+	const record = (r) => ({
+		accessRequestId: String(r.access_request_id),
+		gatewayId: String(r.gateway_id),
+		configurationHash: String(r.configuration_hash),
+		subjectPrincipalId: String(r.subject_principal_id),
+		...json$1(r.request_json),
+		requestHash: String(r.request_hash),
+		state: r.state,
+		revision: Number(r.revision),
+		observation: r.observation_json ? json$1(r.observation_json) : null,
+		createdAt: String(r.created_at),
+		dispatchedAt: r.dispatched_at,
+		finishedAt: r.finished_at
+	});
+	const owned = (i) => {
+		const r = row(i.accessRequestId);
+		if (r.gateway_id !== i.gatewayId) fail$1("RELEASE_ACCESS_REQUEST_NOT_FOUND", 404);
+		gateway(i, String(r.project_id));
+		if (r.request_hash !== i.requestHash || r.configuration_hash !== i.configurationHash) fail$1("RELEASE_ACCESS_REQUEST_CHANGED");
+		return r;
+	};
+	const event = (id) => {
+		const r = row(id), v = record(r);
+		exec("INSERT INTO release_access_request_events VALUES(?,?,?,?)", id, v.revision, canonical(v), now$2());
+		return v;
+	};
+	const current = (i, r) => {
+		const old = record(r), b = binding({
+			...i,
+			subjectPrincipalId: old.subjectPrincipalId,
+			runId: old.target.runId,
+			releaseId: old.target.releaseId
+		});
+		if (canonical(old.target) !== canonical(b.target)) fail$1("RELEASE_ACCESS_TARGET_CHANGED");
+		if (old.gateFence !== b.gate.fence || old.gateRevision !== b.gate.revision) fail$1("RELEASE_ACCESS_GATE_CHANGED");
+		if (r.is_write === 1 && !b.canWrite) fail$1(b.gate.state === "CLOSED" ? "RELEASE_WRITE_GATE_CLOSED" : "FORBIDDEN", b.gate.state === "CLOSED" ? 409 : 403);
+		return b;
+	};
+	const handlers = {
+		registerReleaseAccessPolicy(i) {
+			return tx(() => {
+				if (member(i.principalId, i.projectId).role !== "owner") fail$1("FORBIDDEN", 403);
+				const old = get("SELECT * FROM release_access_policies WHERE project_id=? AND gateway_id=?", i.projectId, i.policy.gatewayId), body = canonical(i.policy);
+				if (old) {
+					if (old.policy_json !== body) fail$1("RELEASE_ACCESS_POLICY_CHANGED");
+					return { policy: releaseAccessPolicy.parse(json$1(old.policy_json)) };
+				}
+				exec("INSERT INTO release_access_policies VALUES(?,?,?,?,?,?)", i.projectId, i.policy.gatewayId, i.policy.gatewayPrincipalId, i.policy.configurationHash, body, now$2());
+				return { policy: i.policy };
+			});
+		},
+		getReleaseWriteGate(i) {
+			return gate(publication(i.principalId, i.releaseId).request.preparation.target.datasetId);
+		},
+		resolveReleaseAccess(i) {
+			return binding(i);
+		},
+		prepareReleaseAccessRequest(i) {
+			return tx(() => {
+				const release = get("SELECT project_id,run_id FROM releases WHERE release_id=?", i.releaseId) ?? fail$1("RELEASE_NOT_FOUND", 404);
+				gateway(i, String(release.project_id));
+				member(i.subjectPrincipalId, String(release.project_id));
+				if (release.run_id !== i.runId) fail$1("RELEASE_NOT_FOUND", 404);
+				const { principalId: _principal, ...intent } = i, intentHash = hash(intent), old = get("SELECT * FROM release_access_requests WHERE access_request_id=?", i.accessRequestId);
+				if (old) {
+					if (old.gateway_id !== i.gatewayId || old.configuration_hash !== i.configurationHash || old.intent_hash !== intentHash) fail$1("RELEASE_ACCESS_REQUEST_CHANGED");
+					return record(old);
+				}
+				const b = binding(i), write = !["GET", "HEAD"].includes(i.request.method);
+				if (write && !b.canWrite) fail$1(b.gate.state === "CLOSED" ? "RELEASE_WRITE_GATE_CLOSED" : "FORBIDDEN", b.gate.state === "CLOSED" ? 409 : 403);
+				const original = {
+					target: b.target,
+					request: i.request,
+					gateFence: b.gate.fence,
+					gateRevision: b.gate.revision
+				}, requestHash = releaseAccessRequestHash({
+					...original,
+					subjectPrincipalId: i.subjectPrincipalId,
+					gatewayId: i.gatewayId,
+					configurationHash: i.configurationHash
+				});
+				exec("INSERT INTO release_access_requests(access_request_id,project_id,release_id,dataset_id,gateway_id,configuration_hash,subject_principal_id,intent_hash,request_hash,request_json,is_write,state,revision,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,'PREPARED',0,?)", i.accessRequestId, b.target.projectId, b.target.releaseId, b.target.datasetId, i.gatewayId, i.configurationHash, i.subjectPrincipalId, intentHash, requestHash, canonical(original), write ? 1 : 0, now$2());
+				return event(i.accessRequestId);
+			});
+		},
+		beginReleaseAccessRequest(i) {
+			return tx(() => {
+				const r = owned(i);
+				if (r.state !== "PREPARED") return {
+					dispatch: false,
+					record: record(r)
+				};
+				current(i, r);
+				exec("UPDATE release_access_requests SET state='DISPATCHED',revision=revision+1,dispatched_at=? WHERE access_request_id=?", now$2(), i.accessRequestId);
+				return {
+					dispatch: true,
+					record: event(i.accessRequestId)
+				};
+			});
+		},
+		releaseAccessRequestAuthorized(i) {
+			const r = owned(i);
+			if (r.state !== "DISPATCHED") return { allowed: false };
+			try {
+				current(i, r);
+				return { allowed: true };
+			} catch (e) {
+				if (e instanceof StorageError) return { allowed: false };
+				throw e;
+			}
+		},
+		getReleaseAccessRequest(i) {
+			return record(owned(i));
+		},
+		recordReleaseAccessObservation(i) {
+			return tx(() => {
+				const r = owned(i), o = i.observation, body = canonical(o);
+				if (r.observation_json === body) return record(r);
+				if (!["DISPATCHED", "UNKNOWN"].includes(String(r.state)) || r.state === "UNKNOWN" && o.state === "NOT_SENT") fail$1("RELEASE_ACCESS_OBSERVATION_CONFLICT");
+				if (o.checkedAt < String(r.dispatched_at) || o.checkedAt > now$2() || r.observation_json && o.checkedAt < json$1(r.observation_json).checkedAt) fail$1("RELEASE_ACCESS_OBSERVATION_STALE");
+				exec("UPDATE release_access_requests SET state=?,revision=revision+1,observation_json=?,finished_at=? WHERE access_request_id=?", o.state, body, o.state === "UNKNOWN" ? null : now$2(), i.accessRequestId);
+				return event(i.accessRequestId);
+			});
+		},
+		listReleaseAccessRequests(i) {
+			gateway(i, i.projectId);
+			const rows = all("SELECT * FROM release_access_requests WHERE project_id=? AND gateway_id=? AND configuration_hash=? AND sequence>? AND state IN ('PREPARED','DISPATCHED','UNKNOWN') ORDER BY sequence LIMIT ?", i.projectId, i.gatewayId, i.configurationHash, i.afterSequence, i.limit + 1), page = rows.slice(0, i.limit);
+			return {
+				items: page.map((r) => ({
+					sequence: Number(r.sequence),
+					record: record(r)
+				})),
+				nextSequence: rows.length > page.length ? Number(page.at(-1).sequence) : null
+			};
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(releaseAccessRequests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+//#region src/release-session-domain.ts
+function fail(code = "RELEASE_CREDENTIAL_INVALID", status = 401) {
+	throw new StorageError(code, status, "Release credential requires its exact purpose, origin, original target and current member");
+}
+const now$1 = () => (/* @__PURE__ */ new Date()).toISOString();
+const json = (v) => JSON.parse(String(v));
+function createReleaseSessionDomain(db, access) {
+	const get = (sql, ...p) => db.prepare(sql).get(...p), exec = (sql, ...p) => db.prepare(sql).run(...p), tx = (f) => transaction(db, f);
+	const policy = (i, project) => {
+		const p = get("SELECT principal_id,configuration_hash FROM release_access_policies WHERE project_id=? AND gateway_id=?", project, i.gatewayId);
+		if (!p || p.principal_id !== i.principalId || p.configuration_hash !== i.configurationHash) fail();
+	};
+	const common = (r) => ({
+		projectId: String(r.project_id),
+		gatewayId: String(r.gateway_id),
+		subjectPrincipalId: String(r.subject_principal_id),
+		target: json(r.target_json),
+		platformOrigin: String(r.platform_origin),
+		releaseOrigin: String(r.release_origin),
+		createdAt: String(r.created_at),
+		expiresAt: String(r.expires_at)
+	});
+	const ticket = (r) => ({
+		...common(r),
+		ticketId: String(r.ticket_id),
+		state: r.state,
+		sessionId: r.session_id
+	});
+	const session = (r) => ({
+		...common(r),
+		sessionId: String(r.session_id),
+		ticketId: String(r.ticket_id),
+		state: r.state,
+		revokedAt: r.revoked_at
+	});
+	const gateway = (i) => ({
+		principalId: i.principalId,
+		gatewayId: i.gatewayId,
+		configurationHash: i.configurationHash
+	});
+	const current = (i, r) => {
+		policy(i, String(r.project_id));
+		if (r.gateway_id !== i.gatewayId || r.configuration_hash !== i.configurationHash) fail();
+		const target = json(r.target_json), binding = access.execute("resolveReleaseAccess", {
+			...gateway(i),
+			subjectPrincipalId: r.subject_principal_id,
+			runId: target.runId,
+			releaseId: target.releaseId
+		});
+		if (canonical(binding.target) !== r.target_json) fail("RELEASE_CREDENTIAL_TARGET_CHANGED", 409);
+		return binding;
+	};
+	const live = (r, at) => {
+		if (Date.parse(String(r.created_at)) > Date.parse(at) || Date.parse(String(r.expires_at)) <= Date.parse(at)) fail("RELEASE_CREDENTIAL_EXPIRED");
+	};
+	const expiry = (value, maximumMs, at) => {
+		const delta = Date.parse(value) - Date.parse(at);
+		if (delta <= 0 || delta > maximumMs) fail("RELEASE_CREDENTIAL_EXPIRY_INVALID", 422);
+	};
+	const distinct = (platform, release) => {
+		if (platform === release || new URL(platform).hostname === new URL(release).hostname) fail("RELEASE_CREDENTIAL_ORIGIN_INVALID", 422);
+	};
+	const event = (kind, id, revision, snapshot, at) => exec("INSERT INTO release_credential_events VALUES(?,?,?,?,?)", kind, id, revision, canonical(snapshot), at);
+	const ownedSession = (i) => {
+		const r = get("SELECT * FROM release_sessions WHERE token_sha256=?", i.tokenSha256) ?? fail();
+		policy(i, String(r.project_id));
+		if (r.gateway_id !== i.gatewayId || r.configuration_hash !== i.configurationHash || r.release_origin !== i.releaseOrigin) fail();
+		return r;
+	};
+	const handlers = {
+		issueReleaseTicket(i) {
+			return tx(() => {
+				distinct(i.platformOrigin, i.releaseOrigin);
+				const binding = access.execute("resolveReleaseAccess", {
+					...gateway(i),
+					subjectPrincipalId: i.subjectPrincipalId,
+					runId: i.runId,
+					releaseId: i.releaseId
+				}), old = get("SELECT * FROM release_tickets WHERE ticket_id=?", i.ticketId);
+				if (old) {
+					if (old.token_sha256 !== i.tokenSha256 || old.gateway_id !== i.gatewayId || old.configuration_hash !== i.configurationHash || old.subject_principal_id !== i.subjectPrincipalId || old.platform_origin !== i.platformOrigin || old.release_origin !== i.releaseOrigin || old.expires_at !== i.expiresAt || old.target_json !== canonical(binding.target)) fail("RELEASE_CREDENTIAL_CONFLICT", 409);
+					return ticket(old);
+				}
+				const at = now$1();
+				expiry(i.expiresAt, 6e4, at);
+				if (get("SELECT 1 FROM release_sessions WHERE token_sha256=?", i.tokenSha256)) fail("RELEASE_CREDENTIAL_CONFLICT", 409);
+				const count = get("SELECT count(*) n FROM release_tickets WHERE project_id=? AND subject_principal_id=? AND state='ISSUED' AND expires_at>?", binding.target.projectId, i.subjectPrincipalId, at);
+				if (Number(count.n) >= 20) fail("RELEASE_TICKET_CAPACITY", 429);
+				exec("INSERT INTO release_tickets VALUES(?,?,?,?,?,?,?,?,?,?,?,'ISSUED',NULL,NULL,?)", i.ticketId, binding.target.projectId, i.gatewayId, i.configurationHash, i.subjectPrincipalId, i.tokenSha256, canonical(binding.target), i.platformOrigin, i.releaseOrigin, at, i.expiresAt, "devmesh.release.ticket.v1");
+				const value = ticket(get("SELECT * FROM release_tickets WHERE ticket_id=?", i.ticketId));
+				event("ticket", i.ticketId, 0, value, at);
+				return value;
+			});
+		},
+		exchangeReleaseTicket(i) {
+			return tx(() => {
+				const r = get("SELECT * FROM release_tickets WHERE token_sha256=?", i.ticketTokenSha256) ?? fail();
+				if (r.release_origin !== i.releaseOrigin || r.platform_origin !== i.platformOrigin) fail();
+				const at = now$1();
+				live(r, at);
+				current(i, r);
+				if (r.state === "CONSUMED") {
+					const s = get("SELECT * FROM release_sessions WHERE session_id=?", r.session_id);
+					if (s.session_id !== i.sessionId || s.token_sha256 !== i.sessionTokenSha256 || s.expires_at !== i.expiresAt) fail("RELEASE_TICKET_CONSUMED", 409);
+					live(s, at);
+					if (s.state !== "ACTIVE") fail("RELEASE_SESSION_REVOKED");
+					return session(s);
+				}
+				expiry(i.expiresAt, 3e5, at);
+				if (get("SELECT 1 FROM release_tickets WHERE token_sha256=?", i.sessionTokenSha256)) fail("RELEASE_CREDENTIAL_CONFLICT", 409);
+				const count = get("SELECT count(*) n FROM release_sessions WHERE project_id=? AND subject_principal_id=? AND state='ACTIVE' AND expires_at>?", r.project_id, r.subject_principal_id, at);
+				if (Number(count.n) >= 20) fail("RELEASE_SESSION_CAPACITY", 429);
+				exec("INSERT INTO release_sessions VALUES(?,?,?,?,?,?,?,?,?,?,?,?,'ACTIVE',NULL,?)", i.sessionId, r.ticket_id, r.project_id, r.gateway_id, r.configuration_hash, r.subject_principal_id, i.sessionTokenSha256, r.target_json, r.platform_origin, r.release_origin, at, i.expiresAt, "devmesh.release.session.v1");
+				exec("UPDATE release_tickets SET state='CONSUMED',session_id=?,consumed_at=? WHERE ticket_id=?", i.sessionId, at, r.ticket_id);
+				const value = session(get("SELECT * FROM release_sessions WHERE session_id=?", i.sessionId));
+				event("ticket", String(r.ticket_id), 1, ticket(get("SELECT * FROM release_tickets WHERE ticket_id=?", r.ticket_id)), at);
+				event("session", i.sessionId, 0, value, at);
+				return value;
+			});
+		},
+		authenticateReleaseSession(i) {
+			const r = ownedSession(i);
+			live(r, now$1());
+			if (r.state !== "ACTIVE") fail("RELEASE_SESSION_REVOKED");
+			return {
+				session: session(r),
+				binding: current(i, r)
+			};
+		},
+		revokeReleaseSession(i) {
+			return tx(() => {
+				const r = ownedSession(i);
+				if (r.state === "REVOKED") return session(r);
+				const at = now$1();
+				exec("UPDATE release_sessions SET state='REVOKED',revoked_at=? WHERE session_id=?", at, r.session_id);
+				const value = session(get("SELECT * FROM release_sessions WHERE session_id=?", r.session_id));
+				event("session", String(r.session_id), 1, value, at);
+				return value;
+			});
+		}
+	};
+	return { execute(method, input) {
+		const parsed = parseContract(releaseSessionRequests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+//#region src/domain.ts
+const uid = (prefix) => `${prefix}_${randomUUID().replaceAll("-", "")}`;
+const now = () => (/* @__PURE__ */ new Date()).toISOString();
+function createDomain(db) {
+	const registry = createRegistryDomain(db, (runId, operationId, workId, attemptId, state) => {
+		bump(runId);
+		event(runId, operationId, "AttemptStateChanged", {
+			attemptId,
+			state
+		}, {
+			workId,
+			attemptId
+		});
+	});
+	const runtime = createRuntimeDomain(db, (attemptId) => registry.markCandidateReady(attemptId));
+	const repository = createRepoDomain(db);
+	const repositoryFiles = createRepoFileDomain(db);
+	const workspaces = createWorkspaceDomain(db);
+	const sourceArchives = createSourceArchiveDomain(db);
+	const workspacePreservations = createWorkspacePreservationDomain(db);
+	const workspaceReclamations = createWorkspaceReclamationDomain(db);
+	const workspaceMaintenance = createWorkspaceMaintenanceDomain(db);
+	const sessions = createSessionDomain(db);
+	const tools = createToolDomain(db, (runId, operationId, attemptId, payload) => {
+		bump(runId);
+		event(runId, operationId, "IssueChanged", payload, { attemptId });
+	});
+	const pipelines = createPipelineDomain(db, (runId, operationId, attemptId, payload) => {
+		const original = get("SELECT operation_id FROM operations WHERE operation_id=?", operationId)?.operation_id ?? get("SELECT dispatch_operation_id FROM attempts WHERE attempt_id=?", attemptId).dispatch_operation_id;
+		bump(runId);
+		event(runId, String(original), "PipelineChanged", payload, { attemptId });
+	}, (attemptId, workspaceRef) => quality.assertPipelinePrepared(attemptId, workspaceRef));
+	const plans = createPlanDomain(db);
+	const verifiedRepairs = createVerifiedRepairDomain(db);
+	const candidateIntegrations = createCandidateIntegrationDomain(db, plans);
+	const quality = createQualityDomain(db, candidateIntegrations);
+	const releaseDeliveries = createReleaseDeliveryDomain(db, quality);
+	const workVerifications = createWorkVerificationDomain(db, quality);
+	const releaseFreezes = createReleaseFreezeDomain(db, plans, candidateIntegrations, releaseDeliveries, workVerifications, quality, {
+		operation: (...args) => operation(...args),
+		changed(runId, operationId, candidateId) {
+			exec("UPDATE runs SET phase='REVIEW' WHERE run_id=?", runId);
+			bump(runId);
+			event(runId, operationId, "CandidateUpdated", {
+				candidateId,
+				state: "READY"
+			});
+		}
+	});
+	const verifiedFindings = createVerifiedFindingDomain(db, quality, candidateIntegrations, (runId, operationId, attemptId, payload) => {
+		bump(runId);
+		event(runId, operationId, "IssueChanged", payload, { attemptId });
+	});
+	const candidateReviews = createCandidateReviewDomain(db, plans, releaseFreezes, {
+		operation: (...args) => operation(...args),
+		changed(runId, operationId, candidateId, resultId) {
+			bump(runId);
+			event(runId, operationId, "CandidateReviewRecorded", {
+				candidateId,
+				resultId
+			});
+		},
+		rejected(runId, operationId, candidateId, rejectionId, resultId, state) {
+			bump(runId);
+			event(runId, operationId, "CandidateRejected", {
+				candidateId,
+				rejectionId,
+				resultId,
+				state
+			});
+		}
+	});
+	const candidateMaterials = createCandidateMaterialDomain(db);
+	const previews = createPreviewDomain(db, plans, releaseFreezes, {
+		operation: (...args) => operation(...args),
+		changed(runId, operationId, target) {
+			bump(runId);
+			event(runId, operationId, "datasetId" in target ? "DatasetStateChanged" : "PreviewOperationChanged", target);
+		}
+	});
+	const previewAccess = createPreviewAccessDomain(db, previews);
+	const previewSessions = createPreviewSessionDomain(db, previewAccess);
+	const acceptances = createAcceptanceDomain(db, plans, releaseFreezes, candidateReviews, {
+		operation: (...args) => operation(...args),
+		changed(runId, operationId, preparationId, state) {
+			bump(runId);
+			event(runId, operationId, "AcceptancePreparationChanged", {
+				preparationId,
+				state
+			});
+		},
+		decision(runId, operationId, decisionId) {
+			bump(runId);
+			event(runId, operationId, "DecisionSaved", { decisionId });
+		},
+		sourceClosed(runId, operationId, datasetId, fence) {
+			bump(runId);
+			event(runId, operationId, "DatasetWriteGateClosed", {
+				datasetId,
+				preparationId: operationId,
+				fence
+			});
+		}
+	});
+	const acceptanceReadiness = createAcceptanceReadinessDomain(db, acceptances, (runId, operationId, sequence, state) => {
+		bump(runId);
+		event(runId, operationId, "AcceptanceReadinessObserved", {
+			preparationId: operationId,
+			sequence,
+			state
+		});
+	});
+	const acceptanceCommits = createAcceptanceCommitDomain(db, plans, releaseFreezes, candidateReviews, acceptances, acceptanceReadiness, {
+		operation: (...args) => operation(...args),
+		completed(runId, operationId, candidateId, releaseId, attempts) {
+			bump(runId);
+			for (const a of attempts) event(runId, operationId, "AttemptStateChanged", {
+				attemptId: a.attemptId,
+				state: "SUCCEEDED"
+			}, a);
+			event(runId, operationId, "ReleaseAccepted", {
+				candidateId,
+				releaseId
+			});
+			const r = run(runId);
+			event(runId, operationId, "ControlProgress", {
+				state: {
+					phase: r.phase,
+					controlGate: r.control_gate,
+					terminalOutcome: "COMPLETED"
+				},
+				controlRevision: Number(r.control_revision),
+				runEpoch: Number(r.run_epoch)
+			});
+		}
+	});
+	const releaseExports = createReleaseExportDomain(db, { operation: (...args) => operation(...args) });
+	const candidateBasis = candidateIntegrations.basis;
+	const acceptanceAborts = createAcceptanceAbortDomain(db, plans, acceptances, {
+		operation: (...args) => operation(...args),
+		requested(runId, operationId, preparationId) {
+			bump(runId);
+			event(runId, operationId, "AcceptanceAbortRequested", {
+				preparationId,
+				abortOperationId: operationId
+			});
+		}
+	});
+	const acceptanceAbortRecovery = createAcceptanceAbortRecoveryDomain(db, (runId, abortId, preparationId) => {
+		bump(runId);
+		event(runId, abortId, "AcceptanceAbortCompleted", {
+			preparationId,
+			abortOperationId: abortId
+		});
+	});
+	const releasePublications = createReleasePublicationDomain(db, plans, (p) => {
+		bump(p.runId);
+		event(p.runId, p.request.acceptanceOperationId, "ReleasePublicationChanged", {
+			releaseId: p.releaseId,
+			state: p.state,
+			publicationRevision: p.revision,
+			observationSequence: p.sequence,
+			errorCode: p.errorCode
+		});
+	});
+	const releaseAccess = createReleaseAccessDomain(db, releasePublications);
+	const releaseSessions = createReleaseSessionDomain(db, releaseAccess);
+	const scheduler = createSchedulerDomain(db, plans, candidateIntegrations);
+	const get = (sql, ...args) => db.prepare(sql).get(...args);
+	const all = (sql, ...args) => db.prepare(sql).all(...args);
+	const exec = (sql, ...args) => db.prepare(sql).run(...args);
+	const insert = (table, row) => {
+		const keys = Object.keys(row);
+		exec(`INSERT INTO ${table}(${keys.join(",")}) VALUES(${keys.map(() => "?").join(",")})`, ...Object.values(row));
+	};
+	const required = (row) => {
+		if (!row) throw new StorageError("RESOURCE_NOT_FOUND", 404, "Requested storage record does not exist");
+		return row;
+	};
+	const run = (id) => required(get("SELECT * FROM runs WHERE run_id=?", id));
+	const runView = (row) => ({
+		runId: String(row.run_id),
+		projectId: String(row.project_id),
+		taskId: String(row.task_id),
+		resourceRevision: Number(row.resource_revision),
+		runEpoch: Number(row.run_epoch),
+		controlRevision: Number(row.control_revision),
+		phase: String(row.phase),
+		controlGate: String(row.control_gate),
+		terminalOutcome: row.terminal_outcome,
+		currentPlanRevision: row.current_plan_revision,
+		currentRequirementRevision: row.current_requirement_revision,
+		eventSeq: Number(row.event_seq)
+	});
+	const attemptView = (row) => ({
+		attemptId: String(row.attempt_id),
+		runId: String(row.run_id),
+		workId: String(row.work_id),
+		role: String(row.role),
+		state: String(row.state),
+		attemptNo: Number(row.attempt_no),
+		dispatchOperationId: String(row.dispatch_operation_id),
+		endedAt: row.ended_at
+	});
+	const outboxView = (row) => ({
+		outboxId: String(row.outbox_id),
+		operationId: String(row.operation_id),
+		destination: String(row.destination),
+		payload: JSON.parse(String(row.payload_json)),
+		status: String(row.status),
+		deliveryAttempt: Number(row.delivery_attempts),
+		leaseOwner: row.lease_owner,
+		leaseUntil: row.lease_until
+	});
+	const operationView = (row) => ({
+		operationId: String(row.operation_id),
+		status: String(row.status),
+		result: row.result_json === null ? null : JSON.parse(String(row.result_json))
+	});
+	const lookup = (meta) => get("SELECT * FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?", meta.principalId, meta.scopeId, meta.idempotencyKey);
+	function operation(meta, kind, payload, action, authorize) {
+		return transaction(db, () => {
+			authorize?.();
+			const requestHash = digest(canonical({
+				kind,
+				payload
+			}));
+			const previous = lookup(meta);
+			if (previous) {
+				if (previous.request_hash !== requestHash) throw new StorageError("IDEMPOTENCY_KEY_REUSED", 409, "The original key belongs to a different request");
+				return operationView(previous);
+			}
+			const operationId = uid("op"), time = now();
+			insert("operations", {
+				operation_id: operationId,
+				principal_id: meta.principalId,
+				scope_id: meta.scopeId,
+				idempotency_key: meta.idempotencyKey,
+				request_hash: requestHash,
+				kind,
+				status: "ACCEPTED",
+				result_json: null,
+				created_at: time,
+				updated_at: time
+			});
+			const result = action(operationId);
+			exec("UPDATE operations SET status='SUCCEEDED',result_json=?,updated_at=? WHERE operation_id=?", canonical(result), now(), operationId);
+			return operationView(required(get("SELECT * FROM operations WHERE operation_id=?", operationId)));
+		});
+	}
+	function writable(input) {
+		const row = run(input.runId);
+		assertResourceVersion(input.ifMatch, Number(row.resource_revision));
+		if (row.terminal_outcome !== null) throw new StorageError("RUN_TERMINAL", 409, "Terminal Run cannot change");
+		return row;
+	}
+	const bump = (runId) => exec("UPDATE runs SET resource_revision=resource_revision+1 WHERE run_id=?", runId);
+	function event(runId, operationId, type, payload, owner = {}) {
+		exec("UPDATE runs SET event_seq=event_seq+1 WHERE run_id=?", runId);
+		const row = run(runId), time = now();
+		const data = parseContract(domainEvent, {
+			schemaVersion: 1,
+			eventId: uid("evt"),
+			projectId: row.project_id,
+			runId,
+			seq: row.event_seq,
+			type,
+			occurredAt: time,
+			observedAt: time,
+			timeSource: "observed",
+			resourceRevision: row.resource_revision,
+			requirementRevision: row.current_requirement_revision,
+			planRevision: row.current_plan_revision,
+			operationId,
+			...owner,
+			payload
+		});
+		insert("events", {
+			event_id: data.eventId,
+			project_id: data.projectId,
+			run_id: runId,
+			work_id: owner.workId ?? null,
+			attempt_id: owner.attemptId ?? null,
+			seq: data.seq,
+			operation_id: operationId,
+			type,
+			schema_version: 1,
+			payload_json: canonical(payload),
+			occurred_at: time,
+			observed_at: time,
+			time_source: "observed",
+			resource_revision: data.resourceRevision,
+			requirement_revision: data.requirementRevision,
+			plan_revision: data.planRevision
+		});
+	}
+	function outbox(operationId, destination, payload) {
+		insert("outbox", {
+			outbox_id: uid("outbox"),
+			operation_id: operationId,
+			message_no: Number(get("SELECT count(*) n FROM outbox WHERE operation_id=?", operationId)?.n ?? 0),
+			destination,
+			payload_json: canonical(payload),
+			status: "PENDING",
+			delivery_attempts: 0,
+			lease_owner: null,
+			lease_until: null,
+			next_attempt_at: now()
+		});
+	}
+	function readyContent(hash) {
+		return required(get("SELECT * FROM content_objects WHERE content_hash=? AND state='READY'", hash));
+	}
+	function createInputFacts(input, operationId, legacyUnderstanding) {
+		const content = readyContent(input.contentHash), time = now();
+		const projectId = input.projectId ?? uid("prj"), taskId = uid("task"), runId = uid("run"), artifactId = uid("artifact"), messageId = uid("message");
+		if (!input.projectId) {
+			insert("projects", {
+				project_id: projectId,
+				owner_id: input.principalId,
+				name: input.name,
+				revision: 1,
+				accepted_release_id: null,
+				created_at: time,
+				updated_at: time
+			});
+			insert("project_members", {
+				project_id: projectId,
+				principal_id: input.principalId,
+				role: "owner",
+				created_at: time
+			});
+		}
+		insert("user_tasks", {
+			task_id: taskId,
+			project_id: projectId,
+			kind: input.kind,
+			base_commit: input.baseCommit,
+			request_artifact_id: artifactId,
+			created_at: time
+		});
+		insert("runs", {
+			run_id: runId,
+			project_id: projectId,
+			task_id: taskId,
+			phase: "UNDERSTANDING",
+			created_at: time
+		});
+		insert("artifacts", {
+			artifact_id: artifactId,
+			project_id: projectId,
+			run_id: runId,
+			attempt_id: null,
+			kind: "USER_INPUT",
+			content_hash: input.contentHash,
+			byte_size: Number(content.byte_size),
+			storage_key: String(content.storage_key),
+			state: "READY",
+			created_at: time
+		});
+		insert("input_messages", {
+			message_id: messageId,
+			project_id: projectId,
+			run_id: runId,
+			author: input.principalId,
+			body_artifact_id: artifactId,
+			client_message_id: input.clientMessageId,
+			created_at: time
+		});
+		event(runId, operationId, "InputSaved", { messageId });
+		if (legacyUnderstanding) outbox(operationId, "understanding", {
+			schemaVersion: 1,
+			projectId,
+			runId,
+			messageId
+		});
+		exec("UPDATE projects SET updated_at=? WHERE project_id=?", time, projectId);
+		return {
+			projectId,
+			taskId,
+			runId,
+			artifactId,
+			messageId,
+			revision: 1
+		};
+	}
+	const inputs = createInputDomain(db, {
+		operation,
+		createInputFacts,
+		event,
+		outbox,
+		runView
+	});
+	function publishPlanFacts(current, requirementRevision, planRevision, plan, planHash, operationId) {
+		const runId = String(current.run_id), time = now(), planContent = readyContent(planHash), artifactId = uid("artifact");
+		insert("plan_revisions", {
+			run_id: runId,
+			revision: planRevision,
+			requirement_revision: requirementRevision,
+			content_hash: planHash,
+			content_json: canonical(plan),
+			created_at: time
+		});
+		for (const work of plan.works) {
+			exec("INSERT OR IGNORE INTO works(run_id,work_id) VALUES(?,?)", runId, work.workId);
+			const previous = get("SELECT definition_hash FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?", runId, work.workId, work.workRevision), hash = digest(canonical(work));
+			if (previous && previous.definition_hash !== hash) throw new StorageError("WORK_REVISION_IMMUTABLE", 409, "Published work definition cannot change");
+			if (!previous) insert("work_revisions", {
+				run_id: runId,
+				work_id: work.workId,
+				revision: work.workRevision,
+				role: work.role,
+				definition_json: canonical(work),
+				definition_hash: hash
+			});
+			insert("plan_works", {
+				run_id: runId,
+				plan_revision: planRevision,
+				work_id: work.workId,
+				work_revision: work.workRevision
+			});
+		}
+		for (const work of plan.works) for (const dependency of work.dependencies) insert("plan_edges", {
+			run_id: runId,
+			plan_revision: planRevision,
+			predecessor: dependency.workId,
+			successor: work.workId,
+			required_outcome: dependency.requiredOutcome
+		});
+		exec("UPDATE runs SET phase='PLANNING',current_requirement_revision=?,current_plan_revision=? WHERE run_id=?", requirementRevision, planRevision, runId);
+		bump(runId);
+		insert("artifacts", {
+			artifact_id: artifactId,
+			project_id: String(current.project_id),
+			run_id: runId,
+			attempt_id: null,
+			kind: "PLAN",
+			content_hash: planHash,
+			byte_size: Number(planContent.byte_size),
+			storage_key: String(planContent.storage_key),
+			state: "READY",
+			created_at: time
+		});
+		event(runId, operationId, "PlanPublished", {
+			planRevision,
+			planRef: {
+				artifactId,
+				sha256: planHash
+			}
+		});
+		return {
+			artifactId,
+			sha256: planHash,
+			runId,
+			planRevision,
+			requirementRevision,
+			reviewHash: planHash,
+			revision: Number(run(runId).resource_revision)
+		};
+	}
+	const preparations = createPreparationDomain(db, {
+		operation,
+		event,
+		outbox,
+		publishPlanFacts
+	});
+	const dispatch = createDispatchDomain(db, (runId, operationId, workId, attemptId, state) => {
+		bump(runId);
+		event(runId, operationId, "AttemptStateChanged", {
+			attemptId,
+			state
+		}, {
+			workId,
+			attemptId
+		});
+	});
+	function confirm(input, strict) {
+		const { meta, ifMatch: _ifMatch, ...payload } = input;
+		if (meta.scopeId !== input.runId) throw new StorageError("OPERATION_SCOPE_INVALID", 422, "Invalid Run scope");
+		return operation(meta, "ConfirmPlan", payload, (operationId) => {
+			const current = writable(input);
+			if (!["OPEN", "PAUSED"].includes(String(current.control_gate))) throw new StorageError("ADMISSION_CLOSED", 409, "The Run is stopping");
+			const plan = required(get("SELECT * FROM plan_revisions WHERE run_id=? AND revision=?", input.runId, input.planRevision));
+			if (current.current_plan_revision !== input.planRevision || current.current_requirement_revision !== input.requirementRevision || plan.content_hash !== input.reviewHash || plan.requirement_revision !== input.requirementRevision) throw new StorageError("PLAN_SUPERSEDED", 409, "The reviewed plan is no longer current", {
+				currentPlanRevision: current.current_plan_revision,
+				currentRequirementRevision: current.current_requirement_revision
+			});
+			if (get("SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=?", input.runId, input.planRevision)) throw new StorageError("PLAN_ALREADY_CONFIRMED", 409, "This plan already has a decision");
+			if (plans.pendingQuestions(input.runId)) throw new StorageError("REQUIRED_QUESTIONS_UNANSWERED", 409, "Required questions must be answered before implementation");
+			if (plans.pendingInterpretation(input.runId, input.requirementRevision)) throw new StorageError("INTERPRETATION_PENDING", 409, "Saved answers must be interpreted before plan confirmation");
+			if (plans.pendingSource(input.runId, input.requirementRevision)) throw new StorageError("BASIS_SUPERSEDED", 409, "Saved source input has not been processed into this plan");
+			if (strict || get("SELECT 1 FROM understanding_revisions WHERE run_id=? AND requirement_revision=?", input.runId, input.requirementRevision)) {
+				const graph = plans.inspect(current, parseContract(planDraft, JSON.parse(String(plan.content_json))));
+				if (graph.issues.length) throw new StorageError("PLAN_INVALID", 422, "Plan checks must pass before confirmation", { issues: graph.issues.slice(0, 100) });
+			}
+			const repair = verifiedRepairs.assertConfirmation(input.runId, input.planRevision, input.carryForwardHash);
+			insert("plan_confirmations", {
+				run_id: input.runId,
+				plan_revision: input.planRevision,
+				requirement_revision: input.requirementRevision,
+				review_hash: input.reviewHash,
+				actor: meta.principalId,
+				operation_id: operationId,
+				created_at: now()
+			});
+			const decisionId = uid("decision");
+			insert("decisions", {
+				decision_id: decisionId,
+				run_id: input.runId,
+				subject_id: String(input.planRevision),
+				subject_kind: "PLAN",
+				basis_hash: input.reviewHash,
+				choice_json: canonical({
+					confirmed: true,
+					...repair ? { carryForwardHash: input.carryForwardHash } : {}
+				}),
+				operation_id: operationId,
+				actor_id: meta.principalId,
+				created_at: now()
+			});
+			if (repair) verifiedFindings.linkApprovedRepair(current, repair.issueIds, repair.fixWorkId);
+			insert("input_operation_resources", {
+				operation_id: operationId,
+				project_id: current.project_id,
+				run_id: input.runId
+			});
+			bump(input.runId);
+			event(input.runId, operationId, "PlanConfirmed", {
+				planRevision: input.planRevision,
+				decisionId
+			});
+			if (current.control_gate === "OPEN") outbox(operationId, "scheduler", {
+				schemaVersion: 1,
+				runId: input.runId,
+				planRevision: input.planRevision
+			});
+			return {
+				projectId: current.project_id,
+				runId: input.runId,
+				planRevision: input.planRevision,
+				revision: Number(run(input.runId).resource_revision)
+			};
+		}, () => {
+			plans.authorized(meta.principalId, input.runId, true);
+		});
+	}
+	function knownEffects(attemptId) {
+		return knownAttemptEffects(db, attemptId);
+	}
+	function evidence(ref, runId) {
+		if (!ref || !get("SELECT artifact_id FROM artifacts WHERE artifact_id=? AND run_id=? AND content_hash=? AND state='READY'", ref.artifactId, runId, ref.sha256)) throw new StorageError("RECONCILIATION_EVIDENCE_REQUIRED", 409, "A persisted evidence artifact belonging to the Run is required");
+	}
+	function admitWorkFacts(input, operationId) {
+		const { meta } = input;
+		const current = writable(input);
+		if (current.control_gate !== "OPEN" || current.run_epoch !== input.runEpoch) throw new StorageError("ADMISSION_CLOSED", 409, "Run gate or epoch changed");
+		if (current.current_plan_revision !== input.planRevision || !get("SELECT run_id FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?", input.runId, input.planRevision, current.current_requirement_revision ?? null)) throw new StorageError("PLAN_NOT_CONFIRMED", 409, "Current plan and requirement basis must be explicitly confirmed");
+		const attemptIds = [];
+		for (const requested of input.works) {
+			const work = required(get("SELECT w.work_epoch,w.blocked_reason,r.role,r.definition_json FROM plan_works p JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN work_revisions r ON r.run_id=p.run_id AND r.work_id=p.work_id AND r.revision=p.work_revision WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND p.work_revision=?", input.runId, input.planRevision, requested.workId, requested.workRevision));
+			if (work.work_epoch !== requested.workEpoch || work.blocked_reason !== null || work.role !== requested.roleSnapshot.role) throw new StorageError("WORK_BASIS_CHANGED", 409, "Work epoch, role or freeze changed");
+			if (get("SELECT attempt_id FROM attempts WHERE run_id=? AND work_id=? AND ended_at IS NULL", input.runId, requested.workId)) throw new StorageError("ACTIVE_ATTEMPT_EXISTS", 409, "Original attempt must be reconciled/ended before retry");
+			for (const edge of all("SELECT predecessor,required_outcome FROM plan_edges WHERE run_id=? AND plan_revision=? AND successor=?", input.runId, input.planRevision, requested.workId)) {
+				const previous = get("SELECT state FROM attempts WHERE run_id=? AND work_id=? ORDER BY attempt_no DESC LIMIT 1", input.runId, String(edge.predecessor));
+				if (!previous || previous.state !== "SUCCEEDED" && !(edge.required_outcome === "completed-with-findings" && previous.state === "FAILED")) throw new StorageError("DEPENDENCY_UNSATISFIED", 409, "Predecessor has no required verified outcome");
+			}
+			const attemptId = uid("attempt"), activationId = uid("activation"), grantId = uid("grant"), dispatchId = uid("op"), time = now();
+			const number = Number(get("SELECT max(attempt_no) n FROM attempts WHERE run_id=? AND work_id=?", input.runId, requested.workId)?.n ?? 0) + 1;
+			const fingerprint = digest(canonical(requested.inputManifest));
+			if (requested.inputManifest.requirements.length === 0) throw new StorageError("INPUT_MANIFEST_EMPTY", 422, "Implementation work must reference requirements");
+			const requirementData = JSON.parse(String(required(get("SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?", input.runId, Number(current.current_requirement_revision))).content_json));
+			const hashes = new Map(requirementData.requirements.map((requirement) => [requirement.id, digest(canonical(requirement))]));
+			if (requested.inputManifest.requirements.some((ref) => hashes.get(ref.requirementId) !== ref.sha256)) throw new StorageError("INPUT_BASIS_CHANGED", 409, "Input requirement fingerprints differ from the current snapshot");
+			const definition = JSON.parse(String(work.definition_json));
+			const included = new Set(requested.inputManifest.requirements.map((ref) => ref.requirementId));
+			if (definition.requirementIds.some((id) => !included.has(id))) throw new StorageError("INPUT_REQUIREMENTS_MISSING", 409, "Input manifest omits requirements assigned to this work");
+			insert("operations", {
+				operation_id: dispatchId,
+				principal_id: meta.principalId,
+				scope_id: input.runId,
+				idempotency_key: uid("dispatch"),
+				request_hash: digest(canonical(requested)),
+				kind: "DISPATCH",
+				status: "ACCEPTED",
+				result_json: null,
+				created_at: time,
+				updated_at: time
+			});
+			insert("attempts", {
+				attempt_id: attemptId,
+				run_id: input.runId,
+				work_id: requested.workId,
+				work_revision: requested.workRevision,
+				role: String(work.role),
+				attempt_no: number,
+				state: "RESERVED",
+				admitted_run_epoch: input.runEpoch,
+				admitted_work_epoch: requested.workEpoch,
+				input_manifest_json: canonical(requested.inputManifest),
+				input_fingerprint: fingerprint,
+				role_snapshot_json: canonical(requested.roleSnapshot),
+				dispatch_operation_id: dispatchId,
+				created_at: time
+			});
+			const snapshotId = uid("role");
+			insert("role_snapshots", {
+				snapshot_id: snapshotId,
+				role: String(work.role),
+				revision: requested.roleSnapshot.revision,
+				snapshot_json: canonical(requested.roleSnapshot),
+				content_hash: digest(canonical(requested.roleSnapshot)),
+				created_at: time
+			});
+			const permit = parseContract(executionPermit, {
+				schemaVersion: "devmesh.permit.v1",
+				ownerKind: "workflowAttempt",
+				runId: input.runId,
+				runEpoch: input.runEpoch,
+				workId: requested.workId,
+				workEpoch: requested.workEpoch,
+				attemptId,
+				grantId,
+				activationId,
+				notBefore: time,
+				expiresAt: new Date(Date.parse(time) + 15e3).toISOString(),
+				resources: requested.resources
+			});
+			insert("execution_grants", {
+				grant_id: grantId,
+				run_id: input.runId,
+				attempt_id: attemptId,
+				activation_id: activationId,
+				permit_json: canonical(permit),
+				status: "ACTIVE",
+				created_at: time,
+				expires_at: permit.expiresAt
+			});
+			insert("role_slots", {
+				run_id: input.runId,
+				role: String(work.role),
+				attempt_id: attemptId,
+				activation_id: activationId
+			});
+			const inputManifestId = registry.freezeDispatch(attemptId, String(work.role), requested.endpoint, fingerprint, snapshotId);
+			outbox(dispatchId, requested.endpoint.endpointId, {
+				schemaVersion: "devmesh.dispatch-intent.v1",
+				operationId: dispatchId,
+				runId: input.runId,
+				attemptId,
+				workId: requested.workId,
+				workRevision: requested.workRevision,
+				endpoint: requested.endpoint,
+				roleSnapshotId: snapshotId,
+				permit,
+				inputFingerprint: fingerprint,
+				...inputManifestId ? { inputManifestId } : {}
+			});
+			bump(input.runId);
+			event(input.runId, operationId, "WorkAdmitted", {
+				workId: requested.workId,
+				attemptId,
+				activationId
+			}, {
+				workId: requested.workId,
+				attemptId
+			});
+			attemptIds.push(attemptId);
+		}
+		exec("UPDATE runs SET phase='EXECUTING' WHERE run_id=?", input.runId);
+		return {
+			runId: input.runId,
+			attemptIds,
+			revision: Number(run(input.runId).resource_revision)
+		};
+	}
+	const handlers = {
+		getCandidateSourceBasis(input) {
+			return transaction(db, () => candidateBasis.freeze(input));
+		},
+		assertCandidateSourceBasis(input) {
+			return transaction(db, () => {
+				const current = candidateBasis.freeze(input);
+				if (current.sha256 !== input.basisSha256) throw new StorageError("CANDIDATE_BASIS_CHANGED", 409, "Candidate source basis changed");
+				return current;
+			});
+		},
+		registerContent(input) {
+			return transaction(db, () => {
+				const storageKey = `sha256/${input.contentHash.slice(0, 2)}/${input.contentHash}`;
+				const previous = get("SELECT * FROM content_objects WHERE content_hash=?", input.contentHash);
+				if (previous && (previous.byte_size !== input.byteSize || previous.state !== "READY")) throw new StorageError("CONTENT_CONFLICT", 409, "Content size/state differs");
+				if (!previous) insert("content_objects", {
+					content_hash: input.contentHash,
+					byte_size: input.byteSize,
+					storage_key: storageKey,
+					mime_type: input.mimeType,
+					state: "READY",
+					created_at: now()
+				});
+				return {
+					contentHash: input.contentHash,
+					storageKey
+				};
+			});
+		},
+		createProjectWithRun(input) {
+			const { meta, ...payload } = input;
+			return operation(meta, "CreateProjectWithRun", payload, (operationId) => {
+				if (input.projectId) {
+					if (required(get("SELECT * FROM projects WHERE project_id=?", input.projectId)).owner_id !== meta.principalId) throw new StorageError("FORBIDDEN", 403, "Caller is not the project owner");
+				}
+				return createInputFacts({
+					...input,
+					principalId: meta.principalId
+				}, operationId, true);
+			});
+		},
+		publishPlan(input) {
+			const { meta, ...payload } = input;
+			return operation(meta, "PublishPlan", payload, (operationId) => {
+				const current = writable(input);
+				if (get("SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL", input.runId)) throw new StorageError("ACTIVE_ATTEMPT_EXISTS", 409, "Cannot replace a live execution plan");
+				if (input.plan.requirementRevision !== input.requirementRevision || input.planRevision <= Number(current.current_plan_revision ?? 0) || input.requirementRevision <= Number(current.current_requirement_revision ?? 0)) throw new StorageError("PLAN_SUPERSEDED", 409, "Plan/requirement revisions must advance together");
+				const requirementHash = digest(canonical(input.requirements)), planHash = digest(canonical(input.plan));
+				if (planHash !== input.planContentHash) throw new StorageError("PLAN_CONTENT_MISMATCH", 422, "Published plan content must match its canonical JSON hash");
+				insert("requirement_revisions", {
+					run_id: input.runId,
+					revision: input.requirementRevision,
+					content_hash: requirementHash,
+					content_json: canonical(input.requirements),
+					created_at: now()
+				});
+				const { runId, planRevision, requirementRevision, reviewHash, revision } = publishPlanFacts(current, input.requirementRevision, input.planRevision, input.plan, planHash, operationId);
+				return {
+					runId,
+					planRevision,
+					requirementRevision,
+					reviewHash,
+					revision
+				};
+			});
+		},
+		confirmPlan(input) {
+			return confirm(input, false);
+		},
+		publishVerifiedRepair(input) {
+			const { meta, ...payload } = input;
+			if (meta.scopeId !== input.runId) throw new StorageError("OPERATION_SCOPE_INVALID", 422, "Invalid Run scope");
+			return operation(meta, "PublishVerifiedRepair", payload, (operationId) => verifiedRepairs.publish(meta.principalId, input.runId, input.operationId, meta.idempotencyKey, operationId, publishPlanFacts), () => {
+				if (plans.authorized(meta.principalId, input.runId, true).membership !== "owner") throw new StorageError("FORBIDDEN", 403, "Project owner required");
+			});
+		},
+		confirmReviewedPlan(input) {
+			return confirm(input, true);
+		},
+		getPlanReview(input) {
+			return transaction(db, () => plans.getPlanReview(input));
+		},
+		nextScheduledWork(input) {
+			return transaction(db, () => scheduler.next(input));
+		},
+		deferScheduledWork(input) {
+			return transaction(db, () => scheduler.defer(input));
+		},
+		listScheduledDispatches(input) {
+			return transaction(db, () => dispatch.list(input));
+		},
+		markScheduledDispatchSent(input) {
+			return transaction(db, () => dispatch.mark(input));
+		},
+		reconcileScheduledDispatch(input) {
+			return transaction(db, () => dispatch.reconcile(input));
+		},
+		admitScheduledWork(input) {
+			const { meta, ifMatch: _version, ...payload } = input;
+			if (meta.scopeId !== input.runId) throw new StorageError("OPERATION_SCOPE_INVALID", 422, "Invalid scheduler scope");
+			return operation(meta, "AdmitScheduledWork", payload, (operationId) => {
+				const current = writable(input);
+				if (current.run_epoch !== input.runEpoch || current.control_gate !== "OPEN" || current.current_plan_revision !== input.planRevision || !get("SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?", input.runId, input.planRevision, current.current_requirement_revision ?? null)) throw new StorageError("ADMISSION_CLOSED", 409, "Run or confirmed plan changed before scheduling");
+				if (plans.pendingQuestions(input.runId) || plans.pendingInterpretation(input.runId, Number(current.current_requirement_revision)) || plans.pendingSource(input.runId, Number(current.current_requirement_revision))) throw new StorageError("ADMISSION_CLOSED", 409, "Run still requires clarification");
+				const { work, manifest, promptHash } = scheduler.currentManifest(input, current);
+				scheduler.reserve(input, current, work, promptHash);
+				const result = admitWorkFacts({
+					...input,
+					works: [{
+						...input.work,
+						inputManifest: manifest
+					}]
+				}, operationId);
+				insert("scheduled_work", {
+					attempt_id: result.attemptIds[0],
+					run_id: input.runId,
+					plan_revision: input.planRevision,
+					runner_id: input.runnerId,
+					reservation_key: input.reservationKey,
+					caller_id: input.callerId
+				});
+				return result;
+			}, () => {
+				plans.authorized(meta.principalId, input.runId, true);
+			});
+		},
+		recordVerifiedWork(input) {
+			const { meta, ...payload } = input;
+			if (meta.scopeId !== input.runId) throw new StorageError("OPERATION_SCOPE_INVALID", 422, "Invalid verification scope");
+			return operation(meta, "RecordVerifiedWork", payload, (operationId) => {
+				const current = run(input.runId);
+				if (current.terminal_outcome !== null || current.control_gate !== "OPEN") throw new StorageError("ADMISSION_CLOSED", 409, "Run does not accept a verification result");
+				if (!knownEffects(input.attemptId)) throw new StorageError("OUTCOME_UNKNOWN", 409, "Original effects must be known before verification");
+				const verification = workVerifications.assertCompletion(input);
+				const { a, workId } = scheduler.verify(input);
+				if (a.admitted_run_epoch !== current.run_epoch) throw new StorageError("WORK_BASIS_CHANGED", 409, "Verification belongs to an older Run epoch");
+				const state = input.outcome === "success" ? "SUCCEEDED" : "FAILED";
+				exec("UPDATE attempts SET state=?,ended_at=? WHERE attempt_id=?", state, now(), input.attemptId);
+				exec("DELETE FROM role_slots WHERE attempt_id=?", input.attemptId);
+				exec("UPDATE execution_grants SET status='REVOKED' WHERE attempt_id=?", input.attemptId);
+				workVerifications.applied(String(verification.operation_id));
+				verifiedFindings.capture(String(verification.operation_id));
+				bump(input.runId);
+				event(input.runId, operationId, "AttemptStateChanged", {
+					attemptId: input.attemptId,
+					state
+				}, {
+					workId,
+					attemptId: input.attemptId
+				});
+				return {
+					attemptId: input.attemptId,
+					state,
+					revision: Number(run(input.runId).resource_revision)
+				};
+			}, () => {
+				plans.authorized(meta.principalId, input.runId, true);
+			});
+		},
+		admitWorks(input) {
+			const { meta, ...payload } = input;
+			return operation(meta, "AdmitWorks", payload, (operationId) => {
+				return admitWorkFacts(input, operationId);
+			});
+		},
+		transitionAttempt(input) {
+			const { meta, ...payload } = input;
+			return operation(meta, "TransitionAttempt", payload, (operationId) => {
+				if (input.state === "SUCCEEDED") throw new StorageError("WORK_VERIFICATION_REQUIRED", 409, "Successful Work must be completed through its immutable verification");
+				const attempt = required(get("SELECT * FROM attempts WHERE attempt_id=? AND run_id=?", input.attemptId, input.runId));
+				const current = run(input.runId);
+				if (attempt.ended_at !== null || current.terminal_outcome !== null || attempt.state !== input.expectedState) throw new StorageError("ATTEMPT_STATE_CONFLICT", 409, "Attempt ended or expected state changed");
+				if (!{
+					RESERVED: [
+						"SUBMITTED",
+						"STOPPING",
+						"OUTCOME_UNKNOWN",
+						"FAILED"
+					],
+					SUBMITTED: [
+						"WORKING",
+						"STOPPING",
+						"OUTCOME_UNKNOWN",
+						"FAILED"
+					],
+					WORKING: [
+						"INPUT_REQUIRED",
+						"VERIFYING",
+						"STOPPING",
+						"OUTCOME_UNKNOWN",
+						"FAILED"
+					],
+					INPUT_REQUIRED: [
+						"WORKING",
+						"STOPPING",
+						"OUTCOME_UNKNOWN"
+					],
+					VERIFYING: [
+						"SUCCEEDED",
+						"FAILED",
+						"STOPPING",
+						"OUTCOME_UNKNOWN"
+					],
+					OUTCOME_UNKNOWN: [
+						"SUBMITTED",
+						"WORKING",
+						"INPUT_REQUIRED",
+						"VERIFYING",
+						"STOPPING",
+						"FAILED",
+						"INTERRUPTED",
+						"CANCELLED"
+					],
+					STOPPING: [
+						"INTERRUPTED",
+						"CANCELLED",
+						"OUTCOME_UNKNOWN"
+					]
+				}[String(attempt.state)]?.includes(input.state)) throw new StorageError("ATTEMPT_TRANSITION_INVALID", 409, "Illegal state transition");
+				if (input.state === "WORKING" && (current.control_gate !== "OPEN" || current.run_epoch !== attempt.admitted_run_epoch || get("SELECT work_epoch FROM works WHERE run_id=? AND work_id=?", input.runId, String(attempt.work_id))?.work_epoch !== attempt.admitted_work_epoch || !get("SELECT grant_id FROM execution_grants WHERE attempt_id=? AND status='ACTIVE' AND expires_at>?", input.attemptId, now()))) throw new StorageError("ADMISSION_CLOSED", 409, "Cannot resume work under a revoked or expired grant/epoch");
+				const terminal = [
+					"SUCCEEDED",
+					"FAILED",
+					"INTERRUPTED",
+					"CANCELLED"
+				].includes(input.state);
+				if (attempt.state === "OUTCOME_UNKNOWN") evidence(input.evidenceRef, input.runId);
+				if (terminal && !knownEffects(input.attemptId)) throw new StorageError("EFFECT_OUTCOME_UNKNOWN", 409, "Original tool/job effects must be reconciled");
+				exec("UPDATE attempts SET state=?,ended_at=? WHERE attempt_id=?", input.state, terminal ? now() : null, input.attemptId);
+				if (terminal) {
+					exec("DELETE FROM role_slots WHERE attempt_id=?", input.attemptId);
+					exec("UPDATE execution_grants SET status='REVOKED' WHERE attempt_id=?", input.attemptId);
+				}
+				bump(input.runId);
+				event(input.runId, operationId, "AttemptStateChanged", {
+					attemptId: input.attemptId,
+					state: input.state
+				}, {
+					workId: String(attempt.work_id),
+					attemptId: input.attemptId
+				});
+				return {
+					attemptId: input.attemptId,
+					state: input.state,
+					revision: Number(run(input.runId).resource_revision)
+				};
+			});
+		},
+		setControlIntent(input) {
+			const { meta, ...payload } = input;
+			return operation(meta, "SetControlIntent", payload, (operationId) => {
+				const current = writable(input);
+				if (current.control_gate === "CANCELLING" && input.action === "pause") throw new StorageError("CANCEL_INTENT_SAVED", 409, "Pause cannot overwrite cancellation");
+				const active = get("SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL", input.runId) || get("SELECT preparation_attempt_id FROM preparation_attempts WHERE run_id=? AND ended_at IS NULL", input.runId);
+				const gate = input.action === "cancel" ? "CANCELLING" : active ? "PAUSING" : "PAUSED";
+				if (current.control_gate !== gate) exec("UPDATE runs SET control_gate=?,run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1 WHERE run_id=?", gate, input.runId);
+				exec("UPDATE execution_grants SET status='REVOKED' WHERE run_id=? AND status='ACTIVE'", input.runId);
+				const updated = run(input.runId);
+				event(input.runId, operationId, "ControlProgress", {
+					state: {
+						phase: updated.phase,
+						controlGate: updated.control_gate,
+						terminalOutcome: updated.terminal_outcome
+					},
+					controlRevision: updated.control_revision,
+					runEpoch: updated.run_epoch
+				});
+				outbox(operationId, "control-stop", {
+					schemaVersion: 1,
+					runId: input.runId,
+					action: input.action
+				});
+				return { ...runView(updated) };
+			});
+		},
+		finishRun(input) {
+			const { meta, ...payload } = input;
+			return operation(meta, "FinishRun", payload, (operationId) => {
+				const current = writable(input);
+				if (get("SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL", input.runId)) throw new StorageError("ACTIVE_ATTEMPT_EXISTS", 409, "All attempts must be known and ended");
+				if (get("SELECT preparation_attempt_id FROM preparation_attempts WHERE run_id=? AND ended_at IS NULL", input.runId)) throw new StorageError("ACTIVE_PREPARATION_EXISTS", 409, "Preparation effects must be known and ended");
+				if (input.outcome === "CANCELLED" && current.control_gate !== "CANCELLING") throw new StorageError("CANCEL_INTENT_REQUIRED", 409, "Cancellation must have a saved control intent");
+				exec("UPDATE runs SET terminal_outcome=?,ended_at=?,resource_revision=resource_revision+1 WHERE run_id=?", input.outcome, now(), input.runId);
+				const updated = run(input.runId);
+				event(input.runId, operationId, "ControlProgress", {
+					state: {
+						phase: current.phase,
+						controlGate: current.control_gate,
+						terminalOutcome: input.outcome
+					},
+					controlRevision: current.control_revision,
+					runEpoch: current.run_epoch
+				});
+				return {
+					...runView(updated),
+					reason: input.reason
+				};
+			});
+		},
+		lookupOperation(input) {
+			const row = lookup(input);
+			return row ? operationView(row) : null;
+		},
+		getOperation(input) {
+			return operationView(required(get("SELECT * FROM operations WHERE operation_id=?", input.operationId)));
+		},
+		getRun(input) {
+			return runView(run(input.runId));
+		},
+		getAttempt(input) {
+			return attemptView(required(get("SELECT * FROM attempts WHERE attempt_id=?", input.attemptId)));
+		},
+		listEvents(input) {
+			run(input.runId);
+			const events = all("SELECT * FROM events WHERE run_id=? AND seq>? ORDER BY seq LIMIT ?", input.runId, input.afterSeq, input.limit).map((row) => parseContract(domainEvent, {
+				schemaVersion: row.schema_version,
+				eventId: row.event_id,
+				projectId: row.project_id,
+				runId: row.run_id,
+				seq: row.seq,
+				type: row.type,
+				occurredAt: row.occurred_at,
+				observedAt: row.observed_at,
+				timeSource: row.time_source,
+				resourceRevision: row.resource_revision,
+				requirementRevision: row.requirement_revision,
+				planRevision: row.plan_revision,
+				operationId: row.operation_id,
+				...row.work_id ? { workId: row.work_id } : {},
+				...row.attempt_id ? { attemptId: row.attempt_id } : {},
+				payload: JSON.parse(String(row.payload_json))
+			}));
+			return {
+				events,
+				nextCursor: events.at(-1)?.seq ?? input.afterSeq
+			};
+		},
+		claimOutbox(input) {
+			return transaction(db, () => {
+				const time = now();
+				exec("UPDATE outbox SET status='RECONCILE' WHERE status='LEASED' AND lease_until<=?", time);
+				const rows = all("SELECT * FROM outbox WHERE status='PENDING' AND next_attempt_at<=? ORDER BY next_attempt_at,outbox_id LIMIT ?", time, input.limit);
+				for (const row of rows) exec("UPDATE outbox SET status='LEASED',lease_owner=?,lease_until=?,delivery_attempts=delivery_attempts+1 WHERE outbox_id=?", input.workerId, new Date(Date.now() + input.leaseMs).toISOString(), String(row.outbox_id));
+				return rows.map((row) => outboxView(required(get("SELECT * FROM outbox WHERE outbox_id=?", String(row.outbox_id)))));
+			});
+		},
+		settleOutbox(input) {
+			return transaction(db, () => {
+				const row = required(get("SELECT * FROM outbox WHERE outbox_id=?", input.outboxId));
+				if (row.lease_owner !== input.workerId || row.delivery_attempts !== input.deliveryAttempt || row.status !== input.outcome && (row.status !== "LEASED" || String(row.lease_until) <= now())) throw new StorageError("OUTBOX_LEASE_CHANGED", 409, "Lease owner, token or validity changed");
+				if (row.status !== input.outcome) exec("UPDATE outbox SET status=? WHERE outbox_id=?", input.outcome, input.outboxId);
+				return outboxView(required(get("SELECT * FROM outbox WHERE outbox_id=?", input.outboxId)));
+			});
+		}
+	};
+	return { execute(method, input) {
+		if (Object.hasOwn(acceptanceAbortRecoveryRequests, method)) return acceptanceAbortRecovery.execute(method, input);
+		if (Object.hasOwn(releasePublicationRequests, method)) return releasePublications.execute(method, input);
+		if (Object.hasOwn(acceptanceAbortRequests, method)) return acceptanceAborts.execute(method, input);
+		if (Object.hasOwn(releaseExportRequests, method)) return releaseExports.execute(method, input);
+		if (Object.hasOwn(acceptanceCommitRequests, method)) return acceptanceCommits.execute(method, input);
+		if (Object.hasOwn(acceptanceReadinessRequests, method)) return acceptanceReadiness.execute(method, input);
+		if (Object.hasOwn(releaseSessionRequests, method)) return releaseSessions.execute(method, input);
+		if (Object.hasOwn(releaseAccessRequests, method)) return releaseAccess.execute(method, input);
+		if (Object.hasOwn(previewSessionRequests, method)) return previewSessions.execute(method, input);
+		if (Object.hasOwn(acceptanceRequests, method)) return acceptances.execute(method, input);
+		if (Object.hasOwn(previewAccessRequests, method)) return previewAccess.execute(method, input);
+		if (Object.hasOwn(previewRequests, method)) return previews.execute(method, input);
+		if (Object.hasOwn(candidateReviewRequests, method)) return candidateReviews.execute(method, input);
+		if (Object.hasOwn(releaseFreezeRequests, method)) return releaseFreezes.execute(method, input);
+		if (Object.hasOwn(releaseDeliveryRequests, method)) return releaseDeliveries.execute(method, input);
+		if (Object.hasOwn(verifiedRepairRequests, method)) return verifiedRepairs.execute(method, input);
+		if (Object.hasOwn(workVerificationRequests, method)) return workVerifications.execute(method, input);
+		if (Object.hasOwn(verifiedFindingRequests, method)) return verifiedFindings.execute(method, input);
+		if (Object.hasOwn(qualityRequests, method)) return quality.execute(method, input);
+		if (Object.hasOwn(workspaceMaintenanceRequests, method)) return workspaceMaintenance.execute(method, input);
+		if (Object.hasOwn(workspaceReclamationRequests, method)) return workspaceReclamations.execute(method, input);
+		if (Object.hasOwn(workspacePreservationRequests, method)) return workspacePreservations.execute(method, input);
+		if (Object.hasOwn(candidateMaterialRequests, method)) return candidateMaterials.execute(method, input);
+		if (Object.hasOwn(candidateIntegrationRequests, method)) return candidateIntegrations.execute(method, input);
+		if (Object.hasOwn(sourceArchiveRequests, method)) return sourceArchives.execute(method, input);
+		if (Object.hasOwn(workspaceRequests, method)) return workspaces.execute(method, input);
+		if (Object.hasOwn(pipelineRequests, method)) return pipelines.execute(method, input);
+		if (Object.hasOwn(repoFileRequests, method)) return repositoryFiles.execute(method, input);
+		if (Object.hasOwn(repoRequests, method)) return repository.execute(method, input);
+		if (Object.hasOwn(toolRequests, method)) return tools.execute(method, input);
+		if (Object.hasOwn(preparationRequests, method)) return preparations.execute(method, input);
+		if (Object.hasOwn(inputRequests, method)) return inputs.execute(method, input);
+		if (Object.hasOwn(runtimeRequests, method)) return runtime.execute(method, input);
+		if (Object.hasOwn(registryRequests, method)) return registry.execute(method, input);
+		if (Object.hasOwn(sessionRequests, method)) return sessions.execute(method, input);
+		if (method === "inspect" || !Object.hasOwn(handlers, method)) throw new StorageError("METHOD_NOT_ALLOWED", 422, "Unsupported storage command");
+		const parsed = parseContract(requests[method], input);
+		return handlers[method](parsed);
+	} };
+}
+//#endregion
+export { createAcceptanceDomain as n, requests as r, createDomain as t };
+
+//# sourceMappingURL=domain-D5nf_lcv.mjs.map
