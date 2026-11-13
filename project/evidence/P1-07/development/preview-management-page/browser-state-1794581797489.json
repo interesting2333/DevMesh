@@ -1,0 +1,26 @@
+{
+  "test": "actual React persists all three original intents before POST and recovers lost ACK without duplicate datasets/previews or data loss",
+  "url": "http://127.0.0.1:55353/api/v1/runs/run_1a904d23866b423aa189dd8ce50c6a79/candidates/candidate_f7b385e9d9d04cc9a46c596f173795bf/preview-management/view",
+  "body": "DevMesh\n返回逐项审查\n刷新预览状态\n准备数据，再启动预览。\n\n数据准备、启动和停止分别确认。预览中的修改保存在原预览数据中；版本接受仍需单独确认。\n\n当前候选\n候选修订 1\n\ncandidate_f7b385e9d9d04cc9a46c596f173795bf\n\n查看材料摘要\n预览使用的数据\n\n首次初始化 · 空数据。\n\n停止预览只停止原服务，数据保留情况可在原数据记录中查看。\n\n1. 准备预览数据\n我已核对候选与数据来源，同意准备独立的预览数据\n创建预览数据\n2. 使用原预览数据启动\n\ndataset_9fed229344734f27b1682a4abcff0b2f\n\n数据状态\n数据就绪\n准备操作\n准备已完成\n来源版本\n首次初始化\n快照时间\n2026年11月13日 22:56\n保留期限\n2026年12月13日 22:56\n\n数据就绪后才能启动；等待或结果未知时，请刷新查询原记录。\n\n预览有效期（分钟，2～1440）\n确认使用这份数据启动预览，并在有效期后停止服务\n启动此预览\n3. 查看或停止原预览\n已停止\n\npreview_d1ae2cd2a71d4e8aa874281d9a6b06d1\n\n原数据\ndataset_9fed229344734f27b1682a4abcff0b2f\n有效期至\n2026年11月13日 23:26\n最近健康观察\n已退出 · 2026年11月13日 22:56\n\n进入此原预览\n\n确认停止这个原预览服务，并保留其数据记录\n停止此原预览\n数据历史\n\ndataset_9fed229344734f27b1682a4abcff0b2f\n\n数据就绪 · 准备已完成\n\n查看这份原数据\n上一页数据\n下一页数据\n预览历史\n\npreview_d1ae2cd2a71d4e8aa874281d9a6b06d1\n\n已停止 · 2026年11月13日 23:26\n\n查看这个原预览\n上一页预览\n下一页预览",
+  "errors": [],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:55353/api/v1/runs/run_1a904d23866b423aa189dd8ce50c6a79/candidates/candidate_f7b385e9d9d04cc9a46c596f173795bf/preview-management/datasets",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:55353/api/v1/runs/run_1a904d23866b423aa189dd8ce50c6a79/candidates/candidate_f7b385e9d9d04cc9a46c596f173795bf/preview-management/previews",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:55353/api/v1/runs/run_1a904d23866b423aa189dd8ce50c6a79/candidates/candidate_f7b385e9d9d04cc9a46c596f173795bf/preview-management/previews/preview_d1ae2cd2a71d4e8aa874281d9a6b06d1/stop",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    }
+  ]
+}

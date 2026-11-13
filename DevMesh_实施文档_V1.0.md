@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | e8306478a696ba2d488a167143ef1b4d8a82341ee01098dc65a738d589019501 |
+| DevMesh_技术设计方案_V1.1.md | 65f39a9de4a80aa4429795cc4ce07ec284f51444d55a9177c97f229cf1255adc |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 65bf46ad036241a33b87c02d171f5f47295d0f7bb38aad69e785e4513b539b52 |
+| DevMesh_产品验收场景_V10.0.md | e7475b816ae2af04e81ea52307a6ccc2b5d3fd86ee8fd07e773029b480c58fd5 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -591,3 +591,7 @@ LocalSqliteAcceptanceDatasetBackend跟踪父进程所有授权／custody／迁�
 P1-07补充可信previewDatasets宿主装配：只消费原owner数据准备，原策略核实、专用未决页及有界项目调度；DatasetPreparer／文件Worker最终授权和超时父RPC排空，保留原SQL与Runner格式。验证实际文件／Worker／宿主及丢ACK重开，不替代真实Linux／身份、完整后继与干净checkout验收。
 
 P1-07预览管理API补充准确候选scope／受限history DTO、显式previewPolicies快照和owner独立创建／停止意图，原版本／UUID及关闭新策略后的原操作恢复；验证实际HTTP、文件／Worker、撤权／红线和Release归属。React管理页与完整后继／物理验收继续。
+
+### 准确候选预览管理React页面增量
+
+P1-07在已有owner意图API上补受保护管理页／脚本与审查入口链接、原请求持久恢复、数据及服务独立历史、分离确认和移动端显示。每个新增动作先保存严格原信封，GET／重载不重发；过期／撤权／损坏存储关闭新动作。后端策略关闭仍可读原历史并恢复已提交请求。UI有效期2～1440分钟，后台首次TTL60秒～24小时规则保持。以实际React／Edge／HTTP／控制Worker／真实应用数据测试留证，容器和上游事实单独标注；不推进后继T5、阶段门槛或正式工作包状态。

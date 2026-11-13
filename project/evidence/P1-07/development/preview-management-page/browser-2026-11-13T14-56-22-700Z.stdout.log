@@ -1,0 +1,66 @@
+TAP version 13
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React persists all three original intents before POST and recovers lost ACK without duplicate datasets/previews or data loss
+ok 1 - actual React persists all three original intents before POST and recovers lost ACK without duplicate datasets/previews or data loss
+  ---
+  duration_ms: 14264.7201
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","requests":{"dataset":2,"start":2,"stop":2},"scope":"Actual React/Edge/HTTP/control Worker/local application SQLite, original ACK recovery and independent controlled preview start/stop. Source/OCI/container/browser identity are explicit fixtures; no physical Linux or product acceptance."}
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React blocks invalid pending and stale submissions, resets consent and removes protected data after membership removal
+ok 2 - actual React blocks invalid pending and stale submissions, resets consent and removes protected data after membership removal
+  ---
+  duration_ms: 5426.2492
+  type: 'test'
+  ...
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React independently pages dataset and preview originals and keeps selected records while paging
+ok 3 - actual React independently pages dataset and preview originals and keeps selected records while paging
+  ---
+  duration_ms: 9344.6009
+  type: 'test'
+  ...
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unconfigured actual entry displays history without offering new dataset or start
+ok 4 - unconfigured actual entry displays history without offering new dataset or start
+  ---
+  duration_ms: 18868.9039
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 48834.8831

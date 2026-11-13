@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "d49a2c2024f64c7672650089ebe99e950a5fbc41",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "browser",
+      "record": "browser-2026-11-13T15-01-00-706Z.json",
+      "tests": 4,
+      "pass": 4,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "consumer",
+      "record": "consumer-2026-11-13T15-02-14-146Z.json",
+      "tests": 6,
+      "pass": 6,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "domain",
+      "record": "domain-2026-11-13T15-02-45-301Z.json",
+      "tests": 21,
+      "pass": 21,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T15-00-35-345Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T15-00-35-362Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T15-00-35-362Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T15-01-00-280Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "history": {
+    "file": "packages/contracts/openapi.json",
+    "sha256": "394eff95ceea6bf313d352982715719f7daec955d03969965d6ef01826fc3c68",
+    "pathCount": 56,
+    "reason": "The contracts generator imports built contracts. Initial generation/check ran before the changed contracts build, so the checked-in artifact still held the previous 56 paths while executable OpenAPI now exposed 58. Browser/API/review tests passed but the two contract drift checks failed. After all test groups terminated, regenerate from the rebuilt contracts, rerun build/type/lint, run contracts check after build, then rerun all three test groups sequentially with fixed inputs. No product source or test assertion changed."
+  },
+  "failedRuns": [
+    {
+      "file": "domain-2026-11-13T14-59-34-068Z.json",
+      "code": 1,
+      "stdoutHash": "71b56ddd1c9f6dcf3a68d6aef2dc4112a7e5d9d8a2cd3a5a600c997a5778e066",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changedDuringRun": []
+    }
+  ],
+  "totalPassed": 31,
+  "totalSkipped": 0,
+  "browser": {
+    "browser": "157.0.4341.42",
+    "requests": {
+      "dataset": 2,
+      "start": 2,
+      "stop": 2
+    },
+    "scope": "Actual React/Edge/HTTP/control Worker/local application SQLite, original ACK recovery and independent controlled preview start/stop. Source/OCI/container/browser identity are explicit fixtures; no physical Linux or product acceptance."
+  },
+  "actualChecks": [
+    "Actual protected HTML/React script verifies nonce CSP/current membership, strict queries, default-off reads, no GET effects and a final membership recheck before the response.",
+    "Actual Edge/React/HTTP and file-backed control Worker persist each strict original request before POST. Dataset/start/stop ACKs are separately lost; reload never resends and explicit recovery uses identical UUID/body/conditions after Worker reopen, with one dataset/preview.",
+    "Actual application SQLite is prepared and receives a business write. An independently advanced controlled preview start/stop keeps database bytes unchanged; the browser distinguishes stop decision from cleanup. No Release or accepted pointer is created.",
+    "Actual React separates three consents, clears stop consent on refresh, closes new actions on corrupt pending storage, requires refreshed state before abandoning a stale rejected request and removes protected candidate/data/history after membership loss.",
+    "Eleven actual writer datasets/previews exercise independent cursor pages and selected original details across pages. Dataset-ready receipts and container facts in this pagination setup are explicit fixtures; real dataset bytes are covered in the first browser case.",
+    "Unconfigured actual entry keeps new dataset/start disabled. Actual desktop/mobile screenshots, 390px overflow assertion and four zero-pageerror browser states are retained."
+  ],
+  "browserStates": [
+    {
+      "file": "browser-state-1794582075132.json",
+      "test": "actual React persists all three original intents before POST and recovers lost ACK without duplicate datasets/previews or data loss",
+      "errors": []
+    },
+    {
+      "file": "browser-state-1794582079159.json",
+      "test": "actual React blocks invalid pending and stale submissions, resets consent and removes protected data after membership removal",
+      "errors": []
+    },
+    {
+      "file": "browser-state-1794582087409.json",
+      "test": "actual React independently pages dataset and preview originals and keeps selected records while paging",
+      "errors": []
+    },
+    {
+      "file": "browser-state-1794582090921.json",
+      "test": "unconfigured actual entry displays history without offering new dataset or start",
+      "errors": []
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "preview-ready-desktop.png",
+      "sha256": "cc139b2a76697bd6c155b22fb3a503ad71a3da1afbeb49af33af4bd1eb82e3f9",
+      "bytes": 151688
+    },
+    {
+      "file": "preview-ready-mobile.png",
+      "sha256": "0f5e21ea97901c86b06b6bd2ed074eed50b2986243c56552bdaf72e2c3ba2e29",
+      "bytes": 137168
+    },
+    {
+      "file": "preview-stopped-mobile.png",
+      "sha256": "0cf2e93156eafe615cd3f5a3748f1fb634815cf3923fc6361b05d4acfe64aae0",
+      "bytes": 135094
+    }
+  ],
+  "inputAssessment": "All final groups/checks have identical recorded final source/test inventories with no changes during or after execution. Config files are included in the final binding. Changed contracts and Input API packages rebuilt before tests; all other bound artifacts retain unchanged sources from the preceding full workspace build. Bundled source-map source bytes match current source and vendor files. Historical control SQL 1..44 is unchanged. Runner source and persistent schema and dependencies are unchanged.",
+  "scope": "Local development only: actual React/Edge/HTTP/control/data Workers, protected candidate management page, original three-action ACK recovery, independent controlled preview stop and real data preservation, paged history and membership checks. Container/network/OCI and physical custody/fences remain explicit fixtures. No actual model/OIDC/Linux/gVisor/physical provider or formal successor preserve/replace acceptance. No default physical authority.",
+  "reproduction": "validation-driver.mjs records exact targeted build/type/lint/contracts and browser/consumer/domain test commands, complete inventories and log SHA. Browser completed first; the final API and contract/review groups partially overlapped, with unchanged inputs. binding-driver.mjs checks maps, current bytes, historical SQL/Runner/dependencies and screenshot SHA.",
+  "limits": [
+    "Only changed contracts/Input API packages were rebuilt; the preceding complete workspace build supplies unchanged other artifacts verified by current source-map bytes.",
+    "Source/OCI/container/browser identity and pagination dataset receipts are explicit fixtures; no physical Linux/gVisor or enterprise identity.",
+    "No complete workbench, successor preserve/replace T5, full pnpm check, clean-checkout validation or product acceptance.",
+    "Single-agent development review, not an independent person or user sign-off."
+  ],
+  "managementChecks": "management-checks.json"
+}

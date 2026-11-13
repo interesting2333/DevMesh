@@ -1,0 +1,6 @@
+{
+  "file": "packages/contracts/openapi.json",
+  "sha256": "394eff95ceea6bf313d352982715719f7daec955d03969965d6ef01826fc3c68",
+  "pathCount": 56,
+  "reason": "The contracts generator imports built contracts. Initial generation/check ran before the changed contracts build, so the checked-in artifact still held the previous 56 paths while executable OpenAPI now exposed 58. Browser/API/review tests passed but the two contract drift checks failed. After all test groups terminated, regenerate from the rebuilt contracts, rerun build/type/lint, run contracts check after build, then rerun all three test groups sequentially with fixed inputs. No product source or test assertion changed."
+}

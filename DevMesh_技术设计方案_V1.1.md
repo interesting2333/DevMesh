@@ -1354,6 +1354,12 @@ startPlatform显式previewLifecycle工厂提供固定项目／策略／service�
 
 准确候选预览管理私有API新增workspace、dataset／preview详情与明确owner创建／停止意图。可信previewPolicies启动快照选择原策略供新数据／启动使用，默认关闭，不等于后端健康；既有历史与原键恢复保留。writer一次成员投影，数据／预览各1～20项独立游标，排除内部路径／Runner／实例／proof；创建沿用Run强If-Match和UUID，停止独立STOP_PREVIEW／原预览版本与impact hash、只USER并保护Release归属。GET不派发／刷新健康／接受。React管理页继续下一增量。
 
+#### 12. 准确候选预览管理页面增量
+
+preview-management/view和client.js为受保护成员入口；逐项审查提供管理链接。nonce CSP／转义初始JSON，GET不准备、派发、停止、签票据或接受。React显示固定候选、INITIAL或已接受来源隔离方案、数据／预览原记录和各10项独立游标；跨页保留选中原记录。数据准备、启动和原服务停止各自确认，刷新／切换／错误清除确认。启动有效期由UI选2～1440分钟，保存绝对expiresAt后再提交；服务端仍校验首次60秒～24小时，避免一分钟输入在网络传输后必低于服务端最小值。
+
+每Run sessionStorage先保存严格原UUID／候选／完整正文及创建Run If-Match或停止原preview版本／impact hash，随后才POST；刷新／重进不重发，仅显式核实原提交。未知结果保留并禁止新提交，条件拒绝须刷新成功后再明确放弃；损坏／不可用存储关闭新操作。权限撤销清空受保护UI，pagehide取消请求、bfcache恢复重载。新创建默认关闭时保留历史及原停止／恢复。REPLACE接受计划在此仍使用来源隔离快照，替换确认留在接受入口。
+
 ---
 
 ## 13. 执行恢复与交付
@@ -2371,5 +2377,9 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 原预览数据后台消费另验证实际SQLite文件／控制Worker、丢派发及结果ACK、原日志重开、最终授权撤销／owner移除、真实超时和名额保留、宿主失败释放与停止排空；历史与预览effect不占专用数据工作页。真实身份／Linux隔离／生产迁移及完整后继链另验。
 
 预览管理API验证实际HTTP／控制Worker和SQLite文件准备、准确候选与成员／owner隔离、原键丢ACK重开且关闭新策略后恢复、独立预览启动／停止保留实际数据、分页及内部字段隔离、响应前撤权复核和显式旧Release归属保护。受控容器／上游事实不替代物理或正式T5验收，React管理页另验。
+
+#### 15. 预览管理页面增量验证范围
+
+以实际Edge／React、HTTP和文件控制Worker验证先存原请求、三种丢ACK重开恢复、分别确认、数据与预览独立分页、刷新清确认、损坏记录与撤权；以真实模板SQLite验证原服务停止后业务数据字节保留。检查移动端溢出、截图和pageerror。上游候选／OCI／容器／浏览器身份及分页准备回执为显式夹具，不能替代真实Linux、企业身份或后继保留／替换T5。受保护HTML／脚本验证nonce CSP、当前成员复核和GET无副作用；结果以开发复核原始记录为准。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

@@ -331,3 +331,7 @@ Acceptance history is projected through one bounded synchronous Worker transacti
 ### Preview management entry
 
 准确候选预览管理API及其可信策略、原意图与公开投影见 [preview-management-design.md](./preview-management-design.md)。
+
+### Preview management React page
+
+准确候选的受保护React管理页、原请求恢复、独立历史与数据语义见 [preview-management-page-design.md](./preview-management-page-design.md)。

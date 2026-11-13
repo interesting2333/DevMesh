@@ -708,3 +708,18 @@ The system SHALL expose authenticated bounded member projections and explicit ow
 #### Scenario: Explicit stop preserves owned resources
 - **WHEN** an owner submits STOP_PREVIEW with the original preview revision and impact hash
 - **THEN** only the original unaccepted instance may be stopped; dataset bytes and Release-owned instances remain protected
+
+### Requirement: Explicit preview management page
+The system SHALL provide an authenticated exact candidate management page with separate dataset/start/stop consent, original request persistence before POST and independently paged histories. GET and page reload SHALL NOT dispatch or resend owner intents. Membership loss SHALL remove protected UI state.
+
+#### Scenario: Recover original browser request
+- **WHEN** an acknowledgement is lost and the page is reloaded
+- **THEN** the original request remains pending without automatic resend, and explicit recovery uses the same UUID, body and version conditions
+
+#### Scenario: Stop and preview data are distinct
+- **WHEN** a user confirms stopping an original preview
+- **THEN** the page shows the saved stop decision separately from cleanup completion and keeps the original data history
+
+#### Scenario: Independent history cursors
+- **WHEN** a user pages dataset history or preview history
+- **THEN** the other cursor and selected original detail remain unchanged

@@ -60,4 +60,10 @@ mountInputApi的acceptance选项仅供可信宿主：policies为已登记project
 
 Trusted acceptance preparation consumption is opt in through the platform host's `acceptancePreparation` factory. Its fixed project/policy/principal/backendRef/Runner bindings must match registered policies and the host's startup `acceptancePolicies` snapshot. The private bounded unresolved-work queue and periodic backend inspection drive original preparations, never page GET, T5, publication or cleanup. Shutdown revokes new dispatch authorization and drains active backend work before closing storage. No physical Runner adapter or identity is enabled by default.
 
-准确候选预览管理位于 `/api/v1/runs/:runId/candidates/:candidateId/preview-management`。显式 `previewPolicies` 按项目选择已注册策略用于新dataset／start，默认关闭；不代表后端或访问健康。GET为当前成员单次writer投影，datasets／previews各1～20项稳定游标；排除本地路径、后端／Runner／实例／端点与proof。POST datasets和previews沿用原UUID／Run If-Match；GET不派发。stop须独立STOP_PREVIEW确认、previewRevision／impactReviewHash，原preview scope、USER原因并保护Release归属。关闭新策略后仍可原键恢复旧意图。真实后台消费／访问另配置，React管理页继续。
+准确候选预览管理位于 `/api/v1/runs/:runId/candidates/:candidateId/preview-management`。显式 `previewPolicies` 按项目选择已注册策略用于新dataset／start，默认关闭；不代表后端或访问健康。GET为当前成员单次writer投影，datasets／previews各1～20项稳定游标；排除本地路径、后端／Runner／实例／端点与proof。POST datasets和previews沿用原UUID／Run If-Match；GET不派发。stop须独立STOP_PREVIEW确认、previewRevision／impactReviewHash，原preview scope、USER原因并保护Release归属。关闭新策略后仍可原键恢复旧意图。真实后台消费／访问另配置。
+
+## 预览管理页面
+
+逐项审查链接到同级 `preview-management/view`；受保护 `client.js` 为第四个独立 React IIFE。页面分别确认数据准备、启动和停止，展示固定数据来源、原数据／服务详情及各10项独立历史；GET不派发、签票据或接受。REPLACE接受方案在预览时仍使用来源隔离快照，数据替换确认留在接受入口。启动有效期在页面选择2～1440分钟，服务端首次60秒～24小时边界保持。
+
+会话存储键 `devmesh.preview.pending:<runId>` 在POST前保留严格原UUID／候选／完整正文及创建Run If-Match或停止原preview版本／impact hash。重进不重发，仅显式核实原提交；损坏／不可用存储、未知结果或未刷新关闭新动作，条件拒绝须刷新成功后明确放弃。刷新／切换／错误清空确认，发现成员撤销后移除受保护内容。原预览访问使用既有受保护view，不在管理页创建访问票据。

@@ -9141,6 +9141,352 @@
         }
       }
     },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/preview-management/view": {
+      "get": {
+        "operationId": "ReadCandidatePreviewManagementPage",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前成员预览管理页；GET不准备数据、启动、停止、签票据或接受",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/preview-management/client.js": {
+      "get": {
+        "operationId": "ReadCandidatePreviewManagementClient",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前成员预览管理React脚本",
+            "content": {
+              "application/javascript": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/runs/{runId}/candidates/{candidateId}/preview-management/datasets": {
       "post": {
         "operationId": "CreatePreviewDataset",

@@ -150,6 +150,9 @@ export function createOpenApiDocument() {
   add(previewPath,'get','ReadPreviewEntry','PreviewEntryView',previewParameters);
   const previewManagementPath='/api/v1/runs/{runId}/candidates/{candidateId}/preview-management',previewManagementParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],previewManagementConditional=[...previewManagementParameters,key,parameter('If-Match',strongETag,'header')];
   add(previewManagementPath,'get','ReadCandidatePreviewWorkspace','CandidatePreviewWorkspace',[...previewManagementParameters,...['afterDatasetSequence','afterPreviewSequence'].map(name=>({name,in:'query',schema:{type:'integer',minimum:0,default:0}})),{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:20,default:10}}]);
+  add(previewManagementPath+'/view','get','ReadCandidatePreviewManagementPage',undefined,previewManagementParameters);
+  add(previewManagementPath+'/client.js','get','ReadCandidatePreviewManagementClient',undefined,previewManagementParameters);
+  for(const [suffix,mime,description]of [['/view','text/html','当前成员预览管理页；GET不准备数据、启动、停止、签票据或接受'],['/client.js','application/javascript','当前成员预览管理React脚本']]){const operation=paths[previewManagementPath+suffix]!.get as {responses:Record<string,unknown>};operation.responses['200']={description,content:{[mime!]:{schema:{type:'string'}}}};}
   add(previewManagementPath+'/datasets','post','CreatePreviewDataset','PreviewDatasetManagement',previewManagementConditional,'CreatePreviewDataset','202');
   add(previewManagementPath+'/datasets/{datasetId}','get','ReadCandidatePreviewDataset','PreviewDatasetManagement',[...previewManagementParameters,parameter('datasetId',ids.dataset)]);
   add(previewManagementPath+'/previews','post','CreatePreviewIntent','PreviewManagement',previewManagementConditional,'CreatePreviewIntent','202');
