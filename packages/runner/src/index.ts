@@ -55,6 +55,7 @@ export type {LocalSqliteDatasetOptions} from './dataset-backend.js';
 export {webCrudDatasetProfile} from './dataset-profile.js';
 export { serveRunner } from './server.js';
 export {RunnerAcceptanceAbortFinalizer} from './acceptance-abort-finalizer.js';
+export {RunnerAcceptanceAbortCoordinator} from './acceptance-abort-coordinator.js';
 export type {AcceptanceAbortSourceRecoveryAuthority,AcceptanceAbortFinalization} from './acceptance-abort-finalizer.js';
 export type { RunnerIdentity } from './server.js';
 export {acquireWorkspaceFence,releaseWorkspaceFence,workspaceFenceSchema} from './workspace-fence.js';

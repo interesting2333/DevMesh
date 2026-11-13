@@ -1,6 +1,7 @@
 import {z} from 'zod';
 import {ids,opaqueKey,sha256,revision} from '@devmesh/contracts';
 import {acceptancePreparationRequest} from './acceptance-protocol.js';
+import type {AcceptancePreparation} from './acceptance-protocol.js';
 import {canonical} from './json.js';
 import {digest} from './migrations.js';
 
@@ -11,6 +12,7 @@ export const acceptanceAbortDecision=z.strictObject({
   preparedProofHash:sha256.nullable(),requestedBy:opaqueKey,reason:z.string().trim().min(1).max(2000),decidedAt:z.iso.datetime(),
 }).refine(v=>digest(canonical(v.preparation))===v.preparationRequestHash,{message:'Exact original preparation required'});
 export const acceptanceAbortRequests={
+  listAcceptanceAbortWork:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:z.number().int().nonnegative().safe().default(0),limit:z.number().int().min(1).max(100).default(20)}),
   requestAcceptanceAbort:z.strictObject({
     meta:z.strictObject({principalId:opaqueKey,scopeId:opaqueKey,idempotencyKey:z.uuid()}),
     runId:ids.run,ifMatch:z.string().optional(),preparationOperationId:ids.operation,requestHash:sha256,
@@ -22,4 +24,4 @@ export type AcceptanceAbortDecision=z.output<typeof acceptanceAbortDecision>;
 export interface AcceptanceAbortRecord {decision:AcceptanceAbortDecision;decisionHash:string}
 export type AcceptanceAbortMethod=keyof typeof acceptanceAbortRequests;
 export type AcceptanceAbortInput<M extends AcceptanceAbortMethod>=z.output<(typeof acceptanceAbortRequests)[M]>;
-export interface AcceptanceAbortResults {requestAcceptanceAbort:AcceptanceAbortRecord;getAcceptanceAbortDecision:AcceptanceAbortRecord|null}
+export interface AcceptanceAbortResults {requestAcceptanceAbort:AcceptanceAbortRecord;getAcceptanceAbortDecision:AcceptanceAbortRecord|null;listAcceptanceAbortWork:{items:{sequence:number;preparation:AcceptancePreparation;record:AcceptanceAbortRecord}[];nextSequence:number|null}}

@@ -1,0 +1,4 @@
+packages/storage-sqlite/src/acceptance-abort-domain.ts(32,129): error TS2322: Type 'string' is not assignable to type 'string & $brand<"op">'.
+  Type 'string' is not assignable to type '$brand<"op">'.
+packages/storage-sqlite/src/acceptance-abort-protocol.ts(2,39): error TS2305: Module '"@devmesh/contracts"' has no exported member 'counter'.
+[ELIFECYCLE] Command failed with exit code 2.

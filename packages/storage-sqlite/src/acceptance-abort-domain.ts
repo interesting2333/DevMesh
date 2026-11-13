@@ -1,9 +1,10 @@
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
-import {assertResourceVersion,parseContract} from '@devmesh/contracts';
+import {assertResourceVersion,parseContract,ids} from '@devmesh/contracts';
 import type {Meta,OperationResult} from './protocol.js';
 import type {createPlanDomain} from './plan-domain.js';
 import type {createAcceptanceDomain} from './acceptance-domain.js';
 import {acceptanceAbortDecision,acceptanceAbortRequests} from './acceptance-abort-protocol.js';
+import {acceptanceBackendPolicy} from './acceptance-protocol.js';
 import type {AcceptanceAbortInput,AcceptanceAbortMethod,AcceptanceAbortRecord} from './acceptance-abort-protocol.js';
 import {canonical} from './json.js';
 import {digest,transaction} from './migrations.js';
@@ -24,6 +25,12 @@ export function createAcceptanceAbortDomain(db:DatabaseSync,plans:Pick<ReturnTyp
     return {decision,decisionHash:String(row.decision_hash)};
   }
   const handlers={
+    listAcceptanceAbortWork(i:AcceptanceAbortInput<'listAcceptanceAbortWork'>){
+      const policy=acceptanceBackendPolicy.parse(JSON.parse(String(get('SELECT policy_json FROM acceptance_backend_policies WHERE project_id=? AND policy_hash=?',i.projectId,i.policyHash)?.policy_json??fail('ACCEPTANCE_BACKEND_NOT_CONFIGURED',503))));
+      if(policy.backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);
+      const rows=db.prepare('SELECT p.rowid sequence,p.operation_id FROM acceptance_preparations p JOIN acceptance_abort_decisions d ON d.preparation_operation_id=p.operation_id LEFT JOIN acceptance_abort_completions c ON c.preparation_operation_id=p.operation_id WHERE p.project_id=? AND p.policy_hash=? AND c.preparation_operation_id IS NULL AND p.rowid>? ORDER BY p.rowid LIMIT ?').all(i.projectId,i.policyHash,i.afterSequence,i.limit+1) as Row[],page=rows.slice(0,i.limit);
+      return {items:page.map(r=>({sequence:Number(r.sequence),preparation:acceptances.getPreparation({principalId:i.principalId,operationId:ids.operation.parse(r.operation_id)}),record:record(String(r.operation_id))!})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};
+    },
     requestAcceptanceAbort(i:AcceptanceAbortInput<'requestAcceptanceAbort'>):AcceptanceAbortRecord{
       if(i.meta.scopeId!==i.runId)fail('OPERATION_SCOPE_INVALID',422);const {meta,ifMatch:_match,...payload}=i;
       const op=hooks.operation(meta,'RequestAcceptanceAbort',payload,operationId=>{

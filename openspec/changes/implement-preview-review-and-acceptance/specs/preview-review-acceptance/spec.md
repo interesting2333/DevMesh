@@ -4,6 +4,19 @@
 
 ## ADDED Requirements
 
+### Requirement: Trusted abort consumer preserves original cleanup authority
+The system SHALL consume only already recorded original abort decisions without a completion, under explicit trusted project/policy/backend/Runner bindings. New acceptance configuration and current owner membership SHALL NOT be prerequisites for the original backend to recover an already authorized abort. Missing physical evidence MUST retain ABORTING; no replacement preparation or deletion of the dataset is permitted.
+
+#### Scenario: Original abort recovery and acknowledgement loss
+- **WHEN** a trusted host resumes unresolved abort work after a lost acknowledgement or restart
+- **THEN** it uses the same original decision, service cleanup stages, data revocation journal and completion writer
+- **AND** completed history does not occupy work pages, the target gate stays closed, and any source reopening requires the existing exact ownership, fresh health and unknown-write checks
+
+#### Scenario: Stop and timed-out Worker retain unfinished authority
+- **WHEN** the host stops or a data Worker exits while an external authority call remains active
+- **THEN** new stage and final authorization close on stop, active calls drain before storage closes or their worker slot is released
+- **AND** Worker exit alone does not establish physical completion or cancel an external side effect
+
 ### Requirement: Trusted publication consumer preserves accepted facts and original stages
 
 The platform SHALL install publication consumption only through explicitly configured trusted project/policy/backend/Runner bindings verified against the original registered policy. It SHALL scan bounded current unresolved accepted publications, exclude published and superseded history, coalesce passes and serialize each project with bounded cross-project concurrency. Publication recovery SHALL remain available to its explicitly configured original backend when new acceptance entry is disabled.

@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 44e4d623d8afbc96cc4ba70122437886be018acca8f702867155445c3717e0fd |
+| DevMesh_技术设计方案_V1.1.md | 8574498f223a09fc939fc3df1039737c07ec5993810f30bb583a727d78761a66 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | bdb1d21415b5c3a868ad51d1ce77dcffbaa81861d8212ef41408ad488ae6d8cf |
+| DevMesh_产品验收场景_V10.0.md | daaaeba3bd3d6d86fc32e8a5ef9c5e2b9890cbb3cbe8f4f1f42d712256b064a6 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -575,3 +575,7 @@ startPlatform显式acceptancePolicies指定项目已登记策略快照，仅在�
 ### P1-07 已接受发布消费增量
 
 实现ReleasePublicationConsumer及startPlatform显式releasePublication工厂，原策略及五项绑定启动校验；只扫描当前已接受原Release未决发布，历史接口保持完整。原唯一publish与inspect／授权resume续接Runner原阶段，有限项目／页预算、轮转、最多2并发和tick合并。停止新接受入口后仍可显式恢复已接受发布，无默认物理后端；停机关闭新publish／resume授权并排空真实调用，再关闭Worker。验证默认关闭／错配启动失败、终态及过期历史过滤、丢许可／观察ACK后重开恢复、周期UNKNOWN续接、失败保留接受事实／闭门、并发／故障隔离和宿主停机／重启。真实物理Runner／路由／围栏／健康仍另行验收，完整4.3／5.1／5.2与正式阶段状态不因局部消费实现自动完成。
+
+### P1-07 撤销后台协调增量
+
+实现AcceptanceAbortConsumer及startPlatform的acceptanceAbort显式工厂，匹配原策略／项目／主体／Runner绑定，只消费已有原决定且无completion的准备。独立于新接受入口、原owner成员身份，有界轮转和最多2项目并发。RunnerAcceptanceAbortCoordinator串联原服务清理与finalizer，停止关闭新阶段／最终授权；数据Worker退出须排空未结束外部authority调用才释放名额。验证原历史过滤、丢完成ACK、周期UNKNOWN恢复、宿主默认关闭／错配启动失败／停机重启、实际Runner清理与数据文件保留、超时与停机时外部调用排空。物理adapter／永久撤权／源健康为夹具时明确记录；完整4.1／5.1／5.2、正式后继链与真实Linux验收继续。

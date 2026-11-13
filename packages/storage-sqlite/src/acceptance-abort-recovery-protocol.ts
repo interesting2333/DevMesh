@@ -34,6 +34,13 @@ export const acceptanceAbortRecoveryRequests={
 };
 export type AcceptanceAbortCompletionEvidence=z.output<typeof acceptanceAbortCompletionEvidence>;
 export interface AcceptanceAbortCompletion {evidence:AcceptanceAbortCompletionEvidence;evidenceHash:string;completedAt:string}
+export type AcceptanceAbortFinalization={state:'ABORTED';completion:AcceptanceAbortCompletion}|{state:'UNKNOWN';errorCode:string};
+/** Trusted executable composition only. Implementations must honor stop before
+ * new stages and drain active external calls before resolving advance. */
+export interface AcceptanceAbortRecoveryBackend {
+ readonly configured:boolean;
+ advance(input:{operationId:string;requestHash:string},signal?:AbortSignal):Promise<AcceptanceAbortFinalization>;
+}
 export type AcceptanceAbortRecoveryMethod=keyof typeof acceptanceAbortRecoveryRequests;
 export type AcceptanceAbortRecoveryInput<M extends AcceptanceAbortRecoveryMethod>=z.output<(typeof acceptanceAbortRecoveryRequests)[M]>;
 export interface AcceptanceAbortRecoveryResults {

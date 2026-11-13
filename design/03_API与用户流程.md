@@ -315,3 +315,11 @@ startPlatform通过显式releasePublication可信工厂安装原发布消费者�
 私有工作页只返回当前accepted_release_id的PENDING／SENT／UNKNOWN；已发布与被取代历史不占工作页，原历史接口保留。最多32项目、每项目唯一绑定、跨项目最多2并发、范围／页预算、轮转与tick合并。原PENDING经一次许可publish，SENT／UNKNOWN先inspect，仅在原continuation授权成立且后端提供resume时续接原Runner日志；未知已派发阶段只查询，未派发下一阶段仍经独立许可。不得重建Release／T5或重做数据迁移；缺后端／充分事实保持UNKNOWN。失败保留接受事实及关闭的目标写门，完整发布证明仍由writer原子核实并开门。
 
 停机同步关闭新扫描、publish／resume最终授权；preflight后再次复核，实际调用排空后关闭存储。后端无强制取消，由实际适配器保证有界I/O；PUBLISHED不作为工作周期改写或延长健康。该宿主增量不代表默认CLI已安装物理Provider，也不替代真实容器、围栏、后继业务链或产品验收。
+
+### 可信撤销后台消费（2026-11-13 开发增量）
+
+startPlatform的acceptanceAbort可信工厂固定project／policyHash／主体／backendRef／Runner及原后端，启动核实DB策略，所有后续组合成功才开始扫描。仅要求持久存储；新接受入口关闭或原owner撤权后，已确认撤销仍由原后端恢复。默认不安装物理清理器。私有工作页只取存在原撤销决定但无completion的准备，原历史保留；最多32项目、每项目串行、最多2并发及范围／页预算、轮转、tick合并。
+
+RunnerAcceptanceAbortCoordinator核实清理器与finalizer的Runner／controller／主体／backendRef一致，按原服务清理→数据永久撤权与原源恢复→控制面完成串联。未知已派发阶段只查原对象，不能重建准备、替用户撤销或删除dataset。完成仍由原writer核实准确proof、目标闭门、适用原源归属与新鲜健康／未知写屏障；缺证据保持ABORTING。
+
+停止同步中止信号，原清理阶段许可前后、driver最终授权、数据Worker授权与进入后续finalizer步骤检查停止。数据Worker超时／退出后，父进程仍排空其未返回的authority RPC，之后才结束advance、释放名额或关闭存储。适配器无强制取消，须自行有界I/O；真实物理Driver／fence／源恢复与后继业务链继续单独验收。

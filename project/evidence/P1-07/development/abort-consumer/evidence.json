@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "27c2aa30c02acc7b52ca0f93d33b48b2bb7bc0f1",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "consumer",
+      "record": "consumer-2026-11-13T12-57-41-163Z.json",
+      "tests": 10,
+      "pass": 10,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lifecycle",
+      "record": "lifecycle-2026-11-13T12-57-41-190Z.json",
+      "tests": 49,
+      "pass": 48,
+      "skipped": 1,
+      "skippedTests": [
+        "CLI shuts down on POSIX SIGTERM"
+      ],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "domain",
+      "record": "domain-2026-11-13T12-57-41-169Z.json",
+      "tests": 94,
+      "pass": 94,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T12-56-36-484Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T12-56-36-495Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T12-56-36-515Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T12-56-36-514Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 152,
+  "totalSkipped": 1,
+  "failedRuns": [
+    {
+      "file": "lint-2026-11-13T12-53-51-489Z.json",
+      "name": "lint",
+      "code": 1,
+      "stdoutHash": "7ee4fea5787393eb9cbddf198cb160731224a4bded777e89712d7a974bd89dca",
+      "stderrHash": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661",
+      "changedDuringRun": []
+    },
+    {
+      "file": "type-2026-11-13T12-53-51-257Z.json",
+      "name": "type",
+      "code": 2,
+      "stdoutHash": "2ef858609a25a162c1fbf2f2201eb5adb14ca660e265094e00215b32331ca5a7",
+      "stderrHash": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "changedDuringRun": []
+    }
+  ],
+  "staticFailureSources": "static-initial/sources.json",
+  "inputAssessment": "All final groups/checks have identical recorded final source/test inventories with no changes during or after execution. Config files are included in the final binding. Complete workspace rebuilt before tests. Bundled source-map source bytes match current source and vendor files. Historical control SQL 1..44 is unchanged. Runner changes are limited to the original abort signal/drain/coordinator and exports/documentation; its persistent store schema and dependencies are unchanged.",
+  "scope": "Local development only: actual file-backed control/Runner Workers, original user abort decisions/completion transactions, real data file journals/receipts and host startup/drain/restart. Physical container/network/OCI, durable revocation/fences and source ownership/health remain explicit protocol fixtures. Multi-project concurrency uses an explicit local dispatcher over three separate Workers. No actual model/OIDC/Linux/gVisor/physical provider or formal successor preserve/replace acceptance. No default physical cleanup backend.",
+  "reproduction": "validation-driver.mjs records complete build/type/lint/contracts and consumer/lifecycle/domain commands, input hashes and raw stdout/stderr. binding-driver.mjs audits final inputs/logs/source maps/historical control SQL and allowed Runner changes.",
+  "actualChecks": [
+    "Only an existing original abort decision without completion is work. Completed history does not occupy pages; backend recovery still works after original owner removal.",
+    "Trusted host requires explicit durable storage and validates original policy, backend principal/ref and Runner; no Input API or new acceptance entry is required. Later startup failure does not begin cleanup.",
+    "Ticks coalesce, periods recover UNKNOWN, scopes rotate and at most two project calls remain unfinished. A scan failure does not starve other actual Workers.",
+    "Completion ACK is discarded after actual control commit. Reopen recovery retains one original decision/completion and no replacement preparation or Release.",
+    "Actual held service Runner cleanup, data file Worker receipt and control completion are composed by RunnerAcceptanceAbortCoordinator. Data bytes remain unchanged, capacity releases only with original removal proof, target gate remains CLOSED.",
+    "Stop during original STOP denies its final authorization and drains the call; only an explicit independent EXITED fixture allows query-only recovery without resending STOP.",
+    "Stop during external revocation waits for its actual return and defers completion; recovery inspects the one original physical-protocol result.",
+    "A 5-second Worker timeout leaves advance pending while authority remains unfinished. A second request queues without another authority query until the original call returns; then it inspects that original result without duplicate revocation.",
+    "Existing timeout tests now assert actual drain and queued next work rather than early rejection/slot reuse. They were updated before any test execution; static checks and complete build were rerun afterward."
+  ],
+  "limits": [
+    "Physical container/network/OCI, durable revocation/fences and source recovery/health are explicit protocol fixtures.",
+    "No real model/OIDC/Linux/gVisor/physical provider or complete successor preserve/replace acceptance.",
+    "No forced cancellation: an unresponsive external authority keeps drain and worker occupancy pending. Actual adapters must bound I/O; externally constructed resources remain caller-owned.",
+    "No full pnpm check or fixed-commit clean-checkout validation."
+  ],
+  "skipped": "Existing foundation POSIX SIGTERM case is skipped on Windows and is not counted as passed.",
+  "managementChecks": "management-checks.json"
+}

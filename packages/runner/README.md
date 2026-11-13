@@ -48,3 +48,9 @@ HTTP 仅绑定明确的 loopback；异机部署由运维反向代理提供 TLS�
 命令行入口 `pnpm runner:start --config <本地配置> [--initialize]` 使用 `config/runner.example.json` 的结构，目前仅提供**执行关闭的管理服务**。生产启用须通过库组合真实 authority、工作区硬配额、受控命令与 DockerBackend；暂无目标资源时不提供“跳过检查即可启用”的开关。`image/Dockerfile` 是待构建描述，要求调用者传入已核实的 Node 24.13.1 基础镜像 digest，再把最终产物按实际 digest 加入 allowlist。仓库未填虚构 digest；离线依赖／浏览器缓存需在模板镜像构建时准备。
 
 离线测试使用真实 HTTP、真实 SQLite Worker、真实管理子进程 SIGKILL 和明确标识的可控容器后端。它们验证协议与恢复逻辑，**不代表 runsc、后代进程、磁盘配额、密钥隔离或实际 E2E 通过**。这些专项保留在 OpenSpec 任务 3.2，资源具备后执行。当前日志在确认退出后收集，未收集时明确返回 409；运行期间分块持久化、跨节点归档 ACK、材料失败补采与清理互斥在 P2-07 接续实现。目录和文件材料暂时保留。
+
+## Acceptance abort coordination
+
+`RunnerAcceptanceAbortCoordinator(cleanup, finalizer, options)` explicitly composes the existing original abort cleanup and completion adapters. Options fix enabled/runnerId/controllerId/principalId/backendRef and must match both components. It implements the trusted `AcceptanceAbortRecoveryBackend` interface for host `acceptanceAbort` composition. It never creates an owner decision or a replacement preparation.
+
+`advance(originalIds, signal?)` checks stop before new cleanup stage grants, in final driver/data authority authorization and before later finalization steps. Already active external calls must drain. Data abort Worker timeout or exit no longer releases the slot while an authority RPC remains unfinished; the original file journal/result remains available for inspection after restart. No forced cancellation, physical adapter or source recovery authority is installed by default.

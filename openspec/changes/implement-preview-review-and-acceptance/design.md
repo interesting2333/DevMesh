@@ -10,6 +10,8 @@
 
 ## Decisions
 
+可信撤销消费的宿主、原决定队列及停机排空补充见[abort-consumer-design.md](./abort-consumer-design.md)。
+
 ### 1. Review is an append-only overlay over an exact candidate
 
 新增候选审查域，读取已冻结且当前有效的 candidate、原需求 revision 和 plan，不更改原质量或 Work 评估。每条必要需求的 acceptance 文本形成稳定逐项人工审查项；额外收集当前最终 Work 的 human-decision 和原质量策略的 human 检查。历史沿用 Work 的人工许可按原正式证明保留，不能重复批准旧失败。自动检查只显示原正式评估，不接受人工把 FAIL 改为 PASS。

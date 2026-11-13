@@ -149,6 +149,7 @@ export type {AcceptedRelease,AcceptanceCommitInput} from './acceptance-commit-pr
 export {acceptanceAbortDecision} from './acceptance-abort-protocol.js';
 export {acceptanceDatasetFences,acceptanceDatasetAbortRequest,acceptanceDatasetAbortProof,acceptanceDatasetAbortReceipt,acceptanceAbortFenceSuccessor,acceptanceAbortSourceGate,acceptanceAbortSourceRecovery,acceptanceAbortCompletionEvidence} from './acceptance-abort-recovery-protocol.js';
 export type {AcceptanceAbortCompletionEvidence,AcceptanceAbortCompletion,AcceptanceAbortRecoveryInput,AcceptanceAbortRecoveryResults} from './acceptance-abort-recovery-protocol.js';
+export type {AcceptanceAbortFinalization,AcceptanceAbortRecoveryBackend} from './acceptance-abort-recovery-protocol.js';
 export type {AcceptanceAbortDecision,AcceptanceAbortRecord,AcceptanceAbortInput} from './acceptance-abort-protocol.js';
 export {previewOrigin} from './preview-session-protocol.js';
 export type {PreviewTicket,PreviewSession} from './preview-session-protocol.js';
