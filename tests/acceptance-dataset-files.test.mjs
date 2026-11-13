@@ -61,7 +61,8 @@ test('custody generation changing after the actual snapshot prevents publication
  assert.deepEqual(await f.acceptance.prepare(p,async()=>true),{state:'UNKNOWN',errorCode:'ACCEPTANCE_DATA_CUSTODY_CHANGED'});const paths=f.pathsFor(p),bytes=await readFile(paths.stagingPath);assert.ok(bytes.length>0);assert.ok(!(await readdir(paths.directory)).includes('app.sqlite'));assert.equal((await f.acceptance.prepare(p,async()=>true)).errorCode,'ACCEPTANCE_DATA_ORIGINAL_INCOMPLETE');assert.equal(f.authority.acquisitions,1);assert.deepEqual(await readFile(paths.stagingPath),bytes);
 });
 test('Worker timeout retains its original journal and late custody authorization cannot start a replacement action',{timeout:120000},async t=>{
- const f=await acceptanceDatasetFixture(t),p=acceptanceDatasetPreparation(),entered=Promise.withResolvers(),resume=Promise.withResolvers(),finished=Promise.withResolvers(),acquire=f.authority.acquire.bind(f.authority);
+ // The injected Worker timeout must occur before the outer test deadline.
+ const f=await acceptanceDatasetFixture(t,{timeoutMs:10000}),p=acceptanceDatasetPreparation(),entered=Promise.withResolvers(),resume=Promise.withResolvers(),finished=Promise.withResolvers(),acquire=f.authority.acquire.bind(f.authority);
  f.authority.acquire=async(...args)=>{entered.resolve();await resume.promise;try{return await acquire(...args);}finally{finished.resolve();}};
  const running=f.acceptance.prepare(p,async()=>true),result=running.then(value=>({value}),error=>({error}));await Promise.race([entered.promise,result.then(()=>{throw Error('Worker ended before the controlled authority was entered');})]);
  const outcome=await result;assert.equal(outcome.error?.code,'ACCEPTANCE_DATA_OUTCOME_UNKNOWN');resume.resolve();await finished.promise;

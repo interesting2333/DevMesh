@@ -37,7 +37,7 @@ export const publicationSnapshot=f=>Object.fromEntries(['release_route_bindings'
 // It does not run/qualify a second candidate freeze, migration or T5 iteration.
 // No production trigger is disabled and every FK remains enabled.
 export async function seedSourcePublication(f){
- const first=(await dispatchPublication(f)).publication;await f.call('recordReleasePublicationObservation',publicationRecord(first,publishedObservation(first)));
+ const first=(await dispatchPublication(f)).publication;if(first.state!=='PUBLISHED')await f.call('recordReleasePublicationObservation',publicationRecord(first,publishedObservation(first)));
  const old=first.request.preparation,runId='run_publication_iteration_fixture',candidateId='candidate_publication_iteration_fixture',operationId='op_publication_iteration_prepare',acceptanceOperationId='op_publication_iteration_accept',releaseId='release_publication_iteration_fixture',datasetId='dataset_publication_iteration_fixture',at=new Date().toISOString();
  const insert=(table,row)=>{const keys=Object.keys(row);f.run('INSERT INTO '+table+'('+keys.join(',')+') VALUES('+keys.map(()=>'?').join(',')+')',...Object.values(row));};
  f.db.exec('BEGIN');try{

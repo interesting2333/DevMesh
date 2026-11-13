@@ -197,3 +197,7 @@ export class PreviewGateway {
   }
   close() {this.#closed = true; for (const abort of this.#active) abort.abort();}
 }
+
+export {ReleaseGateway} from './release.js';
+export {releaseGatewayConfig,releaseGatewayConfiguration,originForRelease} from './release-config.js';
+export type {ReleaseGatewayConfig,ResolvedReleaseGatewayConfig} from './release-config.js';

@@ -1,0 +1,73 @@
+TAP version 13
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Release access preserves exact identity, one-send grants, current membership and shared write barriers
+    # Subtest: PENDING is recovering and Preview policies cannot authorize RELEASE
+    ok 1 - PENDING is recovering and Preview policies cannot authorize RELEASE
+      ---
+      duration_ms: 338.2764
+      type: 'test'
+      ...
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: dispatch grant is unique across concurrency/restart and request hashes bind the gateway/member/gate
+    ok 2 - dispatch grant is unique across concurrency/restart and request hashes bind the gateway/member/gate
+      ---
+      duration_ms: 528.4225
+      type: 'test'
+      ...
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: viewer reads only; removal revokes dispatch while private accounting still finishes
+    ok 3 - viewer reads only; removal revokes dispatch while private accounting still finishes
+      ---
+      duration_ms: 318.9063
+      type: 'test'
+      ...
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: tickets are single-use, hash-only, audience-bound and recheck current membership
+    ok 4 - tickets are single-use, hash-only, audience-bound and recheck current membership
+      ---
+      duration_ms: 300.174
+      type: 'test'
+      ...
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: ticket consumption rolls back with session/event failure, and admission expires at its original TTL
+    ok 5 - ticket consumption rolls back with session/event failure, and admission expires at its original TTL
+      ---
+      duration_ms: 302.8915
+      type: 'test'
+      ...
+# (node:34872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: old sessions and prepared requests cannot follow the next accepted pointer
+    ok 6 - old sessions and prepared requests cannot follow the next accepted pointer
+      ---
+      duration_ms: 291.9773
+      type: 'test'
+      ...
+    1..6
+ok 1 - Release access preserves exact identity, one-send grants, current membership and shared write barriers
+  ---
+  duration_ms: 5568.7028
+  type: 'test'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6235.5506

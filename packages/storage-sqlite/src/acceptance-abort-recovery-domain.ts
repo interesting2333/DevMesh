@@ -48,7 +48,7 @@ export function createAcceptanceAbortRecoveryDomain(db:DatabaseSync,completed:(r
     if(!ps||ps.releaseId!==s.releaseId||ps.datasetId!==s.datasetId||ps.datasetOperationId!==s.datasetOperationId||!follows({...ps,datasetId:s.datasetId,writeState:'CLOSED'},f?.sourceFence?.physical??null))fail('ACCEPTANCE_ABORT_CUSTODY_CHANGED');
     if(!r||r.decisionHash!==i.decisionHash||r.releaseId!==s.releaseId||r.datasetId!==s.datasetId||r.datasetOperationId!==s.datasetOperationId||r.runnerId!==q.runnerId||r.imageDigest!==sourceImage(q)||canonical(r.fence)!==canonical({fenceId:ps.fenceId,generation:ps.generation,proofHash:ps.proofHash,previousHoldHash:ps.previousHoldHash})||r.revocationProofHash!==proof.revocation.proofHash)fail('ACCEPTANCE_SOURCE_RECOVERY_CHANGED');
     const age=Date.parse(at)-Date.parse(r.checkedAt);if(age<0||age>30_000||Date.parse(r.checkedAt)<Date.parse(proof.settledAt))fail('ACCEPTANCE_SOURCE_HEALTH_STALE');
-    if(get("SELECT 1 FROM preview_access_requests WHERE dataset_id=? AND is_write=1 AND state IN ('DISPATCHED','UNKNOWN')",s.datasetId))fail('ACCEPTANCE_SOURCE_WRITES_UNRESOLVED');
+    if(get("SELECT 1 FROM business_pending_writes WHERE dataset_id=?",s.datasetId))fail('ACCEPTANCE_SOURCE_WRITES_UNRESOLVED');
     if(sourceGate.state==='CLOSED'){
      const c=get('SELECT * FROM preview_write_closures WHERE operation_id=?',p.operationId);
      if(!c||sourceGate.closeOperationId!==p.operationId||sourceGate.closeRequestHash!==c.request_hash||digest(String(c.request_json))!==c.request_hash||c.dataset_id!==s.datasetId)fail('ACCEPTANCE_SOURCE_FENCE_CHANGED');

@@ -1,0 +1,73 @@
+TAP version 13
+# (node:8600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8600) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:8600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Release HTTPS entry binds current published identity and one-send writable business HTTP
+    # Subtest: platform GET checks live service but mints no credential and hides internal endpoints
+    ok 1 - platform GET checks live service but mints no credential and hides internal endpoints
+      ---
+      duration_ms: 454.9071
+      type: 'test'
+      ...
+    # Subtest: actual CRUD is accounted once; PREVIEW credentials, cross-origin writes and upstream cookies are refused
+    ok 2 - actual CRUD is accounted once; PREVIEW credentials, cross-origin writes and upstream cookies are refused
+      ---
+      duration_ms: 679.4552
+      type: 'test'
+      ...
+    # Subtest: live guard/health/route/instance changes fail closed with no new physical actions
+    ok 3 - live guard/health/route/instance changes fail closed with no new physical actions
+      ---
+      duration_ms: 544.7236
+      type: 'test'
+      ...
+    # Subtest: lost response after real committed write stays UNKNOWN, blocks shared barrier and is never resent
+    ok 4 - lost response after real committed write stays UNKNOWN, blocks shared barrier and is never resent
+      ---
+      duration_ms: 208.035
+      type: 'test'
+      ...
+    # Subtest: viewer loses writes and membership revocation withholds an already completed response
+    ok 5 - viewer loses writes and membership revocation withholds an already completed response
+      ---
+      duration_ms: 309.0965
+      type: 'test'
+      ...
+    1..5
+not ok 1 - Release HTTPS entry binds current published identity and one-send writable business HTTP
+  ---
+  duration_ms: 30430.1702
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\release-http.test.mjs:11:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/release-http.test.mjs:46:9)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32123.9065

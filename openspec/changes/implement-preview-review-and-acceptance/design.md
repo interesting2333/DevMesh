@@ -275,3 +275,13 @@ REVOKE_PREPARATION必须由专用可信物理Authority永久封禁原acquire／r
 全 Runner 单 writer 共同计算 job／preview／acceptance／release 的 CPU、内存、槽位；新 purpose=RELEASE profile、reservation 和容器独立于被退役的只读服务。GUARD_ENFORCE 必须在任何可写创建／启动前持久核实 ALL_DATASET_WRITES：精确物理代和当前控制 gate 同时准入，包括后台与直接文件写入，代理标志不能替代。随后 NETWORK_CREATE→CREATE→START、准确健康观察、内部生成 RELEASE_OWNED claim、ROUTE_BIND，凭证只从原 journal 派生一次；只有控制发布事务可以开门。
 
 每阶段只有唯一持久 SENT 获准物理派发，查询仅记录已派发阶段观察，不预留、不接管、不创建、不切路由；缺 Authority／guard／route 的实现保持关闭。跨阶段自动继续和默认生产装配仍需后续完成，单独 writer 或受控物理 fixture 不代表完整 4.3 或产品验收。
+
+### Release access uses its own purpose and the shared pending-write barrier
+
+Release 入口要求当前 accepted 指针、PUBLISHED 原证明与持久 route 同时准确匹配；接受已提交但路由未恢复时返回恢复中，不回退到旧 release。前向迁移43增加独立 release_access_policies／requests／events 与 release_tickets／sessions／credential_events，不伪造 PreviewEffect 或使用 PREVIEW 凭据。固定 RELEASE target 包含原 publication proof、claim／profile／reservation、Runner／controller、准确实例／网络、loopback 端点及 route hash／generation。每次签发、兑换、鉴权、派发及发送前复核当前成员和绑定；可写还须原 OPEN gate、初次发布 fence／revision 及原数据操作准确匹配，viewer 只读。原 CLOSED 门允许新准入安全方法，但实际原物理服务／guard 不可用时仍关闭访问。
+
+票据最长60秒，会话最长5分钟，256 bit 随机原串只在签发／浏览器 Cookie 边界使用；库内只存摘要和固定目标，每成员／项目各最多20项有效票据和会话。独立 dmr_ticket／dmr_session、host-only Cookie、r-摘要 host、准确平台 CORS 和受限 iframe 与预览用途隔离。共享模式保持独立可注册域及 HTTPS；平台 GET／view 不签票据，access POST 要求可信身份、准确 Origin 和空 JSON。默认未配置返回明确状态，不引入企业身份假实现。
+
+Runner 转发仅在原 Runner 节点连接原 loopback，先实际查询原独立可写 journal、稳定 proof、当前 guard／fences／route 及 HTTP 健康；再次检查控制授权后才构造一次有界 HTTP 请求。不接受 URL、重定向、连接池或自动重试。请求保存净化后 headers／body 摘要、原目标及 gate fence／revision；唯一派发回执丢失不转发，构造 HTTP 后的不完整响应记录 UNKNOWN。完整响应先记账，再复核成员／会话才返回正文。
+
+business_pending_writes 合并预览和 Release 的 DISPATCHED／UNKNOWN 写。接受准备／T5、发布、门 pending 计数和撤销恢复全部接入该屏障；新派发与关门在同一个控制 writer 串行，补充 SQLite 触发器拒绝未确定写下的提交／发布／旧门恢复，历史迁移1～42正文不改。注销、移除成员或路由切换不解除原写占用，历史原请求可核实但不重派。该增量仍须实际 HTTPS、控制／Runner／业务 SQLite 联调与原失败留证；物理 Provider 和独立产品验收缺项不因此消失。

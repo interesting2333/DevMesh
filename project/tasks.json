@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "6b50f89dde6285b1771dfa6fe8e042ea0bf60f934915ef33497f661506430e86"
+      "sha256": "bd70ed0266e5f56943def68b6f5fdde800ee656cbc1d43b34641b45c007aa4c3"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "836f6fe0b20ff36ddb3d78fbaff8cb6973809e6e8d1ef6cb1eab1bc93f1811b8"
+      "sha256": "c6af2393c28ea184bbaadff8c5659467915479ddba95f265518b7ccf244a206d"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "26f8652e84ebd0d3023709d6034fd729e2949a66a4a1b4d28b1ca37e45556470"
+      "sha256": "ab5725174d4e09cf14874aa80289eedbd66f3e96340087ac9e9cd5ffaf328e81"
     }
   ],
   "gates": [
@@ -1268,7 +1268,32 @@
         "tests/runner-release-service.test.mjs",
         "tests/runner-release-docker.test.mjs",
         "tests/fixtures/release-service.mjs",
-        "tests/fixtures/release-service-successor.mjs"
+        "tests/fixtures/release-service-successor.mjs",
+        "packages/contracts/openapi.json",
+        "packages/contracts/src/index.ts",
+        "packages/storage-sqlite/migrations/manifest.json",
+        "packages/storage-sqlite/src/domain.ts",
+        "packages/storage-sqlite/src/index.ts",
+        "packages/storage-sqlite/src/protocol.ts",
+        "tests/contracts.test.mjs",
+        "tests/fixtures/acceptance-abort-completion.mjs",
+        "packages/contracts/src/release-access.ts",
+        "packages/input-api/src/release.ts",
+        "packages/preview-gateway/RELEASE.md",
+        "packages/preview-gateway/src/release-config.ts",
+        "packages/preview-gateway/src/release.ts",
+        "packages/runner/src/release-http.ts",
+        "packages/storage-sqlite/migrations/0043-releaseaccess.sql",
+        "packages/storage-sqlite/src/release-access-domain.ts",
+        "packages/storage-sqlite/src/release-access-protocol.ts",
+        "packages/storage-sqlite/src/release-session-domain.ts",
+        "packages/storage-sqlite/src/release-session-protocol.ts",
+        "tests/browser/release-entry.test.mjs",
+        "tests/fixtures/release-entry.mjs",
+        "tests/fixtures/release-http.mjs",
+        "tests/release-access.test.mjs",
+        "tests/release-http.test.mjs",
+        "tests/storage-release-access-upgrade.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1404,7 +1429,11 @@
         "project/evidence/P1-07/development/release-retirement/final-binding.json",
         "project/evidence/P1-07/release-service-development-review.md",
         "project/evidence/P1-07/development/release-service/manifest.json",
-        "project/evidence/P1-07/development/release-service/final-binding.json"
+        "project/evidence/P1-07/development/release-service/final-binding.json",
+        "project/evidence/P1-07/release-access-development-review.md",
+        "project/evidence/P1-07/development/release-access/manifest.json",
+        "project/evidence/P1-07/development/release-access/final-binding.json",
+        "packages/preview-gateway/RELEASE.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -1459,7 +1488,8 @@
         "2026-11-13：4.1控制撤销完成增量。迁移41与私有原后端事务绑定原决定／Runner清理／数据撤权，原SENT／UNKNOWN保留，另投影ABORTED并释放本准备占用；源门仅按准确原关闭操作、旧接受指针、冻结镜像、后继fence及新鲜RELEASE_OWNED／READ_WRITE服务核实后原子重开，未知原写先查原请求结局。完整组合覆盖已有HELD服务清理、数据receipt、控制事件失败和重启只查询重放。completion-03 34/34；transaction-03 40/40；runner-03 42/42；acceptance-03 66/66；finalizer-03 1/1，183项通过；六包构建／类型／Lint、160份映射，原控制40迁移／Runner八份迁移不变。两轮失败、原22份源码各自SHA及第二轮探索源码／产物差异、构建后仅新增独立MJS组合测试均留证。源服务／物理事实为明确夹具，真实恢复／可写发布适配器及正式正向迭代未完成，完整4.1不勾选；设计／实施／验收及基线同步，正式状态、8/13和G0不变。",
         "2026-11-13：4.3发布控制增量。迁移42／私有原后端writer／显式ReleasePublisher，T5独立PENDING与首历史同事务；唯一SENT派发固定源／目标门及前代路由，SENT／UNKNOWN只查原发布。稳定proof与新鲜原服务／路由／后继fence验证后，证明／观察、路由代际、数据状态、目标开门及历史／事件同事务，源门保持关闭。publication-05 69/69；transaction-05 74/74；acceptance-05 68/68，共211项通过；六包构建／类型／Lint和164份映射、原41迁移／Runner八份SQL不变。首轮类型错误、各轮夹具／Windows清理失败及过滤未选中均留证；最终输入／产物匹配build-05。物理发布／guard／实际Release访问与导出、后继正式T5／完整组合继续，完整4.3不勾选；设计／实施／验收／OpenSpec及基线同步，正式状态、8/13与G0不变。",
         "2026-11-13：4.3发布退役增量。Runner v10独立退役journal／阶段唯一派发与显式RunnerReleaseRetirementBackend，自行核实原控制T5／basis／prepared proof及准确只读服务；永久物理撤权后停止／移除，容器消失／REMOVED／容量／历史同事务。原数据与claim／profile／proof保留，dataset交接继续防抢占，原abort互斥。丢ACK／重启仅查询已派发原步骤，不发下一未派发步骤，中断继续协调协议待实施。runner-03 105/106（1项条件跳过）；acceptance-03 224/224，共329通过、1条件跳过；六包构建／类型／Lint、168份映射及历史SQL不变，首轮联合类型错误／原输入留证。未实现独立可写服务、guard／fence／路由／Release入口与导出；物理事实为显式夹具。设计／实施／验收／OpenSpec／使用文档和基线同步，完整4.3不勾选，8/13、正式状态与G0不变。",
-        "2026-11-13：4.3独立可写发布服务增量。Runner v11原handoff／容量／profile／唯一阶段日志、显式RunnerReleaseServiceBackend与Docker Driver；严格物理后继、guard／原控制门与路由绑定，先核实只读及旧源退役再新建RELEASE实例，稳定proof及当前查询。源容器消失／REMOVED／容量／历史同事务；丢ACK只查已派发原阶段，继续协调待实现。模板RO无写锁、临时runtime锁、启动不改变准备DB字节。service-06 15/15；acceptance-06 84/84；runner-06 105/106（1项条件跳过）；模板26/26，共230通过、1条件跳过，最终类型／Lint、六包构建与173份映射、旧迁移不变。初轮产品问题／夹具错误／版本断言／超时和主动中止分别留证，最终串行回归。物理guard／Docker／fence／route仍为夹具，正式后继T5、Release入口／导出、默认组合和物理产品验收继续。设计／实施／验收／OpenSpec／使用文档与基线同步；8/13、正式状态及门槛不变。 提交前post-1另发现7处文档EOF空行，已清理并同步基线；原失败及后续post-2检查分别留证。"
+        "2026-11-13：4.3独立可写发布服务增量。Runner v11原handoff／容量／profile／唯一阶段日志、显式RunnerReleaseServiceBackend与Docker Driver；严格物理后继、guard／原控制门与路由绑定，先核实只读及旧源退役再新建RELEASE实例，稳定proof及当前查询。源容器消失／REMOVED／容量／历史同事务；丢ACK只查已派发原阶段，继续协调待实现。模板RO无写锁、临时runtime锁、启动不改变准备DB字节。service-06 15/15；acceptance-06 84/84；runner-06 105/106（1项条件跳过）；模板26/26，共230通过、1条件跳过，最终类型／Lint、六包构建与173份映射、旧迁移不变。初轮产品问题／夹具错误／版本断言／超时和主动中止分别留证，最终串行回归。物理guard／Docker／fence／route仍为夹具，正式后继T5、Release入口／导出、默认组合和物理产品验收继续。设计／实施／验收／OpenSpec／使用文档与基线同步；8/13、正式状态及门槛不变。 提交前post-1另发现7处文档EOF空行，已清理并同步基线；原失败及后续post-2检查分别留证。",
+        "2026-11-13：4.3 Release独立访问增量，迁移43、用途隔离票据／会话、原Runner本地HTTP、显式HTTPS／平台页，统一所有用途未定写屏障；实际Worker／TLS／业务DB／Edge React验证。access 7/7；http 7/7；browser 1/1；upgrade 1/1；regression 90/90；acceptance 157/157；contract-tests 18/18，共281通过，182份映射及旧迁移保留。失败及修正原日志保留；真实物理provider／默认装配／导出／继续协调、后继T5和门换代恢复继续，8/13、正式状态和门槛不变。"
       ]
     },
     {

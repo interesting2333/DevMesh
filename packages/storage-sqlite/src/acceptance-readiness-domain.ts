@@ -16,7 +16,7 @@ export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick
   const original=(i:Bound)=>{const p=acceptances.getPreparation(i);if(p.requestHash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');return p;};
   const service=(i:Bound)=>{const p=original(i);if(i.principalId!==p.request.backendPrincipalId)fail('FORBIDDEN',403);return p;};
   const latest=(id:string)=>get('SELECT * FROM acceptance_preparation_observations WHERE operation_id=? ORDER BY sequence DESC LIMIT 1',id);
-  const pending=(projectId:string)=>!!get("SELECT 1 FROM preview_access_requests WHERE project_id=? AND is_write=1 AND state IN ('DISPATCHED','UNKNOWN')",projectId)||!!get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')",projectId);
+  const pending=(projectId:string)=>!!get("SELECT 1 FROM business_pending_writes WHERE project_id=?",projectId)||!!get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')",projectId);
   function validate(p:AcceptancePreparation,proof:AcceptancePreparedProof,o:Extract<AcceptancePreparationObservation,{state:'READY'}>){
     const r=p.request,d=proof.data,s=proof.sourceFence,c=proof.service.claim,h=o.health;
     const target=get('SELECT d.*,p.request_hash,p.purpose FROM datasets d JOIN dataset_preparations p ON p.dataset_id=d.dataset_id WHERE d.dataset_id=?',r.target.datasetId),targetGate=get('SELECT * FROM preview_write_gates WHERE dataset_id=?',r.target.datasetId);

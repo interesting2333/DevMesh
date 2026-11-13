@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle,opaqueKey } from './primitives.js';
+import {releaseAccessInput,releaseAccessTicket,releaseEntryView} from './release-access.js';
 import {previewAccessInput,previewAccessTicket,previewEntryView} from './preview.js';
 import { command, commandBodies, operationReceipt, idempotencyKey } from './commands.js';
 import { domainEvent, ephemeralTokenDelta } from './events.js';
@@ -24,6 +25,7 @@ export const schemas = {
   Understanding:understandingView,UnderstandingOutput:understandingOutput,RetryUnderstanding:retryUnderstandingInput,
   PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
   PlanReview:planReviewView,
+  ReleaseAccessInput:releaseAccessInput,ReleaseAccessTicket:releaseAccessTicket,ReleaseEntryView:releaseEntryView,
   PreviewAccessInput:previewAccessInput,PreviewAccessTicket:previewAccessTicket,PreviewEntryView:previewEntryView,
   ...commandBodies,
 };
@@ -100,6 +102,12 @@ export function createOpenApiDocument() {
   add('/api/v1/runs/{runId}/understanding','get','ReadUnderstanding','Understanding',[parameter('runId',ids.run),parameter('requirementRevision',revision,'query',false)]);
   add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
   add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
+  const releasePath='/api/v1/runs/{runId}/releases/{releaseId}',releaseParameters=[parameter('runId',ids.run),parameter('releaseId',ids.release)];
+  add(releasePath,'get','ReadReleaseEntry','ReleaseEntryView',releaseParameters);
+  add(releasePath+'/access','post','IssueReleaseAccess','ReleaseAccessTicket',[...releaseParameters,parameter('Origin',z.url(),'header')],'ReleaseAccessInput','200');
+  add(releasePath+'/view','get','ReadReleasePage',undefined,releaseParameters);
+  const releasePage=paths[releasePath+'/view']!.get as {responses:Record<string,unknown>};
+  releasePage.responses['200']={description:'当前成员访问已接受应用；GET 不签票据',content:{'text/html':{schema:{type:'string'}}}};
   const previewPath='/api/v1/runs/{runId}/previews/{previewId}',previewParameters=[parameter('runId',ids.run),parameter('previewId',ids.preview)];
   add(previewPath,'get','ReadPreviewEntry','PreviewEntryView',previewParameters);
   add(previewPath+'/access','post','IssuePreviewAccess','PreviewAccessTicket',[...previewParameters,parameter('Origin',z.url(),'header')],'PreviewAccessInput','200');

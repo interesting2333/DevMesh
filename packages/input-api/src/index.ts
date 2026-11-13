@@ -8,6 +8,9 @@ import { canonical, StorageError } from '@devmesh/storage-sqlite';
 import type { OperationResult } from '@devmesh/storage-sqlite';
 import type { LocalContentStore } from '@devmesh/blob-store';
 import { receiveUpload } from './upload.js';
+import {mountReleaseRoutes} from './release.js';
+import type {ReleaseAccessGateway} from './release.js';
+export type {ReleaseAccessGateway} from './release.js';
 import {mountPreviewRoutes} from './preview.js';
 import type {PreviewAccessGateway} from './preview.js';
 import type {TLSSocket} from 'node:tls';
@@ -19,6 +22,7 @@ export interface TemplateBaseline { readonly version:string;readonly baseCommit:
 export type InputApiOptions={enabled?:false}|{
   enabled:true; identityResolver?:IdentityResolver|undefined; baseline:TemplateBaseline;
   previewGateway?:PreviewAccessGateway|undefined;
+  releaseGateway?:ReleaseAccessGateway|undefined;
   maximumUploads?:number;diagnostic?:(detail:{requestId:string;error:unknown})=>void;
 };
 const runFile=promisify(execFile);
@@ -204,6 +208,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     response.json(await content.storage.request('listInputEvents',{principalId:identity.principalId,projectId:parseContract(ids.project,request.params.projectId),runId:parseContract(ids.run,request.params.runId),afterSeq:Number(after),limit:positive(request.query.limit,50,200)}));
   }));
   mountPreviewRoutes(router,content,options.previewGateway,route);
+  mountReleaseRoutes(router,content,options.releaseGateway,route);
   router.use((error:unknown,request:Request,response:Response,_next:NextFunction)=>{
     const framework=error as {type?:string;status?:number};
     const schemaFailure=error instanceof ContractError||Boolean(error&&typeof error==='object'&&'issues' in error);

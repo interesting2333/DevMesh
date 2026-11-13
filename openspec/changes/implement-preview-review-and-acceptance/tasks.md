@@ -27,6 +27,8 @@
 - [x] 4.2 实现 T5 原子 Release／接受指针／必要人工完成／Run 终态／Outbox／事件，验证每个写入故障回滚、并发 CAS、原键恢复、缺项／未知写阻塞与不可变接受历史。
 - [ ] 4.3 实现发布 Outbox 和独立导出任务恢复，验证路由／打包失败保留接受事实、ACK 丢失不双建、不重复迁移、旧写门未核实不重开。
 
+4.3 本轮访问增量范围：独立 RELEASE 访问协议／迁移43、票据会话、共享未确定写屏障、原 Runner 本地传输及显式 HTTPS／平台入口；固定当前路由与用途隔离。实现与验证记录见末尾，完整导出、继续协调和物理 Provider 仍分别推进，4.3保持未勾选。
+
 4.1 当前首批范围为迁移 36 的私有后端策略、固定候选／审查／原接受指针与数据方案、独立替换确认、预留原 release／目标 dataset ID、唯一派发、UNKNOWN 原操作恢复和仅未派发关闭。实际 Worker 并发／重开／丢 ACK／事务故障、INITIAL 及权限边界通过：最终接受／契约／迁移／质量收集 32/32，存储全量 34/34；失败原输出、夹具签发时点／测试参数修正和各组源码差异见 `project/evidence/P1-07/acceptance-intent-development-review.md`。迭代保留和正向替换确认仍待后续验证。没有准备 READY、外部数据执行、fencing／健康凭证或 T5 命令；这些继续同一子项，4.1 不勾选，变更仍 7/13。
 
 4.1 本轮补充迁移 37 的不可变原准备证明、独立当前观察及显式 AcceptancePreparer：准确 data／schema／迁移／源目标 fence／Runner claim，0～30 秒健康与当前持有，跨 UNKNOWN 的归属高水位、准备版本／观察双 CAS，同毫秒后续原准备 UNKNOWN 关闭旧 READY；仅唯一许可 prepare，丢 ACK／重开只 inspect。首次综合 37/38，端点负例因测试对象别名失败，独立诊断后仅复制测试健康端点，受影响五项重跑 5/5；存储全量 35/35、Runner 归属／清理 33/33。四组各自源码指纹不变，唯一组间差异为该测试夹具，其使用范围已核实；最终构建、类型、Lint／契约及 134/134 源码映射通过。原失败、构建差异和留存范围见 `project/evidence/P1-07/acceptance-readiness-development-review.md`。回执中的物理 fence／健康是显式受控声明，没有默认实际准备后端、数据文件／Release 创建或 T5。实际接受数据／写门的共用归属、准确 Runner 服务装配、正向保留／替换与安全失败恢复继续实施，不能伪造预览策略／effect；4.1 仍不勾选，变更仍 7/13，不归档。
@@ -61,3 +63,5 @@
 4.3 Runner退役增量：v10原交接／阶段日志、可信退役组件，原控制T5／basis／Runner稳定proof及准确只读服务绑定；先永久物理撤权后停止／移除，容量／消失观察／REMOVED／历史同事务。dataset交接不随容量释放，abort互斥，丢ACK只查询已派发步骤且不发后续未派发阶段。runner-03 105/106（1项条件跳过）；acceptance-03 224/224，共329通过、1条件跳过，构建／类型／Lint、168份映射与历史SQL不变。物理事实为显式夹具；独立可写服务、guard／fence／路由／入口／导出、继续协调协议和实际组合继续，完整4.3不勾选，8/13及正式状态／门槛不变。见 `project/evidence/P1-07/release-retirement-development-review.md`。
 
 4.3 独立可写发布服务增量：Runner v11独立容量／profile／阶段日志与显式发布组件，严格后继fence／全写guard契约、旧只读与源退役、新RELEASE实例及稳定proof，丢ACK只查原阶段；源消失／REMOVED／容量／历史同事务。模板运行锁独立、启动保留准备DB字节。service-06 15/15；acceptance-06 84/84；runner-06 105/106（1项条件跳过）；模板26/26，共230通过、1条件跳过，构建／类型／Lint、173份映射和历史SQL不变；失败／夹具修正／超时及中止留证。物理事实为受控夹具，继续协调／Release入口与导出、默认组合、正式后继T5及物理验收继续，完整4.3不勾选，8/13及正式状态／门槛不变。见 `project/evidence/P1-07/release-service-development-review.md`。
+
+4.3 Release访问增量：独立RELEASE请求／票据／会话、原Runner实际健康与准确实例／路由、显式TLS网关／平台入口，GET不签票、一次HTTP与未知写共用屏障、即时成员复核。access 7/7；http 7/7；browser 1/1；upgrade 1/1；regression 90/90；acceptance 157/157；contract-tests 18/18，共281通过；构建／类型／Lint／契约及182份映射、历史SQL保留通过。实际Edge加载React并写入原业务库；物理provider和身份为夹具，默认组合／导出／继续协调、后继T5和门换代恢复继续；完整4.3不勾选，8/13及正式状态／门槛不变。见 `project/evidence/P1-07/release-access-development-review.md`。

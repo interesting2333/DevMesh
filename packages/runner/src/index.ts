@@ -65,3 +65,6 @@ export {DockerReleaseServiceDriver,releaseDockerCreateArguments,releaseDockerNet
 export type {ReleaseDockerOptions} from './release-docker.js';
 export {RunnerReleaseServiceBackend} from './release-service-backend.js';
 export type {RunnerReleaseServiceOptions} from './release-service-backend.js';
+
+export {RunnerReleaseHttpTransport} from './release-http.js';
+export type {ReleaseHttpInput,ReleaseHttpResult,ReleaseHttpTransport} from './release-http.js';

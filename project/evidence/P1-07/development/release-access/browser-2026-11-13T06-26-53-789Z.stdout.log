@@ -1,0 +1,42 @@
+TAP version 13
+# (node:1820) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1820) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1820) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1820) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1820) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:1820) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1820) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:1820) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Edge opens the accepted Release page, exchanges its own session and writes through the isolated React iframe
+not ok 1 - actual Edge opens the accepted Release page, exchanges its own session and writes through the isolated React iframe
+  ---
+  duration_ms: 16166.056
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\release-entry.test.mjs:8:1'
+  failureType: 'testCodeFailure'
+  error: `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+  code: 'ERR_TEST_FAILURE'
+  name: 'SyntaxError'
+  stack: |-
+    JSON.parse (<anonymous>)
+    parseJSONFromBytes (node:internal/deps/undici/undici:4259:19)
+    successSteps (node:internal/deps/undici/undici:6882:27)
+    readAllBytes (node:internal/deps/undici/undici:5807:13)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17454.3887

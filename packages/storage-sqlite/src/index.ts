@@ -152,3 +152,8 @@ export type {AcceptanceAbortCompletionEvidence,AcceptanceAbortCompletion,Accepta
 export type {AcceptanceAbortDecision,AcceptanceAbortRecord,AcceptanceAbortInput} from './acceptance-abort-protocol.js';
 export {previewOrigin} from './preview-session-protocol.js';
 export type {PreviewTicket,PreviewSession} from './preview-session-protocol.js';
+
+export {releaseAccessPolicy,releaseAccessHttpRequest,releaseAccessObservation,releaseAccessTarget,releaseTargetForPublication,releaseAccessRequestHash} from './release-access-protocol.js';
+export type {ReleaseAccessTarget,ReleaseAccessBinding,ReleaseAccessRecord} from './release-access-protocol.js';
+export type {ReleaseTicket,ReleaseSession} from './release-session-protocol.js';
+export {previewOrigin as releaseOrigin} from './preview-session-protocol.js';

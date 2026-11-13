@@ -50,7 +50,7 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
   };
   function writeGate(datasetId:string):PreviewWriteGate{
     const g=get('SELECT * FROM preview_write_gates WHERE dataset_id=?',datasetId)??fail('ACCEPTANCE_WRITE_GATE_MISSING');
-    return {datasetId,projectId:String(g.project_id),datasetOperationId:String(g.dataset_operation_id),datasetRequestHash:String(g.dataset_request_hash),state:g.state as PreviewWriteGate['state'],fence:Number(g.fence),revision:Number(g.revision),closeOperationId:g.close_operation_id as string|null,closeRequestHash:g.close_request_hash as string|null,pendingWrites:Number(get("SELECT count(*) n FROM preview_access_requests WHERE dataset_id=? AND is_write=1 AND state IN ('DISPATCHED','UNKNOWN')",datasetId)!.n),createdAt:String(g.created_at),updatedAt:String(g.updated_at)};
+    return {datasetId,projectId:String(g.project_id),datasetOperationId:String(g.dataset_operation_id),datasetRequestHash:String(g.dataset_request_hash),state:g.state as PreviewWriteGate['state'],fence:Number(g.fence),revision:Number(g.revision),closeOperationId:g.close_operation_id as string|null,closeRequestHash:g.close_request_hash as string|null,pendingWrites:Number(get("SELECT count(*) n FROM business_pending_writes WHERE dataset_id=?",datasetId)!.n),createdAt:String(g.created_at),updatedAt:String(g.updated_at)};
   }
   function bound(i:{principalId:string;operationId:string;requestHash:string},trusted=false){const r=scoped(i.principalId,row(i.operationId));if(trusted)backend(i.principalId,r);if(r.request_hash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');return r;}
   function history(r:Row,operationId=String(r.operation_id)){

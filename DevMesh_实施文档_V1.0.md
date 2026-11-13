@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 6b50f89dde6285b1771dfa6fe8e042ea0bf60f934915ef33497f661506430e86 |
+| DevMesh_技术设计方案_V1.1.md | bd70ed0266e5f56943def68b6f5fdde800ee656cbc1d43b34641b45c007aa4c3 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 836f6fe0b20ff36ddb3d78fbaff8cb6973809e6e8d1ef6cb1eab1bc93f1811b8 |
+| DevMesh_产品验收场景_V10.0.md | c6af2393c28ea184bbaadff8c5659467915479ddba95f265518b7ccf244a206d |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -521,3 +521,7 @@ Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend
 前向迁移11和显式 RunnerReleaseServiceBackend 在只读退役后登记后继 fence、原可写源清理、独立容量／profile、guard、创建／启动／健康、OWNED claim 和准确 route，稳定 proof 从原日志一次派生。job／preview／acceptance／release 共用预算；源消失观察、REMOVED、容量与历史原子提交。模板只读不写锁，发布锁置于临时根，启动／健康不改准备数据库；首次获准写请求才切 WAL。控制发布事务最终开门，Runner 不代替控制权威。
 
 显式物理 provider 全部配置才准入；默认未启用。原阶段丢回执只查询，不发下一未派发阶段，显式继续协调仍待实施。真实物理 guard／fence／route、Release 入口与导出、默认组合、第二轮正式保留迁移／替换和产品验收继续；不提前勾选完整4.3／5.1／5.2，正式依赖和 G0 门槛不变。
+
+### P1-07 Release 独立访问开发增量
+
+迁移43独立 Release 请求／会话／凭据、统一 business_pending_writes，显式 ReleaseGateway、RunnerReleaseHttpTransport 与平台查询／领票／iframe页。当前准确发布路由与成员／原 Runner 健康核实后访问；写入一次派发，未知结果保留并阻止后继验收／切换；预览凭据不能互用。实现与组合说明见 packages/preview-gateway/RELEASE.md。默认身份／物理 provider／平台 listener 不自动启用，导出、阶段继续协调、门再次换代的正式恢复与完整迭代继续；本增量不改变正式状态或门槛。

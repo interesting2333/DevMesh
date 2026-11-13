@@ -457,3 +457,22 @@ The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增
 #### Scenario: Publication commits under control authority
 - **WHEN** 稳定 proof 与新鲜原对象观察通过控制校验
 - **THEN** 控制 writer 原子保存发布／路由／数据状态与开门；缺物理 provider、外部源缺本地证明、未执行真实环境验收均不得被本地日志或夹具替代
+
+### Requirement: Release access preserves current route and credential purpose
+系统 SHALL 以独立 RELEASE 用途凭据开放准确已发布应用，并固定当前接受指针、持久路由代际、原服务证明和数据写门；MUST NOT 复用 PREVIEW 凭据、直接暴露 Runner loopback 或凭历史发布证明假定当前健康。
+
+#### Scenario: Accepted release is waiting for its route
+- **WHEN** 接受已经提交但该 release 尚未 PUBLISHED，或当前路由尚未准确绑定
+- **THEN** 平台入口显示恢复中，不签发业务访问票据、不回退到旧路由，不更改接受事实
+
+#### Scenario: Member accesses the exact published application
+- **WHEN** 已鉴权成员明确打开当前发布应用，准确原物理服务和 guard 可核实
+- **THEN** 独立一次性票据在准确 HTTPS host 兑换为有界用途会话，viewer 只读，写入还核实原 OPEN 门和代际；平台 Cookie／身份头不上游转发
+
+#### Scenario: A release write has an unknown outcome
+- **WHEN** 原写派发回执丢失或实际 HTTP 响应不完整
+- **THEN** 保留原 DISPATCHED／UNKNOWN 占用，重试不重发；注销、会话到期、成员移除或路由切换均不能清除它，接受／发布／旧门恢复共同受阻
+
+#### Scenario: Route or original service changes
+- **WHEN** 会话中的 route hash／generation、claim／profile、实例或当前授权与原绑定不再一致
+- **THEN** 新派发／发送前拒绝，不选择替代实例；已完成记账保留，失效成员不能取得响应正文

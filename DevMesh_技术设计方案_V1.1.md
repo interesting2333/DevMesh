@@ -1274,6 +1274,12 @@ EndpointCheck 保存配置 revision、能力／工具 schema 哈希、checkedAt�
 
 撤销决定受理后显示ABORTING；服务清理或数据回执单独完成均不改变该结论。只有原后端提交全套核实证明并成功提交控制事务后才显示ABORTED，用户可以重新准备候选。原始SENT／UNKNOWN及错误仍可追溯；重复完成返回准确原结果，不重复事件。源仍有DISPATCHED／UNKNOWN写请求、健康过期或旧服务归属未核实时继续展示待核实，不能以超时清除。
 
+#### 12. Release 独立访问入口（2026-11-13 开发增量）
+
+已增加 GET /api/v1/runs/:runId/releases/:releaseId、GET /view 和 POST /access 的显式组件。当前成员可读查询，GET 不签票据；仅当前接受指针对应的 PUBLISHED 原路由、准确 Runner 实例、当前 guard／fences 和实际 HTTP 健康均核实后 AVAILABLE。未配置为 NOT_CONFIGURED，未发布或事实不确定为 RECOVERING，历史版本为 NOT_CURRENT，不隐式回退。POST 要求空 JSON、平台准确 Origin 和当前成员身份。
+
+独立 RELEASE 用途，dmr_ticket／dmr_session 与 __Host-devmesh-release Cookie；票据最长60秒、会话最长5分钟，哈希持久化，原子兑换，撤权即时检查。r-<摘要> 主机与预览 p- 主机分开。页面先 POST 领票、跨站兑换、GET 核实 Cookie，再加载受限 iframe；仅业务网关收到应用凭据，平台身份不透传。Viewer 只读；每项写与业务响应再次核实当前权限和原门。默认平台／物理适配器未启用，详见 packages/preview-gateway/RELEASE.md。
+
 ---
 
 ## 13. 执行恢复与交付
@@ -1404,7 +1410,7 @@ ReleaseCandidate 固定：codeCommit、requirementRevision、planRevision、temp
 
 Runner v8 前向迁移保存不可变完整准备 proof，不修改 v2～v7 迁移正文／历史摘要。首次准确健康和 HELD 后固定 `preparedAt`、claim、custodyRevision、数据与 fences；后续真实健康／持有观察更新当前状态，原 proof 不随心跳或重启变化。数据、动作或 proof 回执未知时只查询原对象，不能重新初始化、重新取得 fence，或在恢复查询中补发尚未获许可的后继动作。完整 READY 须经控制面原准备／最新观察 CAS 接收；安全撤销、OWNED／路由发布和真实物理环境分别验收。
 
-接受准备实例的只读挂载／环境和原 profile 不可变，T5 后仅开放逻辑写门不会使该实例具备写能力。发布必须独立验证准确原归属下的新可写服务、健康及写 fence 交接；不得改写准备 profile／proof、凭接受成功直接宣布应用可写，或同时放开旧新 dataset。当前已增加下文的 Runner v11 独立可写发布组件与受控联调；真实物理转换、Release 访问入口和默认平台装配仍须分别实施与验收。
+接受准备实例的只读挂载／环境和原 profile 不可变，T5 后仅开放逻辑写门不会使该实例具备写能力。发布必须独立验证准确原归属下的新可写服务、健康及写 fence 交接；不得改写准备 profile／proof、凭接受成功直接宣布应用可写，或同时放开旧新 dataset。当前已增加下文的 Runner v11 独立可写发布组件与受控联调；独立 Release 访问组件已增加；真实物理转换和默认平台装配仍须分别实施与验收。
 
 安全撤销先保存 owner 的不可变原决定，绑定原准备 operation／正文／hash／revision、实际已有 proofHash 或 null、原因及操作者。Run scope／强 If-Match／明确确认的新命令与 T5 在同一 writer 互斥；已接受或原指针改变不能撤销，原依据失效或取消仍可关闭原执行权。ABORTING 关闭继续准备、当前 READY、新观察和源闭门；恢复准备器跳过，原后端只按原 hash 恢复决定。原派发历史、proof、目标 CLOSED、数据与占用保留。决定前已获许可的外部动作仍可能在途，拒收迟到 READY 不证明 Runner 已停；须按原对象核实。决定不证明服务已停／移除或物理 fence 已解除，不重开旧门、不生成 ABORTED；独立清理及源恢复证明齐全后才允许解除占用，完整安全撤销仍待实现。
 
@@ -1551,7 +1557,7 @@ T5原promotion Outbox不可变，原接受回执保留提交时的PENDING。独�
 
 派发基准固定目标门、原准备关闭的源门、原项目路由release／hash／generation。稳定发布proof绑定原Outbox／prepared proof、准确服务／路由和上述基准；恢复另提交30秒内原服务、路由及fences观察，不能重签proof延长健康。控制事务确认当前接受指针、准确数据快照、无未知写及相同基准后，保存证明／观察、CAS路由为上一代加一、目标dataset READY／源RETIRED、目标开门、历史及事件。旧接受事实不回退；之后查询历史PUBLISHED不代表当前健康或当前路由。
 
-当前实现包括发布控制协议、writer、显式通用消费器及后文的 Runner v11 独立可写服务容量／持久阶段组件。真实物理撤权与 guard、实际路由／Release 访问入口和导出仍按4.3继续实施与验收，未启用默认平台装配。
+当前实现包括发布控制协议、writer、显式通用消费器及后文的 Runner v11 独立可写服务容量／持久阶段组件。独立 Release 访问组件见后文；真实物理撤权与 guard、实际路由和导出仍按4.3继续实施与验收，未启用默认平台装配。
 
 #### 13. Runner 发布交接的只读服务退役
 
@@ -1570,6 +1576,14 @@ GUARD_ENFORCE 先于 NETWORK_CREATE／CREATE／START，覆盖物理代和控制�
 模板只读连接不在业务盘创建 writer.lock。可写发布使用 /tmp/devmesh-runtime 的运行锁，启动与健康不改业务数据库，首次获准写入才切 WAL；临时锁不充当跨容器排他。实际业务盘的直接写入与后台写入必须由物理 guard 阻断，缺 provider 不启用。inspect 仍只查已有阶段，丢回执不重发或发下一步；显式继续协调、默认装配、真实入口／导出和物理环境继续，不提前完成整个4.3。
 
 物理 guard 后续每次写准入须核实同一控制视图内接受指针、PUBLISHED、当前 route hash／代、原 claim／实例／profile／serviceRequestHash、READY dataset 和 OPEN 门；首次开门 fence／revision 为原 targetGate basis 各加一，原 datasetOperationId／datasetRequestHash 保持，close 字段清空。新的关闭或修订拒绝旧准入，排空在途写由物理 Authority 保证，后续重新开门不复用原许可。Routes.bind 只登记受控准备绑定，公开可见性服从控制库原子路由视图，不能提前切公共流量；入口授权和对外开放另行实施。
+
+#### 13. Release HTTP 与恢复边界（2026-11-13 开发增量）
+
+RunnerReleaseHttpTransport 必须显式绑定原 RunnerReleaseServiceBackend。固定 target 包含 RELEASE、项目／运行／版本／候选／manifest／policy、原准备／promotion／publication proof、原 reservation／profile／claim／完整容器和网络 ID、loopback endpoint 及 routeHash／generation。稳定证明只用于身份；发送前重新 query 原服务、guard／fences／路由、实际 HTTP 健康和当前控制授权，不创建／启动／绑定后续阶段。
+
+ReleaseGateway 在独立 TLS 主机接受哈希会话，每次准备与一次派发都核实成员及当前版本。请求体和允许头摘要固定，原门 fence／revision 入请求摘要。仅一次 native loopback HTTP，无重试／重定向／客户端地址；派发 ACK 丢失不调用 transport，构造后的不完整结果 UNKNOWN，禁止重派。响应先持久观察再核实当前成员，不把撤权等同于业务未发生。请求／响应／并发／时限均有界。独立显式访问链路已实现；默认应用装配、导出和阶段继续协调仍待完成。
+
+当前重新开放后的门必须等于原发布证明的初次 OPEN；后继准备撤销后换代的原 Release，仍须原物理服务／guard／fence 恢复及新授权协议，不能据此增量宣称完整迭代恢复可用。
 
 ---
 
@@ -1983,6 +1997,12 @@ Runner v10增加不可变release_retirements和追加release_retirement_actions�
 
 阶段唯一 SENT 派发与独立观察，前序完整才允许后序。源容器消失观察、旧可写 reservation REMOVED、容量和追加历史同事务，失败回滚；网络清理完才能预留新服务。全 Runner 单 writer 汇总 job／preview／acceptance／release 槽位／CPU／内存，未知状态继续占用；新服务不能绕过原退役 dataset 屏障抢占。新 profile 固定原数据目录与字节预算、独立名字和 guard 的物理 proof／门绑定 hash，内部生成 OWNED claim 和稳定 proof。控制库仍独立原子发布与开门，Runner 本地成功不能替代控制事务。
 
+#### 14. 控制迁移43：Release 凭据与统一写屏障
+
+release_access_policies／requests／request_events 和 release_tickets／sessions／credential_events 独立于 Preview；项目、版本、dataset、gateway／configurationHash、subject、原 target／requestHash 不可变。票据单次兑换与 session／历史同事务；数据库只存 token SHA，凭据 audience 固定 RELEASE。写请求 PREPARED→DISPATCHED 只有一次，UNKNOWN 不得改判 NOT_SENT；可私有记账，不因用户撤权丢失业务结果。
+
+business_pending_writes 将 PREVIEW 和 RELEASE 的 DISPATCHED／UNKNOWN 写统一投影。门 pendingWrites、接受就绪、T5、发布和撤销恢复均使用该投影；新增 SQL 触发器在 T5、publication proof、abort completion 与门重开处兜底。关门原子递增 fence／revision，待发请求不再有权派发；在途未定写仍保留，不能超时清除。迁移1～42正文不改；43升级不创建假票据、假结果或自动发请求，历史原行／FK与失败回滚必须验证。
+
 ---
 
 ## 15. 验证与验收追踪
@@ -2232,5 +2252,11 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 验证 Runner v11 前向升级／失败回滚／历史摘要与原行保留；真实控制／Runner Worker、首轮正式 T5、模板数据库与 HTTP，受控物理 fence／guard／Docker／route 夹具。检查可写服务独立身份、门关闭时拒绝写、控制发布事务后 CRUD、稳定 proof、六阶段回执丢失只查询原步骤、错误当前对象／健康关闭、共享容量和原子源清理；后继私有 writer 分支不等于第二次正式 T5。
 
 模板需证明只读打开不创建锁、可写启动与健康不修改准备快照、运行锁在临时根、单运行根只有一个写连接、首次请求正常持久化。容器参数和 OCI 校验是显式 CLI 夹具，不证明真实只读挂载或 Linux 隔离。实际 provider、默认组合、入口／导出、跨阶段继续、固定提交干净 checkout 和产品验收仍保留独立门槛；具体执行结果另记本次开发证据，不由本段规划推定通过。
+
+#### 15. Release 独立访问开发核实范围
+
+需验证真实控制／Runner SQLite Worker、TLS票据与Cookie、平台 GET 不签票、实际模板 HTTP／业务库写、重复键只记一次、丢派发ACK零发送、真实写后丢响应保留 UNKNOWN、统一屏障阻止后继T5、当前成员／viewer／撤权后响应限制，以及 guard／路由／健康／实例变化关闭访问。迁移43需保留42原行及未知 Preview 写，DDL／history失败完整回滚、摘要漂移拒绝。浏览器需从真实平台页兑换会话、隔离 iframe 加载实际 React 资产并完成写入。
+
+测试的身份、OCI、物理 guard／fences／route 是明确夹具；不得把本地浏览器／数据库证据升级为真实 OIDC／Linux／全写入口物理验收。完整4.3、5.1、5.2及正式工作包仍按独立证据评审。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

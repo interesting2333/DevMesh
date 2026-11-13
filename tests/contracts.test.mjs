@@ -134,7 +134,7 @@ test('plan data has a scale limit and cannot embed a JavaScript completion check
 test('OpenAPI body references and route parameters resolve to shared schemas', () => {
   const document = createOpenApiDocument();
   assert.equal(document.openapi, '3.1.0');
-  assert.equal(Object.keys(document.paths).length, 28);
+  assert.equal(Object.keys(document.paths).length, 31);
   const visit = value => {
     if (!value || typeof value !== 'object') return;
     if (value.$ref) {
@@ -146,14 +146,15 @@ test('OpenAPI body references and route parameters resolve to shared schemas', (
   };
   visit(document);
   for (const [path, methods] of Object.entries(document.paths)) for(const [method,operation] of Object.entries(methods)) {
-    const implemented=['CreateProject','SaveMessage','CreateTask','ListProjects','ReadWorkspace','ReadEvents','LookupInputOperation','ReadInputOperation','UploadAttachment','ReadAttachment','RemoveAttachment','ReadAttachmentContent','ReadUnderstanding','AnswerQuestions','RetryUnderstanding','ReadPlan','ConfirmPlan','ReadPreviewEntry','IssuePreviewAccess','ReadPreviewPage','DownloadFrozenMaterial'].includes(operation.operationId);
+    const implemented=['CreateProject','SaveMessage','CreateTask','ListProjects','ReadWorkspace','ReadEvents','LookupInputOperation','ReadInputOperation','UploadAttachment','ReadAttachment','RemoveAttachment','ReadAttachmentContent','ReadUnderstanding','AnswerQuestions','RetryUnderstanding','ReadPlan','ConfirmPlan','ReadPreviewEntry','IssuePreviewAccess','ReadPreviewPage','ReadReleaseEntry','IssueReleaseAccess','ReadReleasePage','DownloadFrozenMaterial'].includes(operation.operationId);
     assert.equal(operation['x-implementation-status'], implemented?'implemented-offline':'planned');
     assert.deepEqual(new Set([...path.matchAll(/\{([^}]+)\}/g)].map(m => m[1])), new Set(operation.parameters.filter(p => p.in === 'path').map(p => p.name)));
-    if(operation.operationId==='IssuePreviewAccess'){
+    if(['IssuePreviewAccess','IssueReleaseAccess'].includes(operation.operationId)){
       assert.ok(operation.parameters.find(p=>p.in==='header'&&p.name==='Origin'&&p.required));
       assert.equal(operation.parameters.some(p=>p.name==='Idempotency-Key'),false);
-      assert.equal(operation.requestBody.content['application/json'].schema.$ref,'#/components/schemas/PreviewAccessInput');
-      assert.equal(operation.responses['200'].content['application/json'].schema.$ref,'#/components/schemas/PreviewAccessTicket');
+      const prefix=operation.operationId==='IssuePreviewAccess'?'Preview':'Release';
+      assert.equal(operation.requestBody.content['application/json'].schema.$ref,`#/components/schemas/${prefix}AccessInput`);
+      assert.equal(operation.responses['200'].content['application/json'].schema.$ref,`#/components/schemas/${prefix}AccessTicket`);
     }else if(method==='post')assert.ok(operation.parameters.find(p => p.name === 'Idempotency-Key' && p.required));
   }
   assert.deepEqual(readJson('../packages/contracts/openapi.json'), document);

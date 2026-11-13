@@ -28,7 +28,7 @@ export function createReleasePublicationDomain(db:DatabaseSync,plans:Pick<Return
    const target=get('SELECT * FROM datasets WHERE dataset_id=?',q.target.datasetId);if(!target||target.project_id!==q.projectId||target.operation_id!==q.operationId||target.policy_hash!==q.policyHash||target.state!=='WRITE_FROZEN'||target.snapshot_at!==p.data.snapshotAt)fail('RELEASE_PUBLICATION_TARGET_DATA_CHANGED');
   const targetGate=gate(q.target.datasetId);if(targetGate.state!=='CLOSED'||targetGate.datasetOperationId!==q.operationId||targetGate.datasetRequestHash!==p.requestHash||targetGate.closeOperationId!==null||targetGate.closeRequestHash!==null)fail('RELEASE_PUBLICATION_TARGET_GATE_CHANGED');
   let sourceGate:ReturnType<typeof gate>|null=null;if(q.source){sourceGate=gate(q.source.datasetId);const f=p.sourceFence;if(!f||sourceGate.state!=='CLOSED'||sourceGate.datasetOperationId!==q.source.datasetOperationId||sourceGate.closeOperationId!==q.operationId||sourceGate.closeOperationId!==f.closeOperationId||sourceGate.closeRequestHash!==f.closeRequestHash||sourceGate.fence!==f.gateFence)fail('RELEASE_PUBLICATION_SOURCE_GATE_CHANGED');const d=get('SELECT request_hash FROM dataset_preparations WHERE operation_id=? AND dataset_id=?',q.source.datasetOperationId,q.source.datasetId);if(!d||d.request_hash!==sourceGate.datasetRequestHash)fail('RELEASE_PUBLICATION_SOURCE_GATE_CHANGED');}else if(p.sourceFence!==null)fail('RELEASE_PUBLICATION_SOURCE_NOT_APPLICABLE');
-   for(const id of [q.target.datasetId,...(q.source?[q.source.datasetId]:[])])if(get("SELECT 1 FROM preview_access_requests WHERE dataset_id=? AND is_write=1 AND state IN ('DISPATCHED','UNKNOWN')",id))fail('RELEASE_PUBLICATION_WRITES_UNRESOLVED');
+   for(const id of [q.target.datasetId,...(q.source?[q.source.datasetId]:[])])if(get("SELECT 1 FROM business_pending_writes WHERE dataset_id=?",id))fail('RELEASE_PUBLICATION_WRITES_UNRESOLVED');
    const route=get('SELECT * FROM release_route_bindings WHERE project_id=?',q.projectId);if((q.expectedAcceptedReleaseId===null)!==!route||route&&route.release_id!==q.expectedAcceptedReleaseId)fail('RELEASE_PUBLICATION_PREVIOUS_ROUTE_CHANGED');
    return {sourceGate,targetGate,previousRoute:route?{releaseId:String(route.release_id),routeHash:String(route.route_hash),generation:Number(route.generation)}:null};
  }
@@ -57,5 +57,9 @@ export function createReleasePublicationDomain(db:DatabaseSync,plans:Pick<Return
   },
   listReleasePublicationHistory(i:ReleasePublicationInput<'listReleasePublicationHistory'>){bound(i);const rows=all('SELECT * FROM release_publication_events WHERE release_id=? AND revision>? ORDER BY revision LIMIT ?',i.releaseId,i.afterSequence,i.limit+1),page=rows.slice(0,i.limit);return {items:page.map(r=>({sequence:Number(r.revision),revision:Number(r.revision),state:r.state,errorCode:r.error_code,observedAt:r.observed_at})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.revision):null};},
  };
- return {execute(method:ReleasePublicationMethod,input:unknown):unknown{const parsed=parseContract(releasePublicationRequests[method],input);return transaction(db,()=>(handlers[method] as (i:unknown)=>unknown)(parsed));}};
+ return {
+  // Internal read joins the caller's existing transaction; it never begins an effect.
+  getForAccess(principalId:string,releaseId:string){return view(scoped(principalId,row(releaseId)));},
+  execute(method:ReleasePublicationMethod,input:unknown):unknown{const parsed=parseContract(releasePublicationRequests[method],input);return transaction(db,()=>(handlers[method] as (i:unknown)=>unknown)(parsed));}
+ };
 }
