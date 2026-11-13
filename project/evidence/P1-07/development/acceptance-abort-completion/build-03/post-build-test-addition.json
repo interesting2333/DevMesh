@@ -1,0 +1,6 @@
+{
+  "file": "tests/acceptance-abort-finalizer.test.mjs",
+  "sha256": "1c5440981428c0c3d69269ad2f2920f3afedea58040d13f96045c4722db50414",
+  "reason": "Standalone MJS regression for the existing non-null HELD service cleanup/finalizer path and control commit ACK failure recovery. Added after the four existing final groups completed; no production source or emitted artifact changed.",
+  "addedAt": "2026-11-13T02:02:56.831Z"
+}

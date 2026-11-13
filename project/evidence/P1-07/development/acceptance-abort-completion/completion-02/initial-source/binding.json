@@ -1,0 +1,27 @@
+{
+  "scope": "Exact second test input bytes retained; current/emitted/first retained bytes and mechanically reversed test additions are accepted only when matching original inputs-before SHA.",
+  "files": {
+    "packages/runner/src/acceptance-abort-finalizer.ts": "b6cf969163cd8d23a2fc6e662abbf1a454be17427fe6bce6ca2930864526f7e3",
+    "packages/storage-sqlite/migrations/0041-acceptanceabortcompletions.sql": "31b89652ae7b9fd7a3e6a67c7410dea7efd4a4baf42e5cb567fd138cdb1e2008",
+    "packages/storage-sqlite/src/acceptance-abort-recovery-domain.ts": "c02eae282bec216af82942699f78ea96e3fe5bca8854a222e27027c56db294e5",
+    "packages/storage-sqlite/src/acceptance-abort-recovery-protocol.ts": "ba9e82d286e24a45b0d385b4df2da4c8068c84ef8cfd1971eaf693e475b24a88",
+    "tests/acceptance-abort-completion.test.mjs": "81a586ed2893a1a27ff090ccd6cdcd1ea9a1d3f27561e8a725cf7037574cfd4d",
+    "tests/fixtures/acceptance-abort-completion.mjs": "c6eacea1b4077db3c2293dfb9e0bc39caa7c53ae2e3ff1df8e25fbbf53fafcbd",
+    "tests/storage-acceptance-abort-completion-upgrade.test.mjs": "da80193f581e3b53e0d594823765f402ff2e2a39a90df3292d0b738f0fc24f78",
+    "packages/contracts/src/events.ts": "cb6d1786bcab0ea00e6c055cee738c8175c077c17688048073f5b5fc18237cdf",
+    "packages/runner/src/acceptance-dataset-abort.ts": "5b49626f18a6ec3ef203e6da983c447d0e864a7c1db834ef33951f4f05f746df",
+    "packages/runner/src/dataset-journal.ts": "0e9c09aa0795bc8d5fe13757c7f4759f635b618444681cca9dfdaa13abb31295",
+    "packages/runner/src/index.ts": "d56c06beee8bb8371013832f23d11ae75721b337a6873c5982c0e4fbffdab4c7",
+    "packages/storage-sqlite/migrations/manifest.json": "99cb9b4911c95dcfd1563b692ff85a6738261a25b1acdfea8915e4b6de29d880",
+    "packages/storage-sqlite/src/acceptance-abort-domain.ts": "7c91d7c043d22efe03bfb127eb20ac5825e91ccdbeb0ebb8610f8778df9edd40",
+    "packages/storage-sqlite/src/acceptance-commit-domain.ts": "0bbe66fdb22c1e6d2ed3d890f478705a0be0eda45944b75856ed0a29f23c591b",
+    "packages/storage-sqlite/src/acceptance-domain.ts": "5f5969e49bf95ef76ac323a33ed1d94cdf6f23167bfc8c12f760dc9a5eb5e95e",
+    "packages/storage-sqlite/src/acceptance-protocol.ts": "fceda16cd97af27bccc1fb5959aae557f74bdb02d9aed4d9dc338ab0a8f7cd59",
+    "packages/storage-sqlite/src/acceptance-readiness-domain.ts": "31fa4daad485e983f29d81c89500ba4e0ec48492c07e0c95836e9c98c58ca2b4",
+    "packages/storage-sqlite/src/domain.ts": "fcb6aa27524b2a30970ed303832c867a118c783c8435ff16ffd4cd0ab9f76a1d",
+    "packages/storage-sqlite/src/index.ts": "9279d1b42baf206be313e10f2cc6e5b650c65dc26c942503445dea2808aba68f",
+    "packages/storage-sqlite/src/protocol.ts": "de9386254f8c11c0a7f0e4c4ebd42477723c0ff06c0a56f7604c254c05071cde",
+    "tests/fixtures/preview-access-seed.mjs": "162d45ccbc5917d63a52e322339512fac8968f2f17a49c09601d2815529bf8b3",
+    "tests/storage-acceptance-abort-upgrade.test.mjs": "ed7947d12dbdcc6babebd03f0b04fe09e34b69251853c4b978c4664b89f3779c"
+  }
+}

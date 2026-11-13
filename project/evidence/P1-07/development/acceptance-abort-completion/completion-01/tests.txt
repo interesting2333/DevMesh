@@ -1,0 +1,581 @@
+TAP version 13
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: initial control abort completion is immutable, transactional and releases only its own occupancy
+    # Subtest: completion survives restart, preserves SENT, target and decision; admits a new preparation
+    not ok 1 - completion survives restart, preserves SENT, target and decision; admits a new preparation
+      ---
+      duration_ms: 536.1119
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:21:10'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: original prepared proof remains permanently unavailable; exact custody is required
+    not ok 2 - original prepared proof remains permanently unavailable; exact custody is required
+      ---
+      duration_ms: 755.4603
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:28:10'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: only original backend can read or submit completion after owner removal
+    not ok 3 - only original backend can read or submit completion after owner removal
+      ---
+      duration_ms: 581.8681
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:29:10'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: reject mismatched decision without completion effects
+    ok 4 - reject mismatched decision without completion effects
+      ---
+      duration_ms: 500.9191
+      type: 'test'
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: reject mismatched dataRequest without completion effects
+    ok 5 - reject mismatched dataRequest without completion effects
+      ---
+      duration_ms: 509.0136
+      type: 'test'
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: reject mismatched target without completion effects
+    ok 6 - reject mismatched target without completion effects
+      ---
+      duration_ms: 502.1602
+      type: 'test'
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: reject mismatched generation without completion effects
+    ok 7 - reject mismatched generation without completion effects
+      ---
+      duration_ms: 659.3206
+      type: 'test'
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: reject mismatched serviceHash without completion effects
+    ok 8 - reject mismatched serviceHash without completion effects
+      ---
+      duration_ms: 493.6544
+      type: 'test'
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: reject mismatched source without completion effects
+    ok 9 - reject mismatched source without completion effects
+      ---
+      duration_ms: 505.1851
+      type: 'test'
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: reject mismatched future without completion effects
+    ok 10 - reject mismatched future without completion effects
+      ---
+      duration_ms: 531.0539
+      type: 'test'
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback completion cut
+    not ok 11 - rollback completion cut
+      ---
+      duration_ms: 672.19
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:31:229'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback run cut
+    not ok 12 - rollback run cut
+      ---
+      duration_ms: 638.2266
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:31:229'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: rollback event cut
+    not ok 13 - rollback event cut
+      ---
+      duration_ms: 524.2282
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:31:229'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /EXPLICIT_COMPLETION_CUT/. Input:
+        
+        'StorageError: 请求不符合契约。'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+      error: '请求不符合契约。'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      operator: 'rejects'
+      stack: |-
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-abort-completion.test.mjs:31:436)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-abort-completion.test.mjs:31:221)
+        async Test.run (node:internal/test_runner/test:1110:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+    # Subtest: concurrent exact duplicate completion emits one event
+    not ok 14 - concurrent exact duplicate completion emits one event
+      ---
+      duration_ms: 683.8477
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:32:10'
+      failureType: 'testCodeFailure'
+      error: '请求不符合契约。'
+      code: 'SCHEMA_INVALID'
+      name: 'StorageError'
+      stack: |-
+        Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+        Worker.emit (node:events:508:28)
+        MessagePort.<anonymous> (node:internal/worker:332:53)
+        [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+        MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+      ...
+    1..14
+not ok 1 - initial control abort completion is immutable, transactional and releases only its own occupancy
+  ---
+  duration_ms: 11204.2088
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:18:1'
+  failureType: 'subtestsFailed'
+  error: '7 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: source completion reopens only its own exact gate after fresh writable ownership
+    # Subtest: reopen exact closure with next generation
+    not ok 1 - reopen exact closure with next generation
+      ---
+      duration_ms: 307.6107
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:35:43'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: leave untouched OPEN source without fabricated gate history
+    not ok 2 - leave untouched OPEN source without fabricated gate history
+      ---
+      duration_ms: 273.6666
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:35:43'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject pointer atomically
+    not ok 3 - reject pointer atomically
+      ---
+      duration_ms: 284.6194
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject stale atomically
+    not ok 4 - reject stale atomically
+      ---
+      duration_ms: 261.8768
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject future atomically
+    not ok 5 - reject future atomically
+      ---
+      duration_ms: 298.6065
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject readonly atomically
+    not ok 6 - reject readonly atomically
+      ---
+      duration_ms: 272.4022
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject held atomically
+    not ok 7 - reject held atomically
+      ---
+      duration_ms: 268.7764
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject image atomically
+    not ok 8 - reject image atomically
+      ---
+      duration_ms: 261.2636
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject fence atomically
+    not ok 9 - reject fence atomically
+      ---
+      duration_ms: 289.3528
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject gate atomically
+    not ok 10 - reject gate atomically
+      ---
+      duration_ms: 265.8764
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: reject unknownWrite atomically
+    not ok 11 - reject unknownWrite atomically
+      ---
+      duration_ms: 287.0353
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:36:113'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: source gate failure restores completion and gate
+    not ok 12 - source gate failure restores completion and gate
+      ---
+      duration_ms: 266.1576
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:37:244'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: source gateHistory failure restores completion and gate
+    not ok 13 - source gateHistory failure restores completion and gate
+      ---
+      duration_ms: 262.1524
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:37:244'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    # Subtest: source event failure restores completion and gate
+    not ok 14 - source event failure restores completion and gate
+      ---
+      duration_ms: 283.2537
+      type: 'test'
+      location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:37:244'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'principalId')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        capture (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7740:30)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7852:28)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7866:18)
+        Object.getReleaseCandidate [as getCandidate] (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:7927:11)
+        basis (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9214:64)
+        current (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9248:84)
+        view (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9268:19)
+        file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:33
+        transaction (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/migrations-BsETEmRY.mjs:61:17)
+        Object.getAcceptancePreparation (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/domain-ByI-ocAG.mjs:9393:11)
+      ...
+    1..14
+not ok 2 - source completion reopens only its own exact gate after fresh writable ownership
+  ---
+  duration_ms: 3886.3237
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:34:1'
+  failureType: 'subtestsFailed'
+  error: '14 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:5848) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# Subtest: actual Runner, data file Worker and control Writer compose original abort completion
+not ok 3 - actual Runner, data file Worker and control Writer compose original abort completion
+  ---
+  duration_ms: 3418.6956
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\acceptance-abort-completion.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: 'ACCEPTANCE_DATA_ORIGINAL_CHANGED'
+  code: 'ACCEPTANCE_DATA_ORIGINAL_CHANGED'
+  stack: |-
+    validateAcceptanceDataset (file:///D:/yms/AI/DevMesh/packages/runner/dist/acceptance-dataset-backend-COboqnXc.mjs:19:446)
+    #call (file:///D:/yms/AI/DevMesh/packages/runner/dist/acceptance-dataset-backend-COboqnXc.mjs:54:3)
+    LocalSqliteAcceptanceDatasetBackend.prepare (file:///D:/yms/AI/DevMesh/packages/runner/dist/acceptance-dataset-backend-COboqnXc.mjs:140:26)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/acceptance-abort-completion.test.mjs:41:24)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:31884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v40 unresolved abort, closed source and UNKNOWN write survive v41; failures restore exact old schema
+ok 4 - v40 unresolved abort, closed source and UNKNOWN write survive v41; failures restore exact old schema
+  ---
+  duration_ms: 645.6215
+  type: 'test'
+  ...
+1..4
+# tests 32
+# suites 0
+# pass 8
+# fail 24
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20374.396

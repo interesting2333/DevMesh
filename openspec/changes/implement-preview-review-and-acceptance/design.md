@@ -230,6 +230,14 @@ Runner 服务清理结果不等于完整 ABORTED：目标业务文件／原 clai
 
 物理后端调用另按该实例 maximumWorkers 限制未结束数量，文件 Worker 超时不提前释放仍在进行的后端调用名额；查询或撤销未返回时，后续调用明确保持忙／未知。缺物理适配器默认关闭；本地夹具只验证协议／真实文件日志和恢复，不证明物理 fence 已解除。本步骤仅生成数据归属恢复证明，不自动重开控制面源门、释放项目占用或投影 ABORTED。后续控制面还须在同一 writer 核实原接受指针、源门准确关闭记录、原未知写的处理与源服务恢复，保存完整撤销结论后才解除占用；完整4.1继续。
 
+### Abort completion is a separate atomic control fact
+
+前向迁移41保存不可变 acceptance_abort_completions；原准备 SENT／UNKNOWN、错误、revision、proof及撤销决定全部保留。只有原 backendPrincipalId 可以提交完整证明或读取私有恢复上下文，普通 owner 无完成标志入口。RunnerAcceptanceAbortFinalizer 显式启用，读取原控制决定、Runner SQLite 清理、数据 Worker 原回执；缺源服务恢复适配器保持 UNKNOWN。重复完成先复核原后端及原决定，再返回准确原结果，不受后续健康过期／新准备影响。
+
+完成事务绑定原决定、controller／清理摘要、数据 abort request／journal／永久撤权证明、原 prepared fences 及严格递增的后继 generation，目标永久 CLOSED。存在源时还须原 accepted pointer 未变，旧 Release 冻结镜像一致，独立可查询的 RELEASE_OWNED／READ_WRITE 服务及准确恢复 fence，健康不超过30秒。原 DISPATCHED／UNKNOWN 写请求不得被恢复证明抹掉；必须先核实原请求结局。只允许重开本准备准确关闭的旧源门，fence／revision各加一，原关闭记录及历史保留；未关闭的原 OPEN 门不制造一次关开。其他门／目标门不适用该重开权限。
+
+完成事实、源门 CAS、门历史、Run资源版本和事件同一 writer 事务；任一点失败全部回滚。提交后投影 ABORTED 并解除本准备的项目占用，但不创建 Release、不切换接受指针、不删除数据、不放行旧 T5 或晚到准备。4.1仍需真实源服务恢复、保留迁移／替换全流程与物理验证，不能凭控制协议夹具勾选。
+
 ## Risks / Trade-offs
 
 - 接受准备实例的只读挂载／APP_READ_ONLY与profile不可变，T5或开放逻辑门不能直接变为可写服务。4.3须独立实现准确原归属下的服务转换、健康及写fence交接；不能改原proof、凭接受成功宣称可写或同时开放旧新dataset。当前组合未实施发布转换。

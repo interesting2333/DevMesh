@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-13T02:04:18.741Z",
+  "base": "e006b62f9324801a58d563492434d9547dadbbf6",
+  "runnerHistoricalMigrations": [
+    {
+      "file": "packages/runner/src/fence-domain.ts",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/capacity-domain.ts",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/container-domain.ts",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/cleanup-migration.ts",
+      "sha256": "95a46d98e38c49e83b64e775f073e4768c7fbc682878b84243b836451974614e",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-service-migration.ts",
+      "sha256": "28ea1ae25ad2e40d3e027dd6314ae419a6e7928f4d803d7cd20b4eaf492d5034",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-proof-migration.ts",
+      "sha256": "90a68f417ffb05230bec935209ca036c718a27d8368c0027b195aaf8af7ce1e3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-abort-migration.ts",
+      "sha256": "5a4caa5ea7a3da5d6dfd6b97ce7f99b15197b84ed05eca92202080baf945250f",
+      "matchesBase": true
+    }
+  ],
+  "controlHistoricalMigrationCount": 40,
+  "newControlMigration": {
+    "version": 41,
+    "name": "0041-acceptanceabortcompletions.sql",
+    "sha256": "567e9da9f21e1967241e34d57afd037f94926111898235c5cd0318718d795926"
+  },
+  "builds": [
+    {
+      "name": "build-01",
+      "reportSha256": "43e76bead84d7b1252980ba4ca6536f5910f0512ef4b7bf4c134c395bb5924f2",
+      "inputChanges": []
+    },
+    {
+      "name": "build-02",
+      "reportSha256": "34eb9315e86ea176e1e820d2094616b243d2453b23598f11fb470a344980d671",
+      "inputChanges": []
+    },
+    {
+      "name": "build-03",
+      "reportSha256": "71188ec82a8523d99c830b2b0cb3dfb9bd0a81011fca81aa7a3b45fa40d7762c",
+      "inputChanges": []
+    }
+  ],
+  "initial": [
+    {
+      "name": "completion-01",
+      "tests": 32,
+      "pass": 8,
+      "fail": 24,
+      "retainedSourceFiles": 22,
+      "reportSha256": "4c11efac802ec6ca033126fd71af914f5d0646d47bac55b71ae8c731ea0ece14",
+      "differencesFromCorrespondingBuild": []
+    },
+    {
+      "name": "completion-02",
+      "tests": 32,
+      "pass": 30,
+      "fail": 2,
+      "retainedSourceFiles": 22,
+      "reportSha256": "8e1740015203622fed066e128b5733aa0aa25c332e888fb410bdfca49dd88c9a",
+      "differencesFromCorrespondingBuild": [
+        "packages/storage-sqlite/src/acceptance-abort-recovery-domain.ts"
+      ]
+    }
+  ],
+  "secondExploratoryRun": "The source-image digest validation changed after build-02 completed, before completion-02. Its exact input and older emitted bytes are retained; it is not treated as final validation. build-03 includes that change and the gate error-code correction.",
+  "postBuildTestAddition": {
+    "file": "tests/acceptance-abort-finalizer.test.mjs",
+    "sha256": "1c5440981428c0c3d69269ad2f2920f3afedea58040d13f96045c4722db50414",
+    "reason": "Standalone MJS regression for the existing non-null HELD service cleanup/finalizer path and control commit ACK failure recovery. Added after the four existing final groups completed; no production source or emitted artifact changed.",
+    "addedAt": "2026-11-13T02:02:56.831Z"
+  },
+  "groups": [
+    {
+      "name": "completion-03",
+      "tests": 34,
+      "pass": 34,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "bd3a8fbf087ae0a1877ef1e2ea95e7272dbec2596844f7bcf5ff04578a1b1864",
+      "outputSha256": "ddcc3d5336e41dc4411625a88212105d09e874d1842edd11cff4821ba5f8db6d",
+      "postBuildAdditionPresent": false
+    },
+    {
+      "name": "transaction-03",
+      "tests": 40,
+      "pass": 40,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "15058b1c4f17e1ee388035e8d1920a96ef359b1bd20f0bb29d3dff478263e502",
+      "outputSha256": "93fe71a3fe642a49707b2c367aae3991a6daa53e050f6cb4473581d1cd6c4235",
+      "postBuildAdditionPresent": false
+    },
+    {
+      "name": "runner-03",
+      "tests": 42,
+      "pass": 42,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "28e46071c05fd4662919ae603f909508aa8d518a850dab99396805f3f9d3c577",
+      "outputSha256": "abade02a92b575643bbb645d732eae886a5489cece36a23ddd660ed342f8e122",
+      "postBuildAdditionPresent": false
+    },
+    {
+      "name": "acceptance-03",
+      "tests": 66,
+      "pass": 66,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "a573f52f810d0724650b7a8148f510fbbf874de994556d928f9856ed9df9dcc7",
+      "outputSha256": "b9aec4994934ed3344cc3093b75407752ff0fbc53f59e62248e99f899cec7ee0",
+      "postBuildAdditionPresent": false
+    },
+    {
+      "name": "finalizer-03",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "0f130def8087be8daae68f525aa9409d6425f9f4938a728c0c9bbd383dcf0fec",
+      "outputSha256": "2c4cc03ecaea6f05db7284a2bf2d73a5251a6cac9dcf41deb418ef3269690b45",
+      "postBuildAdditionPresent": true
+    }
+  ],
+  "mapMatches": 160,
+  "mapBindingSha256": "17ae4b650d9254ddfbe6d24a3ed6494b5e5a9155dc8b00429b4c385cf360b5a6",
+  "scope": "Modified-checkout local development. Actual SQLite/file Workers and Runner composition; source serving, OCI/container facts and physical revocation are explicit fixtures. No real Linux, physical writable source restoration, production configuration, clean-checkout or product acceptance."
+}

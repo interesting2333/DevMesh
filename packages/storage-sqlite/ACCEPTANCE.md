@@ -41,3 +41,9 @@ REPLACE 另要求 `recordAcceptanceReplacementDecision` 的明确确认，绑定
 新 T5 要求 `devmesh.acceptance-service-claim.v1` 的完整 ACCEPTANCE 用途与绑定。旧预览 claim 仍可读取历史准备证明，但不能用作新接受服务的用途证明；不会自动升级、重新签 claim 或替换原实例。
 
 已构建依赖后用 `pnpm test:acceptance` 执行本地协议回归，根 `pnpm check` 包含该组。用例的原质量收集经过实际 Runner HTTP、文件和 SQLite，但 A2A 准入／授权、Git、OCI／容器和人工观察为明确夹具；没有真实 Runtime 心跳的授权夹具只在派发前签发 15 秒授权，生产租约和作业期限不变。
+
+## 撤销完成（迁移41）
+
+私有原后端getAcceptanceAbortRecovery／completeAcceptanceAbort校验原不可变准备和策略，不依赖当前候选资格。完整证明绑定原决定、Runner清理摘要、数据abort请求／原journal及永久撤权，已保存proof还要求准确原fences和service。源存在时要求旧接受指针、冻结manifest镜像、恢复后fence与RELEASE_OWNED／READ_WRITE服务、30秒内健康，原写DISPATCHED／UNKNOWN全部核实后才提交。
+
+acceptance_abort_completions、源门重开及历史、Run版本／事件同一writer原子保存。只重开本准备准确关闭的源门，fence／revision各加一；原OPEN门保持原历史，目标永久CLOSED。ABORTED解除本准备占用，保留原SENT／UNKNOWN及proof／决定／数据。准确重复返回原完成回执，改证据失败。此API不清理物理资源，不接公共HTTP成功标志；真实物理恢复及发布服务转换仍须独立实现。

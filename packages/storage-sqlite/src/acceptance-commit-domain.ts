@@ -30,7 +30,7 @@ export function createAcceptanceCommitDomain(db:DatabaseSync,plans:Pick<ReturnTy
         assertResourceVersion(i.ifMatch,Number(run.resource_revision));
         if(run.terminal_outcome!==null||run.phase!=='REVIEW'||run.control_gate!=='OPEN')fail('ACCEPTANCE_ADMISSION_CLOSED');
         const p=acceptances.getPreparation({principalId,operationId:i.preparationOperationId}),r=p.request;
-        if(p.resolution==='ABORTING')fail('ACCEPTANCE_ABORT_REQUESTED');
+        if(p.resolution==='ABORTING'||p.resolution==='ABORTED')fail('ACCEPTANCE_ABORT_REQUESTED');
         if(p.runId!==i.runId||p.requestHash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');
         if(get('SELECT 1 FROM acceptance_commits WHERE preparation_operation_id=?',p.operationId))fail('ACCEPTANCE_ALREADY_COMMITTED');
         if(p.revision!==i.expectedPreparationRevision||!['SENT','UNKNOWN'].includes(p.state))fail('ACCEPTANCE_REVISION_CHANGED');

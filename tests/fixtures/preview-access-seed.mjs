@@ -6,12 +6,12 @@ import {datasetPreparationRequest,previewStartRequest,previewEffectReceipt} from
 // Minimal explicit upstream state for access-domain tests. No Runner, build,
 // candidate-freeze, image or dataset execution proof is produced here. Keep every
 // FK and CHECK enabled; do not use this fixture as acceptance/quality evidence.
-export async function previewAccessSeed(t,{endpoint={host:'127.0.0.1',port:54321},instanceId='instance.access.original',targetVersion}={}){
+export async function previewAccessSeed(t,{endpoint={host:'127.0.0.1',port:54321},instanceId='instance.access.original',targetVersion,candidateManifest}={}){
   const f=await qualityStorageFixture(t,{pending:true,unprepared:true,targetVersion,...deliveryOptions()}),at=new Date().toISOString(),projectId=f.p.projectId,runId=f.p.runId,candidateId='candidate_access_fixture',datasetId='dataset_access_fixture',previewId='preview_access_fixture',principalId='preview.backend.local';
  const operation=(id,kind)=>f.insert('operations',{operation_id:id,principal_id:'user_1',scope_id:runId,idempotency_key:id,request_hash:hash(id),kind,status:'SUCCEEDED',result_json:null,created_at:at,updated_at:at});
  const delivery=await f.storage.request('registerReleaseDeliveryPolicy',{principalId:'user_1',projectId,policy:{schemaVersion:'devmesh.delivery-policy.v1',templateVersion:f.q.policy.templateVersion,checkConfigHash:f.policy.configHash,...f.q.policy.delivery}}),deliveryId='op_access_delivery_fixture';
  f.insert('release_deliveries',{operation_id:deliveryId,principal_id:'user_1',project_id:projectId,run_id:runId,quality_operation_id:f.bound.operationId,policy_hash:delivery.policyHash,request_hash:hash('explicit unexecuted delivery'),request_json:'{}',basis_json:'{}',job_json:'{}',state:'PREPARED',image_json:null,data_plan_json:null,created_at:at});
- const manifest={fixture:'access admission only; no build or candidate qualification'},manifestHash=hash(canonical(manifest));
+  const manifest=candidateManifest??{fixture:'access admission only; no build or candidate qualification'},manifestHash=hash(canonical(manifest));
  f.insert('release_candidates',{candidate_id:candidateId,project_id:projectId,run_id:runId,revision:1,code_commit:f.q.input.scope.targetCommit,requirement_revision:1,plan_revision:1,manifest_hash:manifestHash,check_config_hash:f.policy.configHash,data_plan_hash:hash('explicit fixture data plan'),manifest_json:canonical(manifest),state:'READY'});
  const freezeId='op_access_freeze_fixture';operation(freezeId,'access-test-fixture');
  f.insert('candidate_freezes',{operation_id:freezeId,principal_id:'user_1',project_id:projectId,run_id:runId,candidate_id:candidateId,revision:1,integration_operation_id:f.record.basis.sourceIntegrationOperationId,delivery_operation_id:deliveryId,request_hash:hash('explicit unexecuted freeze'),request_json:'{}',basis_hash:hash('explicit fixture basis'),created_at:at});

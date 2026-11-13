@@ -358,6 +358,25 @@ Runner SHALL 持久绑定准确控制面撤销决定、controller 与原准备�
 - **WHEN** 原适配器核实准确原 fences、永久撤权及递增 generation，目标仍关闭、原源 release 归属已恢复
 - **THEN** 保存绑定原决定／清理记录／数据日志的不可变回执，原准备日志／fences／业务文件保留；源标为 CONTROL_CLOSED，不据此自动重开旧门或声明完整 ABORTED
 
+### Requirement: Atomic acceptance abort completion
+系统 SHALL 仅允许原配置后端在核实原决定、原服务／网络清理、持久数据撤权及目标关闭后追加不可变撤销完成事实；原 SENT／UNKNOWN 历史和数据 MUST 保留。
+
+#### Scenario: Complete an initial preparation abort
+- **WHEN** 原后端提交完全匹配的原清理与数据恢复回执，原接受指针未变且目标仍关闭
+- **THEN** 同一事务记录完成、Run版本和事件，投影ABORTED并解除本准备占用；不创建Release或开放目标门
+
+#### Scenario: Restore the original source gate
+- **WHEN** 原旧Release的准确镜像、后继fence、RELEASE_OWNED／READ_WRITE归属及30秒内健康被核实，原写请求均有确定结局且旧源门由本准备准确关闭
+- **THEN** 完成事务仅将该源门重开且fence／revision递增，保留关闭记录与新历史；任一写失败整体回滚
+
+#### Scenario: Uncertain writes or stale source prevent completion
+- **WHEN** 存在DISPATCHED／UNKNOWN原写、错误关闭操作、改变的接受指针、过期健康或只读HELD服务
+- **THEN** 继续ABORTING和项目占用，不能以数据回执推断可写或清除未知请求
+
+#### Scenario: Completion recovery is immutable
+- **WHEN** 原后端重复提交准确原完成证明，或改用不同证明／非原后端
+- **THEN** 准确重放返回原结果且不重复事件；更改证明或越权失败，原准备继续永久禁止T5和目标门开放
+
 ### Requirement: Rejection preserves scope and user correction
 
 The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增需求，并允许用户纠正分类。新增范围 MUST 经过变更与新计划确认，不能通过人工审查结论直接获得实施授权。

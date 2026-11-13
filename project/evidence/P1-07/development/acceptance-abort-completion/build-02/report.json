@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual control abort-completion transactions, Runner/data Worker composition and original custody protocol fixtures. Physical source serving/revocation are explicit fixtures; no Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T01:52:03.841Z",
+      "finishedAt": "2026-11-13T01:52:25.556Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "202c03f7e723a7a28e126b8b42bae122d37826c8e3193c62f9ccba3bf1ab21c8"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T01:52:25.556Z",
+      "finishedAt": "2026-11-13T01:52:35.826Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T01:52:35.827Z",
+      "finishedAt": "2026-11-13T01:52:36.722Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/contracts/dist/index.js",
+    "packages/contracts/dist/index.js.map",
+    "packages/storage-sqlite/dist/domain-ByI-ocAG.mjs",
+    "packages/storage-sqlite/dist/domain-ByI-ocAG.mjs.map",
+    "packages/storage-sqlite/dist/domain.mjs",
+    "packages/storage-sqlite/dist/worker.mjs",
+    "packages/storage-sqlite/dist/domain-BdGRyPe0.mjs",
+    "packages/storage-sqlite/dist/domain-BdGRyPe0.mjs.map"
+  ]
+}

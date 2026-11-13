@@ -21,7 +21,7 @@ test('v39 live proof survives v40 abort migration; DDL and history failures rest
   assert.throws(()=>applyMigrations(f.db,selected,storeId),/explicit_abort_upgrade_cut/i);assert.equal(f.get('PRAGMA user_version').user_version,39);assert.equal(f.get('SELECT count(*) n FROM schema_migrations').n,39);assert.equal(f.get("SELECT name FROM sqlite_master WHERE name='acceptance_abort_decisions'"),undefined);assert.deepEqual(snapshot(),before);assert.equal(f.get('PRAGMA foreign_keys').foreign_keys,1);
   if(failure==='history')f.db.exec('DROP TRIGGER explicit_abort_upgrade_cut');
  }
- assert.equal(applyMigrations(f.db,migrations,storeId),40);assert.deepEqual(snapshot(),before);assert.equal(f.get('SELECT count(*) n FROM acceptance_abort_decisions').n,0);assert.equal(f.get('PRAGMA foreign_keys').foreign_keys,1);assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(),[]);
+  assert.equal(applyMigrations(f.db,migrations,storeId,1,40),40);assert.deepEqual(snapshot(),before);assert.equal(f.get('SELECT count(*) n FROM acceptance_abort_decisions').n,0);assert.equal(f.get('PRAGMA foreign_keys').foreign_keys,1);assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(),[]);
  // This historical fixture intentionally has no current qualified freeze. Test
  // the new SQL decision barrier here; current commands use formal upstream tests.
  const abortId='op_v40_historical_abort',decision={schemaVersion:'devmesh.acceptance-abort-decision.v1',operationId:abortId,preparation:request,preparationRequestHash:requestHash,preparationRevision:2,preparedProofHash:hash(proof),requestedBy:'user_1',reason:'Explicit historical SQL barrier fixture.',decidedAt:at},decisionBody=canonical(decision);

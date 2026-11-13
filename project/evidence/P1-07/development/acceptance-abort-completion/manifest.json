@@ -1,0 +1,736 @@
+{
+  "recordedAt": "2026-11-13T02:07:12.045Z",
+  "scope": "Raw modified-checkout development evidence, including both failed rounds and exact input snapshots. No runtime DB or credentials. Physical revocation/source serving are explicit fixtures; no real Linux, default production installation or product acceptance.",
+  "files": [
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/acceptance-03/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/acceptance-03/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/acceptance-03/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "5834f469e8f8feebeb6426ffa18a0f99c17cc64dcfa4074888f2444620045d4e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/acceptance-03/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "64bf979e6fa82e26b59aa0e350b872f6749bd334e6eebda31a6d2c048db1648b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/acceptance-03/report.json",
+      "byteSize": 1006,
+      "sha256": "a573f52f810d0724650b7a8148f510fbbf874de994556d928f9856ed9df9dcc7"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/acceptance-03/tests.txt",
+      "byteSize": 34862,
+      "sha256": "b9aec4994934ed3344cc3093b75407752ff0fbc53f59e62248e99f899cec7ee0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/acceptance-03/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/build.txt",
+      "byteSize": 15898,
+      "sha256": "ad0324eb04343b1cf831b42dc0f856f51e35a18615c67f66be8813b51f0a35a4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "be17034f2fdc26d7377c57387d7f028e8298c7fbca0393a91c6da614d8c5a076"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/emitted-before.json",
+      "byteSize": 11844,
+      "sha256": "c577508a72b7d91bbbc209634a0111db1b5e0bf28fac9f417bb070bc8c783378"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "c2518d58eb59320bd7af091724bea26642f06664dacdb64879519c26c7a69992"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "e5567f0ded616828f5076909877ddc964b2fa1d4e36d235b10ec228889abd800"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/report.json",
+      "byteSize": 4466,
+      "sha256": "43e76bead84d7b1252980ba4ca6536f5910f0512ef4b7bf4c134c395bb5924f2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-01/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/build.txt",
+      "byteSize": 16295,
+      "sha256": "202c03f7e723a7a28e126b8b42bae122d37826c8e3193c62f9ccba3bf1ab21c8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "5b3aea9a563653e89ec566c877a022d982ef03967c394482f6497045364335ed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "be17034f2fdc26d7377c57387d7f028e8298c7fbca0393a91c6da614d8c5a076"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "cb3737bc0081bb7fd339b51f064bcde06b6d6794e0ddc5c7c1db1af01d2ae84e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "8733ac2c7a4443e87757b02eb618ebabf8ccb7bd0191f3b8e6c24779c5459fe2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/report.json",
+      "byteSize": 2426,
+      "sha256": "34eb9315e86ea176e1e820d2094616b243d2453b23598f11fb470a344980d671"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-02/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/build.txt",
+      "byteSize": 15898,
+      "sha256": "2283c00bf6c8bb877e7683b1b1458a81a4f000b4a86d82ddcbbaa6da3c7f1dc4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "5b3aea9a563653e89ec566c877a022d982ef03967c394482f6497045364335ed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "828ccb12d163fbdc2822d869ee31247959d1ca1d4adf3b89e8f2bf2969a35cf8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "d2098afd0409c806826a2bf337b50eaf714deadad85bdc67309832a0ac67e011"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/post-build-test-addition.json",
+      "byteSize": 427,
+      "sha256": "5aec24cd11a747f15a40e47771dc8281aecc88fd7cde16ed32020dc5e93ed95a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/report.json",
+      "byteSize": 2486,
+      "sha256": "71188ec82a8523d99c830b2b0cb3dfb9bd0a81011fca81aa7a3b45fa40d7762c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/build-03/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "be17034f2fdc26d7377c57387d7f028e8298c7fbca0393a91c6da614d8c5a076"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "be17034f2fdc26d7377c57387d7f028e8298c7fbca0393a91c6da614d8c5a076"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/binding.json",
+      "byteSize": 2900,
+      "sha256": "6948db3d75d362a33f494749e4ba236026cd0baea8d1df20442406b15378ba92"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/contracts/src/events.ts.txt",
+      "byteSize": 5572,
+      "sha256": "2a6d22cf88408b052ea1ba0c881f648692d713a198804e69ea6edcc86f294282"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/runner/src/acceptance-abort-finalizer.ts.txt",
+      "byteSize": 5118,
+      "sha256": "b6cf969163cd8d23a2fc6e662abbf1a454be17427fe6bce6ca2930864526f7e3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/runner/src/acceptance-dataset-abort.ts.txt",
+      "byteSize": 3914,
+      "sha256": "5b49626f18a6ec3ef203e6da983c447d0e864a7c1db834ef33951f4f05f746df"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/runner/src/dataset-journal.ts.txt",
+      "byteSize": 6944,
+      "sha256": "0e9c09aa0795bc8d5fe13757c7f4759f635b618444681cca9dfdaa13abb31295"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/runner/src/index.ts.txt",
+      "byteSize": 5254,
+      "sha256": "d56c06beee8bb8371013832f23d11ae75721b337a6873c5982c0e4fbffdab4c7"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/migrations/0041-acceptanceabortcompletions.sql.txt",
+      "byteSize": 4452,
+      "sha256": "31b89652ae7b9fd7a3e6a67c7410dea7efd4a4baf42e5cb567fd138cdb1e2008"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/migrations/manifest.json.txt",
+      "byteSize": 6074,
+      "sha256": "99cb9b4911c95dcfd1563b692ff85a6738261a25b1acdfea8915e4b6de29d880"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/acceptance-abort-domain.ts.txt",
+      "byteSize": 4835,
+      "sha256": "7c91d7c043d22efe03bfb127eb20ac5825e91ccdbeb0ebb8610f8778df9edd40"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/acceptance-abort-recovery-domain.ts.txt",
+      "byteSize": 10231,
+      "sha256": "8f4bd1ebd3abe180c99766e8c9db58d27d5be43242136bd45647bb9255b123ef"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/acceptance-abort-recovery-protocol.ts.txt",
+      "byteSize": 4631,
+      "sha256": "ba9e82d286e24a45b0d385b4df2da4c8068c84ef8cfd1971eaf693e475b24a88"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/acceptance-commit-domain.ts.txt",
+      "byteSize": 9999,
+      "sha256": "0bbe66fdb22c1e6d2ed3d890f478705a0be0eda45944b75856ed0a29f23c591b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/acceptance-domain.ts.txt",
+      "byteSize": 20390,
+      "sha256": "5f5969e49bf95ef76ac323a33ed1d94cdf6f23167bfc8c12f760dc9a5eb5e95e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/acceptance-protocol.ts.txt",
+      "byteSize": 5785,
+      "sha256": "fceda16cd97af27bccc1fb5959aae557f74bdb02d9aed4d9dc338ab0a8f7cd59"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/acceptance-readiness-domain.ts.txt",
+      "byteSize": 11740,
+      "sha256": "31fa4daad485e983f29d81c89500ba4e0ec48492c07e0c95836e9c98c58ca2b4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/domain.ts.txt",
+      "byteSize": 54106,
+      "sha256": "9e911bff8380a7f185d0588553891eb593fa3c9a5f0a9e36ddec4db12a61e35b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/index.ts.txt",
+      "byteSize": 11167,
+      "sha256": "9279d1b42baf206be313e10f2cc6e5b650c65dc26c942503445dea2808aba68f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/packages/storage-sqlite/src/protocol.ts.txt",
+      "byteSize": 13845,
+      "sha256": "de9386254f8c11c0a7f0e4c4ebd42477723c0ff06c0a56f7604c254c05071cde"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/tests/acceptance-abort-completion.test.mjs.txt",
+      "byteSize": 12794,
+      "sha256": "554eb2604339870b2b623725082e6406496f8964518b1671f9ecaa8b61815500"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/tests/fixtures/acceptance-abort-completion.mjs.txt",
+      "byteSize": 8883,
+      "sha256": "c4c614655fa6d78e6284bf5dc02c002e4c29880cb01182ca1f4b02b984a10809"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/tests/fixtures/preview-access-seed.mjs.txt",
+      "byteSize": 6821,
+      "sha256": "162d45ccbc5917d63a52e322339512fac8968f2f17a49c09601d2815529bf8b3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/tests/storage-acceptance-abort-completion-upgrade.test.mjs.txt",
+      "byteSize": 2298,
+      "sha256": "da80193f581e3b53e0d594823765f402ff2e2a39a90df3292d0b738f0fc24f78"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/initial-source/tests/storage-acceptance-abort-upgrade.test.mjs.txt",
+      "byteSize": 6929,
+      "sha256": "ed7947d12dbdcc6babebd03f0b04fe09e34b69251853c4b978c4664b89f3779c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "e996df77eed11329fc01795e221f74b1e556fb2eeb9a53ace68f751992d52ccd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "4ebd1f726746bf032f4ab76ce9b06f069845246f7bb404345a2b959aa2fb0d10"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/report.json",
+      "byteSize": 901,
+      "sha256": "4c11efac802ec6ca033126fd71af914f5d0646d47bac55b71ae8c731ea0ece14"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/tests.txt",
+      "byteSize": 34750,
+      "sha256": "8baa4083de9d1982478c6569d1d8b3edf0ae1d3350b1fa454c5a8afc1c771f30"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-01/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "5b3aea9a563653e89ec566c877a022d982ef03967c394482f6497045364335ed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "5b3aea9a563653e89ec566c877a022d982ef03967c394482f6497045364335ed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/binding.json",
+      "byteSize": 2932,
+      "sha256": "7c536525b4411732d8c6d7971e3fc909341249af1984e9a4553d9b5362a25981"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/contracts/src/events.ts.txt",
+      "byteSize": 5716,
+      "sha256": "cb6d1786bcab0ea00e6c055cee738c8175c077c17688048073f5b5fc18237cdf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/runner/src/acceptance-abort-finalizer.ts.txt",
+      "byteSize": 5118,
+      "sha256": "b6cf969163cd8d23a2fc6e662abbf1a454be17427fe6bce6ca2930864526f7e3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/runner/src/acceptance-dataset-abort.ts.txt",
+      "byteSize": 3914,
+      "sha256": "5b49626f18a6ec3ef203e6da983c447d0e864a7c1db834ef33951f4f05f746df"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/runner/src/dataset-journal.ts.txt",
+      "byteSize": 6944,
+      "sha256": "0e9c09aa0795bc8d5fe13757c7f4759f635b618444681cca9dfdaa13abb31295"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/runner/src/index.ts.txt",
+      "byteSize": 5254,
+      "sha256": "d56c06beee8bb8371013832f23d11ae75721b337a6873c5982c0e4fbffdab4c7"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/migrations/0041-acceptanceabortcompletions.sql.txt",
+      "byteSize": 4452,
+      "sha256": "31b89652ae7b9fd7a3e6a67c7410dea7efd4a4baf42e5cb567fd138cdb1e2008"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/migrations/manifest.json.txt",
+      "byteSize": 6074,
+      "sha256": "99cb9b4911c95dcfd1563b692ff85a6738261a25b1acdfea8915e4b6de29d880"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/acceptance-abort-domain.ts.txt",
+      "byteSize": 4835,
+      "sha256": "7c91d7c043d22efe03bfb127eb20ac5825e91ccdbeb0ebb8610f8778df9edd40"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/acceptance-abort-recovery-domain.ts.txt",
+      "byteSize": 11088,
+      "sha256": "c02eae282bec216af82942699f78ea96e3fe5bca8854a222e27027c56db294e5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/acceptance-abort-recovery-protocol.ts.txt",
+      "byteSize": 4631,
+      "sha256": "ba9e82d286e24a45b0d385b4df2da4c8068c84ef8cfd1971eaf693e475b24a88"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/acceptance-commit-domain.ts.txt",
+      "byteSize": 9999,
+      "sha256": "0bbe66fdb22c1e6d2ed3d890f478705a0be0eda45944b75856ed0a29f23c591b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/acceptance-domain.ts.txt",
+      "byteSize": 20390,
+      "sha256": "5f5969e49bf95ef76ac323a33ed1d94cdf6f23167bfc8c12f760dc9a5eb5e95e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/acceptance-protocol.ts.txt",
+      "byteSize": 5785,
+      "sha256": "fceda16cd97af27bccc1fb5959aae557f74bdb02d9aed4d9dc338ab0a8f7cd59"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/acceptance-readiness-domain.ts.txt",
+      "byteSize": 11740,
+      "sha256": "31fa4daad485e983f29d81c89500ba4e0ec48492c07e0c95836e9c98c58ca2b4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/domain.ts.txt",
+      "byteSize": 54094,
+      "sha256": "fcb6aa27524b2a30970ed303832c867a118c783c8435ff16ffd4cd0ab9f76a1d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/index.ts.txt",
+      "byteSize": 11167,
+      "sha256": "9279d1b42baf206be313e10f2cc6e5b650c65dc26c942503445dea2808aba68f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/packages/storage-sqlite/src/protocol.ts.txt",
+      "byteSize": 13845,
+      "sha256": "de9386254f8c11c0a7f0e4c4ebd42477723c0ff06c0a56f7604c254c05071cde"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/tests/acceptance-abort-completion.test.mjs.txt",
+      "byteSize": 13315,
+      "sha256": "81a586ed2893a1a27ff090ccd6cdcd1ea9a1d3f27561e8a725cf7037574cfd4d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/tests/fixtures/acceptance-abort-completion.mjs.txt",
+      "byteSize": 8742,
+      "sha256": "c6eacea1b4077db3c2293dfb9e0bc39caa7c53ae2e3ff1df8e25fbbf53fafcbd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/tests/fixtures/preview-access-seed.mjs.txt",
+      "byteSize": 6821,
+      "sha256": "162d45ccbc5917d63a52e322339512fac8968f2f17a49c09601d2815529bf8b3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/tests/storage-acceptance-abort-completion-upgrade.test.mjs.txt",
+      "byteSize": 2298,
+      "sha256": "da80193f581e3b53e0d594823765f402ff2e2a39a90df3292d0b738f0fc24f78"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/initial-source/tests/storage-acceptance-abort-upgrade.test.mjs.txt",
+      "byteSize": 6929,
+      "sha256": "ed7947d12dbdcc6babebd03f0b04fe09e34b69251853c4b978c4664b89f3779c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "bf9702230241e3f59ced13808387725d6e1e8e971043568c12e163b992c25c6e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "1fd3beef368bbe514fa37e2e12f72419be7f4bd70e59843651487a782b2e8fa9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/report.json",
+      "byteSize": 901,
+      "sha256": "8e1740015203622fed066e128b5733aa0aa25c332e888fb410bdfca49dd88c9a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/tests.txt",
+      "byteSize": 12443,
+      "sha256": "ecd6900ef7ba9c3ea049546973691ca1a6c4c9a7730162f0c6619bf4f945f749"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-02/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-03/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-03/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-03/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "97db16bbb59d6c162f93d03b2665602f8c687571ad9fd4ba91ba0ea0fb7a7952"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-03/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "b0bf6f0c768a5034d3caa4b66c75b5ac7e192aeb903f298db60bc8e45e8ff8b1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-03/report.json",
+      "byteSize": 901,
+      "sha256": "bd3a8fbf087ae0a1877ef1e2ea95e7272dbec2596844f7bcf5ff04578a1b1864"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-03/tests.txt",
+      "byteSize": 11069,
+      "sha256": "ddcc3d5336e41dc4411625a88212105d09e874d1842edd11cff4821ba5f8db6d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/completion-03/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/exploratory-map-mismatch.json",
+      "byteSize": 95674,
+      "sha256": "aa43db4b98851189b88690790a9c8359468491110ad92d81b0417149ab5c3882"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/final-binding-driver.mjs",
+      "byteSize": 5560,
+      "sha256": "e19f3c1bc340adb352f8800d42c10ff87c5e9b307f91b83f32d697fe61d5abf1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/final-binding.json",
+      "byteSize": 5832,
+      "sha256": "6d8614490171e116ea2345e82da46743188ff7858675e7c5f500807a8d399318"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/finalizer-03/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/finalizer-03/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/finalizer-03/inputs-after.json",
+      "byteSize": 53753,
+      "sha256": "6ddd53dd2ce599a6d1e560e5371489f9d7f85aa723bec27e40cb84850e47cd68"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/finalizer-03/inputs-before.json",
+      "byteSize": 53753,
+      "sha256": "871356ebfa5de9cb58a9648be60c3c2bef1151c6f80b896eec58d6826bfec5f6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/finalizer-03/report.json",
+      "byteSize": 830,
+      "sha256": "0f130def8087be8daae68f525aa9409d6425f9f4938a728c0c9bbd383dcf0fec"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/finalizer-03/tests.txt",
+      "byteSize": 2412,
+      "sha256": "2c4cc03ecaea6f05db7284a2bf2d73a5251a6cac9dcf41deb418ef3269690b45"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/finalizer-03/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/map-binding.json",
+      "byteSize": 95052,
+      "sha256": "17ae4b650d9254ddfbe6d24a3ed6494b5e5a9155dc8b00429b4c385cf360b5a6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/contracts.txt",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/design.txt",
+      "byteSize": 43,
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/diff.txt",
+      "byteSize": 497,
+      "sha256": "fdbb7b6b5400e1c0a39f0242ae1fe4a97e85a689147b20d313b5bb33aaa6add5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/openspec.txt",
+      "byteSize": 673,
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/project.txt",
+      "byteSize": 172,
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/render.txt",
+      "byteSize": 34,
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/report.json",
+      "byteSize": 2804,
+      "sha256": "9842b88347a2d50537c9285e7c23359d5d606a85518a96495225faddb4af8cd2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-1/validation-driver.mjs",
+      "byteSize": 1864,
+      "sha256": "05ec685309b29c3a6823203118a074c9dd6f6120cf196b4296733675585a4265"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/contracts.txt",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/design.txt",
+      "byteSize": 43,
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/diff.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/openspec.txt",
+      "byteSize": 673,
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/project.txt",
+      "byteSize": 172,
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/render.txt",
+      "byteSize": 34,
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/report.json",
+      "byteSize": 3173,
+      "sha256": "36b0f17efecca14875b26625770b86849ec6e7ef3e9983a95bd1c975c8985ec1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/staged-diff.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/post-2/validation-driver.mjs",
+      "byteSize": 1864,
+      "sha256": "05ec685309b29c3a6823203118a074c9dd6f6120cf196b4296733675585a4265"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/runner-03/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/runner-03/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/runner-03/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "30b0524f6121347a63e4b44ba4f40be3f499c7d694a15285dbc370c5cbed4948"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/runner-03/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "c1edc655be5d772ebe39ee65712751d4276b312d98bc261d09ec4a8a9733a446"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/runner-03/report.json",
+      "byteSize": 875,
+      "sha256": "28e46071c05fd4662919ae603f909508aa8d518a850dab99396805f3f9d3c577"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/runner-03/tests.txt",
+      "byteSize": 40387,
+      "sha256": "abade02a92b575643bbb645d732eae886a5489cece36a23ddd660ed342f8e122"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/runner-03/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/transaction-03/emitted-after.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/transaction-03/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/transaction-03/inputs-after.json",
+      "byteSize": 53638,
+      "sha256": "3eb95ac0a174ac9b6cf4ab6e943c4a8a0b9f2ac4ee89032a4d4c5a0d86d8e6e5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/transaction-03/inputs-before.json",
+      "byteSize": 53638,
+      "sha256": "f2f87e42c7e031f2098c4b28286b8fc2a20c68be5963a1b5582f4b80409fda2f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/transaction-03/report.json",
+      "byteSize": 1084,
+      "sha256": "15058b1c4f17e1ee388035e8d1920a96ef359b1bd20f0bb29d3dff478263e502"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/transaction-03/tests.txt",
+      "byteSize": 18570,
+      "sha256": "93fe71a3fe642a49707b2c367aae3991a6daa53e050f6cb4473581d1cd6c4235"
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-abort-completion/transaction-03/validation-driver.mjs",
+      "byteSize": 4104,
+      "sha256": "5a89f2aa560d1d57dd5d7a7201804691756d470f4a8491f39c6de6daf62db940"
+    }
+  ]
+}

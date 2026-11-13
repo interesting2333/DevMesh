@@ -31,7 +31,7 @@ export function createAcceptanceAbortDomain(db:DatabaseSync,plans:Pick<ReturnTyp
         const p=acceptances.getPreparation({principalId:meta.principalId,operationId:i.preparationOperationId});
         if(p.runId!==i.runId||p.requestHash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');
         if(p.resolution==='COMMITTED')fail('ACCEPTANCE_ALREADY_COMMITTED');
-        if(p.resolution==='ABORTING')fail('ACCEPTANCE_ABORT_ALREADY_REQUESTED');
+        if(p.resolution==='ABORTING'||p.resolution==='ABORTED')fail('ACCEPTANCE_ABORT_ALREADY_REQUESTED');
         if(!['SENT','UNKNOWN'].includes(p.state))fail('ACCEPTANCE_NOT_DISPATCHED');
         if(p.revision!==i.expectedPreparationRevision)fail('ACCEPTANCE_PREPARATION_CHANGED');
         if(get('SELECT accepted_release_id FROM projects WHERE project_id=?',p.projectId)!.accepted_release_id!==p.request.expectedAcceptedReleaseId)fail('ACCEPTANCE_SOURCE_CHANGED');

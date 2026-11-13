@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Actual control abort-completion transactions, Runner/data Worker composition and original custody protocol fixtures. Physical source serving/revocation are explicit fixtures; no Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/acceptance-data-abort.test.mjs",
+        "tests/acceptance-runner-abort.test.mjs"
+      ],
+      "startedAt": "2026-11-13T01:57:19.485Z",
+      "finishedAt": "2026-11-13T02:01:27.322Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "abade02a92b575643bbb645d732eae886a5489cece36a23ddd660ed342f8e122"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

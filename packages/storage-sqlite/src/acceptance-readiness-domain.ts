@@ -44,7 +44,7 @@ export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick
   function view(p:AcceptancePreparation):AcceptanceReadiness{
     const row=latest(p.operationId),stored=get('SELECT * FROM acceptance_prepared_proofs WHERE operation_id=?',p.operationId),proof=stored?acceptancePreparedProof.parse(json(stored.proof_json)):null,o=row?acceptancePreparationObservation.parse(json(row.observation_json)):null;
     const value:AcceptanceReadiness={operationId:p.operationId,requestHash:p.requestHash,sequence:Number(row?.sequence??0),state:'UNPREPARED',reasonCode:null,proofHash:stored?String(stored.proof_hash):null,proof,observation:o};
-    if(p.resolution==='ABORTING')return {...value,state:'UNAVAILABLE',reasonCode:'ACCEPTANCE_ABORT_REQUESTED'};
+    if(p.resolution==='ABORTING'||p.resolution==='ABORTED')return {...value,state:'UNAVAILABLE',reasonCode:'ACCEPTANCE_ABORT_REQUESTED'};
     if(p.qualification!=='CURRENT')return {...value,state:'STALE',reasonCode:'ACCEPTANCE_BASIS_CHANGED'};
     if(!o)return value;
     if(o.state==='UNKNOWN')return {...value,state:'UNAVAILABLE',reasonCode:o.errorCode};
@@ -57,7 +57,7 @@ export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick
     recordAcceptancePreparationObservation(i:AcceptanceReadinessInput<'recordAcceptancePreparationObservation'>){
       const p=service(i),o=i.observation,body=canonical(o);if(!['SENT','UNKNOWN'].includes(p.state))fail('ACCEPTANCE_NOT_DISPATCHED');
       if(get('SELECT 1 FROM acceptance_preparation_observations WHERE operation_id=? AND observation_hash=?',p.operationId,digest(body)))return view(p);
-      if(p.resolution==='ABORTING')fail('ACCEPTANCE_ABORT_REQUESTED');
+      if(p.resolution==='ABORTING'||p.resolution==='ABORTED')fail('ACCEPTANCE_ABORT_REQUESTED');
       if(p.resolution==='COMMITTED')fail('ACCEPTANCE_ALREADY_COMMITTED');
       if(p.revision!==i.expectedPreparationRevision)fail('ACCEPTANCE_PREPARATION_CHANGED');
       const last=latest(p.operationId),prior=last?acceptancePreparationObservation.parse(json(last.observation_json)):null;

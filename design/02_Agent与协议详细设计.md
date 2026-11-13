@@ -567,3 +567,7 @@ Runtime 抽取 `ExecutionHost` 接口：提供读取输入、检查许可、保�
 | 新协议绑定或升级 | 新 adapter 与 Card interface；语义／schema 不兼容采用新技能或服务版本，旧任务查询协议保留到保留期结束 |
 
 给外部接入方的最小交付包包括：Card URL、服务账号开通方式、授权项目范围、业务 schema／技能说明、标准请求样例、人工待办方式、幂等重试规则、状态／成果与取消说明。P0 做原型联调，P2/P3 完成注册与对外任务专项后再允许发布；目录地址与凭据由实际部署填写，本设计修改不等于已经上线外部端点。
+
+### 撤销恢复的可信后端边界
+
+完成协议由原配置backendPrincipalId持有，私有getAcceptanceAbortRecovery／completeAcceptanceAbort按原不可变准备、策略及决定校验，不以当前候选资格作为清理前提。owner可请求撤销，但不能提交清理成功标志。Runner组合器读取原控制决定、Runner SQLite清理、数据文件Worker回执及独立源服务查询；A2A／MCP／浏览器均不增加自行宣告完成的入口。物理恢复和源服务适配器须显式配置，缺配置不推断成功。

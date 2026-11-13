@@ -83,3 +83,7 @@ The separate `AcceptanceDatasetAbortAuthority` must permanently revoke the origi
 测试实际运行控制面／Runner SQLite Worker、并发事务、原动作 ACK 丢失、观察提交回滚、历史升级失败回滚、Worker 终止重开、真实 dataset 和 loopback HTTP；`ControlledContainerDriver` 显式提供 network／container 事实，不执行 Docker，健康服务也属于测试夹具。Docker 参数与观察核验针对明确输入验证，Windows 不执行 Linux CLI 路径；模板另执行实际 HTTP／SQLite／浏览器检查。不能把受控事实当成物理退出、真实镜像健康、cgroup 或宿主防火墙证据。
 
 后续仍需真实 quota／network-isolation 适配器、可信平台装配、T5 必需归属握手，以及实际 Linux／gVisor 启动／退出／移除联调。不能复用短时作业 15 秒租约代替预览生命周期。普通用户／模型没有私有预留、容器注册或可信回执接口。完整开发子项 2.3 保持未勾选。
+
+## Control abort finalization
+
+RunnerAcceptanceAbortFinalizer is opt-in. It reads the original control decision, the Runner SQLite cleanup and the bounded data-abort Worker receipt, then submits the immutable completion protocol. Callers supply only the original operation and request hash. With a source, an explicitly configured query-only authority must observe the exact original Release/image, restored fence, RELEASE_OWNED/READ_WRITE service and fresh health; missing authority remains UNKNOWN. The control writer decides gate reopening and occupancy release. No default physical restoration or writable publication adapter is installed.

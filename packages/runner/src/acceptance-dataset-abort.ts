@@ -1,21 +1,11 @@
 import {z} from 'zod';
-import {ids,opaqueKey,sha256,timestamp} from '@devmesh/contracts';
-import {acceptanceAbortDecision,canonical} from '@devmesh/storage-sqlite';
+import {sha256,timestamp} from '@devmesh/contracts';
+import {canonical,acceptanceDatasetAbortRequest,acceptanceDatasetAbortProof,acceptanceDatasetAbortReceipt,acceptanceAbortFenceSuccessor as successor} from '@devmesh/storage-sqlite';
 import {acceptanceDatasetFences,datasetHash} from './dataset-journal.js';
 import {RunnerError} from './protocol.js';
 
-export const acceptanceDatasetAbortRequest=z.strictObject({schemaVersion:z.literal('devmesh.acceptance-dataset-abort.v1'),decision:acceptanceAbortDecision,decisionHash:sha256,controllerId:opaqueKey,serviceCleanupHash:sha256});
+export {acceptanceDatasetAbortRequest,acceptanceDatasetAbortProof,acceptanceDatasetAbortReceipt};
 export const acceptanceDatasetAbortJournal=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-abort-operation.v1'),request:acceptanceDatasetAbortRequest,requestHash:sha256,originalJournalHash:sha256.nullable(),originalFences:acceptanceDatasetFences.nullable(),createdAt:timestamp});
-const successor=z.strictObject({fenceId:opaqueKey,generation:z.number().int().positive().safe(),proofHash:sha256,previousHoldHash:sha256.nullable()});
-export const acceptanceDatasetAbortProof=z.strictObject({
- schemaVersion:z.literal('devmesh.acceptance-dataset-aborted.v1'),operationId:ids.operation,abortOperationId:ids.operation,decisionHash:sha256,requestHash:sha256,
- originalFences:acceptanceDatasetFences.nullable(),
- revocation:z.strictObject({barrierId:opaqueKey,generation:z.number().int().positive().safe(),proofHash:sha256,state:z.literal('PERMANENTLY_REVOKED')}),
- target:successor.extend({datasetId:ids.dataset,writeState:z.literal('CLOSED')}),
- source:successor.extend({releaseId:ids.release,datasetId:ids.dataset,datasetOperationId:ids.operation,owner:z.literal('ORIGINAL_RELEASE'),writeState:z.literal('CONTROL_CLOSED')}).nullable(),
- settledAt:timestamp,
-});
-export const acceptanceDatasetAbortReceipt=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-abort-receipt.v1'),requestHash:sha256,journalHash:sha256,proof:acceptanceDatasetAbortProof});
 export type AcceptanceDatasetAbortJournal=z.output<typeof acceptanceDatasetAbortJournal>;
 export type AcceptanceDatasetAbortProof=z.output<typeof acceptanceDatasetAbortProof>;
 export type AcceptanceDatasetAbortObservation={state:'RESTORED_CLOSED';receipt:z.output<typeof acceptanceDatasetAbortReceipt>}|{state:'UNKNOWN';errorCode:string};

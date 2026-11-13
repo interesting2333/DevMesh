@@ -1,0 +1,1 @@
+$ oxlint --deny-warnings --ignore-pattern=project/evidence/**/failed-source/** --ignore-pattern=project/evidence/**/validation-driver.mjs apps packages scripts project tests

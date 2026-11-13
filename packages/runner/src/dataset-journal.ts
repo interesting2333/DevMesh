@@ -3,7 +3,7 @@ import {constants,openSync,closeSync,fstatSync,lstatSync,readFileSync,existsSync
 import {createHash} from 'node:crypto';
 import {z} from 'zod';
 import {ids,sha256,timestamp} from '@devmesh/contracts';
-import {canonical,datasetPreparationRequest,previewEffectReceipt,acceptancePreparationRequest,acceptancePreparedProof} from '@devmesh/storage-sqlite';
+import {canonical,datasetPreparationRequest,previewEffectReceipt,acceptancePreparationRequest,acceptancePreparedProof,acceptanceDatasetFences} from '@devmesh/storage-sqlite';
 import {webCrudDatasetMarker,validateDatasetProfile} from './dataset-profile.js';
 import type {RunnerDatasetPaths} from './dataset-paths.js';
 import {RunnerError} from './protocol.js';
@@ -12,7 +12,7 @@ export const datasetHash=(value:string|Uint8Array)=>createHash('sha256').update(
 export const previewDatasetJournal=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-operation.v1'),request:datasetPreparationRequest,requestHash:sha256,appDatasetId:z.uuid(),createdAt:timestamp});
 export const previewDatasetReceipt=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-receipt.v1'),operationId:ids.operation,requestHash:sha256,receipt:previewEffectReceipt});
 export const acceptanceDatasetJournal=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-operation.v2'),purpose:z.literal('ACCEPTANCE'),request:acceptancePreparationRequest,requestHash:sha256,appDatasetId:z.uuid(),createdAt:timestamp});
-export const acceptanceDatasetFences=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-fences.v1'),operationId:ids.operation,requestHash:sha256,sourceFence:acceptancePreparedProof.shape.sourceFence,targetFence:acceptancePreparedProof.shape.targetFence});
+export {acceptanceDatasetFences};
 export const acceptanceDatasetReceipt=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-receipt.v2'),purpose:z.literal('ACCEPTANCE'),operationId:ids.operation,requestHash:sha256,fencesHash:sha256,data:acceptancePreparedProof.shape.data});
 export type AcceptanceDatasetFences=z.output<typeof acceptanceDatasetFences>;
 type Paths=ReturnType<RunnerDatasetPaths['resolve']>;
