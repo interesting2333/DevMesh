@@ -1,0 +1,8 @@
+{
+  "at": "2026-11-13T13:54:34.203Z",
+  "file": "tests/dataset-consumer.test.mjs",
+  "sha256": "3aadaf13eba4c41e2bd664f42eeea5b45445dcd7cfc8d4d8dc624a7aad8b03ca",
+  "reason": "REMOVE branch used nonexistent f.exec. It threw before releasing the paused authority barrier; the teardown correctly waited forever for a real authority RPC. Exact leaf test Node PID 38388 was verified with Win32_Process Name and command line tests/dataset-consumer.test.mjs, then force-stopped. Parent node:test and validation driver exited 1 and preserved their complete failure log/inventory. Other two groups finished before source edits. Fix uses actual file-backed f.db.prepare(...).run(...) plus finally releasing the barrier. No product code changes are needed.",
+  "snapshot": "failed-source/dataset-consumer.test.mjs",
+  "terminationScript": "termination-script.ps1"
+}

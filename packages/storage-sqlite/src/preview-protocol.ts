@@ -42,6 +42,7 @@ export const previewRequests={
   getPreviewLifecycle:z.strictObject({principalId:opaqueKey,previewId:ids.preview}),
   getPreviewLifecycleScope:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256}),
   listPreviewLifecycles:z.strictObject(backendPage),
+  listPreviewDatasetWork:z.strictObject(backendPage),
   verifyPreviewExecution:z.strictObject(bound),
   recordPreviewRuntimeObservation:z.strictObject({...bound,expectedSequence:z.number().int().nonnegative(),fact:previewRuntimeFact}),
   listPreviewRuntimeHistory:z.strictObject({...bound,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
@@ -68,7 +69,7 @@ export type DatasetPreparationObservation={state:'UNKNOWN';errorCode:string}|{st
 export interface DatasetPreparationBackend {
  readonly configured:boolean;
  preflight(effect:PreviewEffect):Promise<void>;
- prepare(effect:PreviewEffect):Promise<DatasetPreparationObservation>;
+ prepare(effect:PreviewEffect,authorize?:()=>Promise<boolean>):Promise<DatasetPreparationObservation>;
  inspect(effect:PreviewEffect):Promise<DatasetPreparationObservation>;
 }
 export interface DatasetView {
@@ -97,6 +98,7 @@ export interface PreviewResults {
   getPreviewLifecycle:PreviewLifecycle;
   getPreviewLifecycleScope:{policyHash:string;policy:PreviewBackendPolicy};
   listPreviewLifecycles:{items:{sequence:number;lifecycle:PreviewLifecycle}[];nextSequence:number|null};
+  listPreviewDatasetWork:{items:{sequence:number;effect:PreviewEffect}[];nextSequence:number|null};
   verifyPreviewExecution:{allowed:boolean;reasonCode:string|null};
   recordPreviewRuntimeObservation:PreviewRuntimeObservation;
   listPreviewRuntimeHistory:{items:PreviewRuntimeObservation[];nextSequence:number|null};

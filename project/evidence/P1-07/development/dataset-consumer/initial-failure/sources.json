@@ -1,0 +1,15 @@
+{
+  "reason": "Initial type check: captured parentPort inside main was nullable (TS18047). Initial lint: Promise.allSettled accepts the Set directly; redundant spread rejected. No tests had started. Both original source bytes and raw logs retained before correction.",
+  "files": [
+    {
+      "file": "packages/runner/src/dataset-backend.ts",
+      "snapshot": "failed-source/dataset-backend.ts",
+      "sha256": "7e0784cbb14f568ea0dc43625809a8d51dd10579cafc5ddc18ecf351c56ebea0"
+    },
+    {
+      "file": "packages/runner/src/dataset-worker.ts",
+      "snapshot": "failed-source/dataset-worker.ts",
+      "sha256": "98efc6e89297e4442cdcb02d7b340fe2d1cfb2ce30f6aeaa7951198f4aaa5dc4"
+    }
+  ]
+}

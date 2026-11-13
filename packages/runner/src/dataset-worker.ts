@@ -12,7 +12,7 @@ import {localSqliteDatasetOptions,validateDatasetEffect} from './dataset-backend
 import {webCrudDatasetMarker,validateDatasetProfile,initializeDatasetProfile} from './dataset-profile.js';
 import {RunnerError} from './protocol.js';
 import {readDatasetJournal,validateStoredDataset} from './dataset-journal.js';
-const port=parentPort;if(!port)throw Error('Dataset filesystem and SQLite actions require their dedicated Worker');
+if(!parentPort)throw Error('Dataset filesystem and SQLite actions require their dedicated Worker');const port=parentPort;
 const journalSchema=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-operation.v1'),request:datasetPreparationRequest,requestHash:sha256,appDatasetId:z.uuid(),createdAt:timestamp});
 const receiptSchema=z.strictObject({schemaVersion:z.literal('devmesh.local-dataset-receipt.v1'),operationId:ids.operation,requestHash:sha256,receipt:previewEffectReceipt});
 type Journal=z.output<typeof journalSchema>;
@@ -50,6 +50,8 @@ async function main(){
  source();
  if(action==='preflight')return undefined;
  if(effect.state!=='SENT')throw new RunnerError('DATASET_DISPATCH_GRANT_REQUIRED',409);
+ const authorized=await new Promise<boolean>(resolve=>{port.once('message',(message:{type?:string;allowed?:boolean})=>resolve(message.type==='authorization'&&message.allowed===true));port.postMessage({type:'authorize'});});
+ if(!authorized)return unknown('DATASET_EXECUTION_NOT_AUTHORIZED');
  const p=paths.resolve(request,true);
  if(existsSync(p.journalPath))return inspect();
  if(readdirSync(p.directory).length)return unknown('DATASET_UNRECOGNIZED_DIRECTORY');

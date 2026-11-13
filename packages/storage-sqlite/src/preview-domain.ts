@@ -156,6 +156,11 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
    const rows=all('SELECT rowid sequence,* FROM preview_effects WHERE project_id=? AND policy_hash=? AND rowid>? AND state IN ('+i.states.map(()=>'?').join(',')+') ORDER BY rowid LIMIT ?',i.projectId,i.policyHash,i.afterSequence,...i.states,i.limit+1),more=rows.length>i.limit;if(more)rows.pop();
    return {items:rows.map(r=>({sequence:Number(r.sequence),effect:effectView(r)})),nextSequence:more?Number(rows.at(-1)!.sequence):null};
   },
+  listPreviewDatasetWork(i:PreviewInput<'listPreviewDatasetWork'>){
+   if(policy(i.projectId,i.policyHash).backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);
+   const rows=all("SELECT rowid sequence,* FROM preview_effects WHERE project_id=? AND policy_hash=? AND rowid>? AND kind='DATASET_PREPARE' AND state IN ('PREPARED','SENT','UNKNOWN') ORDER BY rowid LIMIT ?",i.projectId,i.policyHash,i.afterSequence,i.limit+1),more=rows.length>i.limit;if(more)rows.pop();
+   return {items:rows.map(r=>({sequence:Number(r.sequence),effect:effectView(r)})),nextSequence:more?Number(rows.at(-1)!.sequence):null};
+  },
   markPreviewEffectSent(i:PreviewInput<'markPreviewEffectSent'>){return transaction(db,()=>{
    const r=backend(i);if(r.state!=='PREPARED')return {dispatch:false,effect:effectView(r)};
    if(r.revision!==i.expectedRevision)fail('PREVIEW_EFFECT_REVISION_CHANGED');

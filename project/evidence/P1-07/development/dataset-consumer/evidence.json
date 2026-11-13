@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "b14c78dd2d4ed5511b290ecf5b04bc4c1b603e6c",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "consumer",
+      "record": "consumer-2026-11-13T13-55-41-275Z.json",
+      "tests": 13,
+      "pass": 13,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lifecycle",
+      "record": "lifecycle-2026-11-13T13-55-41-299Z.json",
+      "tests": 24,
+      "pass": 23,
+      "skipped": 1,
+      "skippedTests": [
+        "CLI shuts down on POSIX SIGTERM"
+      ],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "domain",
+      "record": "domain-2026-11-13T13-55-41-295Z.json",
+      "tests": 59,
+      "pass": 59,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T13-54-34-335Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T13-54-34-351Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T13-54-34-369Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T13-54-34-370Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 95,
+  "totalSkipped": 1,
+  "failedRuns": [
+    {
+      "file": "consumer-2026-11-13T13-51-39-331Z.json",
+      "name": "consumer",
+      "code": 1,
+      "stdoutHash": "5e26431b9beb5050ab5f0baf8faebc04632d9fa7780f230447438920ff8d5143",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changedDuringRun": []
+    },
+    {
+      "file": "lint-2026-11-13T13-49-51-237Z.json",
+      "name": "lint",
+      "code": 1,
+      "stdoutHash": "ef9fbb496f85a906e14d5d9ca62fa68c390de403b3d3a36b02cbf63d4acb1814",
+      "stderrHash": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661",
+      "changedDuringRun": []
+    },
+    {
+      "file": "type-2026-11-13T13-49-51-239Z.json",
+      "name": "type",
+      "code": 2,
+      "stdoutHash": "3d533e8bfe661cc35d6dbed7c52f832029b354a0990ba9e0e460148311c8be75",
+      "stderrHash": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "changedDuringRun": []
+    }
+  ],
+  "inputAssessment": "All final groups/checks have identical recorded final source/test inventories with no changes during or after execution. Config files are included in the final binding. Complete workspace rebuilt before tests. Bundled source-map source bytes match current source and vendor files. Historical control SQL 1..44 is unchanged. Runner changes are limited to preview dataset authorization RPC and actual drain; persistent store schema and dependencies are unchanged.",
+  "scope": "Local development only: actual file-backed control/Runner/data Workers, original dataset preparation, real data files, authorization RPC drain, queued project concurrency, consumer stop and original recovery. Container/network/OCI and physical custody/fences remain explicit fixtures. No actual model/OIDC/Linux/gVisor/physical provider or formal successor preserve/replace acceptance. No default physical authority.",
+  "actualChecks": [
+    "Original committed project/policy/service/backendRef/Runner validation, configured state, duplicate projects, all bounds and ordinary owner denial; methods pinned and tick coalesced.",
+    "Actual application SQLite preparation followed by injected lost physical-result ACK, UNKNOWN and control Worker reopen; original immutable journal/database bytes and one prepare, no preview or Release. Committed dispatch ACK loss yields original-only inspect and never initializes.",
+    "Stopping during paused preflight leaves PREPARED and drains the invocation. Stop or actual owner-row removal before final file-Worker authorization returns false, leaves UNKNOWN and creates no original journal.",
+    "A real 1000ms Worker timeout with paused authority retains the parent Promise and single Worker slot beyond timeout. Releasing authority drains the call; a queued second call starts afterward, and neither declined/late authorization creates a journal.",
+    "Three actual control Workers through an explicit local test dispatcher rotate project ranges with at most two pending calls and isolate a private scan failure. Terminal dataset history and active preview effects are excluded from the specialized data queue.",
+    "Actual host defaults off, rejects missing storage before factory invocation, rejects mismatched scopes, cleans storage after later MCP startup failure without creating files. Stop immediately closes authorization, drains before storage closes and restarts by original inspect without Input API.",
+    "Actual host periodically prepares file bytes for an owner-recorded dataset, persists immutable READY receipt across restart and leaves Run unaccepted. Existing data / path / preview / host regressions execute against the same final bytes."
+  ],
+  "history": "首轮类型检查发现文件Worker闭包内parentPort可空的两处TS18047，Lint发现allSettled多余spread；原日志与两份源码字节／SHA保留在initial-failure。首轮consumer的REMOVE测试调用不存在的f.exec，在释放授权barrier前抛出，排空teardown因此等待；核实准确测试Node PID及命令行后只终止该叶进程，原父测试／driver退出1。原测试字节／SHA、终止脚本及原因留在test-fixture-failure；改用实际文件DB.prepare.run并finally释放barrier，没有因此改产品代码。最终重新完整构建并对相同全部输入重跑所有组，不复用旧组结果。",
+  "reproduction": "validation-driver.mjs records build/type/lint/contracts and consumer/domain/lifecycle commands, full inventories and log hashes; binding-driver checks original SQL, allowed Runner source-only delta, source maps and unchanged persistent store/dependencies.",
+  "limits": [
+    "Source candidate/Git/OCI and physical container/network facts remain explicit fixtures.",
+    "No actual model/OIDC/Linux/gVisor/physical production migration or complete successor acceptance.",
+    "No new owner data choice, dataset identity, preview intent, acceptance or publication is made by the consumer.",
+    "Direct trusted local backend callers retain optional authorize compatibility; DatasetPreparer/consumer always supply final writer authorization. External adapters must honor authorization and bound I/O.",
+    "No full pnpm check or fixed-commit clean-checkout validation."
+  ],
+  "skipped": "Existing foundation POSIX SIGTERM case conditionally skips on Windows, not counted as passed.",
+  "managementChecks": "management-checks.json",
+  "documentationFix": "During review, a newly appended validation paragraph was moved from an accidentally named untracked design/06 file to the existing generator topic. The following diff check reported a trailing blank line; the line was removed, design regenerated and management checks rerun. The failed management output is preserved in management-diff-failure.json. This did not change application/test/build inputs."
+}

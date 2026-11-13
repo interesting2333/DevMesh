@@ -327,3 +327,5 @@ RunnerAcceptanceAbortCoordinator核实清理器与finalizer的Runner／controlle
 ### 原预览生命周期后台消费
 
 startPlatform显式previewLifecycle工厂提供固定项目／策略／service主体／backendRef／Runner和PreviewExecutionBackend，启动按DB原策略核实，全部后续宿主组合成功后才扫描；默认无后端，持久存储必需，Input API／网关／身份单独装配。只恢复已登记原预览，不自动创建dataset或owner决定，不自动接受／发布。原一次启动／停止、SENT／UNKNOWN只查询、周期健康保持原receipt、确定键到期停止和Release归属保护沿用原内核。最多32项目、跨项目2并发、单项目串行、有界轮转／页预算和tick合并；stop同步关闭扫描及最终授权，预检后复核，实际调用排空后才关闭存储。
+
+可信宿主可显式配置 `previewDatasets(services)`，核实DB原策略／项目／服务主体／backendRef／Runner，默认关闭且不依赖新入口、模型或身份。专用私有工作页只扫描已有DATASET_PREPARE未决操作，有限页／范围轮转、项目串行及最多2项目并发；原SENT／UNKNOWN只查、不重做初始化。不创建owner决定、预览或接受。准备器预检后复核停止，实际文件Worker建原日志前请求当前owner／候选／源与停机授权；超时关闭线程及迟到授权但等待已开始的父RPC排空后交还名额，宿主最后关闭存储。直接可信后端的可选授权保持兼容，宿主与准备器始终提供授权。

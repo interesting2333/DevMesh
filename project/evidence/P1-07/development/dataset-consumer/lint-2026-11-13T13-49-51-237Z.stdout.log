@@ -1,0 +1,2 @@
+packages/runner/src/dataset-backend.ts:38:89: warning unicorn(no-useless-spread): `Promise.allSettled` accepts an iterable, so it's unnecessary to convert the iterable to an array. help: Consider removing the spread operator.
+[ELIFECYCLE] Command failed with exit code 1.

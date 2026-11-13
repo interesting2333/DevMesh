@@ -686,3 +686,14 @@ The system SHALL allow only explicit executable host composition to install a bo
 - **WHEN** the consumer or host stops while preflight or an original execution call remains unfinished
 - **THEN** new scan and final physical authorization close immediately, preflight is rechecked before the original grant, and shutdown awaits actual backend drain before storage closes
 - **AND** any already committed original grant remains available for query-only recovery without a replacement execution
+
+### Requirement: Trusted host consumes recorded preview datasets
+The system SHALL consume only original owner-recorded dataset preparations through explicitly registered trusted bindings and a bounded private work page. It SHALL preserve terminal history, inspect SENT/UNKNOWN without a new prepare, and drain real backend work before closing storage.
+
+#### Scenario: Host restarts after dataset result ACK loss
+- **WHEN** actual data preparation completed but its original result was lost
+- **THEN** the host consumer inspects that original journal / receipt and does not initialize another dataset, create a preview or accept a release
+
+#### Scenario: Stop or revoked owner before file creation
+- **WHEN** stopAdmission or original owner revocation precedes final dataset authorization
+- **THEN** no new original file journal is created; a timed-out Worker cannot use a late authority result, and its parent call retains its slot until the real authority RPC drains

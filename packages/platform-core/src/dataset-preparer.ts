@@ -2,22 +2,31 @@ import {StorageError} from '@devmesh/storage-sqlite';
 import type {SqliteStorage,PreviewEffect,DatasetPreparationBackend,DatasetPreparationObservation} from '@devmesh/storage-sqlite';
 import {opaqueKey,ids,sha256} from '@devmesh/contracts';
 export class DatasetPreparer {
+ #closed=false;
  constructor(readonly storage:Pick<SqliteStorage,'request'>,readonly principalId:string,readonly backend?:DatasetPreparationBackend){opaqueKey.parse(principalId);}
+ stopAdmission(){this.#closed=true;}
  async advance(operationId:string):Promise<PreviewEffect>{
   const subject={principalId:this.principalId,operationId:ids.operation.parse(operationId)};
   let effect=await this.storage.request('getPreviewEffect',subject);
   if(effect.kind!=='DATASET_PREPARE')throw new StorageError('DATASET_OPERATION_REQUIRED',422,'Only dataset preparation can be advanced here');
   if(effect.state==='SUCCEEDED'||effect.state==='FAILED')return effect;
+  if(this.#closed)throw new StorageError('DATASET_PREPARER_CLOSED',503,'Dataset preparation admission is closed');
   if(!this.backend?.configured)throw new StorageError('DATASET_BACKEND_NOT_CONFIGURED',503,'An explicit trusted dataset backend is required');
   let dispatch=false;
   if(effect.state==='PREPARED'){
    await this.backend.preflight(effect);
+   if(this.#closed||!this.backend.configured)throw new StorageError('DATASET_PREPARER_CLOSED',503,'Dataset preparation admission is closed');
    const grant=await this.storage.request('markPreviewEffectSent',{...subject,requestHash:sha256.parse(effect.requestHash),expectedRevision:effect.revision});
    effect=grant.effect;dispatch=grant.dispatch;
    if(effect.state==='SUCCEEDED'||effect.state==='FAILED')return effect;
   }
   let observation:DatasetPreparationObservation;
-  try{observation=dispatch?await this.backend.prepare(effect):await this.backend.inspect(effect);}
+  const authorize=async()=>{
+   if(this.#closed||!this.backend?.configured)return false;
+   const result=await this.storage.request('verifyPreviewExecution',{...subject,requestHash:sha256.parse(effect.requestHash)});
+   return !this.#closed&&this.backend.configured&&result.allowed;
+  };
+  try{observation=dispatch?await this.backend.prepare(effect,authorize):await this.backend.inspect(effect);}
   catch{observation={state:'UNKNOWN',errorCode:'DATASET_BACKEND_UNCERTAIN'};}
   const current=await this.storage.request('getPreviewEffect',subject);
   if(current.state==='SUCCEEDED'||current.state==='FAILED')return current;
