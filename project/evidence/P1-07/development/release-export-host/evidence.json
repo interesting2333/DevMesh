@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "5adfc6b91cd06efa355e68d9b5b02ae01876240f",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "finalGroups": [
+    {
+      "name": "scheduler",
+      "record": "scheduler-2026-11-13T08-26-24-907Z.json",
+      "tests": 9,
+      "pass": 9,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T08-24-08-923Z.json",
+      "tests": 40,
+      "pass": 39,
+      "skipped": 1,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/release-export-scheduler.test.mjs"
+      ],
+      "reuseAssessment": "Production, shared fixtures and selected regression files are byte-identical. The sole later change supplies known original plan bytes through CAS inside the independent scheduler-test layout helper. This file is not built, imported or selected by the earlier regression. Its exact prior bytes are retained and match both input fingerprints. The final complete scheduler group exercises the corrected host fixture."
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T08-22-43-423Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/release-export-scheduler.test.mjs"
+      ],
+      "reuseAssessment": "Production, shared fixtures and selected regression files are byte-identical. The sole later change supplies known original plan bytes through CAS inside the independent scheduler-test layout helper. This file is not built, imported or selected by the earlier regression. Its exact prior bytes are retained and match both input fingerprints. The final complete scheduler group exercises the corrected host fixture."
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T08-26-35-193Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T08-26-35-220Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T08-26-35-200Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 48,
+  "totalSkipped": 1,
+  "failedRuns": [
+    {
+      "file": "scheduler-2026-11-13T08-23-00-149Z.json",
+      "name": "scheduler",
+      "code": 1
+    }
+  ],
+  "scope": "Modified-checkout development, actual SQLite Worker/CAS/Git, timer, Worker termination/reopen and default platform HTTP/config/start/stop/restart. Accepted source admission, upstream OCI/Runner physical facts and human review are explicit protocol fixtures; hosted layout is an explicit copied fixture, not a tested backup restore. No model, OIDC, Linux/gVisor, UI, formal successor acceptance or full product acceptance.",
+  "inputAssessment": "No selected group changed during execution. Final scheduler/type/lint/contracts inputs match final checkout; prior build and regression differ only in an independent scheduler test not built or selected by them. Production and shared tests are identical and generated source maps are verified. Regression has one Windows-inapplicable POSIX SIGTERM skip. The diagnostic test identifies a fixture gap and is not counted as product validation.",
+  "diagnostic": "The actual CAS integrity scan found one missing original plan object. Its hash equals canonical fixture plan bytes; the host test now supplies those exact bytes through CAS before copying the explicit hosted-layout fixture. Product integrity admission was not weakened.",
+  "reproduction": "Copy validation-driver.mjs and binding-driver.mjs back to .cache/p126-driver.mjs and .cache/p126-bind.mjs respectively. Diagnostic driver originally ran at .cache/p126-diag.test.mjs. Commands and exact input fingerprints are in each run JSON. Original failed scheduler test bytes are retained under failed-source; other failed/earlier full-source snapshots are not claimed.",
+  "managementChecks": "management-checks.json"
+}

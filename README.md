@@ -21,6 +21,7 @@ DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的�
 | 独立 Runner、作业受理、许可与停止事实 | [Runner 说明](./packages/runner/README.md) |
 | 官方 MCP、授权仓库读取与长任务桥接 | [MCP 说明](./packages/mcp-tools/README.md) |
 | 独立任务看板模板、数据目录与验证 | [CRUD 模板说明](./templates/web-crud-v1/README.md) |
+| 已验收源码/配置/协作材料的独立导出与恢复 | [交付包说明](./packages/result-verifier/EXPORTS.md) |
 | 全部文档与原型 | [交付说明](./交付说明.md) |
 | 运行、构建、配置、测试与 CI | [工程说明](./docs/engineering.md) |
 

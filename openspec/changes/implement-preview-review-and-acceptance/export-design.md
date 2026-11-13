@@ -16,6 +16,12 @@ ZIP 使用无压缩 ZIP32、固定时间和 UTF-8 文件名，逐项 CRC32；拒
 
 显式 ReleaseExporter 可由可信宿主运行排队任务；输入 API 仅提供排队/查询/显式 retry/下载，默认不自动装配外部身份或物理后端。下载只读 READY 内容，每次重新鉴权，校验 hash/size，以 attachment/nosniff/sandbox 返回，Range 明确拒绝。
 
+## 宿主持久队列消费
+
+平台以显式 `releaseExports.enabled: true` 启用本地消费者，必须有持久 storage；默认关闭，不依赖模型、A2A Runtime、企业身份或 Runner。可信宿主使用私有 Worker 分页扫描 QUEUED 和租约已过期的 PACKING，返回最小原创建者/作业/代际，不开放公共 HTTP 扫描；只列当前仍在项目内的原创建者。作业执行时原权限及 claim 仍逐次复核。活跃 PACKING、READY、普通 FAILED 不自动重跑；失败须创建者显式 retry，成员撤销不提升为服务主体权限。
+
+消费者一轮有最大作业数、最多两个并发和轮询间隔；同一实例不重叠轮次，跨实例继续依靠 DB claim。崩溃遗留 PACKING 仅在原两分钟租约过期后用 expectedGeneration CAS 重新排队，纯打包使用原 snapshot；不重新接受或执行迁移。默认源读取器固定控制面根目录下原 bare Git。停止先关闭 API 准入，再取消并等待当前打包退出，最后关闭 SQLite；正在打包任务接收停止信号，已提交 READY 保留。单作业有90秒协作取消期限，底层调用未返回不提前释放实例并发或伪称已停止；硬进程退出留下的原租约由后续启动恢复。
+
 ## 验证
 
 真实 SQLite Worker、CAS 文件、受控 Git、ZIP 解包与 HTTP 检查：固定历史版本、幂等与当前成员撤销、并发 claim、超时与 stale worker、写 ACK 丢失/进程重开、缺失损坏材料、路径/大小上限、迁移回滚及原验收/发布/业务库不变。通过这些不代表 OIDC、Linux/gVisor 或完整 P1-07 验收。

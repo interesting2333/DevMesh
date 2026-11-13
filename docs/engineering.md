@@ -55,6 +55,8 @@ host 当前仅允许 `127.0.0.1`／`::1`；port 为 0～65535，0 用于临时�
 
 交互终端使用 Ctrl+C；POSIX 支持 SIGTERM。服务通过 Cordis fiber disposer 关闭监听器和连接，期限到达会关闭残留连接；只有资源释放完成才输出 stopped。Node 子进程支持 IPC `{ "type": "shutdown" }`，用于 Windows 自动验证；父进程断连也触发收尾。Windows 的强制进程终止不能当作执行了 graceful shutdown。
 
+持久 storage 可显式启用 [独立交付导出消费者](../packages/result-verifier/EXPORTS.md)，配置例见 [server.release-exports.example.json](../config/server.release-exports.example.json)。`releaseExports.enabled` 默认关闭；打开后按原创建者消费本地排队和租约过期任务，不依赖模型或 Runner，也不启用平台身份。普通 FAILED 只在用户显式 retry 后消费。停止时先关闭 Input API，再取消并等待导出，最后关闭 SQLite；90秒为打包协作取消期限，原两分钟租约用于硬退出后的恢复，不能把它当作外部调用已终止的证据。
+
 ## 同一提交的独立验证
 
 ### 显式启用计划调度

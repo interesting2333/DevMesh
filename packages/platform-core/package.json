@@ -33,7 +33,9 @@
     "@devmesh/agent-runtime": "workspace:*",
     "@devmesh/mcp-tools": "workspace:*",
     "@devmesh/input-api": "workspace:*",
-    "@devmesh/storage-sqlite": "workspace:*"
+    "@devmesh/storage-sqlite": "workspace:*",
+    "@devmesh/result-verifier": "workspace:*",
+    "@devmesh/code-workspaces": "workspace:*"
   },
   "optionalDependencies": {
     "node-addon-require-builtin": "0.1.9"

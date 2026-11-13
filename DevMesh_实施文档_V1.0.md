@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 65c426a1c6362de0eba8e71b0eb1387dae108fc0b9856070fba2a88bb91d2e93 |
+| DevMesh_技术设计方案_V1.1.md | e07333da8e19acdad9ce75d88db2fc33546f4267d42e2b32987a7b91330c9ece |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | ee13e2d5b9bfb6d96500366393e8e54a512674b5d4e87eb086b0818e78a73726 |
+| DevMesh_产品验收场景_V10.0.md | 0ec370ae81d0d5fc1a3aaeddb6d97c8720cf401e7ff49fa702e9380220f82d3b |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -532,4 +532,6 @@ Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend
 
 ### P1-07 已验收交付导出开发增量
 
-迁移44、独立原版本 snapshot／材料保留、准确 Git 源读取、ZIP32 生成和原作业重试／下载；API GET不启动任务，显式宿主通过 ReleaseExporter 推进排队作业，接入见 packages/result-verifier/EXPORTS.md。归档失败或恢复不调用开发、迁移或发布，也不改验收。原配置／协作／质量／源码分别保留实际依据与处理清单；业务库和平台私有权限排除。默认调度／产品界面与完整运行回放、正式后继保留／替换和实际物理验收继续；正式 P1-07 与门槛按整体证据评审。
+迁移44、独立原版本 snapshot／材料保留、准确 Git 源读取、ZIP32 生成和原作业重试／下载；API GET不启动任务，显式宿主通过 ReleaseExporter 推进排队作业，接入见 packages/result-verifier/EXPORTS.md。归档失败或恢复不调用开发、迁移或发布，也不改验收。原配置／协作／质量／源码分别保留实际依据与处理清单；业务库和平台私有权限排除。产品界面与完整运行回放、正式后继保留／替换和实际物理验收继续；正式 P1-07 与门槛按整体证据评审。
+
+宿主通过 `releaseExports.enabled: true` 显式启用本地持久队列消费，要求已有storage，缺省关闭；私有扫描当前成员原作业、最多两并发、每轮有界，活跃租约／普通FAILED不抢占或重跑。重启从QUEUED续跑，过期PACKING按原代际CAS重排，失败仍用户显式retry；停止先关闭API再取消并等待导出后关闭存储。配置、源码读取器和关闭路径已接平台宿主；此本地增量不启用身份／模型／物理后端，完整正式前置及阶段门槛仍单独评审。

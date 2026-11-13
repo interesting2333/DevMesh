@@ -27,7 +27,28 @@ const exporter = new ReleaseExporter(contentStore,
 await exporter.advance(originalCreatorPrincipalId, exportId, shutdownSignal);
 ```
 
-宿主必须显式调度 QUEUED job；API 的 POST 只排队，GET 不隐式启动。一个 exporter 实例最多同时处理两个不同任务，相同主体/job 合并正在处理的调用；跨实例由控制 SQLite claim 串行。PACKING 的 generation/token/两分钟租约约束材料读取与归档写入，过期者不能完成引用提交。失败可按原任务重试；首次准备的 archive manifest/hash/size 不再变化。已注册内容丢 ACK 先查询 READY。原创建者已被移除时不继续读取，其他当前成员可创建自己的独立导出任务。
+API 的 POST 只排队，GET 不隐式启动。一个 exporter 实例最多同时处理两个不同任务，相同主体/job 合并正在处理的调用；跨实例由控制 SQLite claim 串行。PACKING 的 generation/token/两分钟租约约束材料读取与归档写入，过期者不能完成引用提交。失败可按原任务重试；首次准备的 archive manifest/hash/size 不再变化。已注册内容丢 ACK 先查询 READY。原创建者已被移除时不继续读取，其他当前成员可创建自己的独立导出任务。
+
+## 平台自动消费与恢复
+
+已有持久 storage 的服务器配置可增加以下字段，无须模型或 Runner：
+
+```json
+{
+  "releaseExports": {
+    "enabled": true,
+    "pollIntervalMs": 1000,
+    "maxConcurrentJobs": 2,
+    "maxJobsPerPass": 32
+  }
+}
+```
+
+完整配置参考 [server.release-exports.example.json](../../config/server.release-exports.example.json)。它只增加本地消费，不自动开启身份或 Input API；创建/下载仍须原 Input API 和可信 IdentityResolver。`enabled` 必须明确，缺省或 false 关闭消费者；无持久 storage 启动失败。轮询间隔100～60000ms，并发1～2，每轮1～200项。可在可信程序化宿主使用 `ReleaseExportScheduler(content, sources, options)`，通过 `start()`/`stop()` 管理，或用合并的 `tick()` 做有界单轮处理。
+
+消费者私有分页扫描当前成员创建的 QUEUED，及两分钟租约已过期的原 PACKING；后者按原 generation CAS 重新排队。原快照/清单不变，不消费活跃 PACKING、普通 FAILED 或 READY，不重复验收/发布/迁移。普通失败只有显式 retry 才再消费；崩溃任务在原租约过期前保持 PACKING。新进程无需内存登记便能找回原作业。成员撤销后作业不再扫描，正在打包的后续材料读取及提交也拒绝，未完成原租约保留供准确恢复。
+
+停止平台先关闭 Input API 准入，然后取消并等待当前打包退出，最后关闭存储。每次打包有90秒协作取消信号；如果底层调用未返回，不提前释放实例并发或宣称已经排空，硬退出按原租约恢复。`lastError` 仅保留固定错误码。启动完整性检查照常生效：已登记内容缺失会阻止整个宿主启动，须恢复原内容后启动；不能把导出自身 FAILED 处理理解成绕过存储完整性检查。
 
 ## 包内内容及边界
 

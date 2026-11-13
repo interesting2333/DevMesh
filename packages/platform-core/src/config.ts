@@ -6,6 +6,7 @@ import type { InternalA2AConfig } from '@devmesh/a2a-adapter';
 import { parseRuntimeConfig } from '@devmesh/agent-runtime/config';
 import type { RuntimeConfig } from '@devmesh/agent-runtime';
 import { isAbsolute } from 'node:path';
+import type {ReleaseExportSchedulerOptions} from './release-exports.js';
 
 export interface ServerConfig {
   host: '127.0.0.1' | '::1';
@@ -16,6 +17,7 @@ export interface ServerConfig {
   a2a?:Readonly<InternalA2AConfig>|undefined;
   runtime?:Readonly<RuntimeConfig>|undefined;
   inputApi?:Readonly<{repositoryRoot:string;commit:string;templatePath:string}>|undefined;
+  releaseExports?:Readonly<ReleaseExportSchedulerOptions>|undefined;
 }
 
 export class ConfigError extends Error {
@@ -44,7 +46,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
       throw new ConfigError('Server configuration must be a JSON object');
     }
     for (const key of Object.keys(parsed)) {
-      if (!['host', 'port', 'shutdownTimeoutMs', 'storage','a2a','runtime','inputApi'].includes(key)) throw new ConfigError(`Unknown server configuration field: ${key}`);
+      if (!['host', 'port', 'shutdownTimeoutMs', 'storage','a2a','runtime','inputApi','releaseExports'].includes(key)) throw new ConfigError(`Unknown server configuration field: ${key}`);
     }
     file = parsed as Record<string, unknown>;
   }
@@ -53,6 +55,14 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
   let storage: StorageConfig | undefined;
   let storageSources: Record<string,string> | undefined;
   let inputApi:ServerConfig['inputApi'];
+  let releaseExports:ServerConfig['releaseExports'];
+  if(file.releaseExports!==undefined){
+    const item=file.releaseExports as Record<string,unknown>;
+    if(!item||typeof item!=='object'||Array.isArray(item)||Object.keys(item).some(k=>!['enabled','pollIntervalMs','maxConcurrentJobs','maxJobsPerPass'].includes(k)))throw new ConfigError('Invalid releaseExports configuration');
+    if(typeof item.enabled!=='boolean')throw new ConfigError('releaseExports.enabled must be explicit');
+    const limits={pollIntervalMs:integer(item.pollIntervalMs??1000,'releaseExports.pollIntervalMs',100,60000),maxConcurrentJobs:integer(item.maxConcurrentJobs??2,'releaseExports.maxConcurrentJobs',1,2),maxJobsPerPass:integer(item.maxJobsPerPass??32,'releaseExports.maxJobsPerPass',1,200)};
+    if(item.enabled)releaseExports=Object.freeze(limits);
+  }
   if(file.inputApi!==undefined){
     const item=file.inputApi as Record<string,unknown>;
     if(!item||typeof item!=='object'||Array.isArray(item)||Object.keys(item).some(k=>!['enabled','repositoryRoot','commit','templatePath'].includes(k)))throw new ConfigError('Invalid inputApi configuration');
@@ -77,5 +87,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
     ...(file.a2a!==undefined?{a2a:Object.freeze(loadInternalA2AConfig(file.a2a,path))}:{}),
     ...(file.runtime!==undefined?{runtime:Object.freeze(parseRuntimeConfig(file.runtime))}:{}),
     ...(inputApi?{inputApi}:{}),
+    ...(releaseExports?{releaseExports}:{}),
   });
 }

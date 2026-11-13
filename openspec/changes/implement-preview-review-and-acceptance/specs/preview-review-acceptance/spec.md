@@ -525,3 +525,26 @@ The system SHALL freeze the accepted release identity, exact candidate and sourc
 - **THEN** source, formal quality/build materials and projected collaboration/configuration records are included within declared limits
 - **AND** business data, platform credentials/runtime authority and private model request/response/reasoning are excluded; unsafe or colliding paths fail without silent truncation
 - **AND** delivery completeness does not claim full platform replay/import or physical deployment acceptance
+
+### Requirement: Explicit platform export consumption survives restart
+The system SHALL enable local export consumption only with an explicit platform configuration and durable storage. The trusted host SHALL page through QUEUED and expired PACKING originals owned by current project members, with bounded per-pass work and at most two concurrent packs per instance. It MUST preserve the frozen snapshot, use the original generation CAS to recover an expired lease, and MUST NOT automatically retry ordinary FAILED jobs or replay acceptance, publication, development or migration.
+
+#### Scenario: Queued work survives a platform restart
+- **WHEN** the explicitly enabled platform starts with a durable QUEUED export, including one created by the Input API before shutdown
+- **THEN** the default controlled Git reader packs the original job and provides the same immutable READY archive without an in-memory enqueue record
+- **AND** an unexpired PACKING lease is left alone while an expired one can resume only through original-generation CAS
+
+#### Scenario: Concurrent consumption, failure or membership revocation
+- **WHEN** consumers compete, a pack fails, or the original creator loses project membership
+- **THEN** the database claim prevents competing completion, instance concurrency remains bounded, and a normal failure waits for explicit original retry
+- **AND** revoked originals are not scanned and remaining private reads or archive commits require current membership
+
+#### Scenario: Platform shutdown occurs during packing
+- **WHEN** the platform stops with active export work
+- **THEN** it stops API admission, signals cancellation and waits for actual pack calls to return before closing SQLite
+- **AND** a cooperation deadline is not treated as proof of physical termination; hard exits leave the original lease for later recovery
+
+#### Scenario: Export consumption has no authority configuration
+- **WHEN** releaseExports is omitted or disabled, or it is enabled without durable storage
+- **THEN** omission or disablement installs no consumer, and enabled configuration without storage rejects startup
+- **AND** enabling local export consumption does not enable identity, models, A2A Runtime or a physical Runner

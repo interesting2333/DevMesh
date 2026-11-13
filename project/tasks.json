@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "65c426a1c6362de0eba8e71b0eb1387dae108fc0b9856070fba2a88bb91d2e93"
+      "sha256": "e07333da8e19acdad9ce75d88db2fc33546f4267d42e2b32987a7b91330c9ece"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "ee13e2d5b9bfb6d96500366393e8e54a512674b5d4e87eb086b0818e78a73726"
+      "sha256": "0ec370ae81d0d5fc1a3aaeddb6d97c8720cf401e7ff49fa702e9380220f82d3b"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "fc982d89d48043fc80cbe352b37e09f6969484c3a94b133ffbe82391b2f71b02"
+      "sha256": "403f08344374bc3a10ba3a9861bdc26c3e75d8e5cba474640aa99299a29c6476"
     }
   ],
   "gates": [
@@ -1305,7 +1305,11 @@
         "packages/input-api/src/export.ts",
         "packages/contracts/src/release-export.ts",
         "tests/release-export.test.mjs",
-        "tests/storage-release-export-upgrade.test.mjs"
+        "tests/storage-release-export-upgrade.test.mjs",
+        "packages/platform-core/src/release-exports.ts",
+        "packages/platform-core/src/config.ts",
+        "config/server.release-exports.example.json",
+        "tests/release-export-scheduler.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1454,7 +1458,11 @@
         "project/evidence/P1-07/development/release-export/evidence.json",
         "project/evidence/P1-07/development/release-export/final-binding.json",
         "project/evidence/P1-07/development/release-export/manifest.json",
-        "packages/result-verifier/EXPORTS.md"
+        "packages/result-verifier/EXPORTS.md",
+        "project/evidence/P1-07/release-export-host-development-review.md",
+        "project/evidence/P1-07/development/release-export-host/evidence.json",
+        "project/evidence/P1-07/development/release-export-host/final-binding.json",
+        "project/evidence/P1-07/development/release-export-host/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1512,7 +1520,8 @@
         "2026-11-13：4.3独立可写发布服务增量。Runner v11原handoff／容量／profile／唯一阶段日志、显式RunnerReleaseServiceBackend与Docker Driver；严格物理后继、guard／原控制门与路由绑定，先核实只读及旧源退役再新建RELEASE实例，稳定proof及当前查询。源容器消失／REMOVED／容量／历史同事务；丢ACK只查已派发原阶段，继续协调待实现。模板RO无写锁、临时runtime锁、启动不改变准备DB字节。service-06 15/15；acceptance-06 84/84；runner-06 105/106（1项条件跳过）；模板26/26，共230通过、1条件跳过，最终类型／Lint、六包构建与173份映射、旧迁移不变。初轮产品问题／夹具错误／版本断言／超时和主动中止分别留证，最终串行回归。物理guard／Docker／fence／route仍为夹具，正式后继T5、Release入口／导出、默认组合和物理产品验收继续。设计／实施／验收／OpenSpec／使用文档与基线同步；8/13、正式状态及门槛不变。 提交前post-1另发现7处文档EOF空行，已清理并同步基线；原失败及后续post-2检查分别留证。",
         "2026-11-13：4.3 Release独立访问增量，迁移43、用途隔离票据／会话、原Runner本地HTTP、显式HTTPS／平台页，统一所有用途未定写屏障；实际Worker／TLS／业务DB／Edge React验证。access 7/7；http 7/7；browser 1/1；upgrade 1/1；regression 90/90；acceptance 157/157；contract-tests 18/18，共281通过，182份映射及旧迁移保留。失败及修正原日志保留；真实物理provider／默认装配／导出／继续协调、后继T5和门换代恢复继续，8/13、正式状态和门槛不变。",
         "2026-11-13：4.3原发布继续增量，显式resume、当前控制核验、退役／可写逐阶段唯一许可和原对象查询恢复；Runner v12配额阶段／旧profile只查询。continuation 27/27；runner 120/121（跳过1）；acceptance 157/157；regression 90/90；access 7/7；http 7/7；browser 1/1；upgrade 1/1；contract-tests 18/18，共428通过／1跳过，183份映射及旧迁移保留。两轮测试helper／负例失败和修正源码／原日志如实保留。物理provider／默认组合／独立导出、正式后继T5和门换代源恢复继续，8/13及正式状态／门槛不变。",
-        "2026-11-13：4.3独立交付导出增量，迁移44冻结原版本/实际配置与提示词/用户输入/协作记录及材料引用，准确受控Git源码与确定性ZIP32、claim/原作业重试和当前成员下载；不调用开发/迁移/发布或改验收。export 8/8、regression 114/114在最终源码通过；acceptance 157/157、workspace 18/18复用本轮未变调用路径，共297通过。构建/类型/Lint/契约、139条映射、1～43迁移前缀保留；复用范围、原编译源码及各次失败真实留证见release-export-development-review.md。默认调度/UI、完整正式后继T5及换代源恢复和真实物理验收继续，8/13及正式状态/门槛不变。"
+        "2026-11-13：4.3独立交付导出增量，迁移44冻结原版本/实际配置与提示词/用户输入/协作记录及材料引用，准确受控Git源码与确定性ZIP32、claim/原作业重试和当前成员下载；不调用开发/迁移/发布或改验收。export 8/8、regression 114/114在最终源码通过；acceptance 157/157、workspace 18/18复用本轮未变调用路径，共297通过。构建/类型/Lint/契约、139条映射、1～43迁移前缀保留；复用范围、原编译源码及各次失败真实留证见release-export-development-review.md。默认调度/UI、完整正式后继T5及换代源恢复和真实物理验收继续，8/13及正式状态/门槛不变。",
+        "2026-11-13：4.3导出宿主消费，显式releaseExports配置／默认原Git读取器、当前成员私有分页、最多两并发、过期原代际CAS恢复和先取消排空后关闭存储。scheduler 9/9，回归39通过／Windows SIGTERM跳过1；构建／类型／Lint／契约及153源码映射通过。首轮夹具缺原计划正文导致启动被完整性拦截，诊断后仅CAS补齐原字节，失败／源码差异及复核范围见release-export-host-development-review.md。产品UI、完整后继T5／换代源恢复及真实物理验收继续，8/13及正式状态／门槛不变。"
       ]
     },
     {

@@ -211,6 +211,9 @@ importers:
       '@devmesh/blob-store':
         specifier: workspace:*
         version: link:../blob-store
+      '@devmesh/code-workspaces':
+        specifier: workspace:*
+        version: link:../code-workspaces
       '@devmesh/contracts':
         specifier: workspace:*
         version: link:../contracts
@@ -220,6 +223,9 @@ importers:
       '@devmesh/mcp-tools':
         specifier: workspace:*
         version: link:../mcp-tools
+      '@devmesh/result-verifier':
+        specifier: workspace:*
+        version: link:../result-verifier
       '@devmesh/storage-sqlite':
         specifier: workspace:*
         version: link:../storage-sqlite

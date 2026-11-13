@@ -69,3 +69,5 @@
 4.3 原发布继续增量：显式resume、当前原请求／接受指针／闭门／未定写核验，退役／可写逐阶段唯一许可和原结果查询；Runner v12配额动作及旧profile只查询。continuation 27/27；runner 120/121（跳过1）；acceptance 157/157；regression 90/90；access 7/7；http 7/7；browser 1/1；upgrade 1/1；contract-tests 18/18，共428通过、1跳过；构建／类型／Lint／契约及183份映射、历史SQL保留。失败与修正原样留证，见 `project/evidence/P1-07/release-continuation-development-review.md`。物理provider／默认组合／独立导出、正式后继T5和门换代源恢复继续；完整4.3不勾选，8/13及正式状态／门槛不变。
 
 4.3 2026-11-13：4.3独立交付导出增量，迁移44冻结原版本/实际配置与提示词/用户输入/协作记录及材料引用，准确受控Git源码与确定性ZIP32、claim/原作业重试和当前成员下载；不调用开发/迁移/发布或改验收。export 8/8、regression 114/114在最终源码通过；acceptance 157/157、workspace 18/18复用本轮未变调用路径，共297通过。构建/类型/Lint/契约、139条映射、1～43迁移前缀保留；复用范围、原编译源码及各次失败真实留证见release-export-development-review.md。默认调度/UI、完整正式后继T5及换代源恢复和真实物理验收继续，8/13及正式状态/门槛不变。 证据：`project/evidence/P1-07/release-export-development-review.md`。
+
+2026-11-13：4.3导出宿主消费，显式releaseExports配置／默认原Git读取器、当前成员私有分页、最多两并发、过期原代际CAS恢复和先取消排空后关闭存储。scheduler 9/9，回归39通过／Windows SIGTERM跳过1；构建／类型／Lint／契约及153源码映射通过。首轮夹具缺原计划正文导致启动被完整性拦截，诊断后仅CAS补齐原字节，失败／源码差异及复核范围见release-export-host-development-review.md。产品UI、完整后继T5／换代源恢复及真实物理验收继续，8/13及正式状态／门槛不变。 证据：`project/evidence/P1-07/release-export-host-development-review.md`。

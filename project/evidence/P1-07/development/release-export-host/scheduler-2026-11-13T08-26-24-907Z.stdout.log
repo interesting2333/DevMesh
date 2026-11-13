@@ -1,0 +1,106 @@
+TAP version 13
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: private export scan paginates eligible originals and excludes live, terminal and revoked jobs
+ok 1 - private export scan paginates eligible originals and excludes live, terminal and revoked jobs
+  ---
+  duration_ms: 8040.1801
+  type: 'test'
+  ...
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: two consumers use real DB claims, coalesce ticks, bound concurrency and pack every original once
+ok 2 - two consumers use real DB claims, coalesce ticks, bound concurrency and pack every original once
+  ---
+  duration_ms: 15406.7206
+  type: 'test'
+  ...
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: terminated Worker leaves the original lease; restarted consumer resumes only after expiry
+ok 3 - terminated Worker leaves the original lease; restarted consumer resumes only after expiry
+  ---
+  duration_ms: 10358.7995
+  type: 'test'
+  ...
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed packing does not auto-retry; explicit original retry is consumed without repeating acceptance
+ok 4 - failed packing does not auto-retry; explicit original retry is consumed without repeating acceptance
+  ---
+  duration_ms: 7687.8226
+  type: 'test'
+  ...
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shutdown cancels and drains the actual in-flight pack before closing storage
+ok 5 - shutdown cancels and drains the actual in-flight pack before closing storage
+  ---
+  duration_ms: 6425.8197
+  type: 'test'
+  ...
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: membership removed during packing prevents publication and subsequent private scans
+ok 6 - membership removed during packing prevents publication and subsequent private scans
+  ---
+  duration_ms: 6932.8115
+  type: 'test'
+  ...
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: scan failure keeps the timer alive without persisting private error text
+ok 7 - scan failure keeps the timer alive without persisting private error text
+  ---
+  duration_ms: 7027.3053
+  type: 'test'
+  ...
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32224) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: configured platform drains persisted and HTTP-queued exports across restart with default Git sources
+ok 8 - configured platform drains persisted and HTTP-queued exports across restart with default Git sources
+  ---
+  duration_ms: 10201.766
+  type: 'test'
+  ...
+# Subtest: export configuration requires an explicit flag and bounded local scheduling
+ok 9 - export configuration requires an explicit flag and bounded local scheduling
+  ---
+  duration_ms: 12.6063
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 73020.0065

@@ -1,0 +1,23 @@
+TAP version 13
+# (node:36044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# {"integrity":{"checked":21,"failures":[{"contentHash":"bcbb114d14e203abc319242e4ee9f98741326ac583f6716e1d9d346c140ec7f2","code":"CONTENT_MISSING"}]},"knownPlanHash":"bcbb114d14e203abc319242e4ee9f98741326ac583f6716e1d9d346c140ec7f2","knownRequestHash":"9f8be6dbfc105705fc7c3e4b486cb3d3a0283b755748796f29313a1b7b484f7c"}
+# Subtest: identify registered fixture bytes absent from physical CAS
+ok 1 - identify registered fixture bytes absent from physical CAS
+  ---
+  duration_ms: 7770.6897
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8847.1048

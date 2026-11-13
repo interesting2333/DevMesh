@@ -1,0 +1,2 @@
+import test from 'node:test';import {releaseExportFixture} from '../tests/fixtures/release-export.mjs';import {hash,canonical} from '../tests/fixtures/storage-data.mjs';
+test('identify registered fixture bytes absent from physical CAS',{timeout:120000},async t=>{const f=await releaseExportFixture(t),result=await f.exportContent().verifyAll();console.log(JSON.stringify({integrity:result,knownPlanHash:hash(canonical(f.draft)),knownRequestHash:hash('用户需求原文')}));});
