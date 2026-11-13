@@ -25,6 +25,14 @@ async function harness(t,api){
 }
 const attempt=(page,method,args)=>page.evaluate(async({method,args})=>{try{return {ok:true,value:await window.localStore[method](...args)};}catch(e){return {ok:false,code:e.code??e.name};}},{method,args});
 
+test('plan journal binds all reviewed conditions, locks across basis changes and accepts only the exact plan result',{timeout:120000},async t=>{
+ const h=await harness(t),a=await h.open(),c={principalId:'user_1',form:'plan-confirm',projectId:'prj_plan',runId:'run_plan',basisRevision:3,basis:{planRevision:1,requirementRevision:2,reviewHash:'a'.repeat(64),carryForwardHash:'b'.repeat(64)}};
+ assert((await attempt(a,'save',[c,0,{text:'',name:''}])).ok);assert.equal((await attempt(a,'enqueue',[c,1])).code,'LOCAL_RECORD_INVALID');assert((await attempt(a,'save',[c,1,{text:'CONFIRM_PLAN',name:''}])).ok);const q=(await attempt(a,'enqueue',[c,2])).value.command;assert.equal(q.envelope.path,'/api/v1/runs/run_plan/plans/1:confirm');assert.equal(q.envelope.ifMatch,'"r3"');assert.deepEqual(q.envelope.body,{requirementRevision:2,reviewHash:c.basis.reviewHash,carryForwardHash:c.basis.carryForwardHash});
+ const changed={...c,basisRevision:4,basis:{...c.basis,planRevision:2,reviewHash:'c'.repeat(64)}};assert.equal((await attempt(a,'load',[changed])).value.pending.key,q.key);assert.equal((await attempt(a,'save',[changed,0,{text:'CONFIRM_PLAN',name:''}])).code,'COMMAND_PENDING');
+ const message={principalId:'user_1',form:'message',projectId:c.projectId,runId:c.runId,basisRevision:3};assert((await attempt(a,'save',[message,0,{text:'独立消息草稿',name:''}])).ok);
+ const receipt={operationId:'op_plan_fixture',status:'SUCCEEDED',result:{projectId:c.projectId,runId:c.runId,revision:4,planRevision:1}};assert.equal((await attempt(a,'observe',[q.key,{...receipt,result:{...receipt.result,planRevision:2}}])).code,'LOCAL_RECORD_INVALID');assert.equal((await attempt(a,'load',[changed])).value.pending.key,q.key);assert((await attempt(a,'observe',[q.key,receipt])).ok);assert.equal((await attempt(a,'load',[changed])).value.pending,null);assert.equal((await attempt(a,'load',[message])).value.draft.text,'独立消息草稿');assert.deepEqual((await attempt(a,'getCommand',[q.key])).value.envelope,q.envelope);assert.equal((await attempt(a,'load',[c])).value.draft.text,'');
+});
+
 test('old basis references paginate only exact form contexts without mutating drafts or pending originals',{timeout:120000},async t=>{
  const h=await harness(t),a=await h.open(),c={principalId:'user_1',form:'message',projectId:'prj_reference',runId:'run_reference',basisRevision:1};
  for(let n=1;n<=24;n++)assert((await attempt(a,'save',[{...c,basisRevision:n},0,{text:'旧依据 '+n,name:''}])).ok);

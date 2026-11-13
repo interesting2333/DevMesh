@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-14",
+  "base": "bba91b55f87cff3e5f0447ebea15b834e7ee6cef",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "http",
+      "record": "http-2026-11-13T17-52-33-373Z.json",
+      "tests": 18,
+      "pass": 18,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-13T17-52-33-386Z.json",
+      "tests": 21,
+      "pass": 21,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T17-51-30-230Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-13T17-52-32-815Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T17-52-33-357Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T17-52-33-352Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T17-52-33-372Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 39,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "Actual official A2A preparation and production PreparationRuntime with explicitly controlled structured model outputs; no fabricated plan in the page.",
+    "Exact understanding/plan basis, actual layered DAG/work/dependency/requirement navigation in one bounded stack; original input draft survives.",
+    "Source resolution validates same Run and saved exact artifact/hash references or exact requirement history; malformed, uncited, wrong-hash, foreign and cross-Run references refused.",
+    "Fatal UTF-8 and 2MiB boundary, SHA mismatch and membership revocation during asynchronous reads; plain script text escaped with no page execution.",
+    "GET adds exactly two completed READ leases and no other table-count change; no input, plan confirmation or implementation attempt generated.",
+    "Native IndexedDB full confirmation basis and cross-basis lock; wrong plan success rejected and unrelated message draft preserved.",
+    "Actual confirm POST sees committed original journal first, ACK loss reload remains inert, explicit lookup recovers one original decision and immutable envelope.",
+    "Changed Run returns412, original identity/body/If-Match retained; lookup404 keeps lock, no substitute request.",
+    "Required open questions receive no default answer; viewer has no confirmation component or native local command connection.",
+    "Real journal transaction abort sends zero POST; local retry clears checkbox and requires fresh explicit approval. Existing input/context/IME/keyboard regressions pass.",
+    "Actual desktop and390px screenshots inspected; no overflow, pageerror or CSP violation."
+  ],
+  "failureHistory": {
+    "runs": [
+      {
+        "record": "browser-2026-11-13T17-45-40-346Z.json",
+        "pass": 16,
+        "fail": 5,
+        "excludedFromFinalTotals": true
+      },
+      {
+        "record": "http-2026-11-13T17-45-40-329Z.json",
+        "pass": 14,
+        "fail": 4,
+        "excludedFromFinalTotals": true
+      },
+      {
+        "record": "http-2026-11-13T17-48-47-324Z.json",
+        "pass": 15,
+        "fail": 3,
+        "excludedFromFinalTotals": true
+      }
+    ],
+    "explanations": [
+      "Initial HTTP14/4 and browser16/5 failed before new product assertions because the controlled architect fixture used the earlier product job bootstrap artifact identity. Each job freezes its own identity even for equal bytes. The fixture now uses the architecture job context; production source validation was retained.",
+      "Second HTTP15/3 exposed public error codes missing from the enum (409/413 were mapped to503) and a no-business-write assertion counting READ lease rows as business facts. Added CONTENT_CORRUPT/CONTENT_TOO_LARGE to the public contract; the test now checks exactly two new READ/RELEASED pins and every other table count unchanged. Browser21/0 in that round is diagnostic, excluded from final totals.",
+      "An earlier direct typecheck exited2 on repeated Array.at union narrowing in source navigation. The updateSource helper fixes narrowing. That command was not captured by this raw-log driver; no log has been fabricated. Final recorded typecheck passed."
+    ],
+    "preservedSource": [
+      "failed-source/",
+      "failed-source/round-2/"
+    ]
+  },
+  "inputAssessment": "Full root application and standalone production browser-module builds precede the final browser tests. All final groups retain final source/test inventories without drift. Browser JS and map hashes are recorded before/after the final test and match the final files. All workspace and standalone module source-map source bytes match files. Control SQL1..45, Runner/store and dependencies are unchanged. Earlier failed and pre-hardening runs are diagnostic history excluded from final totals.",
+  "scope": "Actual protected React planning page, Edge 157 native IndexedDB, Input API/file Worker and official A2A preparation with production PreparationRuntime. Controlled model output, browser bearer identity and binary/large bootstrap sources are explicit fixtures. Verifies exact sourced understanding/plan, bounded source resolution, internal DAG/work/source navigation, confirmation journal/CAS/ACK-loss recovery and unchanged input regressions. No real model, OIDC, Linux Runner, WebSocket or full product acceptance.",
+  "retainedBuilds": {
+    "machineLocalOnly": true,
+    "hashes": {
+      ".cache/workbench-local-build/local.js": "6ef25bd540edbf1f046f35002e70c1c7b4b83a3a2b0755b201245ae83e8037d3",
+      ".cache/workbench-local-build/local.js.map": "feeedffefb2e12797afb49df2593e181d8642f51bcc2f1066f57f775337c66e5",
+      "packages/input-api/dist/web/workbench/workbench-client.js": "d73aff4e1c05e3706a5c60f98c8a43460c454378ff7ec99514ddd70df2f66614",
+      "packages/input-api/dist/web/workbench/workbench-client.js.map": "8d2e4e06bb57ddabcd0eb74458c816d6e7d4906550963e8224849b1b485e93ce"
+    }
+  },
+  "limits": [
+    "No attachment/question-answer/new-task UI, exact candidate-delivery navigation, WebSocket or full product/T08 acceptance in this increment.",
+    "Model output and browser identity are explicit fixtures; binary/large content is trusted bootstrap fixture data. No real model/OIDC/Linux acceptance.",
+    "Formal P1-08 remains NOT_STARTED pending predecessors/G0; development task5/13 is not formal completion.",
+    "Definitively rejected original confirmations remain locked. A validated explicit-close/re-entry flow is still outstanding."
+  ],
+  "managementChecks": "management-checks.json"
+}

@@ -75,3 +75,11 @@
 #### Scenario: New project is submitted without external model resources
 - **WHEN** 用户从空项目提交输入但模型／Runner未配置
 - **THEN** 已提交输入可刷新恢复，后续仅展示实际已存在事实与未满足条件，不能伪造计划或发布成功
+
+#### Scenario: Reader follows a stored source
+- **WHEN** 从理解、问题或计划打开消息、材料或准确需求版本来源
+- **THEN** 当前成员与准确Run归属被核实，材料ID及hash必须对应已保存引用；原内容有界读取且响应前重新检查权限，同一详情栈可返回，不读取任意磁盘路径或未引用内部材料
+
+#### Scenario: Plan review has changed or its reply is lost
+- **WHEN** 用户明确确认已审阅计划后发生版本冲突或丢失回执
+- **THEN** 原确认UUID、版本、审阅hash与继承依据被持久保留；重进不自动确认或替换原键，核实成功只表示原计划已确认，不表示实施或发布完成

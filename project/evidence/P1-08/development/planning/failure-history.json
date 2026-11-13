@@ -1,0 +1,31 @@
+{
+  "runs": [
+    {
+      "record": "browser-2026-11-13T17-45-40-346Z.json",
+      "pass": 16,
+      "fail": 5,
+      "excludedFromFinalTotals": true
+    },
+    {
+      "record": "http-2026-11-13T17-45-40-329Z.json",
+      "pass": 14,
+      "fail": 4,
+      "excludedFromFinalTotals": true
+    },
+    {
+      "record": "http-2026-11-13T17-48-47-324Z.json",
+      "pass": 15,
+      "fail": 3,
+      "excludedFromFinalTotals": true
+    }
+  ],
+  "explanations": [
+    "Initial HTTP14/4 and browser16/5 failed before new product assertions because the controlled architect fixture used the earlier product job bootstrap artifact identity. Each job freezes its own identity even for equal bytes. The fixture now uses the architecture job context; production source validation was retained.",
+    "Second HTTP15/3 exposed public error codes missing from the enum (409/413 were mapped to503) and a no-business-write assertion counting READ lease rows as business facts. Added CONTENT_CORRUPT/CONTENT_TOO_LARGE to the public contract; the test now checks exactly two new READ/RELEASED pins and every other table count unchanged. Browser21/0 in that round is diagnostic, excluded from final totals.",
+    "An earlier direct typecheck exited2 on repeated Array.at union narrowing in source navigation. The updateSource helper fixes narrowing. That command was not captured by this raw-log driver; no log has been fabricated. Final recorded typecheck passed."
+  ],
+  "preservedSource": [
+    "failed-source/",
+    "failed-source/round-2/"
+  ]
+}

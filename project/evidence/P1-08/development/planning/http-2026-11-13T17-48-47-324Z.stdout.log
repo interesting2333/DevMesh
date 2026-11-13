@@ -1,0 +1,565 @@
+TAP version 13
+# (node:38000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: input transport rejects ambiguous headers, wrong host and unsupported cookie identity
+ok 1 - input transport rejects ambiguous headers, wrong host and unsupported cookie identity
+  ---
+  duration_ms: 3083.0073
+  type: 'test'
+  ...
+# (node:38000) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shutdown aborts pending trusted identity resolution and admits no late project write
+ok 2 - shutdown aborts pending trusted identity resolution and admits no late project write
+  ---
+  duration_ms: 1343.4631
+  type: 'test'
+  ...
+# (node:20880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: input contracts preserve Unicode and original whitespace while enforcing nonempty material
+ok 3 - input contracts preserve Unicode and original whitespace while enforcing nonempty material
+  ---
+  duration_ms: 13.795
+  type: 'test'
+  ...
+# (node:20880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: input HTTP rejects missing identity, forged user fields, Origin and oversized JSON without business facts
+ok 4 - input HTTP rejects missing identity, forged user fields, Origin and oversized JSON without business facts
+  ---
+  duration_ms: 2768.772
+  type: 'test'
+  ...
+# (node:20880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTP project admission is atomic, duplicate clicks share one result, and queries enforce current membership
+ok 5 - real HTTP project admission is atomic, duplicate clicks share one result, and queries enforce current membership
+  ---
+  duration_ms: 1558.2228
+  type: 'test'
+  ...
+# (node:20880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: saved messages deduplicate before stale CAS, remain paused and emit consistent snapshot cursors
+ok 6 - saved messages deduplicate before stale CAS, remain paused and emit consistent snapshot cursors
+  ---
+  duration_ms: 1631.5574
+  type: 'test'
+  ...
+# (node:20880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: attachments are independent, bounded, owned, and become immutable material only after T1
+ok 7 - attachments are independent, bounded, owned, and become immutable material only after T1
+  ---
+  duration_ms: 1853.9317
+  type: 'test'
+  ...
+# (node:20880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: exact attachment limit is accepted and a disconnected upload does not replace another success
+ok 8 - exact attachment limit is accepted and a disconnected upload does not replace another success
+  ---
+  duration_ms: 1061.593
+  type: 'test'
+  ...
+# (node:20880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a destroyed creation response recovers the same committed project by original key
+ok 9 - a destroyed creation response recovers the same committed project by original key
+  ---
+  duration_ms: 1316.3052
+  type: 'test'
+  ...
+# (node:8748) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:8748) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: new tasks require current accepted code, exclusive admission and project CAS; old workspaces stay read only
+ok 10 - new tasks require current accepted code, exclusive admission and project CAS; old workspaces stay read only
+  ---
+  duration_ms: 1664.5326
+  type: 'test'
+  ...
+# (node:8748) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: workspace cursor and messages remain one snapshot under concurrent Worker submissions and pagination
+ok 11 - workspace cursor and messages remain one snapshot under concurrent Worker submissions and pagination
+  ---
+  duration_ms: 1214.5136
+  type: 'test'
+  ...
+# (node:13992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: workbench page and bundled client require configured trusted identity; GET creates no input facts
+ok 12 - workbench page and bundled client require configured trusted identity; GET creates no input facts
+  ---
+  duration_ms: 4204.57
+  type: 'test'
+  ...
+# (node:13992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: selected workbench rejects malformed or foreign scopes and rechecks membership after asynchronous read
+ok 13 - selected workbench rejects malformed or foreign scopes and rechecks membership after asynchronous read
+  ---
+  duration_ms: 1204.1204
+  type: 'test'
+  ...
+# (node:13992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: expected page principal is a guard before JSON parsing and side effects, never an identity credential
+ok 14 - expected page principal is a guard before JSON parsing and side effects, never an identity credential
+  ---
+  duration_ms: 1701.8561
+  type: 'test'
+  ...
+# (node:30744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source GET reads actual A2A preparation message, cited Git bytes and exact requirement without business writes
+not ok 15 - source GET reads actual A2A preparation message, cited Git bytes and exact requirement without business writes
+  ---
+  duration_ms: 3884.4793
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workbench-sources.test.mjs:8:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      {
+        a2a_task_events: 0,
+        a2a_task_ownership: 0,
+        a2a_tasks: 0,
+        acceptance_abort_completions: 0,
+    ...
+        source_archives: 0,
+    +   storage_pins: 9,
+    -   storage_pins: 7,
+        store_metadata: 1,
+        tool_operations: 0,
+        understanding_revisions: 1,
+        upload_intakes: 0,
+        user_tasks: 1,
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    a2a_task_events: 0
+    a2a_task_ownership: 0
+    a2a_tasks: 0
+    acceptance_abort_completions: 0
+    acceptance_abort_decisions: 0
+    acceptance_backend_policies: 0
+    acceptance_commits: 0
+    acceptance_data_confirmations: 0
+    acceptance_data_decisions: 0
+    acceptance_preparation_history: 0
+    acceptance_preparation_observations: 0
+    acceptance_preparations: 0
+    acceptance_prepared_proofs: 0
+    accepted_work: 0
+    agent_sessions: 0
+    artifact_applicability: 0
+    artifacts: 5
+    attachments: 0
+    attempt_dispatch_bindings: 0
+    attempts: 0
+    auth_sessions: 0
+    candidate_conflict_manifests: 0
+    candidate_freeze_materials: 0
+    candidate_freeze_work_proofs: 0
+    candidate_freezes: 0
+    candidate_integration_sources: 0
+    candidate_integration_steps: 0
+    candidate_integrations: 0
+    candidate_materials: 0
+    candidate_rejection_current: 0
+    candidate_rejection_evidence: 0
+    candidate_rejection_results: 0
+    candidate_review_current: 0
+    candidate_review_evidence: 0
+    candidate_review_results: 0
+    clarification_answers: 0
+    clarification_current: 0
+    clarification_questions: 0
+    content_objects: 15
+    content_write_operations: 0
+    context_snapshots: 0
+    dataset_backend_policies: 0
+    dataset_preparations: 0
+    datasets: 0
+    decisions: 0
+    delegation_inbox: 0
+    endpoint_checks: 4
+    endpoint_registrations: 4
+    endpoint_runtime_state: 4
+    events: 3
+    execution_grants: 0
+    input_message_attachments: 0
+    input_messages: 1
+    input_operation_resources: 3
+    input_processing: 1
+    interpretation_answers: 0
+    issue_operations: 0
+    issue_revisions: 0
+    issues: 0
+    managed_candidate_heads: 0
+    managed_repositories: 0
+    model_steps: 0
+    object_write_operations: 16
+    operations: 19
+    outbox: 4
+    pipeline_stages: 0
+    pipelines: 0
+    plan_carried_results: 0
+    plan_confirmations: 0
+    plan_edges: 1
+    plan_revisions: 1
+    plan_works: 2
+    preparation_a2a_tasks: 2
+    preparation_attempts: 2
+    preparation_bootstrap_sources: 2
+    preparation_inbox: 2
+    preparation_jobs: 2
+    preparation_slots: 0
+    preparation_steps: 2
+    preparation_task_events: 6
+    preview_access_policies: 0
+    preview_access_request_events: 0
+    preview_access_requests: 0
+    preview_credential_events: 0
+    preview_effect_observations: 0
+    preview_effects: 0
+    preview_runtime_observations: 0
+    preview_sessions: 0
+    preview_tickets: 0
+    preview_write_closures: 0
+    preview_write_gate_events: 0
+    preview_write_gates: 0
+    previews: 0
+    project_members: 1
+    projects: 1
+    quality_artifact_refs: 0
+    quality_materials: 0
+    quality_origins: 0
+    quality_policies: 0
+    quality_stage_bindings: 0
+    quality_verifications: 0
+    registry_audit: 0
+    registry_control: 1
+    registry_generations: 1
+    registry_imports: 1
+    registry_probe_tickets: 4
+    release_access_policies: 0
+    release_access_request_events: 0
+    release_access_requests: 0
+    release_candidates: 0
+    release_credential_events: 0
+    release_deliveries: 0
+    release_delivery_materials: 0
+    release_delivery_policies: 0
+    release_export_history: 0
+    release_export_materials: 0
+    release_exports: 0
+    release_promotion_outbox: 0
+    release_publication_events: 0
+    release_publication_observations: 0
+    release_publication_proofs: 0
+    release_publications: 0
+    release_route_bindings: 0
+    release_sessions: 0
+    release_tickets: 0
+    releases: 0
+    repo_file_operations: 0
+    repo_operations: 0
+    requirement_revisions: 1
+    role_endpoint_bindings: 4
+    role_slots: 0
+    role_snapshots: 0
+    runner_jobs: 0
+    runs: 1
+    runtime_activations: 0
+    runtime_model_accounting: 0
+    runtime_results: 0
+    runtime_tool_calls: 0
+    runtime_workspace_results: 0
+    scheduled_dispatch_delivery: 0
+    scheduled_work: 0
+    scheduler_project_turns: 0
+    scheduler_run_budget: 0
+    scheduler_run_roles: 0
+    schema_migrations: 45
+    session_messages: 0
+    source_archives: 0
+    storage_pins: 7
+    store_metadata: 1
+    tool_operations: 0
+    understanding_revisions: 1
+    upload_intakes: 0
+    user_tasks: 1
+    verified_findings: 0
+    verified_issue_commands: 0
+    verified_repairs: 0
+    verified_work_results: 0
+    work_acceptance_completions: 0
+    work_revisions: 2
+    work_verifications: 0
+    works: 2
+    workspace_allocations: 0
+    workspace_preservation_materials: 0
+    workspace_preservations: 0
+    workspace_reclamations: 0
+  actual:
+    a2a_task_events: 0
+    a2a_task_ownership: 0
+    a2a_tasks: 0
+    acceptance_abort_completions: 0
+    acceptance_abort_decisions: 0
+    acceptance_backend_policies: 0
+    acceptance_commits: 0
+    acceptance_data_confirmations: 0
+    acceptance_data_decisions: 0
+    acceptance_preparation_history: 0
+    acceptance_preparation_observations: 0
+    acceptance_preparations: 0
+    acceptance_prepared_proofs: 0
+    accepted_work: 0
+    agent_sessions: 0
+    artifact_applicability: 0
+    artifacts: 5
+    attachments: 0
+    attempt_dispatch_bindings: 0
+    attempts: 0
+    auth_sessions: 0
+    candidate_conflict_manifests: 0
+    candidate_freeze_materials: 0
+    candidate_freeze_work_proofs: 0
+    candidate_freezes: 0
+    candidate_integration_sources: 0
+    candidate_integration_steps: 0
+    candidate_integrations: 0
+    candidate_materials: 0
+    candidate_rejection_current: 0
+    candidate_rejection_evidence: 0
+    candidate_rejection_results: 0
+    candidate_review_current: 0
+    candidate_review_evidence: 0
+    candidate_review_results: 0
+    clarification_answers: 0
+    clarification_current: 0
+    clarification_questions: 0
+    content_objects: 15
+    content_write_operations: 0
+    context_snapshots: 0
+    dataset_backend_policies: 0
+    dataset_preparations: 0
+    datasets: 0
+    decisions: 0
+    delegation_inbox: 0
+    endpoint_checks: 4
+    endpoint_registrations: 4
+    endpoint_runtime_state: 4
+    events: 3
+    execution_grants: 0
+    input_message_attachments: 0
+    input_messages: 1
+    input_operation_resources: 3
+    input_processing: 1
+    interpretation_answers: 0
+    issue_operations: 0
+    issue_revisions: 0
+    issues: 0
+    managed_candidate_heads: 0
+    managed_repositories: 0
+    model_steps: 0
+    object_write_operations: 16
+    operations: 19
+    outbox: 4
+    pipeline_stages: 0
+    pipelines: 0
+    plan_carried_results: 0
+    plan_confirmations: 0
+    plan_edges: 1
+    plan_revisions: 1
+    plan_works: 2
+    preparation_a2a_tasks: 2
+    preparation_attempts: 2
+    preparation_bootstrap_sources: 2
+    preparation_inbox: 2
+    preparation_jobs: 2
+    preparation_slots: 0
+    preparation_steps: 2
+    preparation_task_events: 6
+    preview_access_policies: 0
+    preview_access_request_events: 0
+    preview_access_requests: 0
+    preview_credential_events: 0
+    preview_effect_observations: 0
+    preview_effects: 0
+    preview_runtime_observations: 0
+    preview_sessions: 0
+    preview_tickets: 0
+    preview_write_closures: 0
+    preview_write_gate_events: 0
+    preview_write_gates: 0
+    previews: 0
+    project_members: 1
+    projects: 1
+    quality_artifact_refs: 0
+    quality_materials: 0
+    quality_origins: 0
+    quality_policies: 0
+    quality_stage_bindings: 0
+    quality_verifications: 0
+    registry_audit: 0
+    registry_control: 1
+    registry_generations: 1
+    registry_imports: 1
+    registry_probe_tickets: 4
+    release_access_policies: 0
+    release_access_request_events: 0
+    release_access_requests: 0
+    release_candidates: 0
+    release_credential_events: 0
+    release_deliveries: 0
+    release_delivery_materials: 0
+    release_delivery_policies: 0
+    release_export_history: 0
+    release_export_materials: 0
+    release_exports: 0
+    release_promotion_outbox: 0
+    release_publication_events: 0
+    release_publication_observations: 0
+    release_publication_proofs: 0
+    release_publications: 0
+    release_route_bindings: 0
+    release_sessions: 0
+    release_tickets: 0
+    releases: 0
+    repo_file_operations: 0
+    repo_operations: 0
+    requirement_revisions: 1
+    role_endpoint_bindings: 4
+    role_slots: 0
+    role_snapshots: 0
+    runner_jobs: 0
+    runs: 1
+    runtime_activations: 0
+    runtime_model_accounting: 0
+    runtime_results: 0
+    runtime_tool_calls: 0
+    runtime_workspace_results: 0
+    scheduled_dispatch_delivery: 0
+    scheduled_work: 0
+    scheduler_project_turns: 0
+    scheduler_run_budget: 0
+    scheduler_run_roles: 0
+    schema_migrations: 45
+    session_messages: 0
+    source_archives: 0
+    storage_pins: 9
+    store_metadata: 1
+    tool_operations: 0
+    understanding_revisions: 1
+    upload_intakes: 0
+    user_tasks: 1
+    verified_findings: 0
+    verified_issue_commands: 0
+    verified_repairs: 0
+    verified_work_results: 0
+    work_acceptance_completions: 0
+    work_revisions: 2
+    work_verifications: 0
+    works: 2
+    workspace_allocations: 0
+    workspace_preservation_materials: 0
+    workspace_preservations: 0
+    workspace_reclamations: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workbench-sources.test.mjs:12:226)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:30744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source resolution rejects cross-Run, uncited internal artifact, wrong hash, malformed reference and foreign member
+ok 16 - source resolution rejects cross-Run, uncited internal artifact, wrong hash, malformed reference and foreign member
+  ---
+  duration_ms: 5352.0607
+  type: 'test'
+  ...
+# (node:30744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: source hash and membership are checked again after asynchronous file read
+not ok 17 - source hash and membership are checked again after asynchronous file read
+  ---
+  duration_ms: 3439.0087
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workbench-sources.test.mjs:26:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    503 !== 409
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 409
+  actual: 503
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workbench-sources.test.mjs:29:48)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:30744) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: inline source refuses actual invalid UTF-8 and oversized original content
+not ok 18 - inline source refuses actual invalid UTF-8 and oversized original content
+  ---
+  duration_ms: 3130.0454
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workbench-sources.test.mjs:33:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    503 !== 413
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 413
+  actual: 503
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workbench-sources.test.mjs:40:69)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 15
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 46599.7247

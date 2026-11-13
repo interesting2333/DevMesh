@@ -1,5 +1,11 @@
 import { z } from 'zod';
 import { ids, inputText, taskTitle, projectName, opaqueKey, revision, epoch, timestamp, operationStatus } from './primitives.js';
+import {sourceRef,requirement} from './outputs.js';
+
+export const workbenchSourceView=z.strictObject({runId:ids.run,ref:sourceRef,label:z.string().min(1).max(512),body:z.discriminatedUnion('kind',[
+  z.strictObject({kind:z.literal('text'),text:z.string().max(2*1024*1024)}),
+  z.strictObject({kind:z.literal('requirement'),requirement}),
+])}).superRefine((v,c)=>{if(v.ref.kind==='requirement'?(v.body.kind!=='requirement'||v.body.requirement.id!==v.ref.requirementId):v.body.kind!=='text')c.addIssue({code:'custom',message:'Source body does not match reference'});});
 
 export const inputLimits = Object.freeze({ textCodePoints: 20_000, attachments: 3, attachmentBytes: 2*1024*1024, jsonBytes: 256*1024 });
 export const attachmentIds = z.array(ids.attachment).max(inputLimits.attachments).refine(v => new Set(v).size===v.length, 'Duplicate attachment IDs');

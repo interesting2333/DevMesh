@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ids, opaqueKey, sha256, gitCommit, epoch, projectName, createTaskInput, saveMessageInput, attachmentIds, attachmentName } from '@devmesh/contracts';
+import { ids, opaqueKey, sha256, gitCommit, epoch, projectName, createTaskInput, saveMessageInput, attachmentIds, attachmentName,sourceRef,requirement } from '@devmesh/contracts';
 import type { OperationResult, RunView } from './protocol.js';
 const principal = { principalId: opaqueKey };
 const meta = z.strictObject({ ...principal, scopeId: opaqueKey, idempotencyKey: z.uuid() });
@@ -13,6 +13,7 @@ export const inputRequests = {
   getInputOperation: z.strictObject({ ...principal, operationId:ids.operation }),
   lookupInputOperation: z.strictObject({ ...principal, scopeId:opaqueKey, idempotencyKey:z.uuid() }),
   getInputWorkspace: z.strictObject({ ...principal, projectId:ids.project, runId:ids.run.optional(), afterMessageId:z.string().max(256).optional(), ...page }),
+  getWorkbenchSource:z.strictObject({...principal,runId:ids.run,ref:sourceRef}),
   listInputProjects: z.strictObject({ ...principal, cursor:z.strictObject({ updatedAt:z.iso.datetime({precision:3}), projectId:ids.project }).optional(), limit:z.number().int().min(1).max(100).default(20) }),
   listInputEvents: z.strictObject({ ...principal, projectId:ids.project, runId:ids.run, afterSeq:epoch.default(0), ...page }),
   getInputAttachment: z.strictObject({ ...principal, attachmentId:ids.attachment }),
@@ -36,6 +37,7 @@ export interface WorkspaceView {
   nextMessageCursor:string|null;
 }
 export interface InputResults {
+  getWorkbenchSource:{projectId:string;runId:string;artifactId:string;contentHash:string;label:string;requirement:null}|{projectId:string;runId:string;artifactId:null;contentHash:null;label:string;requirement:z.output<typeof requirement>};
   checkInputAccess:{projectId:string;membership:string};
   createInputProject:OperationResult; createInputTask:OperationResult; appendInputMessage:OperationResult;
   getInputOperation:OperationResult; lookupInputOperation:OperationResult|null;

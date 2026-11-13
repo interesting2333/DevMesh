@@ -1,0 +1,275 @@
+TAP version 13
+# (node:14220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: plan journal binds all reviewed conditions, locks across basis changes and accepts only the exact plan result
+ok 1 - plan journal binds all reviewed conditions, locks across basis changes and accepts only the exact plan result
+  ---
+  duration_ms: 2691.0738
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: old basis references paginate only exact form contexts without mutating drafts or pending originals
+ok 2 - old basis references paginate only exact form contexts without mutating drafts or pending originals
+  ---
+  duration_ms: 2811.0017
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes
+ok 3 - real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes
+  ---
+  duration_ms: 3732.857
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:14220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: two pages admit one original request, actual project ACK loss reopens and exact replay retains one input
+ok 4 - two pages admit one original request, actual project ACK loss reopens and exact replay retains one input
+  ---
+  duration_ms: 18926.3362
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:14220) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation
+ok 5 - message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation
+  ---
+  duration_ms: 3032.2947
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission
+ok 6 - real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission
+  ---
+  duration_ms: 1551.7033
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema
+ok 7 - version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema
+  ---
+  duration_ms: 7729.7793
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project
+ok 8 - actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project
+  ---
+  duration_ms: 2898.5888
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lookup miss retains original; only explicit retry uses exact message key, body and condition
+ok 9 - lookup miss retains original; only explicit retry uses exact message key, body and condition
+  ---
+  duration_ms: 11775.46
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change
+ok 10 - project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change
+  ---
+  duration_ms: 3820.8217
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers
+ok 11 - failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers
+  ---
+  duration_ms: 2950.2346
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changing trusted account rejects old page original before effects; reentry isolates subject drafts
+ok 12 - changing trusted account rejects old page original before effects; reentry isolates subject drafts
+  ---
+  duration_ms: 3434.1961
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: viewer and revoked contexts expose no composer; stale membership refresh clears protected messages
+ok 13 - viewer and revoked contexts expose no composer; stale membership refresh clears protected messages
+  ---
+  duration_ms: 3456.0784
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: rapid project switch aborts an old workspace response and never applies its context
+ok 14 - rapid project switch aborts an old workspace response and never applies its context
+  ---
+  duration_ms: 3277.6246
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical Run is read only and explicitly returns to the current Run
+ok 15 - historical Run is read only and explicitly returns to the current Run
+  ---
+  duration_ms: 3108.7141
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:35380) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs
+ok 16 - IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs
+  ---
+  duration_ms: 3581.5907
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:38248) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38248) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual planning sources and DAG share one internal stack, escape raw text and preserve the input draft
+not ok 17 - actual planning sources and DAG share one internal stack, escape raw text and preserve the input draft
+  ---
+  duration_ms: 1708.5994
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-planning.test.mjs:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"errorCode":"PLAN_INVALID"}
+    
+    undefined !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  operator: 'strictEqual'
+  stack: |-
+    workbenchPlanningFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/workbench-planning.mjs:28:189)
+    async harness (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:8:43)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:14:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:38248) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: plan confirmation commits its journal before POST, lost ACK reload stays inert and exact lookup restores one decision
+not ok 18 - plan confirmation commits its journal before POST, lost ACK reload stays inert and exact lookup restores one decision
+  ---
+  duration_ms: 1781.5736
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-planning.test.mjs:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"errorCode":"PLAN_INVALID"}
+    
+    undefined !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  operator: 'strictEqual'
+  stack: |-
+    workbenchPlanningFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/workbench-planning.mjs:28:189)
+    async harness (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:8:43)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:20:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:38248) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: stale plan confirmation preserves exact rejected original and reload never replaces its identity or basis
+not ok 19 - stale plan confirmation preserves exact rejected original and reload never replaces its identity or basis
+  ---
+  duration_ms: 1805.4101
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-planning.test.mjs:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"errorCode":"PLAN_INVALID"}
+    
+    undefined !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  operator: 'strictEqual'
+  stack: |-
+    workbenchPlanningFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/workbench-planning.mjs:28:189)
+    async harness (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:8:43)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:26:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:38248) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: necessary unanswered questions and read-only members receive no default answer or usable plan confirmation
+not ok 20 - necessary unanswered questions and read-only members receive no default answer or usable plan confirmation
+  ---
+  duration_ms: 1621.729
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-planning.test.mjs:30:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"errorCode":"PLAN_INVALID"}
+    
+    undefined !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  operator: 'strictEqual'
+  stack: |-
+    workbenchPlanningFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/workbench-planning.mjs:28:189)
+    async harness (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:8:43)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:31:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:38248) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: aborted native plan-journal transaction sends zero POST and retry requires a fresh explicit confirmation
+not ok 21 - aborted native plan-journal transaction sends zero POST and retry requires a fresh explicit confirmation
+  ---
+  duration_ms: 1583.4394
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-planning.test.mjs:35:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"errorCode":"PLAN_INVALID"}
+    
+    undefined !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  operator: 'strictEqual'
+  stack: |-
+    workbenchPlanningFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/workbench-planning.mjs:28:189)
+    async harness (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:8:43)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-planning.test.mjs:36:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 16
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 91186.7599

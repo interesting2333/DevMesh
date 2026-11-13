@@ -11,7 +11,7 @@ import { executionPermit, executionOwner } from './permits.js';
 import { roleOutput, productOutput, architectOutput, developerOutput, testerOutput, workRevision, planDraft, workDelegation, invocationDelegation, inputManifest } from './outputs.js';
 import { errorEnvelope } from './errors.js';
 import { strongETag, contentBasis } from './versions.js';
-import { createTaskInput,uploadMetadata,attachmentView,inputOperation,workspaceView } from './input.js';
+import { createTaskInput,uploadMetadata,attachmentView,inputOperation,workspaceView,workbenchSourceView } from './input.js';
 import { preparationDelegation,preparationInput,retryUnderstandingInput,understandingOutput,understandingView } from './preparation.js';
 import { planReviewView } from './plans.js';
 
@@ -31,6 +31,7 @@ export const schemas = {
   Understanding:understandingView,UnderstandingOutput:understandingOutput,RetryUnderstanding:retryUnderstandingInput,
   PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
   PlanReview:planReviewView,
+  WorkbenchSource:workbenchSourceView,
   ReleaseAccessInput:releaseAccessInput,ReleaseAccessTicket:releaseAccessTicket,ReleaseEntryView:releaseEntryView,
   PreviewAccessInput:previewAccessInput,PreviewAccessTicket:previewAccessTicket,PreviewEntryView:previewEntryView,
   CandidatePreviewWorkspace:candidatePreviewWorkspace,PreviewDatasetManagement:previewDatasetManagement,PreviewManagement:previewManagement,CreatePreviewDataset:createPreviewDatasetInput,CreatePreviewIntent:createPreviewIntentInput,StopPreviewIntent:stopPreviewIntentInput,
@@ -102,6 +103,7 @@ export function createOpenApiDocument() {
   add('/api/v1/projects','get','ListProjects',undefined,[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:20}},{name:'cursor',in:'query',schema:{type:'string',maxLength:1024}}]);
   add('/api/v1/projects/{projectId}/tasks','post','CreateTask','OperationReceipt',[parameter('projectId',ids.project),key,parameter('If-Match',strongETag,'header')],'CreateTask');
   add('/api/v1/projects/{projectId}/workspace','get','ReadWorkspace','Workspace',[parameter('projectId',ids.project),parameter('runId',ids.run,'query',false),{name:'afterMessageId',in:'query',schema:{type:'string',maxLength:256}},...page]);
+  add('/api/v1/runs/{runId}/sources','get','ReadWorkbenchSource','WorkbenchSource',[parameter('runId',ids.run),{name:'ref',in:'query',required:true,description:'严格sourceRef的JSON；消息属于准确Run，材料为已保存依据中的同ID/hash引用，需求按准确版本。最多2 MiB纯文本，无下载或写入副作用。',schema:{type:'string',minLength:1,maxLength:4096}}]);
   add('/api/v1/projects/{projectId}/runs/{runId}/events','get','ReadEvents',undefined,[parameter('projectId',ids.project),parameter('runId',ids.run),{name:'afterSeq',in:'query',schema:{type:'integer',minimum:0,default:0}},...page]);
   add('/api/v1/operations/lookup','get','LookupInputOperation','InputOperation',[{name:'scope',in:'query',required:true,schema:{type:'string',maxLength:128}},parameter('key',idempotencyKey,'query')]);
   add('/api/v1/operations/{operationId}','get','ReadInputOperation','InputOperation',[parameter('operationId',ids.operation)]);

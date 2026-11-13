@@ -1,0 +1,89 @@
+{
+  "checkedAt": "2026-11-13T17:54:14.384Z",
+  "results": [
+    {
+      "name": "lockfile",
+      "command": "cmd.exe",
+      "args": [
+        "/d",
+        "/s",
+        "/c",
+        "pnpm.cmd install --offline --frozen-lockfile --ignore-scripts"
+      ],
+      "start": "2026-11-13T17:54:10.629Z",
+      "end": "2026-11-13T17:54:11.883Z",
+      "code": 0,
+      "stdout": "Scope: all 19 workspace projects\nAlready up to date\nDone in 568ms using pnpm v11.28.5\n",
+      "stderr": ""
+    },
+    {
+      "name": "ledger",
+      "command": "node",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "start": "2026-11-13T17:54:11.883Z",
+      "end": "2026-11-13T17:54:11.969Z",
+      "code": 0,
+      "stdout": "台账检查通过：36 个工作包、5 个阶段门槛；依赖无环、来源一致、基线匹配。\n此检查只验证记录结构与引用，不执行产品验收。\n",
+      "stderr": ""
+    },
+    {
+      "name": "design",
+      "command": "node",
+      "args": [
+        "design/生成完整方案.mjs",
+        "--check"
+      ],
+      "start": "2026-11-13T17:54:11.969Z",
+      "end": "2026-11-13T17:54:12.042Z",
+      "code": 0,
+      "stdout": "完整主文与六份专题正文一致。\n",
+      "stderr": ""
+    },
+    {
+      "name": "openspec",
+      "command": "node",
+      "args": [
+        "project/openspec.mjs",
+        "validate",
+        "implement-workbench-first-path",
+        "--strict"
+      ],
+      "start": "2026-11-13T17:54:12.042Z",
+      "end": "2026-11-13T17:54:12.706Z",
+      "code": 0,
+      "stdout": "Change 'implement-workbench-first-path' is valid\n",
+      "stderr": ""
+    },
+    {
+      "name": "diff",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "start": "2026-11-13T17:54:12.706Z",
+      "end": "2026-11-13T17:54:12.835Z",
+      "code": 2,
+      "stdout": "DevMesh_产品验收场景_V10.0.md:474: new blank line at EOF.\nDevMesh_实施文档_V1.0.md:640: new blank line at EOF.\ndesign/03_API与用户流程.md:388: new blank line at EOF.\ndesign/06_验证与验收追踪.md:311: new blank line at EOF.\n",
+      "stderr": ""
+    },
+    {
+      "name": "evidence-lint",
+      "command": "cmd.exe",
+      "args": [
+        "/d",
+        "/s",
+        "/c",
+        "pnpm.cmd lint"
+      ],
+      "start": "2026-11-13T17:54:12.835Z",
+      "end": "2026-11-13T17:54:14.384Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | b8c82ed564000c38ce65c2d778566f9c1a2e1e286c44b82214634c2a6eb78b59 |
+| DevMesh_技术设计方案_V1.1.md | 7baeba3d04373ac26f7c11f85f438f65bde1706f4b6b294f2d1bb2cb41ce97af |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 3c94a8e3dff8c0153be4254642bd7a18495c0e8363e02450a29c9a27fe442a23 |
+| DevMesh_产品验收场景_V10.0.md | dcf7c1767aff09229f5b24895c57a6d5fcbcc13b9c00dfab10ba3c431ed3892c |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -629,3 +629,11 @@ P1-07补充同控制库两轮实际T5到第二轮发布的生产组件组合测�
 原提交先事务持久再发送；刷新不自动POST，原lookup404不换键，明确继续使用原正文／条件。保存失败保留本页输入并阻止切换，成功才显示本机已保存。三栏／五页签提供准确项目／Run导航与初始事实；旧读取取消／迟到隔离，历史及viewer不挂载命令输入。手动刷新保留草稿依据和焦点，basis变化明确切换，旧正文只作有界参考。账号变化／撤权清空当前保护内容并使迟到请求失效。
 
 开发复核须保存实际页面／HTTP／文件Worker／Edge及390px截图证据；历史已接受Release为明确导航夹具，身份为测试接入点。理解／问题／计划详情、附件／新任务、准确候选交付链、WS／事件期间交互及完整首次产品路径继续。开发步骤完成不等于正式P1-08或T08验收，前置和G0仍按台账执行。
+
+### P1-08理解、计划、来源与明确确认
+
+implement-workbench-first-path的2.2接入既有understanding／plan review与准确版本、DAG／工作／来源内部栈，新增有界只读来源GET。来源必须绑定同Run消息或已保存依据中的准确artifact ID／SHA，需求按版本读取；UTF-8／大小／hash和异步权限复核、纯文本渲染及读取租约释放均纳入验证。公共错误码新增CONTENT_CORRUPT／CONTENT_TOO_LARGE，生成OpenAPI。
+
+扩展现有IndexedDB严格日记支持独立plan-confirm表单，保持schema1和原项目／消息键兼容；绑定完整审阅依据，先本机事务后发送，重进不自动确认，原键恢复及条件拒绝保留。准确成功回执不改其他表单草稿。使用实际A2A／PreparationRuntime和受控模型输出建立计划，Edge／HTTP／文件Worker验证来源导航、丢ACK、旧依据、必要问题、viewer及真实事务abort，保留初次失败与修复来源。
+
+本增量不新增依赖或控制／Runner迁移，正式P1-08仍等待前置／G0；开发步骤、同一Agent复核、正式门槛与产品验收分别记录。附件／问题回答／新任务、准确交付入口、WS和完整产品路径继续，真实模型／身份／Linux仍依用户要求留空。

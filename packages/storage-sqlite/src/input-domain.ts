@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
-import { assertResourceVersion, domainEvent, parseContract } from '@devmesh/contracts';
+import { assertResourceVersion, domainEvent, parseContract,productOutput } from '@devmesh/contracts';
 import { StorageError } from './errors.js';
 import { canonical } from './json.js';
 import { digest, transaction } from './migrations.js';
@@ -73,6 +73,29 @@ export function createInputDomain(db:DatabaseSync,h:Helpers){
   function readTransaction<T>(fn:()=>T):T{db.exec('BEGIN');try{const value=fn();db.exec('COMMIT');return value;}catch(error){if(db.isTransaction)db.exec('ROLLBACK');throw error;}}
   const handlers={
     checkInputAccess(input:InputParsed<'checkInputAccess'>){const projectId=input.projectId??String(authorizedRun(input.principalId,input.runId!,input.write).project_id);return {projectId,membership:authorize(input.principalId,projectId,input.write)};},
+    getWorkbenchSource(input:InputParsed<'getWorkbenchSource'>){return readTransaction(()=>{
+      const run=authorizedRun(input.principalId,input.runId),ref=input.ref,base={projectId:String(run.project_id),runId:input.runId};
+      if(ref.kind==='requirement'){
+        const row=required(get('SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?',input.runId,ref.requirementRevision)),snapshot=parseContract(productOutput,JSON.parse(String(row.content_json)));
+        const requirement=snapshot.requirements.find(r=>r.id===ref.requirementId);if(!requirement)fail('RESOURCE_NOT_FOUND',404,'Source is not visible');
+        return {...base,artifactId:null,contentHash:null,label:'需求依据',requirement:requirement!};
+      }
+      let artifactId:string;
+      if(ref.kind==='message')artifactId=String(required(get('SELECT body_artifact_id FROM input_messages WHERE run_id=? AND message_id=?',input.runId,ref.messageId)).body_artifact_id);
+      else{
+        // A same-Run internal artifact alone is not a public source. The exact
+        // ID/hash pair must occur as one source object in a saved review basis.
+        const cited=['understanding_revisions','requirement_revisions','plan_revisions'].some(table=>!!get(`SELECT 1 FROM ${table} s,json_tree(s.content_json) j WHERE s.run_id=? AND j.type='object'
+          AND json_extract(CASE WHEN j.type='object' THEN j.value ELSE '{}' END,'$.kind')='artifact'
+          AND json_extract(CASE WHEN j.type='object' THEN j.value ELSE '{}' END,'$.artifactId')=?
+          AND json_extract(CASE WHEN j.type='object' THEN j.value ELSE '{}' END,'$.sha256')=? LIMIT 1`,input.runId,ref.artifactId,ref.sha256));
+        if(!cited)fail('RESOURCE_NOT_FOUND',404,'Source is not visible');artifactId=ref.artifactId;
+      }
+      const a=required(get("SELECT a.content_hash,a.byte_size FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.run_id=? AND a.artifact_id=? AND a.state='READY' AND c.state='READY'",input.runId,artifactId));
+      if(ref.kind==='artifact'&&ref.sha256!==a.content_hash)fail('RESOURCE_NOT_FOUND',404,'Source is not visible');
+      if(Number(a.byte_size)>2*1024*1024)fail('CONTENT_TOO_LARGE',413,'Source exceeds inline read limit');
+      return {...base,artifactId,contentHash:String(a.content_hash),label:ref.kind==='message'?'原始输入':'引用材料',requirement:null};
+    });},
     createInputProject(input:InputParsed<'createInputProject'>){
       if(input.meta.scopeId!=='projects.create')fail('OPERATION_SCOPE_INVALID',422,'Invalid creation scope');
       const {meta,baseCommit,...payload}=input;

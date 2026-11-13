@@ -1398,7 +1398,15 @@ bootstrap主体来自可信IdentityResolver；页面JSON请求携带可选`X-Dev
 
 导航先完成当前本机保存，失败保留内存输入并阻止切换；允许重试或明确放弃本页未保存修改。快速切换取消旧上下文请求并按代际拒收迟到结果。每上下文保存当前页签／窄屏面板选择。历史／viewer上下文不挂载命令输入与本机命令连接；显示已保存输入并提供返回当前执行。手动刷新合并原消息ID，保留输入basis、草稿、焦点和选择；新Run版本须明确切换，旧草稿通过原生有界游标分页作为参考，复制正文后使用当前依据，不改旧请求。
 
-Enter换行；Ctrl／Cmd+Enter提交时检查IME及重复键，操作期间同步互斥。五页签支持方向键／Home／End，窄屏按项目／输入／详情切换。理解／问题／计划详情、附件／新任务、准确候选交付导航、WebSocket和完整首次路径继续按OpenSpec实施；初始页签与输入链路不等于完整工作台验收。
+Enter换行；Ctrl／Cmd+Enter提交时检查IME及重复键，操作期间同步互斥。五页签支持方向键／Home／End，窄屏按项目／输入／详情切换。附件／新任务、准确候选交付导航、WebSocket和完整首次路径继续按OpenSpec实施；初始页签与输入链路不等于完整工作台验收。
+
+#### 12. 工作台理解、计划与准确来源
+
+任务页读取真实understanding／plan review，核对项目、Run、需求／计划版本及Run资源版本；并发依据变化时提示刷新，不混合生成确认依据。理解、问题、分层DAG、工作和来源共用最多16层内部返回栈。工作详情按原计划显示目标、需求、依赖、输入、输出、检查、写入范围与资源估计；问题仅显示已保存状态／回答，不默认选择或回答。DAG仅使用服务端校验后的拓扑，图节点与列表进入同一工作详情。
+
+新增GET /api/v1/runs/{runId}/sources?ref=<JSON>，严格接受message／artifact／requirement三种引用。同Run消息定位原正文；artifact必须以准确ID／SHA出现在已保存理解、需求或计划中，并为READY；需求按准确版本和ID读取。内容最多2MiB、严格UTF-8与SHA核实，异步读取后再次复核权限／来源。返回有界纯文本或需求对象，页面转义显示，不执行HTML、不暴露磁盘路径。读取可以登记并释放READ租约；不产生输入、确认或执行等业务事实。公共错误契约保留CONTENT_CORRUPT 409、CONTENT_TOO_LARGE 413及CONTENT_TYPE_INVALID 415。
+
+计划确认使用独立plan-confirm本地原命令，绑定主体／项目／Run／Run版本／planRevision／requirementRevision／reviewHash及适用carryForwardHash。用户每次进入须重新勾选，事务保存原UUID／正文／If-Match后才POST；确认前保存输入区草稿。刷新和来源浏览不自动确认；丢ACK只明确核实或重用原信封。原键lookup404和条件拒绝均保留原锁，不自动换键；准确成功回执只释放本表单锁，不改消息草稿或历史。viewer／历史不挂载确认组件，确认回执不表示执行或发布完成。问题回答／附件／新任务、交付导航和WS继续实施。
 
 ---
 
@@ -2455,5 +2463,13 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 后续页面增量使用实际受保护React入口、nonce CSP、Edge原生IndexedDB、Input API和文件Worker，验证项目POST事务先持久／丢ACK／刷新零自动POST／原lookup恢复，以及消息lookup404后明确同键／正文／If-Match恢复。额外验证草稿跨项目和basis隔离、旧草稿有界参考、存储失败阻止导航、多页存储回归、手动刷新保留焦点／选择、快速切换取消旧读取、账号变化拒绝旧主体请求，以及撤权后迟到列表不能重填内容。
 
 只读viewer与历史执行不挂载命令输入／本机命令连接；历史测试使用明确已接受Release事实夹具后通过实际新任务API产生下一Run，不能作为真实接受证据。IME／重复键、快捷提交、页签键盘和390px布局单列；事件期间交互及WS尚未执行。身份仍是测试IdentityResolver，真实OIDC／模型／Linux、完整D01／T08和正式工作包／门槛继续待验。
+
+#### 15. 工作台计划与来源开发验证
+
+以实际官方A2A准备协议、PreparationRuntime、HTTP／文件Worker、Edge／React／CSP及原生IndexedDB验证已保存理解／问题／计划、DAG和内部来源导航，准确需求历史、同Run引用／SHA／权限、异步撤权复核、二进制及2MiB边界。内容GET允许完成READ租约，须核实全部新租约RELEASED及其他业务计数不变。
+
+计划确认须在POST前观察到已提交原信封；丢ACK重进不自动发送，lookup恢复唯一决定。外部输入使Run版本变化后原确认应412，原UUID／If-Match／hash保留；原生事务abort零POST，重新读取后仍须重新明确勾选。必要问题未回答时无可用确认，viewer无确认组件或本机命令连接。来源原文含script时仅按文字显示；内部返回保留输入草稿，390px无横向溢出。
+
+模型输出、浏览器身份和二进制／超大bootstrap来源为明确夹具；准备作业的Git材料各自冻结，不能以相同字节替代准确artifact身份。真实模型／企业认证／Linux、WS及完整产品路径／T08仍单独执行；同一Agent开发复核不替代正式门槛或产品签认。结果与失败历史见P1-08 planning-development-review及原日志。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

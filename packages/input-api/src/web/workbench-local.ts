@@ -1,9 +1,10 @@
 import {z} from 'zod';
-import {ids,opaqueKey,revision,timestamp,createProjectInput,saveMessageInput,inputOperation,operationReceipt} from '@devmesh/contracts';
+import {ids,opaqueKey,revision,timestamp,sha256,commandBodies,createProjectInput,saveMessageInput,inputOperation,operationReceipt} from '@devmesh/contracts';
 
 export const draftContext=z.discriminatedUnion('form',[
   z.strictObject({principalId:opaqueKey,form:z.literal('project'),projectId:z.null(),runId:z.null(),basisRevision:z.null()}),
   z.strictObject({principalId:opaqueKey,form:z.literal('message'),projectId:ids.project,runId:ids.run,basisRevision:revision}),
+  z.strictObject({principalId:opaqueKey,form:z.literal('plan-confirm'),projectId:ids.project,runId:ids.run,basisRevision:revision,basis:z.strictObject({planRevision:revision,requirementRevision:revision,reviewHash:sha256,carryForwardHash:sha256.optional()})}),
 ]);
 export type DraftContext=z.output<typeof draftContext>;
 const draftFields=z.strictObject({text:z.string().max(40000),name:z.string().max(80)});
@@ -13,13 +14,18 @@ const envelopeBase={key:z.uuid(),context:draftContext,draftRevision:revision,cre
 const commandEnvelope=z.discriminatedUnion('kind',[
   z.strictObject({...envelopeBase,kind:z.literal('project'),scope:z.literal('projects.create'),path:z.literal('/api/v1/projects'),ifMatch:z.null(),body:createProjectInput}),
   z.strictObject({...envelopeBase,kind:z.literal('message'),scope:ids.run,path:z.string(),ifMatch:z.string(),body:saveMessageInput}),
+  z.strictObject({...envelopeBase,kind:z.literal('plan-confirm'),scope:ids.run,path:z.string(),ifMatch:z.string(),body:commandBodies.ConfirmPlan}),
 ]).superRefine((v,c)=>{
   if(v.kind!==v.context.form)c.addIssue({code:'custom',message:'Wrong command context'});
   if(v.kind==='message'&&(v.context.form!=='message'||v.scope!==v.context.runId||v.path!==`/api/v1/runs/${v.context.runId}/messages`||v.ifMatch!==`"r${v.context.basisRevision}"`))c.addIssue({code:'custom',message:'Wrong original request'});
+  if(v.kind==='plan-confirm'){
+    const b=v.context.form==='plan-confirm'?v.context.basis:null;
+    if(!b||v.context.form!=='plan-confirm'||v.scope!==v.context.runId||v.path!==`/api/v1/runs/${v.context.runId}/plans/${b.planRevision}:confirm`||v.ifMatch!==`"r${v.context.basisRevision}"`||v.body.requirementRevision!==b.requirementRevision||v.body.reviewHash!==b.reviewHash||v.body.carryForwardHash!==b.carryForwardHash)c.addIssue({code:'custom',message:'Wrong plan confirmation basis'});
+  }
 });
 const commandRecord=z.strictObject({key:z.uuid(),formKey:z.string(),envelope:commandEnvelope,receipt:inputOperation.nullable(),observedAt:timestamp.nullable(),pendingForm:z.string().optional()});
 export type LocalCommand=z.output<typeof commandRecord>;
-const contextKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form,c.basisRevision]);
+const contextKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form,c.basisRevision,...(c.form==='plan-confirm'?[c.basis.planRevision,c.basis.requirementRevision,c.basis.reviewHash,c.basis.carryForwardHash??null]:[])]);
 const formKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form]);
 export class WorkbenchLocalError extends Error{
   constructor(readonly code:'STORAGE_UNAVAILABLE'|'STORAGE_BLOCKED'|'STORAGE_CLOSED'|'LOCAL_CONFLICT'|'COMMAND_PENDING'|'LOCAL_RECORD_INVALID'){super(code);}
@@ -57,12 +63,17 @@ export async function openWorkbenchLocal(principalId:string){
   db.onclose=()=>{closed=true;};
   function context(input:DraftContext){const c=draftContext.parse(input);if(c.principalId!==principalId)invalid();return c;}
   function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);if(d.key!==contextKey(c)||stable(d.context)!==stable(c))invalid();return d;}
+  function success(envelope:LocalCommand['envelope'],result:unknown){
+    const r=z.object({projectId:ids.project,runId:ids.run,revision}).parse(result),c=envelope.context;
+    if(c.form!=='project'&&(r.projectId!==c.projectId||r.runId!==c.runId))invalid();
+    if(envelope.kind==='plan-confirm'){const p=z.object({planRevision:revision}).parse(result);if(c.form!=='plan-confirm'||p.planRevision!==c.basis.planRevision)invalid();}
+    else z.object({messageId:ids.message}).parse(result);
+  }
   function command(value:unknown){
     const v=commandRecord.parse(value),c=v.envelope.context;
     if(v.key!==v.envelope.key||c.principalId!==principalId||v.formKey!==formKey(c)||(v.pendingForm!==undefined&&v.pendingForm!==v.formKey)||((v.pendingForm===undefined)!==(v.receipt?.status==='SUCCEEDED'))||((v.receipt===null)!==(v.observedAt===null)))invalid();
     if(v.receipt?.status==='SUCCEEDED'){
-      const result=z.object({projectId:ids.project,runId:ids.run,messageId:ids.message}).parse(v.receipt.result);
-      if(c.form==='message'&&(result.projectId!==c.projectId||result.runId!==c.runId))invalid();
+      success(v.envelope,v.receipt.result);
     }
     return v;
   }
@@ -121,7 +132,8 @@ export async function openWorkbenchLocal(principalId:string){
       s.get(s.drafts,contextKey(c),raw=>{
         const d=draft(raw,c);if(!d||d.revision!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');if(d.pendingKey)invalid();
         const key=crypto.randomUUID(),createdAt=new Date().toISOString(),common={key,context:c,draftRevision:d.revision,createdAt};
-        const envelope=commandEnvelope.parse(c.form==='project'?{...common,kind:'project',scope:'projects.create',path:'/api/v1/projects',ifMatch:null,body:{initialRequest:{text:d.text,attachmentIds:[]},clientDraftId:d.clientDraftId,...(d.name?{name:d.name}:{})}}:{...common,kind:'message',scope:c.runId,path:`/api/v1/runs/${c.runId}/messages`,ifMatch:`"r${c.basisRevision}"`,body:{text:d.text,attachmentIds:[],clientMessageId:d.clientDraftId}});
+        if(c.form==='plan-confirm'&&(d.text!=='CONFIRM_PLAN'||d.name!==''))return invalid();
+        const envelope=commandEnvelope.parse(c.form==='project'?{...common,kind:'project',scope:'projects.create',path:'/api/v1/projects',ifMatch:null,body:{initialRequest:{text:d.text,attachmentIds:[]},clientDraftId:d.clientDraftId,...(d.name?{name:d.name}:{})}}:c.form==='message'?{...common,kind:'message',scope:c.runId,path:`/api/v1/runs/${c.runId}/messages`,ifMatch:`"r${c.basisRevision}"`,body:{text:d.text,attachmentIds:[],clientMessageId:d.clientDraftId}}:{...common,kind:'plan-confirm',scope:c.runId,path:`/api/v1/runs/${c.runId}/plans/${c.basis.planRevision}:confirm`,ifMatch:`"r${c.basisRevision}"`,body:{requirementRevision:c.basis.requirementRevision,reviewHash:c.basis.reviewHash,...(c.basis.carryForwardHash?{carryForwardHash:c.basis.carryForwardHash}:{})}});
         const v=commandRecord.parse({key,formKey:formKey(c),pendingForm:formKey(c),envelope,receipt:null,observedAt:null}),updated=draftRecord.parse({...d,revision:d.revision+1,pendingKey:key,updatedAt:createdAt});
         s.commands.add(v);s.drafts.put(updated);done({draft:updated,command:v});
       });
@@ -143,8 +155,7 @@ export async function openWorkbenchLocal(principalId:string){
       if(old.receipt?.status==='SUCCEEDED'){if(stable(old.receipt)!==stable(receipt))invalid();done(old);return;}
       const observedAt=new Date().toISOString();
       if(receipt.status!=='SUCCEEDED'){const v=commandRecord.parse({...old,receipt,observedAt});s.commands.put(v);done(v);return;}
-      const result=z.object({projectId:ids.project,runId:ids.run,messageId:ids.message}).parse(receipt.result);
-      if(c.form==='message'&&(result.projectId!==c.projectId||result.runId!==c.runId))invalid();
+      success(old.envelope,receipt.result);
       s.get(s.drafts,contextKey(c),rawDraft=>{
         const d=draft(rawDraft,c);if(!d||d.pendingKey!==key||d.revision!==old.envelope.draftRevision+1)return invalid();
         const {pendingForm:_pendingForm,...rest}=old,v=commandRecord.parse({...rest,receipt,observedAt});
