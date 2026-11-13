@@ -328,7 +328,23 @@ The system SHALL 在短事务重核候选、完整审查、准确原质量、准
 
 #### Scenario: A decision is durable but cleanup is uncertain
 - **WHEN** 撤销决定存在而原服务停止、目标 fence 解除或旧源恢复尚无明确独立证明
-- **THEN** 保持 ABORTING 和占用，不声明 ABORTED、不重开旧写门、不释放物理资源或删除数据；可信原后端仅恢复准确原决定和原对象
+- **THEN** 保持 ABORTING、项目未核实占用和未核实资源，不声明 ABORTED、不重开旧写门或删除数据；可信原后端仅恢复准确原决定和原对象，已明确清理的服务容量按独立证明释放
+
+### Requirement: Runner cleanup requires the original abort and exact object proofs
+
+Runner SHALL 持久绑定准确控制面撤销决定、controller 与原准备，即使尚无 reservation 也阻止迟到创建。系统 MUST 分别记录 STOP／容器移除／网络移除的原请求、唯一派发及明确观察，保留原 claim／proof 和业务数据，不把服务清理当作完整 ABORTED。
+
+#### Scenario: A late create has no verified object identity
+- **WHEN** 原 CREATE 已获许可但原容器 ID 尚未核实，或原动作／查询回执未知
+- **THEN** 只核实原名称、完整 profile 和日志，不创建替代对象、不重发原动作，不以 inspect 失败或空列表释放该占用
+
+#### Scenario: The exact original container is removed
+- **WHEN** 原决定允许清理且准确容器已核实 CREATED 或 EXITED，并通过不带 force／volumes 的原 ID 移除及成功完整 ID 查询核实消失
+- **THEN** 同一 writer 原子保存移除证明、REMOVED、容量释放和历史；CREATED 不伪造 EXITED，原数据／claim／proof 保留；原空网络随后独立核实移除
+
+#### Scenario: Cleanup acknowledgement or observation commit is lost
+- **WHEN** STOP／移除许可、物理响应或观察提交 ACK 丢失，或 Worker 重启
+- **THEN** 只查询原动作与准确 ID，不二次执行；未知继续占用，准确消失证明落库失败不提前释放；已释放服务容量不丢失待恢复的原网络清理
 
 ### Requirement: Rejection preserves scope and user correction
 

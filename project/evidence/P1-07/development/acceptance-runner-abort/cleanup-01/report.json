@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Actual Runner/control Worker and SQLite, abort journal/migration and read-only data preservation. Docker/health/fence facts are explicit fixtures; no physical Linux cleanup, fence release, source restoration or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-preview-cleanup.test.mjs",
+        "tests/runner-upgrade.test.mjs"
+      ],
+      "startedAt": "2026-11-13T01:02:33.466Z",
+      "finishedAt": "2026-11-13T01:03:42.783Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "21aed4a3068eb5c407521d62c7a2f763bbf4407c28a2f0b9779253b8643ac709"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

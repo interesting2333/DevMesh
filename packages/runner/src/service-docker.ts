@@ -9,6 +9,9 @@ export type ServiceContainerProfile=Omit<PreviewContainerProfile,'schemaVersion'
 export type ServiceContainerFact=PreviewContainerFact;
 export interface ServiceDockerSubject {imageDigest:string;imageIdentity:PreviewStartRequest['imageIdentity'];labels:Record<string,string>;readonlyDataset:boolean;errorPrefix:'PREVIEW'|'ACCEPTANCE_SERVICE'}
 const fail=(code:string):never=>{throw new RunnerError(code,409,'unknown');};
+export function serviceDockerRemovalArguments(kind:'CONTAINER_REMOVE'|'NETWORK_REMOVE',id:string){dockerObjectId.parse(id);return kind==='CONTAINER_REMOVE'?['container','rm',id]:['network','rm',id];}
+/** A failed inspect is insufficient; only a successful full-ID list proves absence. */
+export function verifyServiceDockerAbsence(output:string,id:string,errorCode:string){dockerObjectId.parse(id);const value=output.trim();if(value==='')return true;if(value===id)return false;throw new RunnerError(errorCode,409,'unknown');}
 const labels=(_p:ServiceContainerProfile,r:ServiceDockerSubject)=>r.labels;
 const environment=(r:ServiceDockerSubject)=>['HOME=/tmp','NODE_ENV=production','APP_DATA_ROOT=/data','APP_PORT=4317','APP_HOST=0.0.0.0','APP_READ_ONLY='+String(r.readonlyDataset)];
 const expectedMounts=(p:ServiceContainerProfile,r:ServiceDockerSubject)=>[{Source:p.datasetDirectory,Destination:'/data',RW:!r.readonlyDataset},...r.readonlyDataset?[]:['operation.json','receipt.json','dataset.json'].map(name=>({Source:join(p.datasetDirectory,name),Destination:'/data/'+name,RW:false}))];

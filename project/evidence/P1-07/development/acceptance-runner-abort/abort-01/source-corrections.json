@@ -1,0 +1,17 @@
+{
+  "corrections": [
+    {
+      "file": "packages/runner/src/worker.ts",
+      "beforeSha256": "fd4a0a98bc39243bf97e67d6d24b279b2cb4dd77bb8cdc435fb91b04a0b5056e",
+      "beforeSource": "source-before-correction/0.txt",
+      "afterSha256": "eedc86c76e1e3601a533a6ed3c3130ab4225590440d632db719afce4c846b1dd"
+    },
+    {
+      "file": "tests/acceptance-runner-abort.test.mjs",
+      "beforeSha256": "b1c7f16bdb0512d2dd3297cd5172cc84c811852ab7c7a831c64c9df6dd7dfa72",
+      "beforeSource": "source-before-correction/1.txt",
+      "afterSha256": "3a453dc8e4b35be78b0702007156b517d584bc9947ed5d805a6064744927d97e"
+    }
+  ],
+  "reason": "Runner inspect still returned a literal v8 after actual v9 upgrade; read the actual database marker. Add a DDL-failure rollback boundary to the migration test. No migration body or guard relaxed."
+}

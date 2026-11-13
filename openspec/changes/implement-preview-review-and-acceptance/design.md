@@ -210,7 +210,17 @@ Runner v8 新增不可变完整 prepared proof，原 v2～v7 迁移正文／摘�
 
 决定之后投影为 ABORTING，原 SENT／UNKNOWN 历史、proof／观察和 CLOSED 目标不变。新外部准备授权、当前 READY、新观察、UNKNOWN 更新和源闭门全部关闭；数据库反向触发器阻止迟到证明／观察／Release／提交和目标开门。恢复准备器跳过撤销中的对象，原后端和当前成员可按原请求 hash 查询准确决定。决定事务无外部 I/O，事件／Run 版本／操作结果失败全部回滚。
 
-决定不是物理清理证明。决定前已授权的外部动作仍可能在途，拒收迟到 READY 不表示 Runner 已停止；必须先按原对象核实。当前增量不执行服务停止／移除、fence 解除、源写门恢复或容量释放，不产生 ABORTED；项目未核实准备占用继续保留。后续每个破坏性动作须绑定原决定和准确原对象，先查接受结果、记录唯一动作及明确结果，再验证源恢复／目标停止／fence 交接，未齐全不得解除占用或重开旧门。完整4.1仍未完成。
+决定不是物理清理证明。决定前已授权的外部动作仍可能在途，拒收迟到 READY 不表示 Runner 已停止；必须先按原对象核实。决定事务本身不执行服务停止／移除、fence 解除、源写门恢复或容量释放，不产生 ABORTED；项目未核实准备占用继续保留。Runner 服务清理按下节独立核实，只释放已明确清理的服务容量；源恢复／目标停止／fence 交接未齐全不得解除项目占用或重开旧门。完整4.1仍未完成。
+
+### Runner cleanup is bound to the original abort decision
+
+Runner v9 前向重建接受服务表扩充 REMOVED，逐字保留旧行／索引／触发器和 v2～v8 摘要；外键关闭仅用于迁移事务，检查后恢复。独立不可变撤销记录绑定原准备 operation、controller、完整控制面决定／hash与可空原 reservation；即使尚无 reservation 也保存记录，阻止迟到创建原服务。准确原后端显式读取控制面决定，调用方不能传入任意清理决定或公开取得破坏性权限。
+
+登记后禁止新 network／create／start、当前事实／新 HELD 和新 proof；已存在 proof 仍只读恢复。旧派发日志允许观察已获许可的原对象，用于核实在途创建的真实 ID，但不得启动新动作。原容器 ID 仍未知时继续持有占用，不以 inspect 失败或空列表释放可能仍在创建的服务。仅实际无容器动作的预留可明确取消；只有网络时单独移除原网络。原 CREATED 不伪造 EXITED。
+
+STOP／CONTAINER_REMOVE／NETWORK_REMOVE 使用独立固定原决定、profile、服务 hash 和准确 ID 的 SENT／OBSERVED 日志，每动作只有首次 dispatch=true 才能执行。Driver 复核完整原 profile／用途，非 force／volumes 移除原停止容器，原网络须为空；成功完整 ID 列表查询才证明消失，命令失败或超时保持未知。丢 ACK／重启只查原动作，不再执行。容器消失证明、REMOVED、占用释放和历史同一 writer 原子保存，网络后续恢复不受已释放容量的扫描条件排除。
+
+Runner 服务清理结果不等于完整 ABORTED：目标业务文件／原 claim／proof 保留，物理数据 fence 解除、源恢复、控制面占用解除与旧门重开仍需独立握手和证据；真实 Linux／gVisor／quota／networkIsolation 验收单列。4.1 在这些条件齐全前不勾选。
 
 ## Risks / Trade-offs
 

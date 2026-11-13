@@ -64,6 +64,14 @@ After actual file verification and an HTTP health check of the original endpoint
 
 This composition does not install itself at platform startup. Safe abort, accepted service ownership, publication and physical Linux/gVisor validation remain separate work. Actual local Worker/data/template HTTP tests explicitly identify controlled Docker and physical fence facts.
 
+## Acceptance service abort
+
+`RunnerAcceptanceAbortBackend` explicitly reads the exact immutable control decision under the original backend identity. A caller cannot supply a cleanup decision to it. Runner v9 preserves prior SQL bodies/hashes and active rows, extends the service state with REMOVED and retains a permanent preparation abort record even when no service has been reserved. That record blocks late reservation, execution grants, new health/HELD and new proof; already stored proofs and old action observations remain recoverable history.
+
+STOP, CONTAINER_REMOVE and NETWORK_REMOVE each have a fixed decision/profile/service hash and original IDs with one durable dispatch. The Driver rechecks full original ACCEPTANCE identity, stops the original process, removes only a CREATED/EXITED original container without force/volumes, and removes only its empty network. Successful full-ID list queries prove absence; failed inspect, failed commands and timeouts do not. A lost grant or response is only queried, never redispatched. If CREATE may still be in flight and no exact ID is known, capacity remains held. CREATED is preserved as such, without inventing EXITED.
+
+An actual unsent service may cancel. An observed container removal, REMOVED, capacity release and event commit atomically; the later network step remains recoverable after service capacity is released. An isolated original network can be removed without inventing a container. Dataset files, physical data fences, claim and proof stay intact. The control preparation remains ABORTING: data-fence release, old source restoration, project occupancy release and ABORTED still need separate verified handshakes. Linux, runsc, hard quota and network-isolation requirements remain closed by default and require physical validation.
+
 ## Local verification boundary
 
 测试实际运行控制面／Runner SQLite Worker、并发事务、原动作 ACK 丢失、观察提交回滚、历史升级失败回滚、Worker 终止重开、真实 dataset 和 loopback HTTP；`ControlledContainerDriver` 显式提供 network／container 事实，不执行 Docker，健康服务也属于测试夹具。Docker 参数与观察核验针对明确输入验证，Windows 不执行 Linux CLI 路径；模板另执行实际 HTTP／SQLite／浏览器检查。不能把受控事实当成物理退出、真实镜像健康、cgroup 或宿主防火墙证据。

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Actual Runner/control Worker and SQLite, abort journal/migration and read-only data preservation. Docker/health/fence facts are explicit fixtures; no physical Linux cleanup, fence release, source restoration or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-acceptance-service.test.mjs",
+        "tests/acceptance-preparation-backend.test.mjs",
+        "tests/acceptance-service-proof.test.mjs",
+        "tests/acceptance-abort.test.mjs"
+      ],
+      "startedAt": "2026-11-13T01:01:32.376Z",
+      "finishedAt": "2026-11-13T01:03:54.365Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "dfbccbec74c1c16d5a4f48d972c56854c33f8f633c0e50298dc4c44057408af5"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

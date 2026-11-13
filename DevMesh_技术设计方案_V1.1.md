@@ -1398,6 +1398,8 @@ Runner v8 前向迁移保存不可变完整准备 proof，不修改 v2～v7 迁�
 
 T5 为独立 owner 命令，详细事务见 D5。可信调用层先实际读取冻结材料，原键成功恢复直接交回 writer 校验权限／原正文；新提交在本地短事务核实准确准备与最新观察、完整审查和指针，原子保存接受事实、必要人工完成、Run 终态及专用发布意图。原自动质量和评估不改写，发布失败单独呈现。该领域代码／受控后端验证不代表真实服务和物理 fence 已就绪，也不代表发布消费者已装配；完整 4.1／4.3／5.1 仍按各自证据验收。
 
+Runner 服务撤销由显式后端按原主体读取准确控制决定，v9 保留旧迁移正文／历史并扩充 REMOVED，保存不可变原撤销记录和独立 STOP／CONTAINER_REMOVE／NETWORK_REMOVE 日志。即使没有 reservation 也封闭迟到创建；旧已获许可的动作仅允许查询原对象，未知 CREATE／未核实 ID 不释放占用。只有无容器动作的服务可取消；原 CREATED 不伪造 EXITED。每个外部动作只由唯一派发执行，Driver 核实完整原 profile、准确 ID 和停止状态，移除不带 force／volumes，原网络须为空。成功完整 ID 查询确认消失后，容器证明、REMOVED／容量释放和事件原子提交；丢 ACK／重启只查询，网络清理在释放服务容量后继续可恢复。数据／原 claim／proof 保留，物理数据 fence 和源恢复尚未核实则控制面仍 ABORTING，不能解除项目未核实占用或重开旧门。
+
 该规则覆盖“用户正在向旧版本增加任务，同时点接受新版本”的竞态。准备后代码、计划或数据策略变更则原接受操作失效并重新审查；正常新增业务记录由最终冻结快照纳入，不要求每条记录变化都重新确认产品计划。
 
 准备意图先固定准确候选／reviewHash、原接受指针、镜像和数据方案，由服务端预留唯一 releaseId／新目标 datasetId。REPLACE 使用独立的准确主体确认；策略登记或 PREPARED 的持久 ACK 不证明文件、迁移、fencing 或健康已准备好。每项目仅保留一个未核实准备，只有一次派发许可；SENT／UNKNOWN 仅查原对象，不靠 TTL 重建。仅准确从未派发的意图可由当前负责人明确关闭，状态／历史／operation／事件同事务。
@@ -1709,6 +1711,8 @@ BEGIN IMMEDIATE → 校验当前 run、控制门、必要确认、依赖、预�
 迁移 39 不改旧迁移或派发历史。acceptance_commits 固定 Release、本次接受操作、原准备、准确 proofHash 与观察 sequence；原 SENT／UNKNOWN 不改为 FAILED。项目唯一未核实准备由 writer 内查询和数据库准入触发器保障；只有该记录已有不可变提交结论，或准确从未派发的 FAILED，才不再占用；未知不能靠 TTL 解除。旧 Release 不回填伪造证明，新 Release 及提交／人工完成／发布意图禁止更新或删除。
 
 迁移 40 追加 acceptance_abort_decisions：原准备为主键，唯一撤销 operation／decisionHash、准确 requestHash／完整决定正文、可空原 proofHash 外键及决定时点；禁止更新／删除。新 owner 命令在同一短事务内核实强版本、原请求与准备 revision、SENT／UNKNOWN、原接受指针及无 Release／提交，原子保存决定／操作结果／Run 资源版本／事件。T5 与撤销双向拒绝；迟到 proof／观察／准备更新／源闭门和目标开门受数据库屏障保护。原 state、数据、proof 和闭门不变；ABORTING 继续阻塞项目未核实准备名额。ACK 丢失恢复原决定但重验 owner，不含文件或网络 I/O。未来物理清理／源恢复需独立可信结果才可完成撤销，不能仅凭该表释放占用或改写 ABORTED。
+
+Runner v9 使用独立 acceptance_service_aborts／acceptance_abort_actions，固定原决定、controller、可空 reservation 和三个清理动作。父接受服务表按外键检查／恢复的事务重建流程扩充 REMOVED，旧行／索引／触发器、v2～v8 SQL 和摘要不改。登记撤销与服务准入在同一 writer，数据库拒绝迟到创建／动作／新 proof；观察已派发原动作只为恢复身份。仅明确无容器动作可取消，容器消失证明与 REMOVED／容量释放／历史同事务；失败全回滚，网络后继独立保留。Runner 清理日志不写控制面 ABORTED、不释放数据 fence 或项目未核实占用。
 
 MANUAL_PENDING 只能来自冻结时已核实的最终 Tester：非 PASS 检查仅限必要人工项。T5 重新确认本候选完整人工 PASS 后，追加 work_acceptance_completions，固定原 assessment 证据与具体人工结果 ID／reviewHash，登记有效 Work success、结束 Attempt、撤销 grant／释放 slot并标记原 verification 已应用；原自动 assessment／质量／候选字节保持不变。不得把自动 FAIL 或缺材料解释成人工通过。
 
@@ -2096,6 +2100,8 @@ T5 的本地技术证据必须分别覆盖新接受／原键恢复、准确准�
 接受服务组合专项使用真实 Runner／控制面 SQLite Worker、业务文件和只读模板 HTTP，验证数据准备→原服务动作→HELD→稳定 proof→控制面 READY→T5；容器／镜像／物理 fence 若为夹具须逐项明示。覆盖整个 dataset 只读挂载、错误 OCI／用途／沙箱／端口拒绝，动作与 proof 丢 ACK／重启不重派、不补后继动作，撤权／fence 换代／quota 失败保持关闭，v7→v8 活跃历史保留及故障回滚。真实 Linux／gVisor、物理排空、OWNED／发布和完整产品验收仍需独立证据。
 
 撤销决定专项覆盖 SENT／UNKNOWN 与已有 READY、原键丢 ACK／重启、当前 owner／撤权、准确 hash／revision／强版本、过期依据、T5 并发互斥和每个事务边界故障回滚。撤销后验证授权／READY 关闭、迟到 proof／观察／源闭门被拒、原状态／数据／目标 CLOSED／未核实占用保留及恢复不调用后端；迁移39→40保留活跃记录及DDL／history失败回滚。决定测试不代替物理停止、fence释放、旧门恢复或完整安全撤销验收。
+
+Runner 撤销专项覆盖无 reservation 的迟到创建拦截、未派发取消、仅网络／CREATED／HELD 原服务清理、未知 CREATE ID 保持占用、STOP／移除许可及响应丢 ACK／重启、失败查询不能证明消失、容量／事件提交回滚、原 data／claim／proof 保留、v8活跃服务／证明向v9升级及历史写入失败完整回滚。直接 Docker argv／完整 profile 核验和实际控制／Runner Worker 的原决定组合分别验证；受控容器与 fence 明示，物理 Linux／gVisor、源恢复与完整 ABORTED 不由此通过。
 
 | 事项 | 本版已经作出的决策 | 仍需取得的实施证据 |
 | --- | --- | --- |

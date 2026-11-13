@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-13T01:05:49.467Z",
+  "base": "20be0641b23fb67a0ca7e2225465644a4e4b2f79",
+  "runnerHistoricalMigrations": [
+    {
+      "file": "packages/runner/src/fence-domain.ts",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/capacity-domain.ts",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/container-domain.ts",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/cleanup-migration.ts",
+      "sha256": "95a46d98e38c49e83b64e775f073e4768c7fbc682878b84243b836451974614e",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-service-migration.ts",
+      "sha256": "28ea1ae25ad2e40d3e027dd6314ae419a6e7928f4d803d7cd20b4eaf492d5034",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-proof-migration.ts",
+      "sha256": "90a68f417ffb05230bec935209ca036c718a27d8368c0027b195aaf8af7ce1e3",
+      "matchesBase": true
+    }
+  ],
+  "controlHistoricalMigrationCount": 40,
+  "buildReportSha256": "094c343508cd9764865b0634a7befe7ccc888378e3abfc2e96975292f35bd2e2",
+  "initialBuildTestAdditions": [
+    "tests/acceptance-runner-abort.test.mjs",
+    "tests/runner-acceptance-abort-docker.test.mjs"
+  ],
+  "failed": [
+    {
+      "name": "abort-01",
+      "tests": 20,
+      "pass": 19,
+      "fail": 1,
+      "reportSha256": "d84984a731a357ac04ee1aa44779af8b9ebe57c776f6087991c07df0afcbdba6",
+      "outputSha256": "92c9d6cc71e7d8502657e4032777d50865a774bf45813ab98a26438439acb7fa"
+    },
+    {
+      "name": "regression-01",
+      "tests": 45,
+      "pass": 43,
+      "fail": 2,
+      "reportSha256": "892a052c86a5affbea7ee0ba637f775071a859e98d69303dd249aa61fecbe679",
+      "outputSha256": "9a42691e166f0a1700ecc716193360d8476e802274a30a47906440b1ab0b2a2e"
+    }
+  ],
+  "corrections": {
+    "corrections": [
+      {
+        "file": "packages/runner/src/worker.ts",
+        "beforeSha256": "fd4a0a98bc39243bf97e67d6d24b279b2cb4dd77bb8cdc435fb91b04a0b5056e",
+        "beforeSource": "source-before-correction/0.txt",
+        "afterSha256": "eedc86c76e1e3601a533a6ed3c3130ab4225590440d632db719afce4c846b1dd"
+      },
+      {
+        "file": "tests/acceptance-runner-abort.test.mjs",
+        "beforeSha256": "b1c7f16bdb0512d2dd3297cd5172cc84c811852ab7c7a831c64c9df6dd7dfa72",
+        "beforeSource": "source-before-correction/1.txt",
+        "afterSha256": "3a453dc8e4b35be78b0702007156b517d584bc9947ed5d805a6064744927d97e"
+      }
+    ],
+    "reason": "Runner inspect still returned a literal v8 after actual v9 upgrade; read the actual database marker. Add a DDL-failure rollback boundary to the migration test. No migration body or guard relaxed."
+  },
+  "mapMatches": 154,
+  "mapBindingSha256": "aaed3d2a55724aea052eca382d644e1f6862929f8fb7bbf92f5c405e9f55d974",
+  "groups": [
+    {
+      "name": "abort-02",
+      "mode": "test",
+      "tests": 20,
+      "pass": 20,
+      "skipped": 0,
+      "emptyFileWrappers": 0,
+      "selectedCasesExcludingEmptyFiles": 20,
+      "selection": "All tests in the selected files executed.",
+      "reportSha256": "e5896dfab5ce98cc40fd49ef048bf9f9091b9aa9c2a5b151c5dfaa2edc8dbeb2",
+      "outputSha256": "f223a9aa48b3ad18c9ac54883c2697bba11e5a16ef8e35d79b389ff543057a29",
+      "inputChanges": [],
+      "emittedChanges": []
+    },
+    {
+      "name": "regression-02",
+      "mode": "test",
+      "tests": 45,
+      "pass": 45,
+      "skipped": 0,
+      "emptyFileWrappers": 0,
+      "selectedCasesExcludingEmptyFiles": 45,
+      "selection": "All tests in the selected files executed.",
+      "reportSha256": "09571486bbf71f91befca70d2ac5cf26b337951d051033a6e0d1a6c2cb39a721",
+      "outputSha256": "dfbccbec74c1c16d5a4f48d972c56854c33f8f633c0e50298dc4c44057408af5",
+      "inputChanges": [],
+      "emittedChanges": []
+    },
+    {
+      "name": "cleanup-01",
+      "mode": "test",
+      "tests": 19,
+      "pass": 19,
+      "skipped": 0,
+      "emptyFileWrappers": 0,
+      "selectedCasesExcludingEmptyFiles": 19,
+      "selection": "All tests in the selected files executed.",
+      "reportSha256": "db66447a9417d9e5f95a652ba1b4217294d442a29f8aa4d45c6e75f03ab0a79d",
+      "outputSha256": "21aed4a3068eb5c407521d62c7a2f763bbf4407c28a2f0b9779253b8643ac709",
+      "inputChanges": [],
+      "emittedChanges": []
+    },
+    {
+      "name": "migrations-01",
+      "mode": "migration",
+      "tests": 4,
+      "pass": 4,
+      "skipped": 0,
+      "emptyFileWrappers": 1,
+      "selectedCasesExcludingEmptyFiles": 3,
+      "selection": "Three v2-v4 upgrade/preservation cases selected. Node additionally counts one file with zero matching cases as passed; that empty file wrapper is excluded from the asserted-case total. The v5 case runs in cleanup-01.",
+      "reportSha256": "8a6a3db0972fbd96222cebe0a32c8992abbac6db74ce04d91af803921bf3f86e",
+      "outputSha256": "929462bf82fef2c0e36072ed9cff96114675969c3ba264b71d207d943253be37",
+      "inputChanges": [],
+      "emittedChanges": []
+    }
+  ],
+  "currentBuildInputDifferences": [],
+  "scope": "Modified-checkout local development. Actual control/Runner SQLite Workers and migration/restart. Explicit container/network/physical fence facts; no actual Linux/gVisor cleanup, data fence release, source restoration, clean-checkout or product acceptance."
+}

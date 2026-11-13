@@ -23,6 +23,9 @@ export {DockerAcceptanceServiceDriver,acceptanceDockerCreateArguments,acceptance
 export type {AcceptanceDockerOptions} from './acceptance-docker.js';
 export {RunnerAcceptancePreparationBackend} from './acceptance-preparation-backend.js';
 export type {RunnerAcceptancePreparationOptions} from './acceptance-preparation-backend.js';
+export {RunnerAcceptanceAbortBackend} from './acceptance-abort-backend.js';
+export {acceptanceAbortActionRequest,acceptanceAbortObservation} from './acceptance-abort.js';
+export type {AcceptanceAbortDriver,AcceptanceServiceAbort,AcceptanceAbortAction} from './acceptance-abort.js';
 export type {AcceptanceServiceDriver} from './acceptance-service.js';
 export type {AcceptanceServiceRequest,AcceptanceServiceProfile,AcceptanceServiceReservation,AcceptanceServiceFact,AcceptanceServiceJournal,AcceptanceServiceAction} from './acceptance-service.js';
 export {probePreviewHealth} from './preview-health.js';

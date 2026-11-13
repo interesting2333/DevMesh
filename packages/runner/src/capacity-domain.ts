@@ -32,7 +32,7 @@ export function createRunnerCapacityDomain(db:DatabaseSync,runnerId:string){
  const tx=<T>(body:()=>T):T=>{db.exec('BEGIN IMMEDIATE');try{const value=body();db.exec('COMMIT');return value;}catch(error){db.exec('ROLLBACK');throw error;}};
  const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);
  if(version===2)tx(()=>{db.exec(migration);exec('INSERT INTO runner_schema_history VALUES(3,?,?)',hash(migration),new Date().toISOString());});
-  else if(![3,4,5,6,7,8].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
+  else if(![3,4,5,6,7,8,9].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
   if(get('SELECT sha256 FROM runner_schema_history WHERE version=3')?.sha256!==hash(migration)||get('SELECT version FROM runner_identity WHERE singleton=1')?.version!==(version===2?3:version))fail('RUNNER_MIGRATION_DRIFT');
  let capacity:RunnerCapacity|null=null;
  const configure=(input:RunnerCapacity):RunnerCapacity=>{const parsed=runnerCapacity.parse(input);if(capacity&&canonical(capacity)!==canonical(parsed))fail('RUNNER_CAPACITY_CONFIG_CHANGED');return capacity??=(Object.freeze(parsed));};

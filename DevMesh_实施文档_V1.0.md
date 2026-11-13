@@ -300,6 +300,8 @@ P1-07 发布还须单独处理不可变只读准备实例到可写服务的转�
 
 P1-07 安全撤销分为决定与物理完成。先实现 owner 的 requestAcceptanceAbort：独立 meta／Run scope／强 If-Match、原 operation／hash／revision、原因与明确确认；迁移40将完整决定／已有proofHash或null、原响应、Run版本／事件原子保存，与T5互斥。覆盖迟到READY／观察／源闭门、丢ACK／重启、撤权、过期依据、事务故障与39→40活跃历史保留。ABORTING立即关闭新准备权及当前READY，保留原state／proof／数据／目标CLOSED和占用。实际服务stop／rm、物理fence解除、源恢复与容量释放逐项另验；没有独立结果不标ABORTED、不重开旧门，完整4.1继续保留未完成。
 
+Runner 服务清理用v9独立撤销记录与STOP／容器移除／网络移除日志，显式后端从控制库读取原决定，阻止无reservation时的迟到创建；未知CREATE ID保留占用。核实原profile／ID、CREATED或EXITED后按原ID非force／volumes移除，成功完整ID查询才证明消失。容器观察、REMOVED、容量释放和事件原子；网络后续在服务已释放后继续恢复。验证每动作唯一派发、丢许可／ACK只查原对象、事件回滚、旧data／claim／proof保留和v8活跃数据迁移／失败回滚。该服务清理不解除数据fence或控制面项目占用，不宣称源恢复／完整ABORTED；真实Linux／gVisor／配额与隔离另验。
+
 T5 独立验证 owner 的 commitReleaseAcceptance 与可信 ReleaseAcceptor：事务外实际读取冻结材料并校验完整 hash 集合，事务内复核原准备／最新观察双版本、准确候选与完整审查／原指针／Run 代际／全部 READY 内容、健康／fence和未知写。迁移 39 保存不可变提交结论，原 SENT／UNKNOWN 派发历史不改为失败；仅已提交或准确未派发失败才解除项目未核实准备占用。Release、指针 CAS、必要人工完成覆盖层／Attempt／slot、Run COMPLETED、原响应、专用 promotion Outbox及事件故障必须全回滚。人工完成绑定具体人工结果，不改原自动 assessment／质量。并发、丢 ACK／重启、材料在读取期间变化、撤权、未知 HTTP 写及历史不可变分别留证。接受 ACK 恢复不再读文件或要求 Run 活跃；后续实际 OWNED／路由／开放新门／导出消费者另验，不能把独立本地事务通过写成完整服务或产品验收。
 
 数据归属增量须验证通用策略台账的 PREVIEW／ACCEPTANCE 区分、真实原准备 operation／requestHash、REPLACE 基线与复制 origin 分离、接受目标初始关闭及 proof 落库后的 WRITE_FROZEN。迁移 38 重建写门外键必须保持旧关闭门、未知写请求和历史原样；注入晚期故障后 schema、行、版本、迁移历史及外键 pragma 全部恢复。新元数据不证明业务文件、迁移、物理 fence 或 Release 已完成；源闭门与事件故障回滚、准确后端权限、丢 ACK 原记录恢复须单独验证。

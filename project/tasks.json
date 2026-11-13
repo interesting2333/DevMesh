@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "1ded4edc465622c66e994a15c30396cbd66e935142ac35d4d361e7abe47f8d3c"
+      "sha256": "8bfc48d0f34cbdf9e5660215fbd31cf7a1ee707d6241d7366506d62bd9c2bfd8"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "0090c8df98296166f157f77e6fa8ac387211bed95c3833adc245cea3e2a66648"
+      "sha256": "8c762169685d05e1b57c70e81c65d8b4220c84e257e2bc841e4167163fc0e6b0"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "03151bb5f8aaa2d6063798b1df9f44baebc40e074bd787a1f19eaed601a515df"
+      "sha256": "8f55269eea96e4dc19ce7777017e2b70cae853c0fc75a387bf2bff23d744dbbc"
     }
   ],
   "gates": [
@@ -1226,7 +1226,13 @@
         "packages/storage-sqlite/src/acceptance-abort-domain.ts",
         "packages/storage-sqlite/src/acceptance-abort-protocol.ts",
         "tests/acceptance-abort.test.mjs",
-        "tests/storage-acceptance-abort-upgrade.test.mjs"
+        "tests/storage-acceptance-abort-upgrade.test.mjs",
+        "packages/runner/src/acceptance-abort.ts",
+        "packages/runner/src/acceptance-abort-backend.ts",
+        "packages/runner/src/acceptance-abort-domain.ts",
+        "packages/runner/src/acceptance-abort-migration.ts",
+        "tests/acceptance-runner-abort.test.mjs",
+        "tests/runner-acceptance-abort-docker.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1344,7 +1350,10 @@
         "project/evidence/P1-07/development/acceptance-composition/final-binding.json",
         "project/evidence/P1-07/acceptance-abort-development-review.md",
         "project/evidence/P1-07/development/acceptance-abort/manifest.json",
-        "project/evidence/P1-07/development/acceptance-abort/final-binding.json"
+        "project/evidence/P1-07/development/acceptance-abort/final-binding.json",
+        "project/evidence/P1-07/acceptance-runner-abort-development-review.md",
+        "project/evidence/P1-07/development/acceptance-runner-abort/manifest.json",
+        "project/evidence/P1-07/development/acceptance-runner-abort/final-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1393,7 +1402,8 @@
         "2026-11-13：4.2 本轮实现独立 T5／可信材料核验：迁移39保存不可变 Release／提交结论／必要人工覆盖层与专用 promotion 意图，准确 owner／原正文与准备双版本、指针 CAS、Run 终态／事件同事务。storage-01 40/40、t5-03 23/23 通过，覆盖13个写入故障完整回滚与原键重试、人工／自动完成、并发／重启／未知阻塞和真实材料预检；构建／类型／Lint及143份源码映射通过。首轮类型失败、夹具ID修正遗漏导致的失败与主动中止、唯一测试输入差异及38份历史迁移正文绑定见 project/evidence/P1-07/acceptance-commit-development-review.md。这里只完成4.2领域代码与明确受控基础设施验证；实际服务Driver／物理fence／完整准备、安全撤销、发布／导出与产品组合继续，4.1／4.3／5.1／5.2、正式P1-07和门槛不据此完成；变更8/13，不归档。",
         "2026-11-13：4.1 服务组合设计影响评估：直接 ACCEPTANCE Docker Driver 与显式 RunnerAcceptancePreparationBackend 组合实际数据、原服务动作和 HTTP；接受整库只读／APP_READ_ONLY，复用公共 OCI／沙箱核验但不翻译预览请求。Runner v8 前向增加不可变完整 proof，preparedAt／custodyRevision 固定，当前健康另查；原 v2～v7 正文与历史保留，丢 ACK 只查原对象、不补发缺失后继。D4／D5／D6、完整设计、实施文档与 OpenSpec 同步。PRD／D01～D08 不变；真实 Linux／物理 custody、正向保留／替换、安全撤销、OWNED／发布及产品组合仍需分别验收；本条不声明测试通过，4.1、变更8/13和正式工作包／门槛不变。",
         "2026-11-13：4.1 接受服务组合：显式 RunnerAcceptancePreparationBackend／ACCEPTANCE Docker Driver、整库只读与原对象恢复，Runner v8 保存稳定完整 proof；实际 SQLite／模板 HTTP→HELD／控制面 READY→T5 本地链路通过。service-02 16/16、regression-01 15/15、migrations-01 选中4项通过（其余测试未选择，TAP skipped=0），构建／类型／Lint和148份源码映射通过。首轮28项25通过3失败源于两处测试错误，另有未使用导入导致Lint失败，三处修正及原日志／源码指纹全部保留；最后三组输入与最终构建一致、运行期间无变化。物理容器／镜像来源／fence 为明确夹具；真实 Linux／quota／networkIsolation／物理 custody、安全撤销、OWNED／发布及正向保留／替换与完整产品验收继续。4.1不勾选，变更8/13及正式P1-07／门槛不变。",
-        "2026-11-13：本地开发4.1的不可变撤销决定屏障；迁移40、owner原命令／当前权限／准确版本、T5互斥、ABORTING关闭授权／READY及迟到观察／源闭门，保留原派发历史／proof／数据／目标CLOSED和占用。abort-01 17/17；storage-02 59/59；regression-01 48/48，六包构建／类型／Lint及150份源码映射通过，旧1～39迁移不变。嵌套事务和历史迁移测试夹具两次原失败／修正证据保留；OpenAPI及独立迁移测试在最终构建后变化的范围如实绑定，未冒充全输入一致。决定不执行物理清理／fence解除／源恢复或释放容量，不产生ABORTED；完整4.1／产品及真实环境继续，OpenSpec8/13、正式状态／门槛不变。"
+        "2026-11-13：本地开发4.1的不可变撤销决定屏障；迁移40、owner原命令／当前权限／准确版本、T5互斥、ABORTING关闭授权／READY及迟到观察／源闭门，保留原派发历史／proof／数据／目标CLOSED和占用。abort-01 17/17；storage-02 59/59；regression-01 48/48，六包构建／类型／Lint及150份源码映射通过，旧1～39迁移不变。嵌套事务和历史迁移测试夹具两次原失败／修正证据保留；OpenAPI及独立迁移测试在最终构建后变化的范围如实绑定，未冒充全输入一致。决定不执行物理清理／fence解除／源恢复或释放容量，不产生ABORTED；完整4.1／产品及真实环境继续，OpenSpec8/13、正式状态／门槛不变。",
+        "2026-11-13：继续4.1独立Runner撤销清理。v9前向重建／不可变原决定与无预留tombstone、原profile／完整对象ID、唯一STOP／容器和网络移除派发、丢ACK只查询，准确消失观察与REMOVED／服务容量／历史同事务；新准备与proof关闭，原claim／proof／数据保留，无force／删除卷。abort-02 20/20、regression-02 45/45、cleanup-01 19/19，迁移专项实际3项通过（TAP额外1个空文件包装单列）；六包构建／类型／Lint和154份映射通过。首轮版本展示导致的3项失败及修正链保留，旧Runner v2～v8和控制库40份迁移不变。物理容器／网络／fence为明确夹具，没有真实Linux清理、dataset fence解除／源恢复／ABORTED／完整发布或产品验收；正式状态、8/13和门槛不变。"
       ]
     },
     {

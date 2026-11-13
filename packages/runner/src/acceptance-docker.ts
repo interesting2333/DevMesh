@@ -12,6 +12,8 @@ import type {AcceptanceServiceProfile,AcceptanceServiceRequest,AcceptanceService
 import {serviceDockerNetworkArguments,serviceDockerCreateArguments,verifyServiceDockerImage,verifyServiceDockerNetwork,verifyServiceDockerContainer} from './service-docker.js';
 import type {ServiceContainerFact} from './service-docker.js';
 import {RunnerError} from './protocol.js';
+import type {AcceptanceAbortDriver} from './acceptance-abort.js';
+import {serviceDockerRemovalArguments,verifyServiceDockerAbsence} from './service-docker.js';
 
 export type AcceptanceDockerOptions=PreviewDockerOptions;
 const hash=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
@@ -25,7 +27,7 @@ export function verifyAcceptanceDockerContainer(value:unknown,raw:AcceptanceServ
 
 /** Explicit Linux driver. Every physical observation rechecks the full original
  * profile; the entire acceptance dataset is mounted read-only. */
-export class DockerAcceptanceServiceDriver implements AcceptanceServiceDriver {
+export class DockerAcceptanceServiceDriver implements AcceptanceServiceDriver,AcceptanceAbortDriver {
  readonly configured:boolean;readonly #execute:CliExecutor;readonly #options:AcceptanceDockerOptions;
  constructor(options:AcceptanceDockerOptions,executor?:CliExecutor){
   if(!isAbsolute(options.dockerPath)||!options.socketPath.startsWith('/')||/[\0\r\n]/.test(options.socketPath))throw new RunnerError('ACCEPTANCE_SERVICE_DOCKER_CONFIG_INVALID',422);
@@ -41,4 +43,9 @@ export class DockerAcceptanceServiceDriver implements AcceptanceServiceDriver {
  async inspect(p:AcceptanceServiceProfile,r:AcceptanceServiceRequest,networkId:string,containerId:string|null):Promise<ServiceContainerFact|null>{this.#enabled();if(await this.network(p,r)!==networkId||!await this.#options.quota!.verify(p.datasetDirectory,p.datasetBytes))throw new RunnerError('ACCEPTANCE_SERVICE_DOCKER_PROFILE_UNVERIFIED',409);const out=await this.#execute(['inspect','--type','container',p.containerName],15000,256*1024);return out.code===0?verifyAcceptanceDockerContainer(JSON.parse(out.stdout),p,r,networkId,containerId):null;}
  async create(p:AcceptanceServiceProfile,r:AcceptanceServiceRequest,networkId:string,authorize:()=>Promise<boolean>){this.#enabled();if(!await this.#options.quota!.verify(p.datasetDirectory,p.datasetBytes)||await this.network(p,r)!==networkId)throw new RunnerError('ACCEPTANCE_SERVICE_DOCKER_CREATE_UNVERIFIED',409);if(!await authorize())throw new RunnerError('ACCEPTANCE_SERVICE_AUTHORITY_REVOKED',403,'not-sent');const id=dockerObjectId.parse((await this.#call(acceptanceDockerCreateArguments(p,r,networkId))).trim());return this.inspect(p,r,networkId,id);}
  async start(p:AcceptanceServiceProfile,r:AcceptanceServiceRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.inspect(p,r,networkId,containerId);if(before?.state!=='created')throw new RunnerError('ACCEPTANCE_SERVICE_DOCKER_START_UNVERIFIED',409);if(!await authorize())throw new RunnerError('ACCEPTANCE_SERVICE_AUTHORITY_REVOKED',403,'not-sent');await this.#call(['start',containerId]);return this.inspect(p,r,networkId,containerId);}
+ async stop(p:AcceptanceServiceProfile,r:AcceptanceServiceRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.inspect(p,r,networkId,containerId);if(before?.state==='created'||before?.state==='exited')return before;if(before?.state!=='running')throw new RunnerError('ACCEPTANCE_ABORT_STOP_UNVERIFIED',409);if(!await authorize())throw new RunnerError('ACCEPTANCE_ABORT_AUTHORITY_REVOKED',403,'not-sent');await this.#call(['stop','--signal=SIGTERM','--timeout=10',containerId]);return this.inspect(p,r,networkId,containerId);}
+ async containerAbsent(id:string){dockerObjectId.parse(id);return verifyServiceDockerAbsence(await this.#call(['container','ls','--all','--no-trunc','--filter','id='+id,'--format','{{.ID}}']),id,'ACCEPTANCE_ABORT_QUERY_UNVERIFIED');}
+ async networkAbsent(id:string){dockerObjectId.parse(id);return verifyServiceDockerAbsence(await this.#call(['network','ls','--no-trunc','--filter','id='+id,'--format','{{.ID}}']),id,'ACCEPTANCE_ABORT_QUERY_UNVERIFIED');}
+ async removeContainer(p:AcceptanceServiceProfile,r:AcceptanceServiceRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.inspect(p,r,networkId,containerId);if(!before||!['created','exited'].includes(before.state))throw new RunnerError('ACCEPTANCE_ABORT_CONTAINER_NOT_STOPPED',409);if(!await authorize())throw new RunnerError('ACCEPTANCE_ABORT_AUTHORITY_REVOKED',403,'not-sent');await this.#call(serviceDockerRemovalArguments('CONTAINER_REMOVE',containerId));}
+ async removeNetwork(p:AcceptanceServiceProfile,r:AcceptanceServiceRequest,networkId:string,authorize:()=>Promise<boolean>){const original=JSON.parse(await this.#call(['network','inspect',networkId]));if(verifyAcceptanceDockerNetwork(original,p,r)!==networkId||Object.keys(original[0].Containers??{}).length)throw new RunnerError('ACCEPTANCE_ABORT_NETWORK_BUSY',409);if(!await authorize())throw new RunnerError('ACCEPTANCE_ABORT_AUTHORITY_REVOKED',403,'not-sent');await this.#call(serviceDockerRemovalArguments('NETWORK_REMOVE',networkId));}
 }

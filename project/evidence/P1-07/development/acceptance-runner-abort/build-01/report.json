@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual Runner/control Worker and SQLite, abort journal/migration and read-only data preservation. Docker/health/fence facts are explicit fixtures; no physical Linux cleanup, fence release, source restoration or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T00:52:34.796Z",
+      "finishedAt": "2026-11-13T00:52:59.881Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "08eede57c5cc466f6e85ba26adf4e8b09575fc4bf25c46a1a614a985f7946295"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T00:52:59.882Z",
+      "finishedAt": "2026-11-13T00:53:14.413Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T00:53:14.414Z",
+      "finishedAt": "2026-11-13T00:53:15.586Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/runner/dist/index.mjs",
+    "packages/runner/dist/index.mjs.map",
+    "packages/runner/dist/preview-cleanup-BqL6AC4x.mjs",
+    "packages/runner/dist/preview-cleanup-BqL6AC4x.mjs.map",
+    "packages/runner/dist/worker.mjs",
+    "packages/runner/dist/worker.mjs.map",
+    "packages/runner/dist/preview-cleanup-DU5u83TD.mjs",
+    "packages/runner/dist/preview-cleanup-DU5u83TD.mjs.map"
+  ]
+}

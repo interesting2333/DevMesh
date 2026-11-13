@@ -17,9 +17,12 @@ import {acceptanceServiceClaim} from '@devmesh/storage-sqlite';
 import type {AcceptancePreparedProof} from '@devmesh/storage-sqlite';
 import {reserveAcceptanceService,acceptanceServiceFact,acceptanceServiceProfile,acceptanceServiceActionKind,acceptanceServiceActionObservation} from './acceptance-service.js';
 import type {AcceptanceServiceReservation,AcceptanceServiceJournal} from './acceptance-service.js';
+import {acceptanceAbortStoreRequests} from './acceptance-abort.js';
+import type {AcceptanceAbortStoreResults} from './acceptance-abort.js';
 const owner={controllerId:opaqueKey};
 const previewBound={...owner,reservationId:opaqueKey,requestHash:z.string().regex(/^[a-f0-9]{64}$/)};
 export const storeRequests={
+ ...acceptanceAbortStoreRequests,
  acceptanceServiceReserve:z.strictObject({...owner,...reserveAcceptanceService.shape}),
  acceptanceServiceGet:z.strictObject(previewBound),
  acceptanceServiceByOperation:z.strictObject({...owner,operationId:opaqueKey}),
@@ -79,7 +82,7 @@ export const storeRequests={
 export type RunnerStoreMethod=keyof typeof storeRequests;
 export type StoreInput<M extends RunnerStoreMethod>=z.input<(typeof storeRequests)[M]>;
 export interface InternalJob {job:Job;execution:{workspacePath:string;argv:string[]};leasePermit:Job['request']['permit'];leaseRenewedAt:string}
-export interface StoreResults {
+export interface StoreResults extends AcceptanceAbortStoreResults {
  acceptanceServiceReserve:AcceptanceServiceReservation;acceptanceServiceGet:AcceptanceServiceReservation;acceptanceServiceByOperation:AcceptanceServiceReservation|null;
  acceptanceServicePage:{items:{sequence:number;reservation:AcceptanceServiceReservation}[];nextSequence:number|null};
  acceptanceServiceDispatch:{dispatch:boolean;reservation:AcceptanceServiceReservation};acceptanceServiceCancel:AcceptanceServiceReservation;acceptanceServiceRecord:AcceptanceServiceReservation;

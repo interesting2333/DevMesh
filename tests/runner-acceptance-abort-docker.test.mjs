@@ -1,0 +1,19 @@
+// Explicit CLI and inspect responses. These tests do not execute Docker or gVisor.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {DockerAcceptanceServiceDriver} from '../packages/runner/dist/index.mjs';
+import {acceptanceServiceBackendFixture} from './fixtures/acceptance-service-backend.mjs';
+import {acceptanceDockerFacts} from './fixtures/acceptance-docker.mjs';
+
+async function fixture(t){
+ const f=await acceptanceServiceBackendFixture(t);await f.backend.prepare(f.preparation,async()=>true);const r=await f.reservation(),j=await f.journal(),facts=acceptanceDockerFacts(j.profile,r.request),calls=[];let removed=false,networkRemoved=false,queryCode=0,queryOutput=null;
+ const d=new DockerAcceptanceServiceDriver({enabled:false,dockerPath:process.execPath,socketPath:'/explicit-fixture.sock',quota:{async prepare(){},async verify(){return true;}},networkIsolation:{async enforce(){},async verify(){return true;}}},async args=>{calls.push([...args]);if(args[0]==='network'&&args[1]==='inspect')return {code:networkRemoved?1:0,stdout:JSON.stringify(facts.network)};if(args[0]==='inspect')return {code:removed?1:0,stdout:JSON.stringify(facts.container)};if(args[0]==='stop'){Object.assign(facts.container[0].State,{Status:'exited',Running:false,Pid:0});return {code:0,stdout:facts.containerId};}if(args[0]==='container'&&args[1]==='rm'){removed=true;return {code:0,stdout:facts.containerId};}if(args[0]==='network'&&args[1]==='rm'){networkRemoved=true;return {code:0,stdout:facts.networkId};}if(args[1]==='ls')return {code:queryCode,stdout:queryOutput??(args[0]==='container'?removed?'':facts.containerId:networkRemoved?'':facts.networkId)};throw Error('Unexpected explicit CLI '+args);});
+ // Only this private executor fixture is enabled; production platform detection remains closed.
+ Object.defineProperty(d,'configured',{value:true});return {f,r,j,facts,calls,d,setQuery(code,output){queryCode=code;queryOutput=output;}};
+}
+test('acceptance Docker stop and cleanup use original full-profile IDs, no force/volumes, and verified absence',async t=>{
+ const {d,r,j,facts,calls}=await fixture(t),p=j.profile,q=r.request,n=facts.networkId,c=facts.containerId,yes=async()=>true;await assert.rejects(d.removeContainer(p,q,n,c,yes),{code:'ACCEPTANCE_ABORT_CONTAINER_NOT_STOPPED'});assert.equal((await d.stop(p,q,n,c,yes)).state,'exited');assert.deepEqual(calls.find(a=>a[0]==='stop'),['stop','--signal=SIGTERM','--timeout=10',c]);assert.equal(await d.containerAbsent(c),false);await d.removeContainer(p,q,n,c,yes);assert.equal(await d.containerAbsent(c),true);await d.removeNetwork(p,q,n,yes);assert.equal(await d.networkAbsent(n),true);assert.deepEqual(calls.find(a=>a[0]==='container'&&a[1]==='rm'),['container','rm',c]);assert.deepEqual(calls.find(a=>a[0]==='network'&&a[1]==='rm'),['network','rm',n]);assert.equal(calls.flat().some(a=>a==='--force'||a==='--volumes'),false);
+});
+test('replaced profile, revoked authority, failed list and partial IDs cannot authorize removal or prove absence',async t=>{
+ const x=await fixture(t),{d,r,j,facts,calls}=x,n=facts.networkId,c=facts.containerId;await assert.rejects(d.stop(j.profile,r.request,n,c,async()=>false),{code:'ACCEPTANCE_ABORT_AUTHORITY_REVOKED'});assert.equal(calls.some(a=>a[0]==='stop'),false);facts.container[0].Config.Labels['devmesh.purpose']='PREVIEW';await assert.rejects(d.stop(j.profile,r.request,n,c,async()=>true));assert.equal(calls.some(a=>a[0]==='stop'),false);x.setQuery(1,'');await assert.rejects(d.containerAbsent(c),{code:'ACCEPTANCE_SERVICE_DOCKER_UNKNOWN'});x.setQuery(0,c.slice(0,12));await assert.rejects(d.containerAbsent(c),{code:'ACCEPTANCE_ABORT_QUERY_UNVERIFIED'});x.setQuery(0,c+'\n'+'f'.repeat(64));await assert.rejects(d.containerAbsent(c),{code:'ACCEPTANCE_ABORT_QUERY_UNVERIFIED'});
+});

@@ -1,0 +1,70 @@
+TAP version 13
+# (node:30232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v2 upgrade to v7 preserves original migration fingerprint and queued jobs; v3 drift is rejected
+ok 1 - v2 upgrade to v7 preserves original migration fingerprint and queued jobs; v3 drift is rejected
+  ---
+  duration_ms: 1708.2617
+  type: 'test'
+  ...
+# (node:30232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v3 to v7 preserves an active original reservation and history; a failed migration rolls back before retry and v4 drift is rejected
+ok 2 - v3 to v7 preserves an active original reservation and history; a failed migration rolls back before retry and v4 drift is rejected
+  ---
+  duration_ms: 2519.4467
+  type: 'test'
+  ...
+# (node:20580) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+1..0
+# Subtest: tests\\runner-preview-container.test.mjs
+ok 2 - tests\\runner-preview-container.test.mjs
+  ---
+  duration_ms: 1623.8837
+  type: 'test'
+  ...
+# (node:16808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16808) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:16808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16808) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v4 to v6 is transactional and preserves original journals without adopting old previews; v5 drift is rejected
+ok 4 - v4 to v6 is transactional and preserves original journals without adopting old previews; v5 drift is rejected
+  ---
+  duration_ms: 5470.2238
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13386.0838
