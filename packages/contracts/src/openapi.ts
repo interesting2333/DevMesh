@@ -95,6 +95,10 @@ export function createOpenApiDocument() {
   const parameter=(name:string,schema:z.ZodType,location='path',required=true)=>({name,in:location,required,schema:jsonSchema(schema)});
   const key=parameter('Idempotency-Key',idempotencyKey,'header');
   const page=[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:200,default:50}}];
+  for(const [suffix,operationId,mime] of [['view','ReadWorkbenchPage','text/html'],['client.js','ReadWorkbenchClient','application/javascript']] as const){
+    const path='/api/v1/workbench/'+suffix;add(path,'get',operationId,undefined,suffix==='view'?[parameter('projectId',ids.project,'query',false),parameter('runId',ids.run,'query',false)]:[]);
+    (paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'受保护工作台；runId须同时指定projectId，选中上下文按当前成员检查；GET无写入副作用',content:{[mime]:{schema:{type:'string'}}}};
+  }
   add('/api/v1/projects','get','ListProjects',undefined,[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:20}},{name:'cursor',in:'query',schema:{type:'string',maxLength:1024}}]);
   add('/api/v1/projects/{projectId}/tasks','post','CreateTask','OperationReceipt',[parameter('projectId',ids.project),key,parameter('If-Match',strongETag,'header')],'CreateTask');
   add('/api/v1/projects/{projectId}/workspace','get','ReadWorkspace','Workspace',[parameter('projectId',ids.project),parameter('runId',ids.run,'query',false),{name:'afterMessageId',in:'query',schema:{type:'string',maxLength:256}},...page]);
@@ -173,6 +177,9 @@ export function createOpenApiDocument() {
   const confirm=paths['/api/v1/runs/{runId}/plans/{revision}:confirm']!.post as Record<string,unknown>;
   confirm['x-implementation-status']='implemented-offline';confirm.security=[{trustedIdentity:[]}];
   confirm.description='按当前成员、原操作键、版本、审阅哈希和计划校验记录明确确认；后台执行另行准入。';
+  for(const [path,item] of Object.entries(paths))if(path.startsWith('/api/v1/'))for(const operation of Object.values(item)){
+    const op=operation as {parameters:unknown[]};op.parameters.push({...parameter('X-DevMesh-Principal',opaqueKey,'header',false),description:'可选页面主体绑定；须与可信身份解析结果相同，不同则403且不执行副作用；不可用此头建立身份，重复头400。'});
+  }
   return {
     openapi: '3.1.0', jsonSchemaDialect: 'https://json-schema.org/draft/2020-12/schema',
     info: { title: 'DevMesh 核心契约', version: '0.3.0', description: '共享命令、输入与需求理解 API。逐路由标记实现范围；离线代码与测试不代表企业身份、模型或产品全链路验收。其余 D3 API 随工作包增量补齐。' },

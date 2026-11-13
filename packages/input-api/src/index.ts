@@ -18,6 +18,7 @@ import type {ReleaseAccessGateway} from './release.js';
 export type {ReleaseAccessGateway} from './release.js';
 import {mountPreviewRoutes} from './preview.js';
 import {mountPreviewManagementRoutes} from './preview-management.js';
+import {mountWorkbenchRoutes} from './workbench.js';
 import type {PreviewAccessGateway} from './preview.js';
 import type {TLSSocket} from 'node:tls';
 export type {PreviewAccessGateway} from './preview.js';
@@ -55,7 +56,7 @@ const positive=(value:unknown,fallback:number,max:number)=>{
 const scopeMeta=(principalId:string,scopeId:string,request:Request)=>({principalId,scopeId,idempotencyKey:parseContract(idempotencyKey,request.headers['idempotency-key'])});
 function publicBoundary(request:Request){
   if(!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(request.socket.remoteAddress??''))fail('REQUEST_ORIGIN_INVALID',403,'Input API requires its configured local transport');
-  for(const name of ['host','origin','authorization','cookie','idempotency-key','if-match']){
+  for(const name of ['host','origin','authorization','cookie','idempotency-key','if-match','x-devmesh-principal']){
     let count=0;for(let i=0;i<request.rawHeaders.length;i+=2)if(request.rawHeaders[i]!.toLowerCase()===name)count++;
     if(count>1)fail('REQUEST_HEADERS_INVALID',400,'Ambiguous request headers');
   }
@@ -99,7 +100,9 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
       }finally{clearTimeout(timer);request.off('aborted',disconnected);if(abortListener)controller.signal.removeEventListener('abort',abortListener);identityControllers.delete(controller);}
       if(!accepting)fail('SERVICE_STOPPING',503,'Input API is stopping');
       if(!identity)fail('AUTHENTICATION_REQUIRED',401,'Authentication is required');
-      identities.set(request,{principalId:parseContract(opaqueKey,identity.principalId)});next();
+      const principalId=parseContract(opaqueKey,identity.principalId),expected=request.headers['x-devmesh-principal'];
+      if(expected!==undefined&&parseContract(opaqueKey,expected)!==principalId)fail('FORBIDDEN',403,'Page identity has changed');
+      identities.set(request,{principalId});next();
     }catch(error){next(error);}})();
     pending.set(work,request);void work.finally(()=>{pending.delete(work);});
   });
@@ -215,6 +218,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const after=request.query.afterSeq===undefined?'0':scalar(request.query.afterSeq,'afterSeq');if(!/^\d+$/.test(after)||!Number.isSafeInteger(Number(after)))fail('SCHEMA_INVALID',422,'Invalid event cursor');
     response.json(await content.storage.request('listInputEvents',{principalId:identity.principalId,projectId:parseContract(ids.project,request.params.projectId),runId:parseContract(ids.run,request.params.runId),afterSeq:Number(after),limit:positive(request.query.limit,50,200)}));
   }));
+  mountWorkbenchRoutes(router,content,route);
   mountPreviewRoutes(router,content,options.previewGateway,route);
   mountPreviewManagementRoutes(router,content,options.previewPolicies,route);
   mountExportRoutes(router,content,route);

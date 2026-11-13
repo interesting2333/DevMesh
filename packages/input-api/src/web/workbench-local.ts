@@ -66,7 +66,7 @@ export async function openWorkbenchLocal(principalId:string){
     }
     return v;
   }
-  type Session={get:(store:IDBObjectStore|IDBIndex,key:IDBValidKey,next:(v:unknown)=>void)=>void;drafts:IDBObjectStore;commands:IDBObjectStore};
+  type Session={get:(store:IDBObjectStore|IDBIndex,key:IDBValidKey,next:(v:unknown)=>void)=>void;scan:(range:IDBKeyRange,next:(cursor:IDBCursorWithValue|null)=>void)=>void;drafts:IDBObjectStore;commands:IDBObjectStore};
   function transaction<T>(mode:IDBTransactionMode,body:(s:Session,done:(value:T)=>void)=>void):Promise<T>{
     if(closed)return Promise.reject(new WorkbenchLocalError('STORAGE_CLOSED'));
     return new Promise((resolve,reject)=>{
@@ -76,7 +76,7 @@ export async function openWorkbenchLocal(principalId:string){
       const guard=(work:()=>void)=>{try{work();}catch(e){reason=e;tx.abort();}};
       tx.oncomplete=()=>{if(ready)resolve(result);else reject(new WorkbenchLocalError('LOCAL_RECORD_INVALID'));};
       tx.onabort=()=>reject(reason instanceof WorkbenchLocalError?reason:new WorkbenchLocalError(reason?'LOCAL_RECORD_INVALID':'STORAGE_UNAVAILABLE'));
-      const s:Session={drafts:tx.objectStore('drafts'),commands:tx.objectStore('commands'),get(store,key,next){const r=store.get(key);r.onsuccess=()=>guard(()=>next(r.result as unknown));}};
+      const s:Session={drafts:tx.objectStore('drafts'),commands:tx.objectStore('commands'),get(store,key,next){const r=store.get(key);r.onsuccess=()=>guard(()=>next(r.result as unknown));},scan(range,next){const r=tx.objectStore('drafts').openCursor(range,'prev');r.onsuccess=()=>guard(()=>next(r.result));}};
       guard(()=>body(s,value=>{result=value;ready=true;}));
     });
   }
@@ -90,6 +90,20 @@ export async function openWorkbenchLocal(principalId:string){
   function load(input:DraftContext){const c=context(input);return transaction<{draft:LocalDraft|null;pending:LocalCommand|null}>('readonly',(s,done)=>s.get(s.drafts,contextKey(c),raw=>{
     const d=draft(raw,c);pending(s,c,p=>{if(d?.pendingKey&&p?.key!==d.pendingKey)invalid();done({draft:d,pending:p});});
   }));}
+  /** Old basis drafts are references, never silently copied into a new request. */
+  function references(input:DraftContext,afterKey?:string){
+    const c=context(input),prefix=formKey(c).slice(0,-1)+',';
+    if(afterKey!==undefined&&(!afterKey.startsWith(prefix)||afterKey.length>2048))return invalid();
+    return transaction<{items:LocalDraft[];nextCursor:string|null}>('readonly',(s,done)=>{
+      const items:LocalDraft[]=[],range=IDBKeyRange.bound(prefix,afterKey??prefix+'\uffff',false,afterKey!==undefined);let scanned=0;
+      s.scan(range,cursor=>{
+        if(!cursor){done({items,nextCursor:null});return;}
+        const raw=draftRecord.parse(cursor.value),d=draft(raw,context(raw.context));if(!d||formKey(d.context)!==formKey(c))return invalid();
+        scanned++;if(d.context.basisRevision!==c.basisRevision&&(d.text||d.name))items.push(d);
+        if(items.length===10||scanned===50){done({items,nextCursor:String(cursor.key)});return;}cursor.continue();
+      });
+    });
+  }
   function save(input:DraftContext,expectedRevision:number,fields:z.input<typeof draftFields>){
     const c=context(input),value=draftFields.parse(fields);z.number().int().min(0).max(Number.MAX_SAFE_INTEGER-1).parse(expectedRevision);
     return transaction<LocalDraft>('readwrite',(s,done)=>pending(s,c,p=>{
@@ -138,5 +152,5 @@ export async function openWorkbenchLocal(principalId:string){
       });
     }));
   }
-  return {load,save,enqueue,getCommand,observe,close};
+  return {load,references,save,enqueue,getCommand,observe,close};
 }

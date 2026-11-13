@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-14",
+  "base": "0c8d322f785e243ca3531069be24188e030d480e",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "http",
+      "record": "http-2026-11-13T17-18-49-920Z.json",
+      "tests": 14,
+      "pass": 14,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-13T17-18-49-928Z.json",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T17-17-48-918Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-13T17-18-49-163Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T17-18-49-865Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T17-18-49-868Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T17-18-49-886Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 29,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "Protected HTML/script identity defaults, strict scope/query validation, asynchronous membership recheck, nonce CSP/no-store and GET without input facts.",
+    "Expected-principal mismatch before malformed JSON and all effects, duplicate-header refusal, no identity from that header and existing clients without it.",
+    "Actual project POST observes committed IndexedDB journal first; committed ACK loss reload does not post; explicit lookup restores one project/input and retains original envelope.",
+    "Message lookup miss retains original; explicit retry uses exact original UUID, body and If-Match, creates one input.",
+    "Two-project drafts/tabs, explicit basis change and bounded old-basis references; manual refresh preserves text, focus and selection.",
+    "Real IndexedDB abort retains in-memory input, blocks navigation and zero POST until successful local retry.",
+    "Account change refuses old subject before operations, clears protected UI and isolates reentry; history/viewer do not mount a composer or local command connection.",
+    "Rapid switch rejects an old workspace response; membership loss clears old messages and a delayed old project list cannot refill protected UI.",
+    "Actual native local-module CAS/races, journal replay, corruption and schema-upgrade regressions; IME/repeated-key exclusion, shortcut submission, tab keyboard and 390px screenshot."
+  ],
+  "failureHistory": {
+    "record": "browser-2026-11-13T17-10-53-015Z.json",
+    "pass": 12,
+    "fail": 1,
+    "excludedFromFinalTotals": true,
+    "reason": "The viewer fixture omitted required project_members.created_at and failed before that browser scenario could execute. The fixture now supplies the timestamp. The first lint run also reported an unused test variable, which was removed. No product assertion was removed or weakened.",
+    "preservedSource": "failed-source/",
+    "otherRuns": "Intermediate successful runs precede rapid-navigation/revocation hardening or final product copy. They are diagnostic history; final totals use only the latest artifact-bound HTTP/browser runs. Revocation response-generation hardening and delayed project-list assertion were added during development review."
+  },
+  "inputAssessment": "Full root application and standalone production browser-module builds precede the final browser tests. All final groups retain final source/test inventories without drift. Browser JS and map hashes are recorded before/after the final test and match the final files. All workspace and standalone module source-map source bytes match files. Control SQL1..45, Runner/store and dependencies are unchanged. Earlier failed and pre-hardening runs are diagnostic history excluded from final totals.",
+  "scope": "Actual protected React workbench entry, nonce CSP, Edge 157/native IndexedDB and file Worker/Input API; project lost-ACK recovery, explicit exact message retry after lookup miss, scope-specific drafts, permission/account changes, local transaction failures, navigation cancellation, history read-only, IME/keyboard and narrow layout. Separate local-module harness continues context/CAS/journal/upgrade checks. IdentityResolver and accepted-release history seed are explicit fixtures. No real WS, enterprise identity, model, Linux Runner or full T08/D01 product acceptance.",
+  "retainedBuilds": {
+    "machineLocalOnly": true,
+    "hashes": {
+      ".cache/workbench-local-build/local.js": "5782de3b01d81cfc47e7cd91ca3462938569e786f27ca81e4188e04ae46ce487",
+      ".cache/workbench-local-build/local.js.map": "91db93b257823578c98278e6707f634e2d462386a25a9d98c1cbe118eaf5352a",
+      "packages/input-api/dist/web/workbench/workbench-client.js": "17f19a8014071622b3b05538a5308bab8d8f3e8441214d67b1b33db71d36e755",
+      "packages/input-api/dist/web/workbench/workbench-client.js.map": "eb9382c3568dec397891f0a500563c86c60e679733551b9077b793c51da15284"
+    }
+  },
+  "limits": [
+    "No real WebSocket/event interaction, detailed understanding/questions/plans, attachments/new-task UI, exact-candidate delivery navigation or full T08/D01 yet.",
+    "IdentityResolver and accepted-release facts for historical navigation are explicit fixtures; real OIDC/model/Linux and product acceptance remain outstanding.",
+    "Formal P1-08 remains NOT_STARTED pending predecessors/G0; four development tasks do not complete the work package.",
+    "Definitively rejected originals remain locked; a separately validated explicit-close/re-entry flow is not implemented in this increment."
+  ],
+  "managementChecks": "management-checks.json"
+}

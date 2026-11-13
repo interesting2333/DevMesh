@@ -1,0 +1,141 @@
+TAP version 13
+# (node:27936) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: old basis references paginate only exact form contexts without mutating drafts or pending originals
+ok 1 - old basis references paginate only exact form contexts without mutating drafts or pending originals
+  ---
+  duration_ms: 4442.3933
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes
+ok 2 - real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes
+  ---
+  duration_ms: 3666.951
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:27936) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: two pages admit one original request, actual project ACK loss reopens and exact replay retains one input
+ok 3 - two pages admit one original request, actual project ACK loss reopens and exact replay retains one input
+  ---
+  duration_ms: 5090.344
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:27936) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation
+ok 4 - message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation
+  ---
+  duration_ms: 3475.5282
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission
+ok 5 - real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission
+  ---
+  duration_ms: 2845.053
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema
+ok 6 - version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema
+  ---
+  duration_ms: 2339.8758
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project
+ok 7 - actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project
+  ---
+  duration_ms: 4994.7424
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lookup miss retains original; only explicit retry uses exact message key, body and condition
+ok 8 - lookup miss retains original; only explicit retry uses exact message key, body and condition
+  ---
+  duration_ms: 4479.9606
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change
+ok 9 - project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change
+  ---
+  duration_ms: 4518.1248
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers
+ok 10 - failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers
+  ---
+  duration_ms: 3783.9472
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changing trusted account rejects old page original before effects; reentry isolates subject drafts
+ok 11 - changing trusted account rejects old page original before effects; reentry isolates subject drafts
+  ---
+  duration_ms: 3363.0766
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: viewer and revoked contexts expose no composer; stale membership refresh clears protected messages
+ok 12 - viewer and revoked contexts expose no composer; stale membership refresh clears protected messages
+  ---
+  duration_ms: 4595.9972
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: rapid project switch aborts an old workspace response and never applies its context
+ok 13 - rapid project switch aborts an old workspace response and never applies its context
+  ---
+  duration_ms: 2838.4171
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical Run is read only and explicitly returns to the current Run
+ok 14 - historical Run is read only and explicitly returns to the current Run
+  ---
+  duration_ms: 2850.5175
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:20144) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs
+ok 15 - IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs
+  ---
+  duration_ms: 3261.5158
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 61532.5346

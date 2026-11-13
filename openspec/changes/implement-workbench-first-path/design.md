@@ -14,6 +14,8 @@
 
 继续使用input-api内的Express受保护路由、React 18、Zod、现有tsdown浏览器构建与原生IndexedDB。页面位于`/api/v1/workbench/view`，脚本同受保护路由；启动默认身份缺失仍503，不能自动授予本地owner。沿用现有Host／Origin／Cookie／loopback检查、no-store、nonce CSP与响应前权限复核。初始数据只包含当前可信principalId和经验证的显示上下文，不包含密钥、内部路径或能力授权。
 
+工作台所有业务读取／提交带`X-DevMesh-Principal`，值绑定HTML中的可信主体。Input API对提供此可选头的请求先核对当前resolver主体，错配403且不写正文或operation，重复头拒绝；旧客户端未提供时沿用原行为。这样避免同一浏览器换账号后，旧页把另一主体的本地原命令交给新身份执行。当前页面因此失效时清受保护投影，重进取得新主体；不能从消息作者或客户端任意输入推断账号。
+
 复用原API可避免再建一套写语义。单独应用框架／新状态库会增加部署和依赖，当前无需引入；不使用sessionStorage代替跨刷新／多页要求。
 
 ### 本地存储与原命令

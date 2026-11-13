@@ -25,6 +25,16 @@ async function harness(t,api){
 }
 const attempt=(page,method,args)=>page.evaluate(async({method,args})=>{try{return {ok:true,value:await window.localStore[method](...args)};}catch(e){return {ok:false,code:e.code??e.name};}},{method,args});
 
+test('old basis references paginate only exact form contexts without mutating drafts or pending originals',{timeout:120000},async t=>{
+ const h=await harness(t),a=await h.open(),c={principalId:'user_1',form:'message',projectId:'prj_reference',runId:'run_reference',basisRevision:1};
+ for(let n=1;n<=24;n++)assert((await attempt(a,'save',[{...c,basisRevision:n},0,{text:'旧依据 '+n,name:''}])).ok);
+ assert((await attempt(a,'save',[{...c,runId:'run_foreign'},0,{text:'其他执行',name:''}])).ok);assert((await attempt(a,'save',[project,0,{text:'其他表单',name:''}])).ok);
+ const queued=(await attempt(a,'enqueue',[c,1])).value.command,items=[];let cursor;
+ do{const r=await attempt(a,'references',[{...c,basisRevision:25},cursor]);assert(r.ok);assert(r.value.items.length<=10);items.push(...r.value.items);cursor=r.value.nextCursor??undefined;}while(cursor);
+ assert.equal(items.length,24);assert.equal(new Set(items.map(x=>x.key)).size,24);assert(items.every(d=>d.context.runId===c.runId&&d.context.form==='message'));assert.equal((await attempt(a,'load',[{...c,basisRevision:25}])).value.draft,null);assert.deepEqual((await attempt(a,'getCommand',[queued.key])).value.envelope,queued.envelope);assert.equal((await attempt(a,'references',[c,'foreign-cursor'])).code,'LOCAL_RECORD_INVALID');
+ const withoutCurrent=(await attempt(a,'references',[{...c,basisRevision:9}])).value;assert(withoutCurrent.items.every(d=>d.context.basisRevision!==9));
+});
+
 test('real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes',{timeout:120000},async t=>{
   const h=await harness(t),a=await h.open();let r=await attempt(a,'save',[project,0,{text:'原始草稿 🧪\n第二行',name:'项目一'}]);assert(r.ok);assert.equal(r.value.revision,1);
   await h.open(a);assert.equal((await attempt(a,'load',[project])).value.draft.text,r.value.text);

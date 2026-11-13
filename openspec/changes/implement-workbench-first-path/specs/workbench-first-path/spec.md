@@ -16,6 +16,10 @@
 - **WHEN** 用户选择历史Run
 - **THEN** 三栏共享历史上下文且没有可用写客户端；切换前的迟到响应不能写入新上下文
 
+#### Scenario: Account changes while an original local request exists
+- **WHEN** 旧页面主体与当前服务端身份已不同
+- **THEN** 旧页面请求在执行前被拒绝，不把旧主体的草稿或原信封作为新身份提交；重进按新主体加载本地上下文
+
 ### Requirement: Draft persistence is scoped and conflict aware
 
 系统 SHALL 按主体、项目、Run、表单和依据隔离本机草稿，在持久事务完成后才显示本地已保存；陈旧页保存 MUST 检测本地版本冲突，不静默覆盖其他页。服务端提交成功与本地草稿保存 MUST 分别显示。

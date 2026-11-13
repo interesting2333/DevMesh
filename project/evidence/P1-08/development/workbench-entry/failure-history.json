@@ -1,0 +1,9 @@
+{
+  "record": "browser-2026-11-13T17-10-53-015Z.json",
+  "pass": 12,
+  "fail": 1,
+  "excludedFromFinalTotals": true,
+  "reason": "The viewer fixture omitted required project_members.created_at and failed before that browser scenario could execute. The fixture now supplies the timestamp. The first lint run also reported an unused test variable, which was removed. No product assertion was removed or weakened.",
+  "preservedSource": "failed-source/",
+  "otherRuns": "Intermediate successful runs precede rapid-navigation/revocation hardening or final product copy. They are diagnostic history; final totals use only the latest artifact-bound HTTP/browser runs. Revocation response-generation hardening and delayed project-list assertion were added during development review."
+}

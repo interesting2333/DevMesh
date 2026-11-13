@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | bca7fa04c4e1863c9e71da2ed7153462692d89bddec0ac5c606d50c16216901b |
+| DevMesh_技术设计方案_V1.1.md | b8c82ed564000c38ce65c2d778566f9c1a2e1e286c44b82214634c2a6eb78b59 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 260128fa9ea90de21debc43f17f6d8b5157fa101bd47275d3d56f2294639e704 |
+| DevMesh_产品验收场景_V10.0.md | 3c94a8e3dff8c0153be4254642bd7a18495c0e8363e02450a29c9a27fe442a23 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -621,3 +621,11 @@ P1-07补充同控制库两轮实际T5到第二轮发布的生产组件组合测�
 新增implement-workbench-first-path变更，按已有用户授权提前开发不依赖外部资源的部分；正式P1-08仍等待前置与G0。首先实现原生IndexedDB草稿CAS、主体／项目／Run／依据隔离、跨basis未决唯一锁和准确原命令历史；成功输入观察、清空原草稿及释放锁同事务。复用既有严格核心／包装回执契约，包装resource／links一致才采纳；不改变控制SQL、Runner、依赖或旧API。
 
 独立浏览器模块构建和实际Edge／IndexedDB／HTTP／文件Worker用于基础验证。工作台React入口、三栏／五页签、导航／IME、WebSocket和完整首次产品路径继续按变更任务实施；不得以存储模块的开发验证完成工作台或T08验收。
+
+### P1-08工作台页面与原提交入口
+
+受保护`/api/v1/workbench/view`与`client.js`接入真实新项目／消息API，沿用现有React／Express／TypeScript与原生IndexedDB，无新增依赖或控制／Runner迁移。默认身份未配置时仍拒绝，不提供匿名主体。可选X-DevMesh-Principal绑定bootstrap与当前可信主体，在解析正文与副作用前拒绝账号变化；旧客户端不提供该头时保持兼容。新增OpenAPI入口并生成契约。
+
+原提交先事务持久再发送；刷新不自动POST，原lookup404不换键，明确继续使用原正文／条件。保存失败保留本页输入并阻止切换，成功才显示本机已保存。三栏／五页签提供准确项目／Run导航与初始事实；旧读取取消／迟到隔离，历史及viewer不挂载命令输入。手动刷新保留草稿依据和焦点，basis变化明确切换，旧正文只作有界参考。账号变化／撤权清空当前保护内容并使迟到请求失效。
+
+开发复核须保存实际页面／HTTP／文件Worker／Edge及390px截图证据；历史已接受Release为明确导航夹具，身份为测试接入点。理解／问题／计划详情、附件／新任务、准确候选交付链、WS／事件期间交互及完整首次产品路径继续。开发步骤完成不等于正式P1-08或T08验收，前置和G0仍按台账执行。
