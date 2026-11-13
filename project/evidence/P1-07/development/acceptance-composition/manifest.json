@@ -1,0 +1,321 @@
+{
+  "recordedAt": "2026-11-13T00:14:53.200Z",
+  "scope": "Raw local development evidence only; no runtime database, credentials, actual physical Docker/fencing or clean-checkout/independent/product acceptance.",
+  "files": [
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/build.txt",
+      "sha256": "9fb0f37a072111c7e1214b265d548481bd1259bced3bb8fc976bc57679e6868e",
+      "byteSize": 4618
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/emitted-after.json",
+      "sha256": "b421c13c6c40d8314cda757a386e06ed7ceb55edca58953ce8ecd4091bcee986",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/emitted-before.json",
+      "sha256": "187b287b8ea3b8668937ae5c6abbfacb4d27aa79fa624ed5afbbaa13b1431d97",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/inputs-after.json",
+      "sha256": "9b142e79c5f6200c730454648ec55f65daf97fc2721106db226e74ce91e6c80b",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/inputs-before.json",
+      "sha256": "73f2472fa4b4bfb05449599c304c8ba24d7140a532353016b27846374f4e4cfd",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/lint.txt",
+      "sha256": "98fe753bfe1355a287a7af80346ad0011a729db657cd11f534858d96ba7c7ff5",
+      "byteSize": 393
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/report.json",
+      "sha256": "02f739147e39dfcc10c8a876db62ae801e066881a5345c1381c7e2942ec45209",
+      "byteSize": 1985
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteSize": 0
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-01/validation-driver.mjs",
+      "sha256": "d51f33d0ddea6fec7aae5950a12a94a7435909bc27c13758b592905e4215d0db",
+      "byteSize": 3944
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/build.txt",
+      "sha256": "c35fe518a5fc3eca4538527fe58dbbf839702c6e8bebc99e7be3af70d912df6f",
+      "byteSize": 4618
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/emitted-after.json",
+      "sha256": "efee3ce5abb88d5578017d9f3096ed281bbcdc02e0599a9ae5b87815b84ec678",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/emitted-before.json",
+      "sha256": "b421c13c6c40d8314cda757a386e06ed7ceb55edca58953ce8ecd4091bcee986",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/inputs-after.json",
+      "sha256": "abe9444a0226fb53d08da1d0728d729c44470bf8523b92516e8e37a68e32b53c",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/inputs-before.json",
+      "sha256": "8b05cb4830f44523f2c573ba9aafacc7ee459994274c4e16ad0c0f186c00d29e",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661",
+      "byteSize": 174
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/report.json",
+      "sha256": "0ab0a539fc956e1668bd41c87209553c7c67fe0abc6ac37b037e3d7083e95889",
+      "byteSize": 1804
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteSize": 0
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/build-02/validation-driver.mjs",
+      "sha256": "d51f33d0ddea6fec7aae5950a12a94a7435909bc27c13758b592905e4215d0db",
+      "byteSize": 3944
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/final-binding-driver.mjs",
+      "sha256": "0f776fcc56675875830eb51db7f4b28f437cf26bea957aae31e9634e0d674d7a",
+      "byteSize": 4376
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/final-binding.json",
+      "sha256": "14a85aa8a4fb1c9f8034172bd24c291695e1a63b59387e377d0d3d34d1c30a25",
+      "byteSize": 4437
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/map-binding.json",
+      "sha256": "d5ecf5ccabdbde13cf9a0012d19bf42d72609919be6f52a1d86c8d17551f32b7",
+      "byteSize": 87746
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/migrations-01/emitted-after.json",
+      "sha256": "efee3ce5abb88d5578017d9f3096ed281bbcdc02e0599a9ae5b87815b84ec678",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/migrations-01/emitted-before.json",
+      "sha256": "efee3ce5abb88d5578017d9f3096ed281bbcdc02e0599a9ae5b87815b84ec678",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/migrations-01/inputs-after.json",
+      "sha256": "6f0406bb44d7bb9f5bf32c6f8fd1a0567c60b0ab8e64922e8d65718df6f7526c",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/migrations-01/inputs-before.json",
+      "sha256": "0b0fef72ae561f81f95d536ecd7fa578d21881907be6f4a05ad83fe75807636f",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/migrations-01/report.json",
+      "sha256": "46665823747b05f6229732d335f1511509dfd47c149e3958606e1f96cde17805",
+      "byteSize": 1028
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/migrations-01/tests.txt",
+      "sha256": "6dff9bf7d4d6ece2b052d7b333d961e1a44fc0fae161aeb2c4d8c6f6bd094029",
+      "byteSize": 5705
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/migrations-01/validation-driver.mjs",
+      "sha256": "d51f33d0ddea6fec7aae5950a12a94a7435909bc27c13758b592905e4215d0db",
+      "byteSize": 3944
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/contracts.txt",
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a",
+      "byteSize": 41
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/design.txt",
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197",
+      "byteSize": 43
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/diff.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteSize": 0
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661",
+      "byteSize": 174
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/openspec.txt",
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51",
+      "byteSize": 673
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/project.txt",
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4",
+      "byteSize": 172
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/render.txt",
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1",
+      "byteSize": 34
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/report.json",
+      "sha256": "3cc3cf8c96bfebd571f7821bbac3e561d8b5355210f1218573ba0f5ec4d98b74",
+      "byteSize": 3173
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/staged-diff.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteSize": 0
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/post-1/validation-driver.mjs",
+      "sha256": "d87a7493113e5b46f4dc72fd0ef1c59fe1b55e4456906e63f42ec155e0ccae2c",
+      "byteSize": 1859
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/regression-01/emitted-after.json",
+      "sha256": "efee3ce5abb88d5578017d9f3096ed281bbcdc02e0599a9ae5b87815b84ec678",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/regression-01/emitted-before.json",
+      "sha256": "efee3ce5abb88d5578017d9f3096ed281bbcdc02e0599a9ae5b87815b84ec678",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/regression-01/inputs-after.json",
+      "sha256": "beb5bedbba47a7d2a26bbf9d8576cb18adc353e4e5fcaa251a4a04eac7fb87a0",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/regression-01/inputs-before.json",
+      "sha256": "1442ee1025735aa93d40aa807c7ac9a9fc79809fd107d7a39cd61e9f4ba06b3b",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/regression-01/report.json",
+      "sha256": "97d838fb3349f40671af5b722fc9a5e8c2e01dac7e68dedcc77a1054ce3e1320",
+      "byteSize": 894
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/regression-01/tests.txt",
+      "sha256": "5543fee81469274ab48c9a33384aea62868d043299afc9b27426706bdfb07671",
+      "byteSize": 17253
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/regression-01/validation-driver.mjs",
+      "sha256": "d51f33d0ddea6fec7aae5950a12a94a7435909bc27c13758b592905e4215d0db",
+      "byteSize": 3944
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/acceptance-docker.mjs.txt",
+      "sha256": "23149deaf3a22718d5fdafddf7eb4be756b987de12868b446e8f8aaf26056162",
+      "byteSize": 2657
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/acceptance-preparation-backend.test.mjs.txt",
+      "sha256": "35a6f3345b6d91a7f835822e2ca1cef96ce52bfa97b76a4980cd578033e1ab8f",
+      "byteSize": 15010
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/emitted-after.json",
+      "sha256": "b421c13c6c40d8314cda757a386e06ed7ceb55edca58953ce8ecd4091bcee986",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/emitted-before.json",
+      "sha256": "b421c13c6c40d8314cda757a386e06ed7ceb55edca58953ce8ecd4091bcee986",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/inputs-after.json",
+      "sha256": "c2cd0061417c1bf6eecd33647dc86f5d64763369ed2bb189b304c290a7ea490f",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/inputs-before.json",
+      "sha256": "8a49ab59deb432299becfd4225aad60fac0cc431c148a2320f0f2f5a39eaed98",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/preview-docker.ts.txt",
+      "sha256": "4933b1623d57f0675fbc8dde50ffcc0ed3176a93a040d21955851fffa0ae2276",
+      "byteSize": 10212
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/report.json",
+      "sha256": "af25544e6f34d3ef42c71a12b233ee456e5fb22474f7bef5ce3ec69261a4f544",
+      "byteSize": 962
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/source-corrections.json",
+      "sha256": "5debd6807b24de5ce78aa0a3adcc7b4bc1251aaac52085e96bc22b0ecddfc125",
+      "byteSize": 1168
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/tests.txt",
+      "sha256": "c171dee08d367e27045f390bb2ee2688e7a25165cbab558756a35d66f8299968",
+      "byteSize": 27650
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-01/validation-driver.mjs",
+      "sha256": "d51f33d0ddea6fec7aae5950a12a94a7435909bc27c13758b592905e4215d0db",
+      "byteSize": 3944
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-02/emitted-after.json",
+      "sha256": "efee3ce5abb88d5578017d9f3096ed281bbcdc02e0599a9ae5b87815b84ec678",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-02/emitted-before.json",
+      "sha256": "efee3ce5abb88d5578017d9f3096ed281bbcdc02e0599a9ae5b87815b84ec678",
+      "byteSize": 11149
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-02/inputs-after.json",
+      "sha256": "29239844d2d3f059662bd54da79973f3e2ff188907704939590edb15be621c51",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-02/inputs-before.json",
+      "sha256": "5f8cb0c77c590e4e3d94879deac91188828b24c77019ed15d37da274cc8c96d2",
+      "byteSize": 50791
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-02/report.json",
+      "sha256": "7b1e63758322e7b6641c6c48fbeba001bad7e4e2865605f72d617d43fa29dc7f",
+      "byteSize": 859
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-02/tests.txt",
+      "sha256": "0a31a42b8faa0f47cb7759c6e6b73cec61a6285cf78b8018dea34107efef4d27",
+      "byteSize": 14340
+    },
+    {
+      "file": "project/evidence/P1-07/development/acceptance-composition/service-02/validation-driver.mjs",
+      "sha256": "d51f33d0ddea6fec7aae5950a12a94a7435909bc27c13758b592905e4215d0db",
+      "byteSize": 3944
+    }
+  ]
+}

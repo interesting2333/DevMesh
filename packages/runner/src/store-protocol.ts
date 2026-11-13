@@ -14,6 +14,7 @@ import type {RunnerPreviewLifecycle} from './preview-lifecycle.js';
 import {previewCleanupKind,previewCleanupObservation} from './preview-cleanup.js';
 import type {PreviewCleanupAction} from './preview-cleanup.js';
 import {acceptanceServiceClaim} from '@devmesh/storage-sqlite';
+import type {AcceptancePreparedProof} from '@devmesh/storage-sqlite';
 import {reserveAcceptanceService,acceptanceServiceFact,acceptanceServiceProfile,acceptanceServiceActionKind,acceptanceServiceActionObservation} from './acceptance-service.js';
 import type {AcceptanceServiceReservation,AcceptanceServiceJournal} from './acceptance-service.js';
 const owner={controllerId:opaqueKey};
@@ -32,6 +33,7 @@ export const storeRequests={
  acceptanceServiceActionAuthorized:z.strictObject({...previewBound,kind:acceptanceServiceActionKind,actionRequestHash:z.string().regex(/^[a-f0-9]{64}$/)}),
  acceptanceServiceActionObserve:z.strictObject({...previewBound,kind:acceptanceServiceActionKind,actionRequestHash:z.string().regex(/^[a-f0-9]{64}$/),observation:acceptanceServiceActionObservation}),
  acceptanceServiceHold:z.strictObject({...previewBound,claim:acceptanceServiceClaim,claimHash:z.string().regex(/^[a-f0-9]{64}$/)}),
+  acceptanceServicePrepareProof:z.strictObject(previewBound),
  previewCleanupGet:z.strictObject(previewBound),
  previewCleanupPage:z.strictObject({...owner,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
  previewCleanupActionBegin:z.strictObject({...previewBound,kind:previewCleanupKind}),
@@ -84,6 +86,7 @@ export interface StoreResults {
  acceptanceServiceProfilePrepare:AcceptanceServiceJournal;acceptanceServiceJournal:AcceptanceServiceJournal|null;
  acceptanceServiceActionBegin:{dispatch:boolean;journal:AcceptanceServiceJournal};acceptanceServiceActionAuthorized:{allowed:boolean};acceptanceServiceActionObserve:AcceptanceServiceJournal;
  acceptanceServiceHold:AcceptanceServiceReservation;
+  acceptanceServicePrepareProof:AcceptancePreparedProof;
  previewCleanupGet:PreviewCleanupAction[];previewCleanupActionBegin:{dispatch:boolean;action:PreviewCleanupAction};previewCleanupActionAuthorized:{allowed:boolean};previewCleanupActionObserve:PreviewCleanupAction;
  previewCleanupPage:{items:{sequence:number;reservationId:string;requestHash:string}[];nextSequence:number|null};
  previewLifecycleEnroll:RunnerPreviewLifecycle;previewLifecycleGet:RunnerPreviewLifecycle|null;previewExpiryPrepare:RunnerPreviewLifecycle|null;

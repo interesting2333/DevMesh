@@ -15,7 +15,7 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "ed4217cffefe144b2d4c2c16fd69179456bb480c17f5cffc72a0ed8d6ebccf6d"
+      "sha256": "03f13190d9bdf5531a13e5ad3dbfbbe7a711c295db22da5c4895b88ae28f7c5b"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
@@ -23,7 +23,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "cfaf4e9a8f30c3ae50a9423ea36cc74f2e057157f1ce85926971f499ddc19d8a"
+      "sha256": "b9ec8aad4ce2e40b4aaf9d2d1b4f3a23c3e969dcf15f29c8de0738f100b4376f"
     }
   ],
   "gates": [
@@ -1213,7 +1213,15 @@
         "packages/storage-sqlite/src/acceptance-commit-domain.ts",
         "packages/platform-core/src/release-acceptor.ts",
         "tests/acceptance-commit.test.mjs",
-        "tests/storage-acceptance-commit-upgrade.test.mjs"
+        "tests/storage-acceptance-commit-upgrade.test.mjs",
+        "packages/runner/src/service-docker.ts",
+        "packages/runner/src/acceptance-docker.ts",
+        "packages/runner/src/acceptance-preparation-backend.ts",
+        "packages/runner/src/acceptance-proof-domain.ts",
+        "packages/runner/src/acceptance-proof-migration.ts",
+        "tests/acceptance-preparation-backend.test.mjs",
+        "tests/fixtures/acceptance-service-backend.mjs",
+        "tests/fixtures/acceptance-docker.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1325,7 +1333,10 @@
         "project/evidence/P1-07/acceptance-service-development-review.md",
         "project/evidence/P1-07/acceptance-commit-development-review.md",
         "project/evidence/P1-07/development/acceptance-commit/manifest.json",
-        "project/evidence/P1-07/development/acceptance-commit/final-binding.json"
+        "project/evidence/P1-07/development/acceptance-commit/final-binding.json",
+        "project/evidence/P1-07/acceptance-composition-development-review.md",
+        "project/evidence/P1-07/development/acceptance-composition/manifest.json",
+        "project/evidence/P1-07/development/acceptance-composition/final-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1371,7 +1382,9 @@
         "2026-11-13：提交前已暂存检查补获新SQL一处尾随空格，删除后仅更新迁移38校验和；原1～37、TypeScript／既有测试／可执行JS不变。最终校验和重建、类型／Lint／契约及迁移专项6/6通过；前轮综合／存储与旧proof日志按原校验和保留，补充绑定、首次暂存失败和最终post-3校验见dataset-ownership开发证据。修正检查覆盖缺口，不更改4.1／正式工作包和门槛状态。",
         "2026-11-13：接受数据文件增量：独立ACCEPTANCE v2 journal与原custody，实际SQLite初始化／REPLACE新数据／可信固定同schema保留快照；缺实际authority保持关闭，超时／授权／凭据变化及半成品恢复不重新acquire／初始化。修正模板只读切换WAL导致文件头变化，使用原生只读连接。数据／既有预览副本／原归属24/24、模板单元／HTTP24/24及类型／构建／Lint／137份映射通过。初次诊断失败批次主动中止，原日志与碰撞测试文件恢复记录保留；正式物理fence／服务／T5未完成，正式P1-07仍等待P1-06／G0，变更7/13和4.1未勾选。范围／同Agent开发复核见acceptance-data-development-review.md。",
         "2026-11-13：接受服务原日志增量：真实ACCEPTANCE用途原请求、数据回执／fences绑定、Runner v7独立预留／只读profile／唯一容器动作日志与HELD；作业／预览／接受服务统一容量、跨用途dataset独占、UNKNOWN持有及原观察历史原子回滚。新服务claim准确绑定原接受／review／reservation／profile，旧预览专用schema保持明确。service-1 12/12、regression-1 15/15、migrations-1 2/2及构建／类型／Lint、140份映射／5份历史迁移正文匹配通过；初轮类型失败、追加JS测试输入与专项选择范围见acceptance-service-development-review.md。受控容器／fence不是实际启动证明；实际服务Driver／完整组合、安全撤销、T5／发布继续，正式P1-07仍等待P1-06／G0，4.1与7/13不变。",
-        "2026-11-13：4.2 本轮实现独立 T5／可信材料核验：迁移39保存不可变 Release／提交结论／必要人工覆盖层与专用 promotion 意图，准确 owner／原正文与准备双版本、指针 CAS、Run 终态／事件同事务。storage-01 40/40、t5-03 23/23 通过，覆盖13个写入故障完整回滚与原键重试、人工／自动完成、并发／重启／未知阻塞和真实材料预检；构建／类型／Lint及143份源码映射通过。首轮类型失败、夹具ID修正遗漏导致的失败与主动中止、唯一测试输入差异及38份历史迁移正文绑定见 project/evidence/P1-07/acceptance-commit-development-review.md。这里只完成4.2领域代码与明确受控基础设施验证；实际服务Driver／物理fence／完整准备、安全撤销、发布／导出与产品组合继续，4.1／4.3／5.1／5.2、正式P1-07和门槛不据此完成；变更8/13，不归档。"
+        "2026-11-13：4.2 本轮实现独立 T5／可信材料核验：迁移39保存不可变 Release／提交结论／必要人工覆盖层与专用 promotion 意图，准确 owner／原正文与准备双版本、指针 CAS、Run 终态／事件同事务。storage-01 40/40、t5-03 23/23 通过，覆盖13个写入故障完整回滚与原键重试、人工／自动完成、并发／重启／未知阻塞和真实材料预检；构建／类型／Lint及143份源码映射通过。首轮类型失败、夹具ID修正遗漏导致的失败与主动中止、唯一测试输入差异及38份历史迁移正文绑定见 project/evidence/P1-07/acceptance-commit-development-review.md。这里只完成4.2领域代码与明确受控基础设施验证；实际服务Driver／物理fence／完整准备、安全撤销、发布／导出与产品组合继续，4.1／4.3／5.1／5.2、正式P1-07和门槛不据此完成；变更8/13，不归档。",
+        "2026-11-13：4.1 服务组合设计影响评估：直接 ACCEPTANCE Docker Driver 与显式 RunnerAcceptancePreparationBackend 组合实际数据、原服务动作和 HTTP；接受整库只读／APP_READ_ONLY，复用公共 OCI／沙箱核验但不翻译预览请求。Runner v8 前向增加不可变完整 proof，preparedAt／custodyRevision 固定，当前健康另查；原 v2～v7 正文与历史保留，丢 ACK 只查原对象、不补发缺失后继。D4／D5／D6、完整设计、实施文档与 OpenSpec 同步。PRD／D01～D08 不变；真实 Linux／物理 custody、正向保留／替换、安全撤销、OWNED／发布及产品组合仍需分别验收；本条不声明测试通过，4.1、变更8/13和正式工作包／门槛不变。",
+        "2026-11-13：4.1 接受服务组合：显式 RunnerAcceptancePreparationBackend／ACCEPTANCE Docker Driver、整库只读与原对象恢复，Runner v8 保存稳定完整 proof；实际 SQLite／模板 HTTP→HELD／控制面 READY→T5 本地链路通过。service-02 16/16、regression-01 15/15、migrations-01 选中4项通过（其余测试未选择，TAP skipped=0），构建／类型／Lint和148份源码映射通过。首轮28项25通过3失败源于两处测试错误，另有未使用导入导致Lint失败，三处修正及原日志／源码指纹全部保留；最后三组输入与最终构建一致、运行期间无变化。物理容器／镜像来源／fence 为明确夹具；真实 Linux／quota／networkIsolation／物理 custody、安全撤销、OWNED／发布及正向保留／替换与完整产品验收继续。4.1不勾选，变更8/13及正式P1-07／门槛不变。"
       ]
     },
     {

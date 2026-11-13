@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "mode": "migration",
+  "scope": "Real local Runner Worker v8, SQLite datasets, read-only template HTTP, preparation composition and control T5 integration. Explicit Docker inspect, physical fence and image fixtures; no physical Docker/gVisor or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "--test-name-pattern",
+        "v[1-7].*(?:upgrade|preserves)",
+        "tests/runner-preview-capacity.test.mjs",
+        "tests/runner-preview-watchdog.test.mjs",
+        "tests/runner-preview-cleanup.test.mjs"
+      ],
+      "startedAt": "2026-11-13T00:10:15.223Z",
+      "finishedAt": "2026-11-13T00:12:37.736Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "6dff9bf7d4d6ece2b052d7b333d961e1a44fc0fae161aeb2c4d8c6f6bd094029"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

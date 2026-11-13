@@ -1,0 +1,23 @@
+{
+  "reason": "Remove the unused import; canonicalize the explicit Docker profile fixture before hashing; assert UNKNOWN, no proof and no fence reacquisition after the original fence changes instead of expecting inspect to throw.",
+  "corrections": [
+    {
+      "file": "packages/runner/src/preview-docker.ts",
+      "beforeSha256": "4933b1623d57f0675fbc8dde50ffcc0ed3176a93a040d21955851fffa0ae2276",
+      "afterSha256": "f945a1268e8abbb886d37f8ccd0c972099308f486abb24484b4ece4a6caac54e",
+      "beforeSource": "preview-docker.ts.txt"
+    },
+    {
+      "file": "tests/fixtures/acceptance-docker.mjs",
+      "beforeSha256": "23149deaf3a22718d5fdafddf7eb4be756b987de12868b446e8f8aaf26056162",
+      "afterSha256": "64fa8fe08dea6eb03eed07c6df4fa035235e765d889ada650bbbf27f0c28281b",
+      "beforeSource": "acceptance-docker.mjs.txt"
+    },
+    {
+      "file": "tests/acceptance-preparation-backend.test.mjs",
+      "beforeSha256": "35a6f3345b6d91a7f835822e2ca1cef96ce52bfa97b76a4980cd578033e1ab8f",
+      "afterSha256": "e60040d4ad469f962d3866eef334e89cb8eaf3ffc8929cadb8d5405413aebf59",
+      "beforeSource": "acceptance-preparation-backend.test.mjs.txt"
+    }
+  ]
+}

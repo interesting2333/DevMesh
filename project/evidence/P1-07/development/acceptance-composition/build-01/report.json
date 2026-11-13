@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Real local Runner Worker v8, SQLite datasets, read-only template HTTP, preparation composition and control T5 integration. Explicit Docker inspect, physical fence and image fixtures; no physical Docker/gVisor or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/runner",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T23:34:29.591Z",
+      "finishedAt": "2026-11-12T23:35:43.040Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "9fb0f37a072111c7e1214b265d548481bd1259bced3bb8fc976bc57679e6868e"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T23:35:43.048Z",
+      "finishedAt": "2026-11-12T23:38:23.726Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T23:38:23.732Z",
+      "finishedAt": "2026-11-12T23:38:47.831Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "98fe753bfe1355a287a7af80346ad0011a729db657cd11f534858d96ba7c7ff5"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/runner/dist/index.mjs",
+    "packages/runner/dist/index.mjs.map",
+    "packages/runner/dist/preview-cleanup-BqL6AC4x.mjs.map",
+    "packages/runner/dist/worker.mjs",
+    "packages/runner/dist/worker.mjs.map"
+  ]
+}

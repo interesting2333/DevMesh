@@ -56,7 +56,15 @@ Driver 使用绝对 Docker 程序路径、Unix socket、固定 argv／有限环�
 
 网络语义参考 [Docker bridge](https://docs.docker.com/engine/network/drivers/bridge/)／[端口发布](https://docs.docker.com/engine/network/port-publishing/)，资源参数参考 [Docker resource constraints](https://docs.docker.com/engine/containers/resource_constraints/)；未启动 endpoint 的配置与运行分离参考 [Moby updateContainerNetworkSettings](https://github.com/moby/moby/blob/master/daemon/container_operations.go)。这些资料用于代码复核，不能替代目标版本的实际 Docker／gVisor 验证。
 
-## Recovery and remaining integration
+## Separate acceptance preparation
+
+`RunnerAcceptancePreparationBackend` is an explicit trusted composition of `LocalSqliteAcceptanceDatasetBackend`, the original Runner service journal and an `AcceptanceServiceDriver`. It does not synthesize preview requests. `DockerAcceptanceServiceDriver` mounts the entire original `/data` read-only with `APP_READ_ONLY=true`; OCI, sandbox, resources, network and loopback checks share the pure Docker verification layer. Linux, hard quota, network isolation and a physical custody authority are required; missing adapters keep the backend closed.
+
+After actual file verification and an HTTP health check of the original endpoint, the Runner records HELD and one immutable full proof in v8. The proof's preparation timestamp and custody revision stay fixed; current health and custody observations continue separately. Recovery queries the exact original request/profile/objects and stable proof. It never reacquires fences, initializes another database or dispatches an unsent successor from `inspect`. A missing successor remains unknown until a separately verified recovery/abort protocol is available. v8 upgrades preserve the original v2–v7 migration bodies and active service/action history.
+
+This composition does not install itself at platform startup. Safe abort, accepted service ownership, publication and physical Linux/gVisor validation remain separate work. Actual local Worker/data/template HTTP tests explicitly identify controlled Docker and physical fence facts.
+
+## Local verification boundary
 
 测试实际运行控制面／Runner SQLite Worker、并发事务、原动作 ACK 丢失、观察提交回滚、历史升级失败回滚、Worker 终止重开、真实 dataset 和 loopback HTTP；`ControlledContainerDriver` 显式提供 network／container 事实，不执行 Docker，健康服务也属于测试夹具。Docker 参数与观察核验针对明确输入验证，Windows 不执行 Linux CLI 路径；模板另执行实际 HTTP／SQLite／浏览器检查。不能把受控事实当成物理退出、真实镜像健康、cgroup 或宿主防火墙证据。
 

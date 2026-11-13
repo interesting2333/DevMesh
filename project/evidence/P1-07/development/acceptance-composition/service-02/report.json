@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Real local Runner Worker v8, SQLite datasets, read-only template HTTP, preparation composition and control T5 integration. Explicit Docker inspect, physical fence and image fixtures; no physical Docker/gVisor or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/acceptance-preparation-backend.test.mjs"
+      ],
+      "startedAt": "2026-11-12T23:57:30.440Z",
+      "finishedAt": "2026-11-13T00:09:52.964Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "0a31a42b8faa0f47cb7759c6e6b73cec61a6285cf78b8018dea34107efef4d27"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

@@ -19,6 +19,11 @@ export {LocalSqliteAcceptanceDatasetBackend} from './acceptance-dataset-backend.
 export type {AcceptanceDatasetOptions,AcceptanceDatasetAuthority,AcceptanceDatasetObservation} from './acceptance-dataset-backend.js';
 export type {AcceptanceDatasetFences} from './dataset-journal.js';
 export {acceptanceServiceRequest,acceptanceServiceProfile,acceptanceServiceReservation,acceptanceServiceFact,acceptanceServiceNames} from './acceptance-service.js';
+export {DockerAcceptanceServiceDriver,acceptanceDockerCreateArguments,acceptanceDockerNetworkArguments,verifyAcceptanceDockerImage,verifyAcceptanceDockerNetwork,verifyAcceptanceDockerContainer} from './acceptance-docker.js';
+export type {AcceptanceDockerOptions} from './acceptance-docker.js';
+export {RunnerAcceptancePreparationBackend} from './acceptance-preparation-backend.js';
+export type {RunnerAcceptancePreparationOptions} from './acceptance-preparation-backend.js';
+export type {AcceptanceServiceDriver} from './acceptance-service.js';
 export type {AcceptanceServiceRequest,AcceptanceServiceProfile,AcceptanceServiceReservation,AcceptanceServiceFact,AcceptanceServiceJournal,AcceptanceServiceAction} from './acceptance-service.js';
 export {probePreviewHealth} from './preview-health.js';
 export {runnerCapacity,previewResourceLimits,previewReservationSchema} from './preview-reservation.js';

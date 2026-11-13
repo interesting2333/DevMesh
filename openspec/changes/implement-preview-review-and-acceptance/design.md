@@ -196,7 +196,17 @@ T5 由 owner 的独立 `commitReleaseAcceptance` 命令触发，原幂等键先�
 
 人工完成固定原 assessment 和本候选已通过的具体人工结果，不修改自动检查、自动状态、原质量或原证据。不可变 promotion 意图固定原请求、数据、镜像、HELD 服务及 fence；普通 A2A Outbox 不消费此用途。T5 返回已接受与发布待处理两个事实，后续服务归属确认、路由切换、开放新门和导出各自恢复，失败不得倒退接受事实。所有新历史及 Release 禁止更新或删除；旧 Release 不因迁移伪造准备证明。
 
+### 23. Trusted preparation composes real data, an exact read-only service and a stable proof
+
+接受服务 Driver 直接消费 ACCEPTANCE 原请求及独立只读 profile，不翻译成预览 effect。预览与接受只共享底层 Docker 参数／inspect 安全核验；用途 labels、原请求／profile、数据挂载和 APP_READ_ONLY 各自准确固定。接受容器整个 dataset 只读挂载，仍须 runsc、非 root、只读根、资源／硬配额、独占受隔离网络、准确 OCI 和 loopback 单端口；缺可信 Linux／quota／network 配置关闭派发。
+
+显式 RunnerAcceptancePreparationBackend 依次核实原接受、实际数据 journal／回执／当前物理 fences、持久服务预留／profile、唯一原动作、实际 HTTP 健康与准确 HELD claim。每次新外部动作前再次检查当前授权和原 fence。恢复只查询原对象及追加准确观察，不重发 network／create／start，不补建替代对象。数据已完成而服务动作未获原许可时保留待核实，不用 inspect 隐式续发；安全撤销及后续发布仍依独立协议推进。
+
+Runner v8 新增不可变完整 prepared proof，原 v2～v7 迁移正文／摘要不变。只有准确原服务已 HELD 且新鲜健康时才从持久请求、原数据回执／fences、profile 与 claim 生成首份证明及固定 preparedAt／custodyRevision；后续健康心跳或重启只返回原证明，当前可用性另按新鲜观察核实。证明创建失败回滚；丢 ACK 恢复同一证明，不凭当前时间重构新 hash。该记录和显式受控 Driver 测试不代替物理 fencing／真实容器联调，完整 4.1 和产品验收仍按实际证据判断。
+
 ## Risks / Trade-offs
+
+- 接受准备实例的只读挂载／APP_READ_ONLY与profile不可变，T5或开放逻辑门不能直接变为可写服务。4.3须独立实现准确原归属下的服务转换、健康及写fence交接；不能改原proof、凭接受成功宣称可写或同时开放旧新dataset。当前组合未实施发布转换。
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。
 - [复用旧质量或人工结论] → 绑定候选完整 manifest、原质量、条目和 reviewHash；新候选重新审查，原失败追加保留。

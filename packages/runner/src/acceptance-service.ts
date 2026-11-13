@@ -5,6 +5,8 @@ import {acceptancePreparationRequest,acceptanceServiceClaim,canonical} from '@de
 import {acceptanceDatasetReceipt,acceptanceDatasetFences} from './dataset-journal.js';
 import {previewContainerProfile,dockerObjectId} from './preview-container.js';
 import {previewResourceLimits,runnerCapacity} from './preview-reservation.js';
+import type {ServiceContainerFact} from './service-docker.js';
+import type {AcceptancePreparation} from '@devmesh/storage-sqlite';
 
 export const acceptanceServiceRequest=z.strictObject({schemaVersion:z.literal('devmesh.acceptance-service-start.v1'),purpose:z.literal('ACCEPTANCE'),preparation:acceptancePreparationRequest,acceptanceRequestHash:sha256,dataReceipt:acceptanceDatasetReceipt,fences:acceptanceDatasetFences}).superRefine((s,c)=>{
  const r=s.preparation,d=s.dataReceipt,f=s.fences,hash=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
@@ -24,4 +26,14 @@ export type AcceptanceServiceFact=z.output<typeof acceptanceServiceFact>;
 export type AcceptanceServiceReservation=z.output<typeof acceptanceServiceReservation>;
 export type AcceptanceServiceAction=z.output<typeof acceptanceServiceActionRecord>;
 export interface AcceptanceServiceJournal {profile:AcceptanceServiceProfile;profileHash:string;networkId:string|null;containerId:string|null;actions:AcceptanceServiceAction[]}
+export interface AcceptanceServiceDriver {
+ readonly configured:boolean;
+ probe(request:AcceptancePreparation['request'],repository:string):Promise<void>;
+ prepare(profile:AcceptanceServiceProfile):Promise<void>;
+ network(profile:AcceptanceServiceProfile,request:AcceptanceServiceRequest):Promise<string|null>;
+ createNetwork(profile:AcceptanceServiceProfile,request:AcceptanceServiceRequest,authorize:()=>Promise<boolean>):Promise<string>;
+ inspect(profile:AcceptanceServiceProfile,request:AcceptanceServiceRequest,networkId:string,containerId:string|null):Promise<ServiceContainerFact|null>;
+ create(profile:AcceptanceServiceProfile,request:AcceptanceServiceRequest,networkId:string,authorize:()=>Promise<boolean>):Promise<ServiceContainerFact|null>;
+ start(profile:AcceptanceServiceProfile,request:AcceptanceServiceRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>):Promise<ServiceContainerFact|null>;
+}
 export function acceptanceServiceNames(reservationId:string){opaqueKey.parse(reservationId);const key=createHash('sha256').update(reservationId).digest('hex').slice(0,32);return {networkName:'devmesh-an-'+key,containerName:'devmesh-ac-'+key};}

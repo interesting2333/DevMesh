@@ -1,12 +1,13 @@
 import {spawn} from 'node:child_process';
-import {join,isAbsolute} from 'node:path';
+import {isAbsolute} from 'node:path';
 import {createHash} from 'node:crypto';
 import {z} from 'zod';
 import {canonical} from '@devmesh/storage-sqlite';
+import {serviceDockerNetworkArguments,serviceDockerCreateArguments,verifyServiceDockerImage,verifyServiceDockerNetwork,verifyServiceDockerContainer} from './service-docker.js';
 import type {PreviewStartRequest} from '@devmesh/storage-sqlite';
 import {RunnerError} from './protocol.js';
 import type {CliExecutor} from './docker.js';
-import {dockerObjectId,previewContainerProfile,previewRepository} from './preview-container.js';
+import {dockerObjectId,previewContainerProfile} from './preview-container.js';
 import type {PreviewContainerProfile,PreviewContainerFact,PreviewContainerDriver} from './preview-container.js';
 
 export interface PreviewDatasetQuota {
@@ -26,43 +27,12 @@ export function verifyPreviewDockerAbsence(output:string,id:string){dockerObject
 const hash=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
 const fail=(code:string):never=>{throw new RunnerError(code,409,'unknown');};
 const labels=(p:PreviewContainerProfile,r:PreviewStartRequest)=>({'devmesh.runner':r.runnerId,'devmesh.preview':r.previewId,'devmesh.reservation':p.reservationId,'devmesh.request':p.requestHash,'devmesh.profile':hash(p)});
-const env=['HOME=/tmp','NODE_ENV=production','APP_DATA_ROOT=/data','APP_PORT=4317','APP_HOST=0.0.0.0','APP_READ_ONLY=false'];
-const tmpfs=(p:PreviewContainerProfile)=>'rw,noexec,nosuid,nodev,size='+p.resourceLimits.temporaryMiB+'m,mode=1777';
-export function previewDockerNetworkArguments(raw:PreviewContainerProfile,r:PreviewStartRequest){const p=previewContainerProfile.parse(raw);return ['network','create','--driver=bridge','--internal','--opt=com.docker.network.bridge.enable_icc=false','--opt=com.docker.network.bridge.host_binding_ipv4=127.0.0.1','--opt=com.docker.network.bridge.gateway_mode_ipv4=nat',...Object.entries(labels(p,r)).flatMap(([k,v])=>['--label',k+'='+v]),p.networkName];}
-export function previewDockerCreateArguments(raw:PreviewContainerProfile,r:PreviewStartRequest,networkId:string){
- const p=previewContainerProfile.parse(raw);dockerObjectId.parse(networkId);const l=p.resourceLimits;
- const mounts=['type=bind,src='+p.datasetDirectory+',dst=/data',...['operation.json','receipt.json','dataset.json'].map(name=>'type=bind,src='+join(p.datasetDirectory,name)+',dst=/data/'+name+',readonly')];
- return ['create','--name',p.containerName,...Object.entries(labels(p,r)).flatMap(([k,v])=>['--label',k+'='+v]),'--runtime=runsc','--network='+networkId,'--publish=127.0.0.1::4317/tcp','--user=10001:10001','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges:true','--cgroupns=private','--ipc=private','--restart=no','--pids-limit='+l.pids,'--cpus='+l.cpu,'--memory='+l.memoryMiB+'m','--memory-swap='+l.memoryMiB+'m','--ulimit=nofile=1024:1024','--tmpfs=/tmp:'+tmpfs(p),...mounts.flatMap(v=>['--mount',v]),'--workdir=/app','--log-driver=local','--log-opt=max-size=10m','--log-opt=max-file=2',...env.flatMap(v=>['--env',v]),'--entrypoint=node',p.repository+'@'+r.imageDigest,'/app/dist/server/main.js','serve'];
-}
-/** Compare exact immutable OCI identities, never equate manifest digest and config ID. */
-export function verifyPreviewDockerImage(value:unknown,r:PreviewStartRequest,repository:string){
- previewRepository.parse(repository);const [v]=z.array(z.object({Id:z.string(),RepoDigests:z.array(z.string()),Os:z.string(),Architecture:z.string(),RootFS:z.object({Type:z.string(),Layers:z.array(z.string())}),Config:z.object({Labels:z.record(z.string(),z.string()).nullable()})})).length(1).parse(value),i=r.imageIdentity;
- if(v!.Id!==i.configDigest||!v!.RepoDigests.includes(repository+'@'+i.imageDigest)||v!.Os!==i.os||v!.Architecture!==i.architecture||v!.RootFS.Type!=='layers'||canonical(v!.RootFS.Layers)!==canonical(i.layers.map(l=>l.diffId))||v!.Config.Labels?.['org.opencontainers.image.revision']!==i.targetCommit||v!.Config.Labels?.['io.devmesh.build.sha256']!==i.buildArtifactHash)fail('PREVIEW_DOCKER_IMAGE_CHANGED');
-}
-export function verifyPreviewDockerNetwork(value:unknown,p:PreviewContainerProfile,r:PreviewStartRequest){
- const [n]=z.array(z.object({Id:dockerObjectId,Name:z.string(),Driver:z.string(),Internal:z.boolean(),Attachable:z.boolean(),Ingress:z.boolean(),EnableIPv6:z.boolean(),Labels:z.record(z.string(),z.string()).nullable(),Options:z.record(z.string(),z.string()),Containers:z.record(z.string(),z.object({Name:z.string()}))})).length(1).parse(value);
- if(n!.Name!==p.networkName||n!.Driver!=='bridge'||!n!.Internal||n!.Attachable||n!.Ingress||n!.EnableIPv6||Object.entries(labels(p,r)).some(([k,v])=>n!.Labels?.[k]!==v)||n!.Options['com.docker.network.bridge.enable_icc']!=='false'||n!.Options['com.docker.network.bridge.host_binding_ipv4']!=='127.0.0.1'||n!.Options['com.docker.network.bridge.gateway_mode_ipv4']!=='nat'||Object.values(n!.Containers).length>1||Object.entries(n!.Containers).some(([id,c])=>!dockerObjectId.safeParse(id).success||c.Name!==p.containerName))fail('PREVIEW_DOCKER_NETWORK_CHANGED');return n!.Id;
-}
-const nilOrEmpty=(v:unknown)=>v==null||Array.isArray(v)&&v.length===0;
-/** Called on every observation, including cleanup; wrong original objects are never stopped. */
-export function verifyPreviewDockerContainer(value:unknown,p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,containerId:string|null):PreviewContainerFact{
- const item=z.object({Id:dockerObjectId,Name:z.string(),Image:z.string(),Config:z.object({Image:z.string(),User:z.string(),WorkingDir:z.string(),Entrypoint:z.array(z.string()),Cmd:z.array(z.string()),Env:z.array(z.string()),Labels:z.record(z.string(),z.string()).nullable(),Tty:z.boolean(),OpenStdin:z.boolean()}),HostConfig:z.object({Runtime:z.string(),NetworkMode:z.string(),ReadonlyRootfs:z.boolean(),Privileged:z.boolean(),CapAdd:z.unknown(),CapDrop:z.array(z.string()),SecurityOpt:z.array(z.string()),Devices:z.unknown(),DeviceRequests:z.unknown(),Binds:z.unknown(),VolumesFrom:z.unknown(),PidMode:z.string(),IpcMode:z.string(),CgroupnsMode:z.string(),Memory:z.number(),MemorySwap:z.number(),NanoCpus:z.number(),PidsLimit:z.number(),AutoRemove:z.boolean(),RestartPolicy:z.object({Name:z.string(),MaximumRetryCount:z.number()}),Tmpfs:z.record(z.string(),z.string()),PortBindings:z.record(z.string(),z.array(z.object({HostIp:z.string(),HostPort:z.string()}))),LogConfig:z.object({Type:z.string(),Config:z.record(z.string(),z.string())})}),Mounts:z.array(z.object({Type:z.string(),Source:z.string(),Destination:z.string(),RW:z.boolean(),Propagation:z.string()})),State:z.object({Status:z.string(),Running:z.boolean(),Pid:z.number().int().nonnegative(),ExitCode:z.number().int(),StartedAt:z.string(),FinishedAt:z.string()}),NetworkSettings:z.object({Networks:z.record(z.string(),z.object({NetworkID:z.string()})),Ports:z.record(z.string(),z.array(z.object({HostIp:z.string(),HostPort:z.string()})).nullable())})});
- const d=z.array(item).length(1).parse(value)[0]!,c=d.Config,h=d.HostConfig,l=p.resourceLimits,s=d.State;
- const expectedMounts=[{Source:p.datasetDirectory,Destination:'/data',RW:true},...['operation.json','receipt.json','dataset.json'].map(name=>({Source:join(p.datasetDirectory,name),Destination:'/data/'+name,RW:false}))];
- if(d.Name!=='/'+p.containerName||containerId!==null&&d.Id!==containerId||d.Image!==r.imageIdentity.configDigest||c.Image!==p.repository+'@'+r.imageDigest||c.User!=='10001:10001'||c.WorkingDir!=='/app'||canonical(c.Entrypoint)!==canonical(['node'])||canonical(c.Cmd)!==canonical(['/app/dist/server/main.js','serve'])||env.some(v=>c.Env.filter(e=>e.split('=')[0]===v.split('=')[0]).join('')!==v)||c.OpenStdin||c.Tty||Object.entries(labels(p,r)).some(([k,v])=>c.Labels?.[k]!==v))fail('PREVIEW_DOCKER_CONTAINER_CHANGED');
- if(h.Runtime!=='runsc'||h.NetworkMode!==networkId||!h.ReadonlyRootfs||h.Privileged||!nilOrEmpty(h.CapAdd)||canonical(h.CapDrop)!==canonical(['ALL'])||canonical(h.SecurityOpt)!==canonical(['no-new-privileges:true'])||!nilOrEmpty(h.Devices)||!nilOrEmpty(h.DeviceRequests)||!nilOrEmpty(h.Binds)||!nilOrEmpty(h.VolumesFrom)||h.PidMode!==''||h.IpcMode!=='private'||h.CgroupnsMode!=='private'||h.Memory!==l.memoryMiB*1024**2||h.MemorySwap!==h.Memory||h.NanoCpus!==l.cpu*1e9||h.PidsLimit!==l.pids||h.AutoRemove||h.RestartPolicy.Name!=='no'||h.RestartPolicy.MaximumRetryCount!==0||canonical(h.Tmpfs)!==canonical({'/tmp':tmpfs(p)})||h.LogConfig.Type!=='local'||canonical(h.LogConfig.Config)!==canonical({'max-size':'10m','max-file':'2'}))fail('PREVIEW_DOCKER_CONTAINER_CHANGED');
- if(d.Mounts.length!==expectedMounts.length||expectedMounts.some(m=>!d.Mounts.some(a=>a.Type==='bind'&&a.Source===m.Source&&a.Destination===m.Destination&&a.RW===m.RW&&a.Propagation==='rprivate')))fail('PREVIEW_DOCKER_MOUNT_CHANGED');
- const portBindings=h.PortBindings['4317/tcp'];if(Object.keys(h.PortBindings).length!==1||portBindings?.length!==1||portBindings[0]!.HostIp!=='127.0.0.1')fail('PREVIEW_DOCKER_PORT_CHANGED');
-  // Docker creates endpoint configuration before allocating its runtime network
-  // ID. Only a never-started CREATED object may have that empty runtime field;
-  // its exact network name and HostConfig full ID still have to match.
-  const networks=Object.entries(d.NetworkSettings.Networks),unstarted=s.Status==='created'&&!s.Running&&s.Pid===0&&Date.parse(s.StartedAt)===Date.parse('0001-01-01T00:00:00Z');
-  if(networks.length!==1||networks[0]![0]!==p.networkName||networks[0]![1].NetworkID!==networkId&&!(unstarted&&networks[0]![1].NetworkID===''))fail('PREVIEW_DOCKER_NETWORK_CHANGED');
- let endpoint:PreviewContainerFact['endpoint']=null;
- if(s.Running){const ports=d.NetworkSettings.Ports['4317/tcp'],published=ports?.[0]??fail('PREVIEW_DOCKER_PORT_CHANGED'),binding=portBindings?.[0]??fail('PREVIEW_DOCKER_PORT_CHANGED');if(s.Status!=='running'||s.Pid<=0||Object.keys(d.NetworkSettings.Ports).length!==1||ports?.length!==1||published.HostIp!=='127.0.0.1'||!/^\d+$/.test(published.HostPort))fail('PREVIEW_DOCKER_PORT_CHANGED');const port=Number(published.HostPort);if(port<1024||port>65535||binding.HostPort!==''&&binding.HostPort!==String(port))fail('PREVIEW_DOCKER_PORT_CHANGED');endpoint={host:'127.0.0.1',port};}
- const state:PreviewContainerFact['state']=s.Running?'running':s.Status==='exited'&&s.Pid===0&&Number.isFinite(Date.parse(s.StartedAt))&&Date.parse(s.StartedAt)>0&&Number.isFinite(Date.parse(s.FinishedAt))&&Date.parse(s.FinishedAt)>=Date.parse(s.StartedAt)?'exited':s.Status==='created'&&s.Pid===0?'created':'unknown';
- return {containerId:d.Id,networkId,state,pid:s.Pid,exitCode:state==='exited'?s.ExitCode:null,endpoint};
-}
+const subject=(p:PreviewContainerProfile|null,r:PreviewStartRequest)=>({imageDigest:r.imageDigest,imageIdentity:r.imageIdentity,labels:p?labels(p,r):{},readonlyDataset:false,errorPrefix:'PREVIEW' as const});
+export function previewDockerNetworkArguments(raw:PreviewContainerProfile,r:PreviewStartRequest){const p=previewContainerProfile.parse(raw);return serviceDockerNetworkArguments(p,subject(p,r));}
+export function previewDockerCreateArguments(raw:PreviewContainerProfile,r:PreviewStartRequest,networkId:string){const p=previewContainerProfile.parse(raw);return serviceDockerCreateArguments(p,subject(p,r),networkId);}
+export function verifyPreviewDockerImage(value:unknown,r:PreviewStartRequest,repository:string){return verifyServiceDockerImage(value,subject(null,r),repository);}
+export function verifyPreviewDockerNetwork(value:unknown,p:PreviewContainerProfile,r:PreviewStartRequest){return verifyServiceDockerNetwork(value,p,subject(p,r));}
+export function verifyPreviewDockerContainer(value:unknown,p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,containerId:string|null):PreviewContainerFact{return verifyServiceDockerContainer(value,p,subject(p,r),networkId,containerId);}
 export class DockerPreviewDriver implements PreviewContainerDriver {
  readonly configured:boolean;readonly #execute:CliExecutor;readonly #options:PreviewDockerOptions;
  constructor(options:PreviewDockerOptions,executor?:CliExecutor){

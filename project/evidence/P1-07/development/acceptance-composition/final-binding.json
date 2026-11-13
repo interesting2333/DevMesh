@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-13T00:13:04.474Z",
+  "base": "5509c097c422002f8bf4eecb738b5119800b7f57",
+  "migrations": [
+    {
+      "file": "packages/runner/src/fence-domain.ts",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570",
+      "matchesHead": true
+    },
+    {
+      "file": "packages/runner/src/capacity-domain.ts",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638",
+      "matchesHead": true
+    },
+    {
+      "file": "packages/runner/src/container-domain.ts",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95",
+      "matchesHead": true
+    },
+    {
+      "file": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3",
+      "matchesHead": true
+    },
+    {
+      "file": "packages/runner/src/cleanup-migration.ts",
+      "sha256": "95a46d98e38c49e83b64e775f073e4768c7fbc682878b84243b836451974614e",
+      "matchesHead": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-service-migration.ts",
+      "sha256": "28ea1ae25ad2e40d3e027dd6314ae419a6e7928f4d803d7cd20b4eaf492d5034",
+      "matchesHead": true
+    }
+  ],
+  "buildReportSha256": "0ab0a539fc956e1668bd41c87209553c7c67fe0abc6ac37b037e3d7083e95889",
+  "firstToFinalCorrections": {
+    "reason": "Remove the unused import; canonicalize the explicit Docker profile fixture before hashing; assert UNKNOWN, no proof and no fence reacquisition after the original fence changes instead of expecting inspect to throw.",
+    "corrections": [
+      {
+        "file": "packages/runner/src/preview-docker.ts",
+        "beforeSha256": "4933b1623d57f0675fbc8dde50ffcc0ed3176a93a040d21955851fffa0ae2276",
+        "afterSha256": "f945a1268e8abbb886d37f8ccd0c972099308f486abb24484b4ece4a6caac54e",
+        "beforeSource": "preview-docker.ts.txt"
+      },
+      {
+        "file": "tests/fixtures/acceptance-docker.mjs",
+        "beforeSha256": "23149deaf3a22718d5fdafddf7eb4be756b987de12868b446e8f8aaf26056162",
+        "afterSha256": "64fa8fe08dea6eb03eed07c6df4fa035235e765d889ada650bbbf27f0c28281b",
+        "beforeSource": "acceptance-docker.mjs.txt"
+      },
+      {
+        "file": "tests/acceptance-preparation-backend.test.mjs",
+        "beforeSha256": "35a6f3345b6d91a7f835822e2ca1cef96ce52bfa97b76a4980cd578033e1ab8f",
+        "afterSha256": "e60040d4ad469f962d3866eef334e89cb8eaf3ffc8929cadb8d5405413aebf59",
+        "beforeSource": "acceptance-preparation-backend.test.mjs.txt"
+      }
+    ]
+  },
+  "firstToFinalEmittedChanges": [
+    "packages/runner/dist/index.mjs.map"
+  ],
+  "runtimeEmittedCodeUnchanged": true,
+  "currentBuildInputDifferences": [],
+  "groups": [
+    {
+      "attempt": "service-02",
+      "mode": "test",
+      "tests": 16,
+      "pass": 16,
+      "skipped": 0,
+      "selection": "All tests in the selected files executed.",
+      "reportSha256": "7b1e63758322e7b6641c6c48fbeba001bad7e4e2865605f72d617d43fa29dc7f",
+      "outputSha256": "0a31a42b8faa0f47cb7759c6e6b73cec61a6285cf78b8018dea34107efef4d27",
+      "inputChanges": [],
+      "buildInputDifferences": []
+    },
+    {
+      "attempt": "regression-01",
+      "mode": "test",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "selection": "All tests in the selected files executed.",
+      "reportSha256": "97d838fb3349f40671af5b722fc9a5e8c2e01dac7e68dedcc77a1054ce3e1320",
+      "outputSha256": "5543fee81469274ab48c9a33384aea62868d043299afc9b27426706bdfb07671",
+      "inputChanges": [],
+      "buildInputDifferences": []
+    },
+    {
+      "attempt": "migrations-01",
+      "mode": "migration",
+      "tests": 4,
+      "pass": 4,
+      "skipped": 0,
+      "selection": "Only v2-v5 upgrade/preservation tests selected; other tests not selected. TAP skipped count is recorded separately.",
+      "reportSha256": "46665823747b05f6229732d335f1511509dfd47c149e3958606e1f96cde17805",
+      "outputSha256": "6dff9bf7d4d6ece2b052d7b333d961e1a44fc0fae161aeb2c4d8c6f6bd094029",
+      "inputChanges": [],
+      "buildInputDifferences": []
+    }
+  ],
+  "mapBindingSha256": "d5ecf5ccabdbde13cf9a0012d19bf42d72609919be6f52a1d86c8d17551f32b7",
+  "scope": "Local development validation on a modified checkout. Docker, physical fence and source/image provenance use explicit fixtures; no physical Linux/gVisor, safe abort, ownership/publishing or independent/product acceptance."
+}

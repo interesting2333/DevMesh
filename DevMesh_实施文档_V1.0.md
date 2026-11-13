@@ -294,6 +294,10 @@ P1-07 接受准备先用前向迁移保存准确候选／reviewHash、原接受�
 
 原准备证明与当前可用性分开验证：不可变 proof 固定原数据／schema／迁移／完整性、源与目标物理 fence 和准确 Runner RELEASE_HELD claim；当前观察重新核实原 fence 持有／目标关闭及同实例健康，0～30 秒时效、准备版本／观察 sequence 双 CAS 和跨 UNKNOWN 的归属高水位阻止旧状态复活。默认实际后端关闭，控制器只有首次唯一许可可 prepare，之后只 inspect；事务故障须证明 proof／观察／Run 版本／事件一起回滚。受控字段测试不算物理排空、真实容器健康或 T5 通过，正向保留／替换、实际适配器及发布仍须独立执行。
 
+显式 RunnerAcceptancePreparationBackend 组合实际数据文件、原 Runner 服务日志、ACCEPTANCE Docker Driver 与原端点 HTTP。接受容器整个 `/data` 只读且 APP_READ_ONLY=true，公共 OCI／runsc／非 root／只读根／资源／隔离网络核验与预览共用底层逻辑；用途和请求保持独立。缺 Linux、quota、networkIsolation 或物理 custody 关闭。Runner v8 只新增不可变完整 proof，preparedAt／custodyRevision 固定，当前观察独立更新；v2～v7 正文和旧历史不改。专项须覆盖真实文件／HTTP→READY→T5、动作及 proof 丢 ACK／重启、授权／fence／quota 变化、v7 活跃服务升级／故障回滚；只查原对象，不在 inspect 中补发缺失后继动作。实际物理部署、安全撤销、OWNED／发布另验，完整4.1不因局部组合测试提前勾选。
+
+P1-07 发布还须单独处理不可变只读准备实例到可写服务的转换：T5／开放逻辑写门不改变容器挂载或 APP_READ_ONLY。准确实例／归属、实际健康及写 fence 交接须有原操作与恢复证据，不能修改原准备 profile／proof 或同时放开旧新数据；该发布转换当前未实施。
+
 T5 独立验证 owner 的 commitReleaseAcceptance 与可信 ReleaseAcceptor：事务外实际读取冻结材料并校验完整 hash 集合，事务内复核原准备／最新观察双版本、准确候选与完整审查／原指针／Run 代际／全部 READY 内容、健康／fence和未知写。迁移 39 保存不可变提交结论，原 SENT／UNKNOWN 派发历史不改为失败；仅已提交或准确未派发失败才解除项目未核实准备占用。Release、指针 CAS、必要人工完成覆盖层／Attempt／slot、Run COMPLETED、原响应、专用 promotion Outbox及事件故障必须全回滚。人工完成绑定具体人工结果，不改原自动 assessment／质量。并发、丢 ACK／重启、材料在读取期间变化、撤权、未知 HTTP 写及历史不可变分别留证。接受 ACK 恢复不再读文件或要求 Run 活跃；后续实际 OWNED／路由／开放新门／导出消费者另验，不能把独立本地事务通过写成完整服务或产品验收。
 
 数据归属增量须验证通用策略台账的 PREVIEW／ACCEPTANCE 区分、真实原准备 operation／requestHash、REPLACE 基线与复制 origin 分离、接受目标初始关闭及 proof 落库后的 WRITE_FROZEN。迁移 38 重建写门外键必须保持旧关闭门、未知写请求和历史原样；注入晚期故障后 schema、行、版本、迁移历史及外键 pragma 全部恢复。新元数据不证明业务文件、迁移、物理 fence 或 Release 已完成；源闭门与事件故障回滚、准确后端权限、丢 ACK 原记录恢复须单独验证。

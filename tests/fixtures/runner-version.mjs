@@ -10,7 +10,15 @@ export function historicalV5Fixture(db){
 
 // Remove only empty v7 service structures in a dedicated historical test store.
 export function historicalV6Fixture(db){
+ historicalV7Fixture(db);
  if(db.prepare('PRAGMA user_version').get().user_version===6)return;
  if(db.prepare('PRAGMA user_version').get().user_version!==7||db.prepare('SELECT count(*) n FROM acceptance_services').get().n!==0)throw Error('Not a compatible dedicated v7 fixture');
  db.exec('BEGIN IMMEDIATE');try{db.exec("DROP TABLE acceptance_service_actions; DROP TABLE acceptance_service_profiles; DROP TABLE acceptance_service_events; DROP TABLE acceptance_services; ALTER TABLE runner_identity RENAME TO runner_identity_v7_fixture; CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=6)) STRICT; INSERT INTO runner_identity SELECT singleton,runner_id,6 FROM runner_identity_v7_fixture; DROP TABLE runner_identity_v7_fixture; DELETE FROM runner_schema_history WHERE version=7; PRAGMA user_version=6;");if(db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Invalid v6 fixture');db.exec('COMMIT');}catch(error){db.exec('ROLLBACK');throw error;}
+}
+
+// Remove only empty v8 proof structures in a dedicated historical test store.
+export function historicalV7Fixture(db){
+ if(db.prepare('PRAGMA user_version').get().user_version===7||db.prepare('PRAGMA user_version').get().user_version===6)return;
+ if(db.prepare('PRAGMA user_version').get().user_version!==8||db.prepare('SELECT count(*) n FROM acceptance_service_proofs').get().n!==0)throw Error('Not a compatible dedicated v8 fixture');
+ db.exec('BEGIN IMMEDIATE');try{db.exec("DROP TABLE acceptance_service_proofs; ALTER TABLE runner_identity RENAME TO runner_identity_v8_fixture; CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=7)) STRICT; INSERT INTO runner_identity SELECT singleton,runner_id,7 FROM runner_identity_v8_fixture; DROP TABLE runner_identity_v8_fixture; DELETE FROM runner_schema_history WHERE version=8; PRAGMA user_version=7;");if(db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Invalid v7 fixture');db.exec('COMMIT');}catch(error){db.exec('ROLLBACK');throw error;}
 }

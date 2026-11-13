@@ -1386,7 +1386,13 @@ ReleaseCandidate 固定：codeCommit、requirementRevision、planRevision、temp
 
 接受服务使用独立 ACCEPTANCE 原服务请求，固定完整接受依据、实际数据回执及原源／目标 fences，不能翻译成预览 effect。Runner v7 的独立预留、只读 profile 和 network／create／start 日志绑定准确 operation／release／dataset；动作先持久 SENT，只有一次 dispatch 才可执行，丢 ACK 只核实原对象。作业、预览与接受服务在同一个 Runner writer 核算 slot／CPU／内存，跨 controller／用途的 dataset 独占；UNKNOWN／重启继续扣除，未派发取消或准确原容器 EXITED 才释放。接受服务不进入预览到期／清理扫描。
 
-接受服务的 `devmesh.acceptance-service-claim.v1` 与旧预览 claim 分开，固定原接受 hash、原服务 requestHash、reservation／profile、release／candidate／review／dataset／image 及原实例。新鲜健康与准确归属核实后才能取得 RELEASE_HELD，原 claim／实例／端口不可替换；HELD 丢 ACK 恢复原归属，不按 TTL 解除。HELD 仅为准备阶段记录，不能视为 T5 或 RELEASE_OWNED；当前独立 Runner 日志本身不完成服务启动适配、物理数据排空或控制面完整 READY。实际后端装配、明确未提交后的撤销与发布继续按原范围实现。
+接受服务的 `devmesh.acceptance-service-claim.v1` 与旧预览 claim 分开，固定原接受 hash、原服务 requestHash、reservation／profile、release／candidate／review／dataset／image 及原实例。新鲜健康与准确归属核实后才能取得 RELEASE_HELD，原 claim／实例／端口不可替换；HELD 丢 ACK 恢复原归属，不按 TTL 解除。HELD 仅为准备阶段记录，不能视为 T5 或 RELEASE_OWNED。
+
+显式 `RunnerAcceptancePreparationBackend` 组合实际数据组件、Runner 原服务日志、直接 ACCEPTANCE Driver 和原端点 HTTP 健康检查；只在当前授权和原物理 fences 均匹配时创建／启动。Docker Driver 复用公共 OCI／沙箱核验，接受用途的整个 `/data` 只读挂载且 `APP_READ_ONLY=true`，固定 runsc、非 root、只读根、硬配额／资源、独占隔离网络与 loopback 发布端口。缺 Linux、quota、networkIsolation 或物理 custody 适配器不启用，平台启动不自动安装可信后端。
+
+Runner v8 前向迁移保存不可变完整准备 proof，不修改 v2～v7 迁移正文／历史摘要。首次准确健康和 HELD 后固定 `preparedAt`、claim、custodyRevision、数据与 fences；后续真实健康／持有观察更新当前状态，原 proof 不随心跳或重启变化。数据、动作或 proof 回执未知时只查询原对象，不能重新初始化、重新取得 fence，或在恢复查询中补发尚未获许可的后继动作。完整 READY 须经控制面原准备／最新观察 CAS 接收；安全撤销、OWNED／路由发布和真实物理环境分别验收。
+
+接受准备实例的只读挂载／环境和原 profile 不可变，T5 后仅开放逻辑写门不会使该实例具备写能力。后续发布必须独立实现并验证准确原归属下的可写服务转换、健康及写 fence 交接；不得改写准备 profile／proof、凭接受成功直接宣布应用可写，或同时放开旧新 dataset。当前组合止于只读准备与本地 T5，发布转换未实施。
 
 T5 为独立 owner 命令，详细事务见 D5。可信调用层先实际读取冻结材料，原键成功恢复直接交回 writer 校验权限／原正文；新提交在本地短事务核实准确准备与最新观察、完整审查和指针，原子保存接受事实、必要人工完成、Run 终态及专用发布意图。原自动质量和评估不改写，发布失败单独呈现。该领域代码／受控后端验证不代表真实服务和物理 fence 已就绪，也不代表发布消费者已装配；完整 4.1／4.3／5.1 仍按各自证据验收。
 
@@ -1550,6 +1556,7 @@ flowchart LR
 | acceptance_prepared_proofs、acceptance_preparation_observations | 原 request／数据／fence／Runner claim 不可变证明；当前健康与 fence 持有的追加观察 | 配置后端主体写入；proof 首次固定，准备版本／观察 sequence 双 CAS／时间和归属高水位拒绝回退；观察／事件／Run 版本同事务，过期或 UNKNOWN 关闭当前 READY |
 | acceptance_commits、work_acceptance_completions、release_promotion_outbox | T5 的准确提交结论、独立人工完成覆盖层及原发布意图 | Release／准备／证明／观察复合引用；原 SENT／UNKNOWN 历史保留，提交后解除项目未核实准备占用；自动事实不覆盖，专用发布用途不进入普通 A2A 派发 |
 | Runner acceptance_services／events、acceptance_service_profiles／actions | ACCEPTANCE 原服务请求／数据回执／fences、容量、只读 profile、唯一外部动作与原服务 claim | 独立 Runner v7；同 writer 与作业／预览共享容量、跨用途 dataset 独占；原身份／历史不可覆盖，UNKNOWN 保留占用，HELD 不表示 T5 |
+| Runner acceptance_service_proofs | 原 reservation／requestHash／profileHash、完整 proof JSON／摘要与创建时点 | Runner v8 前向迁移；首次准确健康＋HELD 事务插入、禁止更新／删除；preparedAt／custodyRevision 固定，当前健康另查 |
 
 DDL 中涉及同项目／同 run 的关系使用复合外键；只验证“ID 存在”不足以防止跨项目串用。平台接受指针故意引用 releases，不能指向普通 artifact 或未接受 candidate。
 
@@ -1704,6 +1711,8 @@ MANUAL_PENDING 只能来自冻结时已核实的最终 Tester：非 PASS 检查�
 已提交原键恢复先于终态、健康过期和材料读取，但仍检查当前 owner 与原正文；因此丢 ACK 或重启不会再接受、迁移或增加发布任务。返回的原结果记录 ACCEPTED 与提交时 PENDING；实际发布状态须由独立发布观察提供。promotion Outbox 使用独立表，固定原接受请求、数据、镜像、HELD 服务及 fence；普通 A2A 派发不消费。后续 OWNED 确认、路由切换、开放新门和导出失败不撤销已接受事实，尚未实现的消费者与真实环境验证继续分别留证。
 
 新 T5 只接受完整 ACCEPTANCE 服务 claim；旧预览 claim 的历史证明仍可读，不自动升级为新用途或据此新接受。
+
+Runner 完整准备证明的插入是独立本地事务，不持锁执行文件或 HTTP。先读取原服务／profile，核实 HELD、准确实例和 0～30 秒健康再保存；原键恢复校验原请求与已存摘要并返回原字节。当前 READY 必须在此之前实际检查数据文件、同一物理 fences、原 network／container 和 HTTP 健康，不能把历史 proof 的存在解释成当前可用。v7→v8 失败回滚 schema／版本／历史，旧活跃服务及动作行保持原样。
 
 #### 14. T6 注册代际激活
 
@@ -2079,6 +2088,8 @@ T5 的本地技术证据必须分别覆盖新接受／原键恢复、准确准�
 - 代码覆盖、构建、启动、Demo 可访问、接受均为独立事实，绑定实际 SHA 与报告；无法获得标缺失，不从历史版本估算。
 
 ### 15.5. 开发前需要关闭的具体事项
+
+接受服务组合专项使用真实 Runner／控制面 SQLite Worker、业务文件和只读模板 HTTP，验证数据准备→原服务动作→HELD→稳定 proof→控制面 READY→T5；容器／镜像／物理 fence 若为夹具须逐项明示。覆盖整个 dataset 只读挂载、错误 OCI／用途／沙箱／端口拒绝，动作与 proof 丢 ACK／重启不重派、不补后继动作，撤权／fence 换代／quota 失败保持关闭，v7→v8 活跃历史保留及故障回滚。真实 Linux／gVisor、物理排空、OWNED／发布和完整产品验收仍需独立证据。
 
 | 事项 | 本版已经作出的决策 | 仍需取得的实施证据 |
 | --- | --- | --- |

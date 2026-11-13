@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Real local Runner Worker v8, SQLite datasets, read-only template HTTP, preparation composition and control T5 integration. Explicit Docker inspect, physical fence and image fixtures; no physical Docker/gVisor or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/runner",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-12T23:54:57.765Z",
+      "finishedAt": "2026-11-12T23:56:05.656Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "c35fe518a5fc3eca4538527fe58dbbf839702c6e8bebc99e7be3af70d912df6f"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-12T23:56:05.663Z",
+      "finishedAt": "2026-11-12T23:58:44.049Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-12T23:58:44.055Z",
+      "finishedAt": "2026-11-12T23:59:08.533Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/runner/dist/index.mjs.map"
+  ]
+}

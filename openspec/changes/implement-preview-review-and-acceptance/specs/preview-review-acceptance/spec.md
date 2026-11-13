@@ -48,6 +48,26 @@ The system SHALL 为 ACCEPTANCE 服务保存独立原请求、数据回执／fen
 - **WHEN** 预览到期或清理扫描与接受服务同时存在
 - **THEN** 接受服务不属于预览扫描用途；其原 release／candidate／review／数据／镜像／reservation／实例均以独立 claim 核验，不能借用预览 TTL 或停止操作
 
+### Requirement: Trusted acceptance composition retains an exact read-only service and stable proof
+
+The system SHALL 将原接受请求、实际数据回执及当前物理 fences 与用途独立的只读服务装配，不伪造预览 effect。新容器动作 MUST 具有原持久唯一许可，并在外部动作前复核当前授权及原 fence；恢复 MUST 只检查原对象。首次完整证明 MUST 持久保存且不可替换，当前健康与不可变原证明分开。
+
+#### Scenario: Exact read-only service reaches held readiness
+- **WHEN** 显式可信后端已核实原数据、准确 OCI／目录／网络／实例及实际 HTTP 健康
+- **THEN** 取得准确 RELEASE_HELD 并持久保存完整原证明；整个接受 dataset 只读挂载，普通预览的可写参数不能通过核验
+
+#### Scenario: Prepared proof acknowledgement is lost before restart
+- **WHEN** 首份完整证明保存后丢 ACK，随后服务重启或后续心跳推进归属观察版本
+- **THEN** 返回同一 preparedAt／custodyRevision／proofHash，当前健康另行核实；证明保存失败不留下半份，旧历史不伪造回填
+
+#### Scenario: Original action, authority or fence becomes uncertain
+- **WHEN** 原 network／create／start 许可或结果未知，或者授权失效、物理 fence 换代、原实例／profile／端点不匹配
+- **THEN** 只核实原对象并关闭 READY，不补发、替代或重新 acquire fence；缺 Linux／硬配额／网络隔离配置不得派发
+
+#### Scenario: Read-only preparation cannot be declared writable by a logical gate
+- **WHEN** T5 已提交且准备实例仍保持原不可变只读挂载／APP_READ_ONLY
+- **THEN** 发布必须另行核实准确归属下的可写服务转换、健康与写 fence 交接；仅开放逻辑门不能宣称应用可写，不修改原准备 profile／proof 或同时放开旧新 dataset
+
 ### Requirement: Dataset preparation retains its actual purpose and origin
 
 The system SHALL 用不可变公共归属绑定每个 dataset 的真实准备 operation、requestHash、项目、策略及 PREVIEW／ACCEPTANCE 用途。接受准备 MUST 使用自己的原操作和策略，初始逻辑写门关闭；登记元数据不得声称业务文件或物理 fencing 已完成。REPLACE MUST 保留基线 release 且不虚构复制来源。迁移 MUST 保留旧写门、访问和历史，失败全部回滚并恢复外键检查。

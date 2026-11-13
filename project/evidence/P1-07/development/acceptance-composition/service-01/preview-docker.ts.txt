@@ -1,0 +1,56 @@
+import {spawn} from 'node:child_process';
+import {isAbsolute} from 'node:path';
+import {createHash} from 'node:crypto';
+import {z} from 'zod';
+import {canonical} from '@devmesh/storage-sqlite';
+import {serviceDockerNetworkArguments,serviceDockerCreateArguments,verifyServiceDockerImage,verifyServiceDockerNetwork,verifyServiceDockerContainer} from './service-docker.js';
+import type {PreviewStartRequest} from '@devmesh/storage-sqlite';
+import {RunnerError} from './protocol.js';
+import type {CliExecutor} from './docker.js';
+import {dockerObjectId,previewContainerProfile,previewRepository} from './preview-container.js';
+import type {PreviewContainerProfile,PreviewContainerFact,PreviewContainerDriver} from './preview-container.js';
+
+export interface PreviewDatasetQuota {
+ /** Enforce a hard directory quota and prepare only this dataset for uid/gid 10001. */
+ prepare(directory:string,maximumBytes:number):Promise<void>;
+ verify(directory:string,maximumBytes:number):Promise<boolean>;
+}
+export interface PreviewNetworkIsolation {
+ /** Enforce no egress to host/control/other networks; retain only host-origin published-port traffic. */
+ enforce(networkId:string):Promise<void>;
+ verify(networkId:string):Promise<boolean>;
+}
+export interface PreviewDockerOptions {enabled?:boolean;dockerPath:string;socketPath:string;quota?:PreviewDatasetQuota;networkIsolation?:PreviewNetworkIsolation}
+export function previewDockerRemovalArguments(kind:'CONTAINER_REMOVE'|'NETWORK_REMOVE',id:string){dockerObjectId.parse(id);return kind==='CONTAINER_REMOVE'?['container','rm',id]:['network','rm',id];}
+/** Only a successful full-ID list query may establish absence. */
+export function verifyPreviewDockerAbsence(output:string,id:string){dockerObjectId.parse(id);const value=output.trim();if(value==='')return true;if(value===id)return false;throw new RunnerError('PREVIEW_CLEANUP_QUERY_UNVERIFIED',409,'unknown');}
+const hash=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
+const fail=(code:string):never=>{throw new RunnerError(code,409,'unknown');};
+const labels=(p:PreviewContainerProfile,r:PreviewStartRequest)=>({'devmesh.runner':r.runnerId,'devmesh.preview':r.previewId,'devmesh.reservation':p.reservationId,'devmesh.request':p.requestHash,'devmesh.profile':hash(p)});
+const subject=(p:PreviewContainerProfile|null,r:PreviewStartRequest)=>({imageDigest:r.imageDigest,imageIdentity:r.imageIdentity,labels:p?labels(p,r):{},readonlyDataset:false,errorPrefix:'PREVIEW' as const});
+export function previewDockerNetworkArguments(raw:PreviewContainerProfile,r:PreviewStartRequest){const p=previewContainerProfile.parse(raw);return serviceDockerNetworkArguments(p,subject(p,r));}
+export function previewDockerCreateArguments(raw:PreviewContainerProfile,r:PreviewStartRequest,networkId:string){const p=previewContainerProfile.parse(raw);return serviceDockerCreateArguments(p,subject(p,r),networkId);}
+export function verifyPreviewDockerImage(value:unknown,r:PreviewStartRequest,repository:string){return verifyServiceDockerImage(value,subject(null,r),repository);}
+export function verifyPreviewDockerNetwork(value:unknown,p:PreviewContainerProfile,r:PreviewStartRequest){return verifyServiceDockerNetwork(value,p,subject(p,r));}
+export function verifyPreviewDockerContainer(value:unknown,p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,containerId:string|null):PreviewContainerFact{return verifyServiceDockerContainer(value,p,subject(p,r),networkId,containerId);}
+export class DockerPreviewDriver implements PreviewContainerDriver {
+ readonly configured:boolean;readonly #execute:CliExecutor;readonly #options:PreviewDockerOptions;
+ constructor(options:PreviewDockerOptions,executor?:CliExecutor){
+  if(!isAbsolute(options.dockerPath)||!options.socketPath.startsWith('/')||/[\0\r\n]/.test(options.socketPath))throw new RunnerError('PREVIEW_DOCKER_CONFIG_INVALID',422);this.#options={...options};this.configured=options.enabled===true&&process.platform==='linux'&&!!options.quota&&!!options.networkIsolation;
+  this.#execute=executor??((args,timeoutMs,maximumBytes)=>new Promise((resolve,reject)=>{const child=spawn(options.dockerPath,['--host','unix://'+options.socketPath,...args],{shell:false,windowsHide:true,stdio:['ignore','pipe','ignore'],env:{PATH:'/usr/local/bin:/usr/bin:/bin',LANG:'C.UTF-8'}});let count=0;const chunks:Buffer[]=[];const timer=setTimeout(()=>{child.kill('SIGKILL');reject(new RunnerError('PREVIEW_DOCKER_UNKNOWN',503,'unknown'));},timeoutMs);timer.unref();child.stdout.on('data',(b:Buffer)=>{count+=b.length;if(count>maximumBytes){child.kill('SIGKILL');reject(new RunnerError('PREVIEW_DOCKER_OUTPUT_LIMIT',503,'unknown'));}else chunks.push(b);});child.once('error',()=>{clearTimeout(timer);reject(new RunnerError('PREVIEW_DOCKER_UNAVAILABLE',503,'unknown'));});child.once('close',code=>{clearTimeout(timer);resolve({code:code??-1,stdout:Buffer.concat(chunks).toString('utf8')});});}));
+ }
+ #enabled(){if(!this.configured)throw new RunnerError('PREVIEW_DOCKER_NOT_CONFIGURED',503,'not-sent');}
+ async #call(args:readonly string[]){this.#enabled();const r=await this.#execute(args,15000,256*1024);if(r.code!==0)throw new RunnerError('PREVIEW_DOCKER_UNKNOWN',503,'unknown');return r.stdout;}
+ async probe(r:PreviewStartRequest,repository:string){this.#enabled();const info=z.object({OSType:z.literal('linux'),CgroupVersion:z.literal('2'),MemoryLimit:z.literal(true),SwapLimit:z.literal(true),CpuCfsQuota:z.literal(true),PidsLimit:z.literal(true),Runtimes:z.record(z.string(),z.unknown())}).parse(JSON.parse(await this.#call(['info','--format','{{json .}}'])));if(!Object.hasOwn(info.Runtimes,'runsc'))throw new RunnerError('PREVIEW_RUNSC_UNAVAILABLE',503,'not-sent');verifyPreviewDockerImage(JSON.parse(await this.#call(['image','inspect',repository+'@'+r.imageDigest])),r,repository);}
+ async prepare(p:PreviewContainerProfile){this.#enabled();await this.#options.quota!.prepare(p.datasetDirectory,p.datasetBytes);if(!await this.#options.quota!.verify(p.datasetDirectory,p.datasetBytes))throw new RunnerError('PREVIEW_DATASET_QUOTA_UNVERIFIED',503);}
+ async network(p:PreviewContainerProfile,r:PreviewStartRequest){this.#enabled();const out=await this.#execute(['network','inspect',p.networkName],15000,256*1024);if(out.code!==0)return null;const id=verifyPreviewDockerNetwork(JSON.parse(out.stdout),p,r);return await this.#options.networkIsolation!.verify(id)?id:null;}
+ async createNetwork(p:PreviewContainerProfile,r:PreviewStartRequest,authorize:()=>Promise<boolean>){if(!await authorize())throw new RunnerError('PREVIEW_AUTHORITY_REVOKED',403,'not-sent');const id=dockerObjectId.parse((await this.#call(previewDockerNetworkArguments(p,r))).trim());await this.#options.networkIsolation!.enforce(id);const verified=await this.network(p,r);if(verified!==id)fail('PREVIEW_DOCKER_NETWORK_CHANGED');return id;}
+ async inspect(p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,containerId:string|null){this.#enabled();if(await this.network(p,r)!==networkId)fail('PREVIEW_DOCKER_NETWORK_CHANGED');if(!await this.#options.quota!.verify(p.datasetDirectory,p.datasetBytes))fail('PREVIEW_DATASET_QUOTA_UNVERIFIED');const out=await this.#execute(['inspect','--type','container',p.containerName],15000,256*1024);return out.code===0?verifyPreviewDockerContainer(JSON.parse(out.stdout),p,r,networkId,containerId):null;}
+ async create(p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,authorize:()=>Promise<boolean>){this.#enabled();if(!await this.#options.quota!.verify(p.datasetDirectory,p.datasetBytes)||await this.network(p,r)!==networkId)fail('PREVIEW_DOCKER_CREATE_UNVERIFIED');if(!await authorize())throw new RunnerError('PREVIEW_AUTHORITY_REVOKED',403,'not-sent');const id=dockerObjectId.parse((await this.#call(previewDockerCreateArguments(p,r,networkId))).trim());return this.inspect(p,r,networkId,id);}
+ async start(p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.inspect(p,r,networkId,containerId);if(before?.state!=='created')fail('PREVIEW_DOCKER_START_UNVERIFIED');if(!await authorize())throw new RunnerError('PREVIEW_AUTHORITY_REVOKED',403,'not-sent');await this.#call(['start',containerId]);return this.inspect(p,r,networkId,containerId);}
+ async stop(p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.inspect(p,r,networkId,containerId);if(before?.state==='exited'||before?.state==='created')return before;if(before?.state!=='running')fail('PREVIEW_DOCKER_STOP_UNVERIFIED');if(!await authorize())throw new RunnerError('PREVIEW_AUTHORITY_REVOKED',403,'not-sent');await this.#call(['stop','--signal=SIGTERM','--timeout=10',containerId]);return this.inspect(p,r,networkId,containerId);}
+  async containerAbsent(id:string){dockerObjectId.parse(id);return verifyPreviewDockerAbsence(await this.#call(['container','ls','--all','--no-trunc','--filter','id='+id,'--format','{{.ID}}']),id);}
+  async networkAbsent(id:string){dockerObjectId.parse(id);return verifyPreviewDockerAbsence(await this.#call(['network','ls','--no-trunc','--filter','id='+id,'--format','{{.ID}}']),id);}
+  async removeContainer(p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.inspect(p,r,networkId,containerId);if(!before||!['created','exited'].includes(before.state))fail('PREVIEW_CLEANUP_CONTAINER_NOT_STOPPED');if(!await authorize())throw new RunnerError('PREVIEW_AUTHORITY_REVOKED',403,'not-sent');await this.#call(previewDockerRemovalArguments('CONTAINER_REMOVE',containerId));}
+  async removeNetwork(p:PreviewContainerProfile,r:PreviewStartRequest,networkId:string,authorize:()=>Promise<boolean>){const original=JSON.parse(await this.#call(['network','inspect',networkId]));if(verifyPreviewDockerNetwork(original,p,r)!==networkId||Object.keys(original[0].Containers??{}).length)fail('PREVIEW_CLEANUP_NETWORK_BUSY');if(!await authorize())throw new RunnerError('PREVIEW_AUTHORITY_REVOKED',403,'not-sent');await this.#call(previewDockerRemovalArguments('NETWORK_REMOVE',networkId));}
+}
