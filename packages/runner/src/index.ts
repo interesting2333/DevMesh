@@ -59,3 +59,9 @@ export type {AcceptanceAbortSourceRecoveryAuthority,AcceptanceAbortFinalization}
 export type { RunnerIdentity } from './server.js';
 export {acquireWorkspaceFence,releaseWorkspaceFence,workspaceFenceSchema} from './workspace-fence.js';
 export type {WorkspaceBinding,AcquireWorkspaceFence,WorkspaceFence} from './workspace-fence.js';
+export {releaseServiceRequest,releaseServiceFences,releaseServiceProfile,releaseServiceGuardProof,releaseServiceFact,releaseServiceNames,releaseServiceGateBinding} from './release-service.js';
+export type {ReleaseServiceRequest,ReleaseServiceProfile,ReleaseServiceFences,ReleaseServiceGuardProof,ReleaseServiceJournal,ReleaseServiceOriginal,ReleaseServiceAuthority,ReleaseServiceWriteGuard,ReleaseServiceDriver,ReleaseServiceRoutes} from './release-service.js';
+export {DockerReleaseServiceDriver,releaseDockerCreateArguments,releaseDockerNetworkArguments,verifyReleaseDockerImage,verifyReleaseDockerNetwork,verifyReleaseDockerContainer} from './release-docker.js';
+export type {ReleaseDockerOptions} from './release-docker.js';
+export {RunnerReleaseServiceBackend} from './release-service-backend.js';
+export type {RunnerReleaseServiceOptions} from './release-service-backend.js';

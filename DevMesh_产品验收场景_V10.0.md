@@ -295,3 +295,16 @@
 | 退役不等于发布 | 原数据、claim、profile、proof和T5保留，目标门仍CLOSED；独立可写服务、guard、路由及Release入口／导出另行验收 |
 
 本地组合可证明SQLite／Worker／真实数据文件及正式T5事务，物理撤权和Docker／网络仍为显式夹具；实际Linux／gVisor／隔离、可写发布和产品验收继续单列。
+
+### 独立可写发布补充场景（2026-11-13）
+
+| 场景 | 必须观察的结果 |
+| --- | --- |
+| 分离身份与门 | 原只读实例退役，独立可写 reservation／profile／容器／网络；控制事务前目标仍 CLOSED，事务后才可写 |
+| 后继围栏与 guard | 原 fence 同 ID 更高代、previousHoldHash 固定；目标 ARMED／CONTROL_CLOSED、源 RETIRED／CLOSED，所有业务写入受物理代和当前控制门约束 |
+| 源清理与容量 | 原可写 source 精确绑定原 service／route；容器消失、REMOVED、容量与历史整体提交或回滚，网络清理完成才分配下一服务 |
+| 启动不改数据 | 只读连接不创建业务盘锁；可写发布用临时运行锁，启动／健康不切日志模式或改业务数据库，首次获准请求才写 |
+| 丢回执和稳定凭证 | 只查询原已派发步骤，不重复创建或切换；完整原 claim／route 可派生一次 proof，新健康不改旧凭证 |
+| 配置和历史边界 | 缺物理 provider 关闭；外部源无本地原证明不能收编，私有后继夹具不替代第二轮正式接受或迁移验收 |
+
+本地 Worker／真实数据库与 HTTP 验证不代表物理 guard 的 ALL_DATASET_WRITES 保证、真实 Docker／gVisor、默认发布入口或产品验收。完整4.3、5.1及5.2继续实施。

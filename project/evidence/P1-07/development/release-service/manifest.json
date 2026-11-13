@@ -1,0 +1,2191 @@
+{
+  "recordedAt": "2026-11-13T05:58:24.470Z",
+  "scope": "Modified-checkout local development with original failed/interrupted inputs. No runtime databases or credentials. Actual Runner/control Workers and template SQLite/HTTP; Docker/OCI/fences/revocation/all-write guard/route providers are controlled fixtures. No actual Linux/gVisor, public release/export, continuation coordinator, clean checkout or product acceptance.",
+  "files": [
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/binding.json",
+      "byteSize": 57589,
+      "sha256": "adeed1d75d72afa1059e2fa46c68286313f1f49175e1c130684db3e87f0e566d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/acceptance-abort-domain.ts",
+      "byteSize": 9979,
+      "sha256": "fb65a9bb22a19d47c46bc15b7944695ec337b8e8ca84139cc12ac708386cbadf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/acceptance-proof-domain.ts",
+      "byteSize": 3529,
+      "sha256": "febf5f7beea0a3ce47e03fe9db45aafdc533faa2c69d749547bafe6df47c9593"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/acceptance-service-domain.ts",
+      "byteSize": 15198,
+      "sha256": "2462907c66a61008319137ae25c12288960f3945c2d4943a8531cea2e3805eed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/capacity-domain.ts",
+      "byteSize": 13562,
+      "sha256": "7721b5987ad2580c837fc08ed2754496624b639fb50814c4f744e26662c7c8ab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/cleanup-domain.ts",
+      "byteSize": 7011,
+      "sha256": "a89d409fd814082fc65209a949b1cf3c3f0084ff0a8ce9b40e168b898b2bdbdf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/container-domain.ts",
+      "byteSize": 10503,
+      "sha256": "cf6336e90f5418c9ccd05c819f59704ef7cfcc1c30fa0c0d9a2395363483583d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/fence-domain.ts",
+      "byteSize": 6873,
+      "sha256": "8371a1ee9eaf6b807608e71df24c7eae8147c34084adf968a770ab2875930d37"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/index.ts",
+      "byteSize": 6532,
+      "sha256": "00df9c66be23ea05226622478790bdbb4b97d0a54ca3adf00e9616e7f659f449"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "byteSize": 12288,
+      "sha256": "0b8ca31865516aeed11e03eada9addbb8a1aebbaa738cfb8fdc3dcd67bb8ddad"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/preview-reservation.ts",
+      "byteSize": 1754,
+      "sha256": "088debe6a9eaaae2110dcd967a5e00d809263d232ee95f7111656a42c6686ea9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/release-docker.ts",
+      "byteSize": 12339,
+      "sha256": "049d3d245863790e2cf2cb0b9f9fd6c9085b47704cca569f3ff08ddeb5d0184e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/release-retirement-domain.ts",
+      "byteSize": 11063,
+      "sha256": "0cf26ed4180416634a9ff6e7639b695fe7f041666ea43f9d39ddc7b38ff8cc8c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/release-service-backend.ts",
+      "byteSize": 15523,
+      "sha256": "846253b3618812624e4549eb0b86b34b0a038ca6c6d952182117ae8ff4829596"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/release-service-domain.ts",
+      "byteSize": 23886,
+      "sha256": "e8494806dd52fc3e64b98898b58a9d8d10438fd200187795a354085725c97fe3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/release-service-migration.ts",
+      "byteSize": 7073,
+      "sha256": "425a0339fc4d613695d06fa7669aa2ca935ef18792a24553a94bb7390a809c14"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/release-service.ts",
+      "byteSize": 11638,
+      "sha256": "791428e5df91e39952f16df39896498a1f2905427419157a4776ec2427157eb4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/service-docker.ts",
+      "byteSize": 10947,
+      "sha256": "2f2d086a70812f202199a4ae71bfebaebd934f98b5f8effadb6b360d3d3a7a74"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/store-protocol.ts",
+      "byteSize": 11073,
+      "sha256": "6e13bbdb489e074e984b700b6f62784a3e2bb4b1644e5bbe695770c16c23cacb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/packages/runner/src/worker.ts",
+      "byteSize": 15972,
+      "sha256": "b2505a078a468f04cb4e4835656982006f56109d01bde8ac2fa12ae7d0d7cbda"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/templates/web-crud-v1/src/server/database.ts",
+      "byteSize": 6522,
+      "sha256": "7b51e5b0b043efd8833f2f28a0668efdd3429846f2469538824923decc17234f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/templates/web-crud-v1/src/server/dataset.ts",
+      "byteSize": 3866,
+      "sha256": "2fd8664bdd9281f2433de537242769e38a9f0145ff60738c0f0a14df002036cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/templates/web-crud-v1/src/server/db-worker.ts",
+      "byteSize": 949,
+      "sha256": "843610f317b78213ce8271cd46a241efae7413b594958bcfc69fbe2985c4409f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/templates/web-crud-v1/src/server/main.ts",
+      "byteSize": 2168,
+      "sha256": "044b45e41fdbddff6151fc5bba9e174cf57582e9cb06dd71452129f571381078"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/templates/web-crud-v1/src/server/service.ts",
+      "byteSize": 1564,
+      "sha256": "c6a71a27eb9b63a5a310a40784caf6684db835172cebe409c3cf90f747f822fb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/templates/web-crud-v1/src/server/store.ts",
+      "byteSize": 2572,
+      "sha256": "62018f8b0dddcb7e07ab825070ad6b1a9438e7c147c6bbbd12e43bdb35bfc920"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/templates/web-crud-v1/tests/database.test.ts",
+      "byteSize": 10006,
+      "sha256": "f055b5d7fe5a81758c3d1193f6d23ff9738a69c861b2667e1ccae96f3c58c256"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/fixtures/acceptance-service-backend.mjs",
+      "byteSize": 5507,
+      "sha256": "115ccc539a7332dd83d04bd04ebe7b7abb9592ae1d0baa0084854b0bb2eec975"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/fixtures/release-retirement.mjs",
+      "byteSize": 6230,
+      "sha256": "0aa27ec4a93ade377538433cb6ccbb7a482e5213c76e8b523816665bc70cb924"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/fixtures/release-service-successor.mjs",
+      "byteSize": 5272,
+      "sha256": "7277d85f18242ba25ffe224a22f9eef1ddbedbca47f54d0e83c38d0bf8b9d577"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/fixtures/release-service.mjs",
+      "byteSize": 8874,
+      "sha256": "f9a009f03a8d4ccf9b0afc5c55f1a2947c945f2e2c3d8373c27de1acb4fb408b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/fixtures/runner-version.mjs",
+      "byteSize": 9531,
+      "sha256": "92da59941f408e92ca5d2c085d4b099b36f7e9936d9dbebc6ff0103953c36227"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/runner-acceptance-service.test.mjs",
+      "byteSize": 19838,
+      "sha256": "3e0ac2de34b67919cd3d610707f3745dba115d51073e89971e237f89998eba06"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/runner-preview-capacity.test.mjs",
+      "byteSize": 18990,
+      "sha256": "0e532026325ccf64af358fc3a652e0c3d35a16ede2f30072382a29d659feb413"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/runner-preview-cleanup.test.mjs",
+      "byteSize": 19841,
+      "sha256": "5089d0e719acfbff24b093ad0a267101041e3aa3f99d8cbbcc81f4c819194bab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "byteSize": 19200,
+      "sha256": "7a6d9b725e65c53386cb7bed2befeb5509c1e7246579e5303a8996403f11a0b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/runner-release-docker.test.mjs",
+      "byteSize": 7636,
+      "sha256": "e3e3ca43c3d07466e3ac9543d66290ecc9c180443ce4b026267b455d4222f468"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/runner-release-retirement.test.mjs",
+      "byteSize": 17193,
+      "sha256": "a685a666b08e919ed6a0cf1d28902ac36757053f591415e754467a2373bb1fbb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/runner-release-service.test.mjs",
+      "byteSize": 14041,
+      "sha256": "bf32903b79628ab90db5ec59c723bd631eea0793cbab3851a22f499b4640b9e3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/failed-source/tests/runner-upgrade.test.mjs",
+      "byteSize": 2258,
+      "sha256": "1e204ca5717ebeec624cb4b29286cb29cb51945348cc049b00ed5f3d8d59300b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "43b46204cc8e5efe09946d6c7b295e57bc6155eb05a88aca0b391efb3d8e36e7"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "77c79cdff65189eda931d86bb1133e877b877474935bbe691f408ae27418d647"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/interruption.json",
+      "byteSize": 531,
+      "sha256": "360ef8751ad104cac2a9ca5d75ebc4ad20c123646ba606bec23484cc5c9c3bb8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/report.json",
+      "byteSize": 930,
+      "sha256": "1b55f05764fc4ef3f2e8b731539ee2d69916db4ec94ba557feda57a3b10cde02"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/tests.txt",
+      "byteSize": 25865,
+      "sha256": "c018d581ea4c2c87f3d1229582c773ff77dc5059718550b0b5a0a73749d8c603"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-05/validation-driver.mjs",
+      "byteSize": 4939,
+      "sha256": "f1b2a5e74c53fdf6d16c2e559d01e2dd27de013f36c878fc68e3df01cc866086"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-06/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-06/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-06/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "7fd92b7c421c3c16ddec567985e6041b6b29f5f254738439c460d0d1825fc138"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-06/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "ecde1715546d921331e1c9a1290dddf5ccab5cc44c7b593abc09ecb1722c3a7e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-06/report.json",
+      "byteSize": 823,
+      "sha256": "1fbea0c9c99a6d04f01bc9e14b8353f9dbc9dab33ae2385a67106590bc0f89c6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-06/tests.txt",
+      "byteSize": 42638,
+      "sha256": "a3833cadc9f551c2afee16faaeb51874cb87667453eb740d4e50c0fb738c2518"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/acceptance-06/validation-driver.mjs",
+      "byteSize": 4939,
+      "sha256": "f1b2a5e74c53fdf6d16c2e559d01e2dd27de013f36c878fc68e3df01cc866086"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/build.txt",
+      "byteSize": 15538,
+      "sha256": "5a214c130a5de4922b2c855e90b09102e131ddfa8d30822e998042b80730cf5a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "926d0b80fa00af2327856a54e6607ff867b05447bf1d2846f64fc2f6d27c905a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/binding.json",
+      "byteSize": 56899,
+      "sha256": "9b6e953e9fbd0d22d1caa4594f10356ce5e78ed4f3fa34f3adbd5e6dc7567dce"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/acceptance-abort-domain.ts",
+      "byteSize": 9979,
+      "sha256": "fb65a9bb22a19d47c46bc15b7944695ec337b8e8ca84139cc12ac708386cbadf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/acceptance-proof-domain.ts",
+      "byteSize": 3529,
+      "sha256": "febf5f7beea0a3ce47e03fe9db45aafdc533faa2c69d749547bafe6df47c9593"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/acceptance-service-domain.ts",
+      "byteSize": 15198,
+      "sha256": "2462907c66a61008319137ae25c12288960f3945c2d4943a8531cea2e3805eed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/capacity-domain.ts",
+      "byteSize": 13562,
+      "sha256": "7721b5987ad2580c837fc08ed2754496624b639fb50814c4f744e26662c7c8ab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/cleanup-domain.ts",
+      "byteSize": 7011,
+      "sha256": "a89d409fd814082fc65209a949b1cf3c3f0084ff0a8ce9b40e168b898b2bdbdf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/container-domain.ts",
+      "byteSize": 10503,
+      "sha256": "cf6336e90f5418c9ccd05c819f59704ef7cfcc1c30fa0c0d9a2395363483583d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/fence-domain.ts",
+      "byteSize": 6873,
+      "sha256": "8371a1ee9eaf6b807608e71df24c7eae8147c34084adf968a770ab2875930d37"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/index.ts",
+      "byteSize": 6112,
+      "sha256": "234716a457c55b4eb5b0d9ce38ef3615a7938b785e8b7fd21a4800654e82ec39"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "byteSize": 12288,
+      "sha256": "0b8ca31865516aeed11e03eada9addbb8a1aebbaa738cfb8fdc3dcd67bb8ddad"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/preview-reservation.ts",
+      "byteSize": 1754,
+      "sha256": "088debe6a9eaaae2110dcd967a5e00d809263d232ee95f7111656a42c6686ea9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/release-retirement-domain.ts",
+      "byteSize": 11063,
+      "sha256": "0cf26ed4180416634a9ff6e7639b695fe7f041666ea43f9d39ddc7b38ff8cc8c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/release-service-domain.ts",
+      "byteSize": 23707,
+      "sha256": "e53f7388b56b316cdcb00efdc26206e7d2699d8c028a8b0cdd5287cd54ba51a5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/release-service-migration.ts",
+      "byteSize": 6939,
+      "sha256": "75d67cd0116c31ccd8c6ae8644deabce1171e6c25f043825a30092956632e7a2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/release-service.ts",
+      "byteSize": 11350,
+      "sha256": "b487181c2bebb0874f9780ab91ea62e4f726661b539a0aa04ac4a49353c32cff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/store-protocol.ts",
+      "byteSize": 11073,
+      "sha256": "6e13bbdb489e074e984b700b6f62784a3e2bb4b1644e5bbe695770c16c23cacb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/failed-source/packages/runner/src/worker.ts",
+      "byteSize": 15972,
+      "sha256": "b2505a078a468f04cb4e4835656982006f56109d01bde8ac2fa12ae7d0d7cbda"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/inputs-after.json",
+      "byteSize": 55817,
+      "sha256": "7d46e03e1cad7bedd904fa5fe7be5b2dd7b56460b932ec8b62917eeefef0749f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/inputs-before.json",
+      "byteSize": 55817,
+      "sha256": "5edf20f115651ab1397752a5f2e531c7b3da38db633843af18a64eba70bce357"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/report.json",
+      "byteSize": 1829,
+      "sha256": "5fbc5739bec755b5c2bf1716105c45baaff9b1c3a53c2af6c529a34a7e8067d3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/typecheck.txt",
+      "byteSize": 120,
+      "sha256": "a01f0f679e414dedefdae1dee027325797b08871a7e8ae0a62693bec8b168f56"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-01/validation-driver.mjs",
+      "byteSize": 3988,
+      "sha256": "db8a7732f2adaaee360261bf0c69fb24adced3a4ffe9ab88af8e05aaa6b2be26"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/build.txt",
+      "byteSize": 15739,
+      "sha256": "a60b730373a1873a9d8f99316187929cd777e6b6b4df5279a45c5209b10b1beb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4e9d8b67df0d82a7e1807cc484aea1fbf00e655164d3d98dfd7396f603a9cd84"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "926d0b80fa00af2327856a54e6607ff867b05447bf1d2846f64fc2f6d27c905a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/inputs-after.json",
+      "byteSize": 56048,
+      "sha256": "c6f0d1d9357d4b5c48ec76f46b37b00165e895f7b05323d0cb1cf19d153f86dd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/inputs-before.json",
+      "byteSize": 56048,
+      "sha256": "6d2f3d415369ff740776bcc483ba9036638784d429be966d0883dd5611770770"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/report.json",
+      "byteSize": 2135,
+      "sha256": "1d0ab89def2df4486e3a4d9de1dec89b9cdd0f63d49b0e70d5013efa9795bc63"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-02/validation-driver.mjs",
+      "byteSize": 3988,
+      "sha256": "db8a7732f2adaaee360261bf0c69fb24adced3a4ffe9ab88af8e05aaa6b2be26"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/build.txt",
+      "byteSize": 16086,
+      "sha256": "91c4f9b7cd1b1c223a9855bf76824e1728fc9162318c06ae62b70b1f0ec4e891"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4e9d8b67df0d82a7e1807cc484aea1fbf00e655164d3d98dfd7396f603a9cd84"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "8e198700d530bdff79634307fefbba6be920d0ad1507b8dad751bb892132393f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/inputs-before.json",
+      "byteSize": 56377,
+      "sha256": "3919892e9a030460af8dd7a993be2c848c65c36f03ac87983f08b4c57bc47819"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/report.json",
+      "byteSize": 2272,
+      "sha256": "9c4c02f4263211f0d699b02bedf458195e80af1a8eb2cfdd936696932d9e7e1e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-03/validation-driver.mjs",
+      "byteSize": 3988,
+      "sha256": "db8a7732f2adaaee360261bf0c69fb24adced3a4ffe9ab88af8e05aaa6b2be26"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "fa2d82225ba500943195c0a22e77e74568d69f7a1fb8e03b087796f84b5b96b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "bcdb1f3d931b4724dff1e87a588ad301db74888514c6900a108647b8dc1f6d52"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/report.json",
+      "byteSize": 1842,
+      "sha256": "02aeb73b8beadf17583cd1b102546d91d624374c737ff282cb332d2b64607595"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/runner-build.txt",
+      "byteSize": 5670,
+      "sha256": "4d46abada5596233cda18430c014d329184a0cf83836f7c94c5de2ae89f01c7b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/build-04/validation-driver.mjs",
+      "byteSize": 4504,
+      "sha256": "8722b59d39591696b87fc51799559e579417db0233aed989c9d340406668db76"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/failed-input-capture-driver.mjs",
+      "byteSize": 1068,
+      "sha256": "e4620a2f6ac46ebbd298f5bffced9f767f5dffa343b7d542c770d910f8a50278"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/final-binding-driver.mjs",
+      "byteSize": 6802,
+      "sha256": "08f59f3fc5f4a4a3844797561812285d183579fa465c6fb87dbc80bd34f626f0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/final-binding.json",
+      "byteSize": 8664,
+      "sha256": "20d2c5d7e20129a9131c2f734d2559ae026f55ca4fce00470c2ee4cbd881fb96"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/historical-source-reconstruction-driver.mjs",
+      "byteSize": 3073,
+      "sha256": "db7876aed8cc63e9a7f1edb7f851ad97628ccabe3712bb5e633c867994f3b67f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/history-binding.json",
+      "byteSize": 2166,
+      "sha256": "518a8007c3d831806fe853ec57ccffcd57172a20e370451fb89a81a3e148749c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/map-binding.json",
+      "byteSize": 102668,
+      "sha256": "66c1acae9fc6ee2c553f3c0654f77822daa289703e87fef2c9a3128fd1e87798"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/contracts.txt",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/design.txt",
+      "byteSize": 43,
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/diff.txt",
+      "byteSize": 495,
+      "sha256": "e4bf54d9b3fbb499c00ca97096c951c8e461ba33542a23d483f2b50d4436c616"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/openspec.txt",
+      "byteSize": 673,
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/project.txt",
+      "byteSize": 172,
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/render.txt",
+      "byteSize": 34,
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/report.json",
+      "byteSize": 2804,
+      "sha256": "9faec5abebc546ff55e390c28dd58d50f5fcd15729dce5f5565f60d37fa4a947"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-1/validation-driver.mjs",
+      "byteSize": 1852,
+      "sha256": "203a9326716f0ff4de726b13826c87baeb4a5d41217414d8b2f846f8a83c8def"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/contracts.txt",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/design.txt",
+      "byteSize": 43,
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/diff.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/openspec.txt",
+      "byteSize": 673,
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/project.txt",
+      "byteSize": 172,
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/render.txt",
+      "byteSize": 34,
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/report.json",
+      "byteSize": 3173,
+      "sha256": "3f6d449327937337c61e1967a849a5c26b2b5b04cb6c4379a1d03cef4f1c78a1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/staged-diff.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/post-2/validation-driver.mjs",
+      "byteSize": 1852,
+      "sha256": "203a9326716f0ff4de726b13826c87baeb4a5d41217414d8b2f846f8a83c8def"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/queue-driver.mjs",
+      "byteSize": 1748,
+      "sha256": "79cd95f94613e9de5565c55c743d2e3e5a1166d8a7e6225a39709e8dcce53d55"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/queue.json",
+      "byteSize": 744,
+      "sha256": "146c5568476a204dac0ceb808ab927a6c4dbdd3110d0802d7699a9d898cd9cf6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/binding.json",
+      "byteSize": 57589,
+      "sha256": "42ace7cc0c0b0e50e286efe1fe96484ab1fdba307ecd81251250de8e66a46a1b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/acceptance-abort-domain.ts",
+      "byteSize": 9979,
+      "sha256": "fb65a9bb22a19d47c46bc15b7944695ec337b8e8ca84139cc12ac708386cbadf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/acceptance-proof-domain.ts",
+      "byteSize": 3529,
+      "sha256": "febf5f7beea0a3ce47e03fe9db45aafdc533faa2c69d749547bafe6df47c9593"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/acceptance-service-domain.ts",
+      "byteSize": 15198,
+      "sha256": "2462907c66a61008319137ae25c12288960f3945c2d4943a8531cea2e3805eed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/capacity-domain.ts",
+      "byteSize": 13562,
+      "sha256": "7721b5987ad2580c837fc08ed2754496624b639fb50814c4f744e26662c7c8ab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/cleanup-domain.ts",
+      "byteSize": 7011,
+      "sha256": "a89d409fd814082fc65209a949b1cf3c3f0084ff0a8ce9b40e168b898b2bdbdf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/container-domain.ts",
+      "byteSize": 10503,
+      "sha256": "cf6336e90f5418c9ccd05c819f59704ef7cfcc1c30fa0c0d9a2395363483583d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/fence-domain.ts",
+      "byteSize": 6873,
+      "sha256": "8371a1ee9eaf6b807608e71df24c7eae8147c34084adf968a770ab2875930d37"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/index.ts",
+      "byteSize": 6532,
+      "sha256": "00df9c66be23ea05226622478790bdbb4b97d0a54ca3adf00e9616e7f659f449"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "byteSize": 12288,
+      "sha256": "0b8ca31865516aeed11e03eada9addbb8a1aebbaa738cfb8fdc3dcd67bb8ddad"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/preview-reservation.ts",
+      "byteSize": 1754,
+      "sha256": "088debe6a9eaaae2110dcd967a5e00d809263d232ee95f7111656a42c6686ea9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/release-docker.ts",
+      "byteSize": 12339,
+      "sha256": "049d3d245863790e2cf2cb0b9f9fd6c9085b47704cca569f3ff08ddeb5d0184e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/release-retirement-domain.ts",
+      "byteSize": 11063,
+      "sha256": "0cf26ed4180416634a9ff6e7639b695fe7f041666ea43f9d39ddc7b38ff8cc8c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/release-service-backend.ts",
+      "byteSize": 15523,
+      "sha256": "846253b3618812624e4549eb0b86b34b0a038ca6c6d952182117ae8ff4829596"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/release-service-domain.ts",
+      "byteSize": 23886,
+      "sha256": "e8494806dd52fc3e64b98898b58a9d8d10438fd200187795a354085725c97fe3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/release-service-migration.ts",
+      "byteSize": 7073,
+      "sha256": "425a0339fc4d613695d06fa7669aa2ca935ef18792a24553a94bb7390a809c14"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/release-service.ts",
+      "byteSize": 11638,
+      "sha256": "791428e5df91e39952f16df39896498a1f2905427419157a4776ec2427157eb4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/service-docker.ts",
+      "byteSize": 10947,
+      "sha256": "2f2d086a70812f202199a4ae71bfebaebd934f98b5f8effadb6b360d3d3a7a74"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/store-protocol.ts",
+      "byteSize": 11073,
+      "sha256": "6e13bbdb489e074e984b700b6f62784a3e2bb4b1644e5bbe695770c16c23cacb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/packages/runner/src/worker.ts",
+      "byteSize": 15972,
+      "sha256": "b2505a078a468f04cb4e4835656982006f56109d01bde8ac2fa12ae7d0d7cbda"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/templates/web-crud-v1/src/server/database.ts",
+      "byteSize": 6522,
+      "sha256": "7b51e5b0b043efd8833f2f28a0668efdd3429846f2469538824923decc17234f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/templates/web-crud-v1/src/server/dataset.ts",
+      "byteSize": 3866,
+      "sha256": "2fd8664bdd9281f2433de537242769e38a9f0145ff60738c0f0a14df002036cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/templates/web-crud-v1/src/server/db-worker.ts",
+      "byteSize": 949,
+      "sha256": "843610f317b78213ce8271cd46a241efae7413b594958bcfc69fbe2985c4409f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/templates/web-crud-v1/src/server/main.ts",
+      "byteSize": 2168,
+      "sha256": "044b45e41fdbddff6151fc5bba9e174cf57582e9cb06dd71452129f571381078"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/templates/web-crud-v1/src/server/service.ts",
+      "byteSize": 1564,
+      "sha256": "c6a71a27eb9b63a5a310a40784caf6684db835172cebe409c3cf90f747f822fb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/templates/web-crud-v1/src/server/store.ts",
+      "byteSize": 2572,
+      "sha256": "62018f8b0dddcb7e07ab825070ad6b1a9438e7c147c6bbbd12e43bdb35bfc920"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/templates/web-crud-v1/tests/database.test.ts",
+      "byteSize": 10006,
+      "sha256": "f055b5d7fe5a81758c3d1193f6d23ff9738a69c861b2667e1ccae96f3c58c256"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/fixtures/acceptance-service-backend.mjs",
+      "byteSize": 5507,
+      "sha256": "115ccc539a7332dd83d04bd04ebe7b7abb9592ae1d0baa0084854b0bb2eec975"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/fixtures/release-retirement.mjs",
+      "byteSize": 6230,
+      "sha256": "0aa27ec4a93ade377538433cb6ccbb7a482e5213c76e8b523816665bc70cb924"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/fixtures/release-service-successor.mjs",
+      "byteSize": 5272,
+      "sha256": "7277d85f18242ba25ffe224a22f9eef1ddbedbca47f54d0e83c38d0bf8b9d577"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/fixtures/release-service.mjs",
+      "byteSize": 8874,
+      "sha256": "f9a009f03a8d4ccf9b0afc5c55f1a2947c945f2e2c3d8373c27de1acb4fb408b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/fixtures/runner-version.mjs",
+      "byteSize": 9531,
+      "sha256": "92da59941f408e92ca5d2c085d4b099b36f7e9936d9dbebc6ff0103953c36227"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/runner-acceptance-service.test.mjs",
+      "byteSize": 19838,
+      "sha256": "3e0ac2de34b67919cd3d610707f3745dba115d51073e89971e237f89998eba06"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/runner-preview-capacity.test.mjs",
+      "byteSize": 18990,
+      "sha256": "0e532026325ccf64af358fc3a652e0c3d35a16ede2f30072382a29d659feb413"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/runner-preview-cleanup.test.mjs",
+      "byteSize": 19841,
+      "sha256": "5089d0e719acfbff24b093ad0a267101041e3aa3f99d8cbbcc81f4c819194bab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "byteSize": 19200,
+      "sha256": "7a6d9b725e65c53386cb7bed2befeb5509c1e7246579e5303a8996403f11a0b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/runner-release-docker.test.mjs",
+      "byteSize": 7636,
+      "sha256": "e3e3ca43c3d07466e3ac9543d66290ecc9c180443ce4b026267b455d4222f468"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/runner-release-retirement.test.mjs",
+      "byteSize": 17193,
+      "sha256": "a685a666b08e919ed6a0cf1d28902ac36757053f591415e754467a2373bb1fbb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/runner-release-service.test.mjs",
+      "byteSize": 14041,
+      "sha256": "bf32903b79628ab90db5ec59c723bd631eea0793cbab3851a22f499b4640b9e3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/failed-source/tests/runner-upgrade.test.mjs",
+      "byteSize": 2258,
+      "sha256": "1e204ca5717ebeec624cb4b29286cb29cb51945348cc049b00ed5f3d8d59300b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "ddfe534f19150192bba9536687f42784c9374588805cd0039f412d21de210e49"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "bbb0127c03f755c53fcce664e9272db258fb4e9b71da7c811b0d0e5b4620f2b7"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/interruption.json",
+      "byteSize": 486,
+      "sha256": "1384a88b186359896a50f9f50ed713c4fe760a0f1803703191f7fbfc95ecd1d8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/report.json",
+      "byteSize": 1353,
+      "sha256": "a2eef552414ccc48ca57f1614c17a4d142db9dae9fe5b036c7a2c93435c20c96"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/tests.txt",
+      "byteSize": 29189,
+      "sha256": "2ad2f9a75c78901d722e9275a6ad015fb0b69d7ac5a278ce49dab9dc04e726a8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-05/validation-driver.mjs",
+      "byteSize": 4939,
+      "sha256": "f1b2a5e74c53fdf6d16c2e559d01e2dd27de013f36c878fc68e3df01cc866086"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-06/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-06/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-06/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "f276b6f508f625fed70d34f98c7e4b0676726586b348e76fe10e1ac1536b7024"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-06/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "f4558336688ccc8a1e3bc18deb1a54debbddc410f1aa97e075b26c49ea5d0868"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-06/report.json",
+      "byteSize": 1246,
+      "sha256": "a746eff595b339b126814811de25fe33dd7f62eda029b70d56d038205a62a75d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-06/tests.txt",
+      "byteSize": 99760,
+      "sha256": "cbbfc459c86b6977514f54b6d8168a16a0a36a80a752d59fbcf7c2965f11c894"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/runner-06/validation-driver.mjs",
+      "byteSize": 4939,
+      "sha256": "f1b2a5e74c53fdf6d16c2e559d01e2dd27de013f36c878fc68e3df01cc866086"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4e9d8b67df0d82a7e1807cc484aea1fbf00e655164d3d98dfd7396f603a9cd84"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4e9d8b67df0d82a7e1807cc484aea1fbf00e655164d3d98dfd7396f603a9cd84"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/binding.json",
+      "byteSize": 57357,
+      "sha256": "d9b6e6c2d513ddc7ef43e083d2696ea3d6e0febaeb33861b2e6413ad08bb96e1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/acceptance-abort-domain.ts",
+      "byteSize": 9979,
+      "sha256": "fb65a9bb22a19d47c46bc15b7944695ec337b8e8ca84139cc12ac708386cbadf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/acceptance-proof-domain.ts",
+      "byteSize": 3529,
+      "sha256": "febf5f7beea0a3ce47e03fe9db45aafdc533faa2c69d749547bafe6df47c9593"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/acceptance-service-domain.ts",
+      "byteSize": 15198,
+      "sha256": "2462907c66a61008319137ae25c12288960f3945c2d4943a8531cea2e3805eed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/capacity-domain.ts",
+      "byteSize": 13562,
+      "sha256": "7721b5987ad2580c837fc08ed2754496624b639fb50814c4f744e26662c7c8ab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/cleanup-domain.ts",
+      "byteSize": 7011,
+      "sha256": "a89d409fd814082fc65209a949b1cf3c3f0084ff0a8ce9b40e168b898b2bdbdf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/container-domain.ts",
+      "byteSize": 10503,
+      "sha256": "cf6336e90f5418c9ccd05c819f59704ef7cfcc1c30fa0c0d9a2395363483583d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/fence-domain.ts",
+      "byteSize": 6873,
+      "sha256": "8371a1ee9eaf6b807608e71df24c7eae8147c34084adf968a770ab2875930d37"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/index.ts",
+      "byteSize": 6532,
+      "sha256": "00df9c66be23ea05226622478790bdbb4b97d0a54ca3adf00e9616e7f659f449"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "byteSize": 12288,
+      "sha256": "0b8ca31865516aeed11e03eada9addbb8a1aebbaa738cfb8fdc3dcd67bb8ddad"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/preview-reservation.ts",
+      "byteSize": 1754,
+      "sha256": "088debe6a9eaaae2110dcd967a5e00d809263d232ee95f7111656a42c6686ea9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/release-docker.ts",
+      "byteSize": 12270,
+      "sha256": "233272a00688d57a72ec8c5a0e86223924af46870761b2326d5db8284969e9b5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/release-retirement-domain.ts",
+      "byteSize": 11063,
+      "sha256": "0cf26ed4180416634a9ff6e7639b695fe7f041666ea43f9d39ddc7b38ff8cc8c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/release-service-backend.ts",
+      "byteSize": 15084,
+      "sha256": "161d90003c519fec063d32bd29fb55a447fc314122008d5edf3f8ddc7eda6657"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/release-service-domain.ts",
+      "byteSize": 23729,
+      "sha256": "29c3969034fdf932bf2ba305aac448c81aa5e062de82bcb859c939a0fb6ebdcd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/release-service-migration.ts",
+      "byteSize": 6939,
+      "sha256": "75d67cd0116c31ccd8c6ae8644deabce1171e6c25f043825a30092956632e7a2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/release-service.ts",
+      "byteSize": 11638,
+      "sha256": "791428e5df91e39952f16df39896498a1f2905427419157a4776ec2427157eb4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/service-docker.ts",
+      "byteSize": 10871,
+      "sha256": "776615fa4258dad21b85af07a67bd574edd8b72c1e004c70f5b207c0ef83351a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/store-protocol.ts",
+      "byteSize": 11073,
+      "sha256": "6e13bbdb489e074e984b700b6f62784a3e2bb4b1644e5bbe695770c16c23cacb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/packages/runner/src/worker.ts",
+      "byteSize": 15972,
+      "sha256": "b2505a078a468f04cb4e4835656982006f56109d01bde8ac2fa12ae7d0d7cbda"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/fixtures/release-retirement.mjs",
+      "byteSize": 6206,
+      "sha256": "ccd1118990b683331750b40daa840dc52374a24752b254bd5fd9c4065689ac42"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/fixtures/release-service.mjs",
+      "byteSize": 8590,
+      "sha256": "a5fee3154fc3741126aacf5c4d1f729bf11c7d4ed5540eba2abdf4a124e23158"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/fixtures/runner-version.mjs",
+      "byteSize": 9531,
+      "sha256": "92da59941f408e92ca5d2c085d4b099b36f7e9936d9dbebc6ff0103953c36227"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/runner-acceptance-service.test.mjs",
+      "byteSize": 19838,
+      "sha256": "3e0ac2de34b67919cd3d610707f3745dba115d51073e89971e237f89998eba06"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/runner-preview-capacity.test.mjs",
+      "byteSize": 18990,
+      "sha256": "0e532026325ccf64af358fc3a652e0c3d35a16ede2f30072382a29d659feb413"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/runner-preview-cleanup.test.mjs",
+      "byteSize": 19841,
+      "sha256": "5089d0e719acfbff24b093ad0a267101041e3aa3f99d8cbbcc81f4c819194bab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "byteSize": 19200,
+      "sha256": "7a6d9b725e65c53386cb7bed2befeb5509c1e7246579e5303a8996403f11a0b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/runner-release-retirement.test.mjs",
+      "byteSize": 17193,
+      "sha256": "a685a666b08e919ed6a0cf1d28902ac36757053f591415e754467a2373bb1fbb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/runner-release-service.test.mjs",
+      "byteSize": 12053,
+      "sha256": "55d1e9574361f248192416f2bead7d6c9ed29ba51c1d1d0db18cd84a96b76e85"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/failed-source/tests/runner-upgrade.test.mjs",
+      "byteSize": 2258,
+      "sha256": "1e204ca5717ebeec624cb4b29286cb29cb51945348cc049b00ed5f3d8d59300b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/inputs-after.json",
+      "byteSize": 56267,
+      "sha256": "7925c1fa5f5f562d3d3a6745af97344dd4a16c31189a600671137a9358308ed2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/inputs-before.json",
+      "byteSize": 56267,
+      "sha256": "72513cf8d1cc97ea72b38da81bc24333f8f9644222d8c9e53ede0fb5e626cec5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/report.json",
+      "byteSize": 723,
+      "sha256": "acd4ff1625de3c82e91053aa2f2e9fb49d6e17f0db8be1875c41fc699078cbd1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/tests.txt",
+      "byteSize": 3281,
+      "sha256": "9764ab68d92e9f4c51462db60c0304c609cd8fbf34581fa359e1106774494272"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-01/validation-driver.mjs",
+      "byteSize": 3988,
+      "sha256": "db8a7732f2adaaee360261bf0c69fb24adced3a4ffe9ab88af8e05aaa6b2be26"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4e9d8b67df0d82a7e1807cc484aea1fbf00e655164d3d98dfd7396f603a9cd84"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4e9d8b67df0d82a7e1807cc484aea1fbf00e655164d3d98dfd7396f603a9cd84"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/binding.json",
+      "byteSize": 57357,
+      "sha256": "15c74b77160f215531827b17c36fcd12325d41113f7ae931b1aa6ea4e6484525"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/acceptance-abort-domain.ts",
+      "byteSize": 9979,
+      "sha256": "fb65a9bb22a19d47c46bc15b7944695ec337b8e8ca84139cc12ac708386cbadf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/acceptance-proof-domain.ts",
+      "byteSize": 3529,
+      "sha256": "febf5f7beea0a3ce47e03fe9db45aafdc533faa2c69d749547bafe6df47c9593"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/acceptance-service-domain.ts",
+      "byteSize": 15198,
+      "sha256": "2462907c66a61008319137ae25c12288960f3945c2d4943a8531cea2e3805eed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/capacity-domain.ts",
+      "byteSize": 13562,
+      "sha256": "7721b5987ad2580c837fc08ed2754496624b639fb50814c4f744e26662c7c8ab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/cleanup-domain.ts",
+      "byteSize": 7011,
+      "sha256": "a89d409fd814082fc65209a949b1cf3c3f0084ff0a8ce9b40e168b898b2bdbdf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/container-domain.ts",
+      "byteSize": 10503,
+      "sha256": "cf6336e90f5418c9ccd05c819f59704ef7cfcc1c30fa0c0d9a2395363483583d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/fence-domain.ts",
+      "byteSize": 6873,
+      "sha256": "8371a1ee9eaf6b807608e71df24c7eae8147c34084adf968a770ab2875930d37"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/index.ts",
+      "byteSize": 6532,
+      "sha256": "00df9c66be23ea05226622478790bdbb4b97d0a54ca3adf00e9616e7f659f449"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "byteSize": 12288,
+      "sha256": "0b8ca31865516aeed11e03eada9addbb8a1aebbaa738cfb8fdc3dcd67bb8ddad"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/preview-reservation.ts",
+      "byteSize": 1754,
+      "sha256": "088debe6a9eaaae2110dcd967a5e00d809263d232ee95f7111656a42c6686ea9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/release-docker.ts",
+      "byteSize": 12270,
+      "sha256": "233272a00688d57a72ec8c5a0e86223924af46870761b2326d5db8284969e9b5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/release-retirement-domain.ts",
+      "byteSize": 11063,
+      "sha256": "0cf26ed4180416634a9ff6e7639b695fe7f041666ea43f9d39ddc7b38ff8cc8c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/release-service-backend.ts",
+      "byteSize": 15084,
+      "sha256": "161d90003c519fec063d32bd29fb55a447fc314122008d5edf3f8ddc7eda6657"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/release-service-domain.ts",
+      "byteSize": 23729,
+      "sha256": "29c3969034fdf932bf2ba305aac448c81aa5e062de82bcb859c939a0fb6ebdcd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/release-service-migration.ts",
+      "byteSize": 6939,
+      "sha256": "75d67cd0116c31ccd8c6ae8644deabce1171e6c25f043825a30092956632e7a2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/release-service.ts",
+      "byteSize": 11638,
+      "sha256": "791428e5df91e39952f16df39896498a1f2905427419157a4776ec2427157eb4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/service-docker.ts",
+      "byteSize": 10871,
+      "sha256": "776615fa4258dad21b85af07a67bd574edd8b72c1e004c70f5b207c0ef83351a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/store-protocol.ts",
+      "byteSize": 11073,
+      "sha256": "6e13bbdb489e074e984b700b6f62784a3e2bb4b1644e5bbe695770c16c23cacb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/packages/runner/src/worker.ts",
+      "byteSize": 15972,
+      "sha256": "b2505a078a468f04cb4e4835656982006f56109d01bde8ac2fa12ae7d0d7cbda"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/templates/web-crud-v1/src/server/database.ts",
+      "byteSize": 6325,
+      "sha256": "a44d03412343866f2bb9e67b6e00234456131d620aab275cf5d738e4ec54c83a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/templates/web-crud-v1/tests/database.test.ts",
+      "byteSize": 8831,
+      "sha256": "e09631abd1c63ef36197b5590b40397b34323699db89c5d6bcb43f6042be8b57"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/fixtures/release-retirement.mjs",
+      "byteSize": 6206,
+      "sha256": "ccd1118990b683331750b40daa840dc52374a24752b254bd5fd9c4065689ac42"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/fixtures/release-service.mjs",
+      "byteSize": 8590,
+      "sha256": "a5fee3154fc3741126aacf5c4d1f729bf11c7d4ed5540eba2abdf4a124e23158"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/fixtures/runner-version.mjs",
+      "byteSize": 9531,
+      "sha256": "92da59941f408e92ca5d2c085d4b099b36f7e9936d9dbebc6ff0103953c36227"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/runner-acceptance-service.test.mjs",
+      "byteSize": 19838,
+      "sha256": "3e0ac2de34b67919cd3d610707f3745dba115d51073e89971e237f89998eba06"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/runner-preview-capacity.test.mjs",
+      "byteSize": 18990,
+      "sha256": "0e532026325ccf64af358fc3a652e0c3d35a16ede2f30072382a29d659feb413"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/runner-preview-cleanup.test.mjs",
+      "byteSize": 19841,
+      "sha256": "5089d0e719acfbff24b093ad0a267101041e3aa3f99d8cbbcc81f4c819194bab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "byteSize": 19200,
+      "sha256": "7a6d9b725e65c53386cb7bed2befeb5509c1e7246579e5303a8996403f11a0b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/runner-release-retirement.test.mjs",
+      "byteSize": 17193,
+      "sha256": "a685a666b08e919ed6a0cf1d28902ac36757053f591415e754467a2373bb1fbb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/runner-release-service.test.mjs",
+      "byteSize": 12105,
+      "sha256": "52db40802d82899471fb37c513be8e1b0934d3e3ddceed9ad16fae1fb383293a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/failed-source/tests/runner-upgrade.test.mjs",
+      "byteSize": 2258,
+      "sha256": "1e204ca5717ebeec624cb4b29286cb29cb51945348cc049b00ed5f3d8d59300b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/inputs-after.json",
+      "byteSize": 56377,
+      "sha256": "9f6e50f355379eadc2a52220615fb00585c8aefa65a2bc8ececec93a256b09e6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/inputs-before.json",
+      "byteSize": 56267,
+      "sha256": "a0d43194aa8faf4ad063c3e4b517c9973a1f6555f31d6fa5d624a8d245a4f821"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/report.json",
+      "byteSize": 807,
+      "sha256": "3e3905d42744b19b69a9e4853c0c4dae5b885384d5c8ef68bf02d3ed529e1ec7"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/tests.txt",
+      "byteSize": 621497,
+      "sha256": "7ab9adc2fa673a9bfd6638ffd0661cb6b4f816f596f32dbebd43b529a5fab2c4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-02/validation-driver.mjs",
+      "byteSize": 3988,
+      "sha256": "db8a7732f2adaaee360261bf0c69fb24adced3a4ffe9ab88af8e05aaa6b2be26"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/binding.json",
+      "byteSize": 57589,
+      "sha256": "ae00575cb435020a3829b32639cfcd0b44b105c965979ae91f48508c8edd1a61"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/acceptance-abort-domain.ts",
+      "byteSize": 9979,
+      "sha256": "fb65a9bb22a19d47c46bc15b7944695ec337b8e8ca84139cc12ac708386cbadf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/acceptance-proof-domain.ts",
+      "byteSize": 3529,
+      "sha256": "febf5f7beea0a3ce47e03fe9db45aafdc533faa2c69d749547bafe6df47c9593"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/acceptance-service-domain.ts",
+      "byteSize": 15198,
+      "sha256": "2462907c66a61008319137ae25c12288960f3945c2d4943a8531cea2e3805eed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/capacity-domain.ts",
+      "byteSize": 13562,
+      "sha256": "7721b5987ad2580c837fc08ed2754496624b639fb50814c4f744e26662c7c8ab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/cleanup-domain.ts",
+      "byteSize": 7011,
+      "sha256": "a89d409fd814082fc65209a949b1cf3c3f0084ff0a8ce9b40e168b898b2bdbdf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/container-domain.ts",
+      "byteSize": 10503,
+      "sha256": "cf6336e90f5418c9ccd05c819f59704ef7cfcc1c30fa0c0d9a2395363483583d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/fence-domain.ts",
+      "byteSize": 6873,
+      "sha256": "8371a1ee9eaf6b807608e71df24c7eae8147c34084adf968a770ab2875930d37"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/index.ts",
+      "byteSize": 6532,
+      "sha256": "00df9c66be23ea05226622478790bdbb4b97d0a54ca3adf00e9616e7f659f449"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "byteSize": 12288,
+      "sha256": "0b8ca31865516aeed11e03eada9addbb8a1aebbaa738cfb8fdc3dcd67bb8ddad"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/preview-reservation.ts",
+      "byteSize": 1754,
+      "sha256": "088debe6a9eaaae2110dcd967a5e00d809263d232ee95f7111656a42c6686ea9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/release-docker.ts",
+      "byteSize": 12339,
+      "sha256": "049d3d245863790e2cf2cb0b9f9fd6c9085b47704cca569f3ff08ddeb5d0184e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/release-retirement-domain.ts",
+      "byteSize": 11063,
+      "sha256": "0cf26ed4180416634a9ff6e7639b695fe7f041666ea43f9d39ddc7b38ff8cc8c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/release-service-backend.ts",
+      "byteSize": 15523,
+      "sha256": "846253b3618812624e4549eb0b86b34b0a038ca6c6d952182117ae8ff4829596"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/release-service-domain.ts",
+      "byteSize": 23886,
+      "sha256": "e8494806dd52fc3e64b98898b58a9d8d10438fd200187795a354085725c97fe3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/release-service-migration.ts",
+      "byteSize": 7073,
+      "sha256": "425a0339fc4d613695d06fa7669aa2ca935ef18792a24553a94bb7390a809c14"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/release-service.ts",
+      "byteSize": 11638,
+      "sha256": "791428e5df91e39952f16df39896498a1f2905427419157a4776ec2427157eb4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/service-docker.ts",
+      "byteSize": 10947,
+      "sha256": "2f2d086a70812f202199a4ae71bfebaebd934f98b5f8effadb6b360d3d3a7a74"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/store-protocol.ts",
+      "byteSize": 11073,
+      "sha256": "6e13bbdb489e074e984b700b6f62784a3e2bb4b1644e5bbe695770c16c23cacb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/packages/runner/src/worker.ts",
+      "byteSize": 15972,
+      "sha256": "b2505a078a468f04cb4e4835656982006f56109d01bde8ac2fa12ae7d0d7cbda"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/templates/web-crud-v1/src/server/database.ts",
+      "byteSize": 6522,
+      "sha256": "7b51e5b0b043efd8833f2f28a0668efdd3429846f2469538824923decc17234f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/templates/web-crud-v1/src/server/dataset.ts",
+      "byteSize": 3866,
+      "sha256": "2fd8664bdd9281f2433de537242769e38a9f0145ff60738c0f0a14df002036cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/templates/web-crud-v1/src/server/db-worker.ts",
+      "byteSize": 949,
+      "sha256": "843610f317b78213ce8271cd46a241efae7413b594958bcfc69fbe2985c4409f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/templates/web-crud-v1/src/server/main.ts",
+      "byteSize": 2109,
+      "sha256": "49389caa1562580f6bd8ceac6047eca6e64ff3ccf15e1e49b7f2765fc3af23c4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/templates/web-crud-v1/src/server/service.ts",
+      "byteSize": 1564,
+      "sha256": "c6a71a27eb9b63a5a310a40784caf6684db835172cebe409c3cf90f747f822fb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/templates/web-crud-v1/src/server/store.ts",
+      "byteSize": 2572,
+      "sha256": "62018f8b0dddcb7e07ab825070ad6b1a9438e7c147c6bbbd12e43bdb35bfc920"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/templates/web-crud-v1/tests/database.test.ts",
+      "byteSize": 10006,
+      "sha256": "f055b5d7fe5a81758c3d1193f6d23ff9738a69c861b2667e1ccae96f3c58c256"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/fixtures/acceptance-service-backend.mjs",
+      "byteSize": 5507,
+      "sha256": "115ccc539a7332dd83d04bd04ebe7b7abb9592ae1d0baa0084854b0bb2eec975"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/fixtures/release-retirement.mjs",
+      "byteSize": 6230,
+      "sha256": "0aa27ec4a93ade377538433cb6ccbb7a482e5213c76e8b523816665bc70cb924"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/fixtures/release-service-successor.mjs",
+      "byteSize": 5272,
+      "sha256": "7277d85f18242ba25ffe224a22f9eef1ddbedbca47f54d0e83c38d0bf8b9d577"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/fixtures/release-service.mjs",
+      "byteSize": 8874,
+      "sha256": "f9a009f03a8d4ccf9b0afc5c55f1a2947c945f2e2c3d8373c27de1acb4fb408b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/fixtures/runner-version.mjs",
+      "byteSize": 9531,
+      "sha256": "92da59941f408e92ca5d2c085d4b099b36f7e9936d9dbebc6ff0103953c36227"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/runner-acceptance-service.test.mjs",
+      "byteSize": 19838,
+      "sha256": "3e0ac2de34b67919cd3d610707f3745dba115d51073e89971e237f89998eba06"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/runner-preview-capacity.test.mjs",
+      "byteSize": 18990,
+      "sha256": "0e532026325ccf64af358fc3a652e0c3d35a16ede2f30072382a29d659feb413"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/runner-preview-cleanup.test.mjs",
+      "byteSize": 19841,
+      "sha256": "5089d0e719acfbff24b093ad0a267101041e3aa3f99d8cbbcc81f4c819194bab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "byteSize": 19200,
+      "sha256": "7a6d9b725e65c53386cb7bed2befeb5509c1e7246579e5303a8996403f11a0b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/runner-release-docker.test.mjs",
+      "byteSize": 7636,
+      "sha256": "e3e3ca43c3d07466e3ac9543d66290ecc9c180443ce4b026267b455d4222f468"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/runner-release-retirement.test.mjs",
+      "byteSize": 17193,
+      "sha256": "a685a666b08e919ed6a0cf1d28902ac36757053f591415e754467a2373bb1fbb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/runner-release-service.test.mjs",
+      "byteSize": 14041,
+      "sha256": "bf32903b79628ab90db5ec59c723bd631eea0793cbab3851a22f499b4640b9e3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/failed-source/tests/runner-upgrade.test.mjs",
+      "byteSize": 2258,
+      "sha256": "1e204ca5717ebeec624cb4b29286cb29cb51945348cc049b00ed5f3d8d59300b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "2e8b3cfb0d5d2a5675b01063399089e4c9fc0c24ed73cf0a6a459c61a46a047e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "0f8c90ad97a4d68148cc19e47aa0301f07ad5121ee43913dcbd0c409362cfaba"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/report.json",
+      "byteSize": 821,
+      "sha256": "7eb5efa0f4e82dbdbc0c00d49e8b53423aa68c63c8a247069c072bd91119b06c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/tests.txt",
+      "byteSize": 4109,
+      "sha256": "7e3ba38744e2a43b9136fa808ee6d346b862376063ca795801889af1e6fae94c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-03/validation-driver.mjs",
+      "byteSize": 4504,
+      "sha256": "8722b59d39591696b87fc51799559e579417db0233aed989c9d340406668db76"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/binding.json",
+      "byteSize": 57589,
+      "sha256": "b9fd9f51f54f33de3c539894071aa9d660c081650412c707589132da44d8f1e6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/acceptance-abort-domain.ts",
+      "byteSize": 9979,
+      "sha256": "fb65a9bb22a19d47c46bc15b7944695ec337b8e8ca84139cc12ac708386cbadf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/acceptance-proof-domain.ts",
+      "byteSize": 3529,
+      "sha256": "febf5f7beea0a3ce47e03fe9db45aafdc533faa2c69d749547bafe6df47c9593"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/acceptance-service-domain.ts",
+      "byteSize": 15198,
+      "sha256": "2462907c66a61008319137ae25c12288960f3945c2d4943a8531cea2e3805eed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/capacity-domain.ts",
+      "byteSize": 13562,
+      "sha256": "7721b5987ad2580c837fc08ed2754496624b639fb50814c4f744e26662c7c8ab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/cleanup-domain.ts",
+      "byteSize": 7011,
+      "sha256": "a89d409fd814082fc65209a949b1cf3c3f0084ff0a8ce9b40e168b898b2bdbdf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/container-domain.ts",
+      "byteSize": 10503,
+      "sha256": "cf6336e90f5418c9ccd05c819f59704ef7cfcc1c30fa0c0d9a2395363483583d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/fence-domain.ts",
+      "byteSize": 6873,
+      "sha256": "8371a1ee9eaf6b807608e71df24c7eae8147c34084adf968a770ab2875930d37"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/index.ts",
+      "byteSize": 6532,
+      "sha256": "00df9c66be23ea05226622478790bdbb4b97d0a54ca3adf00e9616e7f659f449"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/preview-lifecycle-domain.ts",
+      "byteSize": 12288,
+      "sha256": "0b8ca31865516aeed11e03eada9addbb8a1aebbaa738cfb8fdc3dcd67bb8ddad"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/preview-reservation.ts",
+      "byteSize": 1754,
+      "sha256": "088debe6a9eaaae2110dcd967a5e00d809263d232ee95f7111656a42c6686ea9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/release-docker.ts",
+      "byteSize": 12339,
+      "sha256": "049d3d245863790e2cf2cb0b9f9fd6c9085b47704cca569f3ff08ddeb5d0184e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/release-retirement-domain.ts",
+      "byteSize": 11063,
+      "sha256": "0cf26ed4180416634a9ff6e7639b695fe7f041666ea43f9d39ddc7b38ff8cc8c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/release-service-backend.ts",
+      "byteSize": 15523,
+      "sha256": "846253b3618812624e4549eb0b86b34b0a038ca6c6d952182117ae8ff4829596"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/release-service-domain.ts",
+      "byteSize": 23886,
+      "sha256": "e8494806dd52fc3e64b98898b58a9d8d10438fd200187795a354085725c97fe3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/release-service-migration.ts",
+      "byteSize": 7073,
+      "sha256": "425a0339fc4d613695d06fa7669aa2ca935ef18792a24553a94bb7390a809c14"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/release-service.ts",
+      "byteSize": 11638,
+      "sha256": "791428e5df91e39952f16df39896498a1f2905427419157a4776ec2427157eb4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/service-docker.ts",
+      "byteSize": 10947,
+      "sha256": "2f2d086a70812f202199a4ae71bfebaebd934f98b5f8effadb6b360d3d3a7a74"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/store-protocol.ts",
+      "byteSize": 11073,
+      "sha256": "6e13bbdb489e074e984b700b6f62784a3e2bb4b1644e5bbe695770c16c23cacb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/packages/runner/src/worker.ts",
+      "byteSize": 15972,
+      "sha256": "b2505a078a468f04cb4e4835656982006f56109d01bde8ac2fa12ae7d0d7cbda"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/templates/web-crud-v1/src/server/database.ts",
+      "byteSize": 6522,
+      "sha256": "7b51e5b0b043efd8833f2f28a0668efdd3429846f2469538824923decc17234f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/templates/web-crud-v1/src/server/dataset.ts",
+      "byteSize": 3866,
+      "sha256": "2fd8664bdd9281f2433de537242769e38a9f0145ff60738c0f0a14df002036cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/templates/web-crud-v1/src/server/db-worker.ts",
+      "byteSize": 949,
+      "sha256": "843610f317b78213ce8271cd46a241efae7413b594958bcfc69fbe2985c4409f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/templates/web-crud-v1/src/server/main.ts",
+      "byteSize": 2168,
+      "sha256": "044b45e41fdbddff6151fc5bba9e174cf57582e9cb06dd71452129f571381078"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/templates/web-crud-v1/src/server/service.ts",
+      "byteSize": 1564,
+      "sha256": "c6a71a27eb9b63a5a310a40784caf6684db835172cebe409c3cf90f747f822fb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/templates/web-crud-v1/src/server/store.ts",
+      "byteSize": 2572,
+      "sha256": "62018f8b0dddcb7e07ab825070ad6b1a9438e7c147c6bbbd12e43bdb35bfc920"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/templates/web-crud-v1/tests/database.test.ts",
+      "byteSize": 10006,
+      "sha256": "f055b5d7fe5a81758c3d1193f6d23ff9738a69c861b2667e1ccae96f3c58c256"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/fixtures/acceptance-service-backend.mjs",
+      "byteSize": 5507,
+      "sha256": "115ccc539a7332dd83d04bd04ebe7b7abb9592ae1d0baa0084854b0bb2eec975"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/fixtures/release-retirement.mjs",
+      "byteSize": 6230,
+      "sha256": "0aa27ec4a93ade377538433cb6ccbb7a482e5213c76e8b523816665bc70cb924"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/fixtures/release-service-successor.mjs",
+      "byteSize": 5586,
+      "sha256": "629acd5f8fcb30cba34ea95f39a644836e66d7def45c168404c93ea80dcb6374"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/fixtures/release-service.mjs",
+      "byteSize": 8874,
+      "sha256": "f9a009f03a8d4ccf9b0afc5c55f1a2947c945f2e2c3d8373c27de1acb4fb408b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/fixtures/runner-version.mjs",
+      "byteSize": 9531,
+      "sha256": "92da59941f408e92ca5d2c085d4b099b36f7e9936d9dbebc6ff0103953c36227"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/runner-acceptance-service.test.mjs",
+      "byteSize": 19838,
+      "sha256": "3e0ac2de34b67919cd3d610707f3745dba115d51073e89971e237f89998eba06"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/runner-preview-capacity.test.mjs",
+      "byteSize": 18990,
+      "sha256": "0e532026325ccf64af358fc3a652e0c3d35a16ede2f30072382a29d659feb413"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/runner-preview-cleanup.test.mjs",
+      "byteSize": 19841,
+      "sha256": "5089d0e719acfbff24b093ad0a267101041e3aa3f99d8cbbcc81f4c819194bab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/runner-preview-watchdog.test.mjs",
+      "byteSize": 19200,
+      "sha256": "7a6d9b725e65c53386cb7bed2befeb5509c1e7246579e5303a8996403f11a0b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/runner-release-docker.test.mjs",
+      "byteSize": 7636,
+      "sha256": "e3e3ca43c3d07466e3ac9543d66290ecc9c180443ce4b026267b455d4222f468"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/runner-release-retirement.test.mjs",
+      "byteSize": 17193,
+      "sha256": "a685a666b08e919ed6a0cf1d28902ac36757053f591415e754467a2373bb1fbb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/runner-release-service.test.mjs",
+      "byteSize": 14041,
+      "sha256": "bf32903b79628ab90db5ec59c723bd631eea0793cbab3851a22f499b4640b9e3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/failed-source/tests/runner-upgrade.test.mjs",
+      "byteSize": 2258,
+      "sha256": "1e204ca5717ebeec624cb4b29286cb29cb51945348cc049b00ed5f3d8d59300b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "de9e2e9f589249a862cda78f2c516efeb94b2a4c5413ca2eec96fd18f9245df5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "4fc248c8122fe7612ef9ded9ff4855d5d177bba6d44198589754c8c6860905b6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/interruption.json",
+      "byteSize": 451,
+      "sha256": "73c6045594049b90b5f542653f2209b33492ec696270a2820368e39e7de5ed7b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/report.json",
+      "byteSize": 1006,
+      "sha256": "b6eb54e4e036eb3eb7406ad9ababf66905ea5d3b85ab9f4b5a7bee77b748ca7e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/tests.txt",
+      "byteSize": 15988,
+      "sha256": "d4970c6eac98ffbc09030c0aa7a8f824b3fd9ad6a9ffc00d4dd7559c834f88db"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-04/validation-driver.mjs",
+      "byteSize": 4939,
+      "sha256": "f1b2a5e74c53fdf6d16c2e559d01e2dd27de013f36c878fc68e3df01cc866086"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-06/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-06/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-06/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "c8aee6a09d912e1b673b3944297ecb8aac83c40680ddd6e3d693730b7cd4e626"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-06/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "0ad9fa0bd3bb94bd509020ba0262fa5600bd95fdac1ae5c427a2c4e88962f0c3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-06/report.json",
+      "byteSize": 771,
+      "sha256": "18df09a93bb4d852e499c7c66968500968c00f91dc8575cd2717771547bd8286"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-06/tests.txt",
+      "byteSize": 18501,
+      "sha256": "c8e565a760f2114e71c2cf452aa2f8caada14148224abd437b14b8fc31f6d4d9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-06/validation-driver.mjs",
+      "byteSize": 4939,
+      "sha256": "f1b2a5e74c53fdf6d16c2e559d01e2dd27de013f36c878fc68e3df01cc866086"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-source-05/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-source-05/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-source-05/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "e0f3e9ce4454fa3e9f0e14b2b7c8386eb63fc48213b777076960a8d09e57dca5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-source-05/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "dd151e94f63234e3dfdb7ff6e62ce860deed0b21fec608c9474c10ba83d3ebc8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-source-05/report.json",
+      "byteSize": 761,
+      "sha256": "4366542b7228b7aa6aa859bbcc77458254f4d338ff22d78902622b635b975679"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-source-05/tests.txt",
+      "byteSize": 2260,
+      "sha256": "4f8e91b8639413258a5db19b4dcef93511f994c3b94317b6ccf1cbab73b13b96"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/service-source-05/validation-driver.mjs",
+      "byteSize": 4939,
+      "sha256": "f1b2a5e74c53fdf6d16c2e559d01e2dd27de013f36c878fc68e3df01cc866086"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-03/incident.json",
+      "byteSize": 544,
+      "sha256": "52aef8d9603bb4057a2d9e53331ba0e16dcac5ab62755ab1f9790d3da605ebb2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-03/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "7a2ae575bf073ecdb49edce53ae52d983a078f80c02287d35d3ae1e60253acfa"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-03/validation-driver.mjs",
+      "byteSize": 4473,
+      "sha256": "9b26171c25032a1fc75f3a605e36fca41f1e647d1a71de2ba124127c0217774d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/emitted-after.json",
+      "byteSize": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/emitted-before.json",
+      "byteSize": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/binding.json",
+      "byteSize": 3137,
+      "sha256": "73e295b5a17e81d17c732d2ed83f396f353668cdd7d082cd2d385886ae6fb152"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/e2e/board.spec.ts",
+      "byteSize": 3001,
+      "sha256": "e2207e7421bb3d6b4e893c11055de4ddb506b364ab64437f009aecd072ab0b51"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/package.json",
+      "byteSize": 1294,
+      "sha256": "f91bfe4cd79fda119e2897bd15508a4bc3d9fb68a88c8dfdd47c04ca9a34a41c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/playwright.config.ts",
+      "byteSize": 847,
+      "sha256": "54b881b49b86dd70f95eeb31b5b6a97862d56992f5af423e28ae849586c574ea"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/scripts/e2e-server.mjs",
+      "byteSize": 781,
+      "sha256": "5b7da9e2eaa2346c6162f786b980291e248e1a7380819673e935a0fa0d93a1a1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/server/app.ts",
+      "byteSize": 3454,
+      "sha256": "c8ebbedc62b4c1e8d9105b5207d1aa97ccf7105881f574d3c41dddfc13e072ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/server/database.ts",
+      "byteSize": 6522,
+      "sha256": "7b51e5b0b043efd8833f2f28a0668efdd3429846f2469538824923decc17234f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/server/dataset.ts",
+      "byteSize": 3866,
+      "sha256": "2fd8664bdd9281f2433de537242769e38a9f0145ff60738c0f0a14df002036cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/server/db-worker.ts",
+      "byteSize": 949,
+      "sha256": "843610f317b78213ce8271cd46a241efae7413b594958bcfc69fbe2985c4409f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/server/main.ts",
+      "byteSize": 2109,
+      "sha256": "49389caa1562580f6bd8ceac6047eca6e64ff3ccf15e1e49b7f2765fc3af23c4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/server/service.ts",
+      "byteSize": 1564,
+      "sha256": "c6a71a27eb9b63a5a310a40784caf6684db835172cebe409c3cf90f747f822fb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/server/store.ts",
+      "byteSize": 2572,
+      "sha256": "62018f8b0dddcb7e07ab825070ad6b1a9438e7c147c6bbbd12e43bdb35bfc920"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/shared/task.ts",
+      "byteSize": 927,
+      "sha256": "360898b93832dda89d3b0a04c3826a05168d9f51ad05b0e702bbcd0e22de7c7a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/web/api.ts",
+      "byteSize": 4605,
+      "sha256": "8ab29991160a261b646d6f2cb37df6ca71f5752b42b08a228f9431361133b114"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/web/Board.tsx",
+      "byteSize": 7106,
+      "sha256": "9fa610504ec1c5f8f419dccbb1665c133710ac4b6114b1d8ea28e487f42ace9f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/web/main.tsx",
+      "byteSize": 233,
+      "sha256": "15c80ea3d056b629bfaa5fa108789c7571414a7b40ab3896064ff59547cb07ed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/src/web/vite-env.d.ts",
+      "byteSize": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/template.json",
+      "byteSize": 1080,
+      "sha256": "96d8f9080afa513f0aa16a7b4fb36edb66e1f47b8a3c23fbfdac1bace413cbaf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/tests/api.test.ts",
+      "byteSize": 4864,
+      "sha256": "e0600672facf75e021c555cfc5a44a4ccaed9bfd6458d4632894f8f413b8fa98"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/tests/board.test.tsx",
+      "byteSize": 6543,
+      "sha256": "277322042e27252b29243fd28f936ecd5d2da87d88375d30e3c84aa55784e687"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/tests/cli.test.ts",
+      "byteSize": 3653,
+      "sha256": "ce13b73dc84190db75e89c5546cb1074f5b6e82229ebcf59f222ad307dee99c2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/tests/database.test.ts",
+      "byteSize": 10006,
+      "sha256": "f055b5d7fe5a81758c3d1193f6d23ff9738a69c861b2667e1ccae96f3c58c256"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/tests/http.test.ts",
+      "byteSize": 8201,
+      "sha256": "349c842edae3e52c40a038954b834ca3ad285eed89f599d306a72216053f1284"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/tsconfig.json",
+      "byteSize": 418,
+      "sha256": "90b8560ea4c8f007180603c8862d9a008339a2c8d6a49d1388c15322cbefafa1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/tsconfig.server.json",
+      "byteSize": 194,
+      "sha256": "fce09e4798bbacc54ac0f89cdcf0d27e96de9a9efc71f49e36827c39eb62bc79"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/vite.config.ts",
+      "byteSize": 182,
+      "sha256": "f0dfd15b1650f3afa2d48ab79db9ce412f786c2fa04e4b8ec4820b6dda9b3019"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/failed-source/templates/web-crud-v1/vitest.config.ts",
+      "byteSize": 594,
+      "sha256": "644fc48f6274aa6b6aafad317d80433a740d7c067e331b55e12bec9bc3cd78e1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "8ea1833f77486d8fa36848555d2e13114e6e3dfb59012cb1ebe8f01a4a441739"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "c3425089cc1cdcd2d971e1eaa0ce7fb56eeb17559891205c3b19a630eb5062bf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/report.json",
+      "byteSize": 750,
+      "sha256": "4153bf2325dac384f10085545fd1da24ab9dfa9351c24b92805f713e87ecc472"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/template-typecheck.txt",
+      "byteSize": 747,
+      "sha256": "8c1b48c85b0087cdfb992ee2a311b7deb398efc2c0641fe3adcbab60141eb66e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-04/validation-driver.mjs",
+      "byteSize": 4504,
+      "sha256": "8722b59d39591696b87fc51799559e579417db0233aed989c9d340406668db76"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/emitted-after.json",
+      "byteSize": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/emitted-before.json",
+      "byteSize": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "25088c010831938788e60f616d25061b454f969199d22f8ebecd66179bc2d0ce"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "73eab074b40c3500322a00f0d6879d375c4f852eb4e0e90f5d255c5795e11c4b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/report.json",
+      "byteSize": 1313,
+      "sha256": "1749d24458eb073902833eec26a05657a01c9e09cdc32faa5dda2db3a9d87615"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/results/coverage-summary.json",
+      "byteSize": 4028,
+      "sha256": "fd42149d8b70d4fc0503e96ae6e33b075be4b306c71bc070f6f3d06f020d3067"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/results/unit-results.json",
+      "byteSize": 123013,
+      "sha256": "fec8fdf8e36c81e95088a0b2f6855c43a16752f768ea0ac7b02e4062a1276662"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/template-tests.txt",
+      "byteSize": 7491,
+      "sha256": "fe1f20fd3a07b93de5f601a480478f7752d2414928d6cfedbe3ba356b75a7f93"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/template-typecheck.txt",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/template-05/validation-driver.mjs",
+      "byteSize": 4504,
+      "sha256": "8722b59d39591696b87fc51799559e579417db0233aed989c9d340406668db76"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-05/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-05/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-05/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "b54a551cd049eb68b9130325a6175d6d37e985e787ccbcf686d48040fbf4ca61"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-05/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "c208dc0008009136ecbe55ce78fb861ff9108eb47a8964f4f339fe9a3b82ffcb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-05/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-05/report.json",
+      "byteSize": 1197,
+      "sha256": "d9eac202cd46f809ddefee9079c36d82311a21cf82986e6f94c6fa30cadcb359"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-05/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-05/validation-driver.mjs",
+      "byteSize": 4661,
+      "sha256": "1c4086517e5ba493d047b7bbb69e0895ee22d389e6e0e59cb7502c427763d635"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-06/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-06/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "4849c0738e4b2d25d24cf58f2fdb2a3d1602b2852b8b48a0e790bee2835f592b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-06/inputs-after.json",
+      "byteSize": 56495,
+      "sha256": "24c04af710c5b79896de7ea5df2643880b9e88c841d30e115ed7023fbf2ee933"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-06/inputs-before.json",
+      "byteSize": 56495,
+      "sha256": "1258a504ec1b6278f51cedcccec970d45160ab43d3e816989c4fe5c472e5a7b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-06/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-06/report.json",
+      "byteSize": 1143,
+      "sha256": "85f7a2c614063e78709b46fc7db12fb909f788bdad1d82743caf74bf61edd61b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-06/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-service/verify-06/validation-driver.mjs",
+      "byteSize": 4939,
+      "sha256": "f1b2a5e74c53fdf6d16c2e559d01e2dd27de013f36c878fc68e3df01cc866086"
+    }
+  ]
+}

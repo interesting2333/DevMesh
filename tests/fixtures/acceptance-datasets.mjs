@@ -19,6 +19,9 @@ export function controlledDatasetAuthority(){
 }
 function assertControlled(value){if(!value)throw new RunnerError('ACCEPTANCE_DATA_AUTHORIZATION_CHANGED',409);}
 export async function acceptanceDatasetFixture(t,overrides={}){
- const f=await datasetFixture(t),authority=controlledDatasetAuthority(),options={...f.backendOptions,backendRef:'sqlite.acceptance.local-development.v1',authority,trustedMigrationHashes:[hash(copyPlan)],loadMigration:async()=>copyPlan,...overrides},backend=new LocalSqliteAcceptanceDatasetBackend(options);
+ // These file/authority tests are not latency assertions. Use the supported
+ // maximum Worker budget on loaded Windows hosts; explicit timeout cases can
+ // still override it. This does not change the production default budget.
+ const f=await datasetFixture(t),authority=controlledDatasetAuthority(),options={...f.backendOptions,backendRef:'sqlite.acceptance.local-development.v1',timeoutMs:120000,authority,trustedMigrationHashes:[hash(copyPlan)],loadMigration:async()=>copyPlan,...overrides},backend=new LocalSqliteAcceptanceDatasetBackend(options);
  return {...f,authority,acceptanceOptions:options,acceptance:backend,pathsFor:p=>f.paths.resolve({projectId:p.projectId,datasetId:p.request.target.datasetId}),appFor:(p,readOnly=false)=>f.app({request:{projectId:p.projectId,datasetId:p.request.target.datasetId}},readOnly),async prepareAcceptance(p){await backend.preflight(p);return backend.prepare(p,async()=>true);}};
 }

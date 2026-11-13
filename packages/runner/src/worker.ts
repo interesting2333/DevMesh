@@ -17,6 +17,7 @@ import {createAcceptanceServiceDomain} from './acceptance-service-domain.js';
 import {createAcceptanceProofDomain} from './acceptance-proof-domain.js';
 import {createAcceptanceAbortDomain} from './acceptance-abort-domain.js';
 import {createReleaseRetirementDomain} from './release-retirement-domain.js';
+import {createReleaseServiceDomain} from './release-service-domain.js';
 const port=parentPort;if(!port)throw Error('Runner store requires its Worker');
 const time=()=>new Date().toISOString(),digest=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
 type Row=Record<string,string|number|null>;
@@ -35,7 +36,7 @@ try{
  CREATE TRIGGER immutable_job_identity BEFORE UPDATE ON jobs WHEN NEW.job_id<>OLD.job_id OR NEW.controller_id<>OLD.controller_id OR NEW.operation_id<>OLD.operation_id OR NEW.request_hash<>OLD.request_hash OR NEW.request_json<>OLD.request_json OR NEW.execution_json<>OLD.execution_json OR NEW.owner_key<>OLD.owner_key BEGIN SELECT RAISE(ABORT,'JOB_IDENTITY_IMMUTABLE'); END;
  CREATE TRIGGER immutable_job_terminal BEFORE UPDATE ON jobs WHEN OLD.state='EXITED' BEGIN SELECT RAISE(ABORT,'JOB_TERMINAL_IMMUTABLE'); END;
  PRAGMA user_version=1;`);exec('INSERT INTO runner_identity VALUES(1,?,1)',options.runnerId);});}
-  const identity=get('SELECT * FROM runner_identity WHERE singleton=1');if(identity?.runner_id!==options.runnerId||![1,2,3,4,5,6,7,8,9,10].includes(Number(identity.version))||Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0])!==identity.version)throw new RunnerError('RUNNER_STORE_IDENTITY_MISMATCH',409);
+  const identity=get('SELECT * FROM runner_identity WHERE singleton=1');if(identity?.runner_id!==options.runnerId||![1,2,3,4,5,6,7,8,9,10,11].includes(Number(identity.version))||Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0])!==identity.version)throw new RunnerError('RUNNER_STORE_IDENTITY_MISMATCH',409);
  const fences=createRunnerFenceDomain(db);
   const capacity=createRunnerCapacityDomain(db,options.runnerId);
   let lifecycle:ReturnType<typeof createPreviewLifecycleDomain>;
@@ -46,6 +47,7 @@ try{
    const acceptanceProofs=createAcceptanceProofDomain(db,options.runnerId,acceptanceServices);
    const acceptanceAborts=createAcceptanceAbortDomain(db,options.runnerId,acceptanceServices);
     const releaseRetirements=createReleaseRetirementDomain(db,options.runnerId,acceptanceServices);
+ const releaseServices=createReleaseServiceDomain(db,options.runnerId,releaseRetirements,capacity.fits);
  const row=(id:string)=>required(get('SELECT * FROM jobs WHERE job_id=?',id));
  const owned=(controller:string,id:string)=>{const r=row(id);if(r.controller_id!==controller)throw new RunnerError('JOB_NOT_FOUND',404);return r;};
  const view=(r:Row):Job=>({jobId:String(r.job_id),controllerId:String(r.controller_id),operationId:String(r.operation_id),requestHash:String(r.request_hash),request:JSON.parse(String(r.request_json)),executionProfile:{runnerId:options.runnerId,commandHash:digest(JSON.parse(String(r.execution_json)).argv)},state:r.state as Job['state'],containerId:r.container_id as string|null,createdAt:String(r.created_at),startedAt:r.started_at as string|null,endedAt:r.ended_at as string|null,exitCode:r.exit_code as number|null,stopRequested:r.stop_requested===1,stopEvidence:r.stop_evidence?JSON.parse(String(r.stop_evidence)):null,errorCode:r.error_code as string|null,leaseSequence:Number(r.lease_sequence),lastHeartbeat:String(r.lease_renewed_at),logCursor:Number(r.log_cursor),outputRefs:JSON.parse(String(r.outputs_json))});
@@ -56,6 +58,7 @@ try{
      ...acceptanceProofs,
      ...acceptanceAborts,
       ...releaseRetirements,
+      ...releaseServices,
     previewCleanupGet:cleanup.previewCleanupGet,previewCleanupPage:cleanup.previewCleanupPage,previewCleanupActionBegin:cleanup.previewCleanupActionBegin,previewCleanupActionAuthorized:cleanup.previewCleanupActionAuthorized,
     previewCleanupActionObserve(input:Parameters<typeof cleanup.previewCleanupActionObserve>[0]){const result=cleanup.previewCleanupActionObserve(input);if(result.request.kind==='CONTAINER_REMOVE')lifecycle.forgetClock(input.reservationId);return result;},
     previewLifecycleEnroll:lifecycle.previewLifecycleEnroll,previewLifecycleGet:lifecycle.previewLifecycleGet,previewExpiryPrepare:lifecycle.previewExpiryPrepare,previewExpiryAuthorized:lifecycle.previewExpiryAuthorized,previewLifecycleActionAuthorized:lifecycle.previewLifecycleActionAuthorized,previewReleaseHold:lifecycle.previewReleaseHold,previewReleaseCommit:lifecycle.previewReleaseCommit,

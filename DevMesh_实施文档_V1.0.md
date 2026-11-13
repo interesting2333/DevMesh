@@ -296,7 +296,7 @@ P1-07 接受准备先用前向迁移保存准确候选／reviewHash、原接受�
 
 显式 RunnerAcceptancePreparationBackend 组合实际数据文件、原 Runner 服务日志、ACCEPTANCE Docker Driver 与原端点 HTTP。接受容器整个 `/data` 只读且 APP_READ_ONLY=true，公共 OCI／runsc／非 root／只读根／资源／隔离网络核验与预览共用底层逻辑；用途和请求保持独立。缺 Linux、quota、networkIsolation 或物理 custody 关闭。Runner v8 只新增不可变完整 proof，preparedAt／custodyRevision 固定，当前观察独立更新；v2～v7 正文和旧历史不改。专项须覆盖真实文件／HTTP→READY→T5、动作及 proof 丢 ACK／重启、授权／fence／quota 变化、v7 活跃服务升级／故障回滚；只查原对象，不在 inspect 中补发缺失后继动作。实际物理部署、安全撤销、OWNED／发布另验，完整4.1不因局部组合测试提前勾选。
 
-P1-07 发布还须单独处理不可变只读准备实例到可写服务的转换：T5／开放逻辑写门不改变容器挂载或 APP_READ_ONLY。准确实例／归属、实际健康及写 fence 交接须有原操作与恢复证据，不能修改原准备 profile／proof 或同时放开旧新数据；该发布转换当前未实施。
+P1-07 发布须单独处理不可变只读准备实例到可写服务的转换：T5／开放逻辑写门不改变容器挂载或 APP_READ_ONLY。准确实例／归属、实际健康及写 fence 交接须有原操作与恢复证据，不能修改原准备 profile／proof 或同时放开旧新数据。独立 Runner v11 组件见后文“Runner 独立可写发布”开发增量；真实物理转换、默认装配及完整发布恢复仍须分别验收。
 
 P1-07 安全撤销分为决定与物理完成。先实现 owner 的 requestAcceptanceAbort：独立 meta／Run scope／强 If-Match、原 operation／hash／revision、原因与明确确认；迁移40将完整决定／已有proofHash或null、原响应、Run版本／事件原子保存，与T5互斥。覆盖迟到READY／观察／源闭门、丢ACK／重启、撤权、过期依据、事务故障与39→40活跃历史保留。ABORTING立即关闭新准备权及当前READY，保留原state／proof／数据／目标CLOSED和占用。实际服务stop／rm、物理fence解除、源恢复与容量释放逐项另验；没有独立结果不标ABORTED、不重开旧门，完整4.1继续保留未完成。
 
@@ -506,12 +506,18 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | b6b524251b0afdb0ddae143da50cae5824737f17a353e17d5cce970572e97ad7 |
+| DevMesh_技术设计方案_V1.1.md | 6b50f89dde6285b1771dfa6fe8e042ea0bf60f934915ef33497f661506430e86 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 38a230a1fb74e256bf8a9e1dbf8f3a7c6c361eb1661ecd2075ea5b0deeb9bff0 |
+| DevMesh_产品验收场景_V10.0.md | 836f6fe0b20ff36ddb3d78fbaff8cb6973809e6e8d1ef6cb1eab1bc93f1811b8 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
 Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend接入正式T5后的原请求核实。登记固定原prepared proof、服务journal和门basis；永久物理撤权后按准确原容器停止／移除、原网络移除。每步唯一SENT派发与独立观察，容量释放／REMOVED／历史同事务，原数据／只读profile／claim／proof保留。交接与原撤销决定互斥，dataset持续被交接占用，释放服务容量不允许别的用途抢占。
 
 恢复仅查询已派发原步骤，不重发、不开下一未派发步骤；中断后可能安全停留未完成，继续协调协议另行实施。此增量不新建可写服务、不交接后继fence或路由、不开目标门、不保存PUBLISHED；物理Authority／Linux Driver仍须实际配置与验证。完整4.3、4.1及5.1／5.2继续，正式P1-07及G0门槛不因局部开发提前通过。
+
+### P1-07 开发增量：Runner 独立可写发布（2026-11-13）
+
+前向迁移11和显式 RunnerReleaseServiceBackend 在只读退役后登记后继 fence、原可写源清理、独立容量／profile、guard、创建／启动／健康、OWNED claim 和准确 route，稳定 proof 从原日志一次派生。job／preview／acceptance／release 共用预算；源消失观察、REMOVED、容量与历史原子提交。模板只读不写锁，发布锁置于临时根，启动／健康不改准备数据库；首次获准写请求才切 WAL。控制发布事务最终开门，Runner 不代替控制权威。
+
+显式物理 provider 全部配置才准入；默认未启用。原阶段丢回执只查询，不发下一未派发阶段，显式继续协调仍待实施。真实物理 guard／fence／route、Release 入口与导出、默认组合、第二轮正式保留迁移／替换和产品验收继续；不提前勾选完整4.3／5.1／5.2，正式依赖和 G0 门槛不变。

@@ -1,0 +1,109 @@
+$ pnpm run build && vitest run --coverage
+$ pnpm run build:server && pnpm run build:web
+$ tsc -p tsconfig.server.json
+$ vite build
+vite v6.4.3 building for production...
+transforming...
+✓ 108 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/web/index.html                   0.36 kB │ gzip:  0.28 kB
+dist/web/assets/index-FiV6leVM.css    4.84 kB │ gzip:  1.71 kB
+dist/web/assets/index-wj2KmiGj.js   221.37 kB │ gzip: 68.30 kB
+✓ built in 29.24s
+
+ RUN  v4.1.11 D:/yms/AI/DevMesh/templates/web-crud-v1
+      Coverage enabled with v8
+
+(node:37944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/board.test.tsx (4 tests) 76927ms
+   ✓ creates, edits, moves and deletes through the DOM and real backend; refresh retains saved text  46767ms
+   ✓ validates empty titles, permits cancel, and starts new tasks in the selected column  15461ms
+   ✓ keeps an unknown save in the browser outbox and manually reuses its original key without duplication  9565ms
+   ✓ shows initial load failures and can refresh; read-only views disable writes  5096ms
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/http.test.ts (6 tests) 39777ms
+   ✓ serves real HTTP through the SQLite Worker, persists on restart, and rejects stale and malformed writes  10875ms
+   ✓ serves the container listener through its actual SQLite Worker when explicitly enabled  5487ms
+   ✓ denies foreign Origin, hostile Host and read-only mutations  5815ms
+   ✓ rejects unavailable Worker startup and a second listener without abandoning the dataset lock  16210ms
+   ✓ returns public storage errors without exposing implementation paths  320ms
+   ✓ serves the built entry beneath a hidden ancestor while denying hidden web assets  1046ms
+(node:2772) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | tests/cli.test.ts > starts the actual built CLI and stops it, releasing its Worker and dataset for restart
+DATASET_INITIALIZED
+
+ ✓ tests/cli.test.ts (2 tests) 20260ms
+   ✓ validates CLI configuration without accepting an implicit dataset  3666ms
+   ✓ starts the actual built CLI and stops it, releasing its Worker and dataset for restart  16572ms
+(node:10056) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/database.test.ts (8 tests) 18957ms
+     ✓ persists creates, versioned state updates and receipt replay across restart  1235ms
+     ✓ uses one writer, explicit init and identity validation instead of silently recreating data  902ms
+     ✓ denies read-only writes, invalid keys and bounded or unknown fields  899ms
+     ✓ preserves prepared DELETE-mode database bytes across read-only open, list and close  5571ms
+     ✓ opens readers without creating a writer lock and preserves one writable owner  1646ms
+     ✓ stages a writable service without changing dataset bytes or creating locks inside data  5236ms
+     ✓ rejects linked, reserved, relative and unknown data paths  319ms
+     ✓ refuses capacity overflow inside the transaction without retaining a failed receipt  3120ms
+ ✓ tests/api.test.ts (6 tests) 777ms
+   ✓ retains only uncertain writes and blocks changed intent until explicit recovery  424ms
+
+ Test Files  5 passed (5)
+      Tests  26 passed (26)
+   Start at  12:15:36
+   Duration  312.56s (transform 11.91s, setup 0ms, import 62.09s, tests 156.70s, environment 46.85s)
+
+JSON report written to D:/yms/AI/DevMesh/templates/web-crud-v1/.artifacts/unit-results.json
+ % Coverage report from v8
+----------------|---------|----------|---------|---------|-------------------
+File            | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------|---------|----------|---------|---------|-------------------
+All files       |   90.02 |    86.53 |   89.79 |      93 |                   
+ server         |   88.04 |    80.61 |    84.9 |   91.17 |                   
+  app.ts        |     100 |    85.71 |     100 |     100 | 12,23,32-37       
+  dataset.ts    |   97.14 |    91.48 |     100 |     100 | 13,21,53-63       
+  db-worker.ts  |       0 |        0 |       0 |       0 | 4-15              
+  main.ts       |   46.66 |    61.36 |   14.28 |   47.82 | 14-26,29          
+  service.ts    |   94.59 |    78.57 |   85.71 |     100 | 13-16,25          
+  store.ts      |   93.33 |    89.47 |     100 |     100 | 18,30             
+ web            |   94.48 |    98.01 |      95 |   97.64 |                   
+  Board.tsx     |   92.95 |    98.11 |   92.85 |   97.61 | 64                
+  api.ts        |   98.18 |    97.91 |     100 |     100 | 34                
+  main.tsx      |       0 |      100 |     100 |       0 | 5                 
+----------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 90.02% ( 433/481 )
+Branches     : 86.53% ( 257/297 )
+Functions    : 89.79% ( 88/98 )
+Lines        : 93% ( 306/329 )
+================================================================================

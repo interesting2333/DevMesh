@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "mode": "tests",
+  "scope": "Actual Runner service writer and explicitly controlled physical facts. No Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/acceptance-preparation-backend.test.mjs",
+        "tests/acceptance-datasets.test.mjs",
+        "tests/release-publication.test.mjs"
+      ],
+      "startedAt": "2026-11-13T04:16:13.473Z",
+      "finishedAt": "2026-11-13T04:40:36.508Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "c018d581ea4c2c87f3d1229582c773ff77dc5059718550b0b5a0a73749d8c603"
+    }
+  ],
+  "inputChanges": [
+    "tests/fixtures/release-service-successor.mjs",
+    "tests/acceptance-preparation-backend.test.mjs"
+  ],
+  "emittedChanges": []
+}

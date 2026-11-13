@@ -76,6 +76,36 @@ describe('dataset and durable CRUD', () => {
     expect(readFileSync(sqlitePath)).toEqual(original);
     expect(existsSync(sqlitePath + '-wal')).toBe(false);
   });
+  it('opens readers without creating a writer lock and preserves one writable owner', () => {
+    const path = root(); TaskDatabase.initialize(path);
+    const connection = new DatabaseSync(join(path, 'app.sqlite'));
+    try { connection.exec('PRAGMA journal_mode=DELETE;'); } finally { connection.close(); }
+    const reader = new TaskDatabase(path, true); stores.push(reader);
+    expect(existsSync(join(path, 'writer.lock'))).toBe(false);
+    const writer = new TaskDatabase(path); stores.push(writer);
+    const lock = readFileSync(join(path, 'writer.lock'), 'utf8');
+    const anotherReader = new TaskDatabase(path, true); stores.push(anotherReader);
+    expect(anotherReader.list().readOnly).toBe(true);
+    anotherReader.close(); reader.close();
+    expect(readFileSync(join(path, 'writer.lock'), 'utf8')).toBe(lock);
+    expect(() => new TaskDatabase(path)).toThrow('DATASET_LOCKED');
+    writer.close(); expect(existsSync(join(path, 'writer.lock'))).toBe(false);
+  });
+  it('stages a writable service without changing dataset bytes or creating locks inside data', () => {
+    const path = root(); TaskDatabase.initialize(path);
+    const sqlite = join(path, 'app.sqlite'), connection = new DatabaseSync(sqlite);
+    try { connection.exec('PRAGMA journal_mode=DELETE;'); } finally { connection.close(); }
+    const original = readFileSync(sqlite), runtime = join(path, '..', 'runtime');
+    const service = new TaskDatabase(path, false, runtime); stores.push(service);
+    expect(service.list().tasks).toEqual([]); expect(readFileSync(sqlite)).toEqual(original);
+    expect(existsSync(join(path, 'writer.lock'))).toBe(false);
+    expect(() => new TaskDatabase(path, false, runtime)).toThrow('DATASET_LOCKED');
+    expect(() => new TaskDatabase(path, false, join(path, 'runtime'))).toThrow('RUNTIME_ROOT_OVERLAPS_DATA');
+    // This call represents a request admitted after the external control gate.
+    expect(service.mutate({ kind: 'create', key: randomUUID(), input }).status).toBe(201);
+    service.close(); const reader = new TaskDatabase(path, true); stores.push(reader);
+    expect(reader.list().tasks[0]?.title).toBe(input.title);
+  });
   it('rejects linked, reserved, relative and unknown data paths', () => {
     expect(() => canonicalDataset('relative')).toThrow('DATA_ROOT_REQUIRED');
     expect(() => canonicalDataset(resolve('/'))).toThrow('DATA_ROOT_REQUIRED');

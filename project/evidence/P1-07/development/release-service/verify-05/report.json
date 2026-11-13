@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "mode": "verify",
+  "scope": "Actual Runner service writer and explicitly controlled physical facts. No Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T04:14:46.847Z",
+      "finishedAt": "2026-11-13T04:18:18.048Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T04:18:18.063Z",
+      "finishedAt": "2026-11-13T04:18:46.483Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [
+    "tests/fixtures/release-service-successor.mjs"
+  ],
+  "emittedChanges": []
+}

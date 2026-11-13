@@ -1,0 +1,72 @@
+TAP version 13
+# (node:32784) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: release OCI profile is distinct, writable only for business data, and verifies full original identities
+ok 1 - release OCI profile is distinct, writable only for business data, and verifies full original identities
+  ---
+  duration_ms: 880.6681
+  type: 'test'
+  ...
+# Subtest: missing or changed guard blocks create/start before CLI mutation; retired cleanup still verifies exact profile
+ok 2 - missing or changed guard blocks create/start before CLI mutation; retired cleanup still verifies exact profile
+  ---
+  duration_ms: 561.1529
+  type: 'test'
+  ...
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: formal T5 publishes a distinct Runner-owned writable service; gate opens only in control publication transaction
+not ok 3 - formal T5 publishes a distinct Runner-owned writable service; gate opens only in control publication transaction
+  ---
+  duration_ms: 232235.762
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\runner-release-service.test.mjs:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    [
+      {
+        "code": "custom",
+        "message": "Exact distinct original accepted source required",
+        "path": []
+      }
+    ]
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    acceptanceDatasetPreparation (file:///D:/yms/AI/DevMesh/tests/fixtures/acceptance-datasets.mjs:10:45)
+    privateServiceSuccessor (file:///D:/yms/AI/DevMesh/tests/fixtures/release-service-successor.mjs:8:50)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/runner-release-service.test.mjs:19:19)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:40416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+1..3
+# tests 3
+# suites 0
+# pass 2
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 404366.5748

@@ -1,0 +1,6 @@
+{
+  "at": "2026-11-13T04:40:31.412Z",
+  "pid": 15136,
+  "verifiedOwnedCommand": "--test --test-concurrency=1 --test-reporter=tap tests/acceptance-preparation-backend.test.mjs tests/acceptance-datasets.test.mjs tests/release-publication.test.mjs",
+  "reason": "Operator stopped these concurrent test process trees after multiple 30s data Worker timeouts, a 240s test timeout and additional fixture readiness failures. Reduce concurrent heavy test groups before focused reruns. Partial passes are not a successful complete group."
+}

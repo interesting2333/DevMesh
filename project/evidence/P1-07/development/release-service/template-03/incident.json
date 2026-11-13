@@ -1,0 +1,8 @@
+{
+  "recordedAt": "2026-11-13T04:55:38.799Z",
+  "source": "Observed tool execution in this session; no original report or command output file was produced.",
+  "stage": "Validation harness initial emitted-artifact snapshot",
+  "checksExecuted": [],
+  "error": "ENOENT while packages/platform-core/dist was being rebuilt concurrently.",
+  "interpretation": "The harness failed before template typecheck/tests were started. This attempt supplies no template validation result. Later template-04 and template-05 have their own original output."
+}

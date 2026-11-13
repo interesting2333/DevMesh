@@ -12,7 +12,7 @@ export async function main(args: string[], environment: NodeJS.ProcessEnv = proc
   const port = Number(environment.APP_PORT ?? '4317');
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('INVALID_PORT');
   const { startService } = await import('./service.js');
-  const service = await startService({ root, port, host, readOnly: environment.APP_READ_ONLY === 'true', webRoot: fileURLToPath(new URL('../web/', import.meta.url)) });
+  const service = await startService({ root, port, host, readOnly: environment.APP_READ_ONLY === 'true', ...(environment.APP_RUNTIME_ROOT === undefined ? {} : { runtimeRoot: environment.APP_RUNTIME_ROOT }), webRoot: fileURLToPath(new URL('../web/', import.meta.url)) });
   console.log(`APP_READY ${service.url}`);
   let stopping = false;
   const stop = () => {

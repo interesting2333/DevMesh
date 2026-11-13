@@ -1,0 +1,75 @@
+{
+  "base": "271e37c776cd0f6135468b80f4d37d0f645698f2",
+  "historicalRunner": [
+    {
+      "file": "packages/runner/src/fence-domain.ts",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570"
+    },
+    {
+      "file": "packages/runner/src/capacity-domain.ts",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638"
+    },
+    {
+      "file": "packages/runner/src/container-domain.ts",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95"
+    },
+    {
+      "file": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3"
+    },
+    {
+      "file": "packages/runner/src/cleanup-migration.ts",
+      "sha256": "95a46d98e38c49e83b64e775f073e4768c7fbc682878b84243b836451974614e"
+    },
+    {
+      "file": "packages/runner/src/acceptance-service-migration.ts",
+      "sha256": "28ea1ae25ad2e40d3e027dd6314ae419a6e7928f4d803d7cd20b4eaf492d5034"
+    },
+    {
+      "file": "packages/runner/src/acceptance-proof-migration.ts",
+      "sha256": "90a68f417ffb05230bec935209ca036c718a27d8368c0027b195aaf8af7ce1e3"
+    },
+    {
+      "file": "packages/runner/src/acceptance-abort-migration.ts",
+      "sha256": "5a4caa5ea7a3da5d6dfd6b97ce7f99b15197b84ed05eca92202080baf945250f"
+    },
+    {
+      "file": "packages/runner/src/release-retirement-migration.ts",
+      "sha256": "0fc2741944d896173f543da1f3668a9740a4d8caef076c3f5be386fc2dd20f59"
+    }
+  ],
+  "controlCount": 42,
+  "controlManifestSha256": "6f99e057aafbdcf6e2a08158b3e360e6497892b57102430e1e0c197ce7e141cd",
+  "snapshots": [
+    {
+      "name": "service-01",
+      "retained": 29,
+      "unchanged": 462
+    },
+    {
+      "name": "service-02",
+      "retained": 31,
+      "unchanged": 460
+    },
+    {
+      "name": "service-03",
+      "retained": 39,
+      "unchanged": 454
+    },
+    {
+      "name": "service-04",
+      "retained": 39,
+      "unchanged": 454
+    },
+    {
+      "name": "runner-05",
+      "retained": 39,
+      "unchanged": 454
+    },
+    {
+      "name": "acceptance-05",
+      "retained": 39,
+      "unchanged": 454
+    }
+  ]
+}

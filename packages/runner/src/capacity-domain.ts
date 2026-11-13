@@ -32,7 +32,7 @@ export function createRunnerCapacityDomain(db:DatabaseSync,runnerId:string){
  const tx=<T>(body:()=>T):T=>{db.exec('BEGIN IMMEDIATE');try{const value=body();db.exec('COMMIT');return value;}catch(error){db.exec('ROLLBACK');throw error;}};
  const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);
  if(version===2)tx(()=>{db.exec(migration);exec('INSERT INTO runner_schema_history VALUES(3,?,?)',hash(migration),new Date().toISOString());});
-  else if(![3,4,5,6,7,8,9,10].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
+  else if(![3,4,5,6,7,8,9,10,11].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
   if(get('SELECT sha256 FROM runner_schema_history WHERE version=3')?.sha256!==hash(migration)||get('SELECT version FROM runner_identity WHERE singleton=1')?.version!==(version===2?3:version))fail('RUNNER_MIGRATION_DRIFT');
  let capacity:RunnerCapacity|null=null;
  const configure=(input:RunnerCapacity):RunnerCapacity=>{const parsed=runnerCapacity.parse(input);if(capacity&&canonical(capacity)!==canonical(parsed))fail('RUNNER_CAPACITY_CONFIG_CHANGED');return capacity??=(Object.freeze(parsed));};
@@ -40,7 +40,8 @@ export function createRunnerCapacityDomain(db:DatabaseSync,runnerId:string){
   const jobs=all("SELECT request_json FROM jobs WHERE state NOT IN ('QUEUED','EXITED')").map(r=>JSON.parse(String(r.request_json)).resourceLimits as PreviewResourceLimits);
   const previews=all('SELECT limits_json FROM preview_reservations WHERE released_at IS NULL').map(r=>JSON.parse(String(r.limits_json)) as PreviewResourceLimits);
    const services=all('SELECT limits_json FROM acceptance_services WHERE released_at IS NULL').map(r=>JSON.parse(String(r.limits_json)) as PreviewResourceLimits);
-   const used=[...jobs,...previews,...services];return {slots:used.length,jobSlots:jobs.length,previewSlots:previews.length,acceptanceServiceSlots:services.length,cpu:used.reduce((sum,l)=>sum+l.cpu,0),memoryMiB:used.reduce((sum,l)=>sum+l.memoryMiB,0)};
+   const releases=all('SELECT h.limits_json FROM release_service_reservations r JOIN release_service_handoffs h ON h.release_id=r.release_id WHERE r.released_at IS NULL').map(r=>JSON.parse(String(r.limits_json)) as PreviewResourceLimits);
+   const used=[...jobs,...previews,...services,...releases];return {slots:used.length,jobSlots:jobs.length,previewSlots:previews.length,acceptanceServiceSlots:services.length,releaseServiceSlots:releases.length,cpu:used.reduce((sum,l)=>sum+l.cpu,0),memoryMiB:used.reduce((sum,l)=>sum+l.memoryMiB,0)};
  };
  const fits=(limits:Pick<PreviewResourceLimits,'cpu'|'memoryMiB'>,budget:RunnerCapacity)=>{const c=configure(budget),u=usage();return u.slots<c.maximumJobs&&u.cpu+limits.cpu<=c.cpu&&u.memoryMiB+limits.memoryMiB<=c.memoryMiB;};
  const view=(r:Row):PreviewReservation=>previewReservationSchema.parse({reservationId:r.reservation_id,controllerId:r.controller_id,request:JSON.parse(String(r.request_json)),requestHash:r.request_hash,resourceLimits:JSON.parse(String(r.limits_json)),state:r.state,revision:r.revision,instanceId:r.instance_id,endpoint:r.endpoint_json?JSON.parse(String(r.endpoint_json)):null,fact:r.fact_json?JSON.parse(String(r.fact_json)):null,createdAt:r.created_at,updatedAt:r.updated_at,releasedAt:r.released_at});

@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-13T05:56:22.470Z",
+  "base": "271e37c776cd0f6135468b80f4d37d0f645698f2",
+  "groups": [
+    {
+      "name": "service-06",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "fail": 0,
+      "cancelled": 0,
+      "reportSha256": "18df09a93bb4d852e499c7c66968500968c00f91dc8575cd2717771547bd8286",
+      "outputSha256": "c8e565a760f2114e71c2cf452aa2f8caada14148224abd437b14b8fc31f6d4d9"
+    },
+    {
+      "name": "acceptance-06",
+      "tests": 84,
+      "pass": 84,
+      "skipped": 0,
+      "fail": 0,
+      "cancelled": 0,
+      "reportSha256": "1fbea0c9c99a6d04f01bc9e14b8353f9dbc9dab33ae2385a67106590bc0f89c6",
+      "outputSha256": "a3833cadc9f551c2afee16faaeb51874cb87667453eb740d4e50c0fb738c2518"
+    },
+    {
+      "name": "runner-06",
+      "tests": 106,
+      "pass": 105,
+      "skipped": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "reportSha256": "a746eff595b339b126814811de25fe33dd7f62eda029b70d56d038205a62a75d",
+      "outputSha256": "cbbfc459c86b6977514f54b6d8168a16a0a36a80a752d59fbcf7c2965f11c894"
+    }
+  ],
+  "template": {
+    "name": "template-05",
+    "tests": 26,
+    "pass": 26,
+    "coverage": {
+      "lines": {
+        "total": 329,
+        "covered": 306,
+        "skipped": 0,
+        "pct": 93
+      },
+      "statements": {
+        "total": 481,
+        "covered": 433,
+        "skipped": 0,
+        "pct": 90.02
+      },
+      "functions": {
+        "total": 98,
+        "covered": 88,
+        "skipped": 0,
+        "pct": 89.79
+      },
+      "branches": {
+        "total": 297,
+        "covered": 257,
+        "skipped": 0,
+        "pct": 86.53
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "unitSha256": "fec8fdf8e36c81e95088a0b2f6855c43a16752f768ea0ac7b02e4062a1276662",
+    "coverageSha256": "fd42149d8b70d4fc0503e96ae6e33b075be4b306c71bc070f6f3d06f020d3067",
+    "sourceScope": "All templates/web-crud-v1 inputs match before/after/current. Root successor fixture changes during the run were outside template imports. This does not claim global source stability."
+  },
+  "totalPassed": 230,
+  "totalSkipped": 1,
+  "builds": [
+    {
+      "name": "build-01",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 2
+        }
+      ],
+      "inputChanges": [],
+      "emittedChanges": [
+        "packages/runner/dist/index.mjs",
+        "packages/runner/dist/preview-cleanup-dhE_pE21.mjs",
+        "packages/runner/dist/preview-cleanup-dhE_pE21.mjs.map",
+        "packages/runner/dist/worker.mjs",
+        "packages/runner/dist/worker.mjs.map",
+        "packages/runner/dist/release-service-bl4wMyP9.mjs",
+        "packages/runner/dist/release-service-bl4wMyP9.mjs.map"
+      ],
+      "reportSha256": "5fbc5739bec755b5c2bf1716105c45baaff9b1c3a53c2af6c529a34a7e8067d3"
+    },
+    {
+      "name": "build-02",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "inputChanges": [],
+      "emittedChanges": [
+        "packages/runner/dist/index.mjs",
+        "packages/runner/dist/index.mjs.map",
+        "packages/runner/dist/release-service-bl4wMyP9.mjs.map",
+        "packages/runner/dist/worker.mjs",
+        "packages/runner/dist/worker.mjs.map"
+      ],
+      "reportSha256": "1d0ab89def2df4486e3a4d9de1dec89b9cdd0f63d49b0e70d5013efa9795bc63"
+    },
+    {
+      "name": "build-03",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "inputChanges": [
+        "tests/runner-release-service.test.mjs",
+        "packages/runner/src/release-service-backend.ts",
+        "packages/runner/src/release-docker.ts",
+        "tests/fixtures/release-service-successor.mjs"
+      ],
+      "emittedChanges": [
+        "packages/runner/dist/index.mjs",
+        "packages/runner/dist/index.mjs.map",
+        "packages/runner/dist/worker.mjs",
+        "packages/runner/dist/worker.mjs.map"
+      ],
+      "reportSha256": "9c4c02f4263211f0d699b02bedf458195e80af1a8eb2cfdd936696932d9e7e1e"
+    },
+    {
+      "name": "build-04",
+      "checks": [
+        {
+          "name": "runner-build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "inputChanges": [
+        "tests/fixtures/release-service.mjs",
+        "tests/fixtures/release-retirement.mjs",
+        "tests/fixtures/acceptance-service-backend.mjs",
+        "templates/web-crud-v1/src/server/main.ts"
+      ],
+      "emittedChanges": [],
+      "reportSha256": "02aeb73b8beadf17583cd1b102546d91d624374c737ff282cb332d2b64607595"
+    },
+    {
+      "name": "verify-05",
+      "checks": [
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "inputChanges": [
+        "tests/fixtures/release-service-successor.mjs"
+      ],
+      "emittedChanges": [],
+      "reportSha256": "d9eac202cd46f809ddefee9079c36d82311a21cf82986e6f94c6fa30cadcb359"
+    }
+  ],
+  "sourceMaps": {
+    "entries": 173,
+    "matches": 173,
+    "bindingSha256": "66c1acae9fc6ee2c553f3c0654f77822daa289703e87fef2c9a3128fd1e87798"
+  },
+  "historicalRunner": [
+    {
+      "file": "packages/runner/src/fence-domain.ts",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570"
+    },
+    {
+      "file": "packages/runner/src/capacity-domain.ts",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638"
+    },
+    {
+      "file": "packages/runner/src/container-domain.ts",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95"
+    },
+    {
+      "file": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3"
+    },
+    {
+      "file": "packages/runner/src/cleanup-migration.ts",
+      "sha256": "95a46d98e38c49e83b64e775f073e4768c7fbc682878b84243b836451974614e"
+    },
+    {
+      "file": "packages/runner/src/acceptance-service-migration.ts",
+      "sha256": "28ea1ae25ad2e40d3e027dd6314ae419a6e7928f4d803d7cd20b4eaf492d5034"
+    },
+    {
+      "file": "packages/runner/src/acceptance-proof-migration.ts",
+      "sha256": "90a68f417ffb05230bec935209ca036c718a27d8368c0027b195aaf8af7ce1e3"
+    },
+    {
+      "file": "packages/runner/src/acceptance-abort-migration.ts",
+      "sha256": "5a4caa5ea7a3da5d6dfd6b97ce7f99b15197b84ed05eca92202080baf945250f"
+    },
+    {
+      "file": "packages/runner/src/release-retirement-migration.ts",
+      "sha256": "0fc2741944d896173f543da1f3668a9740a4d8caef076c3f5be386fc2dd20f59"
+    }
+  ],
+  "controlHistoricalMigrationCount": 42,
+  "newRunnerMigration": {
+    "version": 11,
+    "file": "packages/runner/src/release-service-migration.ts",
+    "sha256": "425a0339fc4d613695d06fa7669aa2ca935ef18792a24553a94bb7390a809c14"
+  },
+  "failedAndInterruptedSnapshots": [
+    {
+      "name": "service-01",
+      "retained": 29,
+      "unchanged": 462
+    },
+    {
+      "name": "service-02",
+      "retained": 31,
+      "unchanged": 460
+    },
+    {
+      "name": "service-03",
+      "retained": 39,
+      "unchanged": 454
+    },
+    {
+      "name": "service-04",
+      "retained": 39,
+      "unchanged": 454
+    },
+    {
+      "name": "runner-05",
+      "retained": 39,
+      "unchanged": 454
+    },
+    {
+      "name": "acceptance-05",
+      "retained": 39,
+      "unchanged": 454
+    }
+  ],
+  "excludedFromFinalTotals": [
+    "service-01",
+    "service-02",
+    "service-03",
+    "service-04",
+    "service-source-05",
+    "docker-01",
+    "runner-05",
+    "acceptance-05",
+    "template-04"
+  ],
+  "scope": "Modified checkout local development. Real control T5, Runner Workers, business SQLite/files and template HTTP. OCI, Docker/network, fences, permanent revocation, all-write guard and route providers are explicit controlled fixtures. Private successor cleanup is not a second formal T5. No actual Linux/gVisor/physical-all-write assurance, external model/OIDC, default platform composition, public Release entry/export, continuation coordinator, clean checkout, root pnpm check or independent/product acceptance."
+}

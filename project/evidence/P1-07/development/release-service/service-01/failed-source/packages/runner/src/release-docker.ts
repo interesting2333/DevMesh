@@ -1,0 +1,61 @@
+import {spawn} from 'node:child_process';
+import {isAbsolute} from 'node:path';
+import {createHash} from 'node:crypto';
+import {z} from 'zod';
+import {canonical} from '@devmesh/storage-sqlite';
+import type {ReleaseServiceRequest as ReleasePreparationRequest} from './release-service.js';
+type ReleasePreparation={request:ReleasePreparationRequest['promotion']['preparation']};
+import type {CliExecutor} from './docker.js';
+import type {PreviewDockerOptions} from './preview-docker.js';
+import {dockerObjectId} from './preview-container.js';
+import {releaseServiceProfile,releaseServiceRequest} from './release-service.js';
+import type {ReleaseServiceProfile,ReleaseServiceRequest,ReleaseServiceDriver} from './release-service.js';
+import {serviceDockerNetworkArguments,serviceDockerCreateArguments,verifyServiceDockerImage,verifyServiceDockerNetwork,verifyServiceDockerContainer} from './service-docker.js';
+import type {ServiceContainerFact} from './service-docker.js';
+import {RunnerError} from './protocol.js';
+
+import {serviceDockerRemovalArguments,verifyServiceDockerAbsence} from './service-docker.js';
+
+import {releaseServiceGuardProof} from './release-service.js';
+import type {ReleaseServiceWriteGuard} from './release-service.js';
+export type ReleaseDockerOptions=PreviewDockerOptions & {controllerId:string;guard?:ReleaseServiceWriteGuard};
+const hash=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
+const subject=(p:ReleaseServiceProfile|null,r:ReleasePreparation['request'])=>({imageDigest:r.image.imageDigest,imageIdentity:r.image,readonlyDataset:false,errorPrefix:'RELEASE_SERVICE' as const,labels:p?{'devmesh.runner':r.runnerId,'devmesh.purpose':'RELEASE','devmesh.operation':r.operationId,'devmesh.release':r.releaseId,'devmesh.dataset':r.target.datasetId,'devmesh.reservation':p.reservationId,'devmesh.request':p.requestHash,'devmesh.profile':hash(p)}:{}});
+const binding=(raw:ReleaseServiceProfile,input:ReleaseServiceRequest)=>{const p=releaseServiceProfile.parse(raw),r=releaseServiceRequest.parse(input);if(p.requestHash!==hash(r))throw new RunnerError('RELEASE_SERVICE_IDENTITY_CHANGED',409);return {p,r:r.promotion.preparation};};
+export function releaseDockerNetworkArguments(raw:ReleaseServiceProfile,input:ReleaseServiceRequest){const {p,r}=binding(raw,input);return serviceDockerNetworkArguments(p,subject(p,r));}
+export function releaseDockerCreateArguments(raw:ReleaseServiceProfile,input:ReleaseServiceRequest,networkId:string){const {p,r}=binding(raw,input);return serviceDockerCreateArguments(p,subject(p,r),networkId);}
+export function verifyReleaseDockerImage(value:unknown,r:ReleasePreparation['request'],repository:string){return verifyServiceDockerImage(value,subject(null,r),repository);}
+export function verifyReleaseDockerNetwork(value:unknown,raw:ReleaseServiceProfile,input:ReleaseServiceRequest){const {p,r}=binding(raw,input);return verifyServiceDockerNetwork(value,p,subject(p,r));}
+export function verifyReleaseDockerContainer(value:unknown,raw:ReleaseServiceProfile,input:ReleaseServiceRequest,networkId:string,containerId:string|null){const {p,r}=binding(raw,input);return verifyServiceDockerContainer(value,p,subject(p,r),networkId,containerId);}
+
+/** Explicit Linux driver. Every physical observation rechecks the full original
+ * profile. A physical write guard is required before writable create/start. */
+export class DockerReleaseServiceDriver implements ReleaseServiceDriver {
+ readonly configured:boolean;readonly #execute:CliExecutor;readonly #options:ReleaseDockerOptions;
+ constructor(options:ReleaseDockerOptions,executor?:CliExecutor){
+  if(!isAbsolute(options.dockerPath)||!options.socketPath.startsWith('/')||/[\0\r\n]/.test(options.socketPath))throw new RunnerError('RELEASE_SERVICE_DOCKER_CONFIG_INVALID',422);
+  this.#options={...options};this.configured=options.enabled===true&&process.platform==='linux'&&!!options.quota&&!!options.networkIsolation&&!!options.guard?.configured;
+  this.#execute=executor??((args,timeoutMs,maximumBytes)=>new Promise((resolve,reject)=>{const child=spawn(options.dockerPath,['--host','unix://'+options.socketPath,...args],{shell:false,windowsHide:true,stdio:['ignore','pipe','ignore'],env:{PATH:'/usr/local/bin:/usr/bin:/bin',LANG:'C.UTF-8'}});let count=0;const chunks:Buffer[]=[];const timer=setTimeout(()=>{child.kill('SIGKILL');reject(new RunnerError('RELEASE_SERVICE_DOCKER_UNKNOWN',503,'unknown'));},timeoutMs);timer.unref();child.stdout.on('data',(b:Buffer)=>{count+=b.length;if(count>maximumBytes){child.kill('SIGKILL');reject(new RunnerError('RELEASE_SERVICE_DOCKER_OUTPUT_LIMIT',503,'unknown'));}else chunks.push(b);});child.once('error',()=>{clearTimeout(timer);reject(new RunnerError('RELEASE_SERVICE_DOCKER_UNAVAILABLE',503,'unknown'));});child.once('close',code=>{clearTimeout(timer);resolve({code:code??-1,stdout:Buffer.concat(chunks).toString('utf8')});});}));
+ }
+ #enabled(){if(!this.configured)throw new RunnerError('RELEASE_SERVICE_DOCKER_NOT_CONFIGURED',503,'not-sent');}
+ async #call(args:readonly string[]){this.#enabled();const r=await this.#execute(args,15000,256*1024);if(r.code!==0)throw new RunnerError('RELEASE_SERVICE_DOCKER_UNKNOWN',503,'unknown');return r.stdout;}
+
+ async #guard(p:ReleaseServiceProfile,r:ReleaseServiceRequest){const proof=await this.inspectGuard(p,r,this.#options.controllerId);if(!proof)throw new RunnerError('RELEASE_SERVICE_GUARD_UNVERIFIED',409);return proof;}
+ #verifyGuard(raw:unknown,p:ReleaseServiceProfile,r:ReleaseServiceRequest,controllerId:string){const g=releaseServiceGuardProof.parse(raw),q=r.promotion.preparation;binding(p,r);if(controllerId!==this.#options.controllerId||g.releaseId!==q.releaseId||g.runnerId!==q.runnerId||g.controllerId!==controllerId||g.serviceRequestHash!==p.requestHash||g.reservationId!==p.reservationId||g.profileHash!==hash(p)||g.datasetId!==q.target.datasetId||g.targetProofHash!==p.fenceProofHash||g.gateBindingHash!==p.gateBindingHash)throw new RunnerError('RELEASE_SERVICE_GUARD_CHANGED',409);return g;}
+ async enforceGuard(p:ReleaseServiceProfile,r:ReleaseServiceRequest,controllerId:string,authorize:()=>Promise<boolean>){this.#enabled();binding(p,r);return this.#verifyGuard(await this.#options.guard!.enforce(p,r,controllerId,authorize),p,r,controllerId);}
+ async inspectGuard(p:ReleaseServiceProfile,r:ReleaseServiceRequest,controllerId:string){this.#enabled();binding(p,r);const g=await this.#options.guard!.inspect(p,r,controllerId);return g?this.#verifyGuard(g,p,r,controllerId):null;}
+ async probe(r:ReleasePreparation['request'],repository:string){this.#enabled();const info=z.object({OSType:z.literal('linux'),CgroupVersion:z.literal('2'),MemoryLimit:z.literal(true),SwapLimit:z.literal(true),CpuCfsQuota:z.literal(true),PidsLimit:z.literal(true),Runtimes:z.record(z.string(),z.unknown())}).parse(JSON.parse(await this.#call(['info','--format','{{json .}}'])));if(!Object.hasOwn(info.Runtimes,'runsc'))throw new RunnerError('RELEASE_SERVICE_RUNSC_UNAVAILABLE',503,'not-sent');verifyReleaseDockerImage(JSON.parse(await this.#call(['image','inspect',repository+'@'+r.image.imageDigest])),r,repository);}
+ async prepare(p:ReleaseServiceProfile,r:ReleaseServiceRequest){this.#enabled();binding(p,r);await this.#options.quota!.prepare(p.datasetDirectory,p.datasetBytes);if(!await this.#options.quota!.verify(p.datasetDirectory,p.datasetBytes))throw new RunnerError('RELEASE_SERVICE_QUOTA_UNVERIFIED',503);}
+ async network(p:ReleaseServiceProfile,r:ReleaseServiceRequest){this.#enabled();binding(p,r);const out=await this.#execute(['network','inspect',p.networkName],15000,256*1024);if(out.code!==0)return null;const id=verifyReleaseDockerNetwork(JSON.parse(out.stdout),p,r);return await this.#options.networkIsolation!.verify(id)?id:null;}
+ async createNetwork(p:ReleaseServiceProfile,r:ReleaseServiceRequest,authorize:()=>Promise<boolean>){this.#enabled();binding(p,r);if(!await authorize())throw new RunnerError('RELEASE_SERVICE_AUTHORITY_REVOKED',403,'not-sent');const id=dockerObjectId.parse((await this.#call(releaseDockerNetworkArguments(p,r))).trim());await this.#options.networkIsolation!.enforce(id);if(await this.network(p,r)!==id)throw new RunnerError('RELEASE_SERVICE_DOCKER_NETWORK_CHANGED',409);return id;}
+ async inspect(p:ReleaseServiceProfile,r:ReleaseServiceRequest,networkId:string,containerId:string|null):Promise<ServiceContainerFact|null>{await this.#guard(p,r);return this.#inspect(p,r,networkId,containerId);}
+ async #inspect(p:ReleaseServiceProfile,r:ReleaseServiceRequest,networkId:string,containerId:string|null):Promise<ServiceContainerFact|null>{this.#enabled();if(await this.network(p,r)!==networkId||!await this.#options.quota!.verify(p.datasetDirectory,p.datasetBytes))throw new RunnerError('RELEASE_SERVICE_DOCKER_PROFILE_UNVERIFIED',409);const out=await this.#execute(['inspect','--type','container',p.containerName],15000,256*1024);return out.code===0?verifyReleaseDockerContainer(JSON.parse(out.stdout),p,r,networkId,containerId):null;}
+ async inspectRetired(p:ReleaseServiceProfile,r:ReleaseServiceRequest,networkId:string,containerId:string){return this.#inspect(p,r,networkId,containerId);}
+ async create(p:ReleaseServiceProfile,r:ReleaseServiceRequest,networkId:string,authorize:()=>Promise<boolean>){this.#enabled();await this.#guard(p,r);if(!await this.#options.quota!.verify(p.datasetDirectory,p.datasetBytes)||await this.network(p,r)!==networkId)throw new RunnerError('RELEASE_SERVICE_DOCKER_CREATE_UNVERIFIED',409);if(!await authorize())throw new RunnerError('RELEASE_SERVICE_AUTHORITY_REVOKED',403,'not-sent');const id=dockerObjectId.parse((await this.#call(releaseDockerCreateArguments(p,r,networkId))).trim());return this.inspect(p,r,networkId,id);}
+ async start(p:ReleaseServiceProfile,r:ReleaseServiceRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.#inspect(p,r,networkId,containerId);await this.#guard(p,r);if(before?.state!=='created')throw new RunnerError('RELEASE_SERVICE_DOCKER_START_UNVERIFIED',409);if(!await authorize())throw new RunnerError('RELEASE_SERVICE_AUTHORITY_REVOKED',403,'not-sent');await this.#call(['start',containerId]);return this.inspect(p,r,networkId,containerId);}
+ async stop(p:ReleaseServiceProfile,r:ReleaseServiceRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.#inspect(p,r,networkId,containerId);if(before?.state==='created'||before?.state==='exited')return before;if(before?.state!=='running')throw new RunnerError('RELEASE_SERVICE_STOP_UNVERIFIED',409);if(!await authorize())throw new RunnerError('RELEASE_SERVICE_AUTHORITY_REVOKED',403,'not-sent');await this.#call(['stop','--signal=SIGTERM','--timeout=10',containerId]);return this.#inspect(p,r,networkId,containerId);}
+ async containerAbsent(id:string){dockerObjectId.parse(id);return verifyServiceDockerAbsence(await this.#call(['container','ls','--all','--no-trunc','--filter','id='+id,'--format','{{.ID}}']),id,'RELEASE_SERVICE_QUERY_UNVERIFIED');}
+ async networkAbsent(id:string){dockerObjectId.parse(id);return verifyServiceDockerAbsence(await this.#call(['network','ls','--no-trunc','--filter','id='+id,'--format','{{.ID}}']),id,'RELEASE_SERVICE_QUERY_UNVERIFIED');}
+ async removeContainer(p:ReleaseServiceProfile,r:ReleaseServiceRequest,networkId:string,containerId:string,authorize:()=>Promise<boolean>){const before=await this.#inspect(p,r,networkId,containerId);if(!before||!['created','exited'].includes(before.state))throw new RunnerError('RELEASE_SERVICE_CONTAINER_NOT_STOPPED',409);if(!await authorize())throw new RunnerError('RELEASE_SERVICE_AUTHORITY_REVOKED',403,'not-sent');await this.#call(serviceDockerRemovalArguments('CONTAINER_REMOVE',containerId));}
+ async removeNetwork(p:ReleaseServiceProfile,r:ReleaseServiceRequest,networkId:string,authorize:()=>Promise<boolean>){const original=JSON.parse(await this.#call(['network','inspect',networkId]));if(verifyReleaseDockerNetwork(original,p,r)!==networkId||Object.keys(original[0].Containers??{}).length)throw new RunnerError('RELEASE_SERVICE_NETWORK_BUSY',409);if(!await authorize())throw new RunnerError('RELEASE_SERVICE_AUTHORITY_REVOKED',403,'not-sent');await this.#call(serviceDockerRemovalArguments('NETWORK_REMOVE',networkId));}
+}

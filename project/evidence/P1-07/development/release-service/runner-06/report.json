@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "mode": "baseline-runner",
+  "scope": "Actual Runner service writer and explicitly controlled physical facts. No Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-acceptance-abort-docker.test.mjs",
+        "tests/runner-acceptance-service.test.mjs",
+        "tests/runner-cli.test.mjs",
+        "tests/runner-crash.test.mjs",
+        "tests/runner-execution-profile.test.mjs",
+        "tests/runner-preview-capacity.test.mjs",
+        "tests/runner-preview-cleanup.test.mjs",
+        "tests/runner-preview-container.test.mjs",
+        "tests/runner-preview-watchdog.test.mjs",
+        "tests/runner-release-retirement.test.mjs",
+        "tests/runner-upgrade.test.mjs",
+        "tests/runner.test.mjs"
+      ],
+      "startedAt": "2026-11-13T05:36:33.125Z",
+      "finishedAt": "2026-11-13T05:55:19.204Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "cbbfc459c86b6977514f54b6d8168a16a0a36a80a752d59fbcf7c2965f11c894"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

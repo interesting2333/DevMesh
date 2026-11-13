@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "mode": "tests",
+  "scope": "Actual Runner service writer and explicitly controlled physical facts. No Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-release-service.test.mjs",
+        "tests/runner-release-docker.test.mjs"
+      ],
+      "startedAt": "2026-11-13T04:10:46.198Z",
+      "finishedAt": "2026-11-13T04:17:32.846Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "7e3ba38744e2a43b9136fa808ee6d346b862376063ca795801889af1e6fae94c"
+    }
+  ],
+  "inputChanges": [
+    "templates/web-crud-v1/src/server/main.ts"
+  ],
+  "emittedChanges": []
+}

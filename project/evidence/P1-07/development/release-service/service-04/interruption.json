@@ -1,0 +1,6 @@
+{
+  "at": "2026-11-13T04:45:30.477Z",
+  "pid": 14848,
+  "verifiedOwnedCommand": "node --test --test-concurrency=1 --test-reporter=tap tests/runner-release-service.test.mjs tests/runner-release-docker.test.mjs",
+  "reason": "Stopped the remaining old-input run after existing fixture failures. Rerun this whole group alone using corrected successor fixtures and bounded cold-Worker fixture budgets; do not count this partial run as a passing group."
+}

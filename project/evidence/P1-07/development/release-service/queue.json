@@ -1,0 +1,31 @@
+{
+  "startedAt": "2026-11-13T04:47:51.159Z",
+  "checks": [
+    {
+      "attempt": "acceptance-06",
+      "pid": 12044,
+      "startedAt": "2026-11-13T05:15:25.864Z",
+      "exitCode": 0,
+      "signal": null,
+      "finishedAt": "2026-11-13T05:36:32.844Z"
+    },
+    {
+      "attempt": "runner-06",
+      "pid": 29208,
+      "startedAt": "2026-11-13T05:36:32.853Z",
+      "exitCode": 0,
+      "signal": null,
+      "finishedAt": "2026-11-13T05:55:19.554Z"
+    },
+    {
+      "attempt": "verify-06",
+      "pid": 17352,
+      "startedAt": "2026-11-13T05:55:19.569Z",
+      "exitCode": 0,
+      "signal": null,
+      "finishedAt": "2026-11-13T05:55:44.135Z"
+    }
+  ],
+  "prerequisite": "service-06",
+  "finishedAt": "2026-11-13T05:55:44.136Z"
+}

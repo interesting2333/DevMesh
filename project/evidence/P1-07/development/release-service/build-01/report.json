@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual Runner service writer and explicitly controlled physical facts. No Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T03:38:14.067Z",
+      "finishedAt": "2026-11-13T03:38:31.015Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "5a214c130a5de4922b2c855e90b09102e131ddfa8d30822e998042b80730cf5a"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T03:38:31.016Z",
+      "finishedAt": "2026-11-13T03:39:39.966Z",
+      "exitCode": 2,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "a01f0f679e414dedefdae1dee027325797b08871a7e8ae0a62693bec8b168f56"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/runner/dist/index.mjs",
+    "packages/runner/dist/preview-cleanup-dhE_pE21.mjs",
+    "packages/runner/dist/preview-cleanup-dhE_pE21.mjs.map",
+    "packages/runner/dist/worker.mjs",
+    "packages/runner/dist/worker.mjs.map",
+    "packages/runner/dist/release-service-bl4wMyP9.mjs",
+    "packages/runner/dist/release-service-bl4wMyP9.mjs.map"
+  ]
+}

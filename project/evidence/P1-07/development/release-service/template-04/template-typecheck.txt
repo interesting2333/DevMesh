@@ -1,0 +1,6 @@
+$ tsc --noEmit -p tsconfig.json
+src/server/main.ts(15,38): error TS2379: Argument of type '{ root: string; port: number; host: "127.0.0.1" | "0.0.0.0"; readOnly: boolean; runtimeRoot: string | undefined; webRoot: string; }' is not assignable to parameter of type '{ root: string; port?: number; host?: "127.0.0.1" | "0.0.0.0"; readOnly?: boolean; runtimeRoot?: string; webRoot?: string; workerScript?: URL; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'runtimeRoot' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+[ELIFECYCLE] Command failed with exit code 2.

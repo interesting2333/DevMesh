@@ -9,8 +9,8 @@ export class WorkerStore implements TaskStore {
   private closing = false;
   private broken = false;
   private readonly ready: Promise<void>;
-  constructor(root: string, readOnly = false, workerScript = new URL('./db-worker.js', import.meta.url)) {
-    this.worker = new Worker(workerScript, { workerData: { root, readOnly } });
+  constructor(root: string, readOnly = false, workerScript = new URL('./db-worker.js', import.meta.url), runtimeRoot?: string) {
+    this.worker = new Worker(workerScript, { workerData: { root, readOnly, runtimeRoot } });
     this.ready = new Promise<void>((resolve, reject) => {
       this.worker.on('message', (message: { ready?: boolean; id: number; value: unknown; error?: { code: string; status: number } }) => {
         if (message.ready) { resolve(); return; }

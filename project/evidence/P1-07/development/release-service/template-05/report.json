@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "mode": "template",
+  "scope": "Actual Runner service writer and explicitly controlled physical facts. No Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "template-typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--dir",
+        "templates/web-crud-v1",
+        "run",
+        "typecheck"
+      ],
+      "startedAt": "2026-11-13T04:11:31.880Z",
+      "finishedAt": "2026-11-13T04:12:45.823Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "template-typecheck.txt",
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "name": "template-tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--dir",
+        "templates/web-crud-v1",
+        "run",
+        "test"
+      ],
+      "startedAt": "2026-11-13T04:12:45.830Z",
+      "finishedAt": "2026-11-13T04:20:53.405Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "template-tests.txt",
+      "sha256": "fe1f20fd3a07b93de5f601a480478f7752d2414928d6cfedbe3ba356b75a7f93"
+    }
+  ],
+  "inputChanges": [
+    "tests/fixtures/release-service-successor.mjs"
+  ],
+  "emittedChanges": []
+}

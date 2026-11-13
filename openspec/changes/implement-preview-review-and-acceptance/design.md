@@ -246,7 +246,7 @@ Runner 服务清理结果不等于完整 ABORTED：目标业务文件／原 clai
 
 ## Risks / Trade-offs
 
-- 接受准备实例的只读挂载／APP_READ_ONLY与profile不可变，T5或开放逻辑门不能直接变为可写服务。4.3须独立实现准确原归属下的服务转换、健康及写fence交接；不能改原proof、凭接受成功宣称可写或同时开放旧新dataset。当前组合未实施发布转换。
+- 接受准备实例的只读挂载／APP_READ_ONLY与profile不可变，T5或开放逻辑门不能直接变为可写服务。4.3须独立验证准确原归属下的新可写服务、健康及写fence交接；不能改原proof、凭接受成功宣称可写或同时开放旧新dataset。Runner v11独立发布组件与受控联调已实现；真实物理转换、Release入口与默认装配继续实施与验收。
 
 - [无真实模型／容器／OIDC] → 本地可验证接口、签名用途、访问隔离和恢复；真实构建／启动／健康和人工产品验收单列缺项，生产能力未配置即关闭。
 - [复用旧质量或人工结论] → 绑定候选完整 manifest、原质量、条目和 reviewHash；新候选重新审查，原失败追加保留。
@@ -267,3 +267,11 @@ Runner v10前向增加不可变release_retirements／追加actions，原v2～v9 
 REVOKE_PREPARATION必须由专用可信物理Authority永久封禁原acquire／renew／写入并排清已获许可动作；逻辑记录不证明撤权。随后STOP→CONTAINER_REMOVE→NETWORK_REMOVE，Driver末次复核原授权，成功准确ID查询才证明消失。容器观察、接受服务REMOVED、容量和历史同事务，失败全部回滚；原profile、claim、proof及dataset文件不改。
 
 交接和原abort决定互斥，迟到服务变更关闭；dataset交接占用独立于容量，其他preview／acceptance不能抢占。网络未清理的已释放服务仍可按原controller分页找到。登记ACK或阶段ACK丢失后只查询已持久原动作，不重发、不从查询发出下一未派发阶段；跨步骤中断保持未完成，继续协调协议尚待实施。该适配器只完成只读服务退役，不返回PUBLISHED；独立可写容量／guard／fence／路由、默认装配和实际入口／导出仍继续4.3，完整任务不勾选。
+
+### Runner writable release service
+
+在独立原只读服务退役完成后，v11 前向新增 release_service_handoffs／reservations／profiles／actions／events／proofs；原 v2～v10 SQL 保持不变。ARM_FENCES 持久核实原 HELD 的后继代，目标 ARMED 且 CONTROL_CLOSED、源 RETIRED 且 CLOSED，保留永久撤权。迭代必须绑定原本地已发布 service／route；源 STOP／准确容器消失与容量释放原子提交，网络清理完才预留新可写容量。
+
+全 Runner 单 writer 共同计算 job／preview／acceptance／release 的 CPU、内存、槽位；新 purpose=RELEASE profile、reservation 和容器独立于被退役的只读服务。GUARD_ENFORCE 必须在任何可写创建／启动前持久核实 ALL_DATASET_WRITES：精确物理代和当前控制 gate 同时准入，包括后台与直接文件写入，代理标志不能替代。随后 NETWORK_CREATE→CREATE→START、准确健康观察、内部生成 RELEASE_OWNED claim、ROUTE_BIND，凭证只从原 journal 派生一次；只有控制发布事务可以开门。
+
+每阶段只有唯一持久 SENT 获准物理派发，查询仅记录已派发阶段观察，不预留、不接管、不创建、不切路由；缺 Authority／guard／route 的实现保持关闭。跨阶段自动继续和默认生产装配仍需后续完成，单独 writer 或受控物理 fixture 不代表完整 4.3 或产品验收。

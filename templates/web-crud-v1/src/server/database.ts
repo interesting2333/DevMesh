@@ -27,15 +27,17 @@ export class TaskDatabase {
       database.exec('COMMIT;');
     } finally { database.close(); release(); }
   }
-  constructor(root: string, private readonly readOnly = false) {
+  constructor(root: string, private readonly readOnly = false, runtimeRoot?: string) {
     const dataset = loadDataset(root);
-    this.release = lockDataset(dataset.root);
+    // Readers must work on a wholly read-only mount. Physical custody and write
+    // admission belong to the Runner; only a writable connection owns this lock.
+    this.release = readOnly ? () => {} : lockDataset(dataset.root, runtimeRoot);
     let opened: DatabaseSync | undefined;
     try {
       this.database = opened = new DatabaseSync(join(dataset.root, 'app.sqlite'), { readOnly });
       this.database.exec(readOnly
         ? 'PRAGMA query_only=ON; PRAGMA busy_timeout=1000;'
-        : 'PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=1000;');
+        : 'PRAGMA synchronous=FULL; PRAGMA busy_timeout=1000;');
       const version = this.database.prepare('PRAGMA user_version').get() as { user_version: number };
       const identity = this.database.prepare('SELECT dataset_id FROM dataset_identity WHERE singleton=1').get() as { dataset_id: string } | undefined;
       const integrity = this.database.prepare('PRAGMA quick_check').get() as { quick_check: string };
@@ -52,7 +54,9 @@ export class TaskDatabase {
     if (!/^[A-Za-z0-9_-]{16,128}$/.test(raw.key)) throw new AppError('IDEMPOTENCY_KEY_REQUIRED', 400);
     const operation = raw.kind === 'delete' ? raw : { ...raw, input: TaskInput.parse(raw.input) };
     const hash = createHash('sha256').update(JSON.stringify(operation)).digest('hex');
-    this.database.exec('BEGIN IMMEDIATE;');
+    // Startup and health must not change the prepared snapshot. In a release,
+    // the physical guard admits this first database write only after publication.
+    this.database.exec('PRAGMA journal_mode=WAL; BEGIN IMMEDIATE;');
     try {
       const previous = this.database.prepare('SELECT request_hash,response FROM receipts WHERE key=?').get(raw.key) as { request_hash: string; response: string } | undefined;
       if (previous) {

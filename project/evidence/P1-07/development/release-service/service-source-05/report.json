@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mode": "tests",
+  "scope": "Actual Runner service writer and explicitly controlled physical facts. No Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "--test-name-pattern=formal",
+        "tests/runner-release-service.test.mjs"
+      ],
+      "startedAt": "2026-11-13T04:26:10.550Z",
+      "finishedAt": "2026-11-13T04:31:29.395Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "4f8e91b8639413258a5db19b4dcef93511f994c3b94317b6ccf1cbab73b13b96"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

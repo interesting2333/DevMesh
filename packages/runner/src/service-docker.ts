@@ -7,13 +7,13 @@ import {dockerObjectId,previewRepository} from './preview-container.js';
 import type {PreviewContainerProfile,PreviewContainerFact} from './preview-container.js';
 export type ServiceContainerProfile=Omit<PreviewContainerProfile,'schemaVersion'>;
 export type ServiceContainerFact=PreviewContainerFact;
-export interface ServiceDockerSubject {imageDigest:string;imageIdentity:PreviewStartRequest['imageIdentity'];labels:Record<string,string>;readonlyDataset:boolean;errorPrefix:'PREVIEW'|'ACCEPTANCE_SERVICE'}
+export interface ServiceDockerSubject {imageDigest:string;imageIdentity:PreviewStartRequest['imageIdentity'];labels:Record<string,string>;readonlyDataset:boolean;runtimeRoot?:string;errorPrefix:'PREVIEW'|'ACCEPTANCE_SERVICE'|'RELEASE_SERVICE'}
 const fail=(code:string):never=>{throw new RunnerError(code,409,'unknown');};
 export function serviceDockerRemovalArguments(kind:'CONTAINER_REMOVE'|'NETWORK_REMOVE',id:string){dockerObjectId.parse(id);return kind==='CONTAINER_REMOVE'?['container','rm',id]:['network','rm',id];}
 /** A failed inspect is insufficient; only a successful full-ID list proves absence. */
 export function verifyServiceDockerAbsence(output:string,id:string,errorCode:string){dockerObjectId.parse(id);const value=output.trim();if(value==='')return true;if(value===id)return false;throw new RunnerError(errorCode,409,'unknown');}
 const labels=(_p:ServiceContainerProfile,r:ServiceDockerSubject)=>r.labels;
-const environment=(r:ServiceDockerSubject)=>['HOME=/tmp','NODE_ENV=production','APP_DATA_ROOT=/data','APP_PORT=4317','APP_HOST=0.0.0.0','APP_READ_ONLY='+String(r.readonlyDataset)];
+const environment=(r:ServiceDockerSubject)=>['HOME=/tmp','NODE_ENV=production','APP_DATA_ROOT=/data','APP_PORT=4317','APP_HOST=0.0.0.0','APP_READ_ONLY='+String(r.readonlyDataset),...r.runtimeRoot?['APP_RUNTIME_ROOT='+r.runtimeRoot]:[]];
 const expectedMounts=(p:ServiceContainerProfile,r:ServiceDockerSubject)=>[{Source:p.datasetDirectory,Destination:'/data',RW:!r.readonlyDataset},...r.readonlyDataset?[]:['operation.json','receipt.json','dataset.json'].map(name=>({Source:join(p.datasetDirectory,name),Destination:'/data/'+name,RW:false}))];
 const tmpfs=(p:ServiceContainerProfile)=>'rw,noexec,nosuid,nodev,size='+p.resourceLimits.temporaryMiB+'m,mode=1777';
 export function serviceDockerNetworkArguments(raw:ServiceContainerProfile,r:ServiceDockerSubject){const p=raw;return ['network','create','--driver=bridge','--internal','--opt=com.docker.network.bridge.enable_icc=false','--opt=com.docker.network.bridge.host_binding_ipv4=127.0.0.1','--opt=com.docker.network.bridge.gateway_mode_ipv4=nat',...Object.entries(labels(p,r)).flatMap(([k,v])=>['--label',k+'='+v]),p.networkName];}

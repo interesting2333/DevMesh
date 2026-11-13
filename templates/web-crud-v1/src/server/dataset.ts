@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, mkdirSync, openSync, closeSync, readFileSync, realpathSync, readdirSync, unlinkSync, writeFileSync, fsyncSync } from 'node:fs';
 import { dirname, isAbsolute, join, parse, resolve } from 'node:path';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { AppError } from '../shared/task.js';
 
@@ -45,8 +45,15 @@ export function loadDataset(root: string): { root: string; marker: DatasetMarker
   for (const name of ['app.sqlite-wal', 'app.sqlite-shm']) if (existsSync(join(root, name))) checkedFile(join(root, name));
   return { root, marker };
 }
-export function lockDataset(root: string): () => void {
-  const path = join(root, 'writer.lock');
+export function lockDataset(root: string, runtimeRoot?: string): () => void {
+  let path = join(root, 'writer.lock');
+  if (runtimeRoot !== undefined) {
+    const runtime = canonicalDataset(runtimeRoot);
+    const data = canonicalDataset(root);
+    if (runtime.toLowerCase() === data.toLowerCase() || runtime.toLowerCase().startsWith(data.toLowerCase() + (process.platform === 'win32' ? '\\' : '/'))) throw new AppError('RUNTIME_ROOT_OVERLAPS_DATA', 500);
+    mkdirSync(runtime, { recursive: true, mode: 0o700 });
+    path = join(runtime, createHash('sha256').update(data).digest('hex') + '.lock');
+  }
   const token = randomUUID();
   try { writeDurable(path, JSON.stringify({ pid: process.pid, token }) + '\n'); }
   catch { throw new AppError('DATASET_LOCKED', 503); }

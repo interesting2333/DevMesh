@@ -10,4 +10,4 @@ export const previewReservationSchema=z.strictObject({reservationId:opaqueKey,co
 export type RunnerCapacity=z.output<typeof runnerCapacity>;
 export type PreviewResourceLimits=z.output<typeof previewResourceLimits>;
 export type PreviewReservation=z.output<typeof previewReservationSchema>;
-export interface RunnerCapacityUsage {slots:number;cpu:number;memoryMiB:number;previewSlots:number;jobSlots:number;acceptanceServiceSlots:number}
+export interface RunnerCapacityUsage {slots:number;cpu:number;memoryMiB:number;previewSlots:number;jobSlots:number;acceptanceServiceSlots:number;releaseServiceSlots:number}

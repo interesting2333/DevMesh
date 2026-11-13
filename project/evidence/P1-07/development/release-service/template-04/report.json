@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mode": "template",
+  "scope": "Actual Runner service writer and explicitly controlled physical facts. No Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "template-typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--dir",
+        "templates/web-crud-v1",
+        "run",
+        "typecheck"
+      ],
+      "startedAt": "2026-11-13T04:07:49.383Z",
+      "finishedAt": "2026-11-13T04:09:18.183Z",
+      "exitCode": 2,
+      "signal": null,
+      "output": "template-typecheck.txt",
+      "sha256": "8c1b48c85b0087cdfb992ee2a311b7deb398efc2c0641fe3adcbab60141eb66e"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

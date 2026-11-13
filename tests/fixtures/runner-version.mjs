@@ -36,6 +36,7 @@ export function historicalV8Fixture(db){
 // Remove only empty v10 structures in a dedicated compatibility test store.
 // Production migrations remain forward-only and never call this helper.
 export function historicalV9Fixture(db){
+ historicalV10Fixture(db);
  const version=db.prepare('PRAGMA user_version').get().user_version;if(version<10)return;
  if(version!==10||db.prepare('SELECT count(*) n FROM release_retirements').get().n||db.prepare('SELECT count(*) n FROM release_retirement_actions').get().n)throw Error('Not a compatible dedicated v10 fixture');
  db.exec('BEGIN IMMEDIATE');try{
@@ -44,4 +45,12 @@ export function historicalV9Fixture(db){
   db.exec('DROP TABLE release_retirement_actions; DROP TABLE release_retirements; ALTER TABLE runner_identity RENAME TO runner_identity_v10_fixture; CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=9)) STRICT; INSERT INTO runner_identity SELECT singleton,runner_id,9 FROM runner_identity_v10_fixture; DROP TABLE runner_identity_v10_fixture; DELETE FROM runner_schema_history WHERE version=10; PRAGMA user_version=9;');
   if(db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Invalid v9 fixture');db.exec('COMMIT');
  }catch(e){db.exec('ROLLBACK');throw e;}
+}
+
+// Dedicated compatibility fixture only: remove empty v11 structures. Production
+// opens run only forward migrations. Retain all original v10 rows and hashes.
+export function historicalV10Fixture(db){
+ const version=db.prepare('PRAGMA user_version').get().user_version;if(version<11)return;
+ if(version!==11||db.prepare('SELECT count(*) n FROM release_service_handoffs').get().n)throw Error('Not a compatible dedicated v11 fixture');
+ db.exec('BEGIN IMMEDIATE');try{db.exec('DROP TRIGGER retired_source_service; DROP TABLE release_service_proofs; DROP TABLE release_service_actions; DROP TABLE release_service_events; DROP TABLE release_service_profiles; DROP TABLE release_service_reservations; DROP TABLE release_service_handoffs; ALTER TABLE runner_identity RENAME TO runner_identity_v11_fixture; CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=10)) STRICT; INSERT INTO runner_identity SELECT singleton,runner_id,10 FROM runner_identity_v11_fixture; DROP TABLE runner_identity_v11_fixture; DELETE FROM runner_schema_history WHERE version=11; PRAGMA user_version=10;');if(db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Invalid v10 fixture');db.exec('COMMIT');}catch(e){db.exec('ROLLBACK');throw e;}
 }

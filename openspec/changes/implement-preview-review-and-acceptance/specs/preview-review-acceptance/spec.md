@@ -438,3 +438,22 @@ The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增
 #### Scenario: The dataset remains in handoff
 - **WHEN** 原发布已登记退役，其他controller尝试预留相同dataset或登记原接受撤销
 - **THEN** 交接屏障拒绝操作，即使只读服务已释放容量；旧prepared proof可只读恢复，迟到事实不能复活旧服务
+
+### Requirement: Runner writable publication preserves staged write admission
+系统 SHALL 在原只读退役后以独立 RELEASE 身份持久记录后继围栏、原可写源清理、共享容量、guard、创建启动、归属和路由；目标 MUST 保持 CONTROL_CLOSED 直到控制发布事务成功，所有业务数据写入 MUST 同时受原物理代与当前控制门约束。
+
+#### Scenario: A distinct writable service is staged
+- **WHEN** 原只读退役与后继围栏核实完成，guard 覆盖所有业务数据写入
+- **THEN** 才允许独立可写 profile 创建／启动；只读连接不写业务盘锁，发布运行锁在临时根，启动与健康不改变准备数据库，首次获准请求才开始数据库写入
+
+#### Scenario: An original writable source is retired atomically
+- **WHEN** 后继固定本地原 service／route，准确源容器消失已核实
+- **THEN** 观察、旧服务 REMOVED、容量释放与历史同事务；网络清理后才分配新服务，未知状态继续占用，源只能有一个后继
+
+#### Scenario: Recovery queries existing stages only
+- **WHEN** 可写阶段回执丢失或 Runner 重启
+- **THEN** inspect 只查询原已持久阶段，不预留、接管、安装 guard、创建启动或切路由；完整原 claim／route 可一次派生稳定 proof，缺当前 guard／fence／route／健康不返回可发布观察
+
+#### Scenario: Publication commits under control authority
+- **WHEN** 稳定 proof 与新鲜原对象观察通过控制校验
+- **THEN** 控制 writer 原子保存发布／路由／数据状态与开门；缺物理 provider、外部源缺本地证明、未执行真实环境验收均不得被本地日志或夹具替代
