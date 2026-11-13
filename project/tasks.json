@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "f96a93fe35a7737e0f11a70030e35b96af2b57a2208be760363bbf3d5caf885b"
+      "sha256": "bca7fa04c4e1863c9e71da2ed7153462692d89bddec0ac5c606d50c16216901b"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "c6ba224ed32f27fb78d86b837d837de3a0a21718ba087b3ea3083be01dd34521"
+      "sha256": "260128fa9ea90de21debc43f17f6d8b5157fa101bd47275d3d56f2294639e704"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "c773dbe278867bbe160d47b2650eeb0a8e3ae2f43507e1e957f74d5be66821e2"
+      "sha256": "99c4fefe5a5b91354cc6e5eb0ef20973ff9a35ae9fe6f3ea6ec8ffb34e521d42"
     }
   ],
   "gates": [
@@ -1672,15 +1672,28 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "implement-workbench-first-path"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
-      "codeReferences": [],
-      "evidence": [],
+      "codeReferences": [
+        "packages/input-api/src/web/workbench-local.ts",
+        "tests/browser/workbench-local-build.mjs",
+        "tests/browser/workbench-local.test.mjs"
+      ],
+      "evidence": [
+        "project/evidence/P1-08/local-input-development-review.md",
+        "project/evidence/P1-08/development/local-input/evidence.json",
+        "project/evidence/P1-08/development/local-input/final-binding.json",
+        "project/evidence/P1-08/development/local-input/manifest.json"
+      ],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "2026-11-14：P1-08开发增量1.1／1.2，新增implement-workbench-first-path变更，正式工作包等待前置／G0。原生IndexedDB草稿按主体／项目／Run／表单／依据隔离，本地revision事务CAS；严格原UUID／正文／条件先持久，稀疏唯一pendingForm跨basis阻止绕过未知提交。双页入队只有一条原命令；成功输入回执、清空准确草稿／生成新clientDraftId和释放锁同事务，原信封／历史保留；404／非成功观察不解锁。既有POST包装与lookup核心回执分别严格校验，包装resource／links一致才转核心观察，错operation／上下文／损坏草稿或命令路径关闭准入。真实Edge157／IndexedDB、实际Input API／文件Worker创建项目／消息与原键重放，丢ACK重开、真实事务abort、多页冲突、未来schema升级被外部连接阻塞时旧连接关闭／原数据保留／旧代码拒绝新schema，最终5项通过、0跳过。完整根构建、独立浏览器模块构建、类型／Lint／契约通过；487份源码映射与703输入／产物绑定，最终浏览器JS／map前后SHA一致。初次记录3通过／2失败的回执形状问题、原源码和日志保留；修正严格解析及对齐核心／外层断言，未放宽原身份或事务规则。控制SQL1～45、Runner实现／格式、依赖和旧API保持。模块只提供本地存储，不自行HTTP；当前测试是明确浏览器夹具页面，React工作台入口、三栏／页签、导航／IME、WS及完整T08／首次产品路径继续，浏览器身份为夹具，真实模型／OIDC／Linux仍未配置。"
+      ]
     },
     {
       "id": "P2-01",

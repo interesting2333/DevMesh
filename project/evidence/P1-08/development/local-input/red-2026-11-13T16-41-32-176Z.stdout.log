@@ -1,0 +1,126 @@
+TAP version 13
+# (node:29532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes
+ok 1 - real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes
+  ---
+  duration_ms: 2200.6154
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:29532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: two pages admit one original request, actual project ACK loss reopens and exact replay retains one input
+not ok 2 - two pages admit one original request, actual project ACK loss reopens and exact replay retains one input
+  ---
+  duration_ms: 2207.2483
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-local.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   links: {
+    +     operation: '/api/v1/operations/op_d12331abc4fe4a7f9e180dc22a3cae7b'
+    +   },
+        operationId: 'op_d12331abc4fe4a7f9e180dc22a3cae7b',
+    +   resource: {
+    +     projectId: 'prj_bb338f69b62348cb81dfe3d91370b63c',
+    +     revision: 1,
+    +     runId: 'run_262ea991abde4de8b496a0e65eee0c05'
+    +   },
+        result: {
+          artifactId: 'artifact_b342a4aaa33442ac90424d02b86046d4',
+          messageId: 'message_543920b4cfe549108fbdd0eeacf94d70',
+          projectId: 'prj_bb338f69b62348cb81dfe3d91370b63c',
+          revision: 1,
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    operationId: 'op_d12331abc4fe4a7f9e180dc22a3cae7b'
+    status: 'SUCCEEDED'
+    result:
+      artifactId: 'artifact_b342a4aaa33442ac90424d02b86046d4'
+      messageId: 'message_543920b4cfe549108fbdd0eeacf94d70'
+      projectId: 'prj_bb338f69b62348cb81dfe3d91370b63c'
+      revision: 1
+      runId: 'run_262ea991abde4de8b496a0e65eee0c05'
+      taskId: 'task_de76ea389b6b4a5e9a7fafb0ec8b524f'
+      understandingOperationId: 'op_2718bcd593424b759ac4ca4032ae3190'
+  actual:
+    operationId: 'op_d12331abc4fe4a7f9e180dc22a3cae7b'
+    status: 'SUCCEEDED'
+    result:
+      artifactId: 'artifact_b342a4aaa33442ac90424d02b86046d4'
+      messageId: 'message_543920b4cfe549108fbdd0eeacf94d70'
+      projectId: 'prj_bb338f69b62348cb81dfe3d91370b63c'
+      revision: 1
+      runId: 'run_262ea991abde4de8b496a0e65eee0c05'
+      taskId: 'task_de76ea389b6b4a5e9a7fafb0ec8b524f'
+      understandingOperationId: 'op_2718bcd593424b759ac4ca4032ae3190'
+    resource:
+      projectId: 'prj_bb338f69b62348cb81dfe3d91370b63c'
+      runId: 'run_262ea991abde4de8b496a0e65eee0c05'
+      revision: 1
+    links:
+      operation: '/api/v1/operations/op_d12331abc4fe4a7f9e180dc22a3cae7b'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-local.test.mjs:45:195)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:29532) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation
+not ok 3 - message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation
+  ---
+  duration_ms: 1931.0881
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-local.test.mjs:49:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'ZodError'
+    - 'LOCAL_RECORD_INVALID'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'LOCAL_RECORD_INVALID'
+  actual: 'ZodError'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-local.test.mjs:56:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission
+ok 4 - real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission
+  ---
+  duration_ms: 1111.4645
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema
+ok 5 - version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema
+  ---
+  duration_ms: 1517.2462
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+1..5
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9873.4989

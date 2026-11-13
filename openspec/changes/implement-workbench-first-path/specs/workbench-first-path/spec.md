@@ -1,0 +1,73 @@
+## Purpose
+
+为授权成员提供从空项目输入到理解、计划、执行观察、交付审查和接受入口的连续工作台，明确服务端事实、本机未提交草稿和未知提交的差别，并在刷新、多页、权限变化和事件重连时保持准确上下文与原操作身份。
+
+## ADDED Requirements
+
+### Requirement: Protected workbench shows authoritative context
+
+系统 SHALL 对工作台页面、脚本和业务读取应用当前身份与项目权限，显示准确项目／执行／模式及服务端允许动作；历史上下文 MUST 从命令依赖层只读，打开页面不得创建项目、命令、票据、预览或接受。
+
+#### Scenario: Identity is absent or membership is revoked
+- **WHEN** 身份未配置、无权限或读取过程中成员被移除
+- **THEN** 系统关闭相应入口或清除受保护显示，不授予默认owner或使用游标恢复权限
+
+#### Scenario: Historical execution is opened
+- **WHEN** 用户选择历史Run
+- **THEN** 三栏共享历史上下文且没有可用写客户端；切换前的迟到响应不能写入新上下文
+
+### Requirement: Draft persistence is scoped and conflict aware
+
+系统 SHALL 按主体、项目、Run、表单和依据隔离本机草稿，在持久事务完成后才显示本地已保存；陈旧页保存 MUST 检测本地版本冲突，不静默覆盖其他页。服务端提交成功与本地草稿保存 MUST 分别显示。
+
+#### Scenario: Refresh restores only the matching draft
+- **WHEN** 用户输入后刷新或切换到另一个项目／账号／依据
+- **THEN** 相同上下文恢复持久正文，不把旧上下文内容写入新表单或自动提交旧依据
+
+#### Scenario: Storage fails or two pages edit concurrently
+- **WHEN** 持久写失败或另一页已更新相同草稿
+- **THEN** 保留本页内存输入并显示未保存／冲突；切换或离开须先成功保存或由用户明确放弃
+
+### Requirement: Original command is durable before sending
+
+系统 SHALL 在网络写之前持久保存经严格验证的原主体、上下文、UUID、正文和版本条件，事务性核实准确草稿版本和未决状态。相同上下文多个页竞争提交 MUST 只登记一个原命令，不能覆盖原信封或生成未知请求的替代键。
+
+#### Scenario: Persistence is denied before submission
+- **WHEN** 本机无法提交原请求事务
+- **THEN** 系统不发送业务写请求，输入保留且明确显示失败
+
+#### Scenario: A reply is lost and the page reopens
+- **WHEN** 提交已发送但结果未知，用户刷新或重新进入
+- **THEN** 页面保留原请求且不自动POST，先核实原操作；明确继续提交只能使用完全相同原信封，未决期间禁止新键提交
+
+#### Scenario: Original lookup returns not found
+- **WHEN** 当前未查到原操作
+- **THEN** 页面不把缺少记录当作新键许可，不自动更改正文、版本条件或提交身份
+
+### Requirement: Navigation and keyboard preserve user work
+
+系统 SHALL 提供三栏和任务、协作、成果、预览、记录五页签，以及窄屏导航／主区／详情切换；导航和事件更新不得覆盖未提交输入、选择、阅读位置或抢焦点。多行Enter换行，Ctrl／Cmd+Enter可提交，输入法组合和重复键 MUST 不触发发送。
+
+#### Scenario: User navigates while a draft save is pending
+- **WHEN** 用户切换项目／执行或关闭修改表单
+- **THEN** 系统先排空该上下文保存，失败保留原输入并提供明确处置；不静默切走丢失内容
+
+#### Scenario: Narrow screen receives events during composition
+- **WHEN** 用户在窄屏使用输入法且新事件到达
+- **THEN** 当前输入和焦点保持，组合中的快捷键不提交，关键待办与执行入口仍可使用
+
+### Requirement: Events resume from an exact snapshot
+
+系统 SHALL 使用同一快照返回的seq续读，按连续seq去重补发，不用文本推断状态；正式实时订阅 MUST 先建立有界缓冲再补历史，慢客户端明确resync并重快照。授权失效、上下文切换或超前／缺口游标不得被当成完整回放。
+
+#### Scenario: Connection drops between snapshot and subscription
+- **WHEN** 快照读取后发生新事件且连接重建
+- **THEN** 客户端恢复连续序列，不遗漏、不重复应用，不重置草稿或执行重复命令
+
+### Requirement: First path links real planning and delivery facts
+
+系统 SHALL 从准确工作台上下文展示真实理解、问题、计划／DAG／来源以及已有审查、预览、接受和导出入口，区分分析等待、验证、人工记录、接受和发布。没有模型或执行资源时 MUST 显示实际未配置／等待事实，不能用模拟结果完成产品验收。
+
+#### Scenario: New project is submitted without external model resources
+- **WHEN** 用户从空项目提交输入但模型／Runner未配置
+- **THEN** 已提交输入可刷新恢复，后续仅展示实际已存在事实与未满足条件，不能伪造计划或发布成功

@@ -1382,6 +1382,12 @@ REPLACE交付是方案收集，先固定原作业输出与当前sourceReleaseId�
 
 同库两轮真实T5后的本地组合验证已覆盖保留／替换数据和第二次发布，实际模板HTTP写入新目标、旧业务记录保留。共用HTTP夹具按当前挂载dataset查门，路由夹具按项目维护唯一当前绑定；物理围栏／guard／容器／网络／路由仍为受控事实，不代表真实后台写入隔离、Linux或独立Release网关验收。
 
+#### 12. 工作台本地持久输入基础
+
+首个工作台增量提供独立浏览器存储模块，页面入口与三栏尚需接入。IndexedDB草稿键包含可信主体／项目／Run／表单／依据，本地revision在同一事务CAS，陈旧页不得覆盖。原命令正文／UUID／条件在事务完成前不交给发送方；commands稀疏唯一pendingForm索引跨basis锁住同一主体／项目／Run／表单，版本变化不能绕过旧未知请求。原信封只读，非成功观察保持锁，准确成功输入回执与草稿清空／新clientDraftId／释放锁同事务；旧正文保留于命令历史。
+
+原API POST包装回执与operation lookup核心回执分别按既有严格契约解析；包装的resource／links还须与原结果和operationId一致，再保存统一核心观察。损坏草稿、错位上下文或原命令路径关闭准入。浏览器schema版本独立，versionchange关闭旧连接，旧代码拒绝较新schema且不删除原数据。此模块不自行发HTTP、不替代服务端授权；页面保存提示、导航保护、恢复按钮和实时订阅按后续工作台步骤接入。
+
 ---
 
 ## 13. 执行恢复与交付
@@ -2425,5 +2431,11 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 四个原阶段SOURCE_STOP／SOURCE_CONTAINER_REMOVE／SOURCE_NETWORK_REMOVE／ROUTE_BIND分别丢回执，控制与Runner重开后只查询原对象，恢复原reservation和证明，无重复物理变更／数据准备／T5。最终PUBLISHED控制ACK丢失保留原结果；路由提交事务注入失败时保留T5、旧路由与双门关闭，解除故障后采纳原物理证明。检查原T5回执和首轮发布证明不改写、外键完整，以及丢ACK下容量释放的准确时点。
 
 源Git／模型／Runtime准入、生成OCI与迁移artifact来源、物理围栏／write guard／容器／网络／路由仍为明确夹具。真实SQLite／HTTP／Worker和控制事务的本地组合证据单列，不代替实际物理排空、独立Release网关、完整工作台、D01～D08或正式产品验收。
+
+#### 15. 工作台本地存储基础验证
+
+实际Edge／IndexedDB验证重载恢复、主体／项目／Run／依据隔离、双页CAS与唯一原命令竞争；实际Input API／文件Worker创建项目、保存消息及原UUID重放，丢失项目POST回执后从原lookup恢复且不重复输入。lookup404和非成功观察不释放跨basis锁，错operation／包装resource拒绝；浏览器真实事务abort回滚草稿指针和原命令，损坏本地草稿／命令路径关闭准入。外部连接阻塞未来schema升级时旧模块连接关闭，解除后原数据保留，旧代码拒绝较新版本。
+
+浏览器使用单独编译的生产存储模块和明确测试页面，身份为夹具；这不是工作台React入口、导航保护、WebSocket、完整T08或模型／Linux产品路径验证。根应用与浏览器模块产物分别绑定，初次回执形状不匹配失败与最终结果分开记录。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

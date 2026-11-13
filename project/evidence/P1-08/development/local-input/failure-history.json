@@ -1,0 +1,9 @@
+{
+  "record": "red-2026-11-13T16-41-32-176Z.json",
+  "pass": 3,
+  "fail": 2,
+  "excludedFromFinalTotals": true,
+  "reason": "Initial code accepted only bare operation lookup receipts, while actual POST receipts include resource/links; initial replay assertion also incorrectly expected identical outer shapes. The product now accepts either existing strict contract and validates wrapper consistency before canonical core observation. The test checks matching core plus exact wrapper resource/link and adds invalid-wrapper rejection; no original-ID or transaction assertion is removed.",
+  "preservedSource": "failed-source/",
+  "otherRuns": "The first unrecorded browser run had the same 3 pass / 2 fail result. Later positive runs are pre-hardening/diagnostic; only the final artifact-bound run counts. An earlier type check caught nullable-draft narrowing and was fixed before this recorded failure; its output remains in the chat, not a fabricated raw log."
+}

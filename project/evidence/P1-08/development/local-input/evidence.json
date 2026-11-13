@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-14",
+  "base": "c035b88bacc4f2f0fe4bd0aebc5cc8b0ddfe88fa",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "browser",
+      "record": "browser-2026-11-13T16-46-29-719Z.json",
+      "tests": 5,
+      "pass": 5,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T16-44-07-217Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-13T16-45-30-950Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T16-45-31-762Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T16-45-31-757Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T16-45-31-773Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 5,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "Reload and exact principal/project/run/basis isolation, two-page stale-save CAS and unique original enqueue.",
+    "Actual project POST ACK loss, exact lookup and original replay retain one project/input; successful observation preserves original envelope and atomically clears only its draft and lock.",
+    "Message unknown locks across changed Run basis; lookup miss and non-success observation retain the original lock. Actual message POST and exact successful observation release it without changing the envelope.",
+    "Actual IndexedDB transaction abort rolls back both command insertion and draft pointer. Corrupt draft revision and mismatched message command path fail closed.",
+    "Real blocked future native schema upgrade closes both old module connections, retains original rows and makes old code refuse the newer version."
+  ],
+  "failureHistory": {
+    "record": "red-2026-11-13T16-41-32-176Z.json",
+    "pass": 3,
+    "fail": 2,
+    "excludedFromFinalTotals": true,
+    "reason": "Initial code accepted only bare operation lookup receipts, while actual POST receipts include resource/links; initial replay assertion also incorrectly expected identical outer shapes. The product now accepts either existing strict contract and validates wrapper consistency before canonical core observation. The test checks matching core plus exact wrapper resource/link and adds invalid-wrapper rejection; no original-ID or transaction assertion is removed.",
+    "preservedSource": "failed-source/",
+    "otherRuns": "The first unrecorded browser run had the same 3 pass / 2 fail result. Later positive runs are pre-hardening/diagnostic; only the final artifact-bound run counts. An earlier type check caught nullable-draft narrowing and was fixed before this recorded failure; its output remains in the chat, not a fabricated raw log."
+  },
+  "inputAssessment": "Full root application and standalone production browser-module builds precede the final browser tests. All final groups retain final source/test inventories without drift. Browser JS and map hashes are recorded before/after the final test and match the final files. All workspace and standalone module source-map source bytes match files. Control SQL1..45, Runner/store and dependencies are unchanged. Earlier failed and pre-hardening runs are diagnostic history excluded from final totals.",
+  "scope": "Actual Edge 157 / native IndexedDB executes the standalone production workbench-local module in an explicit harness: reload/context isolation, two-page CAS/enqueue race, actual file Worker Input API project/message and original request recovery, transaction abort, corrupt records and future-version refusal. Browser identity and harness are explicit fixtures. This does not implement or verify a React workbench page, navigation/IME, WebSocket, full T08/D01, enterprise identity, model or Linux Runner.",
+  "retainedBrowserBuild": {
+    "path": "D:/yms/AI/DevMesh/.cache/workbench-local-build",
+    "machineLocalOnly": true,
+    "hashes": {
+      ".cache/workbench-local-build/local.js": "e47840ec3db06fb78ce73556957b4f35a0fb44e364961834763651183cb16ff2",
+      ".cache/workbench-local-build/local.js.map": "bf36bc372c1b11ca90dddc4b2114b4cf2c2c057933111fa2c7e3c904e0507e7e"
+    }
+  },
+  "limits": [
+    "Standalone production module in explicit browser harness; no React workbench entry, navigation/IME or WebSocket verified.",
+    "Browser identity is a fixture; full T08/D01, real OIDC/model/Linux and product acceptance remain outstanding.",
+    "Formal P1-08 remains NOT_STARTED pending predecessors and G0; two development tasks are complete, not the work package."
+  ],
+  "managementChecks": "management-checks.json"
+}

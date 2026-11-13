@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | f96a93fe35a7737e0f11a70030e35b96af2b57a2208be760363bbf3d5caf885b |
+| DevMesh_技术设计方案_V1.1.md | bca7fa04c4e1863c9e71da2ed7153462692d89bddec0ac5c606d50c16216901b |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | c6ba224ed32f27fb78d86b837d837de3a0a21718ba087b3ea3083be01dd34521 |
+| DevMesh_产品验收场景_V10.0.md | 260128fa9ea90de21debc43f17f6d8b5157fa101bd47275d3d56f2294639e704 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -615,3 +615,9 @@ P1-07以45版控制迁移新增追加确认历史并复制原记录，保留首�
 P1-07补充同控制库两轮实际T5到第二轮发布的生产组件组合测试，覆盖保留／明确替换及发布后的实际HTTP数据语义、源退役与容量、路由代际和不可变历史。四个原清理／路由阶段丢ACK、最终控制ACK丢失及路由事务回滚均重开恢复原对象，不重做准备／T5或已完成的物理动作。共享开发HTTP夹具随实际挂载数据检查当前门，路由夹具区分历史和项目当前绑定。
 
 本增量不改生产API、依赖、控制迁移1～45或Runner实现／格式。生产事务、SQLite文件、HTTP和Worker证据与源／模型／Runtime／OCI／物理事实夹具分开绑定；独立Release网关、完整工作台／D01～D08、干净checkout和真实身份／Linux验收继续，正式状态按台账证据评审。
+
+### P1-08工作台本地输入基础
+
+新增implement-workbench-first-path变更，按已有用户授权提前开发不依赖外部资源的部分；正式P1-08仍等待前置与G0。首先实现原生IndexedDB草稿CAS、主体／项目／Run／依据隔离、跨basis未决唯一锁和准确原命令历史；成功输入观察、清空原草稿及释放锁同事务。复用既有严格核心／包装回执契约，包装resource／links一致才采纳；不改变控制SQL、Runner、依赖或旧API。
+
+独立浏览器模块构建和实际Edge／IndexedDB／HTTP／文件Worker用于基础验证。工作台React入口、三栏／五页签、导航／IME、WebSocket和完整首次产品路径继续按变更任务实施；不得以存储模块的开发验证完成工作台或T08验收。
