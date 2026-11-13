@@ -335,3 +335,7 @@ Acceptance history is projected through one bounded synchronous Worker transacti
 ### Preview management React page
 
 准确候选的受保护React管理页、原请求恢复、独立历史与数据语义见 [preview-management-page-design.md](./preview-management-page-design.md)。
+
+### 后继数据方案与替换确认顺序
+
+交付REPLACE只收集方案，批准绑定冻结候选与审查，继续使用已有接受前独立确认。循环前置修正、同库两轮T5测试范围及物理夹具边界见[successor-data-strategy-design.md](./successor-data-strategy-design.md)。

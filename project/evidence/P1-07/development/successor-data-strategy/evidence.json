@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "32cd672e1e09dd10637535b10d27faaba29d6dbc",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "successor",
+      "record": "successor-2026-11-13T15-29-00-056Z.json",
+      "tests": 3,
+      "pass": 3,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T15-30-54-484Z.json",
+      "tests": 55,
+      "pass": 55,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T15-25-23-047Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T15-28-08-407Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T15-28-08-404Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T15-28-08-410Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 58,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "Old compiled source is separately bound to HEAD and reproduces DELIVERY_DATA_REPLACEMENT_UNAPPROVED at original REPLACE delivery collection. Current delivery collects a canonical proposal without a generic CHANGE decision; candidate approval remains mandatory in acceptance.",
+    "Actual same file-backed control Worker database retains first formal Work assessments, candidate, review, T5 and publication. An actual template HTTP request writes a source business row, and createInputTask creates a new Run based on the accepted code commit.",
+    "Second original authenticated Runner output collection, content ACKs, three Work assessments, candidate freeze and review use production components. PRESERVE_MIGRATE performs an actual same-schema SQLite copy containing the business row; REPLACE prepares an actual distinct empty dataset. Both preserve source bytes.",
+    "REPLACE without confirmation creates no second preparation. Exact owner confirmation rejects altered candidate/source/plan/review/decision, missing If-Match and a viewer; original-key confirmation returns the same decision. A changed review invalidates the old confirmation.",
+    "Actual source control closure precedes explicit physical fence acquisition and actual file snapshot. Original read-only service performs actual HTTP health; the second T5 uses retained-content preflight, original accepted-pointer CAS and immutable first acceptance history.",
+    "After Worker reopen, the same T5 key recovers one original second Release, while a changed original body and revoked owner are rejected. Second publication remains pending, source/target gates stay closed, and the migrated schema passes foreign-key checks."
+  ],
+  "failures": {
+    "history": [
+      {
+        "record": "build-2026-11-13T15-20-04-304Z.json",
+        "name": "build",
+        "code": 1,
+        "changedDuringRun": [],
+        "changedSinceRun": [
+          "tests/fixtures/acceptance-successor.mjs"
+        ],
+        "stdoutHash": "d95db2a2c479a651275e183ba91a718cde463975be27deb6c1c947f48cc9e86a",
+        "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "explanation": "A raw recursive workspace build includes the known Cordis/loader vendor cycle; use the repository root build script, which performs the ordered vendor build first."
+      },
+      {
+        "record": "red-2026-11-13T15-19-42-587Z.json",
+        "name": "red",
+        "code": 1,
+        "changedDuringRun": [],
+        "changedSinceRun": [
+          "tests/fixtures/acceptance-successor.mjs"
+        ],
+        "stdoutHash": "6554268f24e64798abb607816a239d361b7b4720ba197133ae4480368828e0cb",
+        "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "explanation": "Expected old compiled implementation rejects REPLACE at collection with DELIVERY_DATA_REPLACEMENT_UNAPPROVED, before the later fixture fence-order branch. The old compiled source is bound separately."
+      },
+      {
+        "record": "successor-2026-11-13T15-22-03-450Z.json",
+        "name": "successor",
+        "code": 1,
+        "changedDuringRun": [],
+        "changedSinceRun": [
+          "tests/fixtures/acceptance-successor.mjs"
+        ],
+        "stdoutHash": "999ec18c8481a99b9817eaadb77f3ce8a483324ae869d68b1c82386ba7667670",
+        "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "explanation": "One pass, two failures: controlled physical heldAt preceded the actual source control gate closure. Reordered only the fixture to close the control gate before acquiring its explicit physical facts. Product timing validation and all assertions remain."
+      }
+    ],
+    "baseline": {
+      "source": "packages/storage-sqlite/src/release-delivery-domain.ts",
+      "sourceHash": "094520788e86c29d5338df96b748b43f58b1e4954168594c1c6e98eb0dd4db41",
+      "mapHash": "4f36459c68104fb2c3c4111be937872cfd682b007fc6424a377930519a90949f",
+      "artifactHash": "c7205cc2c291ad460d84e6366b0364927a90a51607a867ac450addb853b3dc32",
+      "embeddedSourceMatchesBase": true
+    }
+  },
+  "reproduction": "validation-driver.mjs records exact commands, input inventories and log SHA. Complete root application build precedes final tests; successor then regression execute sequentially. binding-driver.mjs verifies current input/artifact/source-map bytes, old migrations and unchanged Runner/dependencies. failure-binding-driver.mjs verifies the exact sole changed failed fixture and old compiled source provenance.",
+  "inputAssessment": "Complete root application build precedes final tests; both final test groups are sequential. All final checks and tests retain the same final source/test inventories without in-run or later input changes. Current complete source-map source bytes match files. Control migrations 1..44, Runner implementation/store format and dependencies are unchanged. Failed run snapshots and their one changed fixture are separately bound in failure-history.json.",
+  "scope": "Local development: same control Worker database, two actual candidate/Work/review/T5 transactions with createInputTask between them; actual first release HTTP business write and second SQLite preserve/replace, read-only HTTP health, source gate closure and original-key reopen. Source Git/model/Runtime/admission/OCI, migration artifact provenance and physical fences/container/network/route facts remain explicit fixtures. Second publication and repeated replacement confirmation after a changed review remain separate work. No real Linux/gVisor/OIDC or product acceptance.",
+  "limits": [
+    "Source Git, live model/Runtime/admission and generated OCI build are explicit fixtures; new Run planning uses existing internal publishPlan fixture.",
+    "Migration artifact bytes/content transaction are actual; artifact provenance and all physical fencing/container/network/route facts are controlled.",
+    "Second publication and repeated confirmation after review changes are not validated here; complete D01-D08 and clean checkout remain outstanding.",
+    "No real Linux/gVisor, enterprise identity or product acceptance; single-agent development review, not an independent person."
+  ],
+  "managementChecks": "management-checks.json",
+  "initialManagementFailure": {
+    "record": "management-checks-initial.json",
+    "reason": "git diff --check rejected a new blank line at the delta spec EOF; removed that one formatting line. No source, fixture, assertion or build input changed."
+  }
+}

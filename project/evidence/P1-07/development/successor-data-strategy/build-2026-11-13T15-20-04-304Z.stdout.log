@@ -1,0 +1,4 @@
+Scope: 18 of 19 workspace projects
+[ERR_PNPM_TASK_CYCLE] The tasks form a dependency cycle: vendor/cordis#build → vendor/loader#build → vendor/cordis#build
+
+If the cycles are deliberate, set ignoreWorkspaceCycles to true to run their tasks in an arbitrary order.

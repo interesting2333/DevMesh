@@ -723,3 +723,21 @@ The system SHALL provide an authenticated exact candidate management page with s
 #### Scenario: Independent history cursors
 - **WHEN** a user pages dataset history or preview history
 - **THEN** the other cursor and selected original detail remain unchanged
+
+### Requirement: Replacement delivery precedes exact candidate confirmation
+
+The system SHALL collect an exact canonical REPLACE data proposal before candidate freeze without requiring a prior generic CHANGE decision. Collection and freeze SHALL NOT authorize data replacement. Acceptance preparation SHALL require the existing owner confirmation bound to the exact candidate revision, manifest, current review, accepted source, data plan and decision identity, using the original operation key and Run precondition.
+
+#### Scenario: A replacement proposal reaches review without approval
+- **WHEN** the approved original Job delivers an exact REPLACE proposal for the current accepted source
+- **THEN** delivery and candidate freeze succeed without creating a replacement decision or preparation
+- **AND** beginning acceptance preparation without the exact independent confirmation is rejected
+
+#### Scenario: A successor retains or replaces accepted data
+- **WHEN** the exact reviewed successor is prepared using its authorized data strategy
+- **THEN** preserve migration retains the source business data in a distinct target, replacement initializes the explicitly chosen target mode, and both retain source bytes
+- **AND** the second T5 compares the original accepted pointer, retains immutable first acceptance history and leaves publication independent
+
+#### Scenario: Confirmation uses changed basis or insufficient authority
+- **WHEN** candidate, source, data plan, review, decision identity, Run precondition or owner authority does not match
+- **THEN** confirmation or preparation is rejected without preparing a replacement target or changing accepted history

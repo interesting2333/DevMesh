@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "65f39a9de4a80aa4429795cc4ce07ec284f51444d55a9177c97f229cf1255adc"
+      "sha256": "417bd3cbe20c827258bd36adb99eab6c6f8c126490f8bdc0284318b231627126"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "e7475b816ae2af04e81ea52307a6ccc2b5d3fd86ee8fd07e773029b480c58fd5"
+      "sha256": "2398a22d0c9c2c49a4e8016002f8969b0e3dd9f60a6a8760ce9f28985727f9fe"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "058daadf4392829f91075af23ac8ab32820a823ba0dce4b5ddb515f8b994b4f6"
+      "sha256": "515c69c31209faf4f7e9979adc614ffe00f1d046327f6abfca0153bed24c65d1"
     }
   ],
   "gates": [
@@ -1354,7 +1354,10 @@
         "packages/input-api/src/preview-management-page.ts",
         "packages/input-api/src/web/preview-management-client.tsx",
         "tests/preview-management-page.test.mjs",
-        "tests/browser/preview-management-page.test.mjs"
+        "tests/browser/preview-management-page.test.mjs",
+        "packages/storage-sqlite/src/release-delivery-domain.ts",
+        "tests/fixtures/acceptance-successor.mjs",
+        "tests/acceptance-successor.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1555,7 +1558,11 @@
         "project/evidence/P1-07/preview-management-page-development-review.md",
         "project/evidence/P1-07/development/preview-management-page/evidence.json",
         "project/evidence/P1-07/development/preview-management-page/final-binding.json",
-        "project/evidence/P1-07/development/preview-management-page/manifest.json"
+        "project/evidence/P1-07/development/preview-management-page/manifest.json",
+        "project/evidence/P1-07/successor-data-strategy-development-review.md",
+        "project/evidence/P1-07/development/successor-data-strategy/evidence.json",
+        "project/evidence/P1-07/development/successor-data-strategy/final-binding.json",
+        "project/evidence/P1-07/development/successor-data-strategy/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1626,7 +1633,8 @@
         "2026-11-13：2.3／5.1原预览可信后台消费：PreviewLifecycleConsumer＋startPlatform显式previewLifecycle工厂，核实DB原项目／策略／主体／backendRef／Runner；全部后续启动成功后才扫描，默认无后端。复用原生命周期页，原一次许可、SENT／UNKNOWN只查、周期健康／确定键到期与Release归属保护；有限轮转／页预算、最多2项目并发、每项目串行和tick合并。预检后／派发前复核停止，最终授权立即关闭，实际排空后关闭存储。consumer 13通过，lifecycle 16通过／1跳过，domain 81通过，共110通过、1跳过；完整构建／类型／Lint／契约、368条源码映射及旧SQL1～44／Runner／依赖未改通过，最终所有输入无漂移。前两轮各有1项测试断言失败：首轮改写夹具execute内部仍调用的this.preflight，修正为独立公开facade；第二轮按并发返回的Map插入顺序比较计数，修正为按原项目ID核对。两轮日志、原源码SHA／字节及原因保留于initial-failure和second-failure；产品代码未因这些失败改动。修正后重新完整构建并在相同最终输入重跑全部分组。真实控制／Runner／业务文件Worker和宿主、30秒健康及真实TTL定时；物理容器／网络／OCI及上游事实为明确夹具，归属测试投影不冒充T5。无自动dataset／owner决定／接受，真实Linux／完整后继链／工作台与干净checkout验收继续；正式P1-07／OpenSpec8/13／阶段门槛不变。",
         "2026-11-13：2.2／2.3／5.1原预览数据后台消费：PreviewDatasetConsumer＋startPlatform显式previewDatasets工厂，核实DB原策略／主体／项目／backendRef／Runner；后续装配成功才启动，默认关闭且不依赖Input API／模型。listPreviewDatasetWork只扫DATASET_PREPARE未决项，保留历史；范围轮转／每项目一页与串行／最多2项目并发／tick合并。原一次派发、SENT／UNKNOWN只查；DatasetPreparer预检后复核停机并提供当前writer最终授权，实际文件Worker建原日志前询问。超时关闭线程和迟到许可但保留父授权RPC及slot直到实际排空，宿主最后关存储。consumer 13通过，lifecycle 23通过／1跳过，domain 59通过，共95通过、1跳过；完整构建／类型／Lint／契约及369条源码映射通过，旧SQL1～44／Runner持久格式／依赖未改，最终输入无漂移。首轮类型检查发现文件Worker闭包内parentPort可空的两处TS18047，Lint发现allSettled多余spread；原日志与两份源码字节／SHA保留在initial-failure。首轮consumer的REMOVE测试调用不存在的f.exec，在释放授权barrier前抛出，排空teardown因此等待；核实准确测试Node PID及命令行后只终止该叶进程，原父测试／driver退出1。原测试字节／SHA、终止脚本及原因留在test-fixture-failure；改用实际文件DB.prepare.run并finally释放barrier，没有因此改产品代码。最终重新完整构建并对相同全部输入重跑所有组，不复用旧组结果。真实控制／数据Worker、SQLite字节／原日志／宿主及超时；上游Git／OCI／候选和物理容器事实仍是明确夹具。无自动owner数据决定／预览创建／接受；真实Linux／身份、完整后继链和干净checkout继续，正式P1-07／OpenSpec8/13／门槛不变。",
         "2026-11-13：2.3／5.1准确候选预览管理API：可信previewPolicies启动快照选择原策略，新dataset／start默认关闭，已有历史与原键恢复保留。单writer成员投影含固定候选／数据方案、Run版本／owner能力和各1～20项独立数据／预览游标，不含路径／Runner／实例／proof。owner分别记录数据准备／启动与STOP_PREVIEW停止；UUID／Run If-Match、原预览版本／impact hash、仅USER及Release归属保护。GET不派发／刷新健康／接受。consumer 5通过，lifecycle 22通过／1次初跑失败（原样定向复跑解决）／1跳过，domain 44通过，acceptanceRetry 1通过，共72通过、1跳过；完整构建／类型／Lint／契约及370映射通过，旧SQL1～44／Runner源码和格式／依赖未改，最终输入无漂移。首轮类型检查5条诊断涉及Map推断的project品牌、默认scope推断为Run品牌、managementContext的Run品牌和optional undefined；原输出与两份源码字节／SHA保留在initial-type-failure。首轮domain契约覆盖仍断言旧50条路径（新文档56），旧implemented列表未列新6个operation；原测试字节／SHA和原因保留在contract-coverage-failure。补覆盖清单及创建需Run If-Match／停止用原preview CAS的声明验证，不因此改产品代码／OpenAPI。全部组结束后修正，最终重新完整构建并以相同全部输入重跑，不复用旧组结果。完整重跑的并行lifecycle组既有接受用例返回409而非注入丢ACK的503；独立只诊断计时复现READY依据从请求前19.346秒至结束31.735秒过期，Release为0，详细时间／响应保存readiness-timing，不计入通过数。未修改产品或测试、未放宽30秒规则；各组及诊断结束后以相同全部输入单独定向复跑原接受用例，通过记录另列，原失败保留。实际HTTP／控制Worker／业务SQLite与三种丢ACK重开；容器／OCI和上游事实、旧Release归属为明确夹具。React管理页、正向后继保留替换和干净checkout／真实身份／Linux继续；正式P1-07／OpenSpec8/13／门槛不变。",
-        "2026-11-13：2.3／5.1预览管理React页：准确候选受保护view／client.js与逐项审查链接，nonce CSP及发送前当前成员复核，GET不准备／派发／停止／签票据／接受。固定数据来源、独立各10项数据／预览历史及跨页原详情；分别确认，刷新／切换／错误清确认。先存每Run原UUID／正文／候选／Run If-Match或原preview CAS再POST，重进不重发、显式原键恢复；损坏存储／未知结果关闭新动作，条件拒绝先刷新后明确放弃，撤权清空UI。UI 2～1440分钟避免一分钟传输后低于后台最小TTL，后台60秒～24小时保持。browser 4通过，consumer 6通过，domain 21通过，共31通过、0跳过；受影响contracts／Input API完整重建、类型／Lint／契约及418映射通过，初次OpenAPI生成／检查早于契约构建而保留旧56路径，原JSON／SHA和两个契约失败保留；全部测试结束后从已构建58路径重新生成，最终同输入重跑全部检查与三组，不改产品源码或测试断言。其余产物源字节沿用前次全workspace构建，旧SQL1～44／Runner源码和格式／依赖未改，输入无漂移。实际Edge／HTTP／控制Worker、三种丢ACK重开与真实应用SQLite保留，分页回执／容器／上游／浏览器身份为显式夹具。管理页开发验证不等于完整工作台、后继保留替换T5／干净checkout或产品验收；正式P1-07／OpenSpec8/13／门槛保持。"
+        "2026-11-13：2.3／5.1预览管理React页：准确候选受保护view／client.js与逐项审查链接，nonce CSP及发送前当前成员复核，GET不准备／派发／停止／签票据／接受。固定数据来源、独立各10项数据／预览历史及跨页原详情；分别确认，刷新／切换／错误清确认。先存每Run原UUID／正文／候选／Run If-Match或原preview CAS再POST，重进不重发、显式原键恢复；损坏存储／未知结果关闭新动作，条件拒绝先刷新后明确放弃，撤权清空UI。UI 2～1440分钟避免一分钟传输后低于后台最小TTL，后台60秒～24小时保持。browser 4通过，consumer 6通过，domain 21通过，共31通过、0跳过；受影响contracts／Input API完整重建、类型／Lint／契约及418映射通过，初次OpenAPI生成／检查早于契约构建而保留旧56路径，原JSON／SHA和两个契约失败保留；全部测试结束后从已构建58路径重新生成，最终同输入重跑全部检查与三组，不改产品源码或测试断言。其余产物源字节沿用前次全workspace构建，旧SQL1～44／Runner源码和格式／依赖未改，输入无漂移。实际Edge／HTTP／控制Worker、三种丢ACK重开与真实应用SQLite保留，分页回执／容器／上游／浏览器身份为显式夹具。管理页开发验证不等于完整工作台、后继保留替换T5／干净checkout或产品验收；正式P1-07／OpenSpec8/13／门槛保持。",
+        "2026-11-13：4.1／5.1后继数据方案与替换确认顺序：修正REPLACE交付要求不存在通用CHANGE批准而无法先冻结候选的循环前置；交付仅收集原规范方案，沿用准确候选／审查／源／方案／owner／Run If-Match的独立确认，未确认禁止准备。复用同文件控制Worker数据库，首轮T5／发布／实际模板HTTP业务写入，createInputTask后新Run完成实际原Runner输出收集、内容、三项Work评估／冻结／审查、真实SQLite保留或替换为空、只读HTTP健康及第二轮T5；旧字节／不同dataset、闭门、外键和原键重开验证。successor 3通过，regression 55通过，合计58通过、0跳过；完整应用构建、类型／Lint／契约及449映射通过，旧SQL1～44／Runner源码与格式／依赖保持。旧构建预期失败、首轮受控physical heldAt早于真实控制关门导致两项拒绝及递归vendor循环命令失败均保留；只改夹具为先关门再acquire，未放宽产品证明或断言。最终两组顺序、输入无漂移。源／模型／Runtime准入／OCI、迁移artifact来源、物理fence／容器／网络／路由与审查观察为显式夹具；第二轮发布、变化review后的再次确认持久模型、完整D01～D08／干净checkout／真实Linux／企业身份与产品验收继续。正式P1-07／OpenSpec8/13／阶段门槛保持。"
       ]
     },
     {

@@ -1,0 +1,47 @@
+{
+  "history": [
+    {
+      "record": "build-2026-11-13T15-20-04-304Z.json",
+      "name": "build",
+      "code": 1,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/fixtures/acceptance-successor.mjs"
+      ],
+      "stdoutHash": "d95db2a2c479a651275e183ba91a718cde463975be27deb6c1c947f48cc9e86a",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "explanation": "A raw recursive workspace build includes the known Cordis/loader vendor cycle; use the repository root build script, which performs the ordered vendor build first."
+    },
+    {
+      "record": "red-2026-11-13T15-19-42-587Z.json",
+      "name": "red",
+      "code": 1,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/fixtures/acceptance-successor.mjs"
+      ],
+      "stdoutHash": "6554268f24e64798abb607816a239d361b7b4720ba197133ae4480368828e0cb",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "explanation": "Expected old compiled implementation rejects REPLACE at collection with DELIVERY_DATA_REPLACEMENT_UNAPPROVED, before the later fixture fence-order branch. The old compiled source is bound separately."
+    },
+    {
+      "record": "successor-2026-11-13T15-22-03-450Z.json",
+      "name": "successor",
+      "code": 1,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/fixtures/acceptance-successor.mjs"
+      ],
+      "stdoutHash": "999ec18c8481a99b9817eaadb77f3ce8a483324ae869d68b1c82386ba7667670",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "explanation": "One pass, two failures: controlled physical heldAt preceded the actual source control gate closure. Reordered only the fixture to close the control gate before acquiring its explicit physical facts. Product timing validation and all assertions remain."
+    }
+  ],
+  "baseline": {
+    "source": "packages/storage-sqlite/src/release-delivery-domain.ts",
+    "sourceHash": "094520788e86c29d5338df96b748b43f58b1e4954168594c1c6e98eb0dd4db41",
+    "mapHash": "4f36459c68104fb2c3c4111be937872cfd682b007fc6424a377930519a90949f",
+    "artifactHash": "c7205cc2c291ad460d84e6366b0364927a90a51607a867ac450addb853b3dc32",
+    "embeddedSourceMatchesBase": true
+  }
+}

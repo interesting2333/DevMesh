@@ -68,11 +68,11 @@ function acceptedLineage(f){
  f.insert('release_candidates',{candidate_id:'candidate_history',project_id:f.p.projectId,run_id:f.p.runId,revision:1,code_commit:'b'.repeat(40),requirement_revision:1,plan_revision:1,manifest_hash:hash('explicit historical fixture'),check_config_hash:hash('old-config'),data_plan_hash:hash('old-data'),manifest_json:'{}',state:'READY'});
  f.insert('releases',{release_id:'release_history',project_id:f.p.projectId,run_id:f.p.runId,candidate_id:'candidate_history',candidate_revision:1,acceptance_operation_id:operation,manifest_hash:hash('explicit historical fixture'),prepared_data_ref:'fixture-only',accepted_by:'user_1',accepted_at:new Date().toISOString()});f.run("UPDATE projects SET accepted_release_id='release_history' WHERE project_id=?",f.p.projectId);return artifact;
 }
-test('existing accepted data requires an exact migration artifact or an approved replacement decision',async t=>{
+test('existing accepted data requires an exact migration artifact or an explicit replacement proposal, with approval deferred to exact candidate acceptance',async t=>{
  for(const strategy of ['INITIAL','PRESERVE_MIGRATE','REPLACE']){
   const f=await fixture(t,{beforeJob(f){const migrationRef=acceptedLineage(f),output=f.extraOutputs.find(o=>o.path===deliveryProfile.materials.find(m=>m.key==='data.plan').path),data=JSON.parse(output.bytes);if(strategy!=='INITIAL'){data.sourceReleaseId='release_history';data.strategy=strategy;if(strategy==='PRESERVE_MIGRATE'){data.initialData=null;data.migrationRef=migrationRef;}else data.replacementDecisionId='decision_unapproved';}output.bytes=Buffer.from(canonical(data));}});
-  if(strategy==='PRESERVE_MIGRATE'){const result=await f.delivery.collect(f.input);assert.equal(result.state,'READY');assert.equal(result.dataPlan.sourceReleaseId,'release_history');}
-  else await assert.rejects(f.delivery.collect(f.input),{code:strategy==='INITIAL'?'DELIVERY_DATA_PLAN_CHANGED':'DELIVERY_DATA_REPLACEMENT_UNAPPROVED'});
+  if(strategy!=='INITIAL'){const result=await f.delivery.collect(f.input);assert.equal(result.state,'READY');assert.equal(result.dataPlan.sourceReleaseId,'release_history');assert.equal(f.get("SELECT count(*) n FROM decisions WHERE subject_kind='CHANGE'").n,0);assert.equal(f.get('SELECT count(*) n FROM acceptance_data_decisions').n,0);assert.equal(f.get('SELECT count(*) n FROM acceptance_preparations').n,0);}
+  else await assert.rejects(f.delivery.collect(f.input),{code:'DELIVERY_DATA_PLAN_CHANGED'});
   assert.equal(f.get('SELECT accepted_release_id FROM projects WHERE project_id=?',f.p.projectId).accepted_release_id,'release_history');
  }
 });

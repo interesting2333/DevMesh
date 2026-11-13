@@ -1360,6 +1360,10 @@ preview-management/view和client.js为受保护成员入口；逐项审查提供
 
 每Run sessionStorage先保存严格原UUID／候选／完整正文及创建Run If-Match或停止原preview版本／impact hash，随后才POST；刷新／重进不重发，仅显式核实原提交。未知结果保留并禁止新提交，条件拒绝须刷新成功后再明确放弃；损坏／不可用存储关闭新操作。权限撤销清空受保护UI，pagehide取消请求、bfcache恢复重载。新创建默认关闭时保留历史及原停止／恢复。REPLACE接受计划在此仍使用来源隔离快照，替换确认留在接受入口。
 
+#### 12. 后继数据方案与替换确认顺序
+
+REPLACE交付是方案收集，先固定原作业输出与当前sourceReleaseId，再冻结候选并逐项审查。交付／冻结不要求尚未能够绑定候选的通用CHANGE批准，也不授权替换。接受页已有独立replacement-confirmations命令绑定准确候选／manifestHash／reviewHash／原接受指针／dataPlanHash／decisionId及owner、UUID、Run If-Match；确认后才允许准备。审查改变使旧确认失效。保留迁移的准确artifact与INITIAL来源限制保持；实际执行／T5／发布仍分离。
+
 ---
 
 ## 13. 执行恢复与交付
@@ -2381,5 +2385,9 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 #### 15. 预览管理页面增量验证范围
 
 以实际Edge／React、HTTP和文件控制Worker验证先存原请求、三种丢ACK重开恢复、分别确认、数据与预览独立分页、刷新清确认、损坏记录与撤权；以真实模板SQLite验证原服务停止后业务数据字节保留。检查移动端溢出、截图和pageerror。上游候选／OCI／容器／浏览器身份及分页准备回执为显式夹具，不能替代真实Linux、企业身份或后继保留／替换T5。受保护HTML／脚本验证nonce CSP、当前成员复核和GET无副作用；结果以开发复核原始记录为准。
+
+#### 15. 后继数据方案与替换确认顺序
+
+使用同一文件控制Worker数据库，两轮实际Work评估／冻结／审查／T5，中间经createInputTask创建准确accepted commit上的新Run。首轮发布后模板HTTP写入业务行；第二轮保留复制该行或明确替换为空，验证源字节、不相同dataset、闭门、原键重开与接受历史。先用旧构建复现交付REPLACE被不存在的前置CHANGE决定阻塞，再验证已有独立确认仍拒绝缺项、错误依据、非owner、缺If-Match和变化review。源／模型／Runtime准入、OCI、迁移artifact来源、物理围栏／容器／网络／路由及审查观察为明确夹具；第二轮发布、重复确认持久模型、完整D01～D08及真实环境另验。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->
