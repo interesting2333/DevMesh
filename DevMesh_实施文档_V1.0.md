@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 8574498f223a09fc939fc3df1039737c07ec5993810f30bb583a727d78761a66 |
+| DevMesh_技术设计方案_V1.1.md | ee67e30f42a26818e5462cc5a37d476eb5712539fb85204ac918809ba9eac388 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | daaaeba3bd3d6d86fc32e8a5ef9c5e2b9890cbb3cbe8f4f1f42d712256b064a6 |
+| DevMesh_产品验收场景_V10.0.md | 5096afc7cda95eeb13cea118566369e1385bc02791ec9e20ca872c95979a5913 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -579,3 +579,7 @@ startPlatform显式acceptancePolicies指定项目已登记策略快照，仅在�
 ### P1-07 撤销后台协调增量
 
 实现AcceptanceAbortConsumer及startPlatform的acceptanceAbort显式工厂，匹配原策略／项目／主体／Runner绑定，只消费已有原决定且无completion的准备。独立于新接受入口、原owner成员身份，有界轮转和最多2项目并发。RunnerAcceptanceAbortCoordinator串联原服务清理与finalizer，停止关闭新阶段／最终授权；数据Worker退出须排空未结束外部authority调用才释放名额。验证原历史过滤、丢完成ACK、周期UNKNOWN恢复、宿主默认关闭／错配启动失败／停机重启、实际Runner清理与数据文件保留、超时与停机时外部调用排空。物理adapter／永久撤权／源健康为夹具时明确记录；完整4.1／5.1／5.2、正式后继链与真实Linux验收继续。
+
+### P1-07 接受数据准备的外部调用排空
+
+LocalSqliteAcceptanceDatasetBackend跟踪父进程所有授权／custody／迁移RPC；Worker超时关闭迟到授权、终止线程，实际排空后才结束调用及释放并发名额。消费者停机复用该语义；不完整原日志继续只查询。适配器自行提供有界I/O，未返回调用继续占位。本增量不新增默认物理Authority、迁移或依赖，真实物理环境／完整后继链及正式门槛仍分别验收。

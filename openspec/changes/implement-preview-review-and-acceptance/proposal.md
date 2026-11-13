@@ -26,4 +26,6 @@
 
 ## Impact
 
+验收准备数据适配器的 Worker 超时／退出须保留父进程中未结束的授权、物理 custody 与可信迁移读取调用，真实排空后才结束原调用并释放名额；与既有消费者停机排空保持一致，原不完整日志只查询、不重做初始化或获取围栏。
+
 涉及 storage-sqlite Worker／迁移、contracts、result-verifier 的候选复查、Runner 与预览网关适配、平台 API 和针对性协议／事务测试。沿用 Node 24、TypeScript、SQLite 单写与官方 A2A／MCP 技术栈，不增加普通模型写权限或默认公网发布。依据 design/03 用户流程、design/04 §6～8、design/05 T5、实施文档 P1-07 与产品场景 D01～D08；基线规则不变。真实身份提供者、生成应用构建运行／健康、Linux/runsc 和真实数据迁移缺项单独保留。

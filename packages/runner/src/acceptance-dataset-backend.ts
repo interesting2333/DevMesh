@@ -64,10 +64,11 @@ export class LocalSqliteAcceptanceDatasetBackend {
   try{return await new Promise<AcceptanceDatasetObservation|undefined>((resolve,reject)=>{
    const worker=new Worker(new URL('./acceptance-dataset-worker.mjs',import.meta.url),{workerData:{action,preparation,options:this.options,trustedMigrationHashes:this.trustedMigrationHashes},execArgv:[]});
    let value:AcceptanceDatasetObservation|undefined,error:RunnerError|undefined,received=false,finished=false;
+   const rpc=new Set<Promise<void>>();
    const allowed=async()=>!finished&&!!authorize&&await authorize()&&!finished;
    const timeout=setTimeout(()=>{finished=true;error=new RunnerError('ACCEPTANCE_DATA_OUTCOME_UNKNOWN',503,'unknown');void worker.terminate();},this.options.timeoutMs);
    worker.on('message',(m:{rpc?:string;id?:number;value?:AcceptanceDatasetObservation;error?:{code:string;status:number}})=>{
-    if(m.rpc){void (async()=>{
+    if(m.rpc){const task=(async()=>{
      try{
       let result:unknown;
       if(finished)return;
@@ -79,11 +80,16 @@ export class LocalSqliteAcceptanceDatasetBackend {
       else throw new RunnerError('ACCEPTANCE_DATA_WORKER_PROTOCOL',409);
       if(!finished)worker.postMessage({id:m.id,value:result});
      }catch(e){if(!finished)worker.postMessage({id:m.id,error:{code:e instanceof RunnerError?e.code:'ACCEPTANCE_DATA_AUTHORITY_UNVERIFIED',status:e instanceof RunnerError?e.status:503}});}
-    })();return;}
+    })();rpc.add(task);void task.finally(()=>rpc.delete(task));return;}
     received=true;if(m.error)error=new RunnerError(m.error.code,m.error.status);else value=m.value;
    });
    worker.on('error',()=>{error=new RunnerError('ACCEPTANCE_DATA_OUTCOME_UNKNOWN',503,'unknown');});
-   worker.once('exit',code=>{finished=true;clearTimeout(timeout);if(error)reject(error);else if(code!==0||!received)reject(new RunnerError('ACCEPTANCE_DATA_OUTCOME_UNKNOWN',503,'unknown'));else resolve(value);});
+   worker.once('exit',code=>{finished=true;clearTimeout(timeout);void (async()=>{
+    // Worker termination does not terminate authority, authorization or migration
+    // calls in this process. Keep the caller and its slot until those calls drain.
+    await Promise.allSettled(rpc);
+    if(error)reject(error);else if(code!==0||!received)reject(new RunnerError('ACCEPTANCE_DATA_OUTCOME_UNKNOWN',503,'unknown'));else resolve(value);
+   })();});
   });}finally{const next=this.#waiting.shift();if(next)next();else this.#active--;}
  }
  async preflight(preparation:AcceptancePreparation){await this.#call('preflight',preparation);}

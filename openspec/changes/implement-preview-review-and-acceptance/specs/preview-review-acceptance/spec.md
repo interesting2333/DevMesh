@@ -657,3 +657,17 @@ The system SHALL provide a current-member HTML page and protected local React sc
 - **WHEN** a candidate has at least 21 original preparations and the member pages its history
 - **THEN** each bounded page is projected from one synchronous Worker transaction with a fixed number of platform-to-Worker round trips, rather than a round trip per item
 - **AND** qualification reuse is confined to that transaction and exact original actor/basis/epoch/source; role changes and revocation are recomputed on the next request without extending health or browser request deadlines
+
+### Requirement: Acceptance data Worker drain includes parent-process calls
+The system SHALL retain an acceptance data preparation call and its bounded Worker slot until every parent-process authorization, custody and trusted migration RPC started by that Worker has settled. Worker timeout or exit SHALL close late authorization and MUST NOT count as cancellation of those external calls. Consumer shutdown SHALL await the actual backend drain.
+
+#### Scenario: Worker exits while an external call remains unfinished
+- **WHEN** a preparation Worker times out during preflight, final authorization, migration loading, custody acquisition or original custody verification
+- **THEN** the caller and its Worker slot remain occupied until the external call actually returns, and queued work cannot exceed the configured concurrency
+- **AND** late authorization is denied, late responses cannot resume the terminated file Worker, and the caller reports an unknown outcome after drain
+- **AND** any original journal and custody remain intact; incomplete originals permit inspection only and never repeat acquisition, initialization or migration
+
+#### Scenario: Shutdown while original acquisition is still returning
+- **WHEN** a trusted preparation consumer stops after original custody was acquired but its external call has not returned
+- **THEN** stop closes new physical authorization and remains pending through Worker timeout until the original call drains
+- **AND** restart queries the same original preparation, preserves incomplete evidence and does not create a Release or replacement physical action

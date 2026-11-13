@@ -12,6 +12,8 @@
 
 可信撤销消费的宿主、原决定队列及停机排空补充见[abort-consumer-design.md](./abort-consumer-design.md)。
 
+验收数据准备的父进程 RPC 与文件 Worker 分别管理生命周期：preflight、acquire、inspect／verify、authorize 和 loadMigration 全部纳入该调用的未结束集合。Worker 超时立即关闭最终授权并终止线程；exit 先关闭新消息处理并真实等待集合排空，之后才结束调用和交还有界名额。外部调用没有强制取消，不能用超时 Promise 竞赛将其视为已结束。已开始的原物理事实与本地日志保留；无原日志的只读预检可重新请求，有原日志而无完整回执的准备只能查询，不能重做 acquire、初始化或迁移。消费者 stop 同样等待实际 RPC 结束，真实适配器须自行限制 I/O。此修复不新增默认物理后端、持久格式或数据库迁移。
+
 ### 1. Review is an append-only overlay over an exact candidate
 
 新增候选审查域，读取已冻结且当前有效的 candidate、原需求 revision 和 plan，不更改原质量或 Work 评估。每条必要需求的 acceptance 文本形成稳定逐项人工审查项；额外收集当前最终 Work 的 human-decision 和原质量策略的 human 检查。历史沿用 Work 的人工许可按原正式证明保留，不能重复批准旧失败。自动检查只显示原正式评估，不接受人工把 FAIL 改为 PASS。

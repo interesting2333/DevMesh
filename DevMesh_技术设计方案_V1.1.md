@@ -1657,6 +1657,10 @@ ReleasePublisher 在恢复 SENT／UNKNOWN 时先 inspect 原操作；只有显�
 
 PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实原控制和动作授权，prepared 只验证原目录及字节限额。Runner v12 对旧 profile 标 INSPECT_ONLY，不声称旧配额已完成、不在恢复中再 enforce；新 profile 同事务标 EXECUTE_ONCE，许可或结果未知仅查询。真实物理 provider、独立导出、默认装配、正式后继保留／替换和门换代后的源服务恢复仍按完整验收实施。
 
+### 13. 验收数据准备的外部调用排空
+
+验收数据准备的 Worker 退出与父进程调用排空独立：LocalSqliteAcceptanceDatasetBackend 跟踪原 Worker 发起的 preflight／acquire／inspect／verify、最终授权及可信迁移读取。超时终止线程并关闭迟到授权，实际 RPC 全部结束后才返回 UNKNOWN、释放有界名额或允许消费者完成停机；未返回的外部调用继续占位，适配器须自行限制 I/O。原日志、文件和物理 custody 保留，不完整原操作只查询、不重做 acquire／初始化／迁移。无原日志的只读预检不虚构派发；不安装默认物理后端，不改变持久格式。
+
 ### 13. 已验收版本独立导出（迁移44）
 
 按原 Release 固定候选／源码 SHA、实际需求／计划／角色配置、控制事件 seq 和会话消息游标及正式材料引用，在独立事务登记 export job。QUEUED→PACKING→READY／FAILED；原创建者与当前成员、generation／claim token／租约共同控制材料读取和归档写入。失败需显式重排原任务；启用的宿主消费者可在原租约过期后按原代际 CAS 恢复崩溃打包。首次准备的 ZIP manifest／hash／size 不变，已注册丢回执查询 READY。材料 FK 阻止 GC，物理原字节恢复仍需 CAS 校验；打包不得执行工作、迁移、发布或改动验收。
@@ -2352,5 +2356,7 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 需验证首轮正式 T5 后，退役撤权／停止／容器和网络移除、fence、配额、guard、网络／容器创建、启动及路由各阶段的物理响应丢失与 Worker 重启；先独立 inspect 原结果，再由显式 resume 领取下一阶段唯一许可。原全局派发 ACK 丢失且 Runner 尚未登记、局部登记／预留／profile／归属／proof ACK 丢失，以及多个协调者并发，均须收敛到同一原请求、预留和实例，不重发已派发动作。丢许可但没有可查询物理结果时保持 UNKNOWN、占用及闭门，不能凭超时推断未执行。
 
 已经记录的 fence 改变、查询不确定、当前接受指针改变、原配置不一致须阻止后续物理阶段；配置恢复后只能继续原 profile。Runner v11→v12 保留旧 action／profile／历史，旧 profile 的配额只查询，不追加配额执行；v12 DDL／历史写失败完整回滚，历史摘要漂移拒绝。实际控制／Runner／数据 Worker 和模板 HTTP 能核实该协议；物理 provider、正式第二轮保留／替换 T5、门换代后的源恢复、导出及完整产品组合另行验证，不由本专项替代。
+
+验收准备数据排空专项使用真实文件 Worker，分别暂停 preflight、最终授权、可信迁移加载、acquire前／后、verify及原完整回执的inspect；超时后检查调用和名额仍保留、排队不超额、迟到授权关闭和原不完整日志不重派。消费者 stop 组合实际控制／Runner／数据 Worker，等待真实RPC返回后才完成，重开仅查原操作、无新服务或Release。物理custody／镜像／容器事实为明确夹具，不作为真实Linux或围栏验收。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

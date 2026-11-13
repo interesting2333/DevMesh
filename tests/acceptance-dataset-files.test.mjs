@@ -4,6 +4,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {randomUUID} from 'node:crypto';
 import {readFile,writeFile,stat,readdir,link} from 'node:fs/promises';
 import {join} from 'node:path';
+import {setTimeout as delay} from 'node:timers/promises';
 import {LocalSqliteAcceptanceDatasetBackend} from '../packages/runner/dist/index.mjs';
 import {datasetEffect} from './fixtures/datasets.mjs';
 import {acceptanceDatasetFixture,acceptanceDatasetPreparation,copyPlan} from './fixtures/acceptance-datasets.mjs';
@@ -65,6 +66,8 @@ test('Worker timeout retains its original journal and late custody authorization
  const f=await acceptanceDatasetFixture(t,{timeoutMs:10000}),p=acceptanceDatasetPreparation(),entered=Promise.withResolvers(),resume=Promise.withResolvers(),finished=Promise.withResolvers(),acquire=f.authority.acquire.bind(f.authority);
  f.authority.acquire=async(...args)=>{entered.resolve();await resume.promise;try{return await acquire(...args);}finally{finished.resolve();}};
  const running=f.acceptance.prepare(p,async()=>true),result=running.then(value=>({value}),error=>({error}));await Promise.race([entered.promise,result.then(()=>{throw Error('Worker ended before the controlled authority was entered');})]);
- const outcome=await result;assert.equal(outcome.error?.code,'ACCEPTANCE_DATA_OUTCOME_UNKNOWN');resume.resolve();await finished.promise;
+ let settled=false;void result.then(()=>{settled=true;});
+ try{await delay(10500);assert.equal(settled,false,'timed-out Worker must retain the external call');}finally{resume.resolve();}
+ const outcome=await result;assert.equal(outcome.error?.code,'ACCEPTANCE_DATA_OUTCOME_UNKNOWN');await finished.promise;
  const paths=f.pathsFor(p),journal=await readFile(paths.journalPath);assert.equal(f.authority.acquisitions,0);assert.deepEqual(await readdir(paths.directory),['operation.json']);assert.equal((await f.acceptance.prepare(p,async()=>true)).errorCode,'ACCEPTANCE_DATA_ORIGINAL_INCOMPLETE');assert.equal(f.authority.acquisitions,0);assert.deepEqual(await readFile(paths.journalPath),journal);
 });

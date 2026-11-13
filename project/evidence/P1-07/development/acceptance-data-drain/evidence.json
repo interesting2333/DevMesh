@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "f4453a6cc88a20c39eafe9350175bc040aa569a0",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "drain",
+      "record": "drain-2026-11-13T13-14-58-551Z.json",
+      "tests": 10,
+      "pass": 10,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lifecycle",
+      "record": "lifecycle-2026-11-13T13-14-58-539Z.json",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "domain",
+      "record": "domain-2026-11-13T13-14-58-551Z.json",
+      "tests": 75,
+      "pass": 75,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T13-13-27-292Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T13-13-27-320Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T13-13-27-323Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T13-13-27-326Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 100,
+  "totalSkipped": 0,
+  "failedRuns": [
+    {
+      "file": "lint-2026-11-13T13-12-31-807Z.json",
+      "name": "lint",
+      "code": 1,
+      "stdoutHash": "b802db4c8476c0972be85eb452482ec23aab72c4cd5f226ed89bdafd2a53f7c1",
+      "stderrHash": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661",
+      "changedDuringRun": []
+    }
+  ],
+  "staticFailureSources": "static-initial/sources.json",
+  "inputAssessment": "All final groups/checks have identical recorded final source/test inventories with no changes during or after execution. Config files are included in the final binding. Complete workspace rebuilt before tests. Bundled source-map source bytes match current source and vendor files. Historical control SQL 1..44 is unchanged. Runner changes are limited to acceptance dataset RPC drain and documentation; its persistent store schema and dependencies are unchanged.",
+  "scope": "Local development only: actual file-backed control/Runner/data Workers, custody and migration RPC drain, queued concurrency, consumer stop and original preparation recovery. Container/network/OCI and physical custody/fences remain explicit fixtures. No actual model/OIDC/Linux/gVisor/physical provider or formal successor preserve/replace acceptance. No default physical authority.",
+  "actualChecks": [
+    "Actual file Worker timeouts during preflight, final authorization and trusted COPY_SAME_SCHEMA loading keep the caller/slot occupied until the controlled call returns. Queued work does not invoke another authority early; no target journal is manufactured and original source bytes remain unchanged.",
+    "Timeout before acquisition denies late physical authorization; timeout after acquisition retains the original custody result but no forged local fence ACK. Verification timeout retains exact journal/fences and no initialized database. Query-only recovery never repeats acquire or initialization.",
+    "Timeout during custody inspection of a materialized original retains the slot. Once drained, queued inspection returns the identical actual receipt/database/journal without another acquisition.",
+    "Actual control/Runner/data Worker composition stops while original acquisition has saved custody but has not returned. Consumer stop remains pending through the file Worker timeout, final authorization is false, control storage remains usable, and restart queries only the same incomplete original without service creation or Release.",
+    "The existing file timeout case was revised before execution to assert actual external drain rather than early rejection. No inventory source or dist rebuild occurred while selected tests ran."
+  ],
+  "reproduction": "validation-driver.mjs records complete build/type/lint/contracts and drain/domain/lifecycle commands with input/log hashes; binding-driver.mjs checks final source/test bytes, source maps, historical SQL and allowed Runner changes.",
+  "limits": [
+    "Physical custody/fences, container/network/OCI and upstream candidate facts are explicit fixtures.",
+    "No real model/OIDC/Linux/gVisor/physical provider or complete successor preserve/replace acceptance.",
+    "External calls cannot be forcibly cancelled. A hung adapter retains its slot and delays stop; actual adapters must bound I/O.",
+    "No full pnpm check or fixed-commit clean-checkout validation."
+  ],
+  "skipped": "No selected test is skipped.",
+  "managementChecks": "management-checks.json"
+}

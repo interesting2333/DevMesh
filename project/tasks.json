@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "8574498f223a09fc939fc3df1039737c07ec5993810f30bb583a727d78761a66"
+      "sha256": "ee67e30f42a26818e5462cc5a37d476eb5712539fb85204ac918809ba9eac388"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "daaaeba3bd3d6d86fc32e8a5ef9c5e2b9890cbb3cbe8f4f1f42d712256b064a6"
+      "sha256": "5096afc7cda95eeb13cea118566369e1385bc02791ec9e20ca872c95979a5913"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "1730b20328a34ca5f630ef57a747eb76a3565801cc572b13cabc28a07480a062"
+      "sha256": "18c632a02b1d5b898647fedb77a59ec3ab190c4a9858022352752fb3f11245f0"
     }
   ],
   "gates": [
@@ -1341,7 +1341,8 @@
         "packages/runner/src/acceptance-abort-coordinator.ts",
         "tests/abort-consumer.test.mjs",
         "tests/abort-coordinator.test.mjs",
-        "tests/abort-consumer-host.test.mjs"
+        "tests/abort-consumer-host.test.mjs",
+        "tests/acceptance-data-drain.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1522,7 +1523,11 @@
         "project/evidence/P1-07/abort-consumer-development-review.md",
         "project/evidence/P1-07/development/abort-consumer/evidence.json",
         "project/evidence/P1-07/development/abort-consumer/final-binding.json",
-        "project/evidence/P1-07/development/abort-consumer/manifest.json"
+        "project/evidence/P1-07/development/abort-consumer/manifest.json",
+        "project/evidence/P1-07/acceptance-data-drain-development-review.md",
+        "project/evidence/P1-07/development/acceptance-data-drain/evidence.json",
+        "project/evidence/P1-07/development/acceptance-data-drain/final-binding.json",
+        "project/evidence/P1-07/development/acceptance-data-drain/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1588,7 +1593,8 @@
         "2026-11-13：5.1 接受React页面：准确view／成员保护脚本接入审查链接；固定INITIAL／保留迁移／替换方案及来源、原准备20项游标，独立替换／准备／关闭／有理由撤销／最终接受确认，刷新清除旧勾选。每Run标签页先保存原正文／UUID／If-Match，丢HTTP应答后显式恢复，重开Worker只一份Release／Outbox；UNKNOWN／损坏存储关闭新提交，ABORTING只显示清理待核实，撤权清空保护内容，原回执和当前发布分开。最终入口6/6、输入／审查／契约22/22、接受领域54项、Edge8/8，共90通过、0跳过；构建／类型／Lint／契约及300条源码映射、旧迁移1～44／Runner不变。类型与首轮浏览器等待失败／修正及原字节快照留存，最终生产源码／产物与完整构建一致；之后仅v37迁移测试改为历史SQL夹具并独立3/3复测，原扩展组52通过2失败保留，仅选用其51个通过的原接受用例；其余原组复用有精确SHA与未导入该独立测试的范围评估，最终Lint／Edge重跑，无运行中漂移；早期输入评估及81秒性能剖析保留历史。实际React／Edge／HTTP／Worker／材料预检／T5；上游Runner／围栏／健康及人工观察为明确夹具，REPLACE／PRESERVE展示另为响应夹具，不代替正式后继业务链。完整工作台／可信后端消费、正向业务／物理验收继续，OpenSpec8/13及正式P1-07／门槛不变。",
         "2026-11-13：4.1／5.1可信接受准备后台消费：AcceptancePreparationConsumer＋startPlatform显式工厂，匹配acceptancePolicies启动快照及DB原project／policy／主体／backendRef／Runner；默认不扫描。未决工作页排除失败／撤销／接受历史，有限范围／页预算、轮转、跨项目最多2并发与每项目串行、tick合并；原一次派发、SENT／UNKNOWN只查原对象，独立周期健康不改proof且GET不刷新。停机立即关闭新授权，preflight后复核，真实排空后端调用再关闭存储，不自动T5／发布／清理。新消费者13/13、宿主／导出19通过1项Windows跳过、接受／T5／撤销／契约45/45，共77通过1跳过；完整构建／类型／Lint／契约通过，301条源码映射及旧迁移1～44／Runner／依赖不变，最终全部输入无漂移。实际文件Worker／CAS／平台启停／31秒健康时效／原HTTP接受回归；物理后端和上游事实为明确夹具。无默认真实Runner／OIDC、物理迁移／清理、正向后继保留替换、完整工作台或产品验收；后端无强制取消、由适配器保证有界I/O。正式P1-07及OpenSpec8/13和门槛保持原状态。",
         "2026-11-13：4.3／5.1已接受发布后台消费：ReleasePublicationConsumer＋startPlatform显式releasePublication工厂，固定原project／policy／主体／backendRef／Runner并核实DB策略，后续宿主组合成功才启动。无需Input API或新接受入口仍开启，默认无物理发布器。私有工作页只取当前已接受未决发布，保留完整历史；原一次publish、SENT／UNKNOWN先inspect并按原授权resume续接Runner阶段，不重建Release／T5或重做迁移。范围轮转、最多2并发、项目串行和tick合并；停机关闭publish／resume最终授权、真实排空后关闭Worker。consumer 16通过，lifecycle 32通过／1跳过，domain 112通过，共160通过1跳过；完整构建／类型／Lint／契约通过，302条源码映射及旧SQL1～44／Runner／依赖不变，所有最终输入无漂移。真实文件Worker／T5／发布事务／宿主启停；物理后端和上游事实为明确夹具，后继历史仅显式元数据投影。未执行完整pnpm check／固定提交干净checkout；真实身份／Linux／容器／物理迁移与正式后继业务链继续验收，正式P1-07／OpenSpec8/13／阶段门槛保持原状态。",
-        "2026-11-13：4.1／5.1原撤销后台协调：AcceptanceAbortConsumer＋startPlatform显式acceptanceAbort工厂，按DB原策略／项目／主体／backendRef／Runner核实，只消费已有决定无completion的原准备；不依赖新接受入口或原owner仍为成员。RunnerAcceptanceAbortCoordinator串联原服务清理与数据／源恢复finalizer；有界轮转／最多2项目并发／tick合并。停机关闭原阶段／driver／数据最终授权并排空调用；数据Worker超时退出后保留未结束authority RPC和名额，返回后只查原结果。consumer 10通过，lifecycle 48通过／1跳过，domain 94通过，共152通过1跳过；完整构建／类型／Lint／契约通过，367条源码映射、旧控制SQL1～44／Runner存储格式／依赖未改，所有最终输入无漂移。首轮类型2处／Lint1条失败及3份源码原字节保留，修正后重新完整构建；两条旧超时测试按新排空契约提前调整后再验证。真实控制／Runner／数据文件Worker和宿主启停；物理Driver／永久撤权／fence／健康仍为明确夹具。完整后继链／真实身份及Linux／容器／全量干净checkout验收继续；正式P1-07／OpenSpec8/13／阶段门槛保持原状态。"
+        "2026-11-13：4.1／5.1原撤销后台协调：AcceptanceAbortConsumer＋startPlatform显式acceptanceAbort工厂，按DB原策略／项目／主体／backendRef／Runner核实，只消费已有决定无completion的原准备；不依赖新接受入口或原owner仍为成员。RunnerAcceptanceAbortCoordinator串联原服务清理与数据／源恢复finalizer；有界轮转／最多2项目并发／tick合并。停机关闭原阶段／driver／数据最终授权并排空调用；数据Worker超时退出后保留未结束authority RPC和名额，返回后只查原结果。consumer 10通过，lifecycle 48通过／1跳过，domain 94通过，共152通过1跳过；完整构建／类型／Lint／契约通过，367条源码映射、旧控制SQL1～44／Runner存储格式／依赖未改，所有最终输入无漂移。首轮类型2处／Lint1条失败及3份源码原字节保留，修正后重新完整构建；两条旧超时测试按新排空契约提前调整后再验证。真实控制／Runner／数据文件Worker和宿主启停；物理Driver／永久撤权／fence／健康仍为明确夹具。完整后继链／真实身份及Linux／容器／全量干净checkout验收继续；正式P1-07／OpenSpec8/13／阶段门槛保持原状态。",
+        "2026-11-13：4.1／5.1验收数据准备RPC排空：LocalSqliteAcceptanceDatasetBackend保留父进程未结束的preflight／authorize／migration／acquire／inspect／verify；Worker超时关闭迟到授权并终止线程，真实排空后才结束调用和释放名额。原不完整日志只查不重做，完整原回执字节保持；实际消费者停止／重开验证同一准备、无新服务或Release。drain 10通过，lifecycle 15通过，domain 75通过，共100通过、0跳过；完整构建／类型／Lint／契约通过，367条源码映射、控制SQL1～44／Runner持久格式／依赖未改，最终所有输入无漂移。首轮Lint多余spread告警及原测试字节保留，修正后完整重建再测试。真实文件／控制／Runner Worker；物理custody／容器／OCI为明确夹具。外部调用无法强制取消，未返回则继续占位；真实身份／Linux与完整后继链／干净checkout验收继续，正式P1-07／OpenSpec8/13／门槛保持原状态。"
       ]
     },
     {
