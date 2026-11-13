@@ -1374,6 +1374,14 @@ REPLACE交付是方案收集，先固定原作业输出与当前sourceReleaseId�
 
 原冻结／上游操作依赖的主体权限失效时，候选继续陈旧，其他owner的确认不能恢复它；需要先产生有效候选。本次验证多个当前owner对仍有效候选分别确认，并验证原冻结主体失去owner权限（包括仅保留operator）时不放宽既有资格检查，不宣称完整owner交接产品流程。
 
+#### 12. 后继接受到第二次发布
+
+第二轮T5完成后，原只读接受服务仍须退役，随后由ReleasePublisher协调准确源服务停止／容器和网络移除、原围栏递增、独立可写目标及当前路由；完整证明落入控制事务后才开放目标。路由generation递增为2，旧dataset保持CLOSED并转为RETIRED。两轮Release／acceptance commit／promotion Outbox及原T5回执保留；发布状态更新不改写原接受回执。
+
+源清理或路由丢回执时只查询原Runner journal和reservation，检查前不得重放物理动作；控制与Runner重开仍使用原证明。源容器消失的当前证明决定旧容量释放，不能仅凭发出删除请求释放容量。最终控制提交丢ACK时恢复已提交PUBLISHED；路由事务失败保留已完成T5和双门关闭，核实原完整物理证明后继续。
+
+同库两轮真实T5后的本地组合验证已覆盖保留／替换数据和第二次发布，实际模板HTTP写入新目标、旧业务记录保留。共用HTTP夹具按当前挂载dataset查门，路由夹具按项目维护唯一当前绑定；物理围栏／guard／容器／网络／路由仍为受控事实，不代表真实后台写入隔离、Linux或独立Release网关验收。
+
 ---
 
 ## 13. 执行恢复与交付
@@ -2409,5 +2417,13 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 冻结依据仍有效时，其他当前owner不能借用原确认，须用自己的新原UUID和当前Run条件明确确认。历史按decisionId／reviewHash／actorId去重，原操作者和首次决定保留，撤权后原键回执不可恢复。
 
 原冻结／上游操作依赖的主体权限失效时，候选继续陈旧，其他owner的确认不能恢复它；需要先产生有效候选。本次验证多个当前owner对仍有效候选分别确认，并验证原冻结主体失去owner权限（包括仅保留operator）时不放宽既有资格检查，不宣称完整owner交接产品流程。
+
+#### 15. 同库第二次发布组合验证
+
+使用现有生产ReleasePublisher、RunnerReleaseRetirementBackend与RunnerReleaseServiceBackend，在同一控制数据库两轮实际T5后完成第二轮发布。PRESERVE_MIGRATE保留首轮HTTP业务行，明确REPLACE使用空目标；发布后实际HTTP新增行仅进入当前目标，原源行保留。核实两份接受／发布历史、路由generation为2且项目仅一个当前路由、源CLOSED／RETIRED、目标OPEN／READY、旧源容量释放和新服务唯一占用。
+
+四个原阶段SOURCE_STOP／SOURCE_CONTAINER_REMOVE／SOURCE_NETWORK_REMOVE／ROUTE_BIND分别丢回执，控制与Runner重开后只查询原对象，恢复原reservation和证明，无重复物理变更／数据准备／T5。最终PUBLISHED控制ACK丢失保留原结果；路由提交事务注入失败时保留T5、旧路由与双门关闭，解除故障后采纳原物理证明。检查原T5回执和首轮发布证明不改写、外键完整，以及丢ACK下容量释放的准确时点。
+
+源Git／模型／Runtime准入、生成OCI与迁移artifact来源、物理围栏／write guard／容器／网络／路由仍为明确夹具。真实SQLite／HTTP／Worker和控制事务的本地组合证据单列，不代替实际物理排空、独立Release网关、完整工作台、D01～D08或正式产品验收。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

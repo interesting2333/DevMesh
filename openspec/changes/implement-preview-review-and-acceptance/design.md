@@ -343,3 +343,7 @@ Acceptance history is projected through one bounded synchronous Worker transacti
 ### 替换确认的追加历史
 
 审查变化后的再次确认、首次锚点与追加历史、前向迁移及原键恢复见 [replacement-reconfirmation-design.md](./replacement-reconfirmation-design.md)。
+
+### 同库两轮接受后的原发布组合
+
+后继正式T5之后的原服务退役、实际新dataset读写、路由换代、丢ACK重开与控制提交失败范围见 [successor-publication-design.md](./successor-publication-design.md)。

@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-14",
+  "base": "d381fea8e730efbac6dda8bd310cfbe9a97a13a7",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "integration",
+      "record": "integration-2026-11-13T16-16-57-408Z.json",
+      "tests": 10,
+      "pass": 10,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T16-19-41-596Z.json",
+      "tests": 12,
+      "pass": 12,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "continuation",
+      "record": "continuation-2026-11-13T16-21-57-080Z.json",
+      "tests": 27,
+      "pass": 27,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "service",
+      "record": "service-2026-11-13T16-25-58-382Z.json",
+      "tests": 13,
+      "pass": 13,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T16-15-03-474Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T16-16-57-380Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T16-16-57-409Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T16-16-57-408Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 62,
+  "totalSkipped": 0,
+  "countType": "TAP test execution occurrences including parent tests; related fixtures/scenarios overlap across sequential groups.",
+  "actualChecks": [
+    "Both strategies traverse the actual second T5 and second publication. Actual template HTTP reads preserve the first business row or start with an empty target, and idempotent writes enter only the new SQLite target while old rows remain.",
+    "Two immutable acceptance commits/releases/promotion outboxes coexist with one current project route at generation 2. Source control gate is CLOSED and dataset RETIRED, target gate OPEN and dataset READY, old source reservation removed/released and one writable slot occupied.",
+    "Each source cleanup/route ACK-loss stage reopens both Workers; inspect has no additional mutations, recovery retains original reservation/proof, no physical stage repeats and no additional data custody acquisition or T5 occurs. UNKNOWN capacity matches the accurate source/target phase.",
+    "Final control commit ACK loss recovers already-PUBLISHED without physical work. A failing route UPDATE rolls back the publication transaction while preserving T5, generation 1 and closed gates; after recovery the original physical proof is adopted unchanged.",
+    "Original T5 receipt bytes and first publication proof remain unchanged. Foreign keys pass. Current HTTP gate and active route fixture follow the actual current target instead of assuming the first release remains current."
+  ],
+  "probeHistory": {
+    "record": "probe-2026-11-13T16-12-55-184Z.json",
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "skipped": 0,
+    "excludedFromFinalTotals": true,
+    "changedAfterProbe": [
+      "tests/release-successor-publication.test.mjs"
+    ],
+    "preservedSource": "probe-source/release-successor-publication.test.mjs",
+    "explanation": "Initial probe exercised both preserve and replace successfully. The final test adds an explicit UNKNOWN-stage capacity assertion; final integration reruns the complete current test. Fixtures and production inputs are otherwise unchanged."
+  },
+  "inputAssessment": "Full root build precedes final tests. Integration, regression, continuation and shared service fixture regression run sequentially. Final build/static/test inventories have no in-run or later drift. Complete source-map bytes match files. Control migrations 1..45, all production source, Runner implementation/store format and dependencies are unchanged. The earlier passing probe is separately preserved with its exact pre-capacity-assertion test source and excluded from final totals.",
+  "scope": "Local development: same control database, two actual candidate/review/T5 transactions followed by two publications using production Publisher/Runner backends; actual SQLite preserve/replace, HTTP business reads/writes and Worker reopen, original source retirement/capacity and current route generation 2. Source Git/model/Runtime/admission/OCI, migration artifact provenance and physical custody/fence/guard/container/network/route facts remain explicit fixtures. Shared loopback HTTP gates follow the currently mounted dataset and do not prove actual background/direct-file write isolation, real Linux/gVisor/OIDC, independent Release gateway, full workbench/D01-D08 or product acceptance.",
+  "limits": [
+    "Physical source/fence/guard/container/network/route, source/model/Runtime/admission/OCI and migration artifact provenance are explicit fixtures. Shared loopback HTTP does not prove real background/direct-file write exclusion.",
+    "Independent Release gateway, full workbench/D01-D08, clean checkout, enterprise identity and Linux/gVisor are outstanding.",
+    "Same-agent local development review; formal work package, OpenSpec completion, stage gates and product acceptance are separate."
+  ],
+  "managementChecks": "management-checks.json"
+}

@@ -1,0 +1,13 @@
+{
+  "record": "probe-2026-11-13T16-12-55-184Z.json",
+  "tests": 3,
+  "pass": 3,
+  "fail": 0,
+  "skipped": 0,
+  "excludedFromFinalTotals": true,
+  "changedAfterProbe": [
+    "tests/release-successor-publication.test.mjs"
+  ],
+  "preservedSource": "probe-source/release-successor-publication.test.mjs",
+  "explanation": "Initial probe exercised both preserve and replace successfully. The final test adds an explicit UNKNOWN-stage capacity assertion; final integration reruns the complete current test. Fixtures and production inputs are otherwise unchanged."
+}

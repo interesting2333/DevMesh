@@ -1,0 +1,18 @@
+# 同库两轮接受后的原发布组合
+
+父工作包P1-07，关联4.3／5.1。复用后继数据方案已有的同文件控制Worker数据库、两轮真实候选／Work评估／人工记录／T5和首次实际模板HTTP业务写入，向后完成第二轮原发布，不以手工插入第二个Release或源路由代替接受与发布。
+
+## 决定
+
+使用现有ReleasePublisher、RunnerReleaseRetirementBackend和RunnerReleaseServiceBackend生产组件，验证先退役本轮只读接受服务，再交接准确源与目标围栏、停止并移除原已发布服务、核实原网络消失、准备独立可写实例／guard／健康／路由，最后由控制事务保存第二轮发布。控制面仅在完整证明及当前观察通过后开放新目标，旧源保持关闭并投影RETIRED。首次接受／发布历史和原T5回执不因后继发布变化改写。
+
+新的组合夹具按本轮原请求产生独立的明确物理撤权记录，不能复用捕获首轮request的固定authority。受控源custody须沿用首轮已发布target的fenceId并递增generation，后继发布再次严格递增；这只是合理的明确夹具因果，不证明真实物理排空。共用模板HTTP服务须按当前实际挂载dataset检查控制门，不能永久检查首轮dataset；物理路由夹具保留历史绑定但当前查询按项目唯一指向当前release。实际SQLite／HTTP／Worker／生产事务与这些物理事实分别记录。
+
+## 验证
+
+- PRESERVE_MIGRATE与明确REPLACE都经过第二轮实际数据准备／T5／发布；分别核实原业务行保留或新目标为空，发布后的实际HTTP写入只进入新目标，旧业务记录保留。
+- 原SOURCE_STOP／SOURCE_CONTAINER_REMOVE／SOURCE_NETWORK_REMOVE或ROUTE_BIND丢ACK后，控制与Runner Worker重开只恢复原journal、reservation、profile和proof；inspect只查，原阶段不重派、不重做数据准备或T5。
+- 第二轮最终控制发布ACK丢失，从已提交PUBLISHED恢复原事实；控制路由更新注入失败时，接受事实不回滚、双门保持关闭，解除失败后核实原证明继续提交。
+- 核实两份Release／acceptance commit／promotion Outbox、一个当前项目路由且generation为2、旧源服务容量只释放一次、当前可写服务容量一份，以及外键和不可变首轮证明。
+
+源Git／模型／Runtime准入、生成OCI、迁移artifact来源、容器／网络／物理fence／write guard及路由仍为明确夹具；本地模板HTTP不证明后台／直接文件写入已受物理隔离，也不替代独立Release网关或完整工作台、D01～D08产品验收。真实OIDC和Linux／gVisor按用户约定继续未配置。

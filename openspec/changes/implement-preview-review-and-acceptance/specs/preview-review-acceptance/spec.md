@@ -495,6 +495,21 @@ The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增
 - **WHEN** 稳定 proof 与新鲜原对象观察通过控制校验
 - **THEN** 控制 writer 原子保存发布／路由／数据状态与开门；缺物理 provider、外部源缺本地证明、未执行真实环境验收均不得被本地日志或夹具替代
 
+#### Scenario: A second accepted release publishes preserved or explicitly replaced data
+- **WHEN** 同一控制数据库中的真实后继T5已提交，原发布器完成准确源服务退役与新目标发布
+- **THEN** 项目路由递增至第二代，旧源保持关闭和数据保留，新目标才允许实际业务写入
+- **AND** 原确认的保留迁移或明确替换语义保持，首轮接受／发布和原T5回执不被改写
+
+#### Scenario: A successor publication loses a source-stage or route acknowledgement
+- **WHEN** 原源服务停止／容器移除／网络移除或路由绑定已执行但ACK丢失，随后控制与Runner Worker重开
+- **THEN** inspect只查原阶段，显式续接使用原请求／预留／profile／proof，不重做T5或数据准备
+- **AND** 只有准确源对象消失证明才能释放旧服务容量，完整控制发布提交前目标不开放写入
+
+#### Scenario: The second route commit fails or its final acknowledgement is lost
+- **WHEN** 控制发布路由事务失败或PUBLISHED已提交后应答丢失
+- **THEN** 前者保留两轮接受事实及闭门并按原物理证明恢复，后者读取原已提交发布结果
+- **AND** 两种恢复都不创建替代服务、重跑迁移或覆盖首轮不可变历史
+
 ### Requirement: Release access preserves current route and credential purpose
 系统 SHALL 以独立 RELEASE 用途凭据开放准确已发布应用，并固定当前接受指针、持久路由代际、原服务证明和数据写门；MUST NOT 复用 PREVIEW 凭据、直接暴露 Runner loopback 或凭历史发布证明假定当前健康。
 
