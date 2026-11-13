@@ -327,3 +327,7 @@ Acceptance history is projected through one bounded synchronous Worker transacti
 ### Recorded preview dataset consumer
 
 原预览数据准备的宿主消费、专用工作页、最终授权与文件Worker排空见 [dataset-consumer-design.md](./dataset-consumer-design.md)。
+
+### Preview management entry
+
+准确候选预览管理API及其可信策略、原意图与公开投影见 [preview-management-design.md](./preview-management-design.md)。

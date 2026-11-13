@@ -4,7 +4,7 @@ import {candidateReviewEntry,candidateHumanResult,candidateRejectionResult,candi
 import {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView} from './release-export.js';
 import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle,opaqueKey } from './primitives.js';
 import {releaseAccessInput,releaseAccessTicket,releaseEntryView} from './release-access.js';
-import {previewAccessInput,previewAccessTicket,previewEntryView} from './preview.js';
+import {previewAccessInput,previewAccessTicket,previewEntryView,candidatePreviewWorkspace,previewDatasetManagement,previewManagement,createPreviewDatasetInput,createPreviewIntentInput,stopPreviewIntentInput} from './preview.js';
 import { command, commandBodies, operationReceipt, idempotencyKey } from './commands.js';
 import { domainEvent, ephemeralTokenDelta } from './events.js';
 import { executionPermit, executionOwner } from './permits.js';
@@ -33,6 +33,7 @@ export const schemas = {
   PlanReview:planReviewView,
   ReleaseAccessInput:releaseAccessInput,ReleaseAccessTicket:releaseAccessTicket,ReleaseEntryView:releaseEntryView,
   PreviewAccessInput:previewAccessInput,PreviewAccessTicket:previewAccessTicket,PreviewEntryView:previewEntryView,
+  CandidatePreviewWorkspace:candidatePreviewWorkspace,PreviewDatasetManagement:previewDatasetManagement,PreviewManagement:previewManagement,CreatePreviewDataset:createPreviewDatasetInput,CreatePreviewIntent:createPreviewIntentInput,StopPreviewIntent:stopPreviewIntentInput,
   ...commandBodies,
 };
 
@@ -147,6 +148,13 @@ export function createOpenApiDocument() {
   releasePage.responses['200']={description:'当前成员访问已接受应用；GET 不签票据',content:{'text/html':{schema:{type:'string'}}}};
   const previewPath='/api/v1/runs/{runId}/previews/{previewId}',previewParameters=[parameter('runId',ids.run),parameter('previewId',ids.preview)];
   add(previewPath,'get','ReadPreviewEntry','PreviewEntryView',previewParameters);
+  const previewManagementPath='/api/v1/runs/{runId}/candidates/{candidateId}/preview-management',previewManagementParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],previewManagementConditional=[...previewManagementParameters,key,parameter('If-Match',strongETag,'header')];
+  add(previewManagementPath,'get','ReadCandidatePreviewWorkspace','CandidatePreviewWorkspace',[...previewManagementParameters,...['afterDatasetSequence','afterPreviewSequence'].map(name=>({name,in:'query',schema:{type:'integer',minimum:0,default:0}})),{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:20,default:10}}]);
+  add(previewManagementPath+'/datasets','post','CreatePreviewDataset','PreviewDatasetManagement',previewManagementConditional,'CreatePreviewDataset','202');
+  add(previewManagementPath+'/datasets/{datasetId}','get','ReadCandidatePreviewDataset','PreviewDatasetManagement',[...previewManagementParameters,parameter('datasetId',ids.dataset)]);
+  add(previewManagementPath+'/previews','post','CreatePreviewIntent','PreviewManagement',previewManagementConditional,'CreatePreviewIntent','202');
+  add(previewManagementPath+'/previews/{previewId}','get','ReadCandidateManagedPreview','PreviewManagement',[...previewManagementParameters,parameter('previewId',ids.preview)]);
+  add(previewManagementPath+'/previews/{previewId}/stop','post','StopPreviewIntent','PreviewManagement',[...previewManagementParameters,parameter('previewId',ids.preview),key],'StopPreviewIntent','202');
   add(previewPath+'/access','post','IssuePreviewAccess','PreviewAccessTicket',[...previewParameters,parameter('Origin',z.url(),'header')],'PreviewAccessInput','200');
   add(previewPath+'/view','get','ReadPreviewPage',undefined,previewParameters);
   const previewPage=paths[previewPath+'/view']!.get as {responses:Record<string,unknown>};

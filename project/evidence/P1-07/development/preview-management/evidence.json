@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "0f11bf7b75c57d6713f61273161716471fda0d6d",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "consumer",
+      "record": "consumer-2026-11-13T14-24-30-855Z.json",
+      "tests": 5,
+      "pass": 5,
+      "failed": 0,
+      "failedTests": [],
+      "passedTests": [
+        "management defaults new intents off, keeps authenticated member reads, fixed policy snapshots and strict owner boundaries",
+        "actual HTTP intents recover committed ACK loss after policy removal/reopen; real data prepares once and independent preview stop preserves its bytes",
+        "strict schemas, If-Match, original body conflicts and foreign scopes reject without creating extra resources",
+        "bounded dataset history pages remain original-only, reads do not dispatch and membership is rechecked before protected response",
+        "explicit legacy Release ownership projection protects stop and malformed stop confirmations never record a decision"
+      ],
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lifecycle",
+      "record": "lifecycle-2026-11-13T14-24-30-899Z.json",
+      "tests": 24,
+      "pass": 22,
+      "failed": 1,
+      "failedTests": [
+        "actual material preflight precedes HTTP T5 and committed ACK recovery preserves one accepted release"
+      ],
+      "passedTests": [
+        "acceptance basis is inert and new actions require current explicit host policy and owner",
+        "preparation HTTP recovers the same original after restart and fails closed on mismatched scope or revoked membership",
+        "HTTP close-unsent and sent abort retain original decisions without claiming physical cleanup",
+        "candidate preparation history uses bounded stable cursor pages and unregistered policies stay unavailable",
+        "host defaults recorded dataset consumption off, validates before starting and cleans up storage after later startup failure",
+        "trusted host prepares actual files without Input API, stops while authority is pending and resumes only original inspection",
+        "periodic trusted host turns an owner-recorded dataset into a real immutable READY receipt and leaves preview decisions separate",
+        "configuration defaults, JSON file and environment precedence",
+        "invalid ports, timeouts and public bind addresses are rejected",
+        "real Cordis plugin serves health/readiness and disposes its listener",
+        "shutdown closes an unfinished TCP connection within its configured deadline",
+        "occupied port rejects startup without closing the existing listener",
+        "built CLI reaches ready and exits after verified Cordis disposal over IPC",
+        "CLI startup failures have nonzero exit codes and never report ready",
+        "CLI propagates EADDRINUSE as a nonzero startup failure",
+        "all five built vendor modules resolve inside this independent repository",
+        "platform input configuration resolves the actual trusted Git baseline and requires an injected identity",
+        "host defaults preview lifecycle off; invalid scopes and later startup failure perform no backend work and release storage",
+        "host stops new preview authorization immediately, drains execution before closing storage and restarts with original inspection",
+        "private review HTTP/page/asset are read-only; an explicit owner result preserves facts, CAS and original receipt",
+        "viewer, foreign candidate, stale hashes and injected identity cannot write; revocation closes all entry reads",
+        "explicit rejection corrections and withdrawals append history and block acceptance preparation without applying changes"
+      ],
+      "skipped": 1,
+      "skippedTests": [
+        "CLI shuts down on POSIX SIGTERM"
+      ],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "domain",
+      "record": "domain-2026-11-13T14-24-31-076Z.json",
+      "tests": 44,
+      "pass": 44,
+      "failed": 0,
+      "failedTests": [],
+      "passedTests": [
+        "checked-in positive and negative examples are executable contracts",
+        "ID namespaces, safe revisions and version literals cannot be coerced",
+        "schema errors retain field paths in a safe standard envelope",
+        "input and display names count Unicode code points at exact boundaries",
+        "conditional requests require a current single strong safe ETag",
+        "a current resource ETag cannot validate old business content or another review",
+        "both execution owners work only within the authority scope",
+        "host IDs, epochs, attempts, activation and grant are all current facts",
+        "validity is half-open and cannot be widened by caller JSON",
+        "forged scope and read-to-write escalation are denied",
+        "command target and payload are discriminated independently of client intent",
+        "event time fallback, persisted versions and host fields cannot contradict payload",
+        "token deltas do not become durable business events",
+        "A2A completed, findings and business success have different representations",
+        "reports must bind one exact commit, including optional preview",
+        "plan data has a scale limit and cannot embed a JavaScript completion checker",
+        "OpenAPI body references and route parameters resolve to shared schemas",
+        "OpenAPI drift check returns a real process success for the generated artifact",
+        "dataset intent retains original identities, closed backend configuration and owner/CAS/idempotency boundaries",
+        "dispatch is granted once and UNKNOWN recovers only the exact original receipt, with immutable history",
+        "intent facts and events roll back together, and a lost intent acknowledgement cannot double-create",
+        "preview binds one exact image/dataset and UNKNOWN start cannot be substituted or stopped without the original instance",
+        "stop ACK and UNKNOWN preserve the original instance, dataset and exact image independently",
+        "persisted backend observations and state/event writes are atomic and recover across a real SQLite Worker restart",
+        "stale prepared candidates cannot dispatch new effects and cross-project or altered storage identities fail closed",
+        "accepted release ownership prevents both new stops and dispatch of an earlier stop intent",
+        "expired intent cannot obtain a late first start grant or claim availability",
+        "trusted backend recovery enumerates original pending objects with bounded stable pagination and project policy isolation",
+        "start intent pins the complete verified image/config identity and data operation; a receipt alone cannot assert health",
+        "unconfigured execution stays PREPARED and the ordinary owner cannot act as the backend",
+        "original start succeeds once, but health expires without rewriting the immutable start receipt",
+        "ongoing unhealthy/unknown observations close availability and the same original instance can recover",
+        "a lost start ACK recovers by inspecting the same object and never executes start again",
+        "a lost dispatch permission ACK never sends an execution or invents an original instance",
+        "a committed runtime observation with a lost ACK leaves the original dispatch for query-only recovery",
+        "an unknown stop is only inspected and an actual local dataset survives verified original-instance stop",
+        "expiry creates one durable stop, preserves the dataset and cannot start an expired PREPARED intent",
+        "release ownership rejects automatic expiry and a last-moment cleanup authorization",
+        "runtime CAS, timestamp and history guards reject stale facts and transaction failures roll back state/events",
+        "stopping a new unaccepted candidate leaves the older owned release, pointer, instance and actual dataset intact",
+        "closing the controller prevents a newly granted action from passing its final authorization",
+        "the actual polling timer recovers expiry without a request and rejects concurrent controller starts",
+        "the real control SQLite Worker reopens original health and scans original lifecycle without replaying a start",
+        "health probe uses actual fixed loopback HTTP with no credentials, redirects, unbounded body or indefinite request"
+      ],
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "acceptanceRetry",
+      "record": "acceptanceRetry-2026-11-13T14-52-50-310Z.json",
+      "tests": 1,
+      "pass": 1,
+      "failed": 0,
+      "failedTests": [],
+      "passedTests": [
+        "actual material preflight precedes HTTP T5 and committed ACK recovery preserves one accepted release"
+      ],
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T14-11-44-742Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T14-11-44-563Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T14-11-44-852Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T14-11-44-808Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 72,
+  "totalSkipped": 1,
+  "failedRuns": [
+    {
+      "file": "domain-2026-11-13T14-09-10-880Z.json",
+      "name": "domain",
+      "code": 1,
+      "stdoutHash": "16efdd2f8cac53c1379c5efae7e6600de87621c8444bd5b05aabb621a45d3d07",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changedDuringRun": []
+    },
+    {
+      "file": "lifecycle-2026-11-13T14-24-30-899Z.json",
+      "name": "lifecycle",
+      "code": 1,
+      "stdoutHash": "7f11690b7f7ba31a2e26ca1e76f9e0433e862f8a2fa45a403d2403808ce1adcc",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changedDuringRun": []
+    },
+    {
+      "file": "type-2026-11-13T14-07-25-653Z.json",
+      "name": "type",
+      "code": 2,
+      "stdoutHash": "df06ccea41544eb0d95bc6d4d9132a81850c73391120e16e0913b4ba695b471e",
+      "stderrHash": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39",
+      "changedDuringRun": []
+    }
+  ],
+  "resolvedFailures": [
+    {
+      "test": "actual material preflight precedes HTTP T5 and committed ACK recovery preserves one accepted release",
+      "initialGroup": "lifecycle-2026-11-13T14-24-30-899Z.json",
+      "focusedGroup": "acceptanceRetry-2026-11-13T14-52-50-310Z.json",
+      "sourceUnchanged": true,
+      "diagnostic": "readiness-timing",
+      "limitation": "Inherited real-time readiness test is sensitive to concurrent host load. The initial nonzero process and timing diagnostic are retained; a focused same-input pass resolves this occurrence. No product freshness or test assertion was changed."
+    }
+  ],
+  "history": "首轮类型检查5条诊断涉及Map推断的project品牌、默认scope推断为Run品牌、managementContext的Run品牌和optional undefined；原输出与两份源码字节／SHA保留在initial-type-failure。首轮domain契约覆盖仍断言旧50条路径（新文档56），旧implemented列表未列新6个operation；原测试字节／SHA和原因保留在contract-coverage-failure。补覆盖清单及创建需Run If-Match／停止用原preview CAS的声明验证，不因此改产品代码／OpenAPI。全部组结束后修正，最终重新完整构建并以相同全部输入重跑，不复用旧组结果。完整重跑的并行lifecycle组既有接受用例返回409而非注入丢ACK的503；独立只诊断计时复现READY依据从请求前19.346秒至结束31.735秒过期，Release为0，详细时间／响应保存readiness-timing，不计入通过数。未修改产品或测试、未放宽30秒规则；各组及诊断结束后以相同全部输入单独定向复跑原接受用例，通过记录另列，原失败保留。",
+  "inputAssessment": "All groups/checks have identical recorded final source/test inventories with no changes during or after execution. The lifecycle process has one explicit retained failure; a separate same-input focused retry must pass precisely that case, and distinct passed names are checked. This is aggregate development evidence, not a claim that every original command exited zero. Config files are included in the final binding. Complete workspace rebuilt before tests. Bundled source-map source bytes match current source and vendor files. Historical control SQL 1..44 is unchanged. Runner source and persistent schema and dependencies are unchanged.",
+  "scope": "Local development only: actual file-backed control/Runner/data Workers, exact candidate preview management HTTP, owner intents, real data files, original ACK recovery and stop, bounded redacted history and membership checks. Container/network/OCI and physical custody/fences remain explicit fixtures. No actual model/OIDC/Linux/gVisor/physical provider or formal successor preserve/replace acceptance. No default physical authority.",
+  "actualChecks": [
+    "Actual HTTP defaults new dataset/start intents off, keeps current-member reads, distinguishes viewer/owner and current selected policy, pins policy map against later caller mutation and rejects absent Input API at host composition.",
+    "Actual file-backed control Worker plus HTTP records dataset/start/stop owner intents. Each injected committed ACK loss survives Worker reopen and new-policy selection removal with the original body/key/If-Match, producing one original identity.",
+    "Actual local application SQLite preparation and a business write compose with independently advanced controlled preview start/stop. Original stop preserves database bytes and creates no accepted Release or project pointer.",
+    "Strict body/query schemas, Idempotency-Key, If-Match, Origin, original-body conflicts, unavailable unprepared dataset and foreign resource/candidate paths reject without extra resources.",
+    "Three actual prepared datasets paginate one item at a time through stable original cursors; GET never starts previews. The response omits paths, backend/Runner/instance/endpoint and internal request/proof. A membership removal after the writer snapshot is caught before protected HTTP response.",
+    "Malformed stop confirmation or stale impact hash cannot create a stop decision. An explicitly inserted legacy Release ownership projection disables stop and the writer rejects it. This projection is not T5 or successor acceptance evidence."
+  ],
+  "reproduction": "validation-driver.mjs records exact build/type/lint/contracts and consumer/domain/lifecycle commands, complete input inventories and stdout/stderr SHA; binding-driver.mjs verifies final bytes, maps, unchanged old SQL/Runner/dependencies.",
+  "limits": [
+    "Source candidate/Git/OCI and container facts remain explicit fixtures; Release ownership is an explicit legacy projection, not T5.",
+    "No new React management page, enterprise identity, physical Linux/gVisor or complete successor preserve/replace acceptance.",
+    "Configured preview policy selection is not proof of a configured or healthy backend/gateway. Consumers are independently installed by trusted composition.",
+    "An inherited real-time readiness case failed under concurrent load and passed only after a focused same-input retry; original nonzero process and timing diagnostic are retained. No test assertion or product freshness was changed.",
+    "No full pnpm check or fixed-commit clean-checkout validation."
+  ],
+  "skipped": "Existing foundation POSIX SIGTERM case skips on Windows, not counted as passed.",
+  "managementChecks": "management-checks.json",
+  "driverHistory": "readiness-timing/driver-generation-history.json"
+}

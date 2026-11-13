@@ -1,0 +1,8 @@
+{
+  "scope": "Auxiliary driver only; no product or test input changed.",
+  "failure": {
+    "sha256": "dd80973a1534b1d8219c329ae4282097ba4b034fdaf62f2f56a09a07fafd9b7e",
+    "byteSize": 5913
+  },
+  "reason": "The first focused-driver generator used a JavaScript replace replacement string containing the dollar-plus-apostrophe replacement token, so its generated driver was syntactically invalid and did not start any test. Callback replacement corrected it; the focused original test passed. Preserved invalid source initially triggered evidence lint and is now retained under the established failed-source exclusion. Original management failure remains in management-first-failure.json."
+}

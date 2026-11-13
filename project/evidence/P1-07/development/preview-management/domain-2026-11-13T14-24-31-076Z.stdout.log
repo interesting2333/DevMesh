@@ -1,0 +1,353 @@
+TAP version 13
+# Subtest: checked-in positive and negative examples are executable contracts
+ok 1 - checked-in positive and negative examples are executable contracts
+  ---
+  duration_ms: 588.5971
+  type: 'test'
+  ...
+# Subtest: ID namespaces, safe revisions and version literals cannot be coerced
+ok 2 - ID namespaces, safe revisions and version literals cannot be coerced
+  ---
+  duration_ms: 15.6813
+  type: 'test'
+  ...
+# Subtest: schema errors retain field paths in a safe standard envelope
+ok 3 - schema errors retain field paths in a safe standard envelope
+  ---
+  duration_ms: 20.9867
+  type: 'test'
+  ...
+# Subtest: input and display names count Unicode code points at exact boundaries
+ok 4 - input and display names count Unicode code points at exact boundaries
+  ---
+  duration_ms: 16.3115
+  type: 'test'
+  ...
+# Subtest: conditional requests require a current single strong safe ETag
+ok 5 - conditional requests require a current single strong safe ETag
+  ---
+  duration_ms: 8.4398
+  type: 'test'
+  ...
+# Subtest: a current resource ETag cannot validate old business content or another review
+ok 6 - a current resource ETag cannot validate old business content or another review
+  ---
+  duration_ms: 7.6678
+  type: 'test'
+  ...
+# Subtest: both execution owners work only within the authority scope
+ok 7 - both execution owners work only within the authority scope
+  ---
+  duration_ms: 14.3982
+  type: 'test'
+  ...
+# Subtest: host IDs, epochs, attempts, activation and grant are all current facts
+ok 8 - host IDs, epochs, attempts, activation and grant are all current facts
+  ---
+  duration_ms: 14.4323
+  type: 'test'
+  ...
+# Subtest: validity is half-open and cannot be widened by caller JSON
+ok 9 - validity is half-open and cannot be widened by caller JSON
+  ---
+  duration_ms: 5.6097
+  type: 'test'
+  ...
+# Subtest: forged scope and read-to-write escalation are denied
+ok 10 - forged scope and read-to-write escalation are denied
+  ---
+  duration_ms: 7.0879
+  type: 'test'
+  ...
+# Subtest: command target and payload are discriminated independently of client intent
+ok 11 - command target and payload are discriminated independently of client intent
+  ---
+  duration_ms: 101.2966
+  type: 'test'
+  ...
+# Subtest: event time fallback, persisted versions and host fields cannot contradict payload
+ok 12 - event time fallback, persisted versions and host fields cannot contradict payload
+  ---
+  duration_ms: 39.1311
+  type: 'test'
+  ...
+# Subtest: token deltas do not become durable business events
+ok 13 - token deltas do not become durable business events
+  ---
+  duration_ms: 317.6865
+  type: 'test'
+  ...
+# Subtest: A2A completed, findings and business success have different representations
+ok 14 - A2A completed, findings and business success have different representations
+  ---
+  duration_ms: 58.7427
+  type: 'test'
+  ...
+# Subtest: reports must bind one exact commit, including optional preview
+ok 15 - reports must bind one exact commit, including optional preview
+  ---
+  duration_ms: 5.9374
+  type: 'test'
+  ...
+# Subtest: plan data has a scale limit and cannot embed a JavaScript completion checker
+ok 16 - plan data has a scale limit and cannot embed a JavaScript completion checker
+  ---
+  duration_ms: 44.8113
+  type: 'test'
+  ...
+# Subtest: OpenAPI body references and route parameters resolve to shared schemas
+ok 17 - OpenAPI body references and route parameters resolve to shared schemas
+  ---
+  duration_ms: 3952.6451
+  type: 'test'
+  ...
+# Subtest: OpenAPI drift check returns a real process success for the generated artifact
+ok 18 - OpenAPI drift check returns a real process success for the generated artifact
+  ---
+  duration_ms: 15288.4309
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dataset intent retains original identities, closed backend configuration and owner/CAS/idempotency boundaries
+ok 19 - dataset intent retains original identities, closed backend configuration and owner/CAS/idempotency boundaries
+  ---
+  duration_ms: 44974.8317
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: dispatch is granted once and UNKNOWN recovers only the exact original receipt, with immutable history
+ok 20 - dispatch is granted once and UNKNOWN recovers only the exact original receipt, with immutable history
+  ---
+  duration_ms: 33829.8455
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: intent facts and events roll back together, and a lost intent acknowledgement cannot double-create
+ok 21 - intent facts and events roll back together, and a lost intent acknowledgement cannot double-create
+  ---
+  duration_ms: 53123.3297
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: preview binds one exact image/dataset and UNKNOWN start cannot be substituted or stopped without the original instance
+ok 22 - preview binds one exact image/dataset and UNKNOWN start cannot be substituted or stopped without the original instance
+  ---
+  duration_ms: 38872.4827
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: stop ACK and UNKNOWN preserve the original instance, dataset and exact image independently
+ok 23 - stop ACK and UNKNOWN preserve the original instance, dataset and exact image independently
+  ---
+  duration_ms: 33621.4907
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: persisted backend observations and state/event writes are atomic and recover across a real SQLite Worker restart
+ok 24 - persisted backend observations and state/event writes are atomic and recover across a real SQLite Worker restart
+  ---
+  duration_ms: 51409.2099
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: stale prepared candidates cannot dispatch new effects and cross-project or altered storage identities fail closed
+ok 25 - stale prepared candidates cannot dispatch new effects and cross-project or altered storage identities fail closed
+  ---
+  duration_ms: 67789.7046
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: accepted release ownership prevents both new stops and dispatch of an earlier stop intent
+ok 26 - accepted release ownership prevents both new stops and dispatch of an earlier stop intent
+  ---
+  duration_ms: 60513.2064
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: expired intent cannot obtain a late first start grant or claim availability
+ok 27 - expired intent cannot obtain a late first start grant or claim availability
+  ---
+  duration_ms: 49279.4064
+  type: 'test'
+  ...
+# (node:38924) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: trusted backend recovery enumerates original pending objects with bounded stable pagination and project policy isolation
+ok 28 - trusted backend recovery enumerates original pending objects with bounded stable pagination and project policy isolation
+  ---
+  duration_ms: 38543.6405
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: start intent pins the complete verified image/config identity and data operation; a receipt alone cannot assert health
+ok 29 - start intent pins the complete verified image/config identity and data operation; a receipt alone cannot assert health
+  ---
+  duration_ms: 38275.8461
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unconfigured execution stays PREPARED and the ordinary owner cannot act as the backend
+ok 30 - unconfigured execution stays PREPARED and the ordinary owner cannot act as the backend
+  ---
+  duration_ms: 72085.1804
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: original start succeeds once, but health expires without rewriting the immutable start receipt
+ok 31 - original start succeeds once, but health expires without rewriting the immutable start receipt
+  ---
+  duration_ms: 36704.473
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: ongoing unhealthy/unknown observations close availability and the same original instance can recover
+ok 32 - ongoing unhealthy/unknown observations close availability and the same original instance can recover
+  ---
+  duration_ms: 31077.3478
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a lost start ACK recovers by inspecting the same object and never executes start again
+ok 33 - a lost start ACK recovers by inspecting the same object and never executes start again
+  ---
+  duration_ms: 34119.995
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a lost dispatch permission ACK never sends an execution or invents an original instance
+ok 34 - a lost dispatch permission ACK never sends an execution or invents an original instance
+  ---
+  duration_ms: 38173.2801
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a committed runtime observation with a lost ACK leaves the original dispatch for query-only recovery
+ok 35 - a committed runtime observation with a lost ACK leaves the original dispatch for query-only recovery
+  ---
+  duration_ms: 30239.6498
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unknown stop is only inspected and an actual local dataset survives verified original-instance stop
+ok 36 - an unknown stop is only inspected and an actual local dataset survives verified original-instance stop
+  ---
+  duration_ms: 68848.8562
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: expiry creates one durable stop, preserves the dataset and cannot start an expired PREPARED intent
+ok 37 - expiry creates one durable stop, preserves the dataset and cannot start an expired PREPARED intent
+  ---
+  duration_ms: 56395.345
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: release ownership rejects automatic expiry and a last-moment cleanup authorization
+ok 38 - release ownership rejects automatic expiry and a last-moment cleanup authorization
+  ---
+  duration_ms: 32935.1496
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: runtime CAS, timestamp and history guards reject stale facts and transaction failures roll back state/events
+ok 39 - runtime CAS, timestamp and history guards reject stale facts and transaction failures roll back state/events
+  ---
+  duration_ms: 50724.9806
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: stopping a new unaccepted candidate leaves the older owned release, pointer, instance and actual dataset intact
+ok 40 - stopping a new unaccepted candidate leaves the older owned release, pointer, instance and actual dataset intact
+  ---
+  duration_ms: 103607.7311
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: closing the controller prevents a newly granted action from passing its final authorization
+ok 41 - closing the controller prevents a newly granted action from passing its final authorization
+  ---
+  duration_ms: 32030.8146
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the actual polling timer recovers expiry without a request and rejects concurrent controller starts
+ok 42 - the actual polling timer recovers expiry without a request and rejects concurrent controller starts
+  ---
+  duration_ms: 40492.1497
+  type: 'test'
+  ...
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:18132) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the real control SQLite Worker reopens original health and scans original lifecycle without replaying a start
+ok 43 - the real control SQLite Worker reopens original health and scans original lifecycle without replaying a start
+  ---
+  duration_ms: 74632.7289
+  type: 'test'
+  ...
+# Subtest: health probe uses actual fixed loopback HTTP with no credentials, redirects, unbounded body or indefinite request
+ok 44 - health probe uses actual fixed loopback HTTP with no credentials, redirects, unbounded body or indefinite request
+  ---
+  duration_ms: 662.5797
+  type: 'test'
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1282826.9315

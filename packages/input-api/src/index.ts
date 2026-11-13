@@ -17,6 +17,7 @@ import {mountReleaseRoutes} from './release.js';
 import type {ReleaseAccessGateway} from './release.js';
 export type {ReleaseAccessGateway} from './release.js';
 import {mountPreviewRoutes} from './preview.js';
+import {mountPreviewManagementRoutes} from './preview-management.js';
 import type {PreviewAccessGateway} from './preview.js';
 import type {TLSSocket} from 'node:tls';
 export type {PreviewAccessGateway} from './preview.js';
@@ -27,6 +28,7 @@ export interface TemplateBaseline { readonly version:string;readonly baseCommit:
 export type InputApiOptions={enabled?:false}|{
   enabled:true; identityResolver?:IdentityResolver|undefined; baseline:TemplateBaseline;
   previewGateway?:PreviewAccessGateway|undefined;
+  previewPolicies?:Readonly<Record<string,string>>|undefined;
   releaseGateway?:ReleaseAccessGateway|undefined;
   acceptance?:AcceptanceAccess|undefined;
   maximumUploads?:number;diagnostic?:(detail:{requestId:string;error:unknown})=>void;
@@ -214,6 +216,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     response.json(await content.storage.request('listInputEvents',{principalId:identity.principalId,projectId:parseContract(ids.project,request.params.projectId),runId:parseContract(ids.run,request.params.runId),afterSeq:Number(after),limit:positive(request.query.limit,50,200)}));
   }));
   mountPreviewRoutes(router,content,options.previewGateway,route);
+  mountPreviewManagementRoutes(router,content,options.previewPolicies,route);
   mountExportRoutes(router,content,route);
   mountReviewRoutes(router,content,route);
   mountAcceptanceRoutes(router,content,options.acceptance,route);

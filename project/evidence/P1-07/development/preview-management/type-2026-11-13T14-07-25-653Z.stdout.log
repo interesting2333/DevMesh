@@ -1,0 +1,20 @@
+packages/input-api/src/preview-management.ts(15,137): error TS2345: Argument of type 'string' is not assignable to parameter of type 'string & $brand<"prj">'.
+  Type 'string' is not assignable to type '$brand<"prj">'.
+packages/input-api/src/preview-management.ts(33,131): error TS2345: Argument of type 'string & $brand<"preview">' is not assignable to parameter of type '(string & $brand<"run">) | undefined'.
+  Type 'string & $brand<"preview">' is not assignable to type 'string & $brand<"run">'.
+    Type 'string & $brand<"preview">' is not assignable to type '$brand<"run">'.
+      Types of property '[$brand]' are incompatible.
+        Property 'run' is missing in type '{ preview: true; }' but required in type '{ run: true; }'.
+packages/storage-sqlite/src/preview-domain.ts(73,70): error TS2345: Argument of type '{ principalId: string; runId: string; candidateId: string & $brand<"candidate">; policyHash?: string; }' is not assignable to parameter of type '{ candidateId: string & $brand<"candidate">; principalId: string; runId: string & $brand<"run">; }'.
+  Types of property 'runId' are incompatible.
+    Type 'string' is not assignable to type 'string & $brand<"run">'.
+      Type 'string' is not assignable to type '$brand<"run">'.
+packages/storage-sqlite/src/preview-domain.ts(82,30): error TS2379: Argument of type '{ candidateId: string & $brand<"candidate">; afterDatasetSequence: number; afterPreviewSequence: number; limit: number; principalId: string; runId: string & $brand<"run">; policyHash?: string | undefined; }' is not assignable to parameter of type '{ principalId: string; runId: string; candidateId: string & $brand<"candidate">; policyHash?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'policyHash' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+packages/storage-sqlite/src/preview-domain.ts(85,102): error TS2379: Argument of type '{ candidateId: string & $brand<"candidate">; datasetId: string & $brand<"dataset">; principalId: string; runId: string & $brand<"run">; policyHash?: string | undefined; }' is not assignable to parameter of type '{ principalId: string; runId: string; candidateId: string & $brand<"candidate">; policyHash?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'policyHash' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+[ELIFECYCLE] Command failed with exit code 2.

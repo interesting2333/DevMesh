@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "31e05a5957495b280bfb231b60ce1bd32a655ca068e4acf7f587f04fdc37af78"
+      "sha256": "e8306478a696ba2d488a167143ef1b4d8a82341ee01098dc65a738d589019501"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "8a09a98bdb1983a90702caa6935175707dda268ee159c4b4317af29159397162"
+      "sha256": "65bf46ad036241a33b87c02d171f5f47295d0f7bb38aad69e785e4513b539b52"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "f0b03e9b37f1cbca81135766902f1c54be7b57a188b6e4f673a8eaac4d050fae"
+      "sha256": "ca275aced4f9324f3e26d2d09a77de8e9f5e550bdabcfd78f3282ac983a6ecde"
     }
   ],
   "gates": [
@@ -1348,7 +1348,9 @@
         "tests/preview-consumer-host.test.mjs",
         "packages/platform-core/src/dataset-consumer.ts",
         "tests/dataset-consumer.test.mjs",
-        "tests/dataset-consumer-host.test.mjs"
+        "tests/dataset-consumer-host.test.mjs",
+        "packages/input-api/src/preview-management.ts",
+        "tests/preview-management.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1541,7 +1543,11 @@
         "project/evidence/P1-07/dataset-consumer-development-review.md",
         "project/evidence/P1-07/development/dataset-consumer/evidence.json",
         "project/evidence/P1-07/development/dataset-consumer/final-binding.json",
-        "project/evidence/P1-07/development/dataset-consumer/manifest.json"
+        "project/evidence/P1-07/development/dataset-consumer/manifest.json",
+        "project/evidence/P1-07/preview-management-development-review.md",
+        "project/evidence/P1-07/development/preview-management/evidence.json",
+        "project/evidence/P1-07/development/preview-management/final-binding.json",
+        "project/evidence/P1-07/development/preview-management/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1610,7 +1616,8 @@
         "2026-11-13：4.1／5.1原撤销后台协调：AcceptanceAbortConsumer＋startPlatform显式acceptanceAbort工厂，按DB原策略／项目／主体／backendRef／Runner核实，只消费已有决定无completion的原准备；不依赖新接受入口或原owner仍为成员。RunnerAcceptanceAbortCoordinator串联原服务清理与数据／源恢复finalizer；有界轮转／最多2项目并发／tick合并。停机关闭原阶段／driver／数据最终授权并排空调用；数据Worker超时退出后保留未结束authority RPC和名额，返回后只查原结果。consumer 10通过，lifecycle 48通过／1跳过，domain 94通过，共152通过1跳过；完整构建／类型／Lint／契约通过，367条源码映射、旧控制SQL1～44／Runner存储格式／依赖未改，所有最终输入无漂移。首轮类型2处／Lint1条失败及3份源码原字节保留，修正后重新完整构建；两条旧超时测试按新排空契约提前调整后再验证。真实控制／Runner／数据文件Worker和宿主启停；物理Driver／永久撤权／fence／健康仍为明确夹具。完整后继链／真实身份及Linux／容器／全量干净checkout验收继续；正式P1-07／OpenSpec8/13／阶段门槛保持原状态。",
         "2026-11-13：4.1／5.1验收数据准备RPC排空：LocalSqliteAcceptanceDatasetBackend保留父进程未结束的preflight／authorize／migration／acquire／inspect／verify；Worker超时关闭迟到授权并终止线程，真实排空后才结束调用和释放名额。原不完整日志只查不重做，完整原回执字节保持；实际消费者停止／重开验证同一准备、无新服务或Release。drain 10通过，lifecycle 15通过，domain 75通过，共100通过、0跳过；完整构建／类型／Lint／契约通过，367条源码映射、控制SQL1～44／Runner持久格式／依赖未改，最终所有输入无漂移。首轮Lint多余spread告警及原测试字节保留，修正后完整重建再测试。真实文件／控制／Runner Worker；物理custody／容器／OCI为明确夹具。外部调用无法强制取消，未返回则继续占位；真实身份／Linux与完整后继链／干净checkout验收继续，正式P1-07／OpenSpec8/13／门槛保持原状态。",
         "2026-11-13：2.3／5.1原预览可信后台消费：PreviewLifecycleConsumer＋startPlatform显式previewLifecycle工厂，核实DB原项目／策略／主体／backendRef／Runner；全部后续启动成功后才扫描，默认无后端。复用原生命周期页，原一次许可、SENT／UNKNOWN只查、周期健康／确定键到期与Release归属保护；有限轮转／页预算、最多2项目并发、每项目串行和tick合并。预检后／派发前复核停止，最终授权立即关闭，实际排空后关闭存储。consumer 13通过，lifecycle 16通过／1跳过，domain 81通过，共110通过、1跳过；完整构建／类型／Lint／契约、368条源码映射及旧SQL1～44／Runner／依赖未改通过，最终所有输入无漂移。前两轮各有1项测试断言失败：首轮改写夹具execute内部仍调用的this.preflight，修正为独立公开facade；第二轮按并发返回的Map插入顺序比较计数，修正为按原项目ID核对。两轮日志、原源码SHA／字节及原因保留于initial-failure和second-failure；产品代码未因这些失败改动。修正后重新完整构建并在相同最终输入重跑全部分组。真实控制／Runner／业务文件Worker和宿主、30秒健康及真实TTL定时；物理容器／网络／OCI及上游事实为明确夹具，归属测试投影不冒充T5。无自动dataset／owner决定／接受，真实Linux／完整后继链／工作台与干净checkout验收继续；正式P1-07／OpenSpec8/13／阶段门槛不变。",
-        "2026-11-13：2.2／2.3／5.1原预览数据后台消费：PreviewDatasetConsumer＋startPlatform显式previewDatasets工厂，核实DB原策略／主体／项目／backendRef／Runner；后续装配成功才启动，默认关闭且不依赖Input API／模型。listPreviewDatasetWork只扫DATASET_PREPARE未决项，保留历史；范围轮转／每项目一页与串行／最多2项目并发／tick合并。原一次派发、SENT／UNKNOWN只查；DatasetPreparer预检后复核停机并提供当前writer最终授权，实际文件Worker建原日志前询问。超时关闭线程和迟到许可但保留父授权RPC及slot直到实际排空，宿主最后关存储。consumer 13通过，lifecycle 23通过／1跳过，domain 59通过，共95通过、1跳过；完整构建／类型／Lint／契约及369条源码映射通过，旧SQL1～44／Runner持久格式／依赖未改，最终输入无漂移。首轮类型检查发现文件Worker闭包内parentPort可空的两处TS18047，Lint发现allSettled多余spread；原日志与两份源码字节／SHA保留在initial-failure。首轮consumer的REMOVE测试调用不存在的f.exec，在释放授权barrier前抛出，排空teardown因此等待；核实准确测试Node PID及命令行后只终止该叶进程，原父测试／driver退出1。原测试字节／SHA、终止脚本及原因留在test-fixture-failure；改用实际文件DB.prepare.run并finally释放barrier，没有因此改产品代码。最终重新完整构建并对相同全部输入重跑所有组，不复用旧组结果。真实控制／数据Worker、SQLite字节／原日志／宿主及超时；上游Git／OCI／候选和物理容器事实仍是明确夹具。无自动owner数据决定／预览创建／接受；真实Linux／身份、完整后继链和干净checkout继续，正式P1-07／OpenSpec8/13／门槛不变。"
+        "2026-11-13：2.2／2.3／5.1原预览数据后台消费：PreviewDatasetConsumer＋startPlatform显式previewDatasets工厂，核实DB原策略／主体／项目／backendRef／Runner；后续装配成功才启动，默认关闭且不依赖Input API／模型。listPreviewDatasetWork只扫DATASET_PREPARE未决项，保留历史；范围轮转／每项目一页与串行／最多2项目并发／tick合并。原一次派发、SENT／UNKNOWN只查；DatasetPreparer预检后复核停机并提供当前writer最终授权，实际文件Worker建原日志前询问。超时关闭线程和迟到许可但保留父授权RPC及slot直到实际排空，宿主最后关存储。consumer 13通过，lifecycle 23通过／1跳过，domain 59通过，共95通过、1跳过；完整构建／类型／Lint／契约及369条源码映射通过，旧SQL1～44／Runner持久格式／依赖未改，最终输入无漂移。首轮类型检查发现文件Worker闭包内parentPort可空的两处TS18047，Lint发现allSettled多余spread；原日志与两份源码字节／SHA保留在initial-failure。首轮consumer的REMOVE测试调用不存在的f.exec，在释放授权barrier前抛出，排空teardown因此等待；核实准确测试Node PID及命令行后只终止该叶进程，原父测试／driver退出1。原测试字节／SHA、终止脚本及原因留在test-fixture-failure；改用实际文件DB.prepare.run并finally释放barrier，没有因此改产品代码。最终重新完整构建并对相同全部输入重跑所有组，不复用旧组结果。真实控制／数据Worker、SQLite字节／原日志／宿主及超时；上游Git／OCI／候选和物理容器事实仍是明确夹具。无自动owner数据决定／预览创建／接受；真实Linux／身份、完整后继链和干净checkout继续，正式P1-07／OpenSpec8/13／门槛不变。",
+        "2026-11-13：2.3／5.1准确候选预览管理API：可信previewPolicies启动快照选择原策略，新dataset／start默认关闭，已有历史与原键恢复保留。单writer成员投影含固定候选／数据方案、Run版本／owner能力和各1～20项独立数据／预览游标，不含路径／Runner／实例／proof。owner分别记录数据准备／启动与STOP_PREVIEW停止；UUID／Run If-Match、原预览版本／impact hash、仅USER及Release归属保护。GET不派发／刷新健康／接受。consumer 5通过，lifecycle 22通过／1次初跑失败（原样定向复跑解决）／1跳过，domain 44通过，acceptanceRetry 1通过，共72通过、1跳过；完整构建／类型／Lint／契约及370映射通过，旧SQL1～44／Runner源码和格式／依赖未改，最终输入无漂移。首轮类型检查5条诊断涉及Map推断的project品牌、默认scope推断为Run品牌、managementContext的Run品牌和optional undefined；原输出与两份源码字节／SHA保留在initial-type-failure。首轮domain契约覆盖仍断言旧50条路径（新文档56），旧implemented列表未列新6个operation；原测试字节／SHA和原因保留在contract-coverage-failure。补覆盖清单及创建需Run If-Match／停止用原preview CAS的声明验证，不因此改产品代码／OpenAPI。全部组结束后修正，最终重新完整构建并以相同全部输入重跑，不复用旧组结果。完整重跑的并行lifecycle组既有接受用例返回409而非注入丢ACK的503；独立只诊断计时复现READY依据从请求前19.346秒至结束31.735秒过期，Release为0，详细时间／响应保存readiness-timing，不计入通过数。未修改产品或测试、未放宽30秒规则；各组及诊断结束后以相同全部输入单独定向复跑原接受用例，通过记录另列，原失败保留。实际HTTP／控制Worker／业务SQLite与三种丢ACK重开；容器／OCI和上游事实、旧Release归属为明确夹具。React管理页、正向后继保留替换和干净checkout／真实身份／Linux继续；正式P1-07／OpenSpec8/13／门槛不变。"
       ]
     },
     {

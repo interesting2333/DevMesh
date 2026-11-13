@@ -1,0 +1,14 @@
+// Actual control Worker and HTTP; identity/source/OCI/container facts explicit.
+import {once} from 'node:events';import {createRequire} from 'node:module';
+import {mountInputApi} from '../../packages/input-api/dist/index.mjs';import {LocalContentStore} from '../../packages/blob-store/dist/index.mjs';import {StorageError} from '../../packages/storage-sqlite/dist/index.mjs';
+import {previewConsumerFixture} from './preview-consumer.mjs';
+const express=createRequire(new URL('../../packages/input-api/package.json',import.meta.url))('express');
+export async function previewManagementFixture(t,{configured=true,empty=true}={}){
+ const f=await previewConsumerFixture(t,{empty}),fault={drop:null,revokeAfter:null},storage={async request(m,i){const v=await f.call(m,i);if(fault.revokeAfter===m){fault.revokeAfter=null;f.run('DELETE FROM project_members WHERE project_id=? AND principal_id=?',f.p.projectId,'user_1');}if(fault.drop===m){fault.drop=null;throw new StorageError('SERVICE_UNAVAILABLE',503,'Explicit committed preview intent ACK lost');}return v;}},content=new LocalContentStore(storage,f.content.dataRoot,0),policies={[f.p.projectId]:f.policyHash};
+ const mount=async(enabled=configured)=>{const app=express(),api=mountInputApi(app,content,{enabled:true,baseline:{version:'preview.management.fixture',baseCommit:'b'.repeat(40)},identityResolver:req=>req.headers.authorization==='Bearer fixture_owner'?{principalId:'user_1'}:req.headers.authorization==='Bearer fixture_viewer'?{principalId:'preview.viewer'}:null,...(enabled?{previewPolicies:policies}:{})}),server=app.listen(0,'127.0.0.1');await once(server,'listening');t.after(async()=>{await api.stop();server.closeAllConnections();await new Promise(r=>server.close(r));});return {origin:'http://127.0.0.1:'+server.address().port,api,server};};
+ const endpoint=await mount(),base='/api/v1/runs/'+f.p.runId+'/candidates/'+f.candidate.candidateId+'/preview-management',headers={authorization:'Bearer fixture_owner'};
+ const get=(path=base,{origin=endpoint.origin,headers:extra={}}={})=>fetch(origin+path,{headers:{...headers,...extra},signal:AbortSignal.timeout(30000)});
+ const post=(path,body,{origin=endpoint.origin,key=crypto.randomUUID(),match,headers:extra={}}={})=>fetch(origin+path,{method:'POST',headers:{...headers,'content-type':'application/json','idempotency-key':key,...(match===undefined?{}:{'if-match':match}),...extra},body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
+ const read=async(extra)=>{const r=await get(base,extra);if(r.status!==200)throw Error('Preview management '+r.status+' '+await r.text());return {r,view:await r.json(),match:r.headers.get('etag')};};
+ return {f,...endpoint,base,storage,content,policies,fault,mount,get,post,read};
+}

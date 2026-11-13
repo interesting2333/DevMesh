@@ -1,0 +1,60 @@
+{
+  "at": "2026-11-13T14:43:04.568Z",
+  "steps": [
+    {
+      "stage": "before-corrupt",
+      "at": "2026-11-13T14:42:44.483Z",
+      "state": "READY",
+      "sequence": 1,
+      "observationCheckedAt": "2026-11-13T14:42:32.822Z",
+      "ageMs": 11662,
+      "releases": 0
+    },
+    {
+      "stage": "corrupt-response",
+      "status": 409,
+      "body": {
+        "error": {
+          "code": "ACCEPTANCE_UNAVAILABLE",
+          "message": "Request could not be accepted",
+          "requestId": "req_a38b4b22f1124f998276a353ed3b7517",
+          "retryable": false,
+          "details": {}
+        }
+      },
+      "elapsedMs": 5458
+    },
+    {
+      "stage": "before-valid",
+      "at": "2026-11-13T14:42:52.168Z",
+      "state": "READY",
+      "sequence": 1,
+      "observationCheckedAt": "2026-11-13T14:42:32.822Z",
+      "ageMs": 19346,
+      "releases": 0
+    },
+    {
+      "stage": "valid-response",
+      "status": 409,
+      "body": {
+        "error": {
+          "code": "ACCEPTANCE_UNAVAILABLE",
+          "message": "Request could not be accepted",
+          "requestId": "req_f811390efdcb49808b977b87dc0fca55",
+          "retryable": false,
+          "details": {}
+        }
+      },
+      "elapsedMs": 10674
+    },
+    {
+      "stage": "after-valid",
+      "at": "2026-11-13T14:43:04.557Z",
+      "state": "UNAVAILABLE",
+      "sequence": 1,
+      "observationCheckedAt": "2026-11-13T14:42:32.822Z",
+      "ageMs": 31735,
+      "releases": 0
+    }
+  ]
+}

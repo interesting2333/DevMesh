@@ -1,0 +1,23 @@
+TAP version 13
+# (node:36704) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36704) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36704) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: diagnose original unchanged acceptance timing without changing freshness or observations
+ok 1 - diagnose original unchanged acceptance timing without changing freshness or observations
+  ---
+  duration_ms: 110185.8895
+  type: 'test'
+  ...
+# [{"stage":"before-corrupt","at":"2026-11-13T14:42:44.483Z","state":"READY","sequence":1,"observationCheckedAt":"2026-11-13T14:42:32.822Z","ageMs":11662,"releases":0},{"stage":"corrupt-response","status":409,"body":{"error":{"code":"ACCEPTANCE_UNAVAILABLE","message":"Request could not be accepted","requestId":"req_a38b4b22f1124f998276a353ed3b7517","retryable":false,"details":{}}},"elapsedMs":5458},{"stage":"before-valid","at":"2026-11-13T14:42:52.168Z","state":"READY","sequence":1,"observationCheckedAt":"2026-11-13T14:42:32.822Z","ageMs":19346,"releases":0},{"stage":"valid-response","status":409,"body":{"error":{"code":"ACCEPTANCE_UNAVAILABLE","message":"Request could not be accepted","requestId":"req_f811390efdcb49808b977b87dc0fca55","retryable":false,"details":{}}},"elapsedMs":10674},{"stage":"after-valid","at":"2026-11-13T14:43:04.557Z","state":"UNAVAILABLE","sequence":1,"observationCheckedAt":"2026-11-13T14:42:32.822Z","ageMs":31735,"releases":0}]
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 127639.9768

@@ -1,0 +1,15 @@
+{
+  "reason": "Initial type check: inferred Map project brand and default scope Run brand were narrower than persisted string/project and preview stop scope; managementContext lost Run brand and did not explicitly permit optional undefined. Five compile diagnostics, no tests had started. Use explicit map/scope string types and original branded Run plus optional undefined; no behavior change.",
+  "files": [
+    {
+      "file": "packages/input-api/src/preview-management.ts",
+      "snapshot": "failed-source/preview-management.ts",
+      "sha256": "2309ea6993fde06f61e0c2c6ee6dd9844b1fea3ed58708f6c95a03c302b2f9cc"
+    },
+    {
+      "file": "packages/storage-sqlite/src/preview-domain.ts",
+      "snapshot": "failed-source/preview-domain.ts",
+      "sha256": "e7986a8ebb2baa4066b31d2bbf56ff2d4e6130d7c0cd83a702acfcd9275b5cf4"
+    }
+  ]
+}

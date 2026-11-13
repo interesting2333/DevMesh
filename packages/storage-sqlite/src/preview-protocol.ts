@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {ids,opaqueKey,sha256,timestamp,revision,previewImageIdentity} from '@devmesh/contracts';
+import {ids,opaqueKey,sha256,timestamp,revision,previewImageIdentity,candidatePreviewWorkspace,previewDatasetManagement,previewManagement} from '@devmesh/contracts';
 const meta=z.strictObject({principalId:opaqueKey,scopeId:opaqueKey,idempotencyKey:z.uuid()});
 const read={principalId:opaqueKey,runId:ids.run};
 const conditional={meta,runId:ids.run,ifMatch:z.string().optional()};
@@ -29,6 +29,9 @@ export const previewRequests={
  getPreviewDataset:z.strictObject({...read,datasetId:ids.dataset}),
  createPreviewIntent:z.strictObject({...conditional,candidateId:ids.candidate,manifestHash:sha256,datasetId:ids.dataset,expiresAt:timestamp}),
  getPreview:z.strictObject({...read,previewId:ids.preview}),
+ getCandidatePreviewWorkspace:z.strictObject({...read,candidateId:ids.candidate,policyHash:sha256.optional(),afterDatasetSequence:z.number().int().nonnegative().safe().default(0),afterPreviewSequence:z.number().int().nonnegative().safe().default(0),limit:z.number().int().min(1).max(20).default(10)}),
+ getCandidatePreviewDataset:z.strictObject({...read,candidateId:ids.candidate,datasetId:ids.dataset,policyHash:sha256.optional()}),
+ getCandidatePreview:z.strictObject({...read,candidateId:ids.candidate,previewId:ids.preview}),
  stopPreviewIntent:z.strictObject({meta,runId:ids.run,previewId:ids.preview,previewRevision:revision,impactReviewHash:sha256,reason:z.enum(['USER','EXPIRED'])}),
  getPreviewEffect:z.strictObject({principalId:opaqueKey,operationId:ids.operation}),
  listPreviewEffects:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20),states:z.array(z.enum(['PREPARED','SENT','UNKNOWN','SUCCEEDED','FAILED'])).min(1).max(5).default(['PREPARED','SENT','UNKNOWN'])}).refine(i=>new Set(i.states).size===i.states.length),
@@ -92,6 +95,7 @@ export interface PreviewEffect {
 export interface PreviewResults {
  registerPreviewBackendPolicy:{policyHash:string;policy:PreviewBackendPolicy};getPreviewBackendPolicy:{policyHash:string;policy:PreviewBackendPolicy};
  createPreviewDataset:DatasetView;getPreviewDataset:DatasetView;createPreviewIntent:PreviewView;getPreview:PreviewView;stopPreviewIntent:PreviewView;
+ getCandidatePreviewWorkspace:z.output<typeof candidatePreviewWorkspace>;getCandidatePreviewDataset:z.output<typeof previewDatasetManagement>;getCandidatePreview:z.output<typeof previewManagement>;
  getPreviewEffect:PreviewEffect;markPreviewEffectSent:{dispatch:boolean;effect:PreviewEffect};recordPreviewEffectObservation:PreviewEffect;
  listPreviewEffects:{items:{sequence:number;effect:PreviewEffect}[];nextSequence:number|null};
  listPreviewEffectHistory:{items:{sequence:number;observation:PreviewInput<'recordPreviewEffectObservation'>['observation'];observedAt:string}[];nextSequence:number|null};

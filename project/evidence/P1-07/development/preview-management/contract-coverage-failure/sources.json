@@ -1,0 +1,6 @@
+{
+  "file": "tests/contracts.test.mjs",
+  "sha256": "2b915c5b6189d49bb2ec85aa1404ede400c17453d7fa1f32f6f2ffc8ce56c298",
+  "snapshot": "failed-source/contracts.test.mjs",
+  "reason": "Old OpenAPI coverage test still asserted 50 total paths and lacked the six newly implemented operation IDs. Actual new document has 56 paths. Update coverage inventory and add semantic assertions for required Run If-Match on dataset/start and original-preview CAS (no Run If-Match) on stop. Product behavior and generated OpenAPI are unchanged by this test fix. All groups must finish before applying and all final groups will rerun after a full build."
+}

@@ -33,3 +33,5 @@
 涉及 storage-sqlite Worker／迁移、contracts、result-verifier 的候选复查、Runner 与预览网关适配、平台 API 和针对性协议／事务测试。沿用 Node 24、TypeScript、SQLite 单写与官方 A2A／MCP 技术栈，不增加普通模型写权限或默认公网发布。依据 design/03 用户流程、design/04 §6～8、design/05 T5、实施文档 P1-07 与产品场景 D01～D08；基线规则不变。真实身份提供者、生成应用构建运行／健康、Linux/runsc 和真实数据迁移缺项单独保留。
 
 原预览数据准备接入可信宿主后台消费：只推进已有owner意图，核实原策略绑定、关闭授权并实际排空；不自动创建预览或接受。
+
+准确候选增加私有预览管理HTTP入口，明确owner数据／启动／停止决定、原键恢复和受限历史投影；React管理页继续下一增量。

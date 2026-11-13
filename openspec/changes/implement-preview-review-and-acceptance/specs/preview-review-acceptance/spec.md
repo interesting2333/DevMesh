@@ -697,3 +697,14 @@ The system SHALL consume only original owner-recorded dataset preparations throu
 #### Scenario: Stop or revoked owner before file creation
 - **WHEN** stopAdmission or original owner revocation precedes final dataset authorization
 - **THEN** no new original file journal is created; a timed-out Worker cannot use a late authority result, and its parent call retains its slot until the real authority RPC drains
+
+### Requirement: Exact candidate preview management
+The system SHALL expose authenticated bounded member projections and explicit owner dataset/start/stop intents for the exact candidate. New dataset/start intents SHALL require a trusted selected original policy, standard idempotency and Run If-Match. Reads SHALL NOT dispatch, refresh health or accept.
+
+#### Scenario: Original intent after configuration removal
+- **WHEN** an owner retries the original committed intent with identical body/key/If-Match after new-intent policy selection is removed
+- **THEN** the original identity is returned, with no duplicate dataset or preview
+
+#### Scenario: Explicit stop preserves owned resources
+- **WHEN** an owner submits STOP_PREVIEW with the original preview revision and impact hash
+- **THEN** only the original unaccepted instance may be stopped; dataset bytes and Release-owned instances remain protected
