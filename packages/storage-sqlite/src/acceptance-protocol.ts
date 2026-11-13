@@ -36,7 +36,7 @@ export type AcceptanceInput<M extends AcceptanceMethod>=z.output<(typeof accepta
 export interface AcceptancePreparation {
   operationId:string;projectId:string;runId:string;candidateId:string;policyHash:string;releaseId:string;requestHash:string;request:AcceptancePreparationRequest;
   state:'PREPARED'|'SENT'|'UNKNOWN'|'FAILED';revision:number;qualification:'CURRENT'|'STALE';errorCode:string|null;createdAt:string;updatedAt:string;
-  resolution:'UNRESOLVED'|'UNSENT_FAILED'|'COMMITTED';acceptanceOperationId:string|null;
+  resolution:'UNRESOLVED'|'UNSENT_FAILED'|'COMMITTED'|'ABORTING';acceptanceOperationId:string|null;
 }
 export interface AcceptanceResults {
   getAcceptanceDataset:{dataset:DatasetView;purpose:'ACCEPTANCE';baseReleaseId:string|null;requestHash:string;gate:PreviewWriteGate};

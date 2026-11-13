@@ -93,6 +93,9 @@ import type {AcceptanceReadinessMethod} from './acceptance-readiness-protocol.js
 import {createAcceptanceCommitDomain} from './acceptance-commit-domain.js';
 import {acceptanceCommitRequests} from './acceptance-commit-protocol.js';
 import type {AcceptanceCommitMethod} from './acceptance-commit-protocol.js';
+import {createAcceptanceAbortDomain} from './acceptance-abort-domain.js';
+import {acceptanceAbortRequests} from './acceptance-abort-protocol.js';
+import type {AcceptanceAbortMethod} from './acceptance-abort-protocol.js';
 import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
@@ -160,6 +163,10 @@ export function createDomain(db: DatabaseSync) {
     completed(runId,operationId,candidateId,releaseId,attempts){bump(runId);for(const a of attempts)event(runId,operationId,'AttemptStateChanged',{attemptId:a.attemptId,state:'SUCCEEDED'},a);event(runId,operationId,'ReleaseAccepted',{candidateId,releaseId});const r=run(runId);event(runId,operationId,'ControlProgress',{state:{phase:r.phase,controlGate:r.control_gate,terminalOutcome:'COMPLETED'},controlRevision:Number(r.control_revision),runEpoch:Number(r.run_epoch)});},
   });
   const candidateBasis=candidateIntegrations.basis;
+  const acceptanceAborts=createAcceptanceAbortDomain(db,plans,acceptances,{
+    operation:(...args)=>operation(...args),
+    requested(runId,operationId,preparationId){bump(runId);event(runId,operationId,'AcceptanceAbortRequested',{preparationId,abortOperationId:operationId});},
+  });
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
@@ -496,6 +503,7 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(acceptanceAbortRequests,method))return acceptanceAborts.execute(method as AcceptanceAbortMethod,input);
     if(Object.hasOwn(acceptanceCommitRequests,method))return acceptanceCommits.execute(method as AcceptanceCommitMethod,input);
     if(Object.hasOwn(acceptanceReadinessRequests,method))return acceptanceReadiness.execute(method as AcceptanceReadinessMethod,input);
     if(Object.hasOwn(previewSessionRequests,method))return previewSessions.execute(method as PreviewSessionMethod,input);

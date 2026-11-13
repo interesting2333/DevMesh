@@ -28,7 +28,13 @@ REPLACE 另要求 `recordAcceptanceReplacementDecision` 的明确确认，绑定
 
 `ReleaseAcceptor` 是显式可信调用层，先通过内容权限读取实际冻结材料、核对全部 SHA 与大小限制，再调用该命令。它不建立准备后端或签发物理证明。原键已存在时直接由 writer 核实权限／原正文并恢复，因此 ACK 丢失、Run 终态或材料后续不可用不导致重接受。`getAcceptedRelease` 只读返回迁移 39 提交时的原接受收据（含提交时 PENDING）；旧 Release 不伪造迁移回填，实际发布观察独立。
 
-原准备的 resolution 投影为 UNRESOLVED／UNSENT_FAILED／COMMITTED，与派发 state 分开；已提交不再占项目未核实准备名额，SENT／UNKNOWN 无提交结论继续阻塞。准备器跳过已提交对象，不重新准备或追加旧 READY。MANUAL_PENDING 只对冻结时已核实的最终 Tester 追加 work_acceptance_completions，绑定原 assessment 和具体人工结果，结束 Attempt／释放 slot；原自动评估、质量、候选 manifest 和 proof 不覆盖。
+原准备的 resolution 投影为 UNRESOLVED／UNSENT_FAILED／COMMITTED／ABORTING，与派发 state 分开；已提交不再占项目未核实准备名额，SENT／UNKNOWN 无提交结论继续阻塞，包括 ABORTING。准备器跳过已提交和撤销中的对象，不重新准备或追加旧 READY。MANUAL_PENDING 只对冻结时已核实的最终 Tester 追加 work_acceptance_completions，绑定原 assessment 和具体人工结果，结束 Attempt／释放 slot；原自动评估、质量、候选 manifest 和 proof 不覆盖。
+
+`requestAcceptanceAbort` 为当前 owner 的独立命令：准确 Run scope、强 If-Match、原准备 operation／hash／revision、原因与明确 ABORT_ACCEPTANCE_PREPARATION。在同一 writer 内确认原 SENT／UNKNOWN 尚未接受及原指针未切换，保存不可变 acceptance_abort_decisions、事件、Run 资源版本和原操作结果。决定固定完整原准备、实际已存 proofHash（尚无 proof 则 null）、操作者与时点。过期候选／Run 代际不阻止 owner 撤销；未派发对象沿用 failUnsentAcceptancePreparation，已接受对象不能撤销。相同键恢复原结果，仍复核当前 owner；新键不能替换原决定。
+
+迁移 40 只增加决定和反向屏障，不改旧迁移。ABORTING 立即关闭 verify／当前 READY／新观察／UNKNOWN 更新／源闭门和 T5，保留原 proof、观察、派发 state、目标 CLOSED 与项目未核实占用；数据库也拒绝迟到证明、观察、接受提交和目标开门。准确重复旧观察只读返回关闭投影。`getAcceptanceAbortDecision` 允许原后端或当前成员按原 hash 恢复决定；未配置公共 HTTP／MCP 破坏性入口。
+
+该决定不发 Docker stop／rm，不释放物理 fence／Runner 资源、不删除 dataset、不重开旧门，也不生成 ABORTED。决定前已获许可的在途外部动作仍可能完成；控制面拒收迟到 READY 不证明物理动作已停止。后续清理必须核实同一决定与原对象，逐步保存明确结果；只有旧源可恢复、目标服务停止和 fence 交接等独立事实齐全后才能解除占用。失联或清理结果未知保留 ABORTING。完整安全撤销仍待实施。
 
 专用 promotion 意图固定完整原准备、准确 proof 与接受 operation，普通 A2A Outbox 不消费。T5 只保存 ACCEPTED／提交时 PENDING，不切路由、不开写门、不确认 OWNED、不导出；这些消费者及明确未提交后的安全撤销继续实施，失败不能倒退接受事实。Release、提交结论、人工覆盖层及发布意图禁止更新和删除。
 

@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Real control Worker/SQLite abort decision, authorization closure, T5 exclusion, late-result barriers and migration rollback. Runner, health and fence facts are explicit fixtures; no physical cleanup or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T00:27:42.922Z",
+      "finishedAt": "2026-11-13T00:32:41.357Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "e48ed1fbc0d6471a0b7dafe97aa4a915bb7f8c58408d1de90ca9dfc11d72b0f8"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T00:32:41.366Z",
+      "finishedAt": "2026-11-13T00:35:21.583Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T00:35:21.589Z",
+      "finishedAt": "2026-11-13T00:35:24.213Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/contracts/dist/index.js",
+    "packages/contracts/dist/index.js.map",
+    "packages/storage-sqlite/dist/domain-CgIzqGwr.mjs",
+    "packages/storage-sqlite/dist/domain-CgIzqGwr.mjs.map",
+    "packages/storage-sqlite/dist/domain.mjs",
+    "packages/storage-sqlite/dist/index.mjs",
+    "packages/storage-sqlite/dist/index.mjs.map",
+    "packages/storage-sqlite/dist/migrations/manifest.json",
+    "packages/storage-sqlite/dist/preview-session-protocol-WC8uSu7C.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-WC8uSu7C.mjs.map",
+    "packages/storage-sqlite/dist/worker.mjs",
+    "packages/platform-core/dist/index.mjs",
+    "packages/platform-core/dist/index.mjs.map",
+    "packages/storage-sqlite/dist/domain-8vjydl2U.mjs",
+    "packages/storage-sqlite/dist/domain-8vjydl2U.mjs.map",
+    "packages/storage-sqlite/dist/migrations/0040-acceptanceabortdecisions.sql",
+    "packages/storage-sqlite/dist/preview-session-protocol-Dll7JslW.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-Dll7JslW.mjs.map"
+  ]
+}

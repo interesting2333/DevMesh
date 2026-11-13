@@ -47,3 +47,5 @@
 - [ ] 5.2 在固定提交干净 checkout 执行适用回归，保存原日志／SHA／源码指纹、部署与恢复说明，同步 OpenSpec 和父工作包台账，单列企业身份／真实 Linux／容器／迁移验收条件。
 
 4.1 本轮服务组合：4.1 接受服务组合：显式 RunnerAcceptancePreparationBackend／ACCEPTANCE Docker Driver、整库只读与原对象恢复，Runner v8 保存稳定完整 proof；实际 SQLite／模板 HTTP→HELD／控制面 READY→T5 本地链路通过。service-02 16/16、regression-01 15/15、migrations-01 选中4项通过（其余测试未选择，TAP skipped=0），构建／类型／Lint和148份源码映射通过。首轮28项25通过3失败源于两处测试错误，另有未使用导入导致Lint失败，三处修正及原日志／源码指纹全部保留；最后三组输入与最终构建一致、运行期间无变化。物理容器／镜像来源／fence 为明确夹具；真实 Linux／quota／networkIsolation／物理 custody、安全撤销、OWNED／发布及正向保留／替换与完整产品验收继续。4.1不勾选，变更8/13及正式P1-07／门槛不变。 证据见 `project/evidence/P1-07/acceptance-composition-development-review.md`。
+
+4.1 撤销决定屏障：迁移40保存owner的不可变原决定并与T5互斥；ABORTING关闭准备授权／READY／新观察／源闭门，保留原派发state、proof／数据／目标CLOSED及未核实占用。abort-01 17/17；storage-02 59/59；regression-01 48/48，构建／类型／Lint、150份映射及旧迁移保留通过；嵌套事务与历史夹具两次失败／修正及构建后OpenAPI／独立测试变化均如实留证。尚无物理stop／rm、fence解除、源恢复、容量释放或ABORTED；完整4.1仍未完成，8/13与正式状态不变。证据见 `project/evidence/P1-07/acceptance-abort-development-review.md`。

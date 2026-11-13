@@ -1394,6 +1394,8 @@ Runner v8 前向迁移保存不可变完整准备 proof，不修改 v2～v7 迁�
 
 接受准备实例的只读挂载／环境和原 profile 不可变，T5 后仅开放逻辑写门不会使该实例具备写能力。后续发布必须独立实现并验证准确原归属下的可写服务转换、健康及写 fence 交接；不得改写准备 profile／proof、凭接受成功直接宣布应用可写，或同时放开旧新 dataset。当前组合止于只读准备与本地 T5，发布转换未实施。
 
+安全撤销先保存 owner 的不可变原决定，绑定原准备 operation／正文／hash／revision、实际已有 proofHash 或 null、原因及操作者。Run scope／强 If-Match／明确确认的新命令与 T5 在同一 writer 互斥；已接受或原指针改变不能撤销，原依据失效或取消仍可关闭原执行权。ABORTING 关闭继续准备、当前 READY、新观察和源闭门；恢复准备器跳过，原后端只按原 hash 恢复决定。原派发历史、proof、目标 CLOSED、数据与占用保留。决定前已获许可的外部动作仍可能在途，拒收迟到 READY 不证明 Runner 已停；须按原对象核实。决定不证明服务已停／移除或物理 fence 已解除，不重开旧门、不生成 ABORTED；独立清理及源恢复证明齐全后才允许解除占用，完整安全撤销仍待实现。
+
 T5 为独立 owner 命令，详细事务见 D5。可信调用层先实际读取冻结材料，原键成功恢复直接交回 writer 校验权限／原正文；新提交在本地短事务核实准确准备与最新观察、完整审查和指针，原子保存接受事实、必要人工完成、Run 终态及专用发布意图。原自动质量和评估不改写，发布失败单独呈现。该领域代码／受控后端验证不代表真实服务和物理 fence 已就绪，也不代表发布消费者已装配；完整 4.1／4.3／5.1 仍按各自证据验收。
 
 该规则覆盖“用户正在向旧版本增加任务，同时点接受新版本”的竞态。准备后代码、计划或数据策略变更则原接受操作失效并重新审查；正常新增业务记录由最终冻结快照纳入，不要求每条记录变化都重新确认产品计划。
@@ -1705,6 +1707,8 @@ BEGIN IMMEDIATE → 校验当前 run、控制门、必要确认、依赖、预�
 数据／镜像准备见 [04 第 7 节](#137-预览业务数据与接受的两阶段处理)。可信 ReleaseAcceptor 在事务外按冻结内容引用读取实际材料，校验完整 SHA 集合与大小边界；它不代替实际准备后端。BEGIN IMMEDIATE → 当前 owner 权限 → 原幂等键／正文恢复 → 新操作复核强 If-Match、准确 preparation 原请求／revision、最新观察 sequence／proofHash、候选 revision／manifestHash／完整 reviewHash、Run 代际／需求／计划与 OPEN、原接受指针、全部 READY 内容及当前健康／fence／无未知写 → 插入不可变 Release → 接受指针 CAS → 不可变提交结论 → 必要人工完成／Attempt／slot → Run COMPLETED／endedAt → 专用 promotion Outbox／事件／operation 结果 → COMMIT。事务内只查本地持久证据；不得持锁执行 HTTP 或文件操作。
 
 迁移 39 不改旧迁移或派发历史。acceptance_commits 固定 Release、本次接受操作、原准备、准确 proofHash 与观察 sequence；原 SENT／UNKNOWN 不改为 FAILED。项目唯一未核实准备由 writer 内查询和数据库准入触发器保障；只有该记录已有不可变提交结论，或准确从未派发的 FAILED，才不再占用；未知不能靠 TTL 解除。旧 Release 不回填伪造证明，新 Release 及提交／人工完成／发布意图禁止更新或删除。
+
+迁移 40 追加 acceptance_abort_decisions：原准备为主键，唯一撤销 operation／decisionHash、准确 requestHash／完整决定正文、可空原 proofHash 外键及决定时点；禁止更新／删除。新 owner 命令在同一短事务内核实强版本、原请求与准备 revision、SENT／UNKNOWN、原接受指针及无 Release／提交，原子保存决定／操作结果／Run 资源版本／事件。T5 与撤销双向拒绝；迟到 proof／观察／准备更新／源闭门和目标开门受数据库屏障保护。原 state、数据、proof 和闭门不变；ABORTING 继续阻塞项目未核实准备名额。ACK 丢失恢复原决定但重验 owner，不含文件或网络 I/O。未来物理清理／源恢复需独立可信结果才可完成撤销，不能仅凭该表释放占用或改写 ABORTED。
 
 MANUAL_PENDING 只能来自冻结时已核实的最终 Tester：非 PASS 检查仅限必要人工项。T5 重新确认本候选完整人工 PASS 后，追加 work_acceptance_completions，固定原 assessment 证据与具体人工结果 ID／reviewHash，登记有效 Work success、结束 Attempt、撤销 grant／释放 slot并标记原 verification 已应用；原自动 assessment／质量／候选字节保持不变。不得把自动 FAIL 或缺材料解释成人工通过。
 
@@ -2090,6 +2094,8 @@ T5 的本地技术证据必须分别覆盖新接受／原键恢复、准确准�
 ### 15.5. 开发前需要关闭的具体事项
 
 接受服务组合专项使用真实 Runner／控制面 SQLite Worker、业务文件和只读模板 HTTP，验证数据准备→原服务动作→HELD→稳定 proof→控制面 READY→T5；容器／镜像／物理 fence 若为夹具须逐项明示。覆盖整个 dataset 只读挂载、错误 OCI／用途／沙箱／端口拒绝，动作与 proof 丢 ACK／重启不重派、不补后继动作，撤权／fence 换代／quota 失败保持关闭，v7→v8 活跃历史保留及故障回滚。真实 Linux／gVisor、物理排空、OWNED／发布和完整产品验收仍需独立证据。
+
+撤销决定专项覆盖 SENT／UNKNOWN 与已有 READY、原键丢 ACK／重启、当前 owner／撤权、准确 hash／revision／强版本、过期依据、T5 并发互斥和每个事务边界故障回滚。撤销后验证授权／READY 关闭、迟到 proof／观察／源闭门被拒、原状态／数据／目标 CLOSED／未核实占用保留及恢复不调用后端；迁移39→40保留活跃记录及DDL／history失败回滚。决定测试不代替物理停止、fence释放、旧门恢复或完整安全撤销验收。
 
 | 事项 | 本版已经作出的决策 | 仍需取得的实施证据 |
 | --- | --- | --- |

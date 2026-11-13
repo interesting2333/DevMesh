@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Real control Worker/SQLite abort decision, authorization closure, T5 exclusion, late-result barriers and migration rollback. Runner, health and fence facts are explicit fixtures; no physical cleanup or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/storage-acceptance-abort-upgrade.test.mjs"
+      ],
+      "startedAt": "2026-11-13T00:33:32.343Z",
+      "finishedAt": "2026-11-13T00:34:00.443Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "1195ca4370c97885c4320bd12f050891bda755281b6acad7e8be3a79dc5157eb"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

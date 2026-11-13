@@ -144,5 +144,7 @@ export {acceptanceReleaseClaim,previewAcceptanceReleaseClaim,acceptanceServiceCl
 export type {AcceptancePreparedProof,AcceptancePreparationObservation,AcceptancePreparationBackend,AcceptanceReadiness} from './acceptance-readiness-protocol.js';
 export {releasePromotionRequest} from './acceptance-commit-protocol.js';
 export type {AcceptedRelease,AcceptanceCommitInput} from './acceptance-commit-protocol.js';
+export {acceptanceAbortDecision} from './acceptance-abort-protocol.js';
+export type {AcceptanceAbortDecision,AcceptanceAbortRecord,AcceptanceAbortInput} from './acceptance-abort-protocol.js';
 export {previewOrigin} from './preview-session-protocol.js';
 export type {PreviewTicket,PreviewSession} from './preview-session-protocol.js';

@@ -1,0 +1,113 @@
+{
+  "checks": [
+    {
+      "name": "render",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "render"
+      ],
+      "startedAt": "2026-11-13T00:43:46.478Z",
+      "finishedAt": "2026-11-13T00:43:46.602Z",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1"
+    },
+    {
+      "name": "project",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "startedAt": "2026-11-13T00:43:46.604Z",
+      "finishedAt": "2026-11-13T00:43:46.750Z",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "name": "openspec",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "project/openspec.mjs",
+        "validate",
+        "--all",
+        "--strict",
+        "--no-interactive"
+      ],
+      "startedAt": "2026-11-13T00:43:46.751Z",
+      "finishedAt": "2026-11-13T00:43:48.253Z",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "name": "design",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "design/生成完整方案.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-13T00:43:48.254Z",
+      "finishedAt": "2026-11-13T00:43:48.385Z",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "name": "contracts",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "scripts/contracts.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-13T00:43:48.386Z",
+      "finishedAt": "2026-11-13T00:43:48.769Z",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T00:43:48.770Z",
+      "finishedAt": "2026-11-13T00:43:49.895Z",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "name": "diff",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "startedAt": "2026-11-13T00:43:49.896Z",
+      "finishedAt": "2026-11-13T00:43:50.089Z",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "staged-diff",
+      "executable": "git",
+      "args": [
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "startedAt": "2026-11-13T00:43:50.090Z",
+      "finishedAt": "2026-11-13T00:43:50.166Z",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

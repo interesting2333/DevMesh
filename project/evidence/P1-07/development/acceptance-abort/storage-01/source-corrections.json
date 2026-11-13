@@ -1,0 +1,11 @@
+{
+  "corrections": [
+    {
+      "file": "tests/storage-acceptance-abort-upgrade.test.mjs",
+      "beforeSha256": "fa346680e027ffe8877521c9694c41f5d9fd71f6e04d33238eef1bc39fe37cbc",
+      "afterSha256": "1c62b7e347e5a012f78d15b6c2f1691d55ccacbc5aa79ccc66495f72c0fb76c5",
+      "beforeSource": "source-before-correction/migration-test.mjs.txt",
+      "reason": "Historical migration fixture has no current qualified candidate; validate SQL barrier directly. No production source change."
+    }
+  ]
+}

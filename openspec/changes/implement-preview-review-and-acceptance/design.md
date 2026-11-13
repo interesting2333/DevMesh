@@ -204,6 +204,14 @@ T5 由 owner 的独立 `commitReleaseAcceptance` 命令触发，原幂等键先�
 
 Runner v8 新增不可变完整 prepared proof，原 v2～v7 迁移正文／摘要不变。只有准确原服务已 HELD 且新鲜健康时才从持久请求、原数据回执／fences、profile 与 claim 生成首份证明及固定 preparedAt／custodyRevision；后续健康心跳或重启只返回原证明，当前可用性另按新鲜观察核实。证明创建失败回滚；丢 ACK 恢复同一证明，不凭当前时间重构新 hash。该记录和显式受控 Driver 测试不代替物理 fencing／真实容器联调，完整 4.1 和产品验收仍按实际证据判断。
 
+### Abort decision precedes destructive recovery
+
+安全撤销首先由当前 owner 使用独立 meta／Run scope／强 If-Match、原准备 operation／hash／revision、原因和明确 ABORT_ACCEPTANCE_PREPARATION 写入不可变决定。迁移 40 保存完整原准备、实际已存在 proofHash（没有则 null）、操作者与时点，和 T5 共享单一 SQLite writer；原接受已提交、指针切换或目标已属 Release 时拒绝撤销，已有撤销决定阻止 T5。相同键恢复同一结果并重新核实 owner，新键不能替换决定。原依据 STALE 或 Run 取消不阻止 owner 关闭原执行权，未派发对象继续使用明确未派发失败协议。
+
+决定之后投影为 ABORTING，原 SENT／UNKNOWN 历史、proof／观察和 CLOSED 目标不变。新外部准备授权、当前 READY、新观察、UNKNOWN 更新和源闭门全部关闭；数据库反向触发器阻止迟到证明／观察／Release／提交和目标开门。恢复准备器跳过撤销中的对象，原后端和当前成员可按原请求 hash 查询准确决定。决定事务无外部 I/O，事件／Run 版本／操作结果失败全部回滚。
+
+决定不是物理清理证明。决定前已授权的外部动作仍可能在途，拒收迟到 READY 不表示 Runner 已停止；必须先按原对象核实。当前增量不执行服务停止／移除、fence 解除、源写门恢复或容量释放，不产生 ABORTED；项目未核实准备占用继续保留。后续每个破坏性动作须绑定原决定和准确原对象，先查接受结果、记录唯一动作及明确结果，再验证源恢复／目标停止／fence 交接，未齐全不得解除占用或重开旧门。完整4.1仍未完成。
+
 ## Risks / Trade-offs
 
 - 接受准备实例的只读挂载／APP_READ_ONLY与profile不可变，T5或开放逻辑门不能直接变为可写服务。4.3须独立实现准确原归属下的服务转换、健康及写fence交接；不能改原proof、凭接受成功宣称可写或同时开放旧新dataset。当前组合未实施发布转换。

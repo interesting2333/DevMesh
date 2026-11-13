@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Real control Worker/SQLite abort decision, authorization closure, T5 exclusion, late-result barriers and migration rollback. Runner, health and fence facts are explicit fixtures; no physical cleanup or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T00:35:56.643Z",
+      "finishedAt": "2026-11-13T00:36:21.368Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "e746e1b7317ded4b9efcffc49db747444227aac243afb1ffc1931d11bbc69559"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T00:36:21.369Z",
+      "finishedAt": "2026-11-13T00:36:36.862Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T00:36:36.864Z",
+      "finishedAt": "2026-11-13T00:36:38.451Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/storage-sqlite/dist/domain-8vjydl2U.mjs",
+    "packages/storage-sqlite/dist/domain-8vjydl2U.mjs.map",
+    "packages/storage-sqlite/dist/domain.mjs",
+    "packages/storage-sqlite/dist/worker.mjs",
+    "packages/platform-core/dist/index.mjs",
+    "packages/platform-core/dist/index.mjs.map",
+    "packages/storage-sqlite/dist/domain-DeHGMU-t.mjs",
+    "packages/storage-sqlite/dist/domain-DeHGMU-t.mjs.map"
+  ]
+}

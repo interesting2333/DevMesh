@@ -314,6 +314,22 @@ The system SHALL 在短事务重核候选、完整审查、准确原质量、准
 - **WHEN** 用户只下载部分成果、查询候选或打开预览
 - **THEN** 不创建 Release，不改变接受指针或下一次迭代起点
 
+### Requirement: An immutable abort decision closes preparation authority
+
+系统 SHALL 在任何接受准备的破坏性撤销动作之前持久保存当前 owner 的准确撤销决定，绑定原准备正文／hash／revision、已有 proofHash 或 null、原因和操作者。新命令 MUST 使用 Run scope、强 If-Match 与明确确认，并与 T5 在同一 writer 内互斥。系统 MUST NOT 把该决定解释为物理清理完成。
+
+#### Scenario: An owner aborts a dispatched original preparation
+- **WHEN** 当前 owner 对尚未接受的准确 SENT／UNKNOWN 准备提交撤销，即使原候选或 Run 代际已失效
+- **THEN** 原子保存不可变决定、原响应、Run 资源版本和事件；投影 ABORTING，关闭继续准备／READY／新观察／源闭门和 T5，保留原派发历史、proof、目标 CLOSED、数据及未核实占用
+
+#### Scenario: Abort and acceptance race or an acknowledgement is lost
+- **WHEN** 两命令竞争单一 writer，或撤销 ACK 丢失后按原键重试／重启恢复
+- **THEN** 只有一个不可逆决定成功；已接受不能撤销，撤销后不能接受；当前 owner 的原键恢复同一决定，新键不能替换，迟到结果不能复活 READY
+
+#### Scenario: A decision is durable but cleanup is uncertain
+- **WHEN** 撤销决定存在而原服务停止、目标 fence 解除或旧源恢复尚无明确独立证明
+- **THEN** 保持 ABORTING 和占用，不声明 ABORTED、不重开旧写门、不释放物理资源或删除数据；可信原后端仅恢复准确原决定和原对象
+
 ### Requirement: Rejection preserves scope and user correction
 
 The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增需求，并允许用户纠正分类。新增范围 MUST 经过变更与新计划确认，不能通过人工审查结论直接获得实施授权。

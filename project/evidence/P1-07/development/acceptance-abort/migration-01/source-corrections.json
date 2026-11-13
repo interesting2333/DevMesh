@@ -1,0 +1,39 @@
+{
+  "before": [
+    {
+      "file": "packages/storage-sqlite/src/acceptance-abort-domain.ts",
+      "beforeSha256": "ba5aed39416e9667284da90d240c98373cdf542bdfb67170b64f9b989f997096",
+      "beforeSource": "source-before-correction/packages/storage-sqlite/src/acceptance-abort-domain.ts.txt"
+    },
+    {
+      "file": "packages/platform-core/src/acceptance-preparer.ts",
+      "beforeSha256": "8e14ff66682f2867882989f273c13b165359bf403b318cc0e9cc97a05846bfa4",
+      "beforeSource": "source-before-correction/packages/platform-core/src/acceptance-preparer.ts.txt"
+    },
+    {
+      "file": "tests/acceptance-abort.test.mjs",
+      "beforeSha256": "dfc62ad1aacd320ba3ceeffddb15f0352ceb349be8851f00768aea4cd71cd50e",
+      "beforeSource": "source-before-correction/tests/acceptance-abort.test.mjs.txt"
+    }
+  ],
+  "corrections": [
+    {
+      "file": "packages/storage-sqlite/src/acceptance-abort-domain.ts",
+      "beforeSha256": "ba5aed39416e9667284da90d240c98373cdf542bdfb67170b64f9b989f997096",
+      "beforeSource": "source-before-correction/packages/storage-sqlite/src/acceptance-abort-domain.ts.txt",
+      "afterSha256": "e2830e925f03ec7cffa2334319af7b9d51c259e977019263fef5cacc2cd574a2"
+    },
+    {
+      "file": "packages/platform-core/src/acceptance-preparer.ts",
+      "beforeSha256": "8e14ff66682f2867882989f273c13b165359bf403b318cc0e9cc97a05846bfa4",
+      "beforeSource": "source-before-correction/packages/platform-core/src/acceptance-preparer.ts.txt",
+      "afterSha256": "9a1b4ab20bcd07cb3adc46e5b85af398b252ffccce6a06ec6d8190b2937c70dd"
+    },
+    {
+      "file": "tests/acceptance-abort.test.mjs",
+      "beforeSha256": "dfc62ad1aacd320ba3ceeffddb15f0352ceb349be8851f00768aea4cd71cd50e",
+      "beforeSource": "source-before-correction/tests/acceptance-abort.test.mjs.txt",
+      "afterSha256": "a46333bac081a99819e4121e2a4dc119728fbc381ae5fa5e8563caffa09b94a0"
+    }
+  ]
+}

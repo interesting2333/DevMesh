@@ -1,0 +1,87 @@
+// Real file-backed Worker/SQLite decision and T5 transactions. Runner service,
+// physical fences and health below are explicit protocol fixtures only.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {backup,DatabaseSync} from 'node:sqlite';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {join} from 'node:path';
+import {openStorage} from '../packages/storage-sqlite/dist/index.mjs';
+import {AcceptancePreparer} from '../packages/platform-core/dist/index.mjs';
+import {acceptanceFixture} from './fixtures/acceptance.mjs';
+import {binding,preparedObservation} from './fixtures/acceptance-readiness.mjs';
+import {hash,canonical,meta} from './fixtures/storage-data.mjs';
+
+async function copy(t,base){
+ const root=await mkdtemp(join(base.root,'abort-')),databasePath=join(root,'control.sqlite');await backup(base.db,databasePath);
+ const db=new DatabaseSync(databasePath);db.exec('PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000');const storeId=db.prepare('SELECT store_id FROM store_metadata').get().store_id;let storage=await openStorage({databasePath,storeId});
+ t.after(async()=>{await storage.close();db.close();await rm(root,{recursive:true,force:true});});
+ return {...base,db,get:(s,...p)=>db.prepare(s).get(...p),run:(s,...p)=>db.prepare(s).run(...p),call:(m,i)=>storage.request(m,i),client:{request:(m,i)=>storage.request(m,i)},async reopen(){await storage.close();storage=await openStorage({databasePath,storeId});}};
+}
+async function input(f,patch={}){const r=await f.call('getRun',{runId:f.p.runId});return {meta:meta(f.p.runId),runId:f.p.runId,ifMatch:'"r'+r.resourceRevision+'"',preparationOperationId:f.prepared.operationId,requestHash:f.prepared.requestHash,expectedPreparationRevision:f.prepared.revision,reason:'Stop original preparation; retain data and fences until verified cleanup.',confirmation:'ABORT_ACCEPTANCE_PREPARATION',...patch};}
+const abort=(f,i)=>f.call('requestAcceptanceAbort',i),original=f=>({principalId:f.policy.backendPrincipalId,preparationOperationId:f.prepared.operationId,requestHash:f.prepared.requestHash});
+function snapshot(f){return Object.fromEntries(['acceptance_preparations','acceptance_preparation_history','acceptance_prepared_proofs','acceptance_preparation_observations','datasets','dataset_preparations','preview_write_gates','preview_write_gate_events','preview_write_closures','releases','acceptance_commits','release_promotion_outbox','projects'].map(table=>[table,f.db.prepare('SELECT * FROM '+table).all()]));}
+function purpose(p){const o=preparedObservation(p),s=o.proof.service,r=p.request;s.claim={schemaVersion:'devmesh.acceptance-service-claim.v1',purpose:'ACCEPTANCE',operationId:p.operationId,acceptanceRequestHash:p.requestHash,releaseId:r.releaseId,projectId:r.projectId,runId:r.runId,candidateId:r.candidateId,manifestHash:r.manifestHash,reviewHash:r.reviewHash,dataPlanHash:r.dataPlanHash,datasetId:r.target.datasetId,imageDigest:r.image.imageDigest,reservationId:s.reservationId,profileHash:s.profileHash,serviceRequestHash:hash('explicit abort service request'),instanceId:s.claim.instanceId};s.claimHash=hash(canonical(s.claim));o.health.claimHash=s.claimHash;return o;}
+async function ready(f){const p=f.prepared,o=purpose(p),v=await f.call('recordAcceptancePreparationObservation',{...binding(f,p),expectedPreparationRevision:p.revision,expectedSequence:0,observation:o});return {v,o};}
+async function commitInput(f,v){return {...await input(f),...Object.fromEntries(['candidateId','candidateRevision','manifestHash','reviewHash','expectedAcceptedReleaseId','dataPlanHash'].map(k=>[k,f.prepared.request[k]])),expectedObservationSequence:v.sequence,proofHash:v.proofHash,reason:undefined,confirmation:'ACCEPT_RELEASE'};}
+// Keep command strict: the abort reason is not part of the T5 protocol.
+async function commitRequest(f,v){const i=await commitInput(f,v);delete i.reason;return i;}
+
+test('acceptance abort decision fences late execution, survives recovery and is exclusive with T5',{timeout:480000},async t=>{
+ const base=await acceptanceFixture(t),p=await base.call('beginAcceptancePreparation',await base.request());base.prepared=(await base.call('markAcceptancePreparationSent',base.bound(p))).preparation;
+ await t.test('SENT decision retains original dispatch, CLOSED target and unresolved occupancy across restart',async t=>{
+  const f=await copy(t,base),before=snapshot(f),i=await input(f);assert.equal(await f.call('getAcceptanceAbortDecision',original(f)),null);
+  const result=await abort(f,i);assert.equal(result.decisionHash,hash(canonical(result.decision)));assert.equal(result.decision.preparedProofHash,null);assert.deepEqual(result.decision.preparation,p.request);assert.equal(result.decision.preparationRevision,2);assert.equal(result.decision.requestedBy,'user_1');assert.deepEqual(snapshot(f),before);
+  assert.equal((await f.call('getAcceptancePreparation',{principalId:'user_1',operationId:p.operationId})).resolution,'ABORTING');assert.equal((await f.call('getAcceptanceReadiness',binding(f,p))).reasonCode,'ACCEPTANCE_ABORT_REQUESTED');assert.equal((await f.call('verifyAcceptancePreparation',binding(f,p))).allowed,false);
+  assert.equal((await f.call('markAcceptancePreparationSent',f.bound(f.prepared))).dispatch,false);
+  await f.reopen();assert.deepEqual(await f.call('getAcceptanceAbortDecision',original(f)),result);assert.deepEqual(await abort(f,i),result);
+  await assert.rejects(abort(f,{...i,reason:'changed command'}),{code:'IDEMPOTENCY_KEY_REUSED'});await assert.rejects(abort(f,await input(f)),{code:'ACCEPTANCE_ABORT_ALREADY_REQUESTED'});
+  await assert.rejects(f.call('beginAcceptancePreparation',{...await f.request(),ifMatch:'"r'+(await f.call('getRun',{runId:p.runId})).resourceRevision+'"'}),{code:'ACCEPTANCE_PREPARATION_UNRESOLVED'});
+  let effects=0;const preparer=new AcceptancePreparer(f.client,f.policy.backendPrincipalId,{configured:true,preflight(){effects++;},prepare(){effects++;},inspect(){effects++;}});assert.equal((await preparer.advance(p.operationId)).state,'UNAVAILABLE');assert.equal(effects,0);
+  assert.deepEqual(snapshot(f),before);assert.equal(f.get("SELECT count(*) n FROM events WHERE type='AcceptanceAbortRequested'").n,1);
+ });
+ await t.test('READY becomes unavailable while immutable proof, original observation and custody stay retained',async t=>{
+  const f=await copy(t,base),{v,o}=await ready(f),before=snapshot(f),decision=await abort(f,await input(f));assert.equal(decision.decision.preparedProofHash,v.proofHash);
+  const closed=await f.call('getAcceptanceReadiness',binding(f,p));assert.equal(closed.state,'UNAVAILABLE');assert.equal(closed.proofHash,v.proofHash);assert.deepEqual(closed.proof,o.proof);assert.equal(closed.sequence,1);assert.deepEqual(snapshot(f),before);
+  // An exact old duplicate is a read of the closed projection, not a new grant.
+  assert.equal((await f.call('recordAcceptancePreparationObservation',{...binding(f,p),expectedPreparationRevision:2,expectedSequence:0,observation:o})).state,'UNAVAILABLE');
+  const late={...o,checkedAt:new Date(Date.parse(o.checkedAt)+1).toISOString()};await assert.rejects(f.call('recordAcceptancePreparationObservation',{...binding(f,p),expectedPreparationRevision:2,expectedSequence:1,observation:late}),{code:'ACCEPTANCE_ABORT_REQUESTED'});
+  await assert.rejects(f.call('markAcceptancePreparationUnknown',{...f.bound(f.prepared),errorCode:'LATE_ACK_LOST'}),{code:'ACCEPTANCE_ABORT_REQUESTED'});await assert.rejects(f.call('closeAcceptanceSourceWriteGate',{...f.bound(f.prepared),expectedFence:0}),{code:'ACCEPTANCE_ABORT_REQUESTED'});
+  await assert.rejects(f.call('commitReleaseAcceptance',await commitRequest(f,v)),{code:'ACCEPTANCE_ABORT_REQUESTED'});assert.deepEqual(snapshot(f),before);
+ });
+ await t.test('an in-flight original dispatcher loses authorization and cannot record its late observation',async t=>{
+  const f=await copy(t,base);let reached,release;const entered=new Promise(r=>{reached=r;}),resume=new Promise(r=>{release=r;});let allowed;
+  const preparer=new AcceptancePreparer(f.client,f.policy.backendPrincipalId,{configured:true,async inspect(){reached();await resume;allowed=(await f.call('verifyAcceptancePreparation',binding(f,p))).allowed;return purpose(f.prepared);}});
+  const pending=preparer.advance(p.operationId);await entered;await abort(f,await input(f));release();await assert.rejects(pending,{code:'ACCEPTANCE_ABORT_REQUESTED'});assert.equal(allowed,false);assert.equal(f.get('SELECT count(*) n FROM acceptance_prepared_proofs').n,0);
+ });
+ for(const [name,patch,code] of [['hash',{requestHash:hash('wrong')},'ACCEPTANCE_REQUEST_CHANGED'],['revision',{expectedPreparationRevision:1},'ACCEPTANCE_PREPARATION_CHANGED'],['scope',{meta:meta('run_other')},'OPERATION_SCOPE_INVALID'],['If-Match',{ifMatch:'"r0"'},'PRECONDITION_FAILED']])await t.test('rejects mismatched '+name+' without durable side effects',async t=>{
+  const f=await copy(t,base),i=await input(f,patch),before=f.get('SELECT * FROM runs WHERE run_id=?',p.runId),operations=f.get('SELECT count(*) n FROM operations').n;await assert.rejects(abort(f,i),{code});assert.equal(f.get('SELECT count(*) n FROM acceptance_abort_decisions').n,0);assert.equal(f.get('SELECT count(*) n FROM operations').n,operations);assert.deepEqual(f.get('SELECT * FROM runs WHERE run_id=?',p.runId),before);
+ });
+ await t.test('only a current owner may decide or replay; backend can recover exact decision after membership removal',async t=>{
+  const f=await copy(t,base),i=await input(f),result=await abort(f,i);f.run("UPDATE project_members SET role='viewer' WHERE principal_id='user_1' AND project_id=?",p.projectId);await assert.rejects(abort(f,i),{code:'FORBIDDEN'});
+  f.run("DELETE FROM project_members WHERE principal_id='user_1' AND project_id=?",p.projectId);assert.deepEqual(await f.call('getAcceptanceAbortDecision',original(f)),result);await assert.rejects(f.call('getAcceptanceAbortDecision',{...original(f),principalId:'user_1'}),{code:'RESOURCE_NOT_FOUND'});
+  await assert.rejects(abort(f,{...i,meta:{...meta(p.runId),principalId:f.policy.backendPrincipalId}}),{code:'RESOURCE_NOT_FOUND'});await assert.rejects(f.call('getAcceptanceAbortDecision',{...original(f),requestHash:hash('other')}),{code:'ACCEPTANCE_REQUEST_CHANGED'});
+ });
+ await t.test('stale Run epoch does not prevent an owner from closing original execution authority',async t=>{
+  const f=await copy(t,base);f.run('UPDATE runs SET run_epoch=run_epoch+1,resource_revision=resource_revision+1 WHERE run_id=?',p.runId);assert.equal((await f.call('getAcceptancePreparation',{principalId:'user_1',operationId:p.operationId})).qualification,'STALE');await abort(f,await input(f));assert.equal((await f.call('getAcceptanceReadiness',binding(f,p))).reasonCode,'ACCEPTANCE_ABORT_REQUESTED');
+ });
+ await t.test('UNKNOWN stays UNKNOWN after decision, with original error and dispatch history retained',async t=>{
+  const f=await copy(t,base);f.prepared=await f.call('markAcceptancePreparationUnknown',{...f.bound(f.prepared),errorCode:'EXPLICIT_ACK_LOST'});const before=snapshot(f),result=await abort(f,await input(f));assert.equal(result.decision.preparationRevision,3);assert.deepEqual(snapshot(f),before);const current=await f.call('getAcceptancePreparation',{principalId:'user_1',operationId:p.operationId});assert.equal(current.state,'UNKNOWN');assert.equal(current.errorCode,'EXPLICIT_ACK_LOST');assert.equal(current.resolution,'ABORTING');assert.equal((await f.call('verifyAcceptancePreparation',binding(f,p))).allowed,false);
+ });
+ for(const [name,sql] of [['decision','BEFORE INSERT ON acceptance_abort_decisions'],['run','BEFORE UPDATE OF resource_revision ON runs'],['event',"BEFORE INSERT ON events WHEN NEW.type='AcceptanceAbortRequested'"],['operation',"BEFORE UPDATE ON operations WHEN NEW.kind='RequestAcceptanceAbort'"]])await t.test('rolls back '+name+' failure including authorization, operation result and event',async t=>{
+  const f=await copy(t,base);await ready(f);const i=await input(f),before=snapshot(f),run=f.get('SELECT * FROM runs WHERE run_id=?',p.runId),n=f.get('SELECT count(*) n FROM operations').n;f.db.exec("CREATE TRIGGER explicit_abort_cut "+sql+" BEGIN SELECT RAISE(ABORT,'EXPLICIT_ABORT_CUT'); END");await assert.rejects(abort(f,i),/EXPLICIT_ABORT_CUT/);assert.deepEqual(snapshot(f),before);assert.deepEqual(f.get('SELECT * FROM runs WHERE run_id=?',p.runId),run);assert.equal(f.get('SELECT count(*) n FROM operations').n,n);assert.equal(f.get('SELECT count(*) n FROM acceptance_abort_decisions').n,0);assert.equal((await f.call('verifyAcceptancePreparation',binding(f,p))).reasonCode,'ACCEPTANCE_DISPATCH_CLOSED');assert.equal((await f.call('getAcceptanceReadiness',binding(f,p))).state,'READY');f.db.exec('DROP TRIGGER explicit_abort_cut');await abort(f,i);
+ });
+ await t.test('concurrent commands share one writer decision; accepted release cannot later be aborted',async t=>{
+  for(const order of ['abort-first','commit-first']){const f=await copy(t,base),{v}=await ready(f),a=await input(f),c=await commitRequest(f,v),requests=order==='abort-first'?[()=>abort(f,a),()=>f.call('commitReleaseAcceptance',c)]:[()=>f.call('commitReleaseAcceptance',c),()=>abort(f,a)],results=await Promise.allSettled(requests.map(run=>run()));assert.equal(results.filter(r=>r.status==='fulfilled').length,1);assert.equal(f.get('SELECT count(*) n FROM acceptance_abort_decisions').n+f.get('SELECT count(*) n FROM acceptance_commits').n,1);if(order==='commit-first'){await assert.rejects(abort(f,await input(f)),{code:'ACCEPTANCE_ALREADY_COMMITTED'});assert.equal(f.get('SELECT count(*) n FROM release_promotion_outbox').n,1);}else assert.equal(f.get('SELECT count(*) n FROM releases').n,0);}
+ });
+ await t.test('SQL barrier rejects late proof/observation/source close, target opening and preparation mutation',async t=>{
+  const f=await copy(t,base),decision=await abort(f,await input(f)),o=purpose(f.prepared),proof=canonical(o.proof);
+  assert.throws(()=>f.run('INSERT INTO acceptance_prepared_proofs VALUES(?,?,?,?,?)',p.operationId,p.requestHash,hash(proof),proof,o.checkedAt),/ACCEPTANCE_ABORT_REQUESTED/);
+  assert.throws(()=>f.run('INSERT INTO acceptance_preparation_observations VALUES(?,?,?,?,?,?)',p.operationId,2,1,hash(canonical(o)),canonical(o),o.checkedAt),/ACCEPTANCE_ABORT_REQUESTED/);
+  assert.throws(()=>f.run("UPDATE acceptance_preparations SET state='UNKNOWN',revision=revision+1,error_code='LATE' WHERE operation_id=?",p.operationId),/ACCEPTANCE_ABORT_REQUESTED/);
+  assert.throws(()=>f.run('INSERT INTO preview_write_closures VALUES(?,?,?,?,?)',p.operationId,p.request.target.datasetId,hash('late'),'{}',o.checkedAt),/ACCEPTANCE_ABORT_REQUESTED/);
+  assert.throws(()=>f.run("UPDATE preview_write_gates SET state='OPEN' WHERE dataset_id=?",p.request.target.datasetId),/ACCEPTANCE_ABORT_REQUESTED/);
+  assert.throws(()=>f.run('INSERT INTO releases VALUES(?,?,?,?,?,?,?,?,?,?)',p.releaseId,p.projectId,p.runId,p.candidateId,p.request.candidateRevision,decision.decision.operationId,p.request.manifestHash,p.request.target.datasetId,'user_1',o.checkedAt),/ACCEPTANCE_ABORT_REQUESTED/);
+  assert.throws(()=>f.run('INSERT INTO acceptance_commits VALUES(?,?,?,?,?,?,?,?,?)',p.releaseId,p.operationId,decision.decision.operationId,hash(proof),1,2,p.request.reviewHash,'{}',o.checkedAt),/ACCEPTANCE_ABORT_REQUESTED/);
+  assert.throws(()=>f.run("UPDATE acceptance_abort_decisions SET decided_at='changed'"),/ACCEPTANCE_ABORT_IMMUTABLE/);assert.throws(()=>f.run('DELETE FROM acceptance_abort_decisions'),/ACCEPTANCE_ABORT_RETAINED/);assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(),[]);
+ });
+});
