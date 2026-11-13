@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | c9bf7133e413896885a1d7e67a25a03840edeef36aa41f3b3a23bf681feaba8f |
+| DevMesh_技术设计方案_V1.1.md | b8fd772c435ffeb98c7269e18d2e4eab223ef5bb2eaa6c427c514fb7fe060eaf |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 0a439a9fe20c08f372527196b8d53c393bc5f542513446c0106f5c12fbf0ae5c |
+| DevMesh_产品验收场景_V10.0.md | f1dde5f9c030e69250b5f17aeee3bdc8952408df4583298f1d8d24591ce25e7c |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -565,3 +565,9 @@ startPlatform显式acceptancePolicies指定项目已登记策略快照，仅在�
 每Run／标签页POST前记录原UUID／正文／If-Match，准备与T5丢HTTP应答后，重开Worker和页面仅显式核实原请求；新动作／自动重试关闭，损坏存储须核对后清除。撤权时清空受保护页面，页面查询不驱动可信后端。实际React／Edge、HTTP、Worker、CAS材料预检和T5开发验证另留原始记录；REPLACE／PRESERVE展示用例是明确响应夹具，不视为正式后继候选或实际数据迁移。完整4.1／4.3／5.1／5.2、默认后端消费装配、真实登录／容器／围栏及完整工作台验收继续；父工作包和门槛不由页面完成推定。
 
 接受原准备历史使用同一Worker事务的有界投影，按原主体和完整候选／审查／数据／epoch／来源绑定仅在本页复用有效性检查；响应前再次复核成员，不跨请求缓存或放宽15秒浏览器请求限制。用例记录Worker往返预算、实际耗时、降权／恢复及撤权，避免20项历史按条重复核验导致页面超时。
+
+### P1-07 可信接受准备消费增量
+
+新增AcceptancePreparationConsumer及startPlatform的acceptancePreparation可信工厂，固定原项目／策略／主体／backendRef／Runner并在启动前核实DB登记；必须匹配acceptancePolicies启动快照。未配置默认不扫描，公共API不提供推进或proof回调。未决工作页只返回PREPARED／SENT／UNKNOWN并排除撤销／接受终态，旧历史不挡新准备。显式限制项目数、页预算、轮转和最多2个项目并发，重复tick合并，单项失败不阻断其他范围。
+
+沿用原派发／观察CAS和丢ACK恢复，SENT／UNKNOWN只inspect原对象，独立周期更新原proof的当前健康；没有自动T5／发布／清理。停机先关闭新授权，preflight后复核，排空真实后端调用再关闭存储；不声称能强制取消未返回调用。开发测试使用实际文件Worker／平台start-stop，物理后端事实仍为明确夹具。正式4.1／5.1的后继业务链、真实Runner／gVisor、默认产品部署及阶段验收继续单列。

@@ -1322,6 +1322,14 @@ POST /candidates/:candidateId:accept 使用本节表格的完整两阶段正文�
 
 原准备列表通过有界私有Worker请求，在同一次同步事务内读取准确候选／审查依据、全部原准备与readiness；相同原主体、候选版本、审查、数据方案、Run epoch和来源绑定的有效性只在本页事务内复用，不跨请求缓存。各条resolution、proof与当前健康仍独立投影，响应前再次复核成员；不会逐条往返Worker。公开能力属于读取时观察，不能替代写入时的当前owner、原正文／版本／观察校验；GET不更新健康或派发。
 
+#### 12. 可信接受准备后台消费（2026-11-13 开发增量）
+
+startPlatform可通过可信acceptancePreparation工厂显式装配接受准备消费者；没有工厂不扫描或派发。要求Input API、持久存储和acceptancePolicies启动快照；工厂绑定的project／policyHash须匹配该快照，并通过私有Worker读取核实已登记策略的backendPrincipalId／backendRef／runnerId。重复项目、禁用后端或无效限制拒绝启动，失败释放服务。后端实例不能从HTTP／MCP／普通JSON配置注入，不安装默认物理适配器。
+
+私有未决工作查询排除FAILED、ABORTING／ABORTED和COMMITTED；历史不占消费页。最多32个显式项目、跨项目最多2个并行后端调用、每项目串行，有界范围／页预算和轮转游标；并发tick合并。PREPARED仍经preflight及writer一次性许可，SENT／UNKNOWN只查询原对象；周期独立核实当前健康，不改变不可变proof，GET不刷新。异常记录受限错误码并按轮询重试，不自动接受、发布或清理。
+
+停机同步停止新扫描和派发授权，preflight之后及后端最终授权回调复核停止标志；已经开始的调用真实排空后才关闭Worker。后端接口没有强制取消，不能以超时竞赛假装调用结束或释放名额；实际适配器需自行提供有界I/O。此显式宿主能力不代表CLI默认安装真实Runner，登录／真实Linux与物理围栏／完整工作台仍另行验收。
+
 ---
 
 ## 13. 执行恢复与交付

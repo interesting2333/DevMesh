@@ -22,6 +22,8 @@ export const acceptanceRequests={
   getCandidateAcceptanceBasis:z.strictObject({principalId:opaqueKey,runId:ids.run,candidateId:ids.candidate,policyHash:sha256.optional()}),
   listCandidateAcceptancePreparations:z.strictObject({principalId:opaqueKey,runId:ids.run,candidateId:ids.candidate,afterSequence:z.number().int().nonnegative().safe().default(0),limit:z.number().int().min(1).max(100).default(20)}),
   registerAcceptanceBackendPolicy:z.strictObject({principalId:opaqueKey,projectId:ids.project,policy:acceptanceBackendPolicy}),
+  getAcceptancePreparationScope:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256}),
+  listAcceptancePreparationWork:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:z.number().int().nonnegative().safe().default(0),limit:z.number().int().min(1).max(100).default(20)}),
   recordAcceptanceReplacementDecision:z.strictObject({...conditional,...candidate,decisionId:ids.decision,confirmation:z.literal('REPLACE_ACCEPTED_DATA')}),
   beginAcceptancePreparation:z.strictObject({...conditional,...candidate,policyHash:sha256}),
   getAcceptancePreparation:z.strictObject({principalId:opaqueKey,operationId:ids.operation}),
@@ -47,6 +49,8 @@ export interface AcceptanceResults {
   getAcceptanceDataset:{dataset:DatasetView;purpose:'ACCEPTANCE';baseReleaseId:string|null;requestHash:string;gate:PreviewWriteGate};
   closeAcceptanceSourceWriteGate:{gate:PreviewWriteGate;closeRequest:z.output<typeof previewWriteCloseRequest>;current:boolean};
   registerAcceptanceBackendPolicy:{policyHash:string;policy:z.output<typeof acceptanceBackendPolicy>};
+  getAcceptancePreparationScope:{policyHash:string;policy:z.output<typeof acceptanceBackendPolicy>};
+  listAcceptancePreparationWork:{items:{sequence:number;preparation:AcceptancePreparation}[];nextSequence:number|null};
   recordAcceptanceReplacementDecision:{decisionId:string;operationId:string};
   beginAcceptancePreparation:AcceptancePreparation;getAcceptancePreparation:AcceptancePreparation;
   listAcceptancePreparations:{items:{sequence:number;preparation:AcceptancePreparation}[];nextSequence:number|null};

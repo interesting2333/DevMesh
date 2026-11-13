@@ -57,3 +57,5 @@ mountInputApi的acceptance选项仅供可信宿主：policies为已登记project
 会话存储键devmesh.acceptance.pending:<runId>按标签页保存原命令，POST之前持久保存UUID、正文、If-Match和原candidate／operation。丢回执／刷新仅显式恢复同一请求，不自动POST或改键。未知状态、新记录损坏或存储不可用关闭新动作；已知409／412／422／428的原提交仍须成功刷新核对后显式放弃。撤权发现后移除页面中的依据／历史／回执，原请求记录不自动换身份重试。接口默认关闭与真实身份／后端装配要求见上节。
 
 原准备列表使用getCandidateAcceptancePreparationPage私有Worker读取，在同步事务内形成去除私有proof的整页投影，资格缓存仅限本次页内相同主体／固定依据／epoch／来源。API仍在响应前核实当前成员，commit配置缺失时清除canCommit；写入权限／CAS独立检查，浏览器15秒超时不放宽。
+
+Trusted acceptance preparation consumption is opt in through the platform host's `acceptancePreparation` factory. Its fixed project/policy/principal/backendRef/Runner bindings must match registered policies and the host's startup `acceptancePolicies` snapshot. The private bounded unresolved-work queue and periodic backend inspection drive original preparations, never page GET, T5, publication or cleanup. Shutdown revokes new dispatch authorization and drains active backend work before closing storage. No physical Runner adapter or identity is enabled by default.

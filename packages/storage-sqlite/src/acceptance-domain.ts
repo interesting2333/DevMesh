@@ -86,6 +86,12 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
       return {items:page.map(r=>({sequence:Number(r.sequence),preparation:view(r,qualifications)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};
   }
   const handlers={
+    getAcceptancePreparationScope(i:AcceptanceInput<'getAcceptancePreparationScope'>){const value=policy(i.projectId,i.policyHash);if(value.backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);return {policyHash:i.policyHash,policy:value};},
+    listAcceptancePreparationWork(i:AcceptanceInput<'listAcceptancePreparationWork'>){return transaction(db,()=>{
+      if(policy(i.projectId,i.policyHash).backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);
+      const rows=all("SELECT p.rowid sequence,p.* FROM acceptance_preparations p WHERE p.project_id=? AND p.policy_hash=? AND p.rowid>? AND p.state IN ('PREPARED','SENT','UNKNOWN') AND NOT EXISTS(SELECT 1 FROM acceptance_commits c WHERE c.preparation_operation_id=p.operation_id) AND NOT EXISTS(SELECT 1 FROM acceptance_abort_decisions a WHERE a.preparation_operation_id=p.operation_id) AND NOT EXISTS(SELECT 1 FROM acceptance_abort_completions a WHERE a.preparation_operation_id=p.operation_id) ORDER BY p.rowid LIMIT ?",i.projectId,i.policyHash,i.afterSequence,i.limit+1),page=rows.slice(0,i.limit),qualifications=new Map<string,boolean>();
+      return {items:page.map(r=>({sequence:Number(r.sequence),preparation:view(r,qualifications)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};
+    });},
     getCandidateAcceptanceBasis(i:AcceptanceInput<'getCandidateAcceptanceBasis'>){return transaction(db,()=>candidateBasis(i));},
     listCandidateAcceptancePreparations(i:AcceptanceInput<'listCandidateAcceptancePreparations'>){return transaction(db,()=>listCandidatePreparations(i));},
     registerAcceptanceBackendPolicy(i:AcceptanceInput<'registerAcceptanceBackendPolicy'>){return transaction(db,()=>{const member=get('SELECT role FROM project_members WHERE project_id=? AND principal_id=?',i.projectId,i.principalId)??fail('RESOURCE_NOT_FOUND',404);if(member.role!=='owner')fail('FORBIDDEN',403);const body=canonical(i.policy),policyHash=digest(body);exec('INSERT OR IGNORE INTO acceptance_backend_policies VALUES(?,?,?,?,?)',i.projectId,policyHash,body,i.principalId,now());return {policyHash,policy:i.policy};});},

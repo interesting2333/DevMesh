@@ -5,21 +5,25 @@ import type {SqliteStorage,AcceptancePreparationBackend,AcceptanceReadiness} fro
 /** Explicit trusted composition; no backend or model identity is installed by default. */
 export class AcceptancePreparer {
   constructor(readonly storage:Pick<SqliteStorage,'request'>,readonly principalId:string,readonly backend?:AcceptancePreparationBackend){opaqueKey.parse(principalId);}
-  async advance(operationId:string):Promise<AcceptanceReadiness>{
+  async advance(operationId:string,signal?:AbortSignal):Promise<AcceptanceReadiness>{
+    signal?.throwIfAborted();
     const subject={principalId:this.principalId,operationId:ids.operation.parse(operationId)};
     let preparation=await this.storage.request('getAcceptancePreparation',subject);
     const bound={...subject,requestHash:sha256.parse(preparation.requestHash)},before=await this.storage.request('getAcceptanceReadiness',bound);
     if(preparation.state==='FAILED'||preparation.resolution!=='UNRESOLVED')return before;
+    signal?.throwIfAborted();
     if(!this.backend?.configured)throw new StorageError('ACCEPTANCE_BACKEND_NOT_CONFIGURED',503,'An explicit trusted acceptance backend is required');
     let dispatch=false;
     if(preparation.state==='PREPARED'){
       await this.backend.preflight(preparation);
+      signal?.throwIfAborted();
       const grant=await this.storage.request('markAcceptancePreparationSent',{...bound,expectedRevision:preparation.revision});
       preparation=grant.preparation;dispatch=grant.dispatch;
       if(preparation.resolution!=='UNRESOLVED')return this.storage.request('getAcceptanceReadiness',bound);
     }
+    signal?.throwIfAborted();
     let observation;
-    try{observation=acceptancePreparationObservation.parse(dispatch?await this.backend.prepare(preparation,async()=>(await this.storage.request('verifyAcceptancePreparation',bound)).allowed):await this.backend.inspect(preparation));}
+    try{observation=acceptancePreparationObservation.parse(dispatch?await this.backend.prepare(preparation,async()=>!signal?.aborted&&(await this.storage.request('verifyAcceptancePreparation',bound)).allowed&&!signal?.aborted):await this.backend.inspect(preparation));}
     catch{observation={state:'UNKNOWN' as const,errorCode:'ACCEPTANCE_BACKEND_UNCERTAIN',checkedAt:new Date().toISOString()};}
     return this.storage.request('recordAcceptancePreparationObservation',{...bound,expectedPreparationRevision:preparation.revision,expectedSequence:before.sequence,observation});
   }

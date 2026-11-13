@@ -4,6 +4,18 @@
 
 ## ADDED Requirements
 
+### Requirement: Trusted acceptance preparation consumer is bounded and opt in
+
+The platform SHALL consume acceptance preparations only through explicitly installed trusted backends whose project, registered policy, backend principal, backend reference and Runner bindings match the startup policy snapshot. Missing configuration SHALL cause no acceptance scanning or dispatch. The consumer SHALL use bounded unresolved-work pages, exclude closed, aborted and committed originals, coalesce concurrent passes and retain bounded per-project serialization and cross-project concurrency.
+
+#### Scenario: Original work survives history and acknowledgement loss
+- **WHEN** terminal history precedes a current unresolved preparation or a prior dispatch or observation acknowledgement was lost
+- **THEN** the trusted consumer finds only its original unresolved work, obtains at most one preparation dispatch grant and inspects SENT or UNKNOWN originals without creating replacement effects, accepting T5 or publishing
+
+#### Scenario: Health observation and shutdown remain independent of page reads
+- **WHEN** a trusted preparation consumer runs or is stopped during preflight or an active backend call
+- **THEN** current health is refreshed only by explicit backend inspection, page GET does not refresh it, stop prevents new dispatch authorization and drains active work before storage closes
+
 ### Requirement: T5 atomically records exact acceptance and pending publication
 
 The system SHALL 在一个本地 writer 事务内保存准确原准备／证明／最新观察上的 Release、项目指针 CAS、必要人工 Work 完成、Run COMPLETED、操作结果、专用 promotion Outbox 和事件。新接受 MUST 复核当前 owner、候选／审查／数据方案／Run 代际、READY 内容、当前新鲜 fence／HELD 健康及无未知写。事务 MUST NOT 等待外部文件或 HTTP。原幂等成功恢复 MUST 先于终态／过期检查并仍核实当前权限。

@@ -11,12 +11,16 @@ import type { WorkflowScheduler, WorkflowSchedulerOptions } from './scheduler.js
 import type {WorkflowMcpOptions,WorkflowMcpServices} from '@devmesh/mcp-tools';
 import {ReleaseExportScheduler} from './release-exports.js';
 import {ReleaseAcceptor} from './release-acceptor.js';
+import {AcceptancePreparationConsumer} from './acceptance-consumer.js';
+import type {AcceptancePreparationConsumerOptions} from './acceptance-consumer.js';
 
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
 export type { WorkflowSchedulerOptions } from './scheduler.js';
 export {DatasetPreparer} from './dataset-preparer.js';
 export {AcceptancePreparer} from './acceptance-preparer.js';
+export {AcceptancePreparationConsumer} from './acceptance-consumer.js';
+export type {AcceptancePreparationConsumerOptions,AcceptancePreparationBinding} from './acceptance-consumer.js';
 export {ReleaseAcceptor} from './release-acceptor.js';
 export {ReleasePublisher} from './release-publisher.js';
 export {ReleaseExportScheduler} from './release-exports.js';
@@ -35,15 +39,18 @@ export interface FoundationServer {
   inputApi?:ReturnType<typeof mountInputApi>|undefined;
   mcp?:WorkflowMcpServices|undefined;
   releaseExports?:ReleaseExportScheduler|undefined;
+  acceptancePreparation?:AcceptancePreparationConsumer|undefined;
 }
 
-export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;previewGateway?:PreviewAccessGateway;acceptancePolicies?:Readonly<Record<string,string>>;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
+export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;previewGateway?:PreviewAccessGateway;acceptancePolicies?:Readonly<Record<string,string>>;acceptancePreparation?:(services:NonNullable<FoundationServer['services']>)=>Promise<AcceptancePreparationConsumerOptions>|AcceptancePreparationConsumerOptions;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
+  const acceptancePolicies=options.acceptancePolicies?Object.freeze({...options.acceptancePolicies}):undefined;
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
   if(config.runtime&&(!config.storage||!config.a2a))throw new Error('Runtime requires durable storage and hosted A2A endpoints');
   if(config.inputApi&&!config.storage)throw new Error('Input API requires durable storage');
   if(config.releaseExports&&!config.storage)throw new Error('Release exports require durable storage');
   if(options.previewGateway&&!config.inputApi)throw new Error('Preview entry requires the explicitly configured Input API');
   if(options.acceptancePolicies&&!config.inputApi)throw new Error('Acceptance entry requires the explicitly configured Input API');
+  if(options.acceptancePreparation&&(!config.storage||!config.inputApi||!acceptancePolicies))throw new Error('Acceptance preparation requires durable storage, Input API and explicit acceptance policies');
   if(options.mcp&&!config.storage)throw new Error('MCP services require durable storage');
   if(options.workspaceLifecycle&&!config.runtime)throw new Error('Managed workspaces require an explicitly configured Runtime');
   if(options.scheduler&&(!config.runtime||!config.a2a?.identities.some(identity=>identity.principalId===options.scheduler?.callerId)))
@@ -91,9 +98,10 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   let inputApi:ReturnType<typeof mountInputApi>|undefined;
   let mcp:WorkflowMcpServices|undefined;
   let releaseExports:ReleaseExportScheduler|undefined;
+  let acceptancePreparation:AcceptancePreparationConsumer|undefined;
   try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
   catch(error){await storageFiber?.dispose();throw error;}
-  try{if(inputModule&&inputBaseline&&services){const acceptor=options.acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,previewGateway:options.previewGateway,...(acceptor?{acceptance:{policies:options.acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
+  try{if(inputModule&&inputBaseline&&services){const acceptor=acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,previewGateway:options.previewGateway,...(acceptor?{acceptance:{policies:acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
   catch(error){await agents?.stop();await storageFiber?.dispose();throw error;}
   app.use((_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
   const server = createServer({ headersTimeout: 5000, requestTimeout: config.inputApi?35000:10000 }, app);
@@ -138,8 +146,9 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   });
 
   async function releaseServices(){
+    acceptancePreparation?.stopAdmission();
     mcp?.stopAdmission();const failures:unknown[]=[];
-    const actions=[()=>inputApi?.stop(),()=>releaseExports?.stop(),()=>scheduler?.stop(),()=>preparationConsumer?.stop(),()=>consumer?.stop(),()=>mcp?.close(),()=>agents?.stop(),()=>fiber.dispose(),()=>storageFiber?.dispose()];
+    const actions=[()=>inputApi?.stop(),()=>acceptancePreparation?.stop(),()=>releaseExports?.stop(),()=>scheduler?.stop(),()=>preparationConsumer?.stop(),()=>consumer?.stop(),()=>mcp?.close(),()=>agents?.stop(),()=>fiber.dispose(),()=>storageFiber?.dispose()];
     for(const action of actions)try{await action();}catch(error){failures.push(error);}
     if(failures.length){server.closeAllConnections();for(const socket of sockets)socket.destroy();throw new AggregateError(failures,'Platform resource release failed');}
   }
@@ -147,6 +156,12 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   try {
     await fiber;
     if(agents)await agents.activate();
+    if(options.acceptancePreparation&&services){
+      const configured=await options.acceptancePreparation(services);
+      if(!Array.isArray(configured.bindings)||configured.bindings.some(b=>acceptancePolicies?.[b.projectId]!==b.policyHash))throw new Error('Acceptance preparation binding must match the startup acceptance policy snapshot');
+      acceptancePreparation=await AcceptancePreparationConsumer.create(services.local.storage,configured);
+      acceptancePreparation.start();
+    }
     if(options.mcp&&services){const {startWorkflowMcpServices}=await import('@devmesh/mcp-tools');mcp=await startWorkflowMcpServices(services.local.storage,services.content,await options.mcp(services));}
     if(config.releaseExports&&services){
       const {LocalReleaseExportSources}=await import('@devmesh/code-workspaces');
@@ -201,8 +216,10 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     ...(inputApi?{inputApi}:{}),
     ...(mcp?{mcp}:{}),
     ...(releaseExports?{releaseExports}:{}),
+    ...(acceptancePreparation?{acceptancePreparation}:{}),
     stop() {
       ready = false;
+      acceptancePreparation?.stopAdmission();
       mcp?.stopAdmission();
       stopping ??= (async () => {
         await releaseServices();

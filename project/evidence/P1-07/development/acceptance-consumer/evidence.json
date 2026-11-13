@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "acc15b10dc9ca3bb02006bd4e53de8dded8285d8",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "consumer",
+      "record": "consumer-2026-11-13T12-21-04-963Z.json",
+      "tests": 13,
+      "pass": 13,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lifecycle",
+      "record": "lifecycle-2026-11-13T12-21-04-972Z.json",
+      "tests": 20,
+      "pass": 19,
+      "skipped": 1,
+      "skippedTests": [
+        "CLI shuts down on POSIX SIGTERM"
+      ],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "domain",
+      "record": "domain-2026-11-13T12-21-04-990Z.json",
+      "tests": 45,
+      "pass": 45,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T12-20-23-136Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T12-20-23-113Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T12-20-23-132Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T12-20-23-136Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 77,
+  "totalSkipped": 1,
+  "failedRuns": [],
+  "inputAssessment": "All final groups/checks have identical final source/test/config inventories with no changes during or after execution. Complete workspace rebuilt before tests. Bundled source-map source bytes match current source and vendor files. Historical SQL 1..44 and Runner/dependency files are unchanged.",
+  "scope": "Local development only: actual foundation start/stop, CAS/layout verification, file-backed SQLite Workers, original private command/CAS, HTTP T5 regression and 31-second health expiry. Backend physical fences/Runner custody/health and upstream source/admission/OCI/manual observations remain explicit protocol fixtures. Multi-project concurrency uses an explicit in-process dispatcher over three separate actual Workers. No real model, OIDC, Linux/gVisor, physical preparation/cleanup, automatic T5/publication, full workbench or formal successor preserve/replace acceptance.",
+  "reproduction": "validation-driver.mjs records the exact full build/type/lint/contracts and consumer/lifecycle/domain test commands, hashes inventories before/after and saves stdout/stderr. binding-driver.mjs verifies selected records, log hashes, final inputs, source maps and historical SQL. Full pnpm check and fixed-commit clean-checkout validation were not run.",
+  "actualChecks": [
+    "Two actual foundation host cases validate default-off behavior, exact policy snapshot, startup rejection/resource release, active-call drain before Worker close and restart inspection without redispatch.",
+    "Actual 21 closed preparations precede a new unresolved preparation; the private work page finds the original without terminal-history starvation.",
+    "Concurrent tick calls share the same pass; an explicit dispatcher over three actual Workers verifies scope rotation, two-project concurrency and progress after one scan failure.",
+    "Original grant/observation ACK loss is injected after the actual private Worker commit. Recovery inspects the original; proof survives and no Release is created.",
+    "Real 31.05-second elapsed wait expires current health without any page read refreshing it; the independent periodic backend updates observation while proof and preparation dispatch remain unchanged.",
+    "Stop during preflight leaves PREPARED; stop during original execution returns false from final authorization, drains the call and leaves original SENT/UNKNOWN facts.",
+    "Actual abort decision and real local HTTP/material-preflight/T5 originals are excluded from work. Consumer does not accept or publish."
+  ],
+  "limits": [
+    "Backend physical fences, Runner custody and health facts are explicit protocol fixtures.",
+    "No real model, OIDC, Linux/gVisor, physical cleanup or positive successor preservation/replacement acceptance.",
+    "The backend interface has no forced cancellation; a non-returning adapter keeps drain pending.",
+    "A small scope budget or busy adapter may allow the 30-second health window to expire; final acceptance remains closed.",
+    "Caller owns externally constructed backend resources; this consumer owns its timer and drains its calls."
+  ],
+  "skipped": "Existing foundation POSIX SIGTERM case is skipped on Windows by its original test condition; it is not counted as passed.",
+  "managementChecks": "management-checks.json"
+}
