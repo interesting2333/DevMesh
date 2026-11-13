@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Actual bounded data-abort file Workers, exclusive durable journals, original Runner/control SQLite barriers and data-file preservation. Physical fence revocation and custody restoration are explicit fixtures; no real Linux cleanup, data fence restoration, open source gate, ABORTED or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/acceptance-data-abort.test.mjs"
+      ],
+      "startedAt": "2026-11-13T01:18:26.583Z",
+      "finishedAt": "2026-11-13T01:20:55.714Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "0b72c724f65b1c43204209ce2ccc418f9855565b6cc9105330fb10e4efac32e5"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

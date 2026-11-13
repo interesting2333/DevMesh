@@ -18,11 +18,11 @@ export class RunnerDatasetPaths {
  }
  resolve(input:{projectId:string;datasetId:string},createParents=false){
   const projectId=ids.project.parse(input.projectId),datasetId=ids.dataset.parse(input.datasetId),key=projectId+'/'+datasetId,storageKey=key+'/app.sqlite';
-   const databasePath=safePath(this.root,storageKey,createParents),journalPath=safePath(this.root,key+'/operation.json'),receiptPath=safePath(this.root,key+'/receipt.json'),markerPath=safePath(this.root,key+'/dataset.json'),stagingPath=safePath(this.root,key+'/preparing.sqlite'),fencesPath=safePath(this.root,key+'/fences.json');
-   for(const file of ['app.sqlite','app.sqlite-wal','app.sqlite-shm','app.sqlite-journal','operation.json','receipt.json','dataset.json','fences.json','writer.lock','preparing.sqlite','preparing.sqlite-wal','preparing.sqlite-shm','preparing.sqlite-journal'].map(name=>key+'/'+name)){
+   const databasePath=safePath(this.root,storageKey,createParents),journalPath=safePath(this.root,key+'/operation.json'),receiptPath=safePath(this.root,key+'/receipt.json'),markerPath=safePath(this.root,key+'/dataset.json'),stagingPath=safePath(this.root,key+'/preparing.sqlite'),fencesPath=safePath(this.root,key+'/fences.json'),abortJournalPath=safePath(this.root,key+'/abort-operation.json'),abortReceiptPath=safePath(this.root,key+'/abort-receipt.json');
+   for(const file of ['app.sqlite','app.sqlite-wal','app.sqlite-shm','app.sqlite-journal','operation.json','receipt.json','dataset.json','fences.json','abort-operation.json','abort-receipt.json','writer.lock','preparing.sqlite','preparing.sqlite-wal','preparing.sqlite-shm','preparing.sqlite-journal'].map(name=>key+'/'+name)){
    const checked=safePath(this.root,file);
    if(existsSync(checked)){const stat=lstatSync(checked);if(!stat.isFile()||stat.isSymbolicLink()||stat.nlink!==1)throw new RunnerError('DATASET_FILE_UNSAFE',403);}
   }
-   return {directory:dirname(databasePath),storageKey,databasePath,journalPath,receiptPath,markerPath,stagingPath,fencesPath};
+   return {directory:dirname(databasePath),storageKey,databasePath,journalPath,receiptPath,markerPath,stagingPath,fencesPath,abortJournalPath,abortReceiptPath};
  }
 }

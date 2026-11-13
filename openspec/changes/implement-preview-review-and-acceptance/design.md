@@ -222,6 +222,14 @@ STOP／CONTAINER_REMOVE／NETWORK_REMOVE 使用独立固定原决定、profile�
 
 Runner 服务清理结果不等于完整 ABORTED：目标业务文件／原 claim／proof 保留，物理数据 fence 解除、源恢复、控制面占用解除与旧门重开仍需独立握手和证据；真实 Linux／gVisor／quota／networkIsolation 验收单列。4.1 在这些条件齐全前不勾选。
 
+### Dataset abort has a permanent revocation and an independent original journal
+
+服务和网络已由原决定核实清理后，显式 RunnerAcceptanceDatasetAbortBackend 再从控制库读取相同不可变决定、从 Runner store 读取已完成的原清理记录；请求方不能提交任意决定或清理成功标志。独立 Worker 在原目标 dataset 目录独占写入并刷新 `abort-operation.json`，固定决定／controller／清理摘要、原准备 journal 摘要及已保存原 fences；日志存在后永不重派数据撤销，半写文件和失联保持 UNKNOWN。准备 Worker 看到该文件即关闭原准备，包括尚无数据 operation.json 的情况；并发在途动作仍须物理适配器永久撤权，文件标志不能替代它。
+
+专用 AcceptanceDatasetAbortAuthority 必须持久封禁原准备的后续 acquire／写入，并核实已获许可的原操作终止，目标继续 CLOSED；按准确原 fence／generation 解除原接受持有并恢复原源 release 归属，返回稳定、可查询的原证明。原 fences 尚未落盘时不能以缺文件推断从未 acquire，适配器须查询自身原记录并覆盖该在途边界。证明绑定决定／原请求／原 fences／目标和源，后继 generation 严格增长；源即使恢复物理归属也标为 CONTROL_CLOSED。只有首次日志创建者可在最后授权后调用 abort，恢复只 inspectAbort，不续约、重派或删除数据；完成回执独占持久化，保留原准备日志／fences／receipt。
+
+物理后端调用另按该实例 maximumWorkers 限制未结束数量，文件 Worker 超时不提前释放仍在进行的后端调用名额；查询或撤销未返回时，后续调用明确保持忙／未知。缺物理适配器默认关闭；本地夹具只验证协议／真实文件日志和恢复，不证明物理 fence 已解除。本步骤仅生成数据归属恢复证明，不自动重开控制面源门、释放项目占用或投影 ABORTED。后续控制面还须在同一 writer 核实原接受指针、源门准确关闭记录、原未知写的处理与源服务恢复，保存完整撤销结论后才解除占用；完整4.1继续。
+
 ## Risks / Trade-offs
 
 - 接受准备实例的只读挂载／APP_READ_ONLY与profile不可变，T5或开放逻辑门不能直接变为可写服务。4.3须独立实现准确原归属下的服务转换、健康及写fence交接；不能改原proof、凭接受成功宣称可写或同时开放旧新dataset。当前组合未实施发布转换。

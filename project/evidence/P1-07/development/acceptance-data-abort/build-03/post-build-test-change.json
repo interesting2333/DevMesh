@@ -1,0 +1,7 @@
+{
+  "file": "tests/acceptance-data-abort.test.mjs",
+  "beforeSource": "source-before-test-order/test.txt",
+  "beforeSha256": "d26caa7be30802dc7056a71e9ab3a5e23d5ad4bedcc13a4e5c2cc442cd1b989e",
+  "afterSha256": "d22bf5c299b13467d7ba8bea4db586cf1c0d9c352234c14d45fc2571065e2db4",
+  "reason": "Review correction in the dedicated actual-control test: materialize data using the real verifyAcceptancePreparation authorization callback before requesting abort, then obtain the real control decision. Standalone MJS test only; no runtime source or emitted code changed after build-03."
+}

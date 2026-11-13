@@ -346,6 +346,18 @@ Runner SHALL 持久绑定准确控制面撤销决定、controller 与原准备�
 - **WHEN** STOP／移除许可、物理响应或观察提交 ACK 丢失，或 Worker 重启
 - **THEN** 只查询原动作与准确 ID，不二次执行；未知继续占用，准确消失证明落库失败不提前释放；已释放服务容量不丢失待恢复的原网络清理
 
+### Requirement: Dataset abort permanently revokes the original preparation
+
+系统 SHALL 在原服务／网络清理核实后，按相同控制面决定持久保存独立数据撤销日志与原证明。物理适配器 MUST 永久封禁原准备的迟到 acquire／写入、核实原在途动作并保持目标 CLOSED；缺少本地 fences 文件 MUST NOT 被解释为从未取得物理持有。
+
+#### Scenario: Data abort is interrupted or its acknowledgement is lost
+- **WHEN** 原数据撤销日志已独占刷新，而物理执行或完成回执尚不确定
+- **THEN** 仅查询原撤销，不重派、不替换日志、不删除数据；不完整日志关闭继续执行，源控制门和项目占用继续保留
+
+#### Scenario: Original custody is restored by the configured authority
+- **WHEN** 原适配器核实准确原 fences、永久撤权及递增 generation，目标仍关闭、原源 release 归属已恢复
+- **THEN** 保存绑定原决定／清理记录／数据日志的不可变回执，原准备日志／fences／业务文件保留；源标为 CONTROL_CLOSED，不据此自动重开旧门或声明完整 ABORTED
+
 ### Requirement: Rejection preserves scope and user correction
 
 The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增需求，并允许用户纠正分类。新增范围 MUST 经过变更与新计划确认，不能通过人工审查结论直接获得实施授权。

@@ -1,0 +1,40 @@
+{
+  "before": [
+    {
+      "file": "packages/runner/src/acceptance-dataset-abort-backend.ts",
+      "beforeSha256": "9887af0bc1a6128221cb2347b6fa861f988fea09baf0c24fee3b8e76d78a2c95",
+      "beforeSource": "source-before-correction/0.txt"
+    },
+    {
+      "file": "tests/acceptance-data-abort.test.mjs",
+      "beforeSha256": "d564f45dd6aaa3f370cb907e163327dcad6b53bf9a8647a7df695702864d1739",
+      "beforeSource": "source-before-correction/1.txt"
+    },
+    {
+      "file": "tests/fixtures/acceptance-data-abort.mjs",
+      "beforeSha256": "486946c1077b20aaeb28fe019baa5e78470c1e9f3efeb6e3d06d74fe94494d5e",
+      "beforeSource": "source-before-correction/2.txt"
+    }
+  ],
+  "corrections": [
+    {
+      "file": "packages/runner/src/acceptance-dataset-abort-backend.ts",
+      "beforeSha256": "9887af0bc1a6128221cb2347b6fa861f988fea09baf0c24fee3b8e76d78a2c95",
+      "beforeSource": "source-before-correction/0.txt",
+      "afterSha256": "d8f3fd7de101353cabe18000a33a0294e767adbdbac5fed7fc25841bb54547a1"
+    },
+    {
+      "file": "tests/acceptance-data-abort.test.mjs",
+      "beforeSha256": "d564f45dd6aaa3f370cb907e163327dcad6b53bf9a8647a7df695702864d1739",
+      "beforeSource": "source-before-correction/1.txt",
+      "afterSha256": "d26caa7be30802dc7056a71e9ab3a5e23d5ad4bedcc13a4e5c2cc442cd1b989e"
+    },
+    {
+      "file": "tests/fixtures/acceptance-data-abort.mjs",
+      "beforeSha256": "486946c1077b20aaeb28fe019baa5e78470c1e9f3efeb6e3d06d74fe94494d5e",
+      "beforeSource": "source-before-correction/2.txt",
+      "afterSha256": "673978479de812b777eb804641a9156626cc6acdb53b11bcb94ec49f54534718"
+    }
+  ],
+  "reason": "The symlink fixture was safely rejected by safePath but its StorageError was mapped to the worker backend failure code. Correct the assertion while verifying zero physical calls and unchanged original bytes. Also bound outstanding authority RPCs until they actually settle, including after a file Worker timeout, and verify timeout/recovery cannot accumulate physical queries. No fence or file guard relaxed."
+}

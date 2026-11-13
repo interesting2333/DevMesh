@@ -25,6 +25,7 @@ const unknown=(errorCode:string):AcceptanceDatasetObservation=>({state:'UNKNOWN'
 async function main(){
  const {action,preparation,options:rawOptions,trustedMigrationHashes}=workerData as {action:'preflight'|'prepare'|'inspect';preparation:AcceptancePreparation;options:unknown;trustedMigrationHashes:string[]};
  const options=acceptanceDataOptions.parse(rawOptions),r=validateAcceptanceDataset(preparation,options),paths=new RunnerDatasetPaths(options),target={projectId:r.projectId,datasetId:r.target.datasetId};
+  if(existsSync(paths.resolve(target).abortJournalPath)){if(action==='inspect')return unknown('ACCEPTANCE_DATA_ABORT_REQUESTED');throw new RunnerError('ACCEPTANCE_DATA_ABORT_REQUESTED',409);}
  const verify=async(f:AcceptanceDatasetFences,kind:'verify'|'inspect')=>{if(canonical(validateAcceptanceFences(await rpc(kind),preparation))!==canonical(f))throw new RunnerError('ACCEPTANCE_DATA_CUSTODY_CHANGED',409);};
  function source(){
   if(!r.source)return null;

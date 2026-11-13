@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual bounded data-abort file Workers, exclusive durable journals, original Runner/control SQLite barriers and data-file preservation. Physical fence revocation and custody restoration are explicit fixtures; no real Linux cleanup, data fence restoration, open source gate, ABORTED or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T01:23:39.031Z",
+      "finishedAt": "2026-11-13T01:24:10.717Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "07b88134a56d73d42b7df7a46cafbf154d0f6bd171eac24af075b945de2032f0"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T01:24:10.719Z",
+      "finishedAt": "2026-11-13T01:24:29.508Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T01:24:29.509Z",
+      "finishedAt": "2026-11-13T01:24:30.871Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/runner/dist/acceptance-dataset-abort-backend-DTiG0BvM.mjs",
+    "packages/runner/dist/acceptance-dataset-abort-backend-DTiG0BvM.mjs.map",
+    "packages/runner/dist/acceptance-dataset-abort-worker.mjs",
+    "packages/runner/dist/index.mjs",
+    "packages/runner/dist/acceptance-dataset-abort-backend-Df_Gz_go.mjs",
+    "packages/runner/dist/acceptance-dataset-abort-backend-Df_Gz_go.mjs.map"
+  ]
+}

@@ -15,7 +15,7 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "8bfc48d0f34cbdf9e5660215fbd31cf7a1ee707d6241d7366506d62bd9c2bfd8"
+      "sha256": "b966b8b0f9d1d563bd7fc8b1cafb1948b65ad0a674e33f160b50afcb6d68b814"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
@@ -23,7 +23,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "8f55269eea96e4dc19ce7777017e2b70cae853c0fc75a387bf2bff23d744dbbc"
+      "sha256": "87ec2cbe0d9358fb02ad602b23e9203a462275fb2523dfd56427c8b9ebd765e2"
     }
   ],
   "gates": [
@@ -1232,7 +1232,11 @@
         "packages/runner/src/acceptance-abort-domain.ts",
         "packages/runner/src/acceptance-abort-migration.ts",
         "tests/acceptance-runner-abort.test.mjs",
-        "tests/runner-acceptance-abort-docker.test.mjs"
+        "tests/runner-acceptance-abort-docker.test.mjs",
+        "packages/runner/src/acceptance-dataset-abort.ts",
+        "packages/runner/src/acceptance-dataset-abort-backend.ts",
+        "packages/runner/src/acceptance-dataset-abort-worker.ts",
+        "tests/acceptance-data-abort.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1353,7 +1357,10 @@
         "project/evidence/P1-07/development/acceptance-abort/final-binding.json",
         "project/evidence/P1-07/acceptance-runner-abort-development-review.md",
         "project/evidence/P1-07/development/acceptance-runner-abort/manifest.json",
-        "project/evidence/P1-07/development/acceptance-runner-abort/final-binding.json"
+        "project/evidence/P1-07/development/acceptance-runner-abort/final-binding.json",
+        "project/evidence/P1-07/acceptance-data-abort-development-review.md",
+        "project/evidence/P1-07/development/acceptance-data-abort/manifest.json",
+        "project/evidence/P1-07/development/acceptance-data-abort/final-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1403,7 +1410,8 @@
         "2026-11-13：4.1 服务组合设计影响评估：直接 ACCEPTANCE Docker Driver 与显式 RunnerAcceptancePreparationBackend 组合实际数据、原服务动作和 HTTP；接受整库只读／APP_READ_ONLY，复用公共 OCI／沙箱核验但不翻译预览请求。Runner v8 前向增加不可变完整 proof，preparedAt／custodyRevision 固定，当前健康另查；原 v2～v7 正文与历史保留，丢 ACK 只查原对象、不补发缺失后继。D4／D5／D6、完整设计、实施文档与 OpenSpec 同步。PRD／D01～D08 不变；真实 Linux／物理 custody、正向保留／替换、安全撤销、OWNED／发布及产品组合仍需分别验收；本条不声明测试通过，4.1、变更8/13和正式工作包／门槛不变。",
         "2026-11-13：4.1 接受服务组合：显式 RunnerAcceptancePreparationBackend／ACCEPTANCE Docker Driver、整库只读与原对象恢复，Runner v8 保存稳定完整 proof；实际 SQLite／模板 HTTP→HELD／控制面 READY→T5 本地链路通过。service-02 16/16、regression-01 15/15、migrations-01 选中4项通过（其余测试未选择，TAP skipped=0），构建／类型／Lint和148份源码映射通过。首轮28项25通过3失败源于两处测试错误，另有未使用导入导致Lint失败，三处修正及原日志／源码指纹全部保留；最后三组输入与最终构建一致、运行期间无变化。物理容器／镜像来源／fence 为明确夹具；真实 Linux／quota／networkIsolation／物理 custody、安全撤销、OWNED／发布及正向保留／替换与完整产品验收继续。4.1不勾选，变更8/13及正式P1-07／门槛不变。",
         "2026-11-13：本地开发4.1的不可变撤销决定屏障；迁移40、owner原命令／当前权限／准确版本、T5互斥、ABORTING关闭授权／READY及迟到观察／源闭门，保留原派发历史／proof／数据／目标CLOSED和占用。abort-01 17/17；storage-02 59/59；regression-01 48/48，六包构建／类型／Lint及150份源码映射通过，旧1～39迁移不变。嵌套事务和历史迁移测试夹具两次原失败／修正证据保留；OpenAPI及独立迁移测试在最终构建后变化的范围如实绑定，未冒充全输入一致。决定不执行物理清理／fence解除／源恢复或释放容量，不产生ABORTED；完整4.1／产品及真实环境继续，OpenSpec8/13、正式状态／门槛不变。",
-        "2026-11-13：继续4.1独立Runner撤销清理。v9前向重建／不可变原决定与无预留tombstone、原profile／完整对象ID、唯一STOP／容器和网络移除派发、丢ACK只查询，准确消失观察与REMOVED／服务容量／历史同事务；新准备与proof关闭，原claim／proof／数据保留，无force／删除卷。abort-02 20/20、regression-02 45/45、cleanup-01 19/19，迁移专项实际3项通过（TAP额外1个空文件包装单列）；六包构建／类型／Lint和154份映射通过。首轮版本展示导致的3项失败及修正链保留，旧Runner v2～v8和控制库40份迁移不变。物理容器／网络／fence为明确夹具，没有真实Linux清理、dataset fence解除／源恢复／ABORTED／完整发布或产品验收；正式状态、8/13和门槛不变。"
+        "2026-11-13：继续4.1独立Runner撤销清理。v9前向重建／不可变原决定与无预留tombstone、原profile／完整对象ID、唯一STOP／容器和网络移除派发、丢ACK只查询，准确消失观察与REMOVED／服务容量／历史同事务；新准备与proof关闭，原claim／proof／数据保留，无force／删除卷。abort-02 20/20、regression-02 45/45、cleanup-01 19/19，迁移专项实际3项通过（TAP额外1个空文件包装单列）；六包构建／类型／Lint和154份映射通过。首轮版本展示导致的3项失败及修正链保留，旧Runner v2～v8和控制库40份迁移不变。物理容器／网络／fence为明确夹具，没有真实Linux清理、dataset fence解除／源恢复／ABORTED／完整发布或产品验收；正式状态、8/13和门槛不变。",
+        "2026-11-13：4.1数据撤销原日志／证明。显式后端从控制决定和Runner原服务清理构造请求，独立Worker排他刷新abort-operation.json后唯一派发、丢ACK／超时只inspectAbort；缺本地fences须查原物理记录，后继generation／准确源release核实，目标CLOSED／源CONTROL_CLOSED，原数据和准备文件保留。未结束物理调用继续占用有界名额。abort-02 24/24；service-02 34/34；datasets-02 27/27，构建／类型／Lint和157份映射通过，旧Runner v2～v9／控制库40份迁移不变。首轮符号链接断言的子项／父项失败、修正前源码与调用限额修正、构建后独立MJS测试顺序变化如实留证。物理Authority为接口／明确夹具，尚无真实适配器或默认装配，不重开控制面源门、不解决原未知写／源服务或解除项目占用／ABORTED；正式状态、8/13和门槛不变。"
       ]
     },
     {

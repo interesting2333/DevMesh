@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-13T01:30:37.918Z",
+  "base": "4dfde06e5ef1d13a103a140f93c00650d959c5f9",
+  "runnerHistoricalMigrations": [
+    {
+      "file": "packages/runner/src/fence-domain.ts",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/capacity-domain.ts",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/container-domain.ts",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/cleanup-migration.ts",
+      "sha256": "95a46d98e38c49e83b64e775f073e4768c7fbc682878b84243b836451974614e",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-service-migration.ts",
+      "sha256": "28ea1ae25ad2e40d3e027dd6314ae419a6e7928f4d803d7cd20b4eaf492d5034",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-proof-migration.ts",
+      "sha256": "90a68f417ffb05230bec935209ca036c718a27d8368c0027b195aaf8af7ce1e3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-abort-migration.ts",
+      "sha256": "5a4caa5ea7a3da5d6dfd6b97ce7f99b15197b84ed05eca92202080baf945250f",
+      "matchesBase": true
+    }
+  ],
+  "controlHistoricalMigrationCount": 40,
+  "builds": [
+    {
+      "name": "build-01",
+      "reportSha256": "78d2735a96994f8b70dabbad7188bc2b8bfe8122b990246dbcfaf7a6653907f2",
+      "emittedChanges": [
+        "packages/runner/dist/acceptance-dataset-backend-tmNbHspr.mjs",
+        "packages/runner/dist/acceptance-dataset-backend-tmNbHspr.mjs.map",
+        "packages/runner/dist/acceptance-dataset-worker.mjs",
+        "packages/runner/dist/acceptance-dataset-worker.mjs.map",
+        "packages/runner/dist/dataset-backend-DMEGCKn5.mjs",
+        "packages/runner/dist/dataset-backend-DMEGCKn5.mjs.map",
+        "packages/runner/dist/dataset-worker.mjs",
+        "packages/runner/dist/index.mjs",
+        "packages/runner/dist/index.mjs.map",
+        "packages/runner/dist/acceptance-dataset-abort-backend-DTiG0BvM.mjs",
+        "packages/runner/dist/acceptance-dataset-abort-backend-DTiG0BvM.mjs.map",
+        "packages/runner/dist/acceptance-dataset-abort-worker.mjs",
+        "packages/runner/dist/acceptance-dataset-abort-worker.mjs.map",
+        "packages/runner/dist/acceptance-dataset-backend-7aHTTRpx.mjs",
+        "packages/runner/dist/acceptance-dataset-backend-7aHTTRpx.mjs.map",
+        "packages/runner/dist/dataset-backend-BvPvI26K.mjs",
+        "packages/runner/dist/dataset-backend-BvPvI26K.mjs.map"
+      ]
+    },
+    {
+      "name": "build-02",
+      "reportSha256": "fa0da231734a65e40f0d7be59fe6b360c28544cdd8b7bca9dfd8f1cd4d744138",
+      "emittedChanges": []
+    },
+    {
+      "name": "build-03",
+      "reportSha256": "ed19f6897b27c964ae44e6af7f83cab7905050211c49dd0f6ec5cd04138c0406",
+      "emittedChanges": [
+        "packages/runner/dist/acceptance-dataset-abort-backend-DTiG0BvM.mjs",
+        "packages/runner/dist/acceptance-dataset-abort-backend-DTiG0BvM.mjs.map",
+        "packages/runner/dist/acceptance-dataset-abort-worker.mjs",
+        "packages/runner/dist/index.mjs",
+        "packages/runner/dist/acceptance-dataset-abort-backend-Df_Gz_go.mjs",
+        "packages/runner/dist/acceptance-dataset-abort-backend-Df_Gz_go.mjs.map"
+      ]
+    }
+  ],
+  "initial": [
+    {
+      "name": "abort-01",
+      "tests": 23,
+      "pass": 21,
+      "fail": 2,
+      "reportSha256": "8f1093cf98ead1c0f901769825dd8476d9ab9875c5a79e4758ed778b3b73135f",
+      "outputSha256": "0b72c724f65b1c43204209ce2ccc418f9855565b6cc9105330fb10e4efac32e5"
+    },
+    {
+      "name": "service-01",
+      "tests": 34,
+      "pass": 34,
+      "fail": 0,
+      "reportSha256": "443b1664951486c38300c3fdfee46c9db8c35d7abdb0392e599cd3619fcc7746",
+      "outputSha256": "5c49dab9d3f22eb45deb0f8bd010dcffd94e784059030f3a29a958d222de977c"
+    },
+    {
+      "name": "datasets-01",
+      "tests": 27,
+      "pass": 27,
+      "fail": 0,
+      "reportSha256": "00ce929c6acd25fd28dc7184f6cfe45b3e2a8597f7b643058237004f182ead32",
+      "outputSha256": "00a1b17525bfa692ce18043a28a34a7fa9f343d7b230101807e386ffdcee20d3"
+    }
+  ],
+  "initialTestExtensions": {
+    "file": "tests/acceptance-data-abort.test.mjs",
+    "beforeSource": "source-before-extension/test.txt",
+    "beforeSha256": "e51805814e1604e80c002964a97938eb9e789209b6d1e06cc08b99055eabe7ef",
+    "afterSha256": "d564f45dd6aaa3f370cb907e163327dcad6b53bf9a8647a7df695702864d1739",
+    "reason": "First build passed; added meaningful concurrent winner, worker timeout and explicit replacement-data preservation cases before final build and first test execution. No production code change."
+  },
+  "corrections": {
+    "before": [
+      {
+        "file": "packages/runner/src/acceptance-dataset-abort-backend.ts",
+        "beforeSha256": "9887af0bc1a6128221cb2347b6fa861f988fea09baf0c24fee3b8e76d78a2c95",
+        "beforeSource": "source-before-correction/0.txt"
+      },
+      {
+        "file": "tests/acceptance-data-abort.test.mjs",
+        "beforeSha256": "d564f45dd6aaa3f370cb907e163327dcad6b53bf9a8647a7df695702864d1739",
+        "beforeSource": "source-before-correction/1.txt"
+      },
+      {
+        "file": "tests/fixtures/acceptance-data-abort.mjs",
+        "beforeSha256": "486946c1077b20aaeb28fe019baa5e78470c1e9f3efeb6e3d06d74fe94494d5e",
+        "beforeSource": "source-before-correction/2.txt"
+      }
+    ],
+    "corrections": [
+      {
+        "file": "packages/runner/src/acceptance-dataset-abort-backend.ts",
+        "beforeSha256": "9887af0bc1a6128221cb2347b6fa861f988fea09baf0c24fee3b8e76d78a2c95",
+        "beforeSource": "source-before-correction/0.txt",
+        "afterSha256": "d8f3fd7de101353cabe18000a33a0294e767adbdbac5fed7fc25841bb54547a1"
+      },
+      {
+        "file": "tests/acceptance-data-abort.test.mjs",
+        "beforeSha256": "d564f45dd6aaa3f370cb907e163327dcad6b53bf9a8647a7df695702864d1739",
+        "beforeSource": "source-before-correction/1.txt",
+        "afterSha256": "d26caa7be30802dc7056a71e9ab3a5e23d5ad4bedcc13a4e5c2cc442cd1b989e"
+      },
+      {
+        "file": "tests/fixtures/acceptance-data-abort.mjs",
+        "beforeSha256": "486946c1077b20aaeb28fe019baa5e78470c1e9f3efeb6e3d06d74fe94494d5e",
+        "beforeSource": "source-before-correction/2.txt",
+        "afterSha256": "673978479de812b777eb804641a9156626cc6acdb53b11bcb94ec49f54534718"
+      }
+    ],
+    "reason": "The symlink fixture was safely rejected by safePath but its StorageError was mapped to the worker backend failure code. Correct the assertion while verifying zero physical calls and unchanged original bytes. Also bound outstanding authority RPCs until they actually settle, including after a file Worker timeout, and verify timeout/recovery cannot accumulate physical queries. No fence or file guard relaxed."
+  },
+  "postBuildTestChange": {
+    "file": "tests/acceptance-data-abort.test.mjs",
+    "beforeSource": "source-before-test-order/test.txt",
+    "beforeSha256": "d26caa7be30802dc7056a71e9ab3a5e23d5ad4bedcc13a4e5c2cc442cd1b989e",
+    "afterSha256": "d22bf5c299b13467d7ba8bea4db586cf1c0d9c352234c14d45fc2571065e2db4",
+    "reason": "Review correction in the dedicated actual-control test: materialize data using the real verifyAcceptancePreparation authorization callback before requesting abort, then obtain the real control decision. Standalone MJS test only; no runtime source or emitted code changed after build-03."
+  },
+  "currentBuildInputDifferences": [
+    "tests/acceptance-data-abort.test.mjs"
+  ],
+  "groups": [
+    {
+      "name": "abort-02",
+      "tests": 24,
+      "pass": 24,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "7bf312c5ab6fb076cb3f5e26e17637e315895676334795579ddf70d14d9a837b",
+      "outputSha256": "4f90454ea76c6ec48c7a157fe505633b93dfad59ae07687bed0d946ec3d6f159",
+      "inputChanges": [],
+      "emittedChanges": []
+    },
+    {
+      "name": "service-02",
+      "tests": 34,
+      "pass": 34,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "f1e5220f961004c738a3c88e5fbcdabc51e45a6f71264e94a867b7d1e6bdf1ac",
+      "outputSha256": "3e7ef9be3e30e96c45f89a52f4ff0dc544e274b6dba0be04518de85398e7021f",
+      "inputChanges": [],
+      "emittedChanges": []
+    },
+    {
+      "name": "datasets-02",
+      "tests": 27,
+      "pass": 27,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "7e306805409895219b3360a2e5d5abf14c871abd2a8791fe808afaa6d8fa0143",
+      "outputSha256": "91d64904ce4477dd290f2dcd46acca3fc759e4792c9797c26f606b85665ff770",
+      "inputChanges": [],
+      "emittedChanges": []
+    }
+  ],
+  "mapMatches": 157,
+  "mapBindingSha256": "673c8f89e7f9a6905720f4f559560d0f8938109e2a49cdaa609f588f4a67fe71",
+  "scope": "Modified-checkout local development. Actual bounded file Workers, exclusive original abort journals, data preservation and control/Runner SQLite barriers. Physical revocation, custody and service objects use explicit fixtures. No actual Linux fencing/source restoration, open control gate, ABORTED, clean-checkout or product acceptance."
+}

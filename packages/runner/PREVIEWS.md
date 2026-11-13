@@ -72,6 +72,12 @@ STOP, CONTAINER_REMOVE and NETWORK_REMOVE each have a fixed decision/profile/ser
 
 An actual unsent service may cancel. An observed container removal, REMOVED, capacity release and event commit atomically; the later network step remains recoverable after service capacity is released. An isolated original network can be removed without inventing a container. Dataset files, physical data fences, claim and proof stay intact. The control preparation remains ABORTING: data-fence release, old source restoration, project occupancy release and ABORTED still need separate verified handshakes. Linux, runsc, hard quota and network-isolation requirements remain closed by default and require physical validation.
 
+## Acceptance dataset abort
+
+`RunnerAcceptanceDatasetAbortBackend` reads the original control decision and completed service/network cleanup directly from trusted stores. Its bounded file Worker exclusively creates and syncs `abort-operation.json` inside the original target dataset directory before the only physical abort dispatch. The immutable request binds the controller, cleanup hash, decision and any original data journal/fences. Existing or partial logs are inspect-only; preparation Workers fail closed when the abort log exists. `abort-receipt.json` binds the original journal bytes and stable authority result. Original data, preparation journals, fences and receipts are retained.
+
+The separate `AcceptanceDatasetAbortAuthority` must permanently revoke the original acquisition, settle in-flight work, prevent late acquire/write, retain a queryable result, keep the target CLOSED and restore the exact source release's physical ownership with successor fence generations. Missing local fences are not evidence of no acquisition. Recovery only calls `inspectAbort`; it never reissues abort, renews custody or deletes files. Missing adapters keep the backend closed. Physical source ownership is recorded as CONTROL_CLOSED: reopening the control gate, resolving original unknown writes, restoring source service, releasing project occupancy and recording ABORTED remain separate work. Fixture proofs are not physical revocation evidence.
+
 ## Local verification boundary
 
 测试实际运行控制面／Runner SQLite Worker、并发事务、原动作 ACK 丢失、观察提交回滚、历史升级失败回滚、Worker 终止重开、真实 dataset 和 loopback HTTP；`ControlledContainerDriver` 显式提供 network／container 事实，不执行 Docker，健康服务也属于测试夹具。Docker 参数与观察核验针对明确输入验证，Windows 不执行 Linux CLI 路径；模板另执行实际 HTTP／SQLite／浏览器检查。不能把受控事实当成物理退出、真实镜像健康、cgroup 或宿主防火墙证据。

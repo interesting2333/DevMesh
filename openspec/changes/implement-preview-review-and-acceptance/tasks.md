@@ -51,3 +51,5 @@
 4.1 撤销决定屏障：迁移40保存owner的不可变原决定并与T5互斥；ABORTING关闭准备授权／READY／新观察／源闭门，保留原派发state、proof／数据／目标CLOSED及未核实占用。abort-01 17/17；storage-02 59/59；regression-01 48/48，构建／类型／Lint、150份映射及旧迁移保留通过；嵌套事务与历史夹具两次失败／修正及构建后OpenAPI／独立测试变化均如实留证。尚无物理stop／rm、fence解除、源恢复、容量释放或ABORTED；完整4.1仍未完成，8/13与正式状态不变。证据见 `project/evidence/P1-07/acceptance-abort-development-review.md`。
 
 4.1 Runner撤销清理：v9原决定／无预留tombstone和原STOP／容器与网络移除日志，绑定原请求／profile／完整ID，丢ACK只查询；准确容器消失与REMOVED／服务容量／历史同事务，数据和原proof保留。最终20/20、45/45、19/19及实际3项历史迁移通过（TAP额外1个空文件包装单列），构建／类型／Lint、154份映射和旧迁移正文保留通过。首轮inspect版本展示的3项失败及修正字节留证；全部最终测试输入匹配build-02。物理事实为明确夹具，尚无dataset fence解除／源恢复／项目占用释放或ABORTED，默认平台未装配；完整4.1仍不勾选，变更8/13及正式状态／门槛不变。证据见 `project/evidence/P1-07/acceptance-runner-abort-development-review.md`。
+
+4.1 数据撤销：独立原日志／receipt绑定控制决定和Runner原清理，唯一abort／恢复只inspect；无本地fences也查原物理记录，严格后继generation与源release、目标CLOSED／源CONTROL_CLOSED，保留原数据与准备证据。并发／超时及未返回物理调用名额均有界。abort-02 24/24；service-02 34/34；datasets-02 27/27，构建／类型／Lint、157份映射和历史迁移不变通过；首轮符号链接错误码断言的子项／父项失败与修正链、build-03之后独立MJS测试顺序变化均留证。实际物理Authority／默认装配、源门／未知写／源服务核实、项目占用解除和ABORTED仍待实现，完整4.1不勾选，8/13及正式状态／门槛不变。证据见 `project/evidence/P1-07/acceptance-data-abort-development-review.md`。

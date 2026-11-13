@@ -1,0 +1,7 @@
+{
+  "file": "tests/acceptance-data-abort.test.mjs",
+  "beforeSource": "source-before-extension/test.txt",
+  "beforeSha256": "e51805814e1604e80c002964a97938eb9e789209b6d1e06cc08b99055eabe7ef",
+  "afterSha256": "d564f45dd6aaa3f370cb907e163327dcad6b53bf9a8647a7df695702864d1739",
+  "reason": "First build passed; added meaningful concurrent winner, worker timeout and explicit replacement-data preservation cases before final build and first test execution. No production code change."
+}
