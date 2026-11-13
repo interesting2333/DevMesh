@@ -1,4 +1,5 @@
 import express from 'express';
+import {mountExportRoutes} from './export.js';
 import type { Express, Request, Response, NextFunction } from 'express';
 import { randomUUID, createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
@@ -208,6 +209,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     response.json(await content.storage.request('listInputEvents',{principalId:identity.principalId,projectId:parseContract(ids.project,request.params.projectId),runId:parseContract(ids.run,request.params.runId),afterSeq:Number(after),limit:positive(request.query.limit,50,200)}));
   }));
   mountPreviewRoutes(router,content,options.previewGateway,route);
+  mountExportRoutes(router,content,route);
   mountReleaseRoutes(router,content,options.releaseGateway,route);
   router.use((error:unknown,request:Request,response:Response,_next:NextFunction)=>{
     const framework=error as {type?:string;status?:number};

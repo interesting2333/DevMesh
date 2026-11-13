@@ -496,3 +496,32 @@ The system SHALL 将原结果查询与后续阶段协调分开。显式 continua
 #### Scenario: Concurrent coordinators lose authority or encounter changed objects
 - **WHEN** 多个协调器同时恢复，或原配置／物理 fence／guard／控制门／接受指针变化
 - **THEN** 同一原阶段至多派发一次；未知旧动作保留，失去授权时不派发后继，不用新配置、实例或路由替代
+
+### Requirement: Accepted release delivery exports use an immutable independent job
+The system SHALL freeze the accepted release identity, exact candidate and source manifest, actual configuration and requirement/plan revisions, control event cutoff and message cursors, and retained content references in a separate idempotent export operation. The system MUST NOT accept, deploy, migrate, rebuild or modify the accepted pointer to create or retry an export. Export metadata and download SHALL require current project membership, while packing and writes SHALL additionally require the original creator and current generation/token lease.
+
+#### Scenario: Retry uses the original version after late records or live source changes
+- **WHEN** an export is queued and later records or a live checkout change
+- **THEN** packing reads only the frozen records, original immutable Git commit and retained material hashes
+- **AND** the manifest identifies the cutoff, exact versions, material hashes, transformations and deliberately excluded scope
+
+#### Scenario: Concurrent or stale packers cannot replace the archive
+- **WHEN** packers compete or an expired worker returns after explicit retry
+- **THEN** only the current claim can read private materials or register archive bytes
+- **AND** the first prepared manifest/hash/size remain immutable and retries produce the same archive
+
+#### Scenario: Packaging failure and lost registration acknowledgement preserve acceptance
+- **WHEN** materials are missing/corrupt, a limit is exceeded or a packing acknowledgement is lost
+- **THEN** only the export job fails or recovers its already registered READY archive
+- **AND** the original Release, acceptance receipt, publication intent and business data remain unchanged
+
+#### Scenario: Download does not schedule work or bypass revoked membership
+- **WHEN** a current member reads status or downloads a READY export
+- **THEN** GET performs no packing or retry and download streams only the exact authorized immutable ZIP as an inert attachment
+- **AND** a removed member is denied on the next read or download
+
+#### Scenario: Delivery scope is explicit and bounded
+- **WHEN** the archive is generated
+- **THEN** source, formal quality/build materials and projected collaboration/configuration records are included within declared limits
+- **AND** business data, platform credentials/runtime authority and private model request/response/reasoning are excluded; unsafe or colliding paths fail without silent truncation
+- **AND** delivery completeness does not claim full platform replay/import or physical deployment acceptance

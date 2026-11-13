@@ -18,7 +18,7 @@ test('v42 history and unresolved Preview writes survive v43; failure rolls back 
   if(cut==='history')db.exec("CREATE TRIGGER explicit_v43_cut BEFORE INSERT ON schema_migrations WHEN NEW.version=43 BEGIN SELECT RAISE(ABORT,'EXPLICIT_V43_CUT'); END");
   const selected=cut==='ddl'?[...m.slice(0,42),{...m[42],sql:m[42].sql+'\nSELECT * FROM explicit_v43_cut;'}]:m;assert.throws(()=>applyMigrations(db,selected,id),/explicit_v43_cut/i);assert.equal(checkHistory(db,m),42);assert.deepEqual(rows(db),before);if(cut==='history')db.exec('DROP TRIGGER explicit_v43_cut');assert.deepEqual(schema(db),ddl);
  }
- assert.equal(applyMigrations(db,m,id),43);for(const [name,old] of before)if(name!=='schema_migrations')assert.deepEqual(db.prepare('SELECT * FROM '+name+' ORDER BY rowid').all(),old,name);
+ assert.equal(applyMigrations(db,m,id,1,43),43);for(const [name,old] of before)if(name!=='schema_migrations')assert.deepEqual(db.prepare('SELECT * FROM '+name+' ORDER BY rowid').all(),old,name);
  assert.equal(db.prepare('SELECT count(*) n FROM business_pending_writes').get().n,1);assert.equal(db.prepare('SELECT purpose FROM business_pending_writes').get().purpose,'PREVIEW');for(const name of ['release_access_requests','release_tickets','release_sessions','release_credential_events'])assert.equal(db.prepare('SELECT count(*) n FROM '+name).get().n,0);assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
  const changed=m.map(x=>x.version===42?{...x,sha256:'0'.repeat(64)}:x);assert.throws(()=>checkHistory(db,changed),{code:'MIGRATION_HISTORY_MISMATCH'});assert.equal(checkHistory(db,m),43);
 });

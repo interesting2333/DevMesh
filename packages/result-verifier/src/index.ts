@@ -12,3 +12,6 @@ export {verifyPreviewImage,previewImageLimits} from './preview-image.js';
 export type {PreviewImageInput,PreviewImageIdentity} from './preview-image.js';
 export {DeliveryCollector} from './delivery.js';
 export {CandidateFreezer} from './freeze.js';
+export {ReleaseExporter} from './release-export.js';
+export type {ReleaseExportSources} from './release-export.js';
+export {buildExportZip,exportPath,exportLimits} from './export-zip.js';

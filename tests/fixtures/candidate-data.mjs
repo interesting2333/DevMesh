@@ -8,7 +8,7 @@ import {seedHistoricalVerification} from './historical-verification.mjs';
 // These tests exercise the actual migrated schema and Worker command handlers.
 // Retained source facts are deliberately seeded DB fixtures, not Git transfer,
 // Runtime or Runner evidence. Real Git behavior has separate integration tests.
-export async function candidateFixture(t,{configureDraft,targetVersion}={}){
+export async function candidateFixture(t,{configureDraft,targetVersion,repositoryIdentity}={}){
   const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON');const migrations=readMigrations();applyMigrations(db,migrations,randomUUID(),1,targetVersion??migrations.length);t.after(()=>db.close());
  const domain=createDomain(db),storage={async request(method,input){return domain.execute(method,input);}},p=await project(storage),draft=plan(['developer','developer','tester']),req=requirements(),[left,right,tester]=draft.works;
  for(const [index,work] of draft.works.entries()){work.inputRefs=[];work.writeScope=work.role==='developer'?['src/'+index+'.ts']:[];}
@@ -17,7 +17,7 @@ export async function candidateFixture(t,{configureDraft,targetVersion}={}){
  const planContentHash=await content(storage,draft),publication=await storage.request('publishPlan',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r1"',requirementRevision:1,planRevision:1,requirements:req,plan:draft,planContentHash});
  await storage.request('confirmReviewedPlan',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r2"',requirementRevision:1,planRevision:1,reviewHash:publication.result.reviewHash});
  const get=(sql,...args)=>db.prepare(sql).get(...args),run=(sql,...args)=>db.prepare(sql).run(...args),insert=(table,row)=>{const keys=Object.keys(row);return run('INSERT INTO '+table+'('+keys.join(',')+') VALUES('+keys.map(()=>'?').join(',')+')',...Object.values(row));};
- const time=new Date().toISOString(),identity={root:'D:\\database-fixture\\repo.git',gitDirectory:'D:\\database-fixture\\repo.git',commonDirectory:'D:\\database-fixture\\repo.git',rootDevice:'1',rootFileId:'2',gitDevice:'1',gitFileId:'2'},base='b'.repeat(40),emptyManifest=commit=>{const value={commit,tree:'e'.repeat(40),files:[],byteSize:0};return {...value,sha256:hash(canonical(value))};};
+  const time=new Date().toISOString(),identity=repositoryIdentity?await repositoryIdentity(p):{root:'D:\\database-fixture\\repo.git',gitDirectory:'D:\\database-fixture\\repo.git',commonDirectory:'D:\\database-fixture\\repo.git',rootDevice:'1',rootFileId:'2',gitDevice:'1',gitFileId:'2'},base='b'.repeat(40),emptyManifest=commit=>{const value={commit,tree:'e'.repeat(40),files:[],byteSize:0};return {...value,sha256:hash(canonical(value))};};
  insert('managed_repositories',{project_id:p.projectId,resource_id:'repository.unit',operation_id:'op_repository',request_hash:hash('repository'),template_commit:base,state:'READY',identity_json:canonical(identity),manifest_json:canonical(emptyManifest(base)),created_at:time,updated_at:time});
  const decisionId=get("SELECT decision_id FROM decisions WHERE run_id=? AND subject_kind='PLAN'",p.runId).decision_id,context={...p,draft,requirements:req},sources=[];
  async function complete(index,{archive=true,interfaces=[],codeBase=base,formal=false,manifestOverrides={},inputArtifacts}={}){

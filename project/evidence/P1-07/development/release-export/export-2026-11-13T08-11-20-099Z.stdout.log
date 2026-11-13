@@ -1,0 +1,92 @@
+TAP version 13
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: accepted export freezes exact source, configuration, quality and collaboration; real CAS ZIP survives restart
+ok 1 - accepted export freezes exact source, configuration, quality and collaboration; real CAS ZIP survives restart
+  ---
+  duration_ms: 13338.5571
+  type: 'test'
+  ...
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: packing missing material fails only export; retry keeps snapshot and produces original bytes
+ok 2 - packing missing material fails only export; retry keeps snapshot and produces original bytes
+  ---
+  duration_ms: 10907.3448
+  type: 'test'
+  ...
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: claims exclude concurrent packers, reject stale workers, and preserve frozen source on retry
+ok 3 - claims exclude concurrent packers, reject stale workers, and preserve frozen source on retry
+  ---
+  duration_ms: 8155.9357
+  type: 'test'
+  ...
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: registered archive ACK loss recovers READY rather than failing or creating another release
+ok 4 - registered archive ACK loss recovers READY rather than failing or creating another release
+  ---
+  duration_ms: 7571.26
+  type: 'test'
+  ...
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared archive ACK loss, terminated Worker and source corruption retain original job and archive
+ok 5 - prepared archive ACK loss, terminated Worker and source corruption retain original job and archive
+  ---
+  duration_ms: 11433.3807
+  type: 'test'
+  ...
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: export registration rollback and immutable references; late live records never enter the frozen archive
+ok 6 - export registration rollback and immutable references; late live records never enter the frozen archive
+  ---
+  duration_ms: 8008.6369
+  type: 'test'
+  ...
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37948) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: download reauthenticates current members; GET never packs; errors remain inert
+ok 7 - download reauthenticates current members; GET never packs; errors remain inert
+  ---
+  duration_ms: 8023.7145
+  type: 'test'
+  ...
+# Subtest: ZIP filenames, collisions, determinism and platform record redaction
+ok 8 - ZIP filenames, collisions, determinism and platform record redaction
+  ---
+  duration_ms: 1.4989
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 69123.4959

@@ -1,3 +1,6 @@
+import {createReleaseExportDomain} from './release-export-domain.js';
+import {releaseExportRequests} from './release-export-protocol.js';
+import type {ReleaseExportMethod} from './release-export-protocol.js';
 import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
@@ -174,6 +177,7 @@ export function createDomain(db: DatabaseSync) {
     operation:(...args)=>operation(...args),
     completed(runId,operationId,candidateId,releaseId,attempts){bump(runId);for(const a of attempts)event(runId,operationId,'AttemptStateChanged',{attemptId:a.attemptId,state:'SUCCEEDED'},a);event(runId,operationId,'ReleaseAccepted',{candidateId,releaseId});const r=run(runId);event(runId,operationId,'ControlProgress',{state:{phase:r.phase,controlGate:r.control_gate,terminalOutcome:'COMPLETED'},controlRevision:Number(r.control_revision),runEpoch:Number(r.run_epoch)});},
   });
+  const releaseExports=createReleaseExportDomain(db,{operation:(...args)=>operation(...args)});
   const candidateBasis=candidateIntegrations.basis;
   const acceptanceAborts=createAcceptanceAbortDomain(db,plans,acceptances,{
     operation:(...args)=>operation(...args),
@@ -522,6 +526,7 @@ export function createDomain(db: DatabaseSync) {
     if(Object.hasOwn(acceptanceAbortRecoveryRequests,method))return acceptanceAbortRecovery.execute(method as AcceptanceAbortRecoveryMethod,input);
     if(Object.hasOwn(releasePublicationRequests,method))return releasePublications.execute(method as ReleasePublicationMethod,input);
     if(Object.hasOwn(acceptanceAbortRequests,method))return acceptanceAborts.execute(method as AcceptanceAbortMethod,input);
+    if(Object.hasOwn(releaseExportRequests,method))return releaseExports.execute(method as ReleaseExportMethod,input);
     if(Object.hasOwn(acceptanceCommitRequests,method))return acceptanceCommits.execute(method as AcceptanceCommitMethod,input);
     if(Object.hasOwn(acceptanceReadinessRequests,method))return acceptanceReadiness.execute(method as AcceptanceReadinessMethod,input);
     if(Object.hasOwn(releaseSessionRequests,method))return releaseSessions.execute(method as ReleaseSessionMethod,input);

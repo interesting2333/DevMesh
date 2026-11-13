@@ -1,0 +1,92 @@
+import {randomUUID} from 'node:crypto';
+import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
+import {parseContract} from '@devmesh/contracts';
+import type {Meta,OperationResult} from './protocol.js';
+import type {ObjectTarget,SessionInput} from './session-protocol.js';
+import type {ReleaseCandidateManifest} from './release-freeze-protocol.js';
+import {sourceManifest} from './workspace-protocol.js';
+import {releaseExportRequests} from './release-export-protocol.js';
+import type {ReleaseExportMethod,ReleaseExportInput,ReleaseExportSnapshot,ReleaseExportJob,ReleaseExportContext,ReleaseExportMaterial} from './release-export-protocol.js';
+import {redactExportRecord} from './export-redaction.js';
+import {canonical} from './json.js';
+import {digest,transaction} from './migrations.js';
+import {StorageError} from './errors.js';
+type Row=Record<string,string|number|null>;
+type Claim=ReleaseExportInput<'getReleaseExportContext'>;
+type ExportTarget=Extract<ObjectTarget,{kind:'releaseExport'}>;
+const json=<T>(v:unknown):T=>JSON.parse(String(v)) as T;
+function fail(code:string,status=409):never{throw new StorageError(code,status,'Release export requires its frozen materials and current project membership');}
+export function createReleaseExportDomain(db:DatabaseSync,hooks?:{operation(meta:Meta,kind:string,payload:unknown,action:(id:string)=>Record<string,unknown>,authorize:()=>void):OperationResult}){
+ const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined;
+ const all=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).all(...p) as Row[];
+ const exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
+ const now=()=>new Date().toISOString();
+ function release(principalId:string,releaseId:string){return get('SELECT r.*,c.receipt_json FROM releases r JOIN acceptance_commits c ON c.release_id=r.release_id JOIN project_members m ON m.project_id=r.project_id AND m.principal_id=? WHERE r.release_id=?',principalId,releaseId)??fail('RESOURCE_NOT_FOUND',404);}
+ function authorized(principalId:string,exportId:string,owner=false){const r=get('SELECT * FROM release_exports WHERE export_id=?',exportId)??fail('RESOURCE_NOT_FOUND',404);release(principalId,String(r.release_id));if(owner&&r.principal_id!==principalId)fail('FORBIDDEN',403);return r;}
+ const snapshot=(r:Row)=>json<ReleaseExportSnapshot>(r.snapshot_json);
+ function view(r:Row):ReleaseExportJob {const s=snapshot(r);return {exportId:String(r.export_id),releaseId:String(r.release_id),runId:s.release.runId,candidateId:s.candidateId,codeCommit:s.codeCommit,cutoffSeq:s.cutoffSeq,snapshotHash:String(r.snapshot_hash),state:r.state as ReleaseExportJob['state'],generation:Number(r.generation),leaseUntil:r.lease_until as string|null,archiveHash:r.archive_hash as string|null,archiveSize:r.archive_size as number|null,errorCode:r.error_code as string|null,createdAt:String(r.created_at),updatedAt:String(r.updated_at)};}
+ function history(id:string,state:string,generation:number,error:string|null=null){exec('INSERT INTO release_export_history SELECT ?,COALESCE(MAX(seq),0)+1,?,?,?,? FROM release_export_history WHERE export_id=?',id,state,generation,error,now(),id);}
+ function claim(i:Claim){const r=authorized(i.principalId,i.exportId,true);if(r.state!=='PACKING'||r.generation!==i.generation||r.claim_token!==i.claimToken||String(r.lease_until)<=now())fail('EXPORT_CLAIM_STALE');return r;}
+ const context=(r:Row):ReleaseExportContext=>({job:view(r),generation:Number(r.generation),claimToken:String(r.claim_token),snapshot:snapshot(r),writeKey:String(r.claim_token)});
+ function capture(principalId:string,releaseId:string):ReleaseExportSnapshot {
+  const r=release(principalId,releaseId),c=get('SELECT * FROM release_candidates WHERE candidate_id=? AND run_id=?',r.candidate_id!,r.run_id!)??fail('EXPORT_MATERIAL_MISSING'),m=json<ReleaseCandidateManifest>(c.manifest_json);
+  if(digest(canonical(m))!==r.manifest_hash||m.codeCommit!==c.code_commit)fail('EXPORT_MATERIAL_CHANGED');
+  const integration=get("SELECT manifest_json FROM candidate_integrations WHERE operation_id=? AND state='ACKNOWLEDGED'",m.source.operationId),source=sourceManifest.parse(json(integration?.manifest_json));
+  const {sha256,...body}=source;if(source.commit!==m.codeCommit||source.sha256!==m.source.manifestSha256||digest(canonical(body))!==sha256)fail('EXPORT_SOURCE_CHANGED');
+  const run=get('SELECT event_seq FROM runs WHERE run_id=?',r.run_id!)!,cutoffSeq=Number(run.event_seq),materials:ReleaseExportMaterial[]=[];
+  function add(key:string,path:string,hash:string,transform:ReleaseExportMaterial['transform']='EXACT'){
+   const content=get("SELECT byte_size FROM content_objects WHERE content_hash=? AND state='READY'",hash)??fail('EXPORT_MATERIAL_MISSING');
+   if(Number(content.byte_size)>64*1024*1024)fail('EXPORT_LIMIT_EXCEEDED',413);
+   materials.push({key,path,contentHash:hash,byteSize:Number(content.byte_size),transform});
+  }
+  const records:Record<string,unknown>={};
+  for(const [key,table,revision] of [['requirements','requirement_revisions',m.requirementRevision],['plan','plan_revisions',m.planRevision]] as const){const row=get(`SELECT content_json FROM ${table} WHERE run_id=? AND revision=?`,r.run_id!,revision)??fail('EXPORT_MATERIAL_MISSING');records[key]=json(row.content_json);}
+  records.candidate={candidateId:String(r.candidate_id),revision:Number(r.candidate_revision),manifestHash:String(r.manifest_hash),automaticStatus:m.automaticStatus,reviewStatus:m.reviewStatus,works:m.works,quality:m.quality.map(q=>({operationId:q.verification.operationId,evaluation:q.verification.evaluation})),issues:m.issues,image:m.delivery.record.image,dataPlan:m.delivery.record.dataPlan};
+  const bounded=(sql:string,...p:SQLInputValue[])=>{const rows=all(sql,...p);if(rows.length>2000)fail('EXPORT_LIMIT_EXCEEDED',413);return rows;};
+  records.roles=bounded('SELECT attempt_id,work_id,role,state,role_snapshot_json FROM attempts WHERE run_id=? ORDER BY created_at,attempt_id LIMIT 2001',r.run_id!).map(a=>({attemptId:a.attempt_id,workId:a.work_id,role:a.role,state:a.state,configuration:json(a.role_snapshot_json)}));
+  records.events=bounded('SELECT seq,type,work_id,attempt_id,payload_json,occurred_at,observed_at FROM events WHERE run_id=? AND seq<=? ORDER BY seq LIMIT 2001',r.run_id!,cutoffSeq).map(e=>({seq:e.seq,type:e.type,workId:e.work_id,attemptId:e.attempt_id,payload:json(e.payload_json),occurredAt:e.occurred_at,observedAt:e.observed_at}));
+  records.a2a=bounded('SELECT endpoint_id,task_id,attempt_id,protocol_state FROM a2a_tasks WHERE run_id=? ORDER BY endpoint_id,task_id LIMIT 2001',r.run_id!);
+  records.a2aHistory=bounded('SELECT e.endpoint_id,e.task_id,e.seq,e.snapshot_json,e.created_at FROM a2a_task_events e JOIN a2a_tasks t ON t.endpoint_id=e.endpoint_id AND t.task_id=e.task_id WHERE t.run_id=? ORDER BY e.endpoint_id,e.task_id,e.seq LIMIT 2001',r.run_id!).map(e=>({endpointId:e.endpoint_id,taskId:e.task_id,seq:e.seq,snapshot:json(e.snapshot_json),createdAt:e.created_at}));
+  records.tools=bounded('SELECT t.operation_id,t.attempt_id,t.tool_name,t.effect_class,t.request_hash,o.status,o.created_at,o.updated_at FROM tool_operations t JOIN operations o ON o.operation_id=t.operation_id WHERE t.run_id=? ORDER BY t.operation_id LIMIT 2001',r.run_id!);
+  records.repositoryOperations=bounded('SELECT operation_id,attempt_id,tool_name,state,request_hash,created_at,updated_at FROM repo_operations WHERE run_id=? ORDER BY operation_id LIMIT 2001',r.run_id!);
+  const messages=bounded('SELECT m.message_id,m.session_id,m.message_seq,m.kind,m.body_content_hash,m.created_at FROM session_messages m JOIN agent_sessions s ON s.session_id=m.session_id WHERE s.run_id=? ORDER BY m.session_id,m.message_seq LIMIT 2001',r.run_id!);
+  records.messages=messages.map((v,n)=>{const key='message.'+n;add(key,'collaboration/messages/'+n+'.json',String(v.body_content_hash),'REDACT_JSON');return {key,sessionId:v.session_id,seq:v.message_seq,kind:v.kind,createdAt:v.created_at};});
+  records.sessionCursors=[...new Set(messages.map(m=>String(m.session_id)))].map(sessionId=>({sessionId,throughMessageSeq:Math.max(...messages.filter(m=>m.session_id===sessionId).map(m=>Number(m.message_seq)))}));
+  for(const [n,v] of m.delivery.materials.entries()){
+   const named:Record<string,string>={'run.instructions':'delivery/run-instructions.json','collaboration.record':'collaboration/runner-record.json','role.configuration':'configuration/runner-role.json','data.plan':'delivery/data-plan.json','image.manifest':'delivery/image/manifest.json','image.config':'delivery/image/config.json'};
+   add('delivery.'+n,named[v.materialKey]??'delivery/'+v.materialKey+'.bin',v.contentHash!,['run.instructions','collaboration.record','role.configuration'].includes(v.materialKey)?'REDACT_JSON':'EXACT');
+  }
+  for(const [n,q] of m.quality.entries())for(const [j,v] of q.materials.entries())add(`quality.${n}.${j}`,`quality/${n}/${j}.bin`,v.contentHash!);
+  const seen=new Set<string>();for(const w of m.works)for(const ref of [w.evidence,w.assessment.candidate,...w.assessment.outputs.map(o=>o.ref)])if(!seen.has(ref.artifactId)){seen.add(ref.artifactId);add('artifact.'+seen.size,'artifacts/'+seen.size+'.json',ref.sha256);}
+  if(materials.length>10000||materials.reduce((n,v)=>n+v.byteSize,0)>190*1024*1024)fail('EXPORT_LIMIT_EXCEEDED',413);
+  return {schemaVersion:'devmesh.release-export-snapshot.v1',release:json(r.receipt_json),candidateId:String(r.candidate_id),candidateRevision:Number(r.candidate_revision),manifestHash:String(r.manifest_hash),codeCommit:m.codeCommit,requirementRevision:m.requirementRevision,planRevision:m.planRevision,checkConfigHash:m.checkConfigHash,templateVersion:m.templateVersion,cutoffSeq,source:{identity:m.source.basis.repository.identity,manifest:source},records:redactExportRecord(records) as Record<string,unknown>,materials};
+ }
+ const handlers={
+  createReleaseExport(i:ReleaseExportInput<'createReleaseExport'>){
+   if(i.meta.scopeId!==i.releaseId)fail('OPERATION_SCOPE_INVALID',422);
+   if(!hooks)fail('SERVICE_UNAVAILABLE',503);
+   const op=hooks.operation(i.meta,'CreateReleaseExport',{releaseId:i.releaseId,format:i.format},operationId=>{
+    const s=capture(i.meta.principalId,i.releaseId),text=canonical(s);if(Buffer.byteLength(text)>240*1024)fail('EXPORT_LIMIT_EXCEEDED',413);
+    const id='export_'+randomUUID().replaceAll('-',''),time=now();exec("INSERT INTO release_exports(export_id,operation_id,release_id,principal_id,snapshot_hash,snapshot_json,state,write_key,created_at,updated_at) VALUES(?,?,?,?,?,?,'QUEUED',?,?,?)",id,operationId,i.releaseId,i.meta.principalId,digest(text),text,randomUUID(),time,time);
+    for(const m of s.materials)exec('INSERT INTO release_export_materials VALUES(?,?,?,?,?,?)',id,m.key,m.path,m.contentHash,m.byteSize,m.transform);
+    history(id,'QUEUED',0);return {exportId:id};
+   },()=>{release(i.meta.principalId,i.releaseId);});
+   return view(authorized(i.meta.principalId,String(op.result!.exportId)));
+  },
+  getReleaseExport(i:ReleaseExportInput<'getReleaseExport'>){return view(authorized(i.principalId,i.exportId));},
+  listReleaseExports(i:ReleaseExportInput<'listReleaseExports'>){release(i.principalId,i.releaseId);const rows=all('SELECT * FROM release_exports WHERE release_id=? AND export_id>? ORDER BY export_id LIMIT ?',i.releaseId,i.afterExportId??'',i.limit+1);return {jobs:rows.slice(0,i.limit).map(view),nextCursor:rows.length>i.limit?String(rows[i.limit-1]!.export_id):null};},
+  retryReleaseExport(i:ReleaseExportInput<'retryReleaseExport'>){const r=authorized(i.principalId,i.exportId,true);if(r.state==='READY')return view(r);if(r.generation!==i.expectedGeneration)fail('EXPORT_CLAIM_STALE');if(r.state==='QUEUED')return view(r);if(r.state==='PACKING'&&String(r.lease_until)>now())fail('EXPORT_IN_PROGRESS');exec("UPDATE release_exports SET state='QUEUED',claim_token=NULL,lease_until=NULL,error_code=NULL,updated_at=? WHERE export_id=?",now(),i.exportId);history(i.exportId,'QUEUED',Number(r.generation));return view(authorized(i.principalId,i.exportId));},
+  claimReleaseExport(i:ReleaseExportInput<'claimReleaseExport'>){const r=authorized(i.principalId,i.exportId,true);if(r.state!=='QUEUED')return null;const generation=Number(r.generation)+1;exec("UPDATE release_exports SET state='PACKING',generation=?,claim_token=?,lease_until=?,error_code=NULL,updated_at=? WHERE export_id=?",generation,randomUUID(),new Date(Date.now()+120000).toISOString(),now(),i.exportId);history(i.exportId,'PACKING',generation);return context(authorized(i.principalId,i.exportId,true));},
+  getReleaseExportContext(i:Claim){return context(claim(i));},
+  prepareReleaseExportArchive(i:ReleaseExportInput<'prepareReleaseExportArchive'>){const r=claim(i),text=canonical(i.manifest);if(Buffer.byteLength(text)>192*1024)fail('EXPORT_LIMIT_EXCEEDED',413);if(r.archive_hash!==null&&(r.archive_hash!==i.hash||r.archive_size!==i.byteSize||r.archive_manifest!==text))fail('EXPORT_ARCHIVE_CHANGED');exec('UPDATE release_exports SET archive_hash=?,archive_size=?,archive_manifest=?,updated_at=? WHERE export_id=?',i.hash,i.byteSize,text,now(),i.exportId);return view(authorized(i.principalId,i.exportId));},
+  failReleaseExport(i:ReleaseExportInput<'failReleaseExport'>){const r=claim(i);exec("UPDATE release_exports SET state='FAILED',error_code=?,updated_at=? WHERE export_id=?",i.errorCode,now(),i.exportId);history(i.exportId,'FAILED',Number(r.generation),i.errorCode);return view(authorized(i.principalId,i.exportId));},
+ };
+ function authorize(principalId:string,t:ExportTarget){const r=authorized(principalId,t.exportId,true);if(r.state==='READY'&&r.generation===t.generation&&r.claim_token===t.claimToken)return r;return claim({principalId,exportId:t.exportId,generation:t.generation,claimToken:t.claimToken});}
+ return {
+  execute(method:ReleaseExportMethod,input:unknown):unknown{const i=parseContract(releaseExportRequests[method],input),call=()=>(handlers[method] as (i:unknown)=>unknown)(i);return method==='createReleaseExport'?call():transaction(db,call);},
+  authorize,
+  validateWrite(i:Omit<SessionInput<'beginObjectWrite'>,'target'>&{target:ExportTarget}){const r=authorize(i.meta.principalId,i.target);if(i.meta.scopeId!==i.target.exportId||i.meta.idempotencyKey!==r.claim_token||i.expectedHash!==r.archive_hash||i.expectedSize!==r.archive_size||i.mimeType!=='application/zip')fail('EXPORT_ARCHIVE_CHANGED');},
+  commit(principalId:string,t:ExportTarget,hash:string,write:{expected_hash?:unknown;expected_size?:unknown}){const r=authorize(principalId,t);if(hash!==r.archive_hash||write.expected_hash!==r.archive_hash||write.expected_size!==r.archive_size)fail('EXPORT_ARCHIVE_CHANGED');if(r.state!=='READY'){exec("UPDATE release_exports SET state='READY',content_hash=?,error_code=NULL,updated_at=? WHERE export_id=?",hash,now(),t.exportId);history(t.exportId,'READY',Number(r.generation));}return {exportId:t.exportId,contentHash:hash};},
+  resolve(principalId:string,t:{kind:'releaseExport';exportId:string}|{kind:'exportMaterial';exportId:string;materialKey:string;generation:number;claimToken:string}){const r=authorized(principalId,t.exportId,t.kind==='exportMaterial');if(t.kind==='releaseExport'){if(r.state!=='READY'||!r.content_hash)fail('EXPORT_NOT_READY');return {content_hash:r.content_hash};}claim({principalId,...t});const m=get('SELECT content_hash FROM release_export_materials WHERE export_id=? AND material_key=?',t.exportId,t.materialKey)??fail('EXPORT_MATERIAL_MISSING');return m;},
+ };
+}

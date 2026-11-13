@@ -1591,6 +1591,12 @@ ReleasePublisher 在恢复 SENT／UNKNOWN 时先 inspect 原操作；只有显�
 
 PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实原控制和动作授权，prepared 只验证原目录及字节限额。Runner v12 对旧 profile 标 INSPECT_ONLY，不声称旧配额已完成、不在恢复中再 enforce；新 profile 同事务标 EXECUTE_ONCE，许可或结果未知仅查询。真实物理 provider、独立导出、默认装配、正式后继保留／替换和门换代后的源服务恢复仍按完整验收实施。
 
+### 13. 已验收版本独立导出（迁移44）
+
+按原 Release 固定候选／源码 SHA、实际需求／计划／角色配置、控制事件 seq 和会话消息游标及正式材料引用，在独立事务登记 export job。QUEUED→PACKING→READY／FAILED；原创建者与当前成员、generation／claim token／租约共同控制材料读取和归档写入。超时或失败仅显式重排原任务，首次准备的 ZIP manifest／hash／size 不变，已注册丢回执查询 READY。材料 FK 阻止 GC，物理原字节恢复仍需 CAS 校验；打包不得执行工作、迁移、发布或改动验收。
+
+已实现排队／列出／查询／重试／下载 API 和显式 ReleaseExporter／LocalReleaseExportSources，默认宿主调度另行装配。原受控 bare Git／原正式内容、实际配置与协作记录进入有界 ZIP32 STORE，manifest逐项 hash／size／转换／排除范围，平台字段净化而项目源码／构建／镜像保留原字节；业务数据、平台权限与私有模型输入／推理不导出。交付 scope 完整不等于平台可回放备份。具体边界及接入见 packages/result-verifier/EXPORTS.md；完整4.3／5.1／5.2与真实物理、后继流程继续单独验收。
+
 ---
 
 ## 14. 数据与事务

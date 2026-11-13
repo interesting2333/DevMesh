@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "bd3707b00cb88595bcfbfbefda22f9e97405d311",
+  "reviewer": "Codex / same-agent development review",
+  "finalGroups": [
+    {
+      "name": "export",
+      "record": "export-2026-11-13T08-11-20-099Z.json",
+      "tests": 8,
+      "pass": 8,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T08-11-20-098Z.json",
+      "tests": 114,
+      "pass": 114,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "acceptance",
+      "record": "acceptance-2026-11-13T08-01-32-090Z.json",
+      "tests": 157,
+      "pass": 157,
+      "skipped": 0,
+      "changedDuringRun": [
+        "packages/storage-sqlite/src/export-redaction.ts",
+        "packages/storage-sqlite/src/release-export-domain.ts",
+        "tests/contracts.test.mjs",
+        "tests/fixtures/release-export.mjs",
+        "tests/release-export.test.mjs"
+      ],
+      "changedSinceRun": [
+        "tests/release-export.test.mjs"
+      ],
+      "reuseAssessment": "Existing acceptance and source archive scenarios do not call export capture/redaction or import export tests/fixture. Only capture and its dedicated redactor changed; factory and all existing call paths remain byte-identical. Prior compiled source bytes retained and match run input hashes. Final export/regression groups exercise final capture/redaction."
+    },
+    {
+      "name": "workspace",
+      "record": "workspace-2026-11-13T08-01-32-119Z.json",
+      "tests": 18,
+      "pass": 18,
+      "skipped": 0,
+      "changedDuringRun": [
+        "tests/contracts.test.mjs"
+      ],
+      "changedSinceRun": [
+        "packages/storage-sqlite/src/export-redaction.ts",
+        "packages/storage-sqlite/src/release-export-domain.ts",
+        "tests/fixtures/release-export.mjs",
+        "tests/release-export.test.mjs"
+      ],
+      "reuseAssessment": "Existing acceptance and source archive scenarios do not call export capture/redaction or import export tests/fixture. Only capture and its dedicated redactor changed; factory and all existing call paths remain byte-identical. Prior compiled source bytes retained and match run input hashes. Final export/regression groups exercise final capture/redaction."
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T08-10-23-848Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T08-11-20-114Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T08-11-20-149Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T08-11-20-148Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 297,
+  "totalSkipped": 0,
+  "failedRuns": [
+    {
+      "file": "export-2026-11-13T07-52-18-569Z.json",
+      "name": "export",
+      "code": 1
+    },
+    {
+      "file": "export-2026-11-13T07-52-43-696Z.json",
+      "name": "export",
+      "code": 1
+    },
+    {
+      "file": "regression-2026-11-13T07-59-27-194Z.json",
+      "name": "regression",
+      "code": 1
+    }
+  ],
+  "scope": "Modified checkout development: real control Worker, CAS, immutable Git and external tar ZIP read, actual local HTTP. Original admission/source integration/OCI/Runner physical facts and human review remain explicit fixtures. No model/OIDC/Linux/gVisor, clean-checkout, default scheduling/UI or full product acceptance. Export is accepted delivery scope, not general replay/import or business dataset backup.",
+  "limits": "Final build/export/regression/type/lint/contracts use final inputs. Older acceptance/source archive validation is reused only for unchanged call paths, with exact prior source bytes and explicit method scope assessment. This is not a claim that all groups ran with identical final checkout bytes.",
+  "unloggedDevelopmentObservation": "An early pnpm check reached typecheck then failed lint on an intentional control-character regex. It was replaced with code-point validation. That console-only exploratory attempt has no saved raw log and is not counted as a passed full check. No full pnpm check completion is claimed.",
+  "managementChecks": "management-checks.json"
+}

@@ -1,0 +1,100 @@
+Scope: 5 of 19 workspace projects
+packages/contracts build$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+packages/contracts build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/contracts build: ℹ config file: D:\yms\AI\DevMesh\packages\contracts\package.json 
+packages/contracts build: ℹ entry: src/index.ts
+packages/contracts build: ℹ target: es2024
+packages/contracts build: ℹ tsconfig: ..\..\tsconfig.json
+packages/contracts build: ℹ Build start
+packages/contracts build: ℹ Cleaning 4 files
+packages/contracts build: ℹ dist\index.js       76.50 kB │ gzip: 20.17 kB
+packages/contracts build: ℹ dist\index.js.map  129.35 kB │ gzip: 32.48 kB
+packages/contracts build: ℹ dist\index.d.ts    241.52 kB │ gzip: 22.71 kB
+packages/contracts build: ℹ 3 files, total: 447.37 kB
+packages/contracts build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/contracts build:   - rolldown-plugin-dts:generate (63%)
+packages/contracts build:   - rolldown-plugin-dts:fake-js (32%)
+packages/contracts build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/contracts build: ✔ Build complete in 3351ms
+packages/contracts build: Done
+packages/storage-sqlite build$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+packages/storage-sqlite build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/storage-sqlite build: ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+packages/storage-sqlite build: ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+packages/storage-sqlite build: ℹ target: node24
+packages/storage-sqlite build: ℹ tsconfig: ..\..\tsconfig.json
+packages/storage-sqlite build: ℹ Build start
+packages/storage-sqlite build: ℹ Cleaning 64 files
+packages/storage-sqlite build: ℹ dist\index.mjs                            9.96 kB │ gzip:   3.19 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs                           5.29 kB │ gzip:   2.16 kB
+packages/storage-sqlite build: ℹ dist\migrations.mjs                       0.26 kB │ gzip:   0.17 kB
+packages/storage-sqlite build: ℹ dist\domain.mjs                           0.21 kB │ gzip:   0.15 kB
+packages/storage-sqlite build: ℹ dist\domain-C5Sq7XMs.mjs.map              1.11 MB
+packages/storage-sqlite build: ℹ dist\domain-C5Sq7XMs.mjs                662.40 kB │ gzip: 131.31 kB
+packages/storage-sqlite build: ℹ dist\export-redaction-DrG5uBHu.mjs.map  179.56 kB │ gzip:  35.89 kB
+packages/storage-sqlite build: ℹ dist\export-redaction-DrG5uBHu.mjs       94.36 kB │ gzip:  19.10 kB
+packages/storage-sqlite build: ℹ dist\index.mjs.map                       19.04 kB │ gzip:   5.66 kB
+packages/storage-sqlite build: ℹ dist\migrations-BsETEmRY.mjs.map         12.27 kB │ gzip:   4.25 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs.map                       8.45 kB │ gzip:   3.15 kB
+packages/storage-sqlite build: ℹ dist\migrations-BsETEmRY.mjs              7.30 kB │ gzip:   2.73 kB
+packages/storage-sqlite build: ℹ dist\index.d.mts                         12.30 kB │ gzip:   3.19 kB
+packages/storage-sqlite build: ℹ dist\domain.d.mts                         9.01 kB │ gzip:   2.04 kB
+packages/storage-sqlite build: ℹ dist\migrations.d.mts                     0.91 kB │ gzip:   0.42 kB
+packages/storage-sqlite build: ℹ dist\worker.d.mts                         0.01 kB │ gzip:   0.03 kB
+packages/storage-sqlite build: ℹ dist\json-BKR27KgI.d.mts                493.67 kB │ gzip:  46.75 kB
+packages/storage-sqlite build: ℹ 17 files, total: 2.63 MB
+packages/storage-sqlite build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/storage-sqlite build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/storage-sqlite build: ✔ Build complete in 5173ms
+packages/storage-sqlite build: Done
+packages/code-workspaces build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/result-verifier build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/input-api build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/code-workspaces build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/result-verifier build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/input-api build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/code-workspaces build: ℹ config file: D:\yms\AI\DevMesh\packages\code-workspaces\package.json 
+packages/result-verifier build: ℹ config file: D:\yms\AI\DevMesh\packages\result-verifier\package.json 
+packages/code-workspaces build: ℹ entry: src/index.ts
+packages/code-workspaces build: ℹ target: node24
+packages/code-workspaces build: ℹ tsconfig: ..\..\tsconfig.json
+packages/input-api build: ℹ config file: D:\yms\AI\DevMesh\packages\input-api\package.json 
+packages/code-workspaces build: ℹ Build start
+packages/result-verifier build: ℹ entry: src/index.ts
+packages/result-verifier build: ℹ target: node24
+packages/result-verifier build: ℹ tsconfig: ..\..\tsconfig.json
+packages/input-api build: ℹ entry: src/index.ts
+packages/input-api build: ℹ target: node24
+packages/input-api build: ℹ tsconfig: ..\..\tsconfig.json
+packages/result-verifier build: ℹ Build start
+packages/input-api build: ℹ Build start
+packages/code-workspaces build: ℹ Cleaning 4 files
+packages/result-verifier build: ℹ Cleaning 4 files
+packages/input-api build: ℹ Cleaning 4 files
+packages/input-api build: ℹ dist\index.mjs      48.03 kB │ gzip: 11.71 kB
+packages/input-api build: ℹ dist\index.mjs.map  79.09 kB │ gzip: 19.46 kB
+packages/input-api build: ℹ dist\index.d.mts     2.39 kB │ gzip:  0.81 kB
+packages/input-api build: ℹ 3 files, total: 129.50 kB
+packages/input-api build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/input-api build:   - tsdown:deps (58%)
+packages/input-api build:   - rolldown-plugin-dts:generate (41%)
+packages/input-api build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/input-api build: ✔ Build complete in 3644ms
+packages/input-api build: Done
+packages/result-verifier build: ℹ dist\index.mjs       59.17 kB │ gzip: 15.35 kB
+packages/result-verifier build: ℹ dist\index.mjs.map  101.35 kB │ gzip: 26.45 kB
+packages/result-verifier build: ℹ dist\index.d.mts      8.75 kB │ gzip:  2.60 kB
+packages/result-verifier build: ℹ 3 files, total: 169.27 kB
+packages/result-verifier build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/result-verifier build:   - rolldown-plugin-dts:generate (81%)
+packages/result-verifier build:   - rolldown-plugin-dts:fake-js (19%)
+packages/result-verifier build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/result-verifier build: ✔ Build complete in 6069ms
+packages/result-verifier build: Done
+packages/code-workspaces build: ℹ dist\index.mjs      122.22 kB │ gzip: 26.04 kB
+packages/code-workspaces build: ℹ dist\index.mjs.map  205.54 kB │ gzip: 45.40 kB
+packages/code-workspaces build: ℹ dist\index.d.mts     19.68 kB │ gzip:  4.81 kB
+packages/code-workspaces build: ℹ 3 files, total: 347.44 kB
+packages/code-workspaces build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/code-workspaces build: ✔ Build complete in 6214ms
+packages/code-workspaces build: Done

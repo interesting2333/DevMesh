@@ -9,8 +9,8 @@ import {acceptanceFixture} from './acceptance.mjs';
 import {preparedObservation,binding} from './acceptance-readiness.mjs';
 import {hash,canonical,meta} from './storage-data.mjs';
 import {randomUUID} from 'node:crypto';
-export async function committedPublicationFixture(t){
- const f=await acceptanceFixture(t,{human:true,humanWork:true}),pending=await f.call('beginAcceptancePreparation',await f.request()),p=(await f.call('markAcceptancePreparationSent',f.bound(pending))).preparation,o=preparedObservation(p),s=o.proof.service,r=p.request;
+export async function committedPublicationFixture(t,options={}){
+ const f=await acceptanceFixture(t,{human:true,humanWork:true,...options}),pending=await f.call('beginAcceptancePreparation',await f.request()),p=(await f.call('markAcceptancePreparationSent',f.bound(pending))).preparation,o=preparedObservation(p),s=o.proof.service,r=p.request;
  s.claim={schemaVersion:'devmesh.acceptance-service-claim.v1',purpose:'ACCEPTANCE',operationId:p.operationId,acceptanceRequestHash:p.requestHash,releaseId:r.releaseId,projectId:r.projectId,runId:r.runId,candidateId:r.candidateId,manifestHash:r.manifestHash,reviewHash:r.reviewHash,dataPlanHash:r.dataPlanHash,datasetId:r.target.datasetId,imageDigest:r.image.imageDigest,reservationId:s.reservationId,profileHash:s.profileHash,serviceRequestHash:hash('explicit acceptance service request'),instanceId:s.claim.instanceId};s.claimHash=hash(canonical(s.claim));o.health.claimHash=s.claimHash;
  const ready=await f.call('recordAcceptancePreparationObservation',{...binding(f,p),expectedPreparationRevision:p.revision,expectedSequence:0,observation:o}),run=await f.call('getRun',{runId:p.runId});
  const commitInput={meta:meta(p.runId),runId:p.runId,ifMatch:'"r'+run.resourceRevision+'"',preparationOperationId:p.operationId,requestHash:p.requestHash,expectedPreparationRevision:p.revision,expectedObservationSequence:ready.sequence,proofHash:ready.proofHash,...Object.fromEntries(['candidateId','candidateRevision','manifestHash','reviewHash','expectedAcceptedReleaseId','dataPlanHash'].map(k=>[k,r[k]])),confirmation:'ACCEPT_RELEASE'};

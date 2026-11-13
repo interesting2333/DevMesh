@@ -21,3 +21,4 @@ export {verifyWorkspaceRemnants} from './workspace-remnants.js';
 export {createLocalWorkspaceCleanupAuthority,createLocalManagedRunnerAuthority} from './maintenance-authority.js';
 export {createLocalManagedBindingResolver} from './managed-bindings.js';
 export {createLocalManagedRuntimeLifecycle} from './runtime-lifecycle.js';
+export {LocalReleaseExportSources} from './release-export-sources.js';

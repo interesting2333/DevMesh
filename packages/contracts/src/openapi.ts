@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView} from './release-export.js';
 import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle,opaqueKey } from './primitives.js';
 import {releaseAccessInput,releaseAccessTicket,releaseEntryView} from './release-access.js';
 import {previewAccessInput,previewAccessTicket,previewEntryView} from './preview.js';
@@ -13,6 +14,7 @@ import { preparationDelegation,preparationInput,retryUnderstandingInput,understa
 import { planReviewView } from './plans.js';
 
 export const schemas = {
+  CreateReleaseExport:createReleaseExportInput,RetryReleaseExport:retryReleaseExportInput,ReleaseExport:releaseExportView,ReleaseExportList:releaseExportListView,
   Command: command, DomainEvent: domainEvent, EphemeralTokenDelta: ephemeralTokenDelta,
   ExecutionPermit: executionPermit, ExecutionOwner: executionOwner, RoleOutput: roleOutput,
   ProductOutput: productOutput, ArchitectOutput: architectOutput, DeveloperOutput: developerOutput, TesterOutput: testerOutput,
@@ -103,6 +105,14 @@ export function createOpenApiDocument() {
   add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
   add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
   const releasePath='/api/v1/runs/{runId}/releases/{releaseId}',releaseParameters=[parameter('runId',ids.run),parameter('releaseId',ids.release)];
+  add('/api/v1/releases/{releaseId}/exports','post','CreateReleaseExport','ReleaseExport',[parameter('releaseId',ids.release),key],'CreateReleaseExport','202');
+  add('/api/v1/releases/{releaseId}/exports','get','ListReleaseExports','ReleaseExportList',[parameter('releaseId',ids.release),parameter('afterExportId',opaqueKey,'query',false),...page]);
+  add('/api/v1/exports/{exportId}','get','ReadReleaseExport','ReleaseExport',[parameter('exportId',opaqueKey)]);
+  add('/api/v1/exports/{exportId}/retry','post','RetryReleaseExport','ReleaseExport',[parameter('exportId',opaqueKey)],'RetryReleaseExport','202');
+  add('/api/v1/exports/{exportId}/download','get','DownloadReleaseExport',undefined,[parameter('exportId',opaqueKey)]);
+  const exportDownload=paths['/api/v1/exports/{exportId}/download']!.get as {responses:Record<string,unknown>};
+  exportDownload.responses['200']={description:'固定 READY 作业的 ZIP attachment；每次当前成员鉴权；不重新生成或改动验收',content:{'application/zip':{schema:{type:'string',format:'binary'}}}};
+  exportDownload.responses['416']={description:'不支持 Range',content:content('ErrorEnvelope')};
   add(releasePath,'get','ReadReleaseEntry','ReleaseEntryView',releaseParameters);
   add(releasePath+'/access','post','IssueReleaseAccess','ReleaseAccessTicket',[...releaseParameters,parameter('Origin',z.url(),'header')],'ReleaseAccessInput','200');
   add(releasePath+'/view','get','ReadReleasePage',undefined,releaseParameters);

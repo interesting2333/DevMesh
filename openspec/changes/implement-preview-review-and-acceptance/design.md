@@ -293,3 +293,7 @@ business_pending_writes 合并预览和 Release 的 DISPATCHED／UNKNOWN 写。�
 配额准备也属于物理动作。Runner v12 新增 PROFILE_PREPARE 阶段、原 profile 的执行模式，prepared 查询只验证准确目录／字节上限。新 profile 同事务登记 EXECUTE_ONCE，唯一许可后才 prepare；ACK 丢失只查。v11 既有 profile 在迁移中标 INSPECT_ONLY，不回填已完成，不在恢复时重新 enforce；配额无法验证则保留未完成。迁移保留历史 SQL、原行／动作／proof／容量，失败完整回滚。后续重新 own 和 prepareProof 只恢复同一不可变本地事实；任何配置／guard／fence／原实例变化关闭后续派发。
 
 本轮不把导出、正式后继保留／替换 T5、默认装配或物理 Linux 验收计为完成。4.3、5.1、5.2 继续按完整范围验收。
+
+### Accepted Release export is a separate frozen job
+
+独立导出协议和约束见 [export-design.md](./export-design.md)。迁移44独立持久化 job/snapshot/材料引用/历史，ZIP仅从固定原源码与正式材料生成；失败和重试不触及 T5 或发布。API 排队/列出/查询/重试/下载与显式 ReleaseExporter 分离；默认调度装配和通用回放/导入仍按原范围继续。

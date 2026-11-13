@@ -1,3 +1,4 @@
+import {createReleaseExportDomain} from './release-export-domain.js';
 import { randomUUID } from 'node:crypto';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import { parseContract } from '@devmesh/contracts';
@@ -25,6 +26,7 @@ export function createSessionDomain(db: DatabaseSync) {
   const quality=createQualityDomain(db);
   const workVerifications=createWorkVerificationDomain(db);
   const verifiedRepairs=createVerifiedRepairDomain(db);
+  const releaseExports=createReleaseExportDomain(db);
   const releaseDeliveries=createReleaseDeliveryDomain(db);
   const get = (sql: string, ...args: SQLInputValue[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: SQLInputValue[]) => db.prepare(sql).all(...args) as Row[];
@@ -51,6 +53,7 @@ export function createSessionDomain(db: DatabaseSync) {
     if(row.purpose==='candidateMaterial')candidateMaterials.authorize(principalId,JSON.parse(String(row.target_json)));
     if(row.purpose==='qualityMaterial')quality.authorize(principalId,JSON.parse(String(row.target_json)));
     if(row.purpose==='workVerification')workVerifications.authorize(principalId,JSON.parse(String(row.target_json)));
+    if(row.purpose==='releaseExport')releaseExports.authorize(principalId,JSON.parse(String(row.target_json)));
     if(row.purpose==='releaseDelivery')releaseDeliveries.authorize(principalId,JSON.parse(String(row.target_json)));
     if(row.purpose==='verifiedRepair')verifiedRepairs.authorize(principalId,JSON.parse(String(row.target_json)));
     return row;
@@ -59,6 +62,7 @@ export function createSessionDomain(db: DatabaseSync) {
   function targetSession(principalId: string, target: ObjectTarget): Row | undefined {
     if (target.kind === 'content' || target.kind === 'attachment') return;
     if(target.kind==='workVerification'){workVerifications.authorize(principalId,target);return;}
+    if(target.kind==='releaseExport'){releaseExports.authorize(principalId,target);return undefined;}
     if(target.kind==='releaseDelivery'){releaseDeliveries.authorize(principalId,target);return;}
     if(target.kind==='verifiedRepair'){verifiedRepairs.authorize(principalId,target);return;}
     if(target.kind==='qualityMaterial'){quality.authorize(principalId,target);return;}
@@ -83,6 +87,7 @@ export function createSessionDomain(db: DatabaseSync) {
     return { messageId, seq, sessionId: s.session_id };
   }
   function commitTarget(principalId: string, target: ObjectTarget, hash: string, row: Row): Record<string, unknown> {
+    if(target.kind==='releaseExport')return releaseExports.commit(principalId,target,hash,row);
     if (target.kind === 'content') return { contentHash: hash };
     if(target.kind==='workVerification')return workVerifications.commit(principalId,target,hash,String(row.write_id));
     if(target.kind==='releaseDelivery')return releaseDeliveries.commit(principalId,target,hash,String(row.write_id));
@@ -138,6 +143,7 @@ export function createSessionDomain(db: DatabaseSync) {
   }
   function resolveReference(principalId: string, ref: ContentReference): Row {
     let row: Row;
+    if(ref.kind==='releaseExport'||ref.kind==='exportMaterial')return ready(String(releaseExports.resolve(principalId,ref).content_hash));
     if(ref.kind==='releaseDelivery'){row=releaseDeliveries.resolve(principalId,ref);
     }else if(ref.kind==='verifiedRepair'){row=verifiedRepairs.resolve(principalId,ref);
     }else if(ref.kind==='workVerification'){row=workVerifications.resolve(principalId,ref);
@@ -185,6 +191,7 @@ export function createSessionDomain(db: DatabaseSync) {
         if(input.target.kind==='candidateMaterial')candidateMaterials.validateWrite({...input,target:input.target});
         if(input.target.kind==='qualityMaterial')quality.validateWrite({...input,target:input.target});
         if(input.target.kind==='workVerification')workVerifications.validateWrite({...input,target:input.target});
+        if(input.target.kind==='releaseExport')releaseExports.validateWrite({...input,target:input.target});
         if(input.target.kind==='releaseDelivery')releaseDeliveries.validateWrite({...input,target:input.target});
         if(input.target.kind==='verifiedRepair')verifiedRepairs.validateWrite({...input,target:input.target});
         const { meta, ...payload } = input, requestHash = digest(canonical({ kind: 'WriteObject', payload }));

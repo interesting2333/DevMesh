@@ -13,6 +13,7 @@ const page = { afterSeq: epoch.default(0), limit: z.number().int().min(1).max(20
 export const messageRef = z.strictObject({ messageId: ids.message, seq: revision, sha256 });
 export const contextManifest = z.strictObject({ schemaVersion: z.literal('devmesh.context.v1'), sessionId: ids.session, roleSnapshotId: ids.roleSnapshot, throughMessageSeq: epoch, configHash: sha256, messages: z.array(messageRef).max(200), summaryContentHash: sha256.optional() });
 export const objectTarget = z.discriminatedUnion('kind', [
+  z.strictObject({kind:z.literal('releaseExport'),exportId:opaqueKey,generation:z.number().int().positive(),claimToken:z.uuid()}),
   z.strictObject({kind:z.literal('releaseDelivery'),...releaseDeliveryTarget}),
   z.strictObject({kind:z.literal('verifiedRepair'),...verifiedRepairTarget}),
   z.strictObject({kind:z.literal('workVerification'),...workVerificationTarget}),
@@ -27,6 +28,8 @@ export const objectTarget = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('modelResponse'), sessionId: ids.session, stepNo: revision, activationId: ids.activation, state: z.enum(['RESPONDED','INTERRUPTED','FAILED']), providerRequestId: z.string().min(1).max(512).optional(), usage: z.strictObject({ inputTokens: epoch, outputTokens: epoch, source: z.enum(['provider','estimated']) }).optional() }),
 ]);
 export const contentReference = z.discriminatedUnion('kind', [
+  z.strictObject({kind:z.literal('releaseExport'),exportId:opaqueKey}),
+  z.strictObject({kind:z.literal('exportMaterial'),exportId:opaqueKey,materialKey:opaqueKey,generation:z.number().int().positive(),claimToken:z.uuid()}),
   z.strictObject({kind:z.literal('releaseDelivery'),...releaseDeliveryTarget}),
   z.strictObject({kind:z.literal('verifiedRepair'),...verifiedRepairTarget}),
   z.strictObject({kind:z.literal('workVerification'),...workVerificationTarget}),

@@ -157,3 +157,6 @@ export {releaseAccessPolicy,releaseAccessHttpRequest,releaseAccessObservation,re
 export type {ReleaseAccessTarget,ReleaseAccessBinding,ReleaseAccessRecord} from './release-access-protocol.js';
 export type {ReleaseTicket,ReleaseSession} from './release-session-protocol.js';
 export {previewOrigin as releaseOrigin} from './preview-session-protocol.js';
+
+export type {ReleaseExportJob,ReleaseExportSnapshot,ReleaseExportContext,ReleaseExportMaterial} from './release-export-protocol.js';
+export {redactExportRecord} from './export-redaction.js';
