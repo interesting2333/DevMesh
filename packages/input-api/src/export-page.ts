@@ -27,7 +27,7 @@ export function mountExportPages(router:Router,content:LocalContentStore,route:R
   }));
   router.get('/releases/:releaseId/exports/client.js',route(async(request,response,identity)=>{
     await entry(request,identity);
-    const bytes=await readFile(new URL('./web/export-client.js',import.meta.url));
+    const bytes=await readFile(new URL('./web/export/export-client.js',import.meta.url));
     await entry(request,identity);
     response.type('application/javascript; charset=utf-8').send(bytes);
   }));

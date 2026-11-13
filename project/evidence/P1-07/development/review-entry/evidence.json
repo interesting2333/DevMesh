@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "fb9502cd4e6bd7a2f6960b85d2aa9d2f46aecf2d",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "finalGroups": [
+    {
+      "name": "entry",
+      "record": "entry-2026-11-13T09-14-25-537Z.json",
+      "tests": 3,
+      "pass": 3,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-13T09-14-25-680Z.json",
+      "tests": 4,
+      "pass": 4,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "export-browser",
+      "record": "export-browser-2026-11-13T09-14-25-633Z.json",
+      "tests": 3,
+      "pass": 3,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T09-14-25-556Z.json",
+      "tests": 39,
+      "pass": 39,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T09-12-11-627Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T09-12-24-036Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T09-12-24-212Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T09-12-23-950Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 49,
+  "totalSkipped": 0,
+  "failedRuns": [
+    {
+      "file": "browser-2026-11-13T09-09-50-990Z.json",
+      "name": "browser",
+      "code": 1
+    },
+    {
+      "file": "build-2026-11-13T09-06-35-967Z.json",
+      "name": "build",
+      "code": 1
+    },
+    {
+      "file": "build-2026-11-13T09-07-37-741Z.json",
+      "name": "build",
+      "code": 1
+    },
+    {
+      "file": "entry-2026-11-13T09-09-50-889Z.json",
+      "name": "entry",
+      "code": 1
+    }
+  ],
+  "scope": "Modified-checkout development: actual local file-backed SQLite Worker/HTTP/React/Edge and original export browser/Git/CAS regression. New manual-review upstream source/admission/Runner/image/automatic report and browser identity are explicit fixtures. No model, OIDC/cookie login, Linux/gVisor, full workspace, formal successor acceptance or product acceptance.",
+  "inputAssessment": "All final groups match the same final tracked source inventory and changed no input while running. Final build source maps include TSX and third-party browser sources. Earlier passing regression changed the not-yet-built review HTTP source during execution; it is retained but replaced by a complete final regression at current source. The exact first failed browser test was reconstructed by removing the later added unreadable-storage scenario from its before-wait snapshot and verified against the original recorded SHA-256. Scoped failed config/client/HTTP snapshots are retained; no complete earlier failed checkout is claimed.",
+  "failedSourceAssessment": "Scoped config/client/HTTP snapshots retained. Original first failed browser test reconstructed by removing the subsequently added unreadable-pending test from before-wait snapshot, verified against original run SHA-256. No complete earlier checkout claimed.",
+  "screenshots": {
+    "files": [
+      "browser/review-desktop.png",
+      "browser/review-mobile.png"
+    ],
+    "visualReview": "Same-agent visual inspection at 1280px and 390px: original SHA, necessary items, original record, forms and actions readable; no overlap or horizontal overflow. Fixture candidate and identity only."
+  },
+  "reproduction": "Restore validation-driver.mjs and binding-driver.mjs to .cache/p128-driver.mjs and .cache/p128-bind.mjs; preserve original records and failed-source under .cache/p128-evidence. Driver supports build/type/lint/contracts/entry/browser/export-browser/regression; scheduler/diagnostic modes are inherited unused placeholders, not checks in this increment. Browser tests use bundled template Playwright runtime and installed Edge. Full pnpm check was not run.",
+  "managementChecks": "management-checks.json"
+}

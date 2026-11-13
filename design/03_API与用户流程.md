@@ -265,3 +265,13 @@ GET /api/v1/releases/:releaseId/exports/view 提供独立 React 18 交付页，�
 创建只由按钮 POST 触发：先在当前标签 sessionStorage 保存每个 Release 的 UUID 原键，再提交；结果丢失或刷新后显示“核实创建请求”，仅用户点击才以原键核实，不在加载／轮询中自动 POST。不能保存原键时拒绝新建。成功后显示固定原任务；分页每页20条，以稳定游标前后翻页，当前创建任务另行固定展示。只有 QUEUED／PACKING 可见任务每2秒 GET 核实，后台标签暂停，单页单在途请求并有15秒合作取消；关闭页面取消在途请求，BFCache 恢复重新加载以鉴权。
 
 canRetry 由服务端基于原创建者、当前成员及 FAILED／过期 PACKING 计算；客户端不推断所有者。重试发送原 generation，下载仅对 READY 原归档提供链接。状态无法核实时隐藏下载并关闭创建／重试，刷新可恢复；401／403／404清除作业并要求重新进入。Bootstrap JSON 转义 HTML 特殊字符，错误只映射固定用户文案。此入口未配置企业身份；实际宿主须注入可信 IdentityResolver，浏览器夹具不是登录实现。
+
+### 候选逐项人工审查入口（2026-11-13 开发增量）
+
+预览页链接到 GET /api/v1/runs/:runId/candidates/:candidateId/review/view，独立 React 页面展示准确源码SHA、候选资格、原自动检查、完整必要人工项和Run内当前退回。人工项每组20条，记录实际操作／预期／观察／证据和明确PASS／FAIL；预期来自原冻结条目，只读显示。退回明确区分原范围缺陷与新增范围，原范围须关联条目；纠正及有理由撤回都追加历史，不自动实施修复／变更。
+
+同级 GET /review 返回公共投影与Run ETag；POST /review/results、/review/rejections 使用原UUID Idempotency-Key、Run If-Match和当前记录 previousResultId，原成功回执恢复先于新操作版本检查，仍复核当前owner。GET /review/history、/review/rejections/history 按条目／退回ID及 afterSequence 读取，默认20／最多100；/view 与 /client.js 也检查当前成员。不存在或不可见的对象统一404，其余陈旧审查以明确冲突返回；不暴露后端目录／策略或写入能力。原通用 AcceptCandidate 契约仍未据此宣称已装配。
+
+服务端 canRecord 只对当前有效候选和可交互REVIEW的owner开放；canWithdrawRejections允许相同Run尚可交互的owner有理由撤回历史候选退回，历史不能新批准。该能力不参与reviewHash，也不改变原自动质量。仅审查全部通过且没有OPEN退回时显示“逐项审查已完成”；版本仍须独立准备和T5接受。
+
+页面每个Run／当前标签最多一份待核实提交，先把原payload／UUID／If-Match写入sessionStorage，再POST；刷新后只由用户点击核实原请求，不自动改正文、换键或重发。无法存储或旧记录无法读取时关闭新提交，核对后可显式清除损坏的填写记录；服务端明确拒绝时，用户须刷新核对再决定放弃本次填写。失联关闭新提交，撤权清除审查／历史并关闭动作。单在途、15秒合作取消、离开取消，BFCache恢复重载鉴权。JSON转义、nonce CSP、React惰性文本与固定本地资产共同保护用户观察及错误元数据。

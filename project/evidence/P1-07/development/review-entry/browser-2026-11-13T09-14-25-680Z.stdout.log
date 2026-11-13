@@ -1,0 +1,53 @@
+TAP version 13
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+ok 1 - actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+  ---
+  duration_ms: 11738.6396
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","originalRequests":2,"durableResults":1,"scope":"Actual local HTTP/Worker/React/Edge; upstream source/admission/Runner/image and browser identity are explicit fixtures; no real model/OIDC/Linux/product acceptance"}
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React classifies, corrects and explicitly withdraws a rejection while unsafe text stays inert
+ok 2 - actual React classifies, corrects and explicitly withdraws a rejection while unsafe text stays inert
+  ---
+  duration_ms: 12087.9366
+  type: 'test'
+  ...
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React pages original item history and clears protected observations on membership revocation
+ok 3 - actual React pages original item history and clears protected observations on membership revocation
+  ---
+  duration_ms: 13992.0883
+  type: 'test'
+  ...
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28036) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unreadable pending request blocks new submissions until the user explicitly clears it after checking
+ok 4 - an unreadable pending request blocks new submissions until the user explicitly clears it after checking
+  ---
+  duration_ms: 6847.7789
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 48474.3399

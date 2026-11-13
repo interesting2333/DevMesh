@@ -567,3 +567,21 @@ The system SHALL expose a current-member React delivery page and protected local
 - **WHEN** an accepted-release page contains untrusted error metadata or a READY archive is downloaded
 - **THEN** bootstrap JSON is escaped, React renders only fixed error labels and inert metadata under nonce CSP with protected local assets
 - **AND** the browser receives the original immutable attachment; real enterprise login and physical acceptance require their own evidence
+
+### Requirement: Private manual review entry preserves exact human observations
+The system SHALL expose current-member JSON, React page, protected local script and bounded history for an exact candidate. Only an interactive Run owner SHALL append explicit human results or rejection corrections. The entry MUST preserve the original expected text, automatic quality, candidate, Work and acceptance facts, and MUST NOT automatically accept, repair or apply scope changes.
+
+#### Scenario: A human result commits but its response is lost
+- **WHEN** a user submits an explicitly filled procedure, observation and verdict and the response cannot be verified
+- **THEN** the tab retains the exact original payload, UUID and version for an explicit same-request recovery after reload
+- **AND** loading or refreshing never POSTs, an unreadable saved request blocks replacement, and unavailable session storage prevents new submission
+
+#### Scenario: A member reviews current or historical candidate records
+- **WHEN** a current member reads the candidate or pages history
+- **THEN** the entry returns its exact SHA and review basis with bounded item/history pages and inert user text under nonce CSP
+- **AND** a viewer cannot append records; an interactive owner can withdraw an original historical rejection with a reason but cannot newly approve stale items
+
+#### Scenario: Concurrent, stale or revoked writes
+- **WHEN** a request changes the original expected value, current result, candidate, Run version or ownership
+- **THEN** the original server CAS and permission rules reject the new write without replacing existing observations
+- **AND** unseen resources return404, uncertain state closes new actions, and revoked access clears the protected browser projections

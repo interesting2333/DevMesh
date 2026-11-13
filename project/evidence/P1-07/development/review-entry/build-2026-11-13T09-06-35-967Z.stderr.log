@@ -1,0 +1,28 @@
+$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (69%)
+  - rolldown-plugin-dts:fake-js (28%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean && tsdown --config tsdown.web.config.ts
+
+ ERROR  Error: Build failed with 1 error:
+
+[31m[INVALID_OPTION] [0mInvalid value "iife" for option "output.format" - UMD and IIFE are not supported for code-splitting builds. For single entry builds, you can set `output.codeSplitting` to `false` to disable code-splitting.
+
+    at aggregateBindingErrorsIntoJsError (file:///D:/yms/AI/DevMesh/node_modules/.pnpm/rolldown@1.1.5/node_modules/rolldown/dist/shared/error-BHRSI0R7.mjs:48:18)
+    at unwrapBindingResult (file:///D:/yms/AI/DevMesh/node_modules/.pnpm/rolldown@1.1.5/node_modules/rolldown/dist/shared/error-BHRSI0R7.mjs:18:128)
+    at #build (file:///D:/yms/AI/DevMesh/node_modules/.pnpm/rolldown@1.1.5/node_modules/rolldown/dist/shared/rolldown-build-CtPvmZgJ.mjs:3276:34)
+    at async build (file:///D:/yms/AI/DevMesh/node_modules/.pnpm/rolldown@1.1.5/node_modules/rolldown/dist/index.mjs:48:22)
+    at async Promise.all (index 0)
+    at async buildSingle (file:///D:/yms/AI/DevMesh/node_modules/.pnpm/tsdown@0.22.2_tsx@4.23.13_typescript@6.0.3/node_modules/tsdown/dist/build-BxT2lm9L.mjs:791:19)
+    at async Promise.all (index 0)
+    at async buildWithConfigs (file:///D:/yms/AI/DevMesh/node_modules/.pnpm/tsdown@0.22.2_tsx@4.23.13_typescript@6.0.3/node_modules/tsdown/dist/build-BxT2lm9L.mjs:747:18)
+    at async CAC.<anonymous> (file:///D:/yms/AI/DevMesh/node_modules/.pnpm/tsdown@0.22.2_tsx@4.23.13_typescript@6.0.3/node_modules/tsdown/dist/run.mjs:21:2)
+    at async runCLI (file:///D:/yms/AI/DevMesh/node_modules/.pnpm/tsdown@0.22.2_tsx@4.23.13_typescript@6.0.3/node_modules/tsdown/dist/run.mjs:45:3)
+

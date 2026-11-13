@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | d33e513991b2d85263e6da84088eaffbe88e9e99d1f92252b0e1fef1223a473a |
+| DevMesh_技术设计方案_V1.1.md | 471cd32bc2babb116b769ce6fabe19b207dac7e6088d5deffa454b3331ac1b32 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | c50b35b34c85bb63631b844e4ed60189cae83341855014be3b25bc8cf5826499 |
+| DevMesh_产品验收场景_V10.0.md | e900e1074ee2d3737bd333b935bdeecbd585032b9a192c55340a2d645790ee9f |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -541,3 +541,11 @@ Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend
 原 Release 页新增交付入口，独立 React 18 页与受保护本地 client.js；使用既有 tsdown 构建此小型嵌入入口并保留许可证，完整工作台沿用 React／Vite 选型。展示原接受版本／SHA、20条稳定游标分页、可见活跃任务2秒 GET 核实、后台暂停、单在途／15秒合作取消、当前原任务下载与服务端 canRetry。创建先保存标签会话原 UUID，回执未知时显式找回原请求；加载／轮询不自动创建或重试。撤权清除作业并关闭动作，暂时无法核实时关闭下载／写动作。
 
 浏览器使用明确本地可信身份夹具验证，与真实 OIDC／Cookie 登录分开；HTTP 负例仍要求认证并验证成员及原创建者。独立交付入口不等于完整工作台、默认产品装配、完整后继 T5／换代源恢复或物理验收完成。P1-07 的正式前置及 G0～G4 保持单独评审。代码及开发复核见 project/evidence/P1-07/release-export-entry-development-review.md。
+
+### P1-07 人工审查 HTTP／React 开发增量
+
+补齐既有候选审查域的公共投影、逐项记录、退回／分类纠正／撤回与有界历史API，预览页进入独立 React 审查入口。用户必须填写实际操作／观察和明确结论；版本、预期及原自动检查保持原依据。标准原键／If-Match／当前记录CAS和owner权限由原Worker事务执行，旧成功回执不因后续版本或终态失效。新增服务端 canWithdrawRejections 为仍可交互的owner保留历史候选撤回能力，不开放历史批准。
+
+创建前保存当前标签原payload／键／版本，未知结果显式找回，不自动提交／修复／接受；无法读取的旧填写不被新请求覆盖。非当前成员及viewer写入关闭，不可见对象统一404。两个嵌入页面各自构建到dist/web/export和dist/web/review，避免多入口IIFE不受支持或并行clean清掉其他资产，完整工作台选型仍是React／Vite。
+
+真实本地Worker／HTTP／React／Edge开发验证与明确上游／浏览器身份夹具分别记录，见project/evidence/P1-07/review-entry-development-review.md。此增量属于5.1组合前置，不完成完整T5／发布、默认产品装配或后继保留／替换与实际物理验收，正式P1-07／G0～G4保持单独评审。

@@ -28,4 +28,12 @@ workspace 在单个读事务中冻结元数据、材料引用与 eventCursor，�
 
 GET /releases/:releaseId/exports/view 提供独立 React 18 入口，GET 同级 client.js 提供已打包的本地资产；两者均要求当前成员，不依赖预览／Release网关。原 Release /view 包含链接。创建／重试／下载调用原导出 API，详情与消费者启用见 [EXPORTS.md](../result-verifier/EXPORTS.md)。页面加载只读取；创建先保存标签会话原键，响应未知后显式核实。活动任务有界轮询，后台暂停；撤权清除作业，暂时失联关闭下载和写动作。
 
-嵌入入口由本包 tsdown.web.config.ts 构建到 dist/web/export-client.js，包含固定 React／ReactDOM／scheduler／Zod 和完整许可证；tsdown 的 node clean 必须先执行，浏览器构建只 clean dist/web。完整工作台仍是 P1-04 React／Vite 范围。默认身份关闭，浏览器专项的可信 IdentityResolver 仅是测试夹具。
+嵌入入口由本包 tsdown.web.config.ts 构建到 dist/web/export/export-client.js，包含固定 React／ReactDOM／scheduler／Zod 和完整许可证；tsdown 的 node clean 必须先执行，两个单入口浏览器构建各只 clean 自己的 dist/web/export 或 dist/web/review。完整工作台仍是 P1-04 React／Vite 范围。默认身份关闭，浏览器专项的可信 IdentityResolver 仅是测试夹具。
+
+## 候选人工审查
+
+预览页的“逐项审查此候选”进入 /runs/:runId/candidates/:candidateId/review/view；页面／本地client.js和JSON读取均要求当前成员，默认身份仍关闭。GET /review 返回准确SHA／审查及Run ETag；POST /review/results、/review/rejections 需要原Idempotency-Key和新操作If-Match，原记录CAS由Worker复核；返回201表示该人工记录已保存，仍不代表版本接受。输入不能提供principalId、Run或后端健康／策略。
+
+GET /review/history?itemId=… 与 /review/rejections/history?rejectionId=… 支持afterSequence、limit（默认20，最多100）。owner可写当前候选；历史候选只允许在原Run仍可交互时明确撤回既有退回，服务端canWithdrawRejections单独控制。viewer只读。不存在／不可见对象统一404，原依据／记录冲突返回409，Run版本冲突412、缺新操作版本428；原成功键优先于新版本核对，仍授权。
+
+React表单要求明确结论和实际操作／观察，原预期只读，证据按artifact ID＋SHA-256逐行填写。退回区分原范围与新增范围，追加纠正／撤回，不自动修复或应用变更。当前标签在会话存储保留单个原提交用于未知结果恢复；只有点击才核实，损坏原记录先核对再显式清除，失联关闭新提交，撤权清空投影。页面不配置企业登录、接受后端、T5或发布调度。

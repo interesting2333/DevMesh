@@ -54,7 +54,7 @@ export function createCandidateReviewDomain(db:DatabaseSync,plans:ReturnType<typ
   const rejectionStatus=rejections.some(r=>r.state==='OPEN')?'OPEN':'NONE';
   const basis={candidateId:i.candidateId,candidateRevision:d.candidate.revision,manifestHash:d.candidate.manifestHash,qualification:d.candidate.qualification,items:items.map(({itemId,itemHash,status,result})=>({itemId,itemHash,status,resultId:result?.resultId??null})),automaticChecks:d.automaticChecks,rejections:rejections.map(r=>({candidateId:r.candidateId,rejectionId:r.rejectionId,resultId:r.resultId,classification:r.classification,state:r.state}))};
   const canRecord=d.candidate.qualification==='CURRENT'&&d.run.terminal_outcome===null&&d.run.phase==='REVIEW'&&d.run.control_gate==='OPEN'&&d.run.membership==='owner';
-  const value:CandidateReviewView={...basis,resourceRevision:Number(d.run.resource_revision),automaticStatus:'PASS',humanStatus,reviewHash:digest(canonical(basis)),items,automaticChecks:d.automaticChecks,rejections,rejectionStatus,canRecord,canPrepareAcceptance:canRecord&&humanStatus==='PASS'&&rejectionStatus==='NONE'};
+   const value:CandidateReviewView={...basis,resourceRevision:Number(d.run.resource_revision),automaticStatus:'PASS',humanStatus,reviewHash:digest(canonical(basis)),items,automaticChecks:d.automaticChecks,rejections,rejectionStatus,canRecord,canPrepareAcceptance:canRecord&&humanStatus==='PASS'&&rejectionStatus==='NONE',canWithdrawRejections:d.run.terminal_outcome===null&&d.run.phase==='REVIEW'&&d.run.control_gate==='OPEN'&&d.run.membership==='owner'};
   if(Buffer.byteLength(canonical(value))>1024*1024)fail('CANDIDATE_REVIEW_LIMIT');return value;
  }
  const handlers={

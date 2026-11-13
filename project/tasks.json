@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "d33e513991b2d85263e6da84088eaffbe88e9e99d1f92252b0e1fef1223a473a"
+      "sha256": "471cd32bc2babb116b769ce6fabe19b207dac7e6088d5deffa454b3331ac1b32"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "c50b35b34c85bb63631b844e4ed60189cae83341855014be3b25bc8cf5826499"
+      "sha256": "e900e1074ee2d3737bd333b935bdeecbd585032b9a192c55340a2d645790ee9f"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "ae422c2c9d0441e28ded28298ea45fcc4d48de248f42278cda65cb2cb7a62ae1"
+      "sha256": "a99c2742933cdfd8c11fd6bc7f85b335de50ffee113dc2c1c0bdd0f0ff096d5e"
     }
   ],
   "gates": [
@@ -1315,7 +1315,13 @@
         "packages/input-api/tsdown.web.config.ts",
         "tests/release-export-entry.test.mjs",
         "tests/browser/release-export-entry.test.mjs",
-        "tests/fixtures/release-export-entry.mjs"
+        "tests/fixtures/release-export-entry.mjs",
+        "packages/contracts/src/candidate-review.ts",
+        "packages/input-api/src/review.ts",
+        "packages/input-api/src/web/review-client.tsx",
+        "tests/fixtures/review-entry.mjs",
+        "tests/review-entry.test.mjs",
+        "tests/browser/review-entry.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1472,7 +1478,11 @@
         "project/evidence/P1-07/release-export-entry-development-review.md",
         "project/evidence/P1-07/development/release-export-entry/evidence.json",
         "project/evidence/P1-07/development/release-export-entry/final-binding.json",
-        "project/evidence/P1-07/development/release-export-entry/manifest.json"
+        "project/evidence/P1-07/development/release-export-entry/manifest.json",
+        "project/evidence/P1-07/review-entry-development-review.md",
+        "project/evidence/P1-07/development/review-entry/evidence.json",
+        "project/evidence/P1-07/development/review-entry/final-binding.json",
+        "project/evidence/P1-07/development/review-entry/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1532,7 +1542,8 @@
         "2026-11-13：4.3原发布继续增量，显式resume、当前控制核验、退役／可写逐阶段唯一许可和原对象查询恢复；Runner v12配额阶段／旧profile只查询。continuation 27/27；runner 120/121（跳过1）；acceptance 157/157；regression 90/90；access 7/7；http 7/7；browser 1/1；upgrade 1/1；contract-tests 18/18，共428通过／1跳过，183份映射及旧迁移保留。两轮测试helper／负例失败和修正源码／原日志如实保留。物理provider／默认组合／独立导出、正式后继T5和门换代源恢复继续，8/13及正式状态／门槛不变。",
         "2026-11-13：4.3独立交付导出增量，迁移44冻结原版本/实际配置与提示词/用户输入/协作记录及材料引用，准确受控Git源码与确定性ZIP32、claim/原作业重试和当前成员下载；不调用开发/迁移/发布或改验收。export 8/8、regression 114/114在最终源码通过；acceptance 157/157、workspace 18/18复用本轮未变调用路径，共297通过。构建/类型/Lint/契约、139条映射、1～43迁移前缀保留；复用范围、原编译源码及各次失败真实留证见release-export-development-review.md。默认调度/UI、完整正式后继T5及换代源恢复和真实物理验收继续，8/13及正式状态/门槛不变。",
         "2026-11-13：4.3导出宿主消费，显式releaseExports配置／默认原Git读取器、当前成员私有分页、最多两并发、过期原代际CAS恢复和先取消排空后关闭存储。scheduler 9/9，回归39通过／Windows SIGTERM跳过1；构建／类型／Lint／契约及153源码映射通过。首轮夹具缺原计划正文导致启动被完整性拦截，诊断后仅CAS补齐原字节，失败／源码差异及复核范围见release-export-host-development-review.md。产品UI、完整后继T5／换代源恢复及真实物理验收继续，8/13及正式状态／门槛不变。",
-        "2026-11-13：4.3 React交付入口，原Release链接、受保护本地脚本／nonce CSP、固定版本与20条游标、活跃GET核实、sessionStorage原键找回、原创建者canRetry与下载。接口2/2、实际Edge3/3、宿主9/9、回归69通过／Windows SIGTERM跳过1，共83通过；构建／类型／Lint／契约与199条源码映射（含浏览器第三方）通过。首轮契约导出遗漏、测试created_at及Playwright下载不携带注入认证头的失败已定位；浏览器使用显式可信身份夹具，生产鉴权未放宽。原请求找回只一任务、实际下载hash、失败重试／分页／撤权及桌面／390px布局已验证，输入差异与复核边界见release-export-entry-development-review.md。完整工作台／默认组合、后继T5／换代源恢复及真实物理验收继续，8/13及正式P1-07／门槛不变。"
+        "2026-11-13：4.3 React交付入口，原Release链接、受保护本地脚本／nonce CSP、固定版本与20条游标、活跃GET核实、sessionStorage原键找回、原创建者canRetry与下载。接口2/2、实际Edge3/3、宿主9/9、回归69通过／Windows SIGTERM跳过1，共83通过；构建／类型／Lint／契约与199条源码映射（含浏览器第三方）通过。首轮契约导出遗漏、测试created_at及Playwright下载不携带注入认证头的失败已定位；浏览器使用显式可信身份夹具，生产鉴权未放宽。原请求找回只一任务、实际下载hash、失败重试／分页／撤权及桌面／390px布局已验证，输入差异与复核边界见release-export-entry-development-review.md。完整工作台／默认组合、后继T5／换代源恢复及真实物理验收继续，8/13及正式P1-07／门槛不变。",
+        "2026-11-13：5.1 人工审查HTTP／React入口：原候选准确SHA、逐项实际操作／观察和PASS／FAIL，退回原范围／新增范围、纠正及有理由撤回，历史20条游标；当前owner／成员及服务端撤回能力、If-Match／前条CAS、sessionStorage原正文／键／ETag找回、损坏待核实记录阻止新提交，撤权清空。最终接口3/3、Edge4/4、原交付页Edge3/3、领域／入口／契约回归39/39，共49通过、0跳过；构建／类型／Lint／契约和248条映射（含TSX／第三方）通过，迁移1～44及Runner不变。两次IIFE配置失败、404映射错误及浏览器提前等待断言已修正并保留；所有最终组输入相同且运行无修改。真实Worker／HTTP／React／Edge，上游源／Runner／报告与浏览器身份为明确夹具，不改质量／Work／接受事实。完整5.1／工作台／默认组合、后继T5及物理验收继续，OpenSpec8/13、正式P1-07及门槛不变。"
       ]
     },
     {

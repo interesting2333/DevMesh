@@ -1,5 +1,6 @@
 import express from 'express';
 import {mountExportRoutes} from './export.js';
+import {mountReviewRoutes} from './review.js';
 import type { Express, Request, Response, NextFunction } from 'express';
 import { randomUUID, createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
@@ -210,6 +211,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   }));
   mountPreviewRoutes(router,content,options.previewGateway,route);
   mountExportRoutes(router,content,route);
+  mountReviewRoutes(router,content,route);
   mountReleaseRoutes(router,content,options.releaseGateway,route);
   router.use((error:unknown,request:Request,response:Response,_next:NextFunction)=>{
     const framework=error as {type?:string;status?:number};

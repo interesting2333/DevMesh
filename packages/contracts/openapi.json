@@ -4287,6 +4287,1331 @@
         }
       }
     },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/review": {
+      "get": {
+        "operationId": "ReadCandidateReview",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateReviewEntry"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/review/results": {
+      "post": {
+        "operationId": "RecordCandidateReview",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\"r[1-9][0-9]*\"$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordCandidateReview"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateHumanResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/review/rejections": {
+      "post": {
+        "operationId": "RecordCandidateRejection",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\"r[1-9][0-9]*\"$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordCandidateRejection"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateRejectionResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/review/history": {
+      "get": {
+        "operationId": "ReadCandidateReviewHistory",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+            }
+          },
+          {
+            "name": "afterSequence",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateReviewHistory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/review/rejections/history": {
+      "get": {
+        "operationId": "ReadCandidateRejectionHistory",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "rejectionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+            }
+          },
+          {
+            "name": "afterSequence",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的输入事实或当前权限下的读取",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateRejectionHistory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/review/view": {
+      "get": {
+        "operationId": "ReadCandidateReviewPage",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前成员准确候选审查入口；GET无写入副作用",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/runs/{runId}/candidates/{candidateId}/review/client.js": {
+      "get": {
+        "operationId": "ReadCandidateReviewClient",
+        "x-implementation-status": "implemented-offline",
+        "security": [
+          {
+            "trustedIdentity": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          },
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前成员准确候选审查入口；GET无写入副作用",
+            "content": {
+              "application/javascript": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "公共错误；未知提交结果先按原操作键查询",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/releases/{releaseId}/exports": {
       "post": {
         "operationId": "CreateReleaseExport",
@@ -6792,6 +8117,1519 @@
       }
     },
     "schemas": {
+      "CandidateReviewEntry": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "codeCommit": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40}$"
+          },
+          "review": {
+            "type": "object",
+            "properties": {
+              "candidateId": {
+                "type": "string",
+                "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "candidateRevision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "manifestHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "qualification": {
+                "type": "string",
+                "enum": [
+                  "CURRENT",
+                  "STALE"
+                ]
+              },
+              "resourceRevision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "automaticStatus": {
+                "type": "string",
+                "const": "PASS"
+              },
+              "humanStatus": {
+                "type": "string",
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "MISSING",
+                  "STALE"
+                ]
+              },
+              "reviewHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "items": {
+                "minItems": 1,
+                "maxItems": 2048,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "itemId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "itemHash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "requirement",
+                        "work-human",
+                        "quality-human"
+                      ]
+                    },
+                    "requirementIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      }
+                    },
+                    "subjectId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "checkId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "expected": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 32768
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "PASS",
+                        "FAIL",
+                        "MISSING",
+                        "STALE"
+                      ]
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "resultId": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                            },
+                            "operationId": {
+                              "type": "string",
+                              "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                            },
+                            "candidateId": {
+                              "type": "string",
+                              "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                            },
+                            "candidateRevision": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 9007199254740991
+                            },
+                            "manifestHash": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "item": {
+                              "type": "object",
+                              "properties": {
+                                "itemId": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                                },
+                                "itemHash": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "requirement",
+                                    "work-human",
+                                    "quality-human"
+                                  ]
+                                },
+                                "requirementIds": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  }
+                                },
+                                "subjectId": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                                },
+                                "checkId": {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                                },
+                                "expected": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 32768
+                                }
+                              },
+                              "required": [
+                                "itemId",
+                                "itemHash",
+                                "kind",
+                                "requirementIds",
+                                "subjectId",
+                                "checkId",
+                                "expected"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "previousResultId": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "principalId": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                            },
+                            "verdict": {
+                              "type": "string",
+                              "enum": [
+                                "PASS",
+                                "FAIL"
+                              ]
+                            },
+                            "procedure": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4096
+                            },
+                            "expected": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 32768
+                            },
+                            "observed": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4096
+                            },
+                            "evidence": {
+                              "maxItems": 16,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "artifactId": {
+                                    "type": "string",
+                                    "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                                  },
+                                  "sha256": {
+                                    "type": "string",
+                                    "pattern": "^[a-f0-9]{64}$"
+                                  }
+                                },
+                                "required": [
+                                  "artifactId",
+                                  "sha256"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                            }
+                          },
+                          "required": [
+                            "resultId",
+                            "operationId",
+                            "candidateId",
+                            "candidateRevision",
+                            "manifestHash",
+                            "item",
+                            "previousResultId",
+                            "principalId",
+                            "verdict",
+                            "procedure",
+                            "expected",
+                            "observed",
+                            "evidence",
+                            "createdAt"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "itemId",
+                    "itemHash",
+                    "kind",
+                    "requirementIds",
+                    "subjectId",
+                    "checkId",
+                    "expected",
+                    "status",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "automaticChecks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "operationId": {
+                      "type": "string",
+                      "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "checkId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "codes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "operationId",
+                    "checkId",
+                    "status",
+                    "codes"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "rejections": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "resultId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "operationId": {
+                      "type": "string",
+                      "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "candidateId": {
+                      "type": "string",
+                      "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "candidateRevision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "manifestHash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "rejectionId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "previousResultId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "classification": {
+                      "type": "string",
+                      "enum": [
+                        "IN_SCOPE_DEFECT",
+                        "SCOPE_CHANGE"
+                      ]
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": [
+                        "OPEN",
+                        "WITHDRAWN"
+                      ]
+                    },
+                    "item": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "itemId": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                            },
+                            "itemHash": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "requirement",
+                                "work-human",
+                                "quality-human"
+                              ]
+                            },
+                            "requirementIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              }
+                            },
+                            "subjectId": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                            },
+                            "checkId": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                            },
+                            "expected": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 32768
+                            }
+                          },
+                          "required": [
+                            "itemId",
+                            "itemHash",
+                            "kind",
+                            "requirementIds",
+                            "subjectId",
+                            "checkId",
+                            "expected"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "evidence": {
+                      "maxItems": 16,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "artifactId": {
+                            "type": "string",
+                            "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          }
+                        },
+                        "required": [
+                          "artifactId",
+                          "sha256"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "principalId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                    },
+                    "nextAction": {
+                      "type": "string",
+                      "enum": [
+                        "REPAIR_REVIEW_REQUIRED",
+                        "CHANGE_REVIEW_REQUIRED",
+                        "NONE"
+                      ]
+                    },
+                    "applicationState": {
+                      "type": "string",
+                      "const": "NOT_APPLIED"
+                    }
+                  },
+                  "required": [
+                    "resultId",
+                    "operationId",
+                    "candidateId",
+                    "candidateRevision",
+                    "manifestHash",
+                    "rejectionId",
+                    "previousResultId",
+                    "classification",
+                    "state",
+                    "item",
+                    "description",
+                    "reason",
+                    "evidence",
+                    "principalId",
+                    "createdAt",
+                    "nextAction",
+                    "applicationState"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "rejectionStatus": {
+                "type": "string",
+                "enum": [
+                  "OPEN",
+                  "NONE"
+                ]
+              },
+              "canRecord": {
+                "type": "boolean"
+              },
+              "canPrepareAcceptance": {
+                "type": "boolean"
+              },
+              "canWithdrawRejections": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "candidateId",
+              "candidateRevision",
+              "manifestHash",
+              "qualification",
+              "resourceRevision",
+              "automaticStatus",
+              "humanStatus",
+              "reviewHash",
+              "items",
+              "automaticChecks",
+              "rejections",
+              "rejectionStatus",
+              "canRecord",
+              "canPrepareAcceptance",
+              "canWithdrawRejections"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "runId",
+          "codeCommit",
+          "review"
+        ],
+        "additionalProperties": false
+      },
+      "CandidateHumanResult": {
+        "type": "object",
+        "properties": {
+          "resultId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "operationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "candidateId": {
+            "type": "string",
+            "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "candidateRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "manifestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "item": {
+            "type": "object",
+            "properties": {
+              "itemId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "itemHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "requirement",
+                  "work-human",
+                  "quality-human"
+                ]
+              },
+              "requirementIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                }
+              },
+              "subjectId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "checkId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "expected": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32768
+              }
+            },
+            "required": [
+              "itemId",
+              "itemHash",
+              "kind",
+              "requirementIds",
+              "subjectId",
+              "checkId",
+              "expected"
+            ],
+            "additionalProperties": false
+          },
+          "previousResultId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "principalId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "FAIL"
+            ]
+          },
+          "procedure": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "expected": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32768
+          },
+          "observed": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "evidence": {
+            "maxItems": 16,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "artifactId": {
+                  "type": "string",
+                  "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "artifactId",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+          }
+        },
+        "required": [
+          "resultId",
+          "operationId",
+          "candidateId",
+          "candidateRevision",
+          "manifestHash",
+          "item",
+          "previousResultId",
+          "principalId",
+          "verdict",
+          "procedure",
+          "expected",
+          "observed",
+          "evidence",
+          "createdAt"
+        ],
+        "additionalProperties": false
+      },
+      "CandidateRejectionResult": {
+        "type": "object",
+        "properties": {
+          "resultId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "operationId": {
+            "type": "string",
+            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "candidateId": {
+            "type": "string",
+            "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "candidateRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "manifestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "rejectionId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "previousResultId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "IN_SCOPE_DEFECT",
+              "SCOPE_CHANGE"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "WITHDRAWN"
+            ]
+          },
+          "item": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "itemId": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                  },
+                  "itemHash": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "requirement",
+                      "work-human",
+                      "quality-human"
+                    ]
+                  },
+                  "requirementIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    }
+                  },
+                  "subjectId": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                  },
+                  "checkId": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                  },
+                  "expected": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32768
+                  }
+                },
+                "required": [
+                  "itemId",
+                  "itemHash",
+                  "kind",
+                  "requirementIds",
+                  "subjectId",
+                  "checkId",
+                  "expected"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "evidence": {
+            "maxItems": 16,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "artifactId": {
+                  "type": "string",
+                  "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "artifactId",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "principalId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+          },
+          "nextAction": {
+            "type": "string",
+            "enum": [
+              "REPAIR_REVIEW_REQUIRED",
+              "CHANGE_REVIEW_REQUIRED",
+              "NONE"
+            ]
+          },
+          "applicationState": {
+            "type": "string",
+            "const": "NOT_APPLIED"
+          }
+        },
+        "required": [
+          "resultId",
+          "operationId",
+          "candidateId",
+          "candidateRevision",
+          "manifestHash",
+          "rejectionId",
+          "previousResultId",
+          "classification",
+          "state",
+          "item",
+          "description",
+          "reason",
+          "evidence",
+          "principalId",
+          "createdAt",
+          "nextAction",
+          "applicationState"
+        ],
+        "additionalProperties": false
+      },
+      "CandidateReviewHistory": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sequence": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "resultId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "operationId": {
+                      "type": "string",
+                      "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "candidateId": {
+                      "type": "string",
+                      "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "candidateRevision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "manifestHash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "item": {
+                      "type": "object",
+                      "properties": {
+                        "itemId": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        "itemHash": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "requirement",
+                            "work-human",
+                            "quality-human"
+                          ]
+                        },
+                        "requirementIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "subjectId": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        "checkId": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        "expected": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 32768
+                        }
+                      },
+                      "required": [
+                        "itemId",
+                        "itemHash",
+                        "kind",
+                        "requirementIds",
+                        "subjectId",
+                        "checkId",
+                        "expected"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "previousResultId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "principalId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "verdict": {
+                      "type": "string",
+                      "enum": [
+                        "PASS",
+                        "FAIL"
+                      ]
+                    },
+                    "procedure": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "expected": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 32768
+                    },
+                    "observed": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "evidence": {
+                      "maxItems": 16,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "artifactId": {
+                            "type": "string",
+                            "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          }
+                        },
+                        "required": [
+                          "artifactId",
+                          "sha256"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                    }
+                  },
+                  "required": [
+                    "resultId",
+                    "operationId",
+                    "candidateId",
+                    "candidateRevision",
+                    "manifestHash",
+                    "item",
+                    "previousResultId",
+                    "principalId",
+                    "verdict",
+                    "procedure",
+                    "expected",
+                    "observed",
+                    "evidence",
+                    "createdAt"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "sequence",
+                "result"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "nextSequence": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "nextSequence"
+        ],
+        "additionalProperties": false
+      },
+      "CandidateRejectionHistory": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sequence": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "resultId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "operationId": {
+                      "type": "string",
+                      "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "candidateId": {
+                      "type": "string",
+                      "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                    },
+                    "candidateRevision": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "manifestHash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "rejectionId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "previousResultId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "classification": {
+                      "type": "string",
+                      "enum": [
+                        "IN_SCOPE_DEFECT",
+                        "SCOPE_CHANGE"
+                      ]
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": [
+                        "OPEN",
+                        "WITHDRAWN"
+                      ]
+                    },
+                    "item": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "itemId": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                            },
+                            "itemHash": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "requirement",
+                                "work-human",
+                                "quality-human"
+                              ]
+                            },
+                            "requirementIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^requirement_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              }
+                            },
+                            "subjectId": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                            },
+                            "checkId": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                            },
+                            "expected": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 32768
+                            }
+                          },
+                          "required": [
+                            "itemId",
+                            "itemHash",
+                            "kind",
+                            "requirementIds",
+                            "subjectId",
+                            "checkId",
+                            "expected"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "evidence": {
+                      "maxItems": 16,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "artifactId": {
+                            "type": "string",
+                            "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          }
+                        },
+                        "required": [
+                          "artifactId",
+                          "sha256"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "principalId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                    },
+                    "nextAction": {
+                      "type": "string",
+                      "enum": [
+                        "REPAIR_REVIEW_REQUIRED",
+                        "CHANGE_REVIEW_REQUIRED",
+                        "NONE"
+                      ]
+                    },
+                    "applicationState": {
+                      "type": "string",
+                      "const": "NOT_APPLIED"
+                    }
+                  },
+                  "required": [
+                    "resultId",
+                    "operationId",
+                    "candidateId",
+                    "candidateRevision",
+                    "manifestHash",
+                    "rejectionId",
+                    "previousResultId",
+                    "classification",
+                    "state",
+                    "item",
+                    "description",
+                    "reason",
+                    "evidence",
+                    "principalId",
+                    "createdAt",
+                    "nextAction",
+                    "applicationState"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "sequence",
+                "result"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "nextSequence": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "nextSequence"
+        ],
+        "additionalProperties": false
+      },
+      "RecordCandidateReview": {
+        "type": "object",
+        "properties": {
+          "manifestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "previousResultId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "FAIL"
+            ]
+          },
+          "procedure": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "expected": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32768
+          },
+          "observed": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "evidence": {
+            "maxItems": 16,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "artifactId": {
+                  "type": "string",
+                  "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "artifactId",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "itemId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "itemHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "manifestHash",
+          "previousResultId",
+          "verdict",
+          "procedure",
+          "expected",
+          "observed",
+          "evidence",
+          "itemId",
+          "itemHash"
+        ],
+        "additionalProperties": false
+      },
+      "RecordCandidateRejection": {
+        "type": "object",
+        "properties": {
+          "manifestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "rejectionId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "previousResultId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "IN_SCOPE_DEFECT",
+              "SCOPE_CHANGE"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "WITHDRAWN"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "evidence": {
+            "maxItems": 16,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "artifactId": {
+                  "type": "string",
+                  "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "artifactId",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "itemId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "itemHash": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "manifestHash",
+          "rejectionId",
+          "previousResultId",
+          "classification",
+          "state",
+          "description",
+          "reason",
+          "evidence",
+          "itemId",
+          "itemHash"
+        ],
+        "additionalProperties": false
+      },
       "CreateReleaseExport": {
         "type": "object",
         "properties": {
@@ -15532,6 +18370,7 @@
                   "RELEASE_UNAVAILABLE",
                   "RANGE_NOT_SUPPORTED",
                   "EXPORT_UNAVAILABLE",
+                  "REVIEW_UNAVAILABLE",
                   "IDENTITY_NOT_CONFIGURED",
                   "REQUEST_ORIGIN_INVALID",
                   "REQUEST_HEADERS_INVALID",

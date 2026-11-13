@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import {candidateReviewEntry,candidateHumanResult,candidateRejectionResult,candidateReviewHistory,candidateRejectionHistory,recordCandidateReviewInput,recordCandidateRejectionInput} from './candidate-review.js';
 import {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView} from './release-export.js';
 import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle,opaqueKey } from './primitives.js';
 import {releaseAccessInput,releaseAccessTicket,releaseEntryView} from './release-access.js';
@@ -14,6 +15,7 @@ import { preparationDelegation,preparationInput,retryUnderstandingInput,understa
 import { planReviewView } from './plans.js';
 
 export const schemas = {
+  CandidateReviewEntry:candidateReviewEntry,CandidateHumanResult:candidateHumanResult,CandidateRejectionResult:candidateRejectionResult,CandidateReviewHistory:candidateReviewHistory,CandidateRejectionHistory:candidateRejectionHistory,RecordCandidateReview:recordCandidateReviewInput,RecordCandidateRejection:recordCandidateRejectionInput,
   CreateReleaseExport:createReleaseExportInput,RetryReleaseExport:retryReleaseExportInput,ReleaseExport:releaseExportView,ReleaseExportList:releaseExportListView,
   Command: command, DomainEvent: domainEvent, EphemeralTokenDelta: ephemeralTokenDelta,
   ExecutionPermit: executionPermit, ExecutionOwner: executionOwner, RoleOutput: roleOutput,
@@ -104,6 +106,14 @@ export function createOpenApiDocument() {
   add('/api/v1/runs/{runId}/understanding','get','ReadUnderstanding','Understanding',[parameter('runId',ids.run),parameter('requirementRevision',revision,'query',false)]);
   add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
   add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
+  const reviewPath='/api/v1/runs/{runId}/candidates/{candidateId}/review',reviewParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)];
+  add(reviewPath,'get','ReadCandidateReview','CandidateReviewEntry',reviewParameters);
+  add(reviewPath+'/results','post','RecordCandidateReview','CandidateHumanResult',[...reviewParameters,key,parameter('If-Match',strongETag,'header')],'RecordCandidateReview');
+  add(reviewPath+'/rejections','post','RecordCandidateRejection','CandidateRejectionResult',[...reviewParameters,key,parameter('If-Match',strongETag,'header')],'RecordCandidateRejection');
+  const reviewHistoryPage=[{name:'afterSequence',in:'query',schema:{type:'integer',minimum:0,default:0}},{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:20}}];
+  add(reviewPath+'/history','get','ReadCandidateReviewHistory','CandidateReviewHistory',[...reviewParameters,parameter('itemId',opaqueKey,'query',false),...reviewHistoryPage]);
+  add(reviewPath+'/rejections/history','get','ReadCandidateRejectionHistory','CandidateRejectionHistory',[...reviewParameters,parameter('rejectionId',opaqueKey,'query',false),...reviewHistoryPage]);
+  for(const [suffix,operationId,mime] of [['view','ReadCandidateReviewPage','text/html'],['client.js','ReadCandidateReviewClient','application/javascript']] as const){const path=reviewPath+'/'+suffix;add(path,'get',operationId,undefined,reviewParameters);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'当前成员准确候选审查入口；GET无写入副作用',content:{[mime]:{schema:{type:'string'}}}};}
   const releasePath='/api/v1/runs/{runId}/releases/{releaseId}',releaseParameters=[parameter('runId',ids.run),parameter('releaseId',ids.release)];
   add('/api/v1/releases/{releaseId}/exports','post','CreateReleaseExport','ReleaseExport',[parameter('releaseId',ids.release),key],'CreateReleaseExport','202');
   add('/api/v1/releases/{releaseId}/exports','get','ListReleaseExports','ReleaseExportList',[parameter('releaseId',ids.release),parameter('afterExportId',opaqueKey,'query',false),...page]);

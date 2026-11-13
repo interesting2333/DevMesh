@@ -88,10 +88,10 @@ export function mountPreviewRoutes(router:Router,content:LocalContentStore,gatew
   }));
 }
 
-function previewPage(view:{preview:{runId:string;previewId:string};access:{state:string;canWrite:boolean;previewOrigin:string|null}},nonce:string){
+function previewPage(view:{preview:{runId:string;previewId:string;candidateId:string};access:{state:string;canWrite:boolean;previewOrigin:string|null}},nonce:string){
   const labels:Record<string,string>={AVAILABLE:view.access.canWrite?'预览可用':'预览可用（只读）',NOT_CONFIGURED:'预览访问尚未配置',RECOVERING:'预览恢复中，请稍后重试',STARTING:'预览启动中',STOPPING:'预览停止中',STOPPED:'预览已停止',EXPIRED:'预览已到期',UNKNOWN:'预览状态正在核实'};
   const settings=JSON.stringify({origin:view.access.previewOrigin,accessPath:`/api/v1/runs/${encodeURIComponent(view.preview.runId)}/previews/${encodeURIComponent(view.preview.previewId)}/access`}).replaceAll('<','\\u003c');
-  return `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>应用预览</title><body><main><h1>应用预览</h1><p id="status" role="status">${labels[view.access.state]??'预览暂不可用'}</p><button id="open"${view.access.state==='AVAILABLE'?'':' disabled'}>打开预览</button><p>打开预览不会接受或发布此版本。</p><iframe id="preview" title="生成应用预览" sandbox="allow-scripts allow-forms allow-same-origin" referrerpolicy="no-referrer" hidden width="100%" height="640"></iframe></main><script nonce="${nonce}">
+  return `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>应用预览</title><body><main><h1>应用预览</h1><p id="status" role="status">${labels[view.access.state]??'预览暂不可用'}</p><button id="open"${view.access.state==='AVAILABLE'?'':' disabled'}>打开预览</button><p>打开预览不会接受或发布此版本。</p><p><a href="/api/v1/runs/${encodeURIComponent(view.preview.runId)}/candidates/${encodeURIComponent(view.preview.candidateId)}/review/view">逐项审查此候选</a></p><iframe id="preview" title="生成应用预览" sandbox="allow-scripts allow-forms allow-same-origin" referrerpolicy="no-referrer" hidden width="100%" height="640"></iframe></main><script nonce="${nonce}">
 const settings=${settings},button=document.getElementById('open'),status=document.getElementById('status'),frame=document.getElementById('preview');
 button.addEventListener('click',async()=>{
   button.disabled=true;status.textContent='正在连接预览…';

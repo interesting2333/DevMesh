@@ -1,0 +1,69 @@
+TAP version 13
+# (node:30732) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30732) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30732) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+not ok 1 - actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+  ---
+  duration_ms: 10190.6616
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\review-entry.test.mjs:7:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/review-entry.test.mjs:10:526)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:30732) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30732) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React classifies, corrects and explicitly withdraws a rejection while unsafe text stays inert
+ok 2 - actual React classifies, corrects and explicitly withdraws a rejection while unsafe text stays inert
+  ---
+  duration_ms: 11437.9397
+  type: 'test'
+  ...
+# (node:30732) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:30732) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React pages original item history and clears protected observations on membership revocation
+not ok 3 - actual React pages original item history and clears protected observations on membership revocation
+  ---
+  duration_ms: 41788.4044
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\review-entry.test.mjs:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    locator.waitFor: Timeout 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByText('访问权限已失效，请重新进入或联系项目负责人。', { exact: true }) to be visible[22m
+    
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    TestContext.<anonymous> (D:\yms\AI\DevMesh\tests\browser\review-entry.test.mjs:22:228)
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 1
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 66194.7324

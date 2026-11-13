@@ -297,3 +297,7 @@ business_pending_writes 合并预览和 Release 的 DISPATCHED／UNKNOWN 写。�
 ### Accepted Release export is a separate frozen job
 
 独立导出协议和约束见 [export-design.md](./export-design.md)。迁移44独立持久化 job/snapshot/材料引用/历史，ZIP仅从固定原源码与正式材料生成；失败和重试不触及 T5 或发布。API 排队/列出/查询/重试/下载与显式 ReleaseExporter 分离；默认调度装配和通用回放/导入仍按原范围继续。
+
+### Private manual review product entry
+
+既有逐项审查和退回域新增私有HTTP／React入口，详细决定见[review-entry-design.md](./review-entry-design.md)。原自动检查和候选不修改；历史withdraw能力由服务端当前owner／Run控制，原成功请求按原键找回。此入口是5.1组合的前置，完整准备、T5／发布和产品默认装配继续按任务验收。

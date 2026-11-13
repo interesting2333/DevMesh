@@ -1,0 +1,21 @@
+$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (65%)
+  - rolldown-plugin-dts:fake-js (29%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+(rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `rolldown-plugin-dts:generate`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean && tsdown --config tsdown.web.config.ts
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (53%)
+  - tsdown:deps (47%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/index.ts src/config.ts src/scheduler.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `tsdown:deps`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+$ tsdown src/main.ts --format esm --platform node --target node24 --sourcemap --clean

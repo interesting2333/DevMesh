@@ -27,7 +27,7 @@ export interface CandidateReviewView {
  items:(CandidateReviewItem&{status:'PASS'|'FAIL'|'MISSING'|'STALE';result:CandidateHumanResult|null})[];
  automaticChecks:{operationId:string;checkId:string;status:string;codes:string[]}[];
  rejections:CandidateRejectionResult[];rejectionStatus:'OPEN'|'NONE';
- canRecord:boolean;canPrepareAcceptance:boolean;
+ canRecord:boolean;canPrepareAcceptance:boolean;canWithdrawRejections:boolean;
 }
 export interface CandidateRejectionResult {
  resultId:string;operationId:string;candidateId:string;candidateRevision:number;manifestHash:string;rejectionId:string;previousResultId:string|null;
