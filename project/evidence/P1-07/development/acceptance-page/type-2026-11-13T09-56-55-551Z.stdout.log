@@ -1,0 +1,6 @@
+packages/input-api/src/web/acceptance-client.tsx(73,56): error TS2345: Argument of type 'string' is not assignable to parameter of type 'string & $brand<"op">'.
+  Type 'string' is not assignable to type '$brand<"op">'.
+packages/input-api/src/web/acceptance-client.tsx(94,16): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type '(string & $brand<"op">) | undefined'.
+  Type 'string' is not assignable to type 'string & $brand<"op">'.
+    Type 'string' is not assignable to type '$brand<"op">'.
+[ELIFECYCLE] Command failed with exit code 2.

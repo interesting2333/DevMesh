@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-13T10:48:05.112Z",
+  "changes": [
+    {
+      "source": "tests/acceptance-entry.test.mjs",
+      "before": "6a03e038a412f44ea30f6d16a8af66ba737135cbdd4c188dc53cced9518bd290",
+      "after": "aff3b4c838543018ebaea2552d3290e6002e52a9767c438b1ebcd8fa389f2d1a",
+      "reason": "Only this MJS test file changed after the passing build/type/contracts/regression: history fixture setup now persists 20 originals through the actual Worker, retains one actual HTTP create/close, all actual HTTP page/permission/boundary assertions and the unchanged 300-second deadline; setup/page timing is retained. Other test bodies and all production code are unchanged."
+    }
+  ],
+  "unaffectedGroups": [
+    "build",
+    "type",
+    "contracts",
+    "regression"
+  ],
+  "scopeEvidence": {
+    "typeRoots": [
+      "apps/*/src/**/*.ts",
+      "packages/*/src/**/*.ts",
+      "tests/**/*.ts",
+      "packages/*/src/**/*.tsx"
+    ],
+    "regressionFiles": [
+      "tests/review-entry.test.mjs",
+      "tests/input-composition.test.mjs",
+      "tests/contracts.test.mjs"
+    ],
+    "productionSourceMaps": "The full node/browser map audit verifies final actual production bytes separately."
+  }
+}

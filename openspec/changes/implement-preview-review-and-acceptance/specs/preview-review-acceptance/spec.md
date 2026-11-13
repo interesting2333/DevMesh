@@ -600,3 +600,23 @@ The system SHALL expose current-member reads for exact candidate acceptance basi
 - **THEN** the trusted ReleaseAcceptor reads and validates the exact immutable content bytes before the T5 writer, while missing bytes or changed basis prevent a new acceptance
 - **AND** a committed acknowledgement lost after T5 is recovered with the original key/body without repeating material generation or preflight, even when new acceptance configuration is disabled; current owner authorization still applies
 - **AND** the fixed receipt distinguishes ACCEPTED from its original PENDING publication and links the exact current-member preparation query
+
+### Requirement: Private React acceptance uses explicit original decisions
+The system SHALL provide a current-member HTML page and protected local React script for an exact candidate acceptance entry. It MUST display the frozen data strategy and accepted source, keep replacement confirmation separate, and require independent explicit confirmation for preparation, unsent closure, dispatched abort and final acceptance. Refreshing basis or selecting a preparation SHALL clear previous consent. Reads MUST NOT dispatch preparation or refresh backend health.
+
+#### Scenario: Readiness and final decision remain separate
+- **WHEN** a member opens the page, creates a preparation, or refreshes its original state
+- **THEN** no acceptance occurs without a distinct owner confirmation using the selected original preparation and its exact basis, revision and observation
+- **AND** missing configuration or readiness keeps final acceptance closed, and ABORTING means cleanup remains unresolved
+- **AND** a committed receipt distinguishes its original pending publication from current publication and independent export
+
+#### Scenario: Reload after a lost acknowledgement
+- **WHEN** a preparation or final acceptance response is lost after the server commits
+- **THEN** the browser retains the original request before POST and reload does not automatically POST
+- **AND** explicit recovery uses the same key, body and If-Match while new submissions remain closed; corrupt storage also closes new submissions until explicitly cleared after checking
+- **AND** known rejected submissions require a successful state refresh before explicit abandonment, and revoked access clears protected basis, preparations, history and receipts
+
+#### Scenario: Bounded history projection preserves current authorization
+- **WHEN** a candidate has at least 21 original preparations and the member pages its history
+- **THEN** each bounded page is projected from one synchronous Worker transaction with a fixed number of platform-to-Worker round trips, rather than a round trip per item
+- **AND** qualification reuse is confined to that transaction and exact original actor/basis/epoch/source; role changes and revocation are recomputed on the next request without extending health or browser request deadlines

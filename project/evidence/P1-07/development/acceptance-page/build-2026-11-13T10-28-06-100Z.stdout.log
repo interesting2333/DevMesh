@@ -1,0 +1,57 @@
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\input-api\package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 14 files
+ℹ dist\index.mjs       75.92 kB │ gzip: 16.97 kB
+ℹ dist\index.mjs.map  120.12 kB │ gzip: 27.25 kB
+ℹ dist\index.d.mts      2.91 kB │ gzip:  1.00 kB
+ℹ 3 files, total: 198.94 kB
+✔ Build complete in 47983ms
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\input-api\tsdown.web.config.ts 
+ℹ entry: src/web/export-client.tsx
+ℹ target: es2022
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ entry: src/web/review-client.tsx
+ℹ target: es2022
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ entry: src/web/acceptance-client.tsx
+ℹ target: es2022
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- react
+- scheduler
+- react-dom
+- zod
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- react
+- scheduler
+- react-dom
+- zod
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- react
+- scheduler
+- react-dom
+- zod
+ℹ dist\web\export\export-client.js      262.49 kB │ gzip:  78.73 kB
+ℹ dist\web\export\export-client.js.map  853.96 kB │ gzip: 180.20 kB
+ℹ 2 files, total: 1.12 MB
+✔ Build complete in 11354ms
+ℹ dist\web\acceptance\acceptance-client.js      271.66 kB │ gzip:  81.03 kB
+ℹ dist\web\acceptance\acceptance-client.js.map  872.46 kB │ gzip: 183.85 kB
+ℹ 2 files, total: 1.14 MB
+✔ Build complete in 12216ms
+ℹ dist\web\review\review-client.js      269.13 kB │ gzip:  80.25 kB
+ℹ dist\web\review\review-client.js.map  867.78 kB │ gzip: 182.86 kB
+ℹ 2 files, total: 1.14 MB
+✔ Build complete in 12480ms

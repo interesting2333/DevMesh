@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-13T10:25:37.356Z",
+  "reason": "Second browser batch contains failed new acceptance UI cases; stop only this exact owned test subtree to repair and rerun all final checks without live input mutations.",
+  "driver": {
+    "ProcessId": 38472,
+    "ParentProcessId": 8740,
+    "CommandLine": "node  .cache/p130-driver.mjs browser"
+  },
+  "child": {
+    "ProcessId": 35696,
+    "ParentProcessId": 38472,
+    "CommandLine": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/acceptance-page.test.mjs tests/browser/review-entry.test.mjs"
+  }
+}

@@ -1,0 +1,99 @@
+TAP version 13
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements
+ok 1 - actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements
+  ---
+  duration_ms: 14989.5752
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","prepareRequests":2,"acceptRequests":2,"releaseCount":1,"scope":"Actual React/Edge/HTTP/file-backed Worker/CAS/T5. Source/admission/Runner/OCI/fences/health/manual review and browser identity are explicit fixtures; not physical or product acceptance."}
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React closes only unsent originals and records a sent abort without claiming cleanup
+ok 2 - actual React closes only unsent originals and records a sent abort without claiming cleanup
+  ---
+  duration_ms: 17388.1265
+  type: 'test'
+  ...
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React blocks damaged pending records, pages originals and clears protected data after revocation
+ok 3 - actual React blocks damaged pending records, pages originals and clears protected data after revocation
+  ---
+  duration_ms: 16090.8938
+  type: 'test'
+  ...
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:20952) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: explicit display fixtures show replacement and migration plans while unconfigured real entry stays closed
+ok 4 - explicit display fixtures show replacement and migration plans while unconfigured real entry stays closed
+  ---
+  duration_ms: 7288.0214
+  type: 'test'
+  ...
+# REPLACE/PRESERVE_MIGRATE in this case are explicit intercepted UI display/command fixtures, not a formal successor candidate or physical migration/replacement chain.
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+ok 5 - actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+  ---
+  duration_ms: 5469.4178
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","originalRequests":2,"durableResults":1,"scope":"Actual local HTTP/Worker/React/Edge; upstream source/admission/Runner/image and browser identity are explicit fixtures; no real model/OIDC/Linux/product acceptance"}
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React classifies, corrects and explicitly withdraws a rejection while unsafe text stays inert
+ok 6 - actual React classifies, corrects and explicitly withdraws a rejection while unsafe text stays inert
+  ---
+  duration_ms: 5923.3617
+  type: 'test'
+  ...
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React pages original item history and clears protected observations on membership revocation
+ok 7 - actual React pages original item history and clears protected observations on membership revocation
+  ---
+  duration_ms: 7423.1505
+  type: 'test'
+  ...
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:17160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unreadable pending request blocks new submissions until the user explicitly clears it after checking
+ok 8 - an unreadable pending request blocks new submissions until the user explicitly clears it after checking
+  ---
+  duration_ms: 4303.3125
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 81649.1148

@@ -1,0 +1,653 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "26654917a7119763cbec46c6b464b9000193e04d",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "finalGroups": [
+    {
+      "name": "entry",
+      "record": "entry-2026-11-13T11-21-58-244Z.json",
+      "tests": 6,
+      "pass": 6,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/storage-dataset-ownership.test.mjs"
+      ],
+      "assessment": "historical-test-only"
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T11-32-28-350Z.json",
+      "tests": 22,
+      "pass": 22,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/storage-dataset-ownership.test.mjs"
+      ],
+      "assessment": "historical-test-only"
+    },
+    {
+      "name": "acceptance",
+      "record": "acceptance-2026-11-13T11-32-28-274Z.json",
+      "recordExitCode": 1,
+      "selection": "Only the original four acceptance test files before the separate v38 ownership test process. The extended run failed overall; its two failing migration cases and one passing migration case are excluded here. All three migration cases are counted only from the final targeted ownership rerun.",
+      "selectedTests": [
+        "SENT decision retains original dispatch, CLOSED target and unresolved occupancy across restart",
+        "READY becomes unavailable while immutable proof, original observation and custody stay retained",
+        "an in-flight original dispatcher loses authorization and cannot record its late observation",
+        "rejects mismatched hash without durable side effects",
+        "rejects mismatched revision without durable side effects",
+        "rejects mismatched scope without durable side effects",
+        "rejects mismatched If-Match without durable side effects",
+        "only a current owner may decide or replay; backend can recover exact decision after membership removal",
+        "stale Run epoch does not prevent an owner from closing original execution authority",
+        "UNKNOWN stays UNKNOWN after decision, with original error and dispatch history retained",
+        "rolls back decision failure including authorization, operation result and event",
+        "rolls back run failure including authorization, operation result and event",
+        "rolls back event failure including authorization, operation result and event",
+        "rolls back operation failure including authorization, operation result and event",
+        "concurrent commands share one writer decision; accepted release cannot later be aborted",
+        "SQL barrier rejects late proof/observation/source close, target opening and preparation mutation",
+        "acceptance abort decision fences late execution, survives recovery and is exclusive with T5",
+        "legacy proof stays readable but cannot substitute a new ACCEPTANCE service purpose",
+        "rollback at release",
+        "rollback at pointer",
+        "rollback at resolution",
+        "rollback at human",
+        "rollback at work-result",
+        "rollback at attempt",
+        "rollback at slot",
+        "rollback at grant",
+        "rollback at assessment",
+        "rollback at run",
+        "rollback at outbox",
+        "rollback at publication",
+        "rollback at publication-history",
+        "rollback at event",
+        "rollback at operation-result",
+        "reject wrong versions, authority, proof, scope and pointer without partial facts",
+        "missing material, changed review and unknown preparation close acceptance",
+        "unknown HTTP writes survive Worker restart and prevent acceptance",
+        "trusted preflight verifies real content bytes and writer rejects a basis changed during I/O",
+        "trusted acceptor reads actual frozen materials once and skips preflight after committed ACK loss",
+        "concurrent exact acceptance, immutable history, terminal ACK and retained dedicated promotion",
+        "T5 preserves original automatic facts, rolls back every boundary and recovers exact committed acceptance",
+        "T5 accepts a fully automatic final Work without inventing human completions",
+        "acceptance intent fixes the exact reviewed candidate and reserved original identities without accepting or preparing data",
+        "Worker concurrent dispatch, lost acknowledgement and UNKNOWN survive reopen and never grant a replacement effect",
+        "a changed human review invalidates the fixed basis; only the never-dispatched intent may be closed",
+        "intent/history/operation/event and dispatch observation roll back atomically before original-key recovery",
+        "permissions, displayed hashes, original keys and replacement confirmation cannot create authority from caller fields",
+        "immutable original proof survives reopen while current health expires and custody high-water survives UNKNOWN",
+        "backend identity, exact bindings, closed durable fence kind and fresh health are required; proof cannot be replaced",
+        "proof, observation, resource revision and event roll back together; late CAS cannot overwrite newer health",
+        "concurrent controllers dispatch once; lost observation ACK and worker reopen only inspect the original prepared objects",
+        "missing backend stays unsent; a lost dispatch grant ACK never permits prepare on recovery"
+      ],
+      "excludedFailedTests": [
+        "v38 rebuild preserves original closed gate, uncertain write, policies and history; late failure restores schema and FK enforcement",
+        "v38 backfills real acceptance identities with separate base/origin semantics and never inserts preview effects"
+      ],
+      "selectedLogByteEnd": 25673,
+      "tests": 51,
+      "pass": 51,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/storage-dataset-ownership.test.mjs"
+      ],
+      "assessment": "historical-test-only"
+    },
+    {
+      "name": "ownership",
+      "record": "ownership-2026-11-13T12-06-09-098Z.json",
+      "tests": 3,
+      "pass": 3,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "assessment": "exact-final-inventory"
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-13T12-06-29-214Z.json",
+      "tests": 8,
+      "pass": 8,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "assessment": "exact-final-inventory"
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T11-12-48-367Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/storage-dataset-ownership.test.mjs"
+      ],
+      "assessment": "historical-test-only"
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T11-08-34-593Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/storage-dataset-ownership.test.mjs"
+      ],
+      "assessment": "historical-test-only"
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T12-07-34-324Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "assessment": "exact-final-inventory"
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T11-08-34-691Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/storage-dataset-ownership.test.mjs"
+      ],
+      "assessment": "historical-test-only"
+    }
+  ],
+  "totalPassed": 90,
+  "totalSkipped": 0,
+  "failedRuns": [
+    {
+      "file": "acceptance-2026-11-13T11-32-28-274Z.json",
+      "name": "acceptance",
+      "code": 1
+    },
+    {
+      "file": "browser-2026-11-13T09-56-55-593Z.json",
+      "name": "browser",
+      "code": 1
+    },
+    {
+      "file": "browser-2026-11-13T10-11-14-504Z.json",
+      "name": "browser",
+      "code": 1
+    },
+    {
+      "file": "browser-2026-11-13T11-01-45-524Z.json",
+      "name": "browser",
+      "code": 1
+    },
+    {
+      "file": "entry-2026-11-13T10-30-59-918Z.json",
+      "name": "entry",
+      "code": 1
+    },
+    {
+      "file": "type-2026-11-13T09-56-55-551Z.json",
+      "name": "type",
+      "code": 2
+    }
+  ],
+  "interruption": {
+    "records": [
+      "interruption.json",
+      "interruption-02.json",
+      "interruption-03.json"
+    ],
+    "outcome": "First browser batch was deliberately stopped after two failed new cases. Windows taskkill returned128 for some Chromium descendants (unsupported/no instance); the exact owned Node test launcher exited1 and its driver retained the incomplete output. Third browser batch was proactively stopped after the completed HTTP profile showed an 80.97-second 20-item page, beyond the unchanged 15-second browser limit; its exact owned launcher exited1. No unrelated process was targeted. None of the incomplete batches is final pass evidence."
+  },
+  "scope": "Modified-checkout development: actual local file-backed SQLite Worker, HTTP, immutable content-byte preflight and T5/ACK recovery. Actual React/Edge acceptance plus manual-review regression. Separate REPLACE/PRESERVE_MIGRATE display/command fixtures are intercepted browser responses, not formal successor acceptance. Upstream source/admission/Runner/OCI/fence/health and manual observations are explicit protocol fixtures; no real model, OIDC/cookie login, Linux/gVisor, full product/workbench, physical cleanup or positive successor preserve/replace acceptance.",
+  "inputAssessment": "All production source and build bytes match the final build, type and contract checks. After those checks and the entry/regression/extended acceptance run, only tests/storage-dataset-ownership.test.mjs changed: v37 setup uses explicit historical SQL and its post-v38 gate assertion reads the actual old schema. Exact old/new SHA and static local MJS import closures are retained. The extended acceptance run remains FAILED (52 pass, 2 fail); only its 51 passing original acceptance cases are selected, with all 3 ownership cases counted from the repaired targeted rerun. Final lint and all 8 browser cases run on the final inventory. No test runs overlap source/build mutations. Earlier failures, interruptions and performance records remain historical.",
+  "inputAssessments": [
+    {
+      "group": "entry",
+      "record": "entry-2026-11-13T11-21-58-244Z.json",
+      "file": "tests/storage-dataset-ownership.test.mjs",
+      "before": "9b73f45c9b33dd1656591250f49dd7e3e43c13e564708c1f08e9958997b58bae",
+      "after": "63dd6bc5feb5d1b6d977c8e1133c287d7a7fc219136a14ff265537067f77a497",
+      "testRoots": [
+        "tests/acceptance-page.test.mjs",
+        "tests/acceptance-entry.test.mjs"
+      ],
+      "localMjsImportClosure": [
+        "tests/acceptance-entry.test.mjs",
+        "tests/acceptance-page.test.mjs",
+        "tests/fixtures/acceptance-entry.mjs",
+        "tests/fixtures/acceptance-readiness.mjs",
+        "tests/fixtures/acceptance.mjs",
+        "tests/fixtures/candidate-data.mjs",
+        "tests/fixtures/delivery.mjs",
+        "tests/fixtures/historical-verification.mjs",
+        "tests/fixtures/quality-runner.mjs",
+        "tests/fixtures/quality-storage.mjs",
+        "tests/fixtures/quality.mjs",
+        "tests/fixtures/release-freeze.mjs",
+        "tests/fixtures/runner.mjs",
+        "tests/fixtures/storage-data.mjs",
+        "tests/fixtures/verified-repair.mjs",
+        "tests/fixtures/work-verification.mjs"
+      ],
+      "assessment": "Only the standalone historical v37 migration-test setup/assertion projection changed. It is not loaded by these retained test processes; the repaired file is rerun separately. Production TypeScript, build inputs and all other test bytes are identical. Build/type/contracts do not execute this MJS test; final lint is rerun."
+    },
+    {
+      "group": "regression",
+      "record": "regression-2026-11-13T11-32-28-350Z.json",
+      "file": "tests/storage-dataset-ownership.test.mjs",
+      "before": "9b73f45c9b33dd1656591250f49dd7e3e43c13e564708c1f08e9958997b58bae",
+      "after": "63dd6bc5feb5d1b6d977c8e1133c287d7a7fc219136a14ff265537067f77a497",
+      "testRoots": [
+        "tests/review-entry.test.mjs",
+        "tests/input-composition.test.mjs",
+        "tests/contracts.test.mjs"
+      ],
+      "localMjsImportClosure": [
+        "tests/contracts.test.mjs",
+        "tests/fixtures/acceptance.mjs",
+        "tests/fixtures/candidate-data.mjs",
+        "tests/fixtures/content-data.mjs",
+        "tests/fixtures/delivery.mjs",
+        "tests/fixtures/historical-verification.mjs",
+        "tests/fixtures/quality-runner.mjs",
+        "tests/fixtures/quality-storage.mjs",
+        "tests/fixtures/quality.mjs",
+        "tests/fixtures/release-freeze.mjs",
+        "tests/fixtures/review-entry.mjs",
+        "tests/fixtures/runner.mjs",
+        "tests/fixtures/storage-data.mjs",
+        "tests/fixtures/verified-repair.mjs",
+        "tests/fixtures/work-verification.mjs",
+        "tests/input-composition.test.mjs",
+        "tests/review-entry.test.mjs"
+      ],
+      "assessment": "Only the standalone historical v37 migration-test setup/assertion projection changed. It is not loaded by these retained test processes; the repaired file is rerun separately. Production TypeScript, build inputs and all other test bytes are identical. Build/type/contracts do not execute this MJS test; final lint is rerun."
+    },
+    {
+      "group": "acceptance-selected-subset",
+      "record": "acceptance-2026-11-13T11-32-28-274Z.json",
+      "file": "tests/storage-dataset-ownership.test.mjs",
+      "before": "9b73f45c9b33dd1656591250f49dd7e3e43c13e564708c1f08e9958997b58bae",
+      "after": "63dd6bc5feb5d1b6d977c8e1133c287d7a7fc219136a14ff265537067f77a497",
+      "testRoots": [
+        "tests/acceptance-intents.test.mjs",
+        "tests/acceptance-readiness.test.mjs",
+        "tests/acceptance-commit.test.mjs",
+        "tests/acceptance-abort.test.mjs"
+      ],
+      "localMjsImportClosure": [
+        "tests/acceptance-abort.test.mjs",
+        "tests/acceptance-commit.test.mjs",
+        "tests/acceptance-intents.test.mjs",
+        "tests/acceptance-readiness.test.mjs",
+        "tests/fixtures/acceptance-readiness.mjs",
+        "tests/fixtures/acceptance.mjs",
+        "tests/fixtures/candidate-data.mjs",
+        "tests/fixtures/delivery.mjs",
+        "tests/fixtures/historical-verification.mjs",
+        "tests/fixtures/quality-runner.mjs",
+        "tests/fixtures/quality-storage.mjs",
+        "tests/fixtures/quality.mjs",
+        "tests/fixtures/release-freeze.mjs",
+        "tests/fixtures/runner.mjs",
+        "tests/fixtures/storage-data.mjs",
+        "tests/fixtures/verified-repair.mjs",
+        "tests/fixtures/work-verification.mjs"
+      ],
+      "assessment": "Only the standalone historical v37 migration-test setup/assertion projection changed. It is not loaded by these retained test processes; the repaired file is rerun separately. Production TypeScript, build inputs and all other test bytes are identical. Build/type/contracts do not execute this MJS test; final lint is rerun."
+    },
+    {
+      "group": "build",
+      "record": "build-2026-11-13T11-12-48-367Z.json",
+      "file": "tests/storage-dataset-ownership.test.mjs",
+      "before": "9b73f45c9b33dd1656591250f49dd7e3e43c13e564708c1f08e9958997b58bae",
+      "after": "63dd6bc5feb5d1b6d977c8e1133c287d7a7fc219136a14ff265537067f77a497",
+      "testRoots": [],
+      "localMjsImportClosure": [],
+      "assessment": "Only the standalone historical v37 migration-test setup/assertion projection changed. It is not loaded by these retained test processes; the repaired file is rerun separately. Production TypeScript, build inputs and all other test bytes are identical. Build/type/contracts do not execute this MJS test; final lint is rerun."
+    },
+    {
+      "group": "type",
+      "record": "type-2026-11-13T11-08-34-593Z.json",
+      "file": "tests/storage-dataset-ownership.test.mjs",
+      "before": "9b73f45c9b33dd1656591250f49dd7e3e43c13e564708c1f08e9958997b58bae",
+      "after": "63dd6bc5feb5d1b6d977c8e1133c287d7a7fc219136a14ff265537067f77a497",
+      "testRoots": [],
+      "localMjsImportClosure": [],
+      "assessment": "Only the standalone historical v37 migration-test setup/assertion projection changed. It is not loaded by these retained test processes; the repaired file is rerun separately. Production TypeScript, build inputs and all other test bytes are identical. Build/type/contracts do not execute this MJS test; final lint is rerun."
+    },
+    {
+      "group": "contracts",
+      "record": "contracts-2026-11-13T11-08-34-691Z.json",
+      "file": "tests/storage-dataset-ownership.test.mjs",
+      "before": "9b73f45c9b33dd1656591250f49dd7e3e43c13e564708c1f08e9958997b58bae",
+      "after": "63dd6bc5feb5d1b6d977c8e1133c287d7a7fc219136a14ff265537067f77a497",
+      "testRoots": [],
+      "localMjsImportClosure": [],
+      "assessment": "Only the standalone historical v37 migration-test setup/assertion projection changed. It is not loaded by these retained test processes; the repaired file is rerun separately. Production TypeScript, build inputs and all other test bytes are identical. Build/type/contracts do not execute this MJS test; final lint is rerun."
+    }
+  ],
+  "failedSources": [
+    {
+      "source": "packages/input-api/src/web/acceptance-client.tsx",
+      "file": "failed-source/acceptance-client.tsx",
+      "sha256": "34bc534d912be42e9defa83c4bb3565857e9533505b7cea9286290e4e211d7f7",
+      "record": "type-2026-11-13T09-56-55-551Z.json"
+    },
+    {
+      "source": "tests/browser/acceptance-page.test.mjs",
+      "file": "failed-source/acceptance-page.test.mjs",
+      "sha256": "84f4477bb5d7698b128800de58f7695ebcb3ec1e175d136417412e026a9bb7c2",
+      "record": "type-2026-11-13T09-56-55-551Z.json"
+    },
+    {
+      "source": "tests/browser/acceptance-page.test.mjs",
+      "file": "failed-source-02/acceptance-page.test.mjs",
+      "sha256": "a7eb148d9b10ffdfe0b7687ab1209b61c000981ad73331f1d9e9b1b32920c48d",
+      "record": "browser-2026-11-13T10-11-14-504Z.json"
+    },
+    {
+      "source": "tests/fixtures/acceptance-entry.mjs",
+      "file": "failed-source-02/acceptance-entry.mjs",
+      "sha256": "7eb3fef8c976f512fed8bf9275d8d1b7e1cdec6451ef633eb14ab58f368cff2b",
+      "record": "browser-2026-11-13T10-11-14-504Z.json"
+    },
+    {
+      "source": "packages/input-api/src/acceptance.ts",
+      "file": "failed-source-02/acceptance.ts",
+      "sha256": "ff1ef36ac1eab5db79875c9e40f69e9e20d7309bf83cbb42fa2bfeb1b0932925",
+      "record": "browser-2026-11-13T10-11-14-504Z.json"
+    },
+    {
+      "source": "tests/acceptance-entry.test.mjs",
+      "file": "failed-source-03/acceptance-entry.test.mjs",
+      "sha256": "6a03e038a412f44ea30f6d16a8af66ba737135cbdd4c188dc53cced9518bd290",
+      "record": "entry-2026-11-13T10-30-59-918Z.json"
+    },
+    {
+      "source": "tests/storage-dataset-ownership.test.mjs",
+      "file": "failed-source-04/storage-dataset-ownership.test.mjs",
+      "sha256": "9b73f45c9b33dd1656591250f49dd7e3e43c13e564708c1f08e9958997b58bae",
+      "record": "acceptance-2026-11-13T11-32-28-274Z.json"
+    }
+  ],
+  "performanceSources": [
+    {
+      "source": "packages/input-api/src/acceptance.ts",
+      "file": "performance-source/packages/input-api/src/acceptance.ts",
+      "sha256": "60f61c99f3b5f49056fb33c227be2638ab68211fe6ab386908a987ab46102d5c",
+      "record": "entry-2026-11-13T10-49-28-240Z.json"
+    },
+    {
+      "source": "packages/storage-sqlite/src/acceptance-domain.ts",
+      "file": "performance-source/packages/storage-sqlite/src/acceptance-domain.ts",
+      "sha256": "dd5ce69636480b58371b0493b98b96b5710f73653a2056c6c5722456871edc6d",
+      "record": "entry-2026-11-13T10-49-28-240Z.json"
+    },
+    {
+      "source": "packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "file": "performance-source/packages/storage-sqlite/src/acceptance-readiness-domain.ts",
+      "sha256": "98b3c88ae2e538316c5696c9c70f0227eb4085f2f2977bb0e6a0360a69f8218e",
+      "record": "entry-2026-11-13T10-49-28-240Z.json"
+    },
+    {
+      "source": "packages/storage-sqlite/src/acceptance-readiness-protocol.ts",
+      "file": "performance-source/packages/storage-sqlite/src/acceptance-readiness-protocol.ts",
+      "sha256": "63c7880d007f07cfb712fb02277221f1f71b3bf2af7edc0ad065690eac75e5f8",
+      "record": "entry-2026-11-13T10-49-28-240Z.json"
+    },
+    {
+      "source": "tests/acceptance-entry.test.mjs",
+      "file": "performance-source/tests/acceptance-entry.test.mjs",
+      "sha256": "aff3b4c838543018ebaea2552d3290e6002e52a9767c438b1ebcd8fa389f2d1a",
+      "record": "entry-2026-11-13T10-49-28-240Z.json"
+    }
+  ],
+  "performanceProfiles": [
+    {
+      "file": "history-profile-1794567639337.json",
+      "at": "2026-11-13T10:57:04.857Z",
+      "setup": [
+        {
+          "count": 1,
+          "elapsedMs": 25698.921199999982
+        },
+        {
+          "count": 2,
+          "elapsedMs": 30981.59289999999
+        },
+        {
+          "count": 3,
+          "elapsedMs": 35430.341999999946
+        },
+        {
+          "count": 4,
+          "elapsedMs": 40544.13749999995
+        },
+        {
+          "count": 5,
+          "elapsedMs": 45217.374499999976
+        },
+        {
+          "count": 6,
+          "elapsedMs": 50592.89199999999
+        },
+        {
+          "count": 7,
+          "elapsedMs": 55985.28569999995
+        },
+        {
+          "count": 8,
+          "elapsedMs": 60779.432099999976
+        },
+        {
+          "count": 9,
+          "elapsedMs": 65517.45889999997
+        },
+        {
+          "count": 10,
+          "elapsedMs": 70617.61479999998
+        },
+        {
+          "count": 11,
+          "elapsedMs": 75580.57589999994
+        },
+        {
+          "count": 12,
+          "elapsedMs": 80330.64559999993
+        },
+        {
+          "count": 13,
+          "elapsedMs": 85791.794
+        },
+        {
+          "count": 14,
+          "elapsedMs": 91380.96100000001
+        },
+        {
+          "count": 15,
+          "elapsedMs": 96264.58880000003
+        },
+        {
+          "count": 16,
+          "elapsedMs": 100893.05579999997
+        },
+        {
+          "count": 17,
+          "elapsedMs": 105418.8003
+        },
+        {
+          "count": 18,
+          "elapsedMs": 110275.90159999998
+        },
+        {
+          "count": 19,
+          "elapsedMs": 115713.1004
+        },
+        {
+          "count": 20,
+          "elapsedMs": 121055.27969999996
+        },
+        {
+          "count": 21,
+          "elapsedMs": 126193.54680000001
+        }
+      ],
+      "pages": [
+        {
+          "items": 20,
+          "elapsedMs": 80970.2611
+        },
+        {
+          "items": 1,
+          "elapsedMs": 87512.09900000005
+        }
+      ]
+    },
+    {
+      "file": "history-profile-1794569476133.json",
+      "at": "2026-11-13T11:28:43.065Z",
+      "setup": [
+        {
+          "count": 1,
+          "elapsedMs": 24898.24040000001
+        },
+        {
+          "count": 2,
+          "elapsedMs": 29723.33720000001
+        },
+        {
+          "count": 3,
+          "elapsedMs": 34713.817099999986
+        },
+        {
+          "count": 4,
+          "elapsedMs": 40574.00799999997
+        },
+        {
+          "count": 5,
+          "elapsedMs": 46773.05549999996
+        },
+        {
+          "count": 6,
+          "elapsedMs": 53171.88189999998
+        },
+        {
+          "count": 7,
+          "elapsedMs": 59107.167799999996
+        },
+        {
+          "count": 8,
+          "elapsedMs": 65411.52729999996
+        },
+        {
+          "count": 9,
+          "elapsedMs": 75105.5602
+        },
+        {
+          "count": 10,
+          "elapsedMs": 81728.2144
+        },
+        {
+          "count": 11,
+          "elapsedMs": 88012.9241
+        },
+        {
+          "count": 12,
+          "elapsedMs": 93688.62890000001
+        },
+        {
+          "count": 13,
+          "elapsedMs": 99402.2328
+        },
+        {
+          "count": 14,
+          "elapsedMs": 105001.06699999998
+        },
+        {
+          "count": 15,
+          "elapsedMs": 110082.9987
+        },
+        {
+          "count": 16,
+          "elapsedMs": 115182.73389999999
+        },
+        {
+          "count": 17,
+          "elapsedMs": 120222.6324
+        },
+        {
+          "count": 18,
+          "elapsedMs": 125218.0662
+        },
+        {
+          "count": 19,
+          "elapsedMs": 130007.92539999995
+        },
+        {
+          "count": 20,
+          "elapsedMs": 134855.35450000002
+        },
+        {
+          "count": 21,
+          "elapsedMs": 139824.80460000003
+        }
+      ],
+      "pages": [
+        {
+          "items": 20,
+          "elapsedMs": 3924.99589999998,
+          "workerRequests": [
+            "getReleaseCandidate",
+            "getCandidateAcceptancePreparationPage",
+            "getReleaseCandidate"
+          ]
+        },
+        {
+          "items": 1,
+          "elapsedMs": 7976.2186999999685
+        }
+      ]
+    }
+  ],
+  "historyLatency": {
+    "before": {
+      "file": "history-profile-1794567639337.json",
+      "elapsedMs": 80970.2611
+    },
+    "after": {
+      "file": "history-profile-1794569476133.json",
+      "elapsedMs": 3924.99589999998,
+      "workerRequests": [
+        "getReleaseCandidate",
+        "getCandidateAcceptancePreparationPage",
+        "getReleaseCandidate"
+      ]
+    },
+    "scope": "Two local development samples, not a production service-level guarantee; browser timeout stays 15 seconds."
+  },
+  "reproduction": "Restore validation-driver.mjs and binding-driver.mjs under .cache/p130-*.mjs and raw records under .cache/p130-evidence. Driver lists exact build/type/lint/contracts/entry/regression/acceptance/browser commands. Browser requires template-local Playwright and installed Edge. pnpm check as a whole and clean-checkout tests were not run.",
+  "ackFault": "Real local HTTP responses are fetched after server commit, then explicitly aborted by Playwright to simulate lost application acknowledgements. Prepare and accept are recovered only after user recovery clicks, with the same request keys/bodies/If-Match. The actual file-backed Worker is reopened before T5 recovery and content reads are then forbidden. This is controlled HTTP acknowledgement loss, not physical Runner or network-fault acceptance.",
+  "displayFixtures": "REPLACE/PRESERVE_MIGRATE UI rendering and replacement-command case explicitly intercepts basis and decision HTTP responses. It does not register a real replacement decision or create a formal successor candidate or physical migration/replacement.",
+  "visualQA": {
+    "images": [
+      "screenshots/acceptance-ready-desktop.png",
+      "screenshots/acceptance-ready-mobile.png",
+      "screenshots/acceptance-committed-mobile.png"
+    ],
+    "check": "Actual browser captures visually inspected; 390px layout verifies no horizontal overflow. Captures contain fixture identifiers only."
+  },
+  "managementChecks": "management-checks.json",
+  "managementCheckHistory": [
+    "management-checks-01.json"
+  ],
+  "managementCheckRepair": "First evidence lint found one unused output destructuring parameter in the copied binding driver; renamed it with the lint-approved underscore prefix. No application/test inputs or selected validation results changed. All management checks rerun."
+}

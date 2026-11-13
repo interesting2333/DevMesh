@@ -305,3 +305,11 @@ business_pending_writes 合并预览和 Release 的 DISPATCHED／UNKNOWN 写。�
 ### Acceptance entry
 
 准确准备／替换确认／原操作查询／撤销及T5公共入口见 [acceptance-entry-design.md](./acceptance-entry-design.md)。
+
+### Private React acceptance entry retains explicit decisions
+
+候选审查链接准确接受view／受保护client.js，新增独立单入口IIFE而非多入口IIFE。当前成员／nonce CSP／no-store与共享身份边界保持关闭默认。页面只读固定数据方案／原来源，独立替换确认、准备、关闭、撤销与最终接受；后端ready和当前owner能力是必要条件，刷新或切换准备清空勾选。
+
+原历史20项游标；ABORTING显示清理待核实，当前观察不替代原dispatch记录。最终接受使用选中原准备的candidate／review／dataPlan／source及request／revision／观察hash。固定成功回执不代表当前发布状态，原Release页面与导出分别访问。每Run／标签页POST前保存原请求，丢HTTP应答或页面重载仅显式恢复原键／正文／If-Match；未知关闭新动作，损坏存储须核对清除，明确拒绝须成功刷新后才能放弃。当前撤权清空依据、原准备／历史及回执，串行超时请求并离页取消。没有HTTP自动advance或虚构健康；可信消费、物理环境、完整工作台和正式后继业务流程继续。
+
+Acceptance history is projected through one bounded synchronous Worker transaction. Candidate qualification reuse is local to that page and keyed by the original actor, exact candidate/review/data basis, Run epoch and source binding; readiness and resolution remain per original. The API rechecks membership before sending and disables commit when the trusted committer is absent. No cross-request cache, backend health refresh, new dispatch, public proof or relaxed browser timeout is introduced.

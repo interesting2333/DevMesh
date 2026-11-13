@@ -1,5 +1,6 @@
 import {z} from 'zod';
 import {ids,opaqueKey,sha256,timestamp,artifactRef} from '@devmesh/contracts';
+import type {acceptancePreparationList} from '@devmesh/contracts';
 import type {AcceptancePreparation} from './acceptance-protocol.js';
 
 export const previewAcceptanceReleaseClaim=z.strictObject({schemaVersion:z.literal('devmesh.preview-release-claim.v1'),operationId:ids.operation,releaseId:ids.release,candidateId:ids.candidate,manifestHash:sha256,previewId:ids.preview,datasetId:ids.dataset,imageDigest:z.string().regex(/^sha256:[a-f0-9]{64}$/),startOperationId:ids.operation,startRequestHash:sha256,instanceId:opaqueKey,acceptanceRequestHash:sha256});
@@ -24,6 +25,7 @@ export const acceptancePreparationObservation=z.discriminatedUnion('state',[
 ]);
 const bound={principalId:opaqueKey,operationId:ids.operation,requestHash:sha256};
 export const acceptanceReadinessRequests={
+  getCandidateAcceptancePreparationPage:z.strictObject({principalId:opaqueKey,runId:ids.run,candidateId:ids.candidate,policyHash:sha256.optional(),afterSequence:z.number().int().nonnegative().safe().default(0),limit:z.number().int().min(1).max(100).default(20)}),
   verifyAcceptancePreparation:z.strictObject(bound),
   getAcceptanceReadiness:z.strictObject(bound),
   recordAcceptancePreparationObservation:z.strictObject({...bound,expectedPreparationRevision:z.number().int().nonnegative().safe(),expectedSequence:z.number().int().nonnegative().safe(),observation:acceptancePreparationObservation}),
@@ -44,6 +46,7 @@ export interface AcceptancePreparationBackend {
   inspect(preparation:AcceptancePreparation):Promise<AcceptancePreparationObservation>;
 }
 export interface AcceptanceReadinessResults {
+  getCandidateAcceptancePreparationPage:z.output<typeof acceptancePreparationList>;
   verifyAcceptancePreparation:{allowed:boolean;reasonCode:string|null};
   getAcceptanceReadiness:AcceptanceReadiness;
   recordAcceptancePreparationObservation:AcceptanceReadiness;

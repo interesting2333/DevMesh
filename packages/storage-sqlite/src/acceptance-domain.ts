@@ -43,10 +43,16 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
     }else if(data.strategy!=='INITIAL')fail('ACCEPTANCE_SOURCE_CHANGED');
     return {run,candidate,data,source};
   }
-  function current(r:Row){try{const request=acceptancePreparationRequest.parse(json(r.request_json)),b=basis(String(r.principal_id),request);return canonical(b.source)===canonical(request.source)&&b.run.run_epoch===request.runEpoch;}catch(error){if(error instanceof StorageError)return false;throw error;}}
-  const view=(r:Row):AcceptancePreparation=>{
+  function current(r:Row,cache?:Map<string,boolean>){
+    const request=acceptancePreparationRequest.parse(json(r.request_json));
+    const key=cache?canonical({principalId:r.principal_id,runId:request.runId,candidateId:request.candidateId,candidateRevision:request.candidateRevision,manifestHash:request.manifestHash,reviewHash:request.reviewHash,expectedAcceptedReleaseId:request.expectedAcceptedReleaseId,dataPlanHash:request.dataPlanHash,runEpoch:request.runEpoch,source:request.source}):undefined;
+    if(key!==undefined&&cache!.has(key))return cache!.get(key)!;
+    let result:boolean;try{const b=basis(String(r.principal_id),request);result=canonical(b.source)===canonical(request.source)&&b.run.run_epoch===request.runEpoch;}catch(error){if(error instanceof StorageError)result=false;else throw error;}
+    if(key!==undefined)cache!.set(key,result);return result;
+  }
+  const view=(r:Row,qualifications?:Map<string,boolean>):AcceptancePreparation=>{
     const commit=get('SELECT acceptance_operation_id FROM acceptance_commits WHERE preparation_operation_id=?',r.operation_id!),abort=get('SELECT 1 FROM acceptance_abort_decisions WHERE preparation_operation_id=?',r.operation_id!),aborted=get('SELECT 1 FROM acceptance_abort_completions WHERE preparation_operation_id=?',r.operation_id!);
-    return {operationId:String(r.operation_id),projectId:String(r.project_id),runId:String(r.run_id),candidateId:String(r.candidate_id),policyHash:String(r.policy_hash),releaseId:String(r.release_id),requestHash:String(r.request_hash),request:acceptancePreparationRequest.parse(json(r.request_json)),state:r.state as AcceptancePreparation['state'],revision:Number(r.revision),qualification:current(r)?'CURRENT':'STALE',errorCode:r.error_code as string|null,createdAt:String(r.created_at),updatedAt:String(r.updated_at),resolution:commit?'COMMITTED':aborted?'ABORTED':abort?'ABORTING':r.state==='FAILED'?'UNSENT_FAILED':'UNRESOLVED',acceptanceOperationId:commit?String(commit.acceptance_operation_id):null};
+    return {operationId:String(r.operation_id),projectId:String(r.project_id),runId:String(r.run_id),candidateId:String(r.candidate_id),policyHash:String(r.policy_hash),releaseId:String(r.release_id),requestHash:String(r.request_hash),request:acceptancePreparationRequest.parse(json(r.request_json)),state:r.state as AcceptancePreparation['state'],revision:Number(r.revision),qualification:current(r,qualifications)?'CURRENT':'STALE',errorCode:r.error_code as string|null,createdAt:String(r.created_at),updatedAt:String(r.updated_at),resolution:commit?'COMMITTED':aborted?'ABORTED':abort?'ABORTING':r.state==='FAILED'?'UNSENT_FAILED':'UNRESOLVED',acceptanceOperationId:commit?String(commit.acceptance_operation_id):null};
   };
   function writeGate(datasetId:string):PreviewWriteGate{
     const g=get('SELECT * FROM preview_write_gates WHERE dataset_id=?',datasetId)??fail('ACCEPTANCE_WRITE_GATE_MISSING');
@@ -58,8 +64,7 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
     exec('INSERT INTO acceptance_preparation_history VALUES(?,?,?,?)',r.operation_id!,r.revision!,canonical(snapshot),r.updated_at!);
     hooks.changed(String(r.run_id),operationId,String(r.operation_id),r.state as AcceptancePreparation['state']);return view(r);
   }
-  const handlers={
-    getCandidateAcceptanceBasis(i:AcceptanceInput<'getCandidateAcceptanceBasis'>):AcceptanceResults['getCandidateAcceptanceBasis']{return transaction(db,()=>{
+  function candidateBasis(i:AcceptanceInput<'getCandidateAcceptanceBasis'>):AcceptanceResults['getCandidateAcceptanceBasis']{
       const run=plans.authorized(i.principalId,i.runId),candidate=freezes.getCandidate(i),review=reviews.getReview(i),data=candidate.manifest.delivery.record.dataPlan!;
       const currentAcceptedReleaseId=(get('SELECT accepted_release_id FROM projects WHERE project_id=?',candidate.projectId)!.accepted_release_id??null) as string|null,dataPlanHash=digest(canonical(data));
       const keys={candidateId:i.candidateId,candidateRevision:candidate.revision,manifestHash:candidate.manifestHash,reviewHash:review.reviewHash,expectedAcceptedReleaseId:data.sourceReleaseId,dataPlanHash};
@@ -73,12 +78,16 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
       const canConfirmReplacement=reason===null&&data.strategy==='REPLACE'&&!replacementConfirmed;
       if(reason===null){if(!configured)reason='BACKEND_UNAVAILABLE';else if(unresolved)reason='PREPARATION_UNRESOLVED';else if(get("SELECT 1 FROM preview_effects WHERE project_id=? AND state IN ('PREPARED','SENT','UNKNOWN')",candidate.projectId))reason='EFFECT_UNRESOLVED';else if(data.strategy==='REPLACE'&&!replacementConfirmed)reason='REPLACEMENT_CONFIRMATION_REQUIRED';}
       return parseContract(acceptanceBasisView,{...keys,projectId:candidate.projectId,runId:i.runId,codeCommit:candidate.manifest.codeCommit,dataPlan:data,currentAcceptedReleaseId,resourceRevision:Number(run.resource_revision),qualification:candidate.qualification,configured,policyHash:configured?i.policyHash!:null,replacementConfirmed,blockedByPreparationOperationId:unresolved?String(unresolved.operation_id):null,canManage:run.membership==='owner',canPrepare:reason===null,canConfirmReplacement,reason});
-    });},
-    listCandidateAcceptancePreparations(i:AcceptanceInput<'listCandidateAcceptancePreparations'>):AcceptanceResults['listCandidateAcceptancePreparations']{return transaction(db,()=>{
+  }
+  function listCandidatePreparations(i:AcceptanceInput<'listCandidateAcceptancePreparations'>):AcceptanceResults['listCandidateAcceptancePreparations']{
+      const qualifications=new Map<string,boolean>();
       plans.authorized(i.principalId,i.runId);freezes.getCandidate(i);
       const rows=all('SELECT rowid sequence,* FROM acceptance_preparations WHERE run_id=? AND candidate_id=? AND rowid>? ORDER BY rowid LIMIT ?',i.runId,i.candidateId,i.afterSequence,i.limit+1),page=rows.slice(0,i.limit);
-      return {items:page.map(r=>({sequence:Number(r.sequence),preparation:view(r)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};
-    });},
+      return {items:page.map(r=>({sequence:Number(r.sequence),preparation:view(r,qualifications)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};
+  }
+  const handlers={
+    getCandidateAcceptanceBasis(i:AcceptanceInput<'getCandidateAcceptanceBasis'>){return transaction(db,()=>candidateBasis(i));},
+    listCandidateAcceptancePreparations(i:AcceptanceInput<'listCandidateAcceptancePreparations'>){return transaction(db,()=>listCandidatePreparations(i));},
     registerAcceptanceBackendPolicy(i:AcceptanceInput<'registerAcceptanceBackendPolicy'>){return transaction(db,()=>{const member=get('SELECT role FROM project_members WHERE project_id=? AND principal_id=?',i.projectId,i.principalId)??fail('RESOURCE_NOT_FOUND',404);if(member.role!=='owner')fail('FORBIDDEN',403);const body=canonical(i.policy),policyHash=digest(body);exec('INSERT OR IGNORE INTO acceptance_backend_policies VALUES(?,?,?,?,?)',i.projectId,policyHash,body,i.principalId,now());return {policyHash,policy:i.policy};});},
     recordAcceptanceReplacementDecision(i:AcceptanceInput<'recordAcceptanceReplacementDecision'>){
       if(i.meta.scopeId!==i.runId)fail('OPERATION_SCOPE_INVALID',422);const {meta,ifMatch:_match,...payload}=i;
@@ -126,5 +135,6 @@ export function createAcceptanceDomain(db:DatabaseSync,plans:ReturnType<typeof c
     },
     listAcceptancePreparationHistory(i:AcceptanceInput<'listAcceptancePreparationHistory'>){return transaction(db,()=>{const r=scoped(i.principalId,row(i.operationId));if(r.request_hash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');const rows=all('SELECT * FROM acceptance_preparation_history WHERE operation_id=? AND sequence>? ORDER BY sequence LIMIT ?',i.operationId,i.afterSequence,i.limit+1),page=rows.slice(0,i.limit);return {items:page.map(r=>({sequence:Number(r.sequence),snapshot:json(r.snapshot_json)})),nextSequence:rows.length>i.limit?Number(page.at(-1)!.sequence):null};});},
   };
-  return {getPreparation:(i:AcceptanceInput<'getAcceptancePreparation'>)=>view(scoped(i.principalId,row(i.operationId))),execute(method:AcceptanceMethod,input:unknown):unknown{const parsed=parseContract(acceptanceRequests[method],input);return (handlers[method] as (i:unknown)=>unknown)(parsed);}};
+  // Internal synchronous readers are composed only inside a Worker transaction.
+  return {getCandidateBasis:candidateBasis,listCandidatePreparations,getPreparation:(i:AcceptanceInput<'getAcceptancePreparation'>)=>view(scoped(i.principalId,row(i.operationId))),execute(method:AcceptanceMethod,input:unknown):unknown{const parsed=parseContract(acceptanceRequests[method],input);return (handlers[method] as (i:unknown)=>unknown)(parsed);}};
 }

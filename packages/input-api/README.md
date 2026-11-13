@@ -47,3 +47,13 @@ POST /candidates/:candidateId:accept现在使用AcceptCandidate完整两阶段�
 mountInputApi的acceptance选项仅供可信宿主：policies为已登记projectId→policyHash快照，commit必须组合ReleaseAcceptor；startPlatform通过显式acceptancePolicies安装该组合。配置缺省关闭新准备／接受；DB须有准确原策略且满足模板与数据方案。不要将接受后端主体作为用户身份，也不要用storage.commitReleaseAcceptance直接代替材料预检。已成功原请求可在配置关闭后恢复，新的请求仍关闭，授权继续复核。字段／范围校验、原操作去重和If-Match由领域再次执行。
 
 准备／数据后端的注册、定时恢复／advance由可信宿主另行装配，此HTTP入口不自动调用它们。公共状态去除storageKey、原proof、端点和后端主体；完整状态仍保留在私有控制面供可信适配器恢复。当前CLI没有企业IdentityResolver或默认接受策略／Runner后端，不能把本地协议夹具当成可部署的完整产品登录与执行环境。
+
+## 接受页面与浏览器恢复
+
+审查页面链接到 /runs/:runId/candidates/:candidateId/acceptance/view，受保护的同级client.js由第三个独立单入口IIFE构建。共享当前成员鉴权、no-store及nonce CSP，默认无身份继续503；脚本前后复核成员，JSON引导转义。没有公共后端登记或健康回执入口。
+
+页面显示固定数据方案／来源和准确版本，REPLACE单独确认；准备、未派发关闭、已派发有理由撤销与最终接受分别由用户明确确认。GET只读。历史每页20项；ABORTING保持清理待核实，不声称物理完成。刷新或切换原准备会清空勾选；最终接受使用选中原准备的完整依据和观察，writer再做准确CAS。
+
+会话存储键devmesh.acceptance.pending:<runId>按标签页保存原命令，POST之前持久保存UUID、正文、If-Match和原candidate／operation。丢回执／刷新仅显式恢复同一请求，不自动POST或改键。未知状态、新记录损坏或存储不可用关闭新动作；已知409／412／422／428的原提交仍须成功刷新核对后显式放弃。撤权发现后移除页面中的依据／历史／回执，原请求记录不自动换身份重试。接口默认关闭与真实身份／后端装配要求见上节。
+
+原准备列表使用getCandidateAcceptancePreparationPage私有Worker读取，在同步事务内形成去除私有proof的整页投影，资格缓存仅限本次页内相同主体／固定依据／epoch／来源。API仍在响应前核实当前成员，commit配置缺失时清除canCommit；写入权限／CAS独立检查，浏览器15秒超时不放宽。

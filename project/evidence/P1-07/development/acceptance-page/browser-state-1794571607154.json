@@ -1,0 +1,20 @@
+{
+  "test": "actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements",
+  "url": "http://127.0.0.1:58200/api/v1/runs/run_32964658a50b419787edde3476ebed02/candidates/candidate_e9e423476bbc42dc9d3bb84f53b04ee3/acceptance/view",
+  "body": "DevMesh\n返回逐项审查\n刷新接受状态\n核对数据，再接受版本。\n\n先固定接受依据并准备数据与服务。准备就绪后，还需要你单独确认最终接受。\n\n原接受已核实并保存。发布状态请进入已接受版本查看。\n\n已过期候选\n候选修订 1\n\n代码提交：cccccccccccccccccccccccccccccccccccccccc\n\n查看固定依据摘要\n\n此候选已过期，请返回当前候选。\n\n本次使用的数据\n\n首次初始化 · 空数据\n\n方案来源版本\n无 · 首次初始化\n冻结接受指针\n无\n当前接受指针\nrelease_e1b749f142be41019852c02cf3d73a73\n\n数据方案已随候选固定。如需改变策略，请重新形成候选并审查。\n\n1. 准备接受\n\n保存固定依据，等待可信后端准备准确的数据和只读服务。\n\n我已核对候选、数据方案和来源版本\n创建接受准备\n2. 核实原准备\n版本已接受\n\nop_7609a5d865c049d0afb4ec2983840728\n\n派发记录\n已派发\n当前就绪观察\n就绪依据已过期\n候选依据\n已过期\n创建时间\n2026年11月13日 20:06\n查看原准备依据摘要\n查看已接受版本与当前发布状态\n导出已接受版本\n原接受已确认\n\nrelease_e1b749f142be41019852c02cf3d73a73\n\n2026年11月13日 20:06 · user_1\n\n原接受回执的发布状态：待发布。当前发布进度请进入已接受版本查看。\n\n准备历史\n\nop_7609a5d865c049d0afb4ec2983840728\n\n2026年11月13日 20:06 · 版本已接受\n\n查看此原准备\n上一页准备\n下一页准备",
+  "errors": [],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:58200/api/v1/runs/run_32964658a50b419787edde3476ebed02/candidates/candidate_e9e423476bbc42dc9d3bb84f53b04ee3/acceptance/preparations",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:58200/api/v1/candidates/candidate_e9e423476bbc42dc9d3bb84f53b04ee3:accept",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    }
+  ]
+}

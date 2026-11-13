@@ -1,0 +1,7 @@
+{
+  "test": "explicit display fixtures show replacement and migration plans while unconfigured real entry stays closed",
+  "url": "http://127.0.0.1:58691/api/v1/runs/run_71a88203c0374ad28c4c5a62e13db2e4/candidates/candidate_0de23b8a4ba24359b0ed0d80eddce943/acceptance/view",
+  "body": "DevMesh\n返回逐项审查\n刷新接受状态\n核对数据，再接受版本。\n\n先固定接受依据并准备数据与服务。准备就绪后，还需要你单独确认最终接受。\n\n当前候选\n候选修订 1\n\n代码提交：cccccccccccccccccccccccccccccccccccccccc\n\n查看固定依据摘要\n本次使用的数据\n\n保留原业务数据，并执行此版本固定的迁移。\n\n迁移材料：artifact_display_migration\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n方案来源版本\nrelease_display_source\n冻结接受指针\nrelease_display_source\n当前接受指针\nrelease_display_source\n\n数据方案已随候选固定。如需改变策略，请重新形成候选并审查。\n\n1. 准备接受\n\n保存固定依据，等待可信后端准备准确的数据和只读服务。\n\n我已核对候选、数据方案和来源版本\n创建接受准备\n准备历史\n\n此候选尚无接受准备。\n\n上一页准备\n下一页准备",
+  "errors": [],
+  "failedRequests": []
+}

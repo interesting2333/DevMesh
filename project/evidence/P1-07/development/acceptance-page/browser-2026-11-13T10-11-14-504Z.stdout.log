@@ -1,0 +1,75 @@
+TAP version 13
+# (node:15788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:15788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:15788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements
+not ok 1 - actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements
+  ---
+  duration_ms: 215785.5936
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\acceptance-page.test.mjs:14:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    locator.check: Timeout 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByLabel('我已检查此原准备及就绪依据，确认接受这个版本', { exact: true })[22m
+    [2m    - locator resolved to <input disabled type="checkbox"/>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not enabled[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not enabled[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    51 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is not enabled[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+    
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    TestContext.<anonymous> (D:\yms\AI\DevMesh\tests\browser\acceptance-page.test.mjs:23:323)
+  ...
+# (node:15788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:15788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React closes only unsent originals and records a sent abort without claiming cleanup
+not ok 2 - actual React closes only unsent originals and records a sent abort without claiming cleanup
+  ---
+  duration_ms: 229653.2519
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\acceptance-page.test.mjs:28:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    locator.waitFor: Timeout 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('region', { name: '原接受准备', exact: true }).getByText('未派发准备已关闭', { exact: true }) to be visible[22m
+    
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    TestContext.<anonymous> (D:\yms\AI\DevMesh\tests\browser\acceptance-page.test.mjs:31:179)
+  ...
+# (node:15788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:15788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React blocks damaged pending records, pages originals and clears protected data after revocation
+not ok 3 - actual React blocks damaged pending records, pages originals and clears protected data after revocation
+  ---
+  duration_ms: 383294.4637
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\acceptance-page.test.mjs:36:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 360000ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# (node:15788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)

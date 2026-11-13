@@ -1308,6 +1308,20 @@ POST /candidates/:candidateId:accept 使用本节表格的完整两阶段正文�
 
 可信宿主通过startPlatform的acceptancePolicies提供projectId→已登记policyHash快照，Input API由宿主装配既有ReleaseAcceptor；默认不配置。DB中的策略须匹配冻结模板／数据方案；客户端不得选择未在宿主快照启用的策略。缺配置关闭新准备／接受，但成员读取原状态、owner核实已提交原请求及请求适用清理不依赖重启新后端。此入口不自动登记策略、派发准备或提供公共后端回执端点；真实准备／恢复器仍须可信装配。投影不返回原storageKey、Runner端点／主体、原prepared proof／claim或物理围栏细节。
 
+#### 12. 两阶段接受的私有React页面（2026-11-13 开发增量）
+
+候选审查可进入 /runs/:runId/candidates/:candidateId/acceptance/view；同级client.js只对当前成员返回本地React脚本，页面及脚本复用Input API身份、Host／Origin、无Cookie认证和no-store边界。nonce CSP禁止frame、对象、任意外部脚本与原生表单提交，固定接受依据以转义JSON引导；没有默认登录或公开入口。
+
+页面展示准确SHA、candidate／manifest／review／dataPlan摘要、冻结／当前接受指针，INITIAL空／演示、PRESERVE_MIGRATE原迁移材料和REPLACE来源及初始数据均保持候选固定。REPLACE有独立确认，创建准备与最终接受分别勾选确认；刷新、切换原准备或失败会清除确认，避免将旧同意套用新观察。未配置、未审查、来源变化、项目未知操作及就绪缺失分别由服务端能力关闭；查询不驱动后端或刷新健康。
+
+准备历史使用20项原游标，明确区分尚未派发、已派发、UNKNOWN和当前就绪／过期。未派发关闭与有理由撤销各自确认；ABORTING只表示决定已记录，仍显示清理待核实，不能呈现ABORTED。最终接受固定所选原准备revision、requestHash、原观察sequence／proofHash及其接受依据，不用当前候选摘要替换历史准备。成功显示原接受回执；当时PENDING与已接受版本页面的当前发布状态分开，可进入独立导出。
+
+每Run／标签页在POST前保存原请求种类、正文、UUID及If-Match。准备、替换、关闭、撤销和接受均使用原请求显式核实，重新加载不自动POST；未知结果保留原记录，新动作关闭。明确拒绝后也须成功刷新并由用户决定才丢弃本次填写；损坏或不可写会话存储关闭新提交。当前成员撤权／降权发现后清空受保护内容并关闭操作；请求串行、超时有界、离页取消，BFCache恢复重新加载。
+
+此页面是私有接受入口，可信准备后端advance／恢复消费仍另行装配，未配置时保持关闭。真实企业登录、完整React／Vite工作台、正向后继保留／替换业务链与物理容器验收继续单独完成。
+
+原准备列表通过有界私有Worker请求，在同一次同步事务内读取准确候选／审查依据、全部原准备与readiness；相同原主体、候选版本、审查、数据方案、Run epoch和来源绑定的有效性只在本页事务内复用，不跨请求缓存。各条resolution、proof与当前健康仍独立投影，响应前再次复核成员；不会逐条往返Worker。公开能力属于读取时观察，不能替代写入时的当前owner、原正文／版本／观察校验；GET不更新健康或派发。
+
 ---
 
 ## 13. 执行恢复与交付

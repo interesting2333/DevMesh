@@ -1,0 +1,7 @@
+{
+  "test": "actual React closes only unsent originals and records a sent abort without claiming cleanup",
+  "url": "http://127.0.0.1:58348/api/v1/runs/run_4907ca8df91c464fa480fb2da2b843eb/candidates/candidate_54029c6026c5400b96d9718a0cf1f36b/acceptance/view",
+  "body": "DevMesh\n返回逐项审查\n刷新接受状态\n核对数据，再接受版本。\n\n先固定接受依据并准备数据与服务。准备就绪后，还需要你单独确认最终接受。\n\n原撤销决定已保存，清理完成情况请核实原准备。\n\n当前候选\n候选修订 1\n\n代码提交：cccccccccccccccccccccccccccccccccccccccc\n\n查看固定依据摘要\n\n项目已有未决准备，请先核实原准备。\n\n项目未决准备：op_91e414d12c1d4823a1ae2efc1b19c1e0\n\n本次使用的数据\n\n首次初始化 · 空数据\n\n方案来源版本\n无 · 首次初始化\n冻结接受指针\n无\n当前接受指针\n无\n\n数据方案已随候选固定。如需改变策略，请重新形成候选并审查。\n\n1. 准备接受\n\n保存固定依据，等待可信后端准备准确的数据和只读服务。\n\n我已核对候选、数据方案和来源版本\n创建接受准备\n2. 核实原准备\n撤销决定已记录 · 清理待核实\n\nop_91e414d12c1d4823a1ae2efc1b19c1e0\n\n派发记录\n已派发\n当前就绪观察\n暂时无法核实就绪\n候选依据\n当前有效\n创建时间\n2026年11月13日 20:06\n查看原准备依据摘要\n\n撤销决定已记录。原实例清理、数据撤权和来源恢复仍需核实；此状态不表示清理完成。\n\n准备历史\n\nop_7e9ce1d6a7fb46bd8afd3abdcf066c90\n\n2026年11月13日 20:06 · 未派发准备已关闭\n\n查看此原准备\n\nop_91e414d12c1d4823a1ae2efc1b19c1e0\n\n2026年11月13日 20:06 · 撤销决定已记录 · 清理待核实\n\n查看此原准备\n上一页准备\n下一页准备",
+  "errors": [],
+  "failedRequests": []
+}

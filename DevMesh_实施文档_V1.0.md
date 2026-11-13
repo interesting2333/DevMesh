@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 2719f07b03e4ccecf7480d878d8d8c36c7d728377e61efa0b5d6027ba6c37244 |
+| DevMesh_技术设计方案_V1.1.md | c9bf7133e413896885a1d7e67a25a03840edeef36aa41f3b3a23bf681feaba8f |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | b1c68a54485ac5b346974cca533b758a23676539b176ca78ce80f1ae514e88c8 |
+| DevMesh_产品验收场景_V10.0.md | 0a439a9fe20c08f372527196b8d53c393bc5f542513446c0106f5c12fbf0ae5c |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -557,3 +557,11 @@ Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend
 startPlatform显式acceptancePolicies指定项目已登记策略快照，仅在启用Input API时组合真实ReleaseAcceptor；不自动登记策略、安装身份或推进后端。原键成功恢复先于当前配置／新版本检查，仍检查当前owner与原正文；已提交丢ACK可在关闭新接受配置后核实，不重新读取或生成材料。状态投影去除目录、端点、后端主体和proof正文；原状态和分页只读。links.preparation连接准确准备查询，普通InputOperation仍只服务输入类操作。
 
 本轮本地Worker／HTTP与实际材料字节预检验证独立记录；源码／OCI／Runner／fences／手工观察为明确夹具，不据此通过正式保留／替换、物理清理、Linux／gVisor、企业登录、完整工作台或产品验收。前置和门槛保持原状态。见project/evidence/P1-07/acceptance-entry-development-review.md。
+
+### P1-07 私有接受React入口增量
+
+实现准确候选接受view和当前成员保护的单入口React bundle，审查页跳转固定接受依据。数据方案和来源只读，替换、准备、未派发关闭、有理由撤销、最终接受分别明确确认，刷新／原准备切换清空勾选。原历史20项游标，UNKNOWN不重建，ABORTING显示清理待核实，成功回执与当前发布状态分开，连接原Release及独立导出。
+
+每Run／标签页POST前记录原UUID／正文／If-Match，准备与T5丢HTTP应答后，重开Worker和页面仅显式核实原请求；新动作／自动重试关闭，损坏存储须核对后清除。撤权时清空受保护页面，页面查询不驱动可信后端。实际React／Edge、HTTP、Worker、CAS材料预检和T5开发验证另留原始记录；REPLACE／PRESERVE展示用例是明确响应夹具，不视为正式后继候选或实际数据迁移。完整4.1／4.3／5.1／5.2、默认后端消费装配、真实登录／容器／围栏及完整工作台验收继续；父工作包和门槛不由页面完成推定。
+
+接受原准备历史使用同一Worker事务的有界投影，按原主体和完整候选／审查／数据／epoch／来源绑定仅在本页复用有效性检查；响应前再次复核成员，不跨请求缓存或放宽15秒浏览器请求限制。用例记录Worker往返预算、实际耗时、降权／恢复及撤权，避免20项历史按条重复核验导致页面超时。

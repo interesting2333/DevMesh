@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-13T11:04:09.225Z",
+  "reason": "Third browser batch stopped proactively after the completed HTTP profile measured a 20-item page at 80.97 seconds, exceeding the unchanged 15-second browser request limit. Repair bounded read projection before running final browser checks; this incomplete run is not pass evidence.",
+  "driver": {
+    "ProcessId": 30352,
+    "ParentProcessId": 33876,
+    "CommandLine": "D:\\Environments\\nodejs\\node.exe .cache/p130-driver.mjs browser"
+  },
+  "child": {
+    "ProcessId": 20544,
+    "ParentProcessId": 30352,
+    "CommandLine": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/acceptance-page.test.mjs tests/browser/review-entry.test.mjs"
+  }
+}

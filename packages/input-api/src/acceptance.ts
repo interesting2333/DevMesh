@@ -5,6 +5,8 @@ import {StorageError} from '@devmesh/storage-sqlite';
 import type {Request as StorageRequest,OperationResult,AcceptancePreparation} from '@devmesh/storage-sqlite';
 import type {LocalContentStore} from '@devmesh/blob-store';
 import type {Identity} from './index.js';
+import {readFile} from 'node:fs/promises';
+import {acceptancePage} from './acceptance-page.js';
 
 /** Only trusted composition may install this. Policies must already be registered;
  * commit must perform the ReleaseAcceptor's actual frozen-content preflight. */
@@ -42,7 +44,14 @@ export function mountAcceptanceRoutes(router:Router,content:LocalContentStore,ac
     const match=request.headers['if-match'];return {meta:{principalId:who.principalId,scopeId:who.runId,idempotencyKey:parseContract(idempotencyKey,request.headers['idempotency-key'])},runId:who.runId,...(match===undefined?{}:{ifMatch:parseContract(z.string().max(128),match)})};
   }
   router.get(base,guarded(async(request,response,identity)=>{empty.parse(request.query);const b=await basis(subject(request,identity));response.setHeader('ETag','"r'+b.resourceRevision+'"');response.json(b);}));
-  router.get(base+'/preparations',guarded(async(request,response,identity)=>{const who=subject(request,identity),query=parseContract(page,request.query),list=await storage.request('listCandidateAcceptancePreparations',{...who,...query}),items=[];for(const item of list.items)items.push({sequence:item.sequence,preparation:await project(who,item.preparation)});await storage.request('getReleaseCandidate',who);response.json(parseContract(acceptancePreparationList,{items,nextSequence:list.nextSequence}));}));
+  router.get(base+'/view',guarded(async(request,response,identity)=>{empty.parse(request.query);const value=await basis(subject(request,identity)),page=acceptancePage(value);response.setHeader('Referrer-Policy','no-referrer');response.setHeader('Content-Security-Policy',page.policy);response.type('text/html; charset=utf-8').send(page.html);}));
+  router.get(base+'/client.js',guarded(async(request,response,identity)=>{empty.parse(request.query);const who=subject(request,identity);await basis(who);const bytes=await readFile(new URL('./web/acceptance/acceptance-client.js',import.meta.url));await basis(who);response.type('application/javascript; charset=utf-8').send(bytes);}));
+  router.get(base+'/preparations',guarded(async(request,response,identity)=>{
+    const who=subject(request,identity),query=parseContract(page,request.query),candidate=await storage.request('getReleaseCandidate',who),policyHash=policies.get(candidate.projectId);
+    const list=await storage.request('getCandidateAcceptancePreparationPage',{...who,...query,...(policyHash?{policyHash}:{})});
+    await storage.request('getReleaseCandidate',who);
+    response.json(parseContract(acceptancePreparationList,{...list,items:list.items.map(item=>({...item,preparation:{...item.preparation,canCommit:Boolean(commit)&&item.preparation.canCommit}}))}));
+  }));
   router.get(base+'/preparations/:operationId',guarded(async(request,response,identity)=>{empty.parse(request.query);const who=subject(request,identity),p=await original(who,parseContract(ids.operation,request.params.operationId)),value=await project(who,p);response.setHeader('ETag','"r'+value.resourceRevision+'"');response.json(value);}));
   router.post(base+'/preparations',guarded(async(request,response,identity)=>{
     const who=subject(request,identity),conditional=write(request,who),body=parseContract(beginAcceptanceInput,request.body),b=await basis(who);

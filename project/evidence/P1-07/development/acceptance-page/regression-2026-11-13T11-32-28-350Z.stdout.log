@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: checked-in positive and negative examples are executable contracts
+ok 1 - checked-in positive and negative examples are executable contracts
+  ---
+  duration_ms: 359.7294
+  type: 'test'
+  ...
+# Subtest: ID namespaces, safe revisions and version literals cannot be coerced
+ok 2 - ID namespaces, safe revisions and version literals cannot be coerced
+  ---
+  duration_ms: 18.1299
+  type: 'test'
+  ...
+# Subtest: schema errors retain field paths in a safe standard envelope
+ok 3 - schema errors retain field paths in a safe standard envelope
+  ---
+  duration_ms: 30.4939
+  type: 'test'
+  ...
+# Subtest: input and display names count Unicode code points at exact boundaries
+ok 4 - input and display names count Unicode code points at exact boundaries
+  ---
+  duration_ms: 19.532
+  type: 'test'
+  ...
+# Subtest: conditional requests require a current single strong safe ETag
+ok 5 - conditional requests require a current single strong safe ETag
+  ---
+  duration_ms: 10.0097
+  type: 'test'
+  ...
+# Subtest: a current resource ETag cannot validate old business content or another review
+ok 6 - a current resource ETag cannot validate old business content or another review
+  ---
+  duration_ms: 7.3727
+  type: 'test'
+  ...
+# Subtest: both execution owners work only within the authority scope
+ok 7 - both execution owners work only within the authority scope
+  ---
+  duration_ms: 10.8787
+  type: 'test'
+  ...
+# Subtest: host IDs, epochs, attempts, activation and grant are all current facts
+ok 8 - host IDs, epochs, attempts, activation and grant are all current facts
+  ---
+  duration_ms: 14.2475
+  type: 'test'
+  ...
+# Subtest: validity is half-open and cannot be widened by caller JSON
+ok 9 - validity is half-open and cannot be widened by caller JSON
+  ---
+  duration_ms: 13.0779
+  type: 'test'
+  ...
+# Subtest: forged scope and read-to-write escalation are denied
+ok 10 - forged scope and read-to-write escalation are denied
+  ---
+  duration_ms: 7.9413
+  type: 'test'
+  ...
+# Subtest: command target and payload are discriminated independently of client intent
+ok 11 - command target and payload are discriminated independently of client intent
+  ---
+  duration_ms: 11.4411
+  type: 'test'
+  ...
+# Subtest: event time fallback, persisted versions and host fields cannot contradict payload
+ok 12 - event time fallback, persisted versions and host fields cannot contradict payload
+  ---
+  duration_ms: 21.5578
+  type: 'test'
+  ...
+# Subtest: token deltas do not become durable business events
+ok 13 - token deltas do not become durable business events
+  ---
+  duration_ms: 7.2025
+  type: 'test'
+  ...
+# Subtest: A2A completed, findings and business success have different representations
+ok 14 - A2A completed, findings and business success have different representations
+  ---
+  duration_ms: 18.7012
+  type: 'test'
+  ...
+# Subtest: reports must bind one exact commit, including optional preview
+ok 15 - reports must bind one exact commit, including optional preview
+  ---
+  duration_ms: 9.1652
+  type: 'test'
+  ...
+# Subtest: plan data has a scale limit and cannot embed a JavaScript completion checker
+ok 16 - plan data has a scale limit and cannot embed a JavaScript completion checker
+  ---
+  duration_ms: 49.5409
+  type: 'test'
+  ...
+# Subtest: OpenAPI body references and route parameters resolve to shared schemas
+ok 17 - OpenAPI body references and route parameters resolve to shared schemas
+  ---
+  duration_ms: 1085.7768
+  type: 'test'
+  ...
+# Subtest: OpenAPI drift check returns a real process success for the generated artifact
+ok 18 - OpenAPI drift check returns a real process success for the generated artifact
+  ---
+  duration_ms: 4255.2827
+  type: 'test'
+  ...
+# (node:35980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: platform input configuration resolves the actual trusted Git baseline and requires an injected identity
+ok 19 - platform input configuration resolves the actual trusted Git baseline and requires an injected identity
+  ---
+  duration_ms: 31967.0479
+  type: 'test'
+  ...
+# (node:39648) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39648) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39648) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39648) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: private review HTTP/page/asset are read-only; an explicit owner result preserves facts, CAS and original receipt
+ok 20 - private review HTTP/page/asset are read-only; an explicit owner result preserves facts, CAS and original receipt
+  ---
+  duration_ms: 75594.7055
+  type: 'test'
+  ...
+# (node:39648) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39648) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: viewer, foreign candidate, stale hashes and injected identity cannot write; revocation closes all entry reads
+ok 21 - viewer, foreign candidate, stale hashes and injected identity cannot write; revocation closes all entry reads
+  ---
+  duration_ms: 67319.747
+  type: 'test'
+  ...
+# (node:39648) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39648) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: explicit rejection corrections and withdrawals append history and block acceptance preparation without applying changes
+ok 22 - explicit rejection corrections and withdrawals append history and block acceptance preparation without applying changes
+  ---
+  duration_ms: 48525.6379
+  type: 'test'
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 258978.618

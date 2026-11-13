@@ -1,5 +1,5 @@
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
-import {parseContract} from '@devmesh/contracts';
+import {parseContract,acceptancePreparationList} from '@devmesh/contracts';
 import type {createAcceptanceDomain} from './acceptance-domain.js';
 import type {AcceptancePreparation} from './acceptance-protocol.js';
 import {acceptanceReadinessRequests,acceptancePreparedProof,acceptancePreparationObservation} from './acceptance-readiness-protocol.js';
@@ -11,7 +11,7 @@ type Row=Record<string,string|number|null>;
 type Bound=AcceptanceReadinessInput<'getAcceptanceReadiness'>;
 const json=<T>(v:unknown):T=>JSON.parse(String(v)) as T,hash=(v:unknown)=>digest(canonical(v));
 function fail(code:string,status=409):never{throw new StorageError(code,status,'Acceptance readiness requires the original trusted preparation, current fences and exact held service');}
-export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick<ReturnType<typeof createAcceptanceDomain>,'getPreparation'>,changed:(runId:string,operationId:string,sequence:number,state:AcceptancePreparationObservation['state'])=>void){
+export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick<ReturnType<typeof createAcceptanceDomain>,'getPreparation'|'getCandidateBasis'|'listCandidatePreparations'>,changed:(runId:string,operationId:string,sequence:number,state:AcceptancePreparationObservation['state'])=>void){
   const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined,all=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).all(...p) as Row[],exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
   const original=(i:Bound)=>{const p=acceptances.getPreparation(i);if(p.requestHash!==i.requestHash)fail('ACCEPTANCE_REQUEST_CHANGED');return p;};
   const service=(i:Bound)=>{const p=original(i);if(i.principalId!==p.request.backendPrincipalId)fail('FORBIDDEN',403);return p;};
@@ -52,6 +52,16 @@ export function createAcceptanceReadinessDomain(db:DatabaseSync,acceptances:Pick
     catch(error){if(error instanceof StorageError)return {...value,state:'UNAVAILABLE',reasonCode:error.code};throw error;}
   }
   const handlers={
+    getCandidateAcceptancePreparationPage(i:AcceptanceReadinessInput<'getCandidateAcceptancePreparationPage'>){
+      // One synchronous transaction: authorization, candidate basis, all original
+      // qualifications and readiness observe the same database state. No health
+      // refresh or external dispatch occurs, and no private proof leaves this view.
+      const b=acceptances.getCandidateBasis(i),page=acceptances.listCandidatePreparations(i);
+      return parseContract(acceptancePreparationList,{items:page.items.map(({sequence,preparation:p})=>{
+        const ready=view(p),unresolved=p.resolution==='UNRESOLVED',policyCurrent=b.configured&&b.policyHash===p.policyHash;
+        return {sequence,preparation:{operationId:p.operationId,runId:p.runId,candidateId:p.candidateId,releaseId:p.releaseId,requestHash:p.requestHash,revision:p.revision,state:p.state,resolution:p.resolution,qualification:p.qualification,basis:Object.fromEntries(['candidateRevision','manifestHash','reviewHash','expectedAcceptedReleaseId','dataPlanHash'].map(k=>[k,p.request[k as keyof typeof p.request]])),createdAt:p.createdAt,updatedAt:p.updatedAt,acceptanceOperationId:p.acceptanceOperationId,readiness:{state:ready.state,sequence:ready.sequence,proofHash:ready.proofHash,checkedAt:ready.observation?.checkedAt??null},resourceRevision:b.resourceRevision,canCommit:Boolean(unresolved&&b.canManage&&policyCurrent&&p.qualification==='CURRENT'&&ready.state==='READY'&&ready.proof?.service.claim.schemaVersion==='devmesh.acceptance-service-claim.v1'),canCloseUnsent:unresolved&&b.canManage&&p.state==='PREPARED',canAbort:unresolved&&b.canManage&&['SENT','UNKNOWN'].includes(p.state)&&b.currentAcceptedReleaseId===p.request.expectedAcceptedReleaseId}};
+      }),nextSequence:page.nextSequence});
+    },
     verifyAcceptancePreparation(i:AcceptanceReadinessInput<'verifyAcceptancePreparation'>){const p=service(i);if(p.resolution!=='UNRESOLVED'||!['SENT','UNKNOWN'].includes(p.state)||get('SELECT 1 FROM acceptance_prepared_proofs WHERE operation_id=?',p.operationId))return {allowed:false,reasonCode:'ACCEPTANCE_DISPATCH_CLOSED'};if(p.qualification!=='CURRENT')return {allowed:false,reasonCode:'ACCEPTANCE_BASIS_CHANGED'};if(pending(p.projectId))return {allowed:false,reasonCode:'ACCEPTANCE_EFFECT_UNRESOLVED'};return {allowed:true,reasonCode:null};},
     getAcceptanceReadiness(i:AcceptanceReadinessInput<'getAcceptanceReadiness'>){return view(original(i));},
     recordAcceptancePreparationObservation(i:AcceptanceReadinessInput<'recordAcceptancePreparationObservation'>){

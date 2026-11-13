@@ -1,0 +1,82 @@
+TAP version 13
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements
+ok 1 - actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements
+  ---
+  duration_ms: 23835.0201
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","prepareRequests":2,"acceptRequests":2,"releaseCount":1,"scope":"Actual React/Edge/HTTP/file-backed Worker/CAS/T5. Source/admission/Runner/OCI/fences/health/manual review and browser identity are explicit fixtures; not physical or product acceptance."}
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React closes only unsent originals and records a sent abort without claiming cleanup
+not ok 2 - actual React closes only unsent originals and records a sent abort without claiming cleanup
+  ---
+  duration_ms: 9872.9035
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\acceptance-page.test.mjs:23:1'
+  failureType: 'testCodeFailure'
+  error: 'Acceptance readiness requires the original trusted preparation, current fences and exact held service'
+  code: 'ACCEPTANCE_NOT_DISPATCHED'
+  name: 'StorageError'
+  stack: |-
+    Worker.<anonymous> (file:///D:/yms/AI/DevMesh/packages/storage-sqlite/dist/index.mjs:115:34)
+    Worker.emit (node:events:508:28)
+    MessagePort.<anonymous> (node:internal/worker:332:53)
+    [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+  ...
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React blocks damaged pending records, pages originals and clears protected data after revocation
+not ok 3 - actual React blocks damaged pending records, pages originals and clears protected data after revocation
+  ---
+  duration_ms: 88406.2557
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\acceptance-page.test.mjs:29:1'
+  failureType: 'testCodeFailure'
+  error: 'page.waitForFunction: Timeout 30000ms exceeded.'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    TestContext.<anonymous> (D:\yms\AI\DevMesh\tests\browser\acceptance-page.test.mjs:32:583)
+  ...
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:31812) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: explicit display fixtures show replacement and migration plans while unconfigured real entry stays closed
+ok 4 - explicit display fixtures show replacement and migration plans while unconfigured real entry stays closed
+  ---
+  duration_ms: 112004.7197
+  type: 'test'
+  ...
+# REPLACE/PRESERVE_MIGRATE in this case are explicit intercepted UI display/command fixtures, not a formal successor candidate or physical migration/replacement chain.
+# (node:16276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+ok 5 - actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+  ---
+  duration_ms: 74822.998
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","originalRequests":2,"durableResults":1,"scope":"Actual local HTTP/Worker/React/Edge; upstream source/admission/Runner/image and browser identity are explicit fixtures; no real model/OIDC/Linux/product acceptance"}
+# (node:16276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)

@@ -1,4 +1,5 @@
-import test from 'node:test';import assert from 'node:assert/strict';
+import test from 'node:test';import assert from 'node:assert/strict';import {mkdir,writeFile} from 'node:fs/promises';
+import {meta} from './fixtures/storage-data.mjs';
 import {acceptanceEntryFixture,beginBody,commitBody} from './fixtures/acceptance-entry.mjs';
 
 const clean=value=>{const text=JSON.stringify(value);for(const privateName of ['storageKey','backendPrincipalId','backendRef','runnerId','endpoint','instanceId','preparedProof','targetFence','claimHash','physical'])assert.equal(text.includes('"'+privateName+'"'),false,privateName);};
@@ -48,8 +49,26 @@ test('HTTP close-unsent and sent abort retain original decisions without claimin
 test('candidate preparation history uses bounded stable cursor pages and unregistered policies stay unavailable',{timeout:300000},async t=>{
   const f=await acceptanceEntryFixture(t,{register:false}),unregistered=await f.read();assert.equal(unregistered.basis.configured,false);assert.equal(unregistered.basis.canPrepare,false);assert.equal((await f.httpPost(f.base+'/preparations',{...beginBody(unregistered.basis),policyHash:f.policyHash},{match:unregistered.response.headers.get('etag')})).status,503);
   await f.storage.request('registerAcceptanceBackendPolicy',f.registration);const ids=[];
-  for(let n=0;n<21;n++){const p=await begin(f);ids.push(p.operationId);const {response}=await detail(f,p.operationId);assert.equal((await f.httpPost(f.base+'/preparations/'+p.operationId+'/close-unsent',{requestHash:p.requestHash},{match:response.headers.get('etag')})).status,200);}
-  const page=await (await f.httpGet(f.base+'/preparations?limit=20')).json();assert.equal(page.items.length,20);assert.deepEqual(page.items.map(i=>i.preparation.operationId),ids.slice(0,20));assert.ok(page.nextSequence);clean(page);
-  const next=await (await f.httpGet(f.base+'/preparations?limit=20&afterSequence='+page.nextSequence)).json();assert.equal(next.items.length,1);assert.equal(next.items[0].preparation.operationId,ids[20]);assert.equal(next.nextSequence,null);
+  const profile={at:new Date().toISOString(),setup:[],pages:[]},started=performance.now();t.after(async()=>{await mkdir('.cache/p130-evidence',{recursive:true});await writeFile('.cache/p130-evidence/history-profile-'+Date.now()+'.json',JSON.stringify(profile,null,2)+'\n');});
+  // One actual HTTP create/close plus real Worker originals for page setup.
+  // Other cases cover owner, CAS, original HTTP recovery and close/abort.
+  for(let n=0;n<21;n++){
+    const p=n===0?await begin(f):await f.call('beginAcceptancePreparation',await f.request());ids.push(p.operationId);
+    if(n===0){const {response}=await detail(f,p.operationId);assert.equal((await f.httpPost(f.base+'/preparations/'+p.operationId+'/close-unsent',{requestHash:p.requestHash},{match:response.headers.get('etag')})).status,200);}
+    else {const current=await f.call('getRun',{runId:f.p.runId});await f.call('failUnsentAcceptancePreparation',{meta:meta(f.p.runId),runId:f.p.runId,operationId:p.operationId,requestHash:p.requestHash,ifMatch:'"r'+current.resourceRevision+'"'});}
+    profile.setup.push({count:n+1,elapsedMs:performance.now()-started});
+  }
+  const listStarted=performance.now();
+  const workerRequests=[],originalRequest=f.storage.request;
+  f.storage.request=function(...args){workerRequests.push(args[0]);return originalRequest.apply(this,args);};
+  let page;try{page=await (await f.httpGet(f.base+'/preparations?limit=20')).json();}finally{f.storage.request=originalRequest;}
+  profile.pages.push({items:page.items.length,elapsedMs:performance.now()-listStarted,workerRequests});
+  assert.ok(workerRequests.length<=5,'Page reads must have a fixed Worker round-trip budget');assert.equal(page.items.length,20);assert.deepEqual(page.items.map(i=>i.preparation.operationId),ids.slice(0,20));assert.ok(page.nextSequence);clean(page);
+  const next=await (await f.httpGet(f.base+'/preparations?limit=20&afterSequence='+page.nextSequence)).json();assert.equal(next.items.length,1);assert.equal(next.items[0].preparation.operationId,ids[20]);assert.equal(next.nextSequence,null);profile.pages.push({items:next.items.length,elapsedMs:performance.now()-listStarted});
   for(const query of ['limit=101','limit=0','afterSequence=-1','afterSequence=9007199254740992','unknown=1'])assert.equal((await f.httpGet(f.base+'/preparations?'+query)).status,422,query);assert.equal(state(f).releases,0);assert.equal(f.fault.reads,0);
+  f.run('UPDATE project_members SET role=? WHERE project_id=? AND principal_id=?','viewer',f.p.projectId,'user_1');
+  const demoted=await (await f.httpGet(f.base+'/preparations?limit=20')).json();assert.equal(demoted.items.length,20);assert.ok(demoted.items.every(({preparation:p})=>p.qualification==='STALE'&&!p.canCommit&&!p.canCloseUnsent&&!p.canAbort));
+  f.run('UPDATE project_members SET role=? WHERE project_id=? AND principal_id=?','owner',f.p.projectId,'user_1');
+  const restored=await (await f.httpGet(f.base+'/preparations?limit=20')).json();assert.ok(restored.items.every(({preparation:p})=>p.qualification==='CURRENT'));
+  f.run('DELETE FROM project_members WHERE project_id=? AND principal_id=?',f.p.projectId,'user_1');assert.equal((await f.httpGet(f.base+'/preparations?limit=20')).status,404);
 });

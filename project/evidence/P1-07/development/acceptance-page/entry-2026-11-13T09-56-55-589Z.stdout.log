@@ -1,0 +1,80 @@
+TAP version 13
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: acceptance basis is inert and new actions require current explicit host policy and owner
+ok 1 - acceptance basis is inert and new actions require current explicit host policy and owner
+  ---
+  duration_ms: 8637.9321
+  type: 'test'
+  ...
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: preparation HTTP recovers the same original after restart and fails closed on mismatched scope or revoked membership
+ok 2 - preparation HTTP recovers the same original after restart and fails closed on mismatched scope or revoked membership
+  ---
+  duration_ms: 8063.2554
+  type: 'test'
+  ...
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual material preflight precedes HTTP T5 and committed ACK recovery preserves one accepted release
+ok 3 - actual material preflight precedes HTTP T5 and committed ACK recovery preserves one accepted release
+  ---
+  duration_ms: 8346.2764
+  type: 'test'
+  ...
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HTTP close-unsent and sent abort retain original decisions without claiming physical cleanup
+ok 4 - HTTP close-unsent and sent abort retain original decisions without claiming physical cleanup
+  ---
+  duration_ms: 9315.9327
+  type: 'test'
+  ...
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:21992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: candidate preparation history uses bounded stable cursor pages and unregistered policies stay unavailable
+ok 5 - candidate preparation history uses bounded stable cursor pages and unregistered policies stay unavailable
+  ---
+  duration_ms: 74527.4787
+  type: 'test'
+  ...
+# (node:33876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: acceptance HTML and bundled React script share exact current-member and inert read boundaries
+ok 6 - acceptance HTML and bundled React script share exact current-member and inert read boundaries
+  ---
+  duration_ms: 82010.2079
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 209185.3236
