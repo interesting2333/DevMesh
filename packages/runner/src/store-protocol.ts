@@ -19,10 +19,13 @@ import {reserveAcceptanceService,acceptanceServiceFact,acceptanceServiceProfile,
 import type {AcceptanceServiceReservation,AcceptanceServiceJournal} from './acceptance-service.js';
 import {acceptanceAbortStoreRequests} from './acceptance-abort.js';
 import type {AcceptanceAbortStoreResults} from './acceptance-abort.js';
+import {releaseRetirementStoreRequests} from './release-retirement.js';
+import type {ReleaseRetirementStoreResults} from './release-retirement.js';
 const owner={controllerId:opaqueKey};
 const previewBound={...owner,reservationId:opaqueKey,requestHash:z.string().regex(/^[a-f0-9]{64}$/)};
 export const storeRequests={
  ...acceptanceAbortStoreRequests,
+ ...releaseRetirementStoreRequests,
  acceptanceServiceReserve:z.strictObject({...owner,...reserveAcceptanceService.shape}),
  acceptanceServiceGet:z.strictObject(previewBound),
  acceptanceServiceByOperation:z.strictObject({...owner,operationId:opaqueKey}),
@@ -82,7 +85,7 @@ export const storeRequests={
 export type RunnerStoreMethod=keyof typeof storeRequests;
 export type StoreInput<M extends RunnerStoreMethod>=z.input<(typeof storeRequests)[M]>;
 export interface InternalJob {job:Job;execution:{workspacePath:string;argv:string[]};leasePermit:Job['request']['permit'];leaseRenewedAt:string}
-export interface StoreResults extends AcceptanceAbortStoreResults {
+export interface StoreResults extends AcceptanceAbortStoreResults,ReleaseRetirementStoreResults {
  acceptanceServiceReserve:AcceptanceServiceReservation;acceptanceServiceGet:AcceptanceServiceReservation;acceptanceServiceByOperation:AcceptanceServiceReservation|null;
  acceptanceServicePage:{items:{sequence:number;reservation:AcceptanceServiceReservation}[];nextSequence:number|null};
  acceptanceServiceDispatch:{dispatch:boolean;reservation:AcceptanceServiceReservation};acceptanceServiceCancel:AcceptanceServiceReservation;acceptanceServiceRecord:AcceptanceServiceReservation;

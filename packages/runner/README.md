@@ -4,6 +4,8 @@
 
 接受服务的私有原请求、容量与容器日志见 [ACCEPTANCE-SERVICES.md](./ACCEPTANCE-SERVICES.md)。该用途与预览分别登记，共享 Runner 全局资源；日志与 RELEASE_HELD 不表示实际容器已启动或接受已完成。
 
+T5 后只读服务退役的原请求日志、容量释放与恢复边界见 [RELEASE-PUBLICATION.md](./RELEASE-PUBLICATION.md)。它是完整可写发布所需的阶段组件，尚不构成可写 Release 服务或发布成功。
+
 ```text
 runner/
   runner-layout.json

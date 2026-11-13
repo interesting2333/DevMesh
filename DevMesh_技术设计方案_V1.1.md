@@ -1553,6 +1553,14 @@ T5原promotion Outbox不可变，原接受回执保留提交时的PENDING。独�
 
 当前实现为发布控制协议、writer与显式通用消费器。Runner独立可写服务的容量／持久阶段、真实物理撤权与guard、实际路由／Release访问入口和导出仍按4.3后续实施，未启用默认平台装配。
 
+#### 13. Runner 发布交接的只读服务退役
+
+RunnerReleaseRetirementBackend只负责发布前半段，显式注入原控制存储、原准备controller、可信移除Driver和永久撤权Authority；缺任一配置关闭。适配器自行从控制库核实原SENT／UNKNOWN发布及固定basis，不能让调用方提交任意清理决定。原T5、prepared proof、服务profile／容器／网络与Runner本地稳定proof必须逐项一致。登记唯一交接后，按REVOKE_PREPARATION→STOP→CONTAINER_REMOVE→NETWORK_REMOVE顺序，每步独立持久SENT／OBSERVED和唯一dispatch。
+
+Authority须永久撤销原准备的acquire／renew／写入，并核实之前已获许可的动作终止，不能用SQLite标志、文件或逻辑门替代物理保证。撤权证明之后才可停止／移除原只读服务；Driver执行前复核控制授权与原动作，移除采用准确ID和独立成功查询证明。容器消失观察、原接受服务REMOVED、容量释放和服务历史同一writer提交，网络消失另记。原profile、claim、prepared proof与数据文件保留；只读服务退役不转为可写、不开放写门、不完成发布。
+
+登记ACK或任一步ACK丢失后只查询已登记原动作，不重复撤权／停止／移除，也不自动开始后续未派发步骤；若中断于两步骤之间则保持未完成，后续恢复协调协议仍须显式实施。登记持续持有dataset交接占用，容器释放容量后也不能被其他预览或接受服务抢占。独立可写服务／容量、后继fence与物理guard、实际路由和Release入口／导出仍继续4.3，缺物理适配器默认关闭。
+
 ---
 
 ## 14. 数据与事务
@@ -1953,6 +1961,12 @@ release_publications按原Outbox唯一登记，状态PENDING／SENT／UNKNOWN／
 
 迁移42保留1～41原字节／checksum，历史Outbox只回填PENDING和首条历史，不制造SENT、proof、路由或OPEN。旧撤销、未知原写及关闭源门不变；新T5的Outbox、发布PENDING和历史在原接受事务一起写入。迁移失败回滚DDL／历史／版本并保持外键约束。发布证明只允许开放本次准确原目标门，原撤销决定仍永久阻止目标开放。
 
+#### 14. Runner 前向迁移10与发布退役事务
+
+Runner v10增加不可变release_retirements和追加release_retirement_actions，绑定原release／preparation／reservation／dataset、完整发布请求、固定门及原服务journal；release、准备、预留和dataset唯一。旧v2～v9迁移正文和摘要不改，迁移失败回滚新表、触发器、identity版本和schema history，外键始终启用。已有v9对象不回填发布许可或成功证明。
+
+交接与撤销决定互斥；数据库屏障阻止旧接受服务新动作／观察／proof／当前事实与其他用途dataset预留。原记录只读准确重放保留。每步固定完整请求和SHA，前序须OBSERVED，观察绑定原对象、原时间范围和永久撤权身份，完成观察不可更改。原容器独立消失证明与REMOVED、容量释放、历史在同一事务；历史写失败全部回滚，未知继续计入容量。原网络尚未移除的已释放记录继续进入按controller有界恢复分页；dataset交接屏障持续保留，后继可写服务须走独立受控交接，不能套用普通preview／acceptance预留。
+
 ---
 
 ## 15. 验证与验收追踪
@@ -2192,5 +2206,9 @@ Runner 撤销专项覆盖无 reservation 的迟到创建拦截、未派发取消
 #### 15. 撤销完成验证边界
 
 P1-07开发复核须覆盖：INITIAL完成后保留原SENT／UNKNOWN并允许新准备；原prepared proof永久不可用；准确重复完成／并发只一次事件；错误决定／清理摘要／原fences／后继generation拒绝；源指针、冻结镜像、可写归属及健康绑定；无关关闭操作和UNKNOWN原写阻止源门重开；原请求结局核实后才继续；完成／门／历史／Run／事件故障逐点回滚；迁移40→41数据及DDL回滚；真实Runner／数据文件Worker／控制库的组合。物理撤权及源服务事实可用明确夹具验证协议，真实Linux／gVisor、可写服务转换、正向保留迁移／替换及独立产品验收另行保留，完整4.1不据此勾选。
+
+#### 15. 发布退役验证边界
+
+P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服务journal绑定；登记和各阶段唯一派发；撤权、停止、容器／网络移除四种ACK丢失与Worker重启原查询；未知前序、错误对象／hash／时钟、错误控制授权及缺配置关闭；消失观察、REMOVED、容量与历史故障回滚；释放容量后dataset仍禁止其他preview／acceptance抢占，原abort决定与交接互斥；原数据文件、profile、claim及proof保留；v9→v10原行／摘要／外键和失败回滚。恢复只查询已派发阶段、不自动继续下一未派发阶段的中断限制须明确记录。物理撤权和Docker事实夹具不替代真实Linux／gVisor验收，退役不替代独立可写服务、guard／后继fence／路由、Release入口／导出与完整4.3。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

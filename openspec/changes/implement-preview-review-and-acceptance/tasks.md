@@ -57,3 +57,5 @@
 4.1 控制撤销完成增量：迁移41、共享恢复协议、原后端原子完成及显式Runner组合器；准确原清理／数据撤权、原fences、旧Release／镜像／源门、原写结局与新鲜可写归属核实后才ABORTED、重开适用源门及解除本准备占用，原派发／proof／数据保留。183项测试、构建／类型／Lint及160份映射通过；两轮失败及修正和构建后独立MJS测试新增如实留证。真实物理源恢复／可写发布适配器、保留迁移／替换正式正向流程及物理产品验收继续实施，完整4.1不勾选，8/13及正式状态／门槛不变。见 `project/evidence/P1-07/acceptance-abort-completion-development-review.md`。
 
 4.3 发布控制增量：迁移42、原后端writer与显式ReleasePublisher，T5原子登记独立PENDING；一次派发固定源／目标门及前代路由，未知仅查原操作。稳定proof、新鲜原服务／路由／后继fence核实后，证明／观察、路由代际、数据状态、目标开门及历史／事件同事务，源门保持关闭。publication-05 69/69；transaction-05 74/74；acceptance-05 68/68，共211项及构建／类型／Lint、164份映射通过；失败／修正／未选中过滤完整留证。物理Runner可写发布／guard／Release访问与导出、平台装配、正式后继T5及完整组合继续，4.3／5.1／5.2不勾选，8/13及正式状态／门槛不变。见 `project/evidence/P1-07/release-publication-development-review.md`。
+
+4.3 Runner退役增量：v10原交接／阶段日志、可信退役组件，原控制T5／basis／Runner稳定proof及准确只读服务绑定；先永久物理撤权后停止／移除，容量／消失观察／REMOVED／历史同事务。dataset交接不随容量释放，abort互斥，丢ACK只查询已派发步骤且不发后续未派发阶段。runner-03 105/106（1项条件跳过）；acceptance-03 224/224，共329通过、1条件跳过，构建／类型／Lint、168份映射与历史SQL不变。物理事实为显式夹具；独立可写服务、guard／fence／路由／入口／导出、继续协调协议和实际组合继续，完整4.3不勾选，8/13及正式状态／门槛不变。见 `project/evidence/P1-07/release-retirement-development-review.md`。

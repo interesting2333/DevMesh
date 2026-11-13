@@ -259,3 +259,11 @@ Runner 服务清理结果不等于完整 ABORTED：目标业务文件／原 clai
 按现有前向编号新增审查、dataset／预览、接受准备与发布表及内容外键，启动前由现有备份／migration 流程保护。先部署默认关闭的领域 API 与只读投影，再显式配置可信适配器和独立预览 origin。历史候选不回填人工通过、准备凭证或 Release；无 candidate_freezes 的旧候选只能历史阅读。故障回退关闭新准入，保留已提交记录并恢复原操作，不回滚已接受事实或清理 dataset。
 
 发布路由也属于派发基准：固定上一个release／route hash／generation，release_route_bindings与新proof、数据READY／旧数据RETIRED、目标开门和事件同事务更新。初代无旧路由，后代准确上一代加一；旧PUBLISHED仅是历史发布结论，不能作为当前健康或当前路由的保证。
+
+### Runner publication retirement is an independent original journal
+
+Runner v10前向增加不可变release_retirements／追加actions，原v2～v9 SQL和摘要不变。显式RunnerReleaseRetirementBackend自行从控制库核实原SENT／UNKNOWN、策略身份和固定basis，再绑定Runner原稳定proof、只读profile、准确容器／网络登记；不会以调用者声明替代正式T5。登记、每阶段唯一SENT派发和独立观察分别持久化。
+
+REVOKE_PREPARATION必须由专用可信物理Authority永久封禁原acquire／renew／写入并排清已获许可动作；逻辑记录不证明撤权。随后STOP→CONTAINER_REMOVE→NETWORK_REMOVE，Driver末次复核原授权，成功准确ID查询才证明消失。容器观察、接受服务REMOVED、容量和历史同事务，失败全部回滚；原profile、claim、proof及dataset文件不改。
+
+交接和原abort决定互斥，迟到服务变更关闭；dataset交接占用独立于容量，其他preview／acceptance不能抢占。网络未清理的已释放服务仍可按原controller分页找到。登记ACK或阶段ACK丢失后只查询已持久原动作，不重发、不从查询发出下一未派发阶段；跨步骤中断保持未完成，继续协调协议尚待实施。该适配器只完成只读服务退役，不返回PUBLISHED；独立可写容量／guard／fence／路由、默认装配和实际入口／导出仍继续4.3，完整任务不勾选。

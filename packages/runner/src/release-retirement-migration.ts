@@ -1,0 +1,23 @@
+// Forward-only v10. Never edit any earlier migration SQL/checksum.
+export const releaseRetirementMigration=`
+ALTER TABLE runner_identity RENAME TO runner_identity_v9;
+CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=10)) STRICT;
+INSERT INTO runner_identity SELECT singleton,runner_id,10 FROM runner_identity_v9;
+DROP TABLE runner_identity_v9;
+CREATE TABLE release_retirements(sequence INTEGER PRIMARY KEY,release_id TEXT NOT NULL UNIQUE,controller_id TEXT NOT NULL,preparation_operation_id TEXT NOT NULL UNIQUE,reservation_id TEXT NOT NULL UNIQUE REFERENCES acceptance_services(reservation_id),dataset_id TEXT NOT NULL UNIQUE,request_hash TEXT NOT NULL UNIQUE,request_json TEXT NOT NULL CHECK(json_valid(request_json)),original_json TEXT NOT NULL CHECK(json_valid(original_json)),created_at TEXT NOT NULL) STRICT;
+CREATE TABLE release_retirement_actions(release_id TEXT NOT NULL REFERENCES release_retirements(release_id),kind TEXT NOT NULL CHECK(kind IN ('REVOKE_PREPARATION','STOP','CONTAINER_REMOVE','NETWORK_REMOVE')),request_hash TEXT NOT NULL,request_json TEXT NOT NULL CHECK(json_valid(request_json)),state TEXT NOT NULL CHECK(state IN ('SENT','OBSERVED')),observation_json TEXT CHECK(observation_json IS NULL OR json_valid(observation_json)),created_at TEXT NOT NULL,observed_at TEXT,PRIMARY KEY(release_id,kind),CHECK((state='OBSERVED')=(observation_json IS NOT NULL)),CHECK((state='OBSERVED')=(observed_at IS NOT NULL))) STRICT;
+CREATE TRIGGER immutable_release_retirement BEFORE UPDATE ON release_retirements BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_IMMUTABLE'); END;
+CREATE TRIGGER preserve_release_retirement BEFORE DELETE ON release_retirements BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_IMMUTABLE'); END;
+CREATE TRIGGER immutable_release_retirement_action BEFORE UPDATE ON release_retirement_actions WHEN OLD.state='OBSERVED' OR NEW.release_id<>OLD.release_id OR NEW.kind<>OLD.kind OR NEW.request_hash<>OLD.request_hash OR NEW.request_json<>OLD.request_json OR NEW.created_at<>OLD.created_at BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_ACTION_IMMUTABLE'); END;
+CREATE TRIGGER preserve_release_retirement_action BEFORE DELETE ON release_retirement_actions BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_ACTION_IMMUTABLE'); END;
+CREATE TRIGGER publishing_acceptance_abort BEFORE INSERT ON acceptance_service_aborts WHEN EXISTS(SELECT 1 FROM release_retirements WHERE preparation_operation_id=NEW.operation_id) BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_ENROLLED'); END;
+CREATE TRIGGER aborting_release_retirement BEFORE INSERT ON release_retirements WHEN EXISTS(SELECT 1 FROM acceptance_service_aborts WHERE operation_id=NEW.preparation_operation_id) BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_ABORT_REQUESTED'); END;
+CREATE TRIGGER publishing_acceptance_action BEFORE INSERT ON acceptance_service_actions WHEN EXISTS(SELECT 1 FROM release_retirements WHERE reservation_id=NEW.reservation_id) BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_ENROLLED'); END;
+CREATE TRIGGER publishing_acceptance_action_observation BEFORE UPDATE ON acceptance_service_actions WHEN EXISTS(SELECT 1 FROM release_retirements WHERE reservation_id=NEW.reservation_id) BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_ENROLLED'); END;
+CREATE TRIGGER publishing_acceptance_proof BEFORE INSERT ON acceptance_service_proofs WHEN EXISTS(SELECT 1 FROM release_retirements WHERE reservation_id=NEW.reservation_id) BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_ENROLLED'); END;
+CREATE TRIGGER publishing_acceptance_service BEFORE UPDATE ON acceptance_services WHEN EXISTS(SELECT 1 FROM release_retirements WHERE reservation_id=OLD.reservation_id) AND NOT (
+ NEW.state='REMOVED' AND NEW.released_at IS NOT NULL AND EXISTS(SELECT 1 FROM release_retirements r JOIN release_retirement_actions a USING(release_id) WHERE r.reservation_id=OLD.reservation_id AND a.kind='CONTAINER_REMOVE' AND a.state='OBSERVED' AND json_extract(a.observation_json,'$.objectId')=OLD.instance_id AND json_extract(a.observation_json,'$.absenceVerified')=1)
+) BEGIN SELECT RAISE(ABORT,'RELEASE_RETIREMENT_ENROLLED'); END;
+CREATE TRIGGER publishing_preview_reservation BEFORE INSERT ON preview_reservations WHEN EXISTS(SELECT 1 FROM release_retirements WHERE dataset_id=NEW.dataset_id) BEGIN SELECT RAISE(ABORT,'RELEASE_DATASET_HANDOFF_HELD'); END;
+CREATE TRIGGER publishing_acceptance_reservation BEFORE INSERT ON acceptance_services WHEN EXISTS(SELECT 1 FROM release_retirements WHERE dataset_id=NEW.dataset_id) BEGIN SELECT RAISE(ABORT,'RELEASE_DATASET_HANDOFF_HELD'); END;
+PRAGMA user_version=10;`;

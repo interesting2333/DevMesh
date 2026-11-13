@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual Runner retirement writer, control T5 and explicitly controlled physical authority/driver. No writable release service, Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T03:04:34.895Z",
+      "finishedAt": "2026-11-13T03:04:54.867Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "d840046619c06d335c0d7ee7a3935fcf99596e200622376b2cc2f1c605cae9ce"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T03:04:54.869Z",
+      "finishedAt": "2026-11-13T03:05:04.666Z",
+      "exitCode": 2,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "9f0309c639b89cf7153b12dde33e8781c76c10030bcf19796c2321495ef64916"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/runner/dist/index.mjs",
+    "packages/runner/dist/index.mjs.map",
+    "packages/runner/dist/preview-cleanup-BnbPxXrC.mjs",
+    "packages/runner/dist/preview-cleanup-BnbPxXrC.mjs.map",
+    "packages/runner/dist/worker.mjs",
+    "packages/runner/dist/worker.mjs.map",
+    "packages/runner/dist/preview-cleanup-dhE_pE21.mjs",
+    "packages/runner/dist/preview-cleanup-dhE_pE21.mjs.map"
+  ]
+}

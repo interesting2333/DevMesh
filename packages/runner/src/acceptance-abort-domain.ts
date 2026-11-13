@@ -16,8 +16,8 @@ export function createAcceptanceAbortDomain(db:DatabaseSync,runnerId:string,serv
  const get=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).get(...p) as Row|undefined,all=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).all(...p) as Row[],exec=(sql:string,...p:SQLInputValue[])=>db.prepare(sql).run(...p);
  const tx=<T>(body:()=>T):T=>{db.exec('BEGIN IMMEDIATE');try{const v=body();db.exec('COMMIT');return v;}catch(e){db.exec('ROLLBACK');throw e;}};
  const version=Number(Object.values(db.prepare('PRAGMA user_version').get()!)[0]);
- if(version===8){db.exec('PRAGMA foreign_keys=OFF');try{if(Number(Object.values(db.prepare('PRAGMA foreign_keys').get()!)[0])!==0)fail('RUNNER_MIGRATION_FOREIGN_KEYS');tx(()=>{db.exec(acceptanceAbortMigration);exec('INSERT INTO runner_schema_history VALUES(9,?,?)',hash(acceptanceAbortMigration),new Date().toISOString());if(db.prepare('PRAGMA foreign_key_check').all().length)fail('RUNNER_MIGRATION_FOREIGN_KEYS');});}finally{db.exec('PRAGMA foreign_keys=ON');}}else if(version!==9)fail('RUNNER_STORE_IDENTITY_MISMATCH');
- if(get('SELECT sha256 FROM runner_schema_history WHERE version=9')?.sha256!==hash(acceptanceAbortMigration)||get('SELECT version FROM runner_identity')?.version!==9)fail('RUNNER_MIGRATION_DRIFT');
+ if(version===8){db.exec('PRAGMA foreign_keys=OFF');try{if(Number(Object.values(db.prepare('PRAGMA foreign_keys').get()!)[0])!==0)fail('RUNNER_MIGRATION_FOREIGN_KEYS');tx(()=>{db.exec(acceptanceAbortMigration);exec('INSERT INTO runner_schema_history VALUES(9,?,?)',hash(acceptanceAbortMigration),new Date().toISOString());if(db.prepare('PRAGMA foreign_key_check').all().length)fail('RUNNER_MIGRATION_FOREIGN_KEYS');});}finally{db.exec('PRAGMA foreign_keys=ON');}}else if(![9,10].includes(version))fail('RUNNER_STORE_IDENTITY_MISMATCH');
+ if(get('SELECT sha256 FROM runner_schema_history WHERE version=9')?.sha256!==hash(acceptanceAbortMigration)||get('SELECT version FROM runner_identity')?.version!==(version===8?9:version))fail('RUNNER_MIGRATION_DRIFT');
  if(Number(Object.values(db.prepare('PRAGMA foreign_keys').get()!)[0])!==1)fail('RUNNER_MIGRATION_FOREIGN_KEYS');
  const row=(i:Bound)=>{const r=get('SELECT * FROM acceptance_service_aborts WHERE operation_id=? AND controller_id=?',i.operationId,i.controllerId)??fail('ACCEPTANCE_ABORT_NOT_FOUND',404);if(r.decision_hash!==i.decisionHash)fail('ACCEPTANCE_ABORT_IDENTITY_CHANGED');return r;};
  const action=(id:string,kind:string)=>get('SELECT * FROM acceptance_abort_actions WHERE operation_id=? AND kind=?',id,kind);
@@ -42,6 +42,7 @@ export function createAcceptanceAbortDomain(db:DatabaseSync,runnerId:string,serv
  return {
   acceptanceAbortEnroll(i:StoreInput<'acceptanceAbortEnroll'>){return tx(()=>{
    const d=i.decision,q=d.preparation;if(q.runnerId!==runnerId||i.decisionHash!==hash(d))fail('ACCEPTANCE_ABORT_IDENTITY_CHANGED');
+   if(get('SELECT 1 FROM release_retirements WHERE preparation_operation_id=?',q.operationId))fail('RELEASE_RETIREMENT_ENROLLED');
    const old=get('SELECT * FROM acceptance_service_aborts WHERE operation_id=?',q.operationId);if(old){if(old.controller_id!==i.controllerId||old.decision_hash!==i.decisionHash||old.decision_json!==canonical(d))fail('ACCEPTANCE_ABORT_IDENTITY_CHANGED');return view(old);}
    if(get('SELECT 1 FROM acceptance_services WHERE operation_id=? AND controller_id<>?',q.operationId,i.controllerId))fail('ACCEPTANCE_ABORT_IDENTITY_CHANGED');
    const service=get('SELECT * FROM acceptance_services WHERE controller_id=? AND operation_id=?',i.controllerId,q.operationId);

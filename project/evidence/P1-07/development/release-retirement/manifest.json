@@ -1,0 +1,391 @@
+{
+  "recordedAt": "2026-11-13T03:25:28.197Z",
+  "scope": "Actual modified-checkout development evidence with original failed inputs. No runtime databases or credentials. Physical revocation, Docker/network, OCI and publication success claims are explicit fixtures; no writable release, Linux/gVisor, full root check, clean-checkout or product acceptance.",
+  "files": [
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/acceptance-03/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/acceptance-03/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/acceptance-03/inputs-after.json",
+      "byteSize": 55464,
+      "sha256": "a80e0ab5cccaf0e5a0f97fd4631a4ee04b3e4f23d95570950ac3d132131b92d5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/acceptance-03/inputs-before.json",
+      "byteSize": 55464,
+      "sha256": "ee76e366d12b23d8c6f6d377a254616a261fe1bea193d882a0ce777bd32d59b0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/acceptance-03/report.json",
+      "byteSize": 809,
+      "sha256": "3150c60136a3ab2217816002c959375a3a69977c83e8108d963c511ad5d92fc8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/acceptance-03/tests.txt",
+      "byteSize": 136320,
+      "sha256": "09da7c18e3c5f23f7c142795062f19449cbf4f2ccfdafbfd8d2d09830fc873e5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/acceptance-03/validation-driver.mjs",
+      "byteSize": 4043,
+      "sha256": "6000df6d8c3e3c9ccb9d94feae96683910d1bae37ef0f477b8d9d31912eecf81"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/build.txt",
+      "byteSize": 15792,
+      "sha256": "d840046619c06d335c0d7ee7a3935fcf99596e200622376b2cc2f1c605cae9ce"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "b4564df270464beefb0a405e548e0c577edc176b6e197266cc52d5013e719ebb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/inputs-after.json",
+      "byteSize": 55239,
+      "sha256": "f23c04ed685601aba96a3efa7110ca226db85f2394a22ca10a5a8e2e0392c13d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/inputs-before.json",
+      "byteSize": 55239,
+      "sha256": "10013c929186510b0bd5e1b95199bb9de92cd33f3f1d26ada3a8c8dc94f152fd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/report.json",
+      "byteSize": 1923,
+      "sha256": "2d9a623ce81ed5e921525f00d361eb64d506c1a48b609b3b5add6764a64812ae"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/binding.json",
+      "byteSize": 56481,
+      "sha256": "dcd1eb0e232c5af6824cce835afa4fd716a2bf0998499de563ee925269b48a82"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/acceptance-abort-domain.ts",
+      "byteSize": 9976,
+      "sha256": "9c2eb77878620d710f8b7f5083a3ff73e5d8cddad23a272f2c2586793e9afd28"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/acceptance-proof-domain.ts",
+      "byteSize": 3526,
+      "sha256": "fe99e723df4a9b5587950d60b4188816bc1835ddc11a21983ee92971d5b6bf8f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/acceptance-service-domain.ts",
+      "byteSize": 15195,
+      "sha256": "2b222e612728d6f06cfa898df37d98635c96c9b5ece0a35083caee294e275495"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/capacity-domain.ts",
+      "byteSize": 13272,
+      "sha256": "60cc97078ff784afd20385f9561d260f294f8566e22406917b17cd0098c505c9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/cleanup-domain.ts",
+      "byteSize": 7008,
+      "sha256": "5dc43a597f16b493a1ed8779d113506aed34c4f18723e3b9956010bb211fd1fd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/container-domain.ts",
+      "byteSize": 10500,
+      "sha256": "493569e52a00e124adfbc0786746864b942aebe87b4f7f9dd2a76e041e86d39f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/fence-domain.ts",
+      "byteSize": 6870,
+      "sha256": "f035b2178d4823a9991f9ae57a69e1246c9bd0add851470bca0f6c72d76acf72"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/index.ts",
+      "byteSize": 5650,
+      "sha256": "e75e93b1b76d9772ddc1b302d5e00e589f4d57e0df699d83700bbe823a58f541"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/preview-lifecycle-domain.ts",
+      "byteSize": 12285,
+      "sha256": "eed571fd822b89bdc37f2b7978cf3fc2cdc8644f0f3a1a9256b096f4a305f973"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/release-retirement-backend.ts",
+      "byteSize": 7127,
+      "sha256": "7812ceac29005a8d2593babd362deaa26ca49bf82f5761c1315d9f900d6a292c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/release-retirement-domain.ts",
+      "byteSize": 10998,
+      "sha256": "57fc2dd30ca56fbcf471a53a4bb8a1ae003decea697529adfd9ef769b2f12936"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/release-retirement-migration.ts",
+      "byteSize": 4642,
+      "sha256": "071717fe216d20dc2d15c8f8c15e75a129784cab7365aa601cc51a5b1201c1ef"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/release-retirement.ts",
+      "byteSize": 4684,
+      "sha256": "8e7a891b05a0afbfa1c6e39a2e96a9be61b1808d38add21a708c347abb0fb0da"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/store-protocol.ts",
+      "byteSize": 10877,
+      "sha256": "50cd6c8f19d540ffde2faaf84d920f47414fd60d0efd9fd3915b0d169e3d34fe"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/source-snapshot/packages/runner/src/worker.ts",
+      "byteSize": 15766,
+      "sha256": "e045b8cf43849c376742e7b1dd0a49fb1b78f26c4365df28689276264c1b97fc"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/typecheck.txt",
+      "byteSize": 799,
+      "sha256": "9f0309c639b89cf7153b12dde33e8781c76c10030bcf19796c2321495ef64916"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-01/validation-driver.mjs",
+      "byteSize": 4043,
+      "sha256": "6000df6d8c3e3c9ccb9d94feae96683910d1bae37ef0f477b8d9d31912eecf81"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/build.txt",
+      "byteSize": 15898,
+      "sha256": "fac97d2ae51f1d899978096ffd1682b270d0240cbef0e607113a6924fe40775e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "b4564df270464beefb0a405e548e0c577edc176b6e197266cc52d5013e719ebb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/inputs-after.json",
+      "byteSize": 55464,
+      "sha256": "fce7533d0fc629adddea2f3f15bfb209747938ebe80228b7ff95319dcf1f95b3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/inputs-before.json",
+      "byteSize": 55464,
+      "sha256": "047bc3ffc8bf63a4af05733bcd43469db9bae8cef571d99cb8ad9571f379cada"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/report.json",
+      "byteSize": 2046,
+      "sha256": "aed7f5ae081a58303ab1f27cceba1ba2082feae0540da67c48ee851a95a65261"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-02/validation-driver.mjs",
+      "byteSize": 4043,
+      "sha256": "6000df6d8c3e3c9ccb9d94feae96683910d1bae37ef0f477b8d9d31912eecf81"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/build.txt",
+      "byteSize": 15538,
+      "sha256": "c4e931937b79c42f97bc8472fdc36abc3f6a405b8b2add77ebe566a5caa53b93"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/inputs-after.json",
+      "byteSize": 55464,
+      "sha256": "ac3fd089433b9147ae38bd99a6b76fb6b27b7a57c8207fe4a23e912fd1a7c7c6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/inputs-before.json",
+      "byteSize": 55464,
+      "sha256": "962c8ff6401448eea259b62a544970c181d439df7ea12b396782437c8a019468"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/report.json",
+      "byteSize": 1962,
+      "sha256": "4121348ecaf5351e97fb462040cd5269fe6b3f3145bf98545b2a94634125d3cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/build-03/validation-driver.mjs",
+      "byteSize": 4043,
+      "sha256": "6000df6d8c3e3c9ccb9d94feae96683910d1bae37ef0f477b8d9d31912eecf81"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/final-binding-driver.mjs",
+      "byteSize": 5488,
+      "sha256": "dd4f6ae243a4454b8b48440e73a98d2b9edfbcc6e5dc78d4ceadcd224ed69f70"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/final-binding.json",
+      "byteSize": 4986,
+      "sha256": "92cb251ade825926569d48d86cf9ef3e4262d34c81fa924782f5d55fe702fac6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/historical-source-reconstruction-driver.mjs",
+      "byteSize": 1904,
+      "sha256": "4993cef2630f74402635f48148f6477ffe1fb2381edae9b9185877e994b1ffbd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/map-binding.json",
+      "byteSize": 99817,
+      "sha256": "382d9868be546c014f340126152d30e18098721ae38ece08a0e93fd618eff0b9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/contracts.txt",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/design.txt",
+      "byteSize": 43,
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/diff.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/openspec.txt",
+      "byteSize": 673,
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/project.txt",
+      "byteSize": 172,
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/render.txt",
+      "byteSize": 34,
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/report.json",
+      "byteSize": 3173,
+      "sha256": "d375f529322ca89aa9f960bc1fa7fa671a7bd19d7d980352cdc83b81b61647dd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/staged-diff.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/post-1/validation-driver.mjs",
+      "byteSize": 1855,
+      "sha256": "cd48f53c6ea27a92e0b6b1fecc55c3512288ea711164e77085e336a50e92c9d1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/retirement-01/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/retirement-01/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/retirement-01/inputs-after.json",
+      "byteSize": 55464,
+      "sha256": "3195a921942307d2bccf0b7c16272291cfe9e46ece5c34e230b12f932b951126"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/retirement-01/inputs-before.json",
+      "byteSize": 55464,
+      "sha256": "441a27e17e1d7686b3200cb6e35edb0566e21057aca1d40eada1289046b1efa7"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/retirement-01/report.json",
+      "byteSize": 777,
+      "sha256": "f99ab189c0ad7cdd6c7825d758d8aadb344fbc7c18fe1a753ce84cb035c7e633"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/retirement-01/tests.txt",
+      "byteSize": 23080,
+      "sha256": "cfc984b30a352029d44bdf1bc17cea7ef94ce12ca636bf3f614f2b2cc31d52d2"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/retirement-01/validation-driver.mjs",
+      "byteSize": 4043,
+      "sha256": "6000df6d8c3e3c9ccb9d94feae96683910d1bae37ef0f477b8d9d31912eecf81"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/runner-03/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/runner-03/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "9c3c30c77380cd0310e7e451cdc3fa6c44d941834d198fe85e7721d67484e818"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/runner-03/inputs-after.json",
+      "byteSize": 55464,
+      "sha256": "5c7bffa6f9ef9fbe756d2ed3df00f7ec6a49b9cc3b1c37de42087dceafbe5f98"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/runner-03/inputs-before.json",
+      "byteSize": 55464,
+      "sha256": "09087dfe9703b6d938c855737d9bbe2a59fc085be1a5ef3cd51056e89c49c142"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/runner-03/report.json",
+      "byteSize": 759,
+      "sha256": "79508e6e67917c117ad0468de6d955ce6d2a806dc492fd1aee8df5c43cee1faf"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/runner-03/tests.txt",
+      "byteSize": 99739,
+      "sha256": "651220abddc610f1f08644720f6fc2665ddf22d786689ded16c2f0b77dd54558"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-retirement/runner-03/validation-driver.mjs",
+      "byteSize": 4043,
+      "sha256": "6000df6d8c3e3c9ccb9d94feae96683910d1bae37ef0f477b8d9d31912eecf81"
+    }
+  ]
+}

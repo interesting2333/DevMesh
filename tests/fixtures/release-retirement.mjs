@@ -1,0 +1,31 @@
+// Real control T5 and Runner/file Workers. All Docker/physical revocation facts
+// remain explicit fixtures; no writable service or route is installed here.
+import assert from 'node:assert/strict';
+import {RunnerReleaseRetirementBackend} from '../../packages/runner/dist/index.mjs';
+import {AcceptancePreparer} from '../../packages/platform-core/dist/index.mjs';
+import {acceptanceFixture} from './acceptance.mjs';
+import {acceptanceServiceBackendFixture} from './acceptance-service-backend.mjs';
+import {hash,canonical,meta} from './storage-data.mjs';
+export {hash,canonical};
+export const retirementBinding=j=>({controllerId:j.controllerId,releaseId:j.request.promotion.preparation.releaseId,requestHash:j.requestHash});
+export function installRetirementDriver(f){return Object.assign(f.driver,{
+ async stop(p,r,n,id,authorize){const x=await this.inspect(p,r,n,id);if(!x)return null;if(!await authorize())throw Error('explicit denied');this.calls.push('STOP');Object.assign(this.containers.get(p.containerName),{state:'exited',pid:0,exitCode:0,endpoint:null});this.lost('STOP');return this.inspect(p,r,n,id);},
+ async containerAbsent(id){this.calls.push('query-absence-container');if(this.queryFails)throw Error('explicit list failure');return ![...this.containers.values()].some(x=>x.containerId===id);},
+ async networkAbsent(id){this.calls.push('query-absence-network');if(this.queryFails)throw Error('explicit list failure');return ![...this.networks.values()].includes(id);},
+ async removeContainer(p,r,n,id,authorize){const x=await this.inspect(p,r,n,id);if(!x||!['created','exited'].includes(x.state))throw Error('explicit not stopped');if(!await authorize())throw Error('explicit denied');this.calls.push('CONTAINER_REMOVE');this.containers.delete(p.containerName);this.lost('CONTAINER_REMOVE');},
+ async removeNetwork(p,r,n,authorize){if(await this.network(p,r)!==n||this.containers.size)throw Error('explicit wrong/busy network');if(!await authorize())throw Error('explicit denied');this.calls.push('NETWORK_REMOVE');this.networks.delete(p.networkName);this.lost('NETWORK_REMOVE');},
+ });}
+export async function retirementFixture(t){
+ const control=await acceptanceFixture(t,{human:true,humanWork:true}),policy={...control.policy,runnerId:'runner.preview.local',backendRef:'sqlite.acceptance.local-development.v1'},registered=await control.call('registerAcceptanceBackendPolicy',{principalId:'user_1',projectId:control.p.projectId,policy}),pending=await control.call('beginAcceptancePreparation',await control.request({policyHash:registered.policyHash})),f=await acceptanceServiceBackendFixture(t,{preparation:pending}),preparer=new AcceptancePreparer(control.storage,policy.backendPrincipalId,f.backend),ready=await preparer.advance(pending.operationId);assert.equal(ready.state,'READY');
+ const p=await control.call('getAcceptancePreparation',{principalId:'user_1',operationId:pending.operationId}),q=p.request,run=await control.call('getRun',{runId:p.runId});
+ await control.call('commitReleaseAcceptance',{meta:meta(p.runId),runId:p.runId,ifMatch:'"r'+run.resourceRevision+'"',preparationOperationId:p.operationId,requestHash:p.requestHash,expectedPreparationRevision:p.revision,expectedObservationSequence:ready.sequence,proofHash:ready.proofHash,...Object.fromEntries(['candidateId','candidateRevision','manifestHash','reviewHash','expectedAcceptedReleaseId','dataPlanHash'].map(k=>[k,q[k]])),confirmation:'ACCEPT_RELEASE'});
+ const subject={principalId:policy.backendPrincipalId,releaseId:q.releaseId},initial=await control.call('getReleasePublication',subject),publication=(await control.call('beginReleasePublication',{...subject,requestHash:initial.requestHash,expectedRevision:initial.revision})).publication;
+ const request={schemaVersion:'devmesh.release-retirement.v1',promotion:publication.request,promotionRequestHash:publication.requestHash,gates:publication.basis},binding={controllerId:f.options.controllerId,releaseId:q.releaseId,requestHash:hash(canonical(request))};
+ const authority={configured:true,record:null,calls:[],failAfter:false,queryFails:false,
+  async preflight(){},
+  async revoke(r,controllerId,authorize){if(!await authorize())throw Error('explicit revoke denied');this.calls.push('REVOKE_PREPARATION');this.record={schemaVersion:'devmesh.release-preparation-revoked.v1',promotionRequestHash:r.promotionRequestHash,preparationOperationId:q.operationId,releaseId:q.releaseId,runnerId:q.runnerId,controllerId,barrierId:'fixture.release.retirement.barrier',generation:1,proofHash:hash('explicit fixture permanent revocation'),state:'PERMANENTLY_REVOKED'};if(this.failAfter)throw Error('explicit revoke ACK loss');return structuredClone(this.record);},
+  async inspect(){this.calls.push('query-revocation');if(this.queryFails)throw Error('explicit revocation query failure');return structuredClone(this.record);},
+ };
+ const driver=installRetirementDriver(f),options={enabled:true,runnerId:f.options.runnerId,controllerId:f.options.controllerId,backendRef:f.options.backendRef,principalId:policy.backendPrincipalId},makeBackend=(store=f.store,c=control.storage,opts=options)=>new RunnerReleaseRetirementBackend(store,c,driver,authority,opts),backend=makeBackend();
+ return {...f,control,publication,request,binding,authority,backend,makeBackend,async enroll(){return f.store.request('releaseRetirementEnroll',{controllerId:binding.controllerId,request,requestHash:binding.requestHash});},async current(){return f.store.request('releaseRetirementGet',binding);},async observe(kind,changes={}){const g=await f.store.request('releaseRetirementActionBegin',{...binding,kind}),a=g.action;let observation;if(kind==='REVOKE_PREPARATION')observation={kind,proof:await authority.revoke(request,binding.controllerId,async()=>true),checkedAt:new Date().toISOString()};else observation={kind,objectId:kind==='NETWORK_REMOVE'?a.request.networkId:a.request.containerId,...(kind==='STOP'?{state:'EXITED'}:{absenceVerified:true}),checkedAt:new Date().toISOString()};return f.store.request('releaseRetirementActionObserve',{...binding,kind,actionRequestHash:a.requestHash,observation:{...observation,...changes}});}};
+}

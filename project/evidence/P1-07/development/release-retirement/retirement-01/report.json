@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Actual Runner retirement writer, control T5 and explicitly controlled physical authority/driver. No writable release service, Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/runner-release-retirement.test.mjs"
+      ],
+      "startedAt": "2026-11-13T03:09:13.142Z",
+      "finishedAt": "2026-11-13T03:11:33.249Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "cfc984b30a352029d44bdf1bc17cea7ef94ce12ca636bf3f614f2b2cc31d52d2"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

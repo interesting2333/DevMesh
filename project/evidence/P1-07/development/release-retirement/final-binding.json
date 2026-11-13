@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-13T03:24:59.432Z",
+  "base": "4092ccf54375f2b1a87c7f39d71a95dcbb94bbb1",
+  "controlHistoricalMigrationCount": 42,
+  "historicalRunner": [
+    {
+      "file": "packages/runner/src/fence-domain.ts",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/capacity-domain.ts",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/container-domain.ts",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/cleanup-migration.ts",
+      "sha256": "95a46d98e38c49e83b64e775f073e4768c7fbc682878b84243b836451974614e",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-service-migration.ts",
+      "sha256": "28ea1ae25ad2e40d3e027dd6314ae419a6e7928f4d803d7cd20b4eaf492d5034",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-proof-migration.ts",
+      "sha256": "90a68f417ffb05230bec935209ca036c718a27d8368c0027b195aaf8af7ce1e3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-abort-migration.ts",
+      "sha256": "5a4caa5ea7a3da5d6dfd6b97ce7f99b15197b84ed05eca92202080baf945250f",
+      "matchesBase": true
+    }
+  ],
+  "newRunnerMigration": {
+    "version": 10,
+    "file": "packages/runner/src/release-retirement-migration.ts",
+    "sha256": "071717fe216d20dc2d15c8f8c15e75a129784cab7365aa601cc51a5b1201c1ef"
+  },
+  "builds": [
+    {
+      "name": "build-01",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 2
+        }
+      ],
+      "reportSha256": "2d9a623ce81ed5e921525f00d361eb64d506c1a48b609b3b5add6764a64812ae"
+    },
+    {
+      "name": "build-02",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "reportSha256": "aed7f5ae081a58303ab1f27cceba1ba2082feae0540da67c48ee851a95a65261"
+    },
+    {
+      "name": "build-03",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "reportSha256": "4121348ecaf5351e97fb462040cd5269fe6b3f3145bf98545b2a94634125d3cd"
+    }
+  ],
+  "failed": {
+    "name": "build-01",
+    "reason": "Package builds succeeded; root typecheck rejected union serviceRequestHash access. Lint not reached. Narrowed explicit claim before property access; original changed inputs retained and verified.",
+    "retainedChangedFiles": 15,
+    "unchangedFilesBoundToBase": 467
+  },
+  "intermediate": {
+    "name": "retirement-01",
+    "tests": 15,
+    "pass": 15,
+    "excludedFromFinalTotals": true,
+    "reason": "Initial successful retirement tests. Later added preview dataset-exclusivity and private abort mutual-exclusion coverage; final Runner group reruns all retirement tests.",
+    "sourceDelta": [
+      "tests/runner-release-retirement.test.mjs"
+    ]
+  },
+  "groups": [
+    {
+      "name": "runner-03",
+      "tests": 106,
+      "pass": 105,
+      "skipped": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "reportSha256": "79508e6e67917c117ad0468de6d955ce6d2a806dc492fd1aee8df5c43cee1faf",
+      "outputSha256": "651220abddc610f1f08644720f6fc2665ddf22d786689ded16c2f0b77dd54558"
+    },
+    {
+      "name": "acceptance-03",
+      "tests": 224,
+      "pass": 224,
+      "skipped": 0,
+      "fail": 0,
+      "cancelled": 0,
+      "reportSha256": "3150c60136a3ab2217816002c959375a3a69977c83e8108d963c511ad5d92fc8",
+      "outputSha256": "09da7c18e3c5f23f7c142795062f19449cbf4f2ccfdafbfd8d2d09830fc873e5"
+    }
+  ],
+  "totalPassed": 329,
+  "totalSkipped": 1,
+  "sourceMaps": {
+    "entries": 168,
+    "matches": 168,
+    "sha256": "382d9868be546c014f340126152d30e18098721ae38ece08a0e93fd618eff0b9"
+  },
+  "scope": "Modified-checkout local development with real control/Runner SQLite Workers, formal initial T5 and application data files. Retirement revocation, Docker/network, OCI and control publication success proofs are explicit fixtures. Historical-v9 helper only removes empty v10 structures in dedicated test stores; no production downgrade. No writable release service, physical guard, route, default platform installation, full root check, clean-checkout, Linux/gVisor or product acceptance."
+}

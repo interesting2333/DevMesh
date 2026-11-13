@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "852ee125ee80e325cdc7dadc46b7a580283857664e3c1a827125cf1876979f77"
+      "sha256": "b6b524251b0afdb0ddae143da50cae5824737f17a353e17d5cce970572e97ad7"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "8c22e3d0d9551250b57d10c96243d2fcc19aea2efaf3f5eda5fbba150011fd19"
+      "sha256": "38a230a1fb74e256bf8a9e1dbf8f3a7c6c361eb1661ecd2075ea5b0deeb9bff0"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "c5d3ef85ebbdcdc727056236300f2055a4693b2bb7c9a4f8632b4259dc309bbf"
+      "sha256": "0d9000f2e3f647478187eda29f2f945084f3853c68b4a39988fa657ef34d01a4"
     }
   ],
   "gates": [
@@ -1251,7 +1251,14 @@
         "packages/platform-core/src/release-publisher.ts",
         "tests/release-publication.test.mjs",
         "tests/storage-release-publication-upgrade.test.mjs",
-        "tests/fixtures/release-publication.mjs"
+        "tests/fixtures/release-publication.mjs",
+        "packages/runner/src/release-retirement.ts",
+        "packages/runner/src/release-retirement-migration.ts",
+        "packages/runner/src/release-retirement-domain.ts",
+        "packages/runner/src/release-retirement-backend.ts",
+        "packages/runner/RELEASE-PUBLICATION.md",
+        "tests/runner-release-retirement.test.mjs",
+        "tests/fixtures/release-retirement.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1381,7 +1388,10 @@
         "project/evidence/P1-07/development/acceptance-abort-completion/final-binding.json",
         "project/evidence/P1-07/release-publication-development-review.md",
         "project/evidence/P1-07/development/release-publication/manifest.json",
-        "project/evidence/P1-07/development/release-publication/final-binding.json"
+        "project/evidence/P1-07/development/release-publication/final-binding.json",
+        "project/evidence/P1-07/release-retirement-development-review.md",
+        "project/evidence/P1-07/development/release-retirement/manifest.json",
+        "project/evidence/P1-07/development/release-retirement/final-binding.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1434,7 +1444,8 @@
         "2026-11-13：继续4.1独立Runner撤销清理。v9前向重建／不可变原决定与无预留tombstone、原profile／完整对象ID、唯一STOP／容器和网络移除派发、丢ACK只查询，准确消失观察与REMOVED／服务容量／历史同事务；新准备与proof关闭，原claim／proof／数据保留，无force／删除卷。abort-02 20/20、regression-02 45/45、cleanup-01 19/19，迁移专项实际3项通过（TAP额外1个空文件包装单列）；六包构建／类型／Lint和154份映射通过。首轮版本展示导致的3项失败及修正链保留，旧Runner v2～v8和控制库40份迁移不变。物理容器／网络／fence为明确夹具，没有真实Linux清理、dataset fence解除／源恢复／ABORTED／完整发布或产品验收；正式状态、8/13和门槛不变。",
         "2026-11-13：4.1数据撤销原日志／证明。显式后端从控制决定和Runner原服务清理构造请求，独立Worker排他刷新abort-operation.json后唯一派发、丢ACK／超时只inspectAbort；缺本地fences须查原物理记录，后继generation／准确源release核实，目标CLOSED／源CONTROL_CLOSED，原数据和准备文件保留。未结束物理调用继续占用有界名额。abort-02 24/24；service-02 34/34；datasets-02 27/27，构建／类型／Lint和157份映射通过，旧Runner v2～v9／控制库40份迁移不变。首轮符号链接断言的子项／父项失败、修正前源码与调用限额修正、构建后独立MJS测试顺序变化如实留证。物理Authority为接口／明确夹具，尚无真实适配器或默认装配，不重开控制面源门、不解决原未知写／源服务或解除项目占用／ABORTED；正式状态、8/13和门槛不变。",
         "2026-11-13：4.1控制撤销完成增量。迁移41与私有原后端事务绑定原决定／Runner清理／数据撤权，原SENT／UNKNOWN保留，另投影ABORTED并释放本准备占用；源门仅按准确原关闭操作、旧接受指针、冻结镜像、后继fence及新鲜RELEASE_OWNED／READ_WRITE服务核实后原子重开，未知原写先查原请求结局。完整组合覆盖已有HELD服务清理、数据receipt、控制事件失败和重启只查询重放。completion-03 34/34；transaction-03 40/40；runner-03 42/42；acceptance-03 66/66；finalizer-03 1/1，183项通过；六包构建／类型／Lint、160份映射，原控制40迁移／Runner八份迁移不变。两轮失败、原22份源码各自SHA及第二轮探索源码／产物差异、构建后仅新增独立MJS组合测试均留证。源服务／物理事实为明确夹具，真实恢复／可写发布适配器及正式正向迭代未完成，完整4.1不勾选；设计／实施／验收及基线同步，正式状态、8/13和G0不变。",
-        "2026-11-13：4.3发布控制增量。迁移42／私有原后端writer／显式ReleasePublisher，T5独立PENDING与首历史同事务；唯一SENT派发固定源／目标门及前代路由，SENT／UNKNOWN只查原发布。稳定proof与新鲜原服务／路由／后继fence验证后，证明／观察、路由代际、数据状态、目标开门及历史／事件同事务，源门保持关闭。publication-05 69/69；transaction-05 74/74；acceptance-05 68/68，共211项通过；六包构建／类型／Lint和164份映射、原41迁移／Runner八份SQL不变。首轮类型错误、各轮夹具／Windows清理失败及过滤未选中均留证；最终输入／产物匹配build-05。物理发布／guard／实际Release访问与导出、后继正式T5／完整组合继续，完整4.3不勾选；设计／实施／验收／OpenSpec及基线同步，正式状态、8/13与G0不变。"
+        "2026-11-13：4.3发布控制增量。迁移42／私有原后端writer／显式ReleasePublisher，T5独立PENDING与首历史同事务；唯一SENT派发固定源／目标门及前代路由，SENT／UNKNOWN只查原发布。稳定proof与新鲜原服务／路由／后继fence验证后，证明／观察、路由代际、数据状态、目标开门及历史／事件同事务，源门保持关闭。publication-05 69/69；transaction-05 74/74；acceptance-05 68/68，共211项通过；六包构建／类型／Lint和164份映射、原41迁移／Runner八份SQL不变。首轮类型错误、各轮夹具／Windows清理失败及过滤未选中均留证；最终输入／产物匹配build-05。物理发布／guard／实际Release访问与导出、后继正式T5／完整组合继续，完整4.3不勾选；设计／实施／验收／OpenSpec及基线同步，正式状态、8/13与G0不变。",
+        "2026-11-13：4.3发布退役增量。Runner v10独立退役journal／阶段唯一派发与显式RunnerReleaseRetirementBackend，自行核实原控制T5／basis／prepared proof及准确只读服务；永久物理撤权后停止／移除，容器消失／REMOVED／容量／历史同事务。原数据与claim／profile／proof保留，dataset交接继续防抢占，原abort互斥。丢ACK／重启仅查询已派发原步骤，不发下一未派发步骤，中断继续协调协议待实施。runner-03 105/106（1项条件跳过）；acceptance-03 224/224，共329通过、1条件跳过；六包构建／类型／Lint、168份映射及历史SQL不变，首轮联合类型错误／原输入留证。未实现独立可写服务、guard／fence／路由／Release入口与导出；物理事实为显式夹具。设计／实施／验收／OpenSpec／使用文档和基线同步，完整4.3不勾选，8/13、正式状态与G0不变。"
       ]
     },
     {

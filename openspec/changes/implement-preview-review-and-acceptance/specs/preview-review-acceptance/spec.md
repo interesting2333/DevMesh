@@ -419,3 +419,22 @@ The system SHALL 保存准确候选退回依据，区分原范围缺陷与新增
 #### Scenario: A frozen material is downloaded
 - **WHEN** 当前成员按准确冻结候选的材料键下载
 - **THEN** 服务端解析原交付引用，核实内容 hash／大小，发送前复核成员，以不能作为平台 HTML 执行的 attachment 返回，接受指针与 Run 终态不变
+
+### Requirement: Runner retirement preserves the original publication handoff
+系统 SHALL 在私有可信装配中核实原已派发T5、固定门basis、Runner稳定prepared proof及准确只读服务journal，持久记录独立发布退役；MUST NOT 把只读HELD服务改写为可写OWNED，或仅因退役完成记录PUBLISHED。
+
+#### Scenario: Permanent revocation precedes exact retirement
+- **WHEN** 原发布已唯一派发，原物理Authority核实准备永久撤权且前序观察完整
+- **THEN** 才允许依次停止／移除准确原容器及网络，每步只首次dispatch可执行；原profile、claim、proof和数据保留，目标控制门不开放
+
+#### Scenario: Lost acknowledgment only queries an original stage
+- **WHEN** 登记许可、撤权或移除回执丢失，或Runner重启
+- **THEN** 仅查询已持久原步骤，不重发或发出下一未派发步骤；未知容器继续占用容量，中断未完成不得伪造成功
+
+#### Scenario: Absence and capacity release are atomic
+- **WHEN** 成功查询证明准确原容器消失，或服务历史写入失败
+- **THEN** 消失观察、REMOVED、容量释放及历史整体提交或整体回滚；原网络尚未消失的记录即使容量已释放也继续可恢复查询
+
+#### Scenario: The dataset remains in handoff
+- **WHEN** 原发布已登记退役，其他controller尝试预留相同dataset或登记原接受撤销
+- **THEN** 交接屏障拒绝操作，即使只读服务已释放容量；旧prepared proof可只读恢复，迟到事实不能复活旧服务

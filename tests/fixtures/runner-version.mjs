@@ -26,8 +26,22 @@ export function historicalV7Fixture(db){
 
 // Reconstruct the exact old parent only in a dedicated test store. No production downgrade.
 export function historicalV8Fixture(db){
+ historicalV9Fixture(db);
  const version=db.prepare('PRAGMA user_version').get().user_version;if(version<9)return;
  if(version!==9||db.prepare('SELECT count(*) n FROM acceptance_service_aborts').get().n||db.prepare("SELECT 1 FROM acceptance_services WHERE state='REMOVED'").get())throw Error('Not a compatible dedicated v9 fixture');
  const old=readFileSync(new URL('../../packages/runner/src/acceptance-service-migration.ts',import.meta.url),'utf8').match(/Migration=`([\s\S]*?)`;/)[1].split('\n'),table=old.find(l=>l.startsWith('CREATE TABLE acceptance_services(')).replace('acceptance_services(','acceptance_services_fixture('),indexes=old.filter(l=>l.startsWith('CREATE UNIQUE INDEX exclusive_acceptance_service_')),triggers=old.filter(l=>l.startsWith('CREATE TRIGGER immutable_acceptance_service ')||l.startsWith('CREATE TRIGGER preserve_acceptance_service '));
  db.exec('PRAGMA foreign_keys=OFF');try{db.exec('BEGIN IMMEDIATE');db.exec(['DROP TRIGGER aborted_acceptance_action;','DROP TRIGGER aborted_acceptance_proof;','DROP TABLE acceptance_abort_actions;','DROP TABLE acceptance_service_aborts;',table,'INSERT INTO acceptance_services_fixture SELECT * FROM acceptance_services;','DROP TABLE acceptance_services;','ALTER TABLE acceptance_services_fixture RENAME TO acceptance_services;',...indexes,...triggers,'ALTER TABLE runner_identity RENAME TO runner_identity_v9_fixture;','CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=8)) STRICT;','INSERT INTO runner_identity SELECT singleton,runner_id,8 FROM runner_identity_v9_fixture;','DROP TABLE runner_identity_v9_fixture;','DELETE FROM runner_schema_history WHERE version=9;','PRAGMA user_version=8;'].join('\n'));if(db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Invalid v8 fixture');db.exec('COMMIT');}catch(e){db.exec('ROLLBACK');throw e;}finally{db.exec('PRAGMA foreign_keys=ON');}
+}
+
+// Remove only empty v10 structures in a dedicated compatibility test store.
+// Production migrations remain forward-only and never call this helper.
+export function historicalV9Fixture(db){
+ const version=db.prepare('PRAGMA user_version').get().user_version;if(version<10)return;
+ if(version!==10||db.prepare('SELECT count(*) n FROM release_retirements').get().n||db.prepare('SELECT count(*) n FROM release_retirement_actions').get().n)throw Error('Not a compatible dedicated v10 fixture');
+ db.exec('BEGIN IMMEDIATE');try{
+  const triggers=db.prepare("SELECT name FROM sqlite_schema WHERE type='trigger' AND (tbl_name IN ('release_retirements','release_retirement_actions') OR name IN ('publishing_acceptance_abort','aborting_release_retirement','publishing_acceptance_action','publishing_acceptance_action_observation','publishing_acceptance_proof','publishing_acceptance_service','publishing_preview_reservation','publishing_acceptance_reservation'))").all();
+  for(const r of triggers)db.exec('DROP TRIGGER '+r.name);
+  db.exec('DROP TABLE release_retirement_actions; DROP TABLE release_retirements; ALTER TABLE runner_identity RENAME TO runner_identity_v10_fixture; CREATE TABLE runner_identity(singleton INTEGER PRIMARY KEY CHECK(singleton=1),runner_id TEXT NOT NULL,version INTEGER NOT NULL CHECK(version=9)) STRICT; INSERT INTO runner_identity SELECT singleton,runner_id,9 FROM runner_identity_v10_fixture; DROP TABLE runner_identity_v10_fixture; DELETE FROM runner_schema_history WHERE version=10; PRAGMA user_version=9;');
+  if(db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Invalid v9 fixture');db.exec('COMMIT');
+ }catch(e){db.exec('ROLLBACK');throw e;}
 }

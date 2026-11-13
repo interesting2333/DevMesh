@@ -506,6 +506,12 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 852ee125ee80e325cdc7dadc46b7a580283857664e3c1a827125cf1876979f77 |
+| DevMesh_技术设计方案_V1.1.md | b6b524251b0afdb0ddae143da50cae5824737f17a353e17d5cce970572e97ad7 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 8c22e3d0d9551250b57d10c96243d2fcc19aea2efaf3f5eda5fbba150011fd19 |
+| DevMesh_产品验收场景_V10.0.md | 38a230a1fb74e256bf8a9e1dbf8f3a7c6c361eb1661ecd2075ea5b0deeb9bff0 |
+
+### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
+
+Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend接入正式T5后的原请求核实。登记固定原prepared proof、服务journal和门basis；永久物理撤权后按准确原容器停止／移除、原网络移除。每步唯一SENT派发与独立观察，容量释放／REMOVED／历史同事务，原数据／只读profile／claim／proof保留。交接与原撤销决定互斥，dataset持续被交接占用，释放服务容量不允许别的用途抢占。
+
+恢复仅查询已派发原步骤，不重发、不开下一未派发步骤；中断后可能安全停留未完成，继续协调协议另行实施。此增量不新建可写服务、不交接后继fence或路由、不开目标门、不保存PUBLISHED；物理Authority／Linux Driver仍须实际配置与验证。完整4.3、4.1及5.1／5.2继续，正式P1-07及G0门槛不因局部开发提前通过。
