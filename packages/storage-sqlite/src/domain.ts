@@ -99,6 +99,9 @@ import type {AcceptanceAbortMethod} from './acceptance-abort-protocol.js';
 import {createAcceptanceAbortRecoveryDomain} from './acceptance-abort-recovery-domain.js';
 import {acceptanceAbortRecoveryRequests} from './acceptance-abort-recovery-protocol.js';
 import type {AcceptanceAbortRecoveryMethod} from './acceptance-abort-recovery-protocol.js';
+import {createReleasePublicationDomain} from './release-publication-domain.js';
+import {releasePublicationRequests} from './release-publication-protocol.js';
+import type {ReleasePublicationMethod} from './release-publication-protocol.js';
 import {createReleaseDeliveryDomain} from './release-delivery-domain.js';
 import {releaseDeliveryRequests} from './release-delivery-protocol.js';
 import type {ReleaseDeliveryMethod} from './release-delivery-protocol.js';
@@ -171,6 +174,7 @@ export function createDomain(db: DatabaseSync) {
     requested(runId,operationId,preparationId){bump(runId);event(runId,operationId,'AcceptanceAbortRequested',{preparationId,abortOperationId:operationId});},
   });
   const acceptanceAbortRecovery=createAcceptanceAbortRecoveryDomain(db,(runId,abortId,preparationId)=>{bump(runId);event(runId,abortId,'AcceptanceAbortCompleted',{preparationId,abortOperationId:abortId});});
+  const releasePublications=createReleasePublicationDomain(db,plans,p=>{bump(p.runId);event(p.runId,p.request.acceptanceOperationId,'ReleasePublicationChanged',{releaseId:p.releaseId,state:p.state,publicationRevision:p.revision,observationSequence:p.sequence,errorCode:p.errorCode});});
   const scheduler = createSchedulerDomain(db,plans,candidateIntegrations);
   const get = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).get(...args) as Row | undefined;
   const all = (sql: string, ...args: (string | number | null)[]) => db.prepare(sql).all(...args) as Row[];
@@ -508,6 +512,7 @@ export function createDomain(db: DatabaseSync) {
   };
   return { execute(method: Method, input: unknown): unknown {
     if(Object.hasOwn(acceptanceAbortRecoveryRequests,method))return acceptanceAbortRecovery.execute(method as AcceptanceAbortRecoveryMethod,input);
+    if(Object.hasOwn(releasePublicationRequests,method))return releasePublications.execute(method as ReleasePublicationMethod,input);
     if(Object.hasOwn(acceptanceAbortRequests,method))return acceptanceAborts.execute(method as AcceptanceAbortMethod,input);
     if(Object.hasOwn(acceptanceCommitRequests,method))return acceptanceCommits.execute(method as AcceptanceCommitMethod,input);
     if(Object.hasOwn(acceptanceReadinessRequests,method))return acceptanceReadiness.execute(method as AcceptanceReadinessMethod,input);

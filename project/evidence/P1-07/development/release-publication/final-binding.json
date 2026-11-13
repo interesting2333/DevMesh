@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-13T02:49:03.875Z",
+  "base": "ea7d80636b300e5624ff8726734047706cbd77d0",
+  "newControlMigration": {
+    "version": 42,
+    "name": "0042-releasepublications.sql",
+    "sha256": "db3e15c5fb267b866fba6d7b513645d9d03092f8638e90e01a621ebdbd6f5297"
+  },
+  "controlHistoricalMigrationCount": 41,
+  "historicalRunner": [
+    {
+      "file": "packages/runner/src/fence-domain.ts",
+      "sha256": "5cbeba26a82ee92819c9822e1fb87aabb91dbce9e13de24d22e922aba3050570",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/capacity-domain.ts",
+      "sha256": "38cf63ec719eca256541205729c98d121bfb4b9ce3a3859ef5aac3f287092638",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/container-domain.ts",
+      "sha256": "1d6fb4d6f3ecd07a3e77870acded6e86e78dcc609a3a7d6d61d31f51ff10ff95",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/preview-lifecycle-domain.ts",
+      "sha256": "26cabd0fa1b7fb9e063af9cb83f6849c594cf4ae05a1a1bdbeb4290d90ac85f3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/cleanup-migration.ts",
+      "sha256": "95a46d98e38c49e83b64e775f073e4768c7fbc682878b84243b836451974614e",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-service-migration.ts",
+      "sha256": "28ea1ae25ad2e40d3e027dd6314ae419a6e7928f4d803d7cd20b4eaf492d5034",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-proof-migration.ts",
+      "sha256": "90a68f417ffb05230bec935209ca036c718a27d8368c0027b195aaf8af7ce1e3",
+      "matchesBase": true
+    },
+    {
+      "file": "packages/runner/src/acceptance-abort-migration.ts",
+      "sha256": "5a4caa5ea7a3da5d6dfd6b97ce7f99b15197b84ed05eca92202080baf945250f",
+      "matchesBase": true
+    }
+  ],
+  "builds": [
+    {
+      "name": "build-01",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 2
+        }
+      ],
+      "inputChanges": [],
+      "reportSha256": "0e49ea461e5bb7e187038366cca9712c1a6442800a782118d23a4d720a4a4586"
+    },
+    {
+      "name": "build-02",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "inputChanges": [],
+      "reportSha256": "0a1f3f721b5f830836a28d7e4f861a040fea0fd9f0bc574f34b5dab8179b7c82"
+    },
+    {
+      "name": "build-03",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "inputChanges": [],
+      "reportSha256": "18b7be6e36e36fec21c0b4610a2e08fe1915fc6f6e7f1d938c2def5a565f96d5"
+    },
+    {
+      "name": "build-04",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "inputChanges": [],
+      "reportSha256": "71e2e860da260dd183a3111917222453ab0745a0f9f0c2bf15fd863614e0d96d"
+    },
+    {
+      "name": "build-05",
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        }
+      ],
+      "inputChanges": [],
+      "reportSha256": "ef100abbd454b3febaf05a51e721be999e3e0eae6c3d9b6a4df13284f7126e6a"
+    }
+  ],
+  "failed": [
+    {
+      "name": "build-01",
+      "reportSha256": "0e49ea461e5bb7e187038366cca9712c1a6442800a782118d23a4d720a4a4586",
+      "retainedChangedFiles": 11,
+      "unchangedFilesBoundToBase": 89,
+      "inputChanges": [],
+      "interpretation": "Build succeeded; typecheck failed at optional SQL argument and union narrowing. Lint not reached."
+    },
+    {
+      "name": "publication-01",
+      "reportSha256": "97e7590a6f4fb3d564287d10627f795f39a82a9d2264cb1aaf3a1a9858c72034",
+      "retainedChangedFiles": 12,
+      "unchangedFilesBoundToBase": 89,
+      "inputChanges": [],
+      "interpretation": "51 TAP tests: 47 passed, 4 failed including parent. Wrong receipt field, expected membership error and aliased endpoint fixture."
+    },
+    {
+      "name": "publication-02",
+      "reportSha256": "bb77ee16d2868a2250531a6f8f0979c9fa5b34110dd70d83270ab6e90f69bc41",
+      "retainedChangedFiles": 12,
+      "unchangedFilesBoundToBase": 89,
+      "inputChanges": [
+        "tests/storage-acceptance-abort-completion-upgrade.test.mjs",
+        "tests/fixtures/release-publication.mjs"
+      ],
+      "interpretation": "Partial invocation: wrong current endpoint assertion and source fixture missing candidate_freezes FK; hook cleanup did not terminate. Own test process forcibly stopped; input changes after failure/hang recorded."
+    },
+    {
+      "name": "publication-03",
+      "reportSha256": "95c4040b8030255e1e9be75d326fd4b906e06258ebdb24f659110aacd220567b",
+      "retainedChangedFiles": 12,
+      "unchangedFilesBoundToBase": 89,
+      "inputChanges": [
+        "tests/storage-release-publication-upgrade.test.mjs"
+      ],
+      "interpretation": "Source business cases passed; parent hook failed EBUSY because source parent temporary directory was removed before child DB clients closed. Own test process forcibly stopped; new unrelated upgrade test was added while failed cleanup hung."
+    },
+    {
+      "name": "publication-04",
+      "reportSha256": "2136bc1e3ff8fc4c704853c16c50d9d1d03e3c9745accb2de37c9cf749c46d9b",
+      "retainedChangedFiles": 13,
+      "unchangedFilesBoundToBase": 89,
+      "inputChanges": [],
+      "interpretation": "67 TAP tests: 65 passed, 2 failed including parent. structuredClone preserved endpoint aliases; corrected by JSON serialization. No production relaxation."
+    }
+  ],
+  "nonCoverageInvocation": {
+    "name": "source-03",
+    "reason": "Accidentally used v1-v7 migration-name filter on publication tests. Zero selected coverage; explicitly excluded from final totals."
+  },
+  "groups": [
+    {
+      "name": "publication-05",
+      "tests": 69,
+      "pass": 69,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "reportSha256": "176f3106698ae41906e1fe68f4b0153369e1ce6daa1ff57fa67228029376ad37",
+      "outputSha256": "dcff48496e4d49546492f4db9a63146df34534ccfd8ac244fac266e7d1855096"
+    },
+    {
+      "name": "transaction-05",
+      "tests": 74,
+      "pass": 74,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "reportSha256": "cbe5c90f735e6fda1971e65eefc1cd3ae0e1c3d13e266a5b656b1d627bfce2b6",
+      "outputSha256": "8d28558bfcf032df71290e8540525d49477172ce1f3cecc2ba15810bee2b90c0"
+    },
+    {
+      "name": "acceptance-05",
+      "tests": 68,
+      "pass": 68,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "reportSha256": "f050ed8555ea87a99a5e679f56d193a62f0c1bf08913d8e9d7e44a3ea04bd8cc",
+      "outputSha256": "1c74608f7073b7654c53884e173b320e4e2ebb993c6825e59db0d8f03ec5ba7f"
+    }
+  ],
+  "total": 211,
+  "sourceMaps": {
+    "entries": 164,
+    "matches": 164,
+    "sha256": "f4def63709b87d3a7e018b8e0f163308eb6c72882d240afaf73ad028e12d4b61"
+  },
+  "scope": "Modified checkout development only. Actual control Worker/SQLite, formal initial T5 and explicit successor acceptance metadata. Writable service, retirement, physical gates and route statements are fixtures. No Runner physical publication adapter, default platform installation, complete root check, fixed clean-checkout, Linux/gVisor or product acceptance."
+}

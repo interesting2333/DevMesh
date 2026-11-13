@@ -16,6 +16,7 @@ export type { WorkflowSchedulerOptions } from './scheduler.js';
 export {DatasetPreparer} from './dataset-preparer.js';
 export {AcceptancePreparer} from './acceptance-preparer.js';
 export {ReleaseAcceptor} from './release-acceptor.js';
+export {ReleasePublisher} from './release-publisher.js';
 export {PreviewLifecycleManager} from './preview-lifecycle.js';
 export type {PreviewRecoveryScope} from './preview-lifecycle.js';
 

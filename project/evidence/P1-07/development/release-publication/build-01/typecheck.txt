@@ -1,0 +1,4 @@
+packages/storage-sqlite/src/release-publication-domain.ts(33,125): error TS2345: Argument of type 'string | number | null | undefined' is not assignable to parameter of type 'SQLInputValue'.
+  Type 'undefined' is not assignable to type 'SQLInputValue'.
+packages/storage-sqlite/src/release-publication-validation.ts(11,146): error TS2339: Property 'serviceRequestHash' does not exist on type '{ schemaVersion: "devmesh.preview-release-claim.v1"; operationId: string & $brand<"op">; releaseId: string & $brand<"release">; candidateId: string & $brand<"candidate">; ... 7 more ...; acceptanceRequestHash: string; } | { ...; }'.
+  Property 'serviceRequestHash' does not exist on type '{ schemaVersion: "devmesh.preview-release-claim.v1"; operationId: string & $brand<"op">; releaseId: string & $brand<"release">; candidateId: string & $brand<"candidate">; ... 7 more ...; acceptanceRequestHash: string; }'.

@@ -62,6 +62,8 @@ test('T5 preserves original automatic facts, rolls back every boundary and recov
   ['assessment',"BEFORE UPDATE ON work_verifications WHEN NEW.state='APPLIED'"],
   ['run',"BEFORE UPDATE OF terminal_outcome ON runs WHEN NEW.terminal_outcome='COMPLETED'"],
   ['outbox',"BEFORE INSERT ON release_promotion_outbox"],
+   ['publication',"BEFORE INSERT ON release_publications"],
+   ['publication-history',"BEFORE INSERT ON release_publication_events"],
   ['event',"BEFORE INSERT ON events WHEN NEW.type='ReleaseAccepted'"],
   ['operation-result',"BEFORE UPDATE ON operations WHEN NEW.kind='CommitReleaseAcceptance' AND NEW.status='SUCCEEDED'"],
  ])await t.test('rollback at '+name,async t=>{

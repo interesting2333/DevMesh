@@ -38,6 +38,12 @@ T5 在短事务复查原准备、当前候选、完整审查／质量、内容 R
 
 promotion 使用 releaseId 作为幂等键，含准确 image／dataset／原写门 fencing。提交后消费者仅路由／开放新写门；ACK 丢失查原发布，只有原目标一致才完成。失败或 UNKNOWN 保留“已接受，预览恢复中”，不重复创建 Release、不重跑测试／迁移、不重新接受。旧写门在准确切换已证实前保持关闭，不同时开放两份数据。导出打包使用独立任务和失败状态。下载和只读查询没有接受副作用。
 
+发布消费者采用独立release_publications台账，迁移42只给原promotion Outbox回填PENDING及初始历史，不伪造派发、路由或健康。原后端一次性PENDING→SENT取得许可并固定源／目标门快照，SENT／UNKNOWN恢复只查原releaseId，不重派publish、创建替代服务或重跑迁移。不可变T5响应仍保存当时的PENDING，当前发布另行查询，普通A2A Outbox不消费该用途。
+
+发布证明与当前观察分离。原准备只读profile／claim／proof保留；发布证明必须绑定一个不同reservation／instance／profile／network的RELEASE可写服务，原只读实例／网络已准确退役，原准备物理许可永久撤权，源／目标fence为准确原持有的严格后继。目标先ARMED／CONTROL_CLOSED、旧源保持CLOSED，新服务所有写入口受控制门fence约束；裸READ_WRITE进程或逻辑开门不能替代实际围栏。路由固定release／dataset／镜像／新instance／endpoint／claim及原接受版本。原证明时间稳定，恢复另查30秒内当前服务、路由和围栏状态，不用过期健康开门。
+
+writer复核原Outbox／提交、原后端、当前接受指针、原门快照、旧源无未核实写及完整新鲜观察，同一事务保存原发布证明、观察、PUBLISHED、目标门fence／revision递增、门历史和完成事件。旧源门不重开，接受事实及Run终态不回滚。准确旧观察重放先于当前时间／指针检查，换证明或并发CAS冲突拒绝。显式ReleasePublisher只负责此原操作协议，未装配真实Runner可写转换／路由／物理gate适配器时保持关闭；4.3仍包含实际适配器、访问与独立导出恢复，不凭此台账勾选。
+
 ### 6. Rejection and scope correction remain explicit
 
 退回保存准确候选、原范围缺陷／新增需求分类及证据；用户可纠正分类。原范围问题连接新前向修复，新范围连接变更审查和新计划，不通过更改候选审查表扩写已确认范围。P2-03 尚未实现的变更应用只保存待处理事实，不伪造已应用。
@@ -251,3 +257,5 @@ Runner 服务清理结果不等于完整 ABORTED：目标业务文件／原 clai
 ## Migration Plan
 
 按现有前向编号新增审查、dataset／预览、接受准备与发布表及内容外键，启动前由现有备份／migration 流程保护。先部署默认关闭的领域 API 与只读投影，再显式配置可信适配器和独立预览 origin。历史候选不回填人工通过、准备凭证或 Release；无 candidate_freezes 的旧候选只能历史阅读。故障回退关闭新准入，保留已提交记录并恢复原操作，不回滚已接受事实或清理 dataset。
+
+发布路由也属于派发基准：固定上一个release／route hash／generation，release_route_bindings与新proof、数据READY／旧数据RETIRED、目标开门和事件同事务更新。初代无旧路由，后代准确上一代加一；旧PUBLISHED仅是历史发布结论，不能作为当前健康或当前路由的保证。

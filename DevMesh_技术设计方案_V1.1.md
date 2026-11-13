@@ -1543,6 +1543,16 @@ flowchart LR
 
 RunnerAcceptanceAbortFinalizer显式启用，按原决定查询已清理的原容器／网络和数据abort原回执，绑定controller及清理摘要。存在旧源时再查询原Release的准确镜像、恢复后fence、RELEASE_OWNED／READ_WRITE服务及30秒内健康；查询不启动服务或续约。控制writer复核旧接受指针、准确源门及未完成写请求，只重开本准备关闭的旧源门，门fence／revision各递增。未关闭的OPEN源门不制造关开历史，目标仍永久CLOSED。原物理适配器及可写发布转换独立实施，控制协议通过不能视为真实源服务恢复或完整4.1／4.3验收。
 
+#### 13. 接受后的发布消费与恢复
+
+T5原promotion Outbox不可变，原接受回执保留提交时的PENDING。独立release_publications投影当前发布状态，私有原策略后端以revision CAS取得唯一PENDING→SENT派发许可；丢许可ACK、SENT或UNKNOWN只查询原发布，不重新prepare、初始化数据、迁移、替换实例或切换新路由。ReleasePublisher仅显式注入可信后端，未配置时保持PENDING，不安装伪成功后端。
+
+接受准备服务的只读profile、挂载和APP_READ_ONLY不改写。物理发布适配器必须永久撤销原准备，核实原只读容器及网络消失，另建不同reservation／profile／instance／network的READ_WRITE、RELEASE_OWNED服务。可写实例的每个入口必须受物理控制写门约束；目标fence严格继承原HELD并保持ARMED／CONTROL_CLOSED，源保持后继RETIRED／CLOSED，不能先开放裸可写HTTP再补控制状态。
+
+派发基准固定目标门、原准备关闭的源门、原项目路由release／hash／generation。稳定发布proof绑定原Outbox／prepared proof、准确服务／路由和上述基准；恢复另提交30秒内原服务、路由及fences观察，不能重签proof延长健康。控制事务确认当前接受指针、准确数据快照、无未知写及相同基准后，保存证明／观察、CAS路由为上一代加一、目标dataset READY／源RETIRED、目标开门、历史及事件。旧接受事实不回退；之后查询历史PUBLISHED不代表当前健康或当前路由。
+
+当前实现为发布控制协议、writer与显式通用消费器。Runner独立可写服务的容量／持久阶段、真实物理撤权与guard、实际路由／Release访问入口和导出仍按4.3后续实施，未启用默认平台装配。
+
 ---
 
 ## 14. 数据与事务
@@ -1934,6 +1944,14 @@ GC 先事务核实无业务引用、无 pin 和宽限期满足，将对象置 DE
 #### 14. 撤销完成事务与前向迁移41
 
 acceptance_abort_completions以原preparation_operation_id唯一，固定decisionHash、完整evidence及SHA、源门原revision／fence／关闭操作和完成时间，禁止更新／删除。原准备和决定不覆盖。完成事实、源门准确CAS、门历史、Run资源版本和完成事件同一SQLite writer事务；任一点失败全部回滚。项目未核实准备准入同时排除已提交和已完成撤销的原准备；旧决定屏障永久阻止T5／目标开门。迁移41保留1～40正文与checksum，旧UNKNOWN请求、关闭源门及撤销决定原样保留，迁移失败恢复原DDL／历史／外键设置。
+
+#### 14. 发布事务与前向迁移42
+
+release_publications按原Outbox唯一登记，状态PENDING／SENT／UNKNOWN／PUBLISHED，revision和观察sequence分开计数；basis、dispatchedAt首次派发后固定。release_publication_observations按原expected revision／sequence及内容SHA准确重放；release_publication_proofs和release_publication_events追加保留。release_route_bindings为每项目当前逻辑路由，绑定不可变proof；初代必须无旧路由，后代必须准确原release／route hash且generation加一。
+
+原后端提交观察、稳定proof、路由CAS、dataset状态、目标写门／门历史、发布状态／历史及终态Run资源版本／事件在同一writer事务，任何写失败全部回滚。源门保持原CLOSED及历史，源数据和原prepared proof不删除。PUBLISHED不再变更；准确重放在原授权及请求绑定后返回历史结果，不因健康过期、成员移除或后续接受指针变化重复发布。成员移除后原后端仍按原不可变策略恢复，普通成员不能派发或写证明。
+
+迁移42保留1～41原字节／checksum，历史Outbox只回填PENDING和首条历史，不制造SENT、proof、路由或OPEN。旧撤销、未知原写及关闭源门不变；新T5的Outbox、发布PENDING和历史在原接受事务一起写入。迁移失败回滚DDL／历史／版本并保持外键约束。发布证明只允许开放本次准确原目标门，原撤销决定仍永久阻止目标开放。
 
 ---
 

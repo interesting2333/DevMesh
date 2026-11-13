@@ -55,3 +55,5 @@
 4.1 数据撤销：独立原日志／receipt绑定控制决定和Runner原清理，唯一abort／恢复只inspect；无本地fences也查原物理记录，严格后继generation与源release、目标CLOSED／源CONTROL_CLOSED，保留原数据与准备证据。并发／超时及未返回物理调用名额均有界。abort-02 24/24；service-02 34/34；datasets-02 27/27，构建／类型／Lint、157份映射和历史迁移不变通过；首轮符号链接错误码断言的子项／父项失败与修正链、build-03之后独立MJS测试顺序变化均留证。实际物理Authority／默认装配、源门／未知写／源服务核实、项目占用解除和ABORTED仍待实现，完整4.1不勾选，8/13及正式状态／门槛不变。证据见 `project/evidence/P1-07/acceptance-data-abort-development-review.md`。
 
 4.1 控制撤销完成增量：迁移41、共享恢复协议、原后端原子完成及显式Runner组合器；准确原清理／数据撤权、原fences、旧Release／镜像／源门、原写结局与新鲜可写归属核实后才ABORTED、重开适用源门及解除本准备占用，原派发／proof／数据保留。183项测试、构建／类型／Lint及160份映射通过；两轮失败及修正和构建后独立MJS测试新增如实留证。真实物理源恢复／可写发布适配器、保留迁移／替换正式正向流程及物理产品验收继续实施，完整4.1不勾选，8/13及正式状态／门槛不变。见 `project/evidence/P1-07/acceptance-abort-completion-development-review.md`。
+
+4.3 发布控制增量：迁移42、原后端writer与显式ReleasePublisher，T5原子登记独立PENDING；一次派发固定源／目标门及前代路由，未知仅查原操作。稳定proof、新鲜原服务／路由／后继fence核实后，证明／观察、路由代际、数据状态、目标开门及历史／事件同事务，源门保持关闭。publication-05 69/69；transaction-05 74/74；acceptance-05 68/68，共211项及构建／类型／Lint、164份映射通过；失败／修正／未选中过滤完整留证。物理Runner可写发布／guard／Release访问与导出、平台装配、正式后继T5及完整组合继续，4.3／5.1／5.2不勾选，8/13及正式状态／门槛不变。见 `project/evidence/P1-07/release-publication-development-review.md`。

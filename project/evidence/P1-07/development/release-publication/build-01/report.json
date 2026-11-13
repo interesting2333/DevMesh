@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual control publication transactions and explicit trusted publisher protocol fixtures. No physical publication adapter, Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T02:22:17.049Z",
+      "finishedAt": "2026-11-13T02:22:39.095Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "7a03c4e84937a8c31370c9bbc57b16dd6bcf6990bd7fa029b073b080ba74de71"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T02:22:39.096Z",
+      "finishedAt": "2026-11-13T02:22:50.048Z",
+      "exitCode": 2,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "41ba592832d3e2ed8766c443059af29cef1cd1ef0c7d621e2a12bbd24a198d30"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/contracts/dist/index.js",
+    "packages/contracts/dist/index.js.map",
+    "packages/storage-sqlite/dist/domain-P52RnxjC.mjs",
+    "packages/storage-sqlite/dist/domain-P52RnxjC.mjs.map",
+    "packages/storage-sqlite/dist/domain.mjs",
+    "packages/storage-sqlite/dist/index.mjs",
+    "packages/storage-sqlite/dist/index.mjs.map",
+    "packages/storage-sqlite/dist/migrations/manifest.json",
+    "packages/storage-sqlite/dist/preview-session-protocol-bKi5zxae.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-bKi5zxae.mjs.map",
+    "packages/storage-sqlite/dist/worker.mjs",
+    "packages/platform-core/dist/index.mjs",
+    "packages/platform-core/dist/index.mjs.map",
+    "packages/storage-sqlite/dist/domain-D87UA0LP.mjs",
+    "packages/storage-sqlite/dist/domain-D87UA0LP.mjs.map",
+    "packages/storage-sqlite/dist/migrations/0042-releasepublications.sql",
+    "packages/storage-sqlite/dist/preview-session-protocol-BypljurU.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-BypljurU.mjs.map"
+  ]
+}

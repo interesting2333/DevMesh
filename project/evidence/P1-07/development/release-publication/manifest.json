@@ -1,0 +1,946 @@
+{
+  "recordedAt": "2026-11-13T02:50:33.320Z",
+  "scope": "Actual modified-checkout development evidence and original failed inputs. No runtime DB or credentials. Physical publication/route/service statements and successor acceptance metadata are explicit fixtures; no full root check, clean checkout, Linux/gVisor, default installation or product acceptance.",
+  "files": [
+    {
+      "file": "project/evidence/P1-07/development/release-publication/acceptance-05/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/acceptance-05/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/acceptance-05/inputs-after.json",
+      "byteSize": 54754,
+      "sha256": "cf5714569fa56c316d37a2610452fd78a337302589783699b8c4e3b0c43afd40"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/acceptance-05/inputs-before.json",
+      "byteSize": 54754,
+      "sha256": "87d8629ea1ffa058973591e7064daa4e6e4a716e6ecdd70e198a4181f921f77b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/acceptance-05/report.json",
+      "byteSize": 951,
+      "sha256": "f050ed8555ea87a99a5e679f56d193a62f0c1bf08913d8e9d7e44a3ea04bd8cc"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/acceptance-05/tests.txt",
+      "byteSize": 35587,
+      "sha256": "1c74608f7073b7654c53884e173b320e4e2ebb993c6825e59db0d8f03ec5ba7f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/acceptance-05/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/build.txt",
+      "byteSize": 15951,
+      "sha256": "7a03c4e84937a8c31370c9bbc57b16dd6bcf6990bd7fa029b073b080ba74de71"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "76246af15617bedbd01170b9d3d07b49b26a027935f8f73dd729a7e85e2da3c1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/emitted-before.json",
+      "byteSize": 11993,
+      "sha256": "d1578bbe484e73f45440d5ba296c27710ac4d328543a9d21e935709f60bde1b8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/inputs-after.json",
+      "byteSize": 54410,
+      "sha256": "ffd442ec68fcac4bb02c291da6112657c4c885ceafd6dda508553f5826d388c5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/inputs-before.json",
+      "byteSize": 54410,
+      "sha256": "575b2c440e7c5e4ef86e75f2320a7672d00380d49b97ffc21f21e9d0446dd0ab"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/report.json",
+      "byteSize": 2563,
+      "sha256": "0e49ea461e5bb7e187038366cca9712c1a6442800a782118d23a4d720a4a4586"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/binding.json",
+      "byteSize": 12750,
+      "sha256": "fea492219c01ee8a24c17653c11d2c98bf893df79aa6106dc5fff42f93b1a873"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/contracts/src/events.ts",
+      "byteSize": 5966,
+      "sha256": "1fe290d01c06f2ba74c5478523a6b3ab6b6035d9cfe2aa7128a9e71fa4a02641"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/platform-core/src/index.ts",
+      "byteSize": 12031,
+      "sha256": "13e3f258a5ce19bd09eb10a247f053611439a167f5a2eca56d496fdb58788f20"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/platform-core/src/release-publisher.ts",
+      "byteSize": 2795,
+      "sha256": "9f2ebea818f8b855adb7a1302b00b40a1dc4097c5724454e661605514091361f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/storage-sqlite/migrations/0042-releasepublications.sql",
+      "byteSize": 10039,
+      "sha256": "798a3bf8e94666e39129ee391321617fa1f49ab170f06a450e8233ee542afc4e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 6227,
+      "sha256": "3087bfcc2a3c3266ca2a616c979fa1c7716ff1eb8ff6f7cc355d95f530c2215d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 54754,
+      "sha256": "79340820953e3742f4ee1994be2af81454cc149fa32088ada7c756ec53da7b04"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/storage-sqlite/src/index.ts",
+      "byteSize": 11564,
+      "sha256": "4d03d3f285c8d7efde22c24ee2bc8e38bbf30e47279c593387eaba8e84300fe4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 14065,
+      "sha256": "8b18eb5f866c195e56f334fec867152879d44348867c99d3e53e17c137e67877"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/storage-sqlite/src/release-publication-domain.ts",
+      "byteSize": 12195,
+      "sha256": "61b0813f8747fe99e1f8eeb19c7a20994faea82f76d582582099b044c646079d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/storage-sqlite/src/release-publication-protocol.ts",
+      "byteSize": 7349,
+      "sha256": "3d0cf2906607cbb6203fd905b9b0e58212f98ec495da871bfbfa26a92f60e347"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/source-snapshot/packages/storage-sqlite/src/release-publication-validation.ts",
+      "byteSize": 4786,
+      "sha256": "f648252212778d2a271b2e6581a72b27fe78d5d6fb89a7e71204c1dd9e080489"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/typecheck.txt",
+      "byteSize": 907,
+      "sha256": "41ba592832d3e2ed8766c443059af29cef1cd1ef0c7d621e2a12bbd24a198d30"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-01/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/build.txt",
+      "byteSize": 15881,
+      "sha256": "ae3e9d97b4167e8beb441a136da8bcdae1717d59df800f5316178ce30eb2ab74"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "bc5af465842dbcdf6f503ba86a15183dea82adcf5999be0d31642af7d2822b58"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "76246af15617bedbd01170b9d3d07b49b26a027935f8f73dd729a7e85e2da3c1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/inputs-after.json",
+      "byteSize": 54522,
+      "sha256": "4599308363e7dbc7eaec7ee50825331340651c5d25f52eed171227b3e6f8061b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/inputs-before.json",
+      "byteSize": 54522,
+      "sha256": "cfba555ae8aa4c7e7625164a72494cf3c2d9eeb56e14ff27ebbe6af8030ea402"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/report.json",
+      "byteSize": 2287,
+      "sha256": "0a1f3f721b5f830836a28d7e4f861a040fea0fd9f0bc574f34b5dab8179b7c82"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/source-snapshot/packages/storage-sqlite/migrations/0042-releasepublications.sql",
+      "byteSize": 10039,
+      "sha256": "798a3bf8e94666e39129ee391321617fa1f49ab170f06a450e8233ee542afc4e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-02/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/build.txt",
+      "byteSize": 16225,
+      "sha256": "a8cf5ce57668f8be2d9acbe9fb20433a6373964d803a5e6a146533e3159ffeed"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "bc5af465842dbcdf6f503ba86a15183dea82adcf5999be0d31642af7d2822b58"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/inputs-after.json",
+      "byteSize": 54630,
+      "sha256": "2145f155406af3739080c1151b377aedcd3d3b723a3f1ddbe0f5e743f75d76ee"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/inputs-before.json",
+      "byteSize": 54630,
+      "sha256": "8fb08a458884846f0c73424f07b2d99b47e89017a9e653dc67e3e3b331fcbdae"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/report.json",
+      "byteSize": 2774,
+      "sha256": "18b7be6e36e36fec21c0b4610a2e08fe1915fc6f6e7f1d938c2def5a565f96d5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-03/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/build.txt",
+      "byteSize": 16080,
+      "sha256": "cb901d26a70d6a58e3b527233135463867dea48ecf77b8c97abf0519ce87ee20"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/inputs-after.json",
+      "byteSize": 54754,
+      "sha256": "384301ce7417592079d03b018c1eda4f0bb82f164cab92c0a633ef298c75dbd8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/inputs-before.json",
+      "byteSize": 54754,
+      "sha256": "0a18b135362662b1bb5a6a44976a7029f62e1d8a1c30e274799d5630f4d3d6b5"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/report.json",
+      "byteSize": 1959,
+      "sha256": "71e2e860da260dd183a3111917222453ab0745a0f9f0c2bf15fd863614e0d96d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-04/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/build.txt",
+      "byteSize": 16080,
+      "sha256": "b9251fb72dab13a979e87b0a90e4a55a4184a56a34e70713991047b03093c859"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/inputs-after.json",
+      "byteSize": 54754,
+      "sha256": "e1be67643794aeac6b21be797eb4497a78faa79022fea0a3125e168adcddf67c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/inputs-before.json",
+      "byteSize": 54754,
+      "sha256": "a2c72bdd7411b2f41a10abeb1843d258197c7f25600ee870c9dbda1ebd54eb1c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/report.json",
+      "byteSize": 1959,
+      "sha256": "ef100abbd454b3febaf05a51e721be999e3e0eae6c3d9b6a4df13284f7126e6a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/typecheck.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/build-05/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/final-binding-driver.mjs",
+      "byteSize": 6076,
+      "sha256": "c5021122edab2263651e05ed03598bd6e73b0fa23a7222d6317d77034bea46c9"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/final-binding.json",
+      "byteSize": 7840,
+      "sha256": "12ad5fda170b1e8472ac26f762ea189a661b6ff62f935525c8b0dc3107813081"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/historical-source-binding-driver.mjs",
+      "byteSize": 1068,
+      "sha256": "a80333f20bc00f9ce68529d05b876b331b9b00f537801c7bdc68277f2e5361d8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/historical-source-reconstruction-driver.mjs",
+      "byteSize": 1845,
+      "sha256": "2f62e61cc75230b1afb65312e05d585dcae94d0fe54db8d00e6fe33420c1c8bd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/map-binding.json",
+      "byteSize": 97510,
+      "sha256": "f4def63709b87d3a7e018b8e0f163308eb6c72882d240afaf73ad028e12d4b61"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/contracts.txt",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/design.txt",
+      "byteSize": 43,
+      "sha256": "17220bfa45f0736db786bfd1f92907c1f88e9e4b207b6fa2714b286144943197"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/diff.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/lint.txt",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/openspec.txt",
+      "byteSize": 673,
+      "sha256": "f0c3ad687920d1ed1fb74065352a13fd0b3ac8a54f818e8be278833197dc5e51"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/project.txt",
+      "byteSize": 172,
+      "sha256": "03822dde55a20b9481c41fadaa718d2e024c7a4b211988b8ae5986db09bca2b4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/render.txt",
+      "byteSize": 34,
+      "sha256": "abfe9208cecfa87e3c70b22218300263c0e204a3131e6518138cd93d0d37fba1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/report.json",
+      "byteSize": 3173,
+      "sha256": "36318585f54a191e78352ed0584d502b83296e0c695223499097679caed62a12"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/staged-diff.txt",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/post-1/validation-driver.mjs",
+      "byteSize": 1856,
+      "sha256": "6c33f9bb575b3ac925430c354abf7606fdf8f2bda8a76cf9b93ea1950eb03639"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "bc5af465842dbcdf6f503ba86a15183dea82adcf5999be0d31642af7d2822b58"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "bc5af465842dbcdf6f503ba86a15183dea82adcf5999be0d31642af7d2822b58"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/inputs-after.json",
+      "byteSize": 54630,
+      "sha256": "dbdc587701fc5c4e1b1b1cb7e9a6ee6347f0ad904b88b5255484c75018f9bbce"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/inputs-before.json",
+      "byteSize": 54630,
+      "sha256": "e97415d04489aec13f8501d275f06cf21cd078dbec8cde4826477c9b15f4073f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/report.json",
+      "byteSize": 768,
+      "sha256": "97e7590a6f4fb3d564287d10627f795f39a82a9d2264cb1aaf3a1a9858c72034"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/binding.json",
+      "byteSize": 12841,
+      "sha256": "a06272fa4b324bb7419a95cd59edea59e9f7521d317449326b3d77efb37d9f6a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/contracts/src/events.ts",
+      "byteSize": 5966,
+      "sha256": "1fe290d01c06f2ba74c5478523a6b3ab6b6035d9cfe2aa7128a9e71fa4a02641"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/platform-core/src/index.ts",
+      "byteSize": 12031,
+      "sha256": "13e3f258a5ce19bd09eb10a247f053611439a167f5a2eca56d496fdb58788f20"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/platform-core/src/release-publisher.ts",
+      "byteSize": 2795,
+      "sha256": "9f2ebea818f8b855adb7a1302b00b40a1dc4097c5724454e661605514091361f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 6227,
+      "sha256": "3087bfcc2a3c3266ca2a616c979fa1c7716ff1eb8ff6f7cc355d95f530c2215d"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 54754,
+      "sha256": "79340820953e3742f4ee1994be2af81454cc149fa32088ada7c756ec53da7b04"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/storage-sqlite/src/index.ts",
+      "byteSize": 11564,
+      "sha256": "4d03d3f285c8d7efde22c24ee2bc8e38bbf30e47279c593387eaba8e84300fe4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 14065,
+      "sha256": "8b18eb5f866c195e56f334fec867152879d44348867c99d3e53e17c137e67877"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/storage-sqlite/src/release-publication-domain.ts",
+      "byteSize": 12202,
+      "sha256": "c66dd9749e0c519b65759c2cb31a6ccf6f3e2a17423913a45fc8ed5530f006d1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/storage-sqlite/src/release-publication-protocol.ts",
+      "byteSize": 7349,
+      "sha256": "3d0cf2906607cbb6203fd905b9b0e58212f98ec495da871bfbfa26a92f60e347"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/packages/storage-sqlite/src/release-publication-validation.ts",
+      "byteSize": 4793,
+      "sha256": "6fb27bdba7ef14566549a7101f29f009169bd22fe64e12f18095cbb3e89b792a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/tests/fixtures/release-publication.mjs",
+      "byteSize": 7315,
+      "sha256": "8635ad95dd06801ca7d936785df7e6c335b61a13015cd289ebea09b337265945"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/source-snapshot/tests/release-publication.test.mjs",
+      "byteSize": 18644,
+      "sha256": "a726596c9e92d8a31f33e809a63ac806639d1032d94337211412653fe321eb75"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/tests.txt",
+      "byteSize": 24590,
+      "sha256": "cc41849006994ef7778b135aa7369e64b243ec86017543ec47749baeb90bc6fd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-01/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/inputs-after.json",
+      "byteSize": 54630,
+      "sha256": "9e125b9a7cb37748a935bac60a10e910d39af5ea2df3b3ece558f7cef9bc42dc"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/inputs-before.json",
+      "byteSize": 54630,
+      "sha256": "6c25bd1ac9f4666e78345170acf9262011a297c52f2344d24a64332724758e47"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/report.json",
+      "byteSize": 882,
+      "sha256": "bb77ee16d2868a2250531a6f8f0979c9fa5b34110dd70d83270ab6e90f69bc41"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/binding.json",
+      "byteSize": 12841,
+      "sha256": "de687f55900a4ecc1397fa3de12a978cb68a6f75860a34db42be078ce4ce9d56"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/contracts/src/events.ts",
+      "byteSize": 5966,
+      "sha256": "1fe290d01c06f2ba74c5478523a6b3ab6b6035d9cfe2aa7128a9e71fa4a02641"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/platform-core/src/index.ts",
+      "byteSize": 12031,
+      "sha256": "13e3f258a5ce19bd09eb10a247f053611439a167f5a2eca56d496fdb58788f20"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/platform-core/src/release-publisher.ts",
+      "byteSize": 2795,
+      "sha256": "9f2ebea818f8b855adb7a1302b00b40a1dc4097c5724454e661605514091361f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 6227,
+      "sha256": "6f99e057aafbdcf6e2a08158b3e360e6497892b57102430e1e0c197ce7e141cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 54754,
+      "sha256": "79340820953e3742f4ee1994be2af81454cc149fa32088ada7c756ec53da7b04"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/storage-sqlite/src/index.ts",
+      "byteSize": 11564,
+      "sha256": "4d03d3f285c8d7efde22c24ee2bc8e38bbf30e47279c593387eaba8e84300fe4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 14065,
+      "sha256": "8b18eb5f866c195e56f334fec867152879d44348867c99d3e53e17c137e67877"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/storage-sqlite/src/release-publication-domain.ts",
+      "byteSize": 13404,
+      "sha256": "570f8599043e4d931180a5d05c1ab41858dd4a78db0990c9fe338492281a99f1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/storage-sqlite/src/release-publication-protocol.ts",
+      "byteSize": 7442,
+      "sha256": "2bf0495920a9d517e27da474af159f388ac23080ed63fcce90d829977016ca09"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/packages/storage-sqlite/src/release-publication-validation.ts",
+      "byteSize": 4865,
+      "sha256": "4cd416117bb073d3ece0ce218a3887b7c66469de7280a6d81da162fbe24051f6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/tests/fixtures/release-publication.mjs",
+      "byteSize": 12883,
+      "sha256": "ec7267e00460f7d1c39a26654004bb291bbb1e378a4497d965d76e0682cee815"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/source-snapshot/tests/release-publication.test.mjs",
+      "byteSize": 22205,
+      "sha256": "36d05df4b926f2e6605a3d6075a63740350b72c552348cea224a0db5a71f5642"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/tests.txt",
+      "byteSize": 24804,
+      "sha256": "eb9f9537c869d40974123c494d0683e4a2ac8bd87c7ddb55a901f4a19900be69"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-02/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/inputs-after.json",
+      "byteSize": 54754,
+      "sha256": "e759dc80933ce4cea507b5e3118ffacd8757929e94fe1ab01e1d15cf675eb7b1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/inputs-before.json",
+      "byteSize": 54630,
+      "sha256": "a2344c06c970585ac62c19a444fd03a56b6cb991dca6b01a21958d4191bf3a7e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/report.json",
+      "byteSize": 828,
+      "sha256": "95c4040b8030255e1e9be75d326fd4b906e06258ebdb24f659110aacd220567b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/binding.json",
+      "byteSize": 12841,
+      "sha256": "983a6f12e9950091cc352f7fdef5e128bc309089f5f580cf5583b3552ca8e275"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/contracts/src/events.ts",
+      "byteSize": 5966,
+      "sha256": "1fe290d01c06f2ba74c5478523a6b3ab6b6035d9cfe2aa7128a9e71fa4a02641"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/platform-core/src/index.ts",
+      "byteSize": 12031,
+      "sha256": "13e3f258a5ce19bd09eb10a247f053611439a167f5a2eca56d496fdb58788f20"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/platform-core/src/release-publisher.ts",
+      "byteSize": 2795,
+      "sha256": "9f2ebea818f8b855adb7a1302b00b40a1dc4097c5724454e661605514091361f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 6227,
+      "sha256": "6f99e057aafbdcf6e2a08158b3e360e6497892b57102430e1e0c197ce7e141cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 54754,
+      "sha256": "79340820953e3742f4ee1994be2af81454cc149fa32088ada7c756ec53da7b04"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/storage-sqlite/src/index.ts",
+      "byteSize": 11564,
+      "sha256": "4d03d3f285c8d7efde22c24ee2bc8e38bbf30e47279c593387eaba8e84300fe4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 14065,
+      "sha256": "8b18eb5f866c195e56f334fec867152879d44348867c99d3e53e17c137e67877"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/storage-sqlite/src/release-publication-domain.ts",
+      "byteSize": 13404,
+      "sha256": "570f8599043e4d931180a5d05c1ab41858dd4a78db0990c9fe338492281a99f1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/storage-sqlite/src/release-publication-protocol.ts",
+      "byteSize": 7442,
+      "sha256": "2bf0495920a9d517e27da474af159f388ac23080ed63fcce90d829977016ca09"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/packages/storage-sqlite/src/release-publication-validation.ts",
+      "byteSize": 4865,
+      "sha256": "4cd416117bb073d3ece0ce218a3887b7c66469de7280a6d81da162fbe24051f6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/tests/fixtures/release-publication.mjs",
+      "byteSize": 13126,
+      "sha256": "a5613430d6a433907cc8423f2cefec250bc727ebe7fa341f4bd060971bd42643"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/source-snapshot/tests/release-publication.test.mjs",
+      "byteSize": 22205,
+      "sha256": "36d05df4b926f2e6605a3d6075a63740350b72c552348cea224a0db5a71f5642"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/tests.txt",
+      "byteSize": 27767,
+      "sha256": "5ae8af203929635aaa77f6fdc1259c01e4763ab67b65da2545e677c9338bc177"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-03/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/inputs-after.json",
+      "byteSize": 54754,
+      "sha256": "030c103d7f228386bec649d1cd4bba9770af0c2e5d8b259b276eda45e9db1336"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/inputs-before.json",
+      "byteSize": 54754,
+      "sha256": "11b840a2d6143b9678ca1fae58156950e9c3345343aa16fb80a463f24bc99657"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/report.json",
+      "byteSize": 830,
+      "sha256": "2136bc1e3ff8fc4c704853c16c50d9d1d03e3c9745accb2de37c9cf749c46d9b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/binding.json",
+      "byteSize": 12967,
+      "sha256": "9dcf9f189dccd24ea18a0139239f8f1046338c5e8d338e7f6c8bcbb39a33e5d8"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/contracts/src/events.ts",
+      "byteSize": 5966,
+      "sha256": "1fe290d01c06f2ba74c5478523a6b3ab6b6035d9cfe2aa7128a9e71fa4a02641"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/platform-core/src/index.ts",
+      "byteSize": 12031,
+      "sha256": "13e3f258a5ce19bd09eb10a247f053611439a167f5a2eca56d496fdb58788f20"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/platform-core/src/release-publisher.ts",
+      "byteSize": 2795,
+      "sha256": "9f2ebea818f8b855adb7a1302b00b40a1dc4097c5724454e661605514091361f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/storage-sqlite/migrations/manifest.json",
+      "byteSize": 6227,
+      "sha256": "6f99e057aafbdcf6e2a08158b3e360e6497892b57102430e1e0c197ce7e141cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/storage-sqlite/src/domain.ts",
+      "byteSize": 54754,
+      "sha256": "79340820953e3742f4ee1994be2af81454cc149fa32088ada7c756ec53da7b04"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/storage-sqlite/src/index.ts",
+      "byteSize": 11564,
+      "sha256": "4d03d3f285c8d7efde22c24ee2bc8e38bbf30e47279c593387eaba8e84300fe4"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/storage-sqlite/src/protocol.ts",
+      "byteSize": 14065,
+      "sha256": "8b18eb5f866c195e56f334fec867152879d44348867c99d3e53e17c137e67877"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/storage-sqlite/src/release-publication-domain.ts",
+      "byteSize": 13404,
+      "sha256": "570f8599043e4d931180a5d05c1ab41858dd4a78db0990c9fe338492281a99f1"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/storage-sqlite/src/release-publication-protocol.ts",
+      "byteSize": 7442,
+      "sha256": "2bf0495920a9d517e27da474af159f388ac23080ed63fcce90d829977016ca09"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/packages/storage-sqlite/src/release-publication-validation.ts",
+      "byteSize": 4865,
+      "sha256": "4cd416117bb073d3ece0ce218a3887b7c66469de7280a6d81da162fbe24051f6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/tests/fixtures/release-publication.mjs",
+      "byteSize": 13165,
+      "sha256": "6c20a99f368138602b5d0e6930c93d334c11bb028dba4df1ec75df343e3d0063"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/tests/release-publication.test.mjs",
+      "byteSize": 23150,
+      "sha256": "ebbcfae52ba633d8082a957bfe2bb39aa18bcfb44f3b9933c82f2be9a8358bfb"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/source-snapshot/tests/storage-release-publication-upgrade.test.mjs",
+      "byteSize": 4810,
+      "sha256": "aa4ae76c8b736d7585dbb30a8972032690f257ef4a63c81dea42e0150175cb6c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/tests.txt",
+      "byteSize": 28949,
+      "sha256": "90a11cec045cacd230b5e98ed421082086e5d94ce3c7e4069caf4aeb1d88996b"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-04/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-05/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-05/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-05/inputs-after.json",
+      "byteSize": 54754,
+      "sha256": "d45390d48570a2c6b48e5ad7138fe55443997689663a8585cd18e7bba57df1a3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-05/inputs-before.json",
+      "byteSize": 54754,
+      "sha256": "51738a5e74b3eb2bbf0a6752c0de1b4bb9a1acf97651bc302d2e3beceda3d8fd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-05/report.json",
+      "byteSize": 830,
+      "sha256": "176f3106698ae41906e1fe68f4b0153369e1ce6daa1ff57fa67228029376ad37"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-05/tests.txt",
+      "byteSize": 28409,
+      "sha256": "dcff48496e4d49546492f4db9a63146df34534ccfd8ac244fac266e7d1855096"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/publication-05/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/source-03/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/source-03/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/source-03/inputs-after.json",
+      "byteSize": 54630,
+      "sha256": "ca6bfe684786b531820a86425b029a6f434af499f8fc966aaf0cab406b903c0f"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/source-03/inputs-before.json",
+      "byteSize": 54630,
+      "sha256": "86efcc8aebf0e2a123eb79a5c928fa1b9bda5753cc4d616295ebd284993815fd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/source-03/report.json",
+      "byteSize": 845,
+      "sha256": "4851cf122cca04c9787b8affcd2e168d62f82cb9c01387013450c96d5403331e"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/source-03/tests.txt",
+      "byteSize": 437,
+      "sha256": "0019ae977af3a622d58b404ef820bad29450de77157e0566a53a9462b5adf705"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/source-03/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/transaction-05/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/transaction-05/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/transaction-05/inputs-after.json",
+      "byteSize": 54754,
+      "sha256": "62fb69f43b3490827a697e1f04a11404700d2642112d84c43daabb5556856e0c"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/transaction-05/inputs-before.json",
+      "byteSize": 54754,
+      "sha256": "0b692462ed6d0070e349cccacbc0c01dedc8ee952cc5d8d8f2c204bfb71e538a"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/transaction-05/report.json",
+      "byteSize": 1153,
+      "sha256": "cbe5c90f735e6fda1971e65eefc1cd3ae0e1c3d13e266a5b656b1d627bfce2b6"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/transaction-05/tests.txt",
+      "byteSize": 29460,
+      "sha256": "8d28558bfcf032df71290e8540525d49477172ce1f3cecc2ba15810bee2b90c0"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/transaction-05/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/upgrade-01/emitted-after.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/upgrade-01/emitted-before.json",
+      "byteSize": 12135,
+      "sha256": "1a14dc8b2c82ad29e80e7b8d38084e651b07f90149ace23e37a85e5525f99709"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/upgrade-01/inputs-after.json",
+      "byteSize": 54754,
+      "sha256": "359e162864e87fed27f9c2fe161de1de8306b477acee8463e44d753918ad6236"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/upgrade-01/inputs-before.json",
+      "byteSize": 54754,
+      "sha256": "65a18a5fff6a708e90702ef957ef5e30666d13f6d5f0692b370b0a8b5e7db783"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/upgrade-01/report.json",
+      "byteSize": 854,
+      "sha256": "8dc55651543222289bd802d742a421c6dab45898ad52486aa0a45d6ce62163cd"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/upgrade-01/tests.txt",
+      "byteSize": 1588,
+      "sha256": "3a10c7cd4f3e978c07782d76da6051a8ac59e0b1c758ad249f2f8a02943064c3"
+    },
+    {
+      "file": "project/evidence/P1-07/development/release-publication/upgrade-01/validation-driver.mjs",
+      "byteSize": 4041,
+      "sha256": "d1b25518d3e0a783e3a0ffe5bbf905956520a19860eff53c5373891ab1fbf0ff"
+    }
+  ]
+}

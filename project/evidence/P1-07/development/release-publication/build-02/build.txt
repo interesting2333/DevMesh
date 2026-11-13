@@ -1,0 +1,162 @@
+Scope: 6 of 19 workspace projects
+packages/contracts build$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+packages/contracts build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/contracts build: ℹ config file: D:\yms\AI\DevMesh\packages\contracts\package.json 
+packages/contracts build: ℹ entry: src/index.ts
+packages/contracts build: ℹ target: es2024
+packages/contracts build: ℹ tsconfig: ..\..\tsconfig.json
+packages/contracts build: ℹ Build start
+packages/contracts build: ℹ Cleaning 4 files
+packages/contracts build: ℹ dist\index.js       71.30 kB │ gzip: 19.27 kB
+packages/contracts build: ℹ dist\index.js.map  121.31 kB │ gzip: 31.21 kB
+packages/contracts build: ℹ dist\index.d.ts    235.00 kB │ gzip: 21.89 kB
+packages/contracts build: ℹ 3 files, total: 427.62 kB
+packages/contracts build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/contracts build:   - rolldown-plugin-dts:generate (64%)
+packages/contracts build:   - rolldown-plugin-dts:fake-js (31%)
+packages/contracts build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/contracts build: ✔ Build complete in 4067ms
+packages/contracts build: Done
+packages/storage-sqlite build$ tsdown src/index.ts src/worker.ts src/migrations.ts src/domain.ts --format esm --platform node --target node24 --dts --sourcemap --clean && node build-copy.mjs
+packages/storage-sqlite build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/storage-sqlite build: ℹ config file: D:\yms\AI\DevMesh\packages\storage-sqlite\package.json 
+packages/storage-sqlite build: ℹ entry: src/index.ts, src/worker.ts, src/migrations.ts, src/domain.ts
+packages/storage-sqlite build: ℹ target: node24
+packages/storage-sqlite build: ℹ tsconfig: ..\..\tsconfig.json
+packages/storage-sqlite build: ℹ Build start
+packages/storage-sqlite build: ℹ Cleaning 62 files
+packages/storage-sqlite build: ℹ dist\index.mjs                                    9.55 kB │ gzip:   3.10 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs                                   5.29 kB │ gzip:   2.15 kB
+packages/storage-sqlite build: ℹ dist\migrations.mjs                               0.26 kB │ gzip:   0.17 kB
+packages/storage-sqlite build: ℹ dist\domain.mjs                                   0.22 kB │ gzip:   0.15 kB
+packages/storage-sqlite build: ℹ dist\domain-CXs8kjpw.mjs.map                      1.04 MB
+packages/storage-sqlite build: ℹ dist\domain-CXs8kjpw.mjs                        621.59 kB │ gzip: 122.96 kB
+packages/storage-sqlite build: ℹ dist\preview-session-protocol-BypljurU.mjs.map  165.88 kB │ gzip:  32.78 kB
+packages/storage-sqlite build: ℹ dist\preview-session-protocol-BypljurU.mjs       86.81 kB │ gzip:  17.39 kB
+packages/storage-sqlite build: ℹ dist\index.mjs.map                               18.38 kB │ gzip:   5.54 kB
+packages/storage-sqlite build: ℹ dist\migrations-BsETEmRY.mjs.map                 12.27 kB │ gzip:   4.25 kB
+packages/storage-sqlite build: ℹ dist\worker.mjs.map                               8.45 kB │ gzip:   3.15 kB
+packages/storage-sqlite build: ℹ dist\migrations-BsETEmRY.mjs                      7.30 kB │ gzip:   2.73 kB
+packages/storage-sqlite build: ℹ dist\index.d.mts                                 11.24 kB │ gzip:   2.95 kB
+packages/storage-sqlite build: ℹ dist\domain.d.mts                                 9.01 kB │ gzip:   2.04 kB
+packages/storage-sqlite build: ℹ dist\migrations.d.mts                             0.91 kB │ gzip:   0.42 kB
+packages/storage-sqlite build: ℹ dist\worker.d.mts                                 0.01 kB │ gzip:   0.03 kB
+packages/storage-sqlite build: ℹ dist\json-DJ6Xdwdo.d.mts                        477.78 kB │ gzip:  43.73 kB
+packages/storage-sqlite build: ℹ 17 files, total: 2.48 MB
+packages/storage-sqlite build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/storage-sqlite build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/storage-sqlite build:   - rolldown-plugin-dts:generate (69%)
+packages/storage-sqlite build:   - tsdown:deps (16%)
+packages/storage-sqlite build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/storage-sqlite build: ✔ Build complete in 5926ms
+packages/storage-sqlite build: Done
+packages/runner build$ tsdown src/index.ts src/worker.ts src/main.ts src/dataset-worker.ts src/acceptance-dataset-worker.ts src/acceptance-dataset-abort-worker.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/input-api build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/input-api build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/runner build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/input-api build: ℹ config file: D:\yms\AI\DevMesh\packages\input-api\package.json 
+packages/runner build: ℹ config file: D:\yms\AI\DevMesh\packages\runner\package.json 
+packages/runner build: ℹ entry: src/index.ts, src/worker.ts, src/main.ts, src/dataset-worker.ts, src/acceptance-dataset-worker.ts, src/acceptance-dataset-abort-worker.ts
+packages/input-api build: ℹ entry: src/index.ts
+packages/input-api build: ℹ target: node24
+packages/runner build: ℹ target: node24
+packages/runner build: ℹ tsconfig: ..\..\tsconfig.json
+packages/input-api build: ℹ tsconfig: ..\..\tsconfig.json
+packages/runner build: ℹ Build start
+packages/input-api build: ℹ Build start
+packages/runner build: ℹ Cleaning 35 files
+packages/input-api build: ℹ Cleaning 4 files
+packages/input-api build: ℹ dist\index.mjs      36.63 kB │ gzip: 10.33 kB
+packages/input-api build: ℹ dist\index.mjs.map  60.48 kB │ gzip: 17.07 kB
+packages/input-api build: ℹ dist\index.d.mts     1.80 kB │ gzip:  0.74 kB
+packages/input-api build: ℹ 3 files, total: 98.92 kB
+packages/input-api build: ✔ Build complete in 2956ms
+packages/input-api build: Done
+packages/runner build: ℹ dist\worker.mjs                                         120.12 kB │ gzip: 20.01 kB
+packages/runner build: ℹ dist\index.mjs                                           99.28 kB │ gzip: 20.98 kB
+packages/runner build: ℹ dist\acceptance-dataset-worker.mjs                       10.03 kB │ gzip:  3.17 kB
+packages/runner build: ℹ dist\dataset-worker.mjs                                   9.81 kB │ gzip:  3.12 kB
+packages/runner build: ℹ dist\acceptance-dataset-abort-worker.mjs                  6.54 kB │ gzip:  2.08 kB
+packages/runner build: ℹ dist\main.mjs                                             3.09 kB │ gzip:  1.39 kB
+packages/runner build: ℹ dist\worker.mjs.map                                     179.33 kB │ gzip: 31.63 kB
+packages/runner build: ℹ dist\index.mjs.map                                      165.70 kB │ gzip: 36.00 kB
+packages/runner build: ℹ dist\server-ke1TSt2G.mjs.map                             55.64 kB │ gzip: 14.74 kB
+packages/runner build: ℹ dist\server-ke1TSt2G.mjs                                 32.42 kB │ gzip:  8.54 kB
+packages/runner build: ℹ dist\preview-cleanup-BnbPxXrC.mjs.map                    25.09 kB │ gzip:  5.04 kB
+packages/runner build: ℹ dist\dataset-journal-BxtC082T.mjs.map                    16.26 kB │ gzip:  5.04 kB
+packages/runner build: ℹ dist\acceptance-dataset-worker.mjs.map                   15.69 kB │ gzip:  5.04 kB
+packages/runner build: ℹ dist\dataset-worker.mjs.map                              15.60 kB │ gzip:  5.01 kB
+packages/runner build: ℹ dist\acceptance-dataset-abort-backend-CS5pkic8.mjs.map   15.57 kB │ gzip:  4.80 kB
+packages/runner build: ℹ dist\acceptance-dataset-backend-COboqnXc.mjs.map         12.89 kB │ gzip:  4.20 kB
+packages/runner build: ℹ dist\preview-cleanup-BnbPxXrC.mjs                        12.66 kB │ gzip:  2.89 kB
+packages/runner build: ℹ dist\dataset-backend-uuN8dA_o.mjs.map                    10.69 kB │ gzip:  3.65 kB
+packages/runner build: ℹ dist\dataset-journal-BxtC082T.mjs                        10.61 kB │ gzip:  3.40 kB
+packages/runner build: ℹ dist\acceptance-dataset-abort-worker.mjs.map              9.97 kB │ gzip:  3.12 kB
+packages/runner build: ℹ dist\acceptance-dataset-abort-backend-CS5pkic8.mjs        9.36 kB │ gzip:  2.78 kB
+packages/runner build: ℹ dist\acceptance-dataset-backend-COboqnXc.mjs              7.56 kB │ gzip:  2.33 kB
+packages/runner build: ℹ dist\dataset-backend-uuN8dA_o.mjs                         6.58 kB │ gzip:  2.28 kB
+packages/runner build: ℹ dist\protocol-CrzCRB9P.mjs.map                            6.07 kB │ gzip:  2.18 kB
+packages/runner build: ℹ dist\main.mjs.map                                         5.15 kB │ gzip:  2.10 kB
+packages/runner build: ℹ dist\protocol-CrzCRB9P.mjs                                2.56 kB │ gzip:  1.13 kB
+packages/runner build: ℹ dist\workspace-fence-BX3LCM3x.mjs.map                     1.98 kB │ gzip:  0.79 kB
+packages/runner build: ℹ dist\workspace-fence-BX3LCM3x.mjs                         1.29 kB │ gzip:  0.56 kB
+packages/runner build: ℹ dist\index.d.mts                                        154.65 kB │ gzip: 16.96 kB
+packages/runner build: ℹ dist\acceptance-dataset-abort-worker.d.mts                0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ dist\acceptance-dataset-worker.d.mts                      0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ dist\dataset-worker.d.mts                                 0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ dist\main.d.mts                                           0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ dist\worker.d.mts                                         0.01 kB │ gzip:  0.03 kB
+packages/runner build: ℹ 34 files, total: 1.02 MB
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: (rolldown-plugin-dts:fake-js plugin) [33m[SOURCEMAP_BROKEN] [0mSourcemap is likely to be incorrect: a plugin (rolldown-plugin-dts:fake-js) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect
+packages/runner build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/runner build:   - tsdown:deps (56%)
+packages/runner build:   - rolldown-plugin-dts:generate (24%)
+packages/runner build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/runner build: ✔ Build complete in 5140ms
+packages/runner build: Done
+packages/platform-core build$ tsdown src/index.ts src/config.ts src/scheduler.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/preview-gateway build$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean
+packages/platform-core build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/preview-gateway build: ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+packages/platform-core build: ℹ config file: D:\yms\AI\DevMesh\packages\platform-core\package.json 
+packages/preview-gateway build: ℹ config file: D:\yms\AI\DevMesh\packages\preview-gateway\package.json 
+packages/platform-core build: ℹ entry: src/index.ts, src/config.ts, src/scheduler.ts
+packages/platform-core build: ℹ target: node24
+packages/preview-gateway build: ℹ entry: src/index.ts
+packages/preview-gateway build: ℹ target: node24
+packages/platform-core build: ℹ tsconfig: ..\..\tsconfig.json
+packages/preview-gateway build: ℹ tsconfig: ..\..\tsconfig.json
+packages/platform-core build: ℹ Build start
+packages/preview-gateway build: ℹ Build start
+packages/platform-core build: ℹ Cleaning 10 files
+packages/preview-gateway build: ℹ Cleaning 4 files
+packages/preview-gateway build: ℹ dist\index.mjs      17.75 kB │ gzip: 5.63 kB
+packages/preview-gateway build: ℹ dist\index.mjs.map  31.41 kB │ gzip: 9.33 kB
+packages/preview-gateway build: ℹ dist\index.d.mts     2.90 kB │ gzip: 0.96 kB
+packages/preview-gateway build: ℹ 3 files, total: 52.06 kB
+packages/preview-gateway build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/preview-gateway build:   - tsdown:deps (66%)
+packages/preview-gateway build:   - rolldown-plugin-dts:generate (34%)
+packages/preview-gateway build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/preview-gateway build: ✔ Build complete in 4505ms
+packages/preview-gateway build: Done
+packages/platform-core build: ℹ dist\index.mjs          29.85 kB │ gzip:  7.11 kB
+packages/platform-core build: ℹ dist\scheduler.mjs       4.05 kB │ gzip:  1.36 kB
+packages/platform-core build: ℹ dist\config.mjs          4.01 kB │ gzip:  1.56 kB
+packages/platform-core build: ℹ dist\index.mjs.map      50.54 kB │ gzip: 12.57 kB
+packages/platform-core build: ℹ dist\config.mjs.map      7.33 kB │ gzip:  2.65 kB
+packages/platform-core build: ℹ dist\scheduler.mjs.map   7.26 kB │ gzip:  2.59 kB
+packages/platform-core build: ℹ dist\index.d.mts         6.62 kB │ gzip:  1.65 kB
+packages/platform-core build: ℹ dist\scheduler.d.mts     1.68 kB │ gzip:  0.73 kB
+packages/platform-core build: ℹ dist\config.d.mts        0.90 kB │ gzip:  0.45 kB
+packages/platform-core build: ℹ 9 files, total: 112.25 kB
+packages/platform-core build: [33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+packages/platform-core build:   - tsdown:deps (69%)
+packages/platform-core build:   - rolldown-plugin-dts:generate (27%)
+packages/platform-core build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+packages/platform-core build: ✔ Build complete in 5091ms
+packages/platform-core build: Done

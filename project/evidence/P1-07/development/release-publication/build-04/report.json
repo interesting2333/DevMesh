@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual control publication transactions and explicit trusted publisher protocol fixtures. No physical publication adapter, Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T02:41:12.417Z",
+      "finishedAt": "2026-11-13T02:41:41.712Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "cb901d26a70d6a58e3b527233135463867dea48ecf77b8c97abf0519ce87ee20"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T02:41:41.713Z",
+      "finishedAt": "2026-11-13T02:41:56.846Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T02:41:56.847Z",
+      "finishedAt": "2026-11-13T02:41:58.022Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

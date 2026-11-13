@@ -143,6 +143,8 @@ export type {AcceptancePreparation,AcceptancePreparationRequest} from './accepta
 export {acceptanceReleaseClaim,previewAcceptanceReleaseClaim,acceptanceServiceClaim,acceptancePreparedProof,acceptancePreparationObservation} from './acceptance-readiness-protocol.js';
 export type {AcceptancePreparedProof,AcceptancePreparationObservation,AcceptancePreparationBackend,AcceptanceReadiness} from './acceptance-readiness-protocol.js';
 export {releasePromotionRequest} from './acceptance-commit-protocol.js';
+export {releasePublicationGate,releasePublicationBasis,releaseServiceClaim,releaseRouteBinding,releasePublicationProof,releasePublicationObservation} from './release-publication-protocol.js';
+export type {ReleasePublication,ReleasePublicationProof,ReleasePublicationObservation,ReleasePublicationBackend,ReleasePublicationInput,ReleasePublicationResults} from './release-publication-protocol.js';
 export type {AcceptedRelease,AcceptanceCommitInput} from './acceptance-commit-protocol.js';
 export {acceptanceAbortDecision} from './acceptance-abort-protocol.js';
 export {acceptanceDatasetFences,acceptanceDatasetAbortRequest,acceptanceDatasetAbortProof,acceptanceDatasetAbortReceipt,acceptanceAbortFenceSuccessor,acceptanceAbortSourceGate,acceptanceAbortSourceRecovery,acceptanceAbortCompletionEvidence} from './acceptance-abort-recovery-protocol.js';

@@ -302,6 +302,22 @@ The system SHALL 使用原接受请求准备实际数据文件并持久绑定 AC
 
 The system SHALL 在短事务重核候选、完整审查、准确原质量、准备凭证、当前接受指针和未知副作用，原子创建不可变 Release、更新接受指针、完成 Run 并保存发布意图。事务外准备和发布不得占用该事务。已提交事实 MUST 在路由或打包失败后保留，恢复只处理原发布／导出。
 
+#### Scenario: Original publication has only one dispatch grant
+- **WHEN** 原配置后端消费准确T5 Outbox，或SENT／UNKNOWN操作恢复
+- **THEN** PENDING仅一次取得派发许可并固定原源／目标门；已有派发只查询原操作，不创建替代服务、迁移或新Release
+
+#### Scenario: Readonly preparation cannot be relabeled as writable publication
+- **WHEN** 发布仅重用原只读profile／instance，或缺少准确退役、永久撤权、后继围栏及独立受控制门约束的RELEASE_OWNED／READ_WRITE服务
+- **THEN** 保持接受事实和关闭的新目标门，不记录PUBLISHED或凭普通后端健康标志宣称可写
+
+#### Scenario: Publish the exact restored target atomically
+- **WHEN** 原后端核实准确新服务／路由／镜像／dataset、源门关闭且无未知原写、原门快照、30秒内当前健康及准确后继fence
+- **THEN** 同一writer保存不可变发布证明／观察／PUBLISHED、目标新fence／门历史与事件；旧源继续关闭，任一写失败整体回滚
+
+#### Scenario: Stable publication proof needs fresh recovery observation
+- **WHEN** 原发布证明早已产生而控制ACK丢失，后端再次查询
+- **THEN** 原证明不改写；开门前须新鲜查询同一服务／路由／围栏。准确已保存观察重放返回原结果，不重复事件或开门
+
 #### Scenario: Acceptance transaction fails
 - **WHEN** T5 保存过程发生错误
 - **THEN** Release、指针、Run 完成和发布意图全部回滚，不显示接受成功

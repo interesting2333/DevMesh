@@ -47,3 +47,11 @@ REPLACE 另要求 `recordAcceptanceReplacementDecision` 的明确确认，绑定
 私有原后端getAcceptanceAbortRecovery／completeAcceptanceAbort校验原不可变准备和策略，不依赖当前候选资格。完整证明绑定原决定、Runner清理摘要、数据abort请求／原journal及永久撤权，已保存proof还要求准确原fences和service。源存在时要求旧接受指针、冻结manifest镜像、恢复后fence与RELEASE_OWNED／READ_WRITE服务、30秒内健康，原写DISPATCHED／UNKNOWN全部核实后才提交。
 
 acceptance_abort_completions、源门重开及历史、Run版本／事件同一writer原子保存。只重开本准备准确关闭的源门，fence／revision各加一；原OPEN门保持原历史，目标永久CLOSED。ABORTED解除本准备占用，保留原SENT／UNKNOWN及proof／决定／数据。准确重复返回原完成回执，改证据失败。此API不清理物理资源，不接公共HTTP成功标志；真实物理恢复及发布服务转换仍须独立实现。
+
+## 接受后的发布控制（迁移42）
+
+T5同事务登记独立PENDING／首条历史。原Outbox与接受回执不可变，原PENDING不表示当前发布状态。getReleasePublication／listReleasePublicationHistory供当前成员及原后端查询；listReleasePublications、begin／verify／recordReleasePublicationObservation仅原不可变策略后端使用。没有公共HTTP／MCP成功标志入口。
+
+PENDING→SENT只给一次许可，固定源／目标写门与前代路由；SENT／UNKNOWN永不重新派发。稳定proof绑定原准备、准确只读服务清理、永久撤权、严格后继fence、独立受物理门约束的可写服务与原镜像／dataset／路由。30秒内原对象查询另存观察，旧proof不能替代新鲜健康。保存证明／观察、项目路由代际加一、数据状态、目标开门与历史／Run资源版本／事件同事务，源门保持CLOSED，原接受事实不回退。准确同revision／sequence／内容SHA重放返回历史结果；PUBLISHED不能再改写。
+
+ReleasePublisher只显式注入可信后端；缺配置保持PENDING，preflight只读，恢复inspect禁止新建、迁移、替代或切新路由。此轮只有控制协议／事务和通用消费器，实际Runner可写生命周期、物理guard／撤权、Release访问与导出尚未装配；协议声明不是真实物理能力。

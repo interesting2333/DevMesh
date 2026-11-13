@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "mode": "build",
+  "scope": "Actual control publication transactions and explicit trusted publisher protocol fixtures. No physical publication adapter, Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "build",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "--filter",
+        "@devmesh/contracts",
+        "--filter",
+        "@devmesh/storage-sqlite",
+        "--filter",
+        "@devmesh/runner",
+        "--filter",
+        "@devmesh/platform-core",
+        "--filter",
+        "@devmesh/preview-gateway",
+        "--filter",
+        "@devmesh/input-api",
+        "-r",
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-11-13T02:30:22.386Z",
+      "finishedAt": "2026-11-13T02:30:49.783Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "build.txt",
+      "sha256": "a8cf5ce57668f8be2d9acbe9fb20433a6373964d803a5e6a146533e3159ffeed"
+    },
+    {
+      "name": "typecheck",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "startedAt": "2026-11-13T02:30:49.785Z",
+      "finishedAt": "2026-11-13T02:31:02.548Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "typecheck.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "node_modules/pnpm/bin/pnpm.cjs",
+        "run",
+        "lint"
+      ],
+      "startedAt": "2026-11-13T02:31:02.550Z",
+      "finishedAt": "2026-11-13T02:31:03.691Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "lint.txt",
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": [
+    "packages/storage-sqlite/dist/domain-CXs8kjpw.mjs",
+    "packages/storage-sqlite/dist/domain-CXs8kjpw.mjs.map",
+    "packages/storage-sqlite/dist/domain.mjs",
+    "packages/storage-sqlite/dist/index.mjs",
+    "packages/storage-sqlite/dist/migrations/0042-releasepublications.sql",
+    "packages/storage-sqlite/dist/migrations/manifest.json",
+    "packages/storage-sqlite/dist/preview-session-protocol-BypljurU.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-BypljurU.mjs.map",
+    "packages/storage-sqlite/dist/worker.mjs",
+    "packages/storage-sqlite/dist/domain-AbLaBYiO.mjs",
+    "packages/storage-sqlite/dist/domain-AbLaBYiO.mjs.map",
+    "packages/storage-sqlite/dist/preview-session-protocol-B_EPTyYZ.mjs",
+    "packages/storage-sqlite/dist/preview-session-protocol-B_EPTyYZ.mjs.map"
+  ]
+}

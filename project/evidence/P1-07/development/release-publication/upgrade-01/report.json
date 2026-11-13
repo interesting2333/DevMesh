@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Actual control publication transactions and explicit trusted publisher protocol fixtures. No physical publication adapter, Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/storage-release-publication-upgrade.test.mjs",
+        "tests/storage-acceptance-abort-completion-upgrade.test.mjs"
+      ],
+      "startedAt": "2026-11-13T02:36:19.760Z",
+      "finishedAt": "2026-11-13T02:36:27.812Z",
+      "exitCode": 0,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "3a10c7cd4f3e978c07782d76da6051a8ac59e0b1c758ad249f2f8a02943064c3"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

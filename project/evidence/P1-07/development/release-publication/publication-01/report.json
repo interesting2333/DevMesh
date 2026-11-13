@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mode": "test",
+  "scope": "Actual control publication transactions and explicit trusted publisher protocol fixtures. No physical publication adapter, Linux or product acceptance.",
+  "checks": [
+    {
+      "name": "tests",
+      "executable": "D:\\Environments\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/release-publication.test.mjs"
+      ],
+      "startedAt": "2026-11-13T02:27:17.440Z",
+      "finishedAt": "2026-11-13T02:27:44.965Z",
+      "exitCode": 1,
+      "signal": null,
+      "output": "tests.txt",
+      "sha256": "cc41849006994ef7778b135aa7369e64b243ec86017543ec47749baeb90bc6fd"
+    }
+  ],
+  "inputChanges": [],
+  "emittedChanges": []
+}

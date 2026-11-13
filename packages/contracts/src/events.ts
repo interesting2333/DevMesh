@@ -29,6 +29,7 @@ export const eventPayloads = {
   AcceptanceAbortCompleted:z.strictObject({preparationId:ids.operation,abortOperationId:ids.operation}),
   DatasetWriteGateClosed:z.strictObject({datasetId:ids.dataset,preparationId:ids.operation,fence:revision}),
   ReleaseAccepted: z.strictObject({ candidateId: ids.candidate, releaseId: ids.release }),
+  ReleasePublicationChanged:z.strictObject({releaseId:ids.release,state:z.enum(['PENDING','SENT','UNKNOWN','PUBLISHED']),publicationRevision:revision,observationSequence:epoch,errorCode:opaqueKey.nullable()}),
   PreviewStateChanged: z.strictObject({ previewId: ids.preview, state: z.enum(['PREPARING', 'RUNNING', 'STOPPING', 'STOPPED', 'FAILED', 'OUTCOME_UNKNOWN']) }),
   ExportUpdated: z.strictObject({ exportId: ids.export, status: operationStatus }),
 } as const;
@@ -40,6 +41,7 @@ const base = {
 };
 const eventOf = <T extends keyof typeof eventPayloads>(type: T) => z.strictObject({ ...base, type: z.literal(type), payload: eventPayloads[type] });
 export const domainEvent = z.discriminatedUnion('type', [
+  eventOf('ReleasePublicationChanged'),
   eventOf('AcceptanceAbortRequested'),
   eventOf('AcceptanceAbortCompleted'),
   eventOf('InputSaved'), eventOf('UnderstandingUpdated'), eventOf('QuestionAnswered'), eventOf('PlanPublished'),
