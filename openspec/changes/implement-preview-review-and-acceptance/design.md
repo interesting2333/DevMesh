@@ -10,6 +10,8 @@
 
 ## Decisions
 
+原预览生命周期的可信后台装配见 [preview-consumer-design.md](./preview-consumer-design.md)。
+
 可信撤销消费的宿主、原决定队列及停机排空补充见[abort-consumer-design.md](./abort-consumer-design.md)。
 
 验收数据准备的父进程 RPC 与文件 Worker 分别管理生命周期：preflight、acquire、inspect／verify、authorize 和 loadMigration 全部纳入该调用的未结束集合。Worker 超时立即关闭最终授权并终止线程；exit 先关闭新消息处理并真实等待集合排空，之后才结束调用和交还有界名额。外部调用没有强制取消，不能用超时 Promise 竞赛将其视为已结束。已开始的原物理事实与本地日志保留；无原日志的只读预检可重新请求，有原日志而无完整回执的准备只能查询，不能重做 acquire、初始化或迁移。消费者 stop 同样等待实际 RPC 结束，真实适配器须自行限制 I/O。此修复不新增默认物理后端、持久格式或数据库迁移。

@@ -40,6 +40,7 @@ export const previewRequests={
  ])}),
  listPreviewEffectHistory:z.strictObject({...bound,afterSequence:z.number().int().nonnegative().default(0),limit:z.number().int().min(1).max(100).default(20)}),
   getPreviewLifecycle:z.strictObject({principalId:opaqueKey,previewId:ids.preview}),
+  getPreviewLifecycleScope:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256}),
   listPreviewLifecycles:z.strictObject(backendPage),
   verifyPreviewExecution:z.strictObject(bound),
   recordPreviewRuntimeObservation:z.strictObject({...bound,expectedSequence:z.number().int().nonnegative(),fact:previewRuntimeFact}),
@@ -94,6 +95,7 @@ export interface PreviewResults {
  listPreviewEffects:{items:{sequence:number;effect:PreviewEffect}[];nextSequence:number|null};
  listPreviewEffectHistory:{items:{sequence:number;observation:PreviewInput<'recordPreviewEffectObservation'>['observation'];observedAt:string}[];nextSequence:number|null};
   getPreviewLifecycle:PreviewLifecycle;
+  getPreviewLifecycleScope:{policyHash:string;policy:PreviewBackendPolicy};
   listPreviewLifecycles:{items:{sequence:number;lifecycle:PreviewLifecycle}[];nextSequence:number|null};
   verifyPreviewExecution:{allowed:boolean;reasonCode:string|null};
   recordPreviewRuntimeObservation:PreviewRuntimeObservation;

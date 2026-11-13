@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | ee67e30f42a26818e5462cc5a37d476eb5712539fb85204ac918809ba9eac388 |
+| DevMesh_技术设计方案_V1.1.md | 51cf252a9a14b4a56059ceda51f31be646965fee404c711fee48849c253c1d0a |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 5096afc7cda95eeb13cea118566369e1385bc02791ec9e20ca872c95979a5913 |
+| DevMesh_产品验收场景_V10.0.md | ba4fd96911f7bfb9e4830557d41468c05ec43b8a3cefd3e9e9508aa7f0c2d717 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -583,3 +583,7 @@ startPlatform显式acceptancePolicies指定项目已登记策略快照，仅在�
 ### P1-07 接受数据准备的外部调用排空
 
 LocalSqliteAcceptanceDatasetBackend跟踪父进程所有授权／custody／迁移RPC；Worker超时关闭迟到授权、终止线程，实际排空后才结束调用及释放并发名额。消费者停机复用该语义；不完整原日志继续只查询。适配器自行提供有界I/O，未返回调用继续占位。本增量不新增默认物理Authority、迁移或依赖，真实物理环境／完整后继链及正式门槛仍分别验收。
+
+### P1-07 原预览可信后台消费
+
+以startPlatform.previewLifecycle工厂显式安装PreviewLifecycleConsumer，按原DB预览策略核实完整项目／主体／后端／Runner绑定。复用原生命周期工作页、一次派发、周期健康、原到期停止和Release归属保护，有限范围／页预算、轮转、最多2项目并发。全部后续启动成功才开始消费；停止关闭新授权，预检后复核，真实排空后关闭存储。没有默认真实后端或自动dataset／owner决定／接受；无数据库迁移和依赖变化。真实TTL专项、Worker／Runner／HTTP开发验证与物理Linux、完整后继链、正式门槛分别留证。

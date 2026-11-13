@@ -107,6 +107,7 @@ export function createPreviewDomain(db:DatabaseSync,plans:ReturnType<typeof crea
   },
   getPreview(i:PreviewInput<'getPreview'>){const p=preview(i.previewId);scoped(i.principalId,i.runId,p);return previewView(p);},
    getPreviewLifecycle(i:PreviewInput<'getPreviewLifecycle'>){return lifecycle(backendPreview(i.principalId,i.previewId));},
+    getPreviewLifecycleScope(i:PreviewInput<'getPreviewLifecycleScope'>){const p=policy(i.projectId,i.policyHash);if(p.backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);return {policyHash:i.policyHash,policy:p};},
    listPreviewLifecycles(i:PreviewInput<'listPreviewLifecycles'>){
     if(policy(i.projectId,i.policyHash).backendPrincipalId!==i.principalId)fail('FORBIDDEN',403);
     const rows=all("SELECT rowid sequence,* FROM previews p WHERE project_id=? AND policy_hash=? AND rowid>? AND (state NOT IN ('STOPPED','EXPIRED') OR EXISTS(SELECT 1 FROM preview_effects e WHERE e.preview_id=p.preview_id AND e.state IN ('PREPARED','SENT','UNKNOWN'))) ORDER BY rowid LIMIT ?",i.projectId,i.policyHash,i.afterSequence,i.limit+1),more=rows.length>i.limit;if(more)rows.pop();return {items:rows.map(r=>({sequence:Number(r.sequence),lifecycle:lifecycle(r)})),nextSequence:more?Number(rows.at(-1)!.sequence):null};

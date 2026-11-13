@@ -1,0 +1,15 @@
+{
+  "sources": [
+    {
+      "file": "tests/preview-consumer.test.mjs",
+      "copy": "failed-source/preview-consumer.test.mjs",
+      "sha256": "a8314a459e64000465e89105525a1abc0e8984c270945b4a93403bd09b3572a9"
+    },
+    {
+      "file": "tests/fixtures/preview-lifecycle.mjs",
+      "copy": "failed-source/preview-lifecycle.mjs",
+      "sha256": "fa0714779a9dd95077e9679b161d797c9d0b1bfb1d91ed0b47df3f3635644bf0"
+    }
+  ],
+  "diagnosis": "The test mutated ControlledPreviewBackend.preflight on the same object used by its execute implementation. execute internally calls this.preflight; pinning the installed public adapter methods does not freeze adapter internals. Correct the test by mutating a separate public facade after construction, with methods bound to the unchanged internal fixture. Production code is unchanged."
+}

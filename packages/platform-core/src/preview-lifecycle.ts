@@ -18,13 +18,16 @@ export class PreviewLifecycleManager {
   if(effect.kind==='DATASET_PREPARE')throw new StorageError('PREVIEW_OPERATION_REQUIRED',422,'Use the dataset preparer for data operations');
   if(effect.state==='SUCCEEDED'||effect.state==='FAILED')return effect;
   const backend=this.#configured();let before=await this.#lifecycle(effect.previewId!),dispatch=false;
+  this.#configured();
   if(effect.kind==='PREVIEW_START'&&effect.state==='PREPARED'&&Date.parse(before.preview.expiresAt)<=Date.now())return this.storage.request('recordPreviewEffectObservation',{...this.#subject(effect),expectedRevision:effect.revision,observation:{state:'FAILED',errorCode:'PREVIEW_EXPIRED_WITHOUT_DISPATCH',absenceVerified:true}});
   if(effect.state==='PREPARED'){
    await backend.preflight(effect,before.datasetEffect);
+   this.#configured();
    const grant=await this.storage.request('markPreviewEffectSent',{...this.#subject(effect),expectedRevision:effect.revision});effect=grant.effect;dispatch=grant.dispatch;
    if(effect.state==='SUCCEEDED'||effect.state==='FAILED')return effect;
   }
   before=await this.#lifecycle(effect.previewId!);
+  this.#configured();
   let result:PreviewExecutionResult;
   try{result=dispatch?await backend.execute(effect,before.datasetEffect,async()=>{if(this.#closed)return false;const allowed=await this.storage.request('verifyPreviewExecution',this.#subject(effect));return !this.#closed&&allowed.allowed;}):await backend.inspect(effect);}
   catch{result={observation:{state:'UNKNOWN',errorCode:'PREVIEW_BACKEND_UNCERTAIN'},fact:previewRuntimeFact.parse({previewId:effect.previewId!,datasetId:effect.datasetId,imageDigest:before.preview.imageDigest,state:'UNKNOWN',instanceId:null,endpoint:null,checkedAt:new Date().toISOString()})};}
@@ -46,6 +49,7 @@ export class PreviewLifecycleManager {
   if(current.stopEffect&&!['SUCCEEDED','FAILED'].includes(current.stopEffect.state))await this.advance(current.stopEffect.operationId);
   current=await this.#lifecycle(previewId);
   if(!current.accepted&&!current.stopEffect&&current.preview.instanceId&&['READY','STARTING','UNKNOWN'].includes(current.preview.state)&&Date.parse(current.preview.expiresAt)<=Date.now()){
+   this.#configured();
    const stopped=await this.storage.request('preparePreviewExpiry',{principalId:this.principalId,previewId});await this.advance(stopped.stopOperationId!);
   }
   return (await this.#lifecycle(previewId)).preview;
@@ -62,5 +66,6 @@ export class PreviewLifecycleManager {
   this.#tick=cycle();try{await this.#tick;}finally{this.#tick=undefined;}
   if(!this.#closed){this.#timer=setInterval(()=>{if(!this.#tick)this.#tick=cycle().catch(()=>options.onError?.('PREVIEW_RECOVERY_UNAVAILABLE')).finally(()=>{this.#tick=undefined;});},interval);this.#timer.unref();}
  }
- async close(){this.#closed=true;clearInterval(this.#timer);await this.#tick;}
+ stopAdmission(){this.#closed=true;clearInterval(this.#timer);}
+ async close(){this.stopAdmission();await this.#tick;}
 }

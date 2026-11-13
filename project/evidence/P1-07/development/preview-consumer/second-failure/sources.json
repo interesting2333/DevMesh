@@ -1,0 +1,10 @@
+{
+  "sources": [
+    {
+      "file": "tests/preview-consumer.test.mjs",
+      "copy": "failed-source/preview-consumer.test.mjs",
+      "sha256": "c31ff2cc4edde6173bad17ecc88bc30360e9146296c80c9a8e140d36b6d36781"
+    }
+  ],
+  "diagnosis": "The assertion compared Map insertion order after concurrent calls on distinct projects. Both valid arrival orders retain the correct per-project counts; compare by the original project IDs instead. Production code is unchanged."
+}

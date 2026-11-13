@@ -1,5 +1,15 @@
 # DevMesh platform host
 
+## Trusted preview lifecycle recovery
+
+`startPlatform(config, { previewLifecycle: services => ({ bindings: [{ projectId, policyHash, principalId, backendRef, runnerId, backend }] }) })` explicitly installs `PreviewLifecycleConsumer`. The factory supplies a trusted `PreviewExecutionBackend`, such as an explicitly constructed `RunnerPreviewBackend`; its five identity fields must match the original registered preview policy. Executable factories are not HTTP/MCP registration or JSON configuration. Durable storage is required; Input API, model identity and a preview gateway are independently configured. No backend is installed by default, and all other startup composition must succeed before this consumer starts. External adapter resources remain caller-owned.
+
+The consumer handles existing preview lifecycles only. It does not create datasets, owner start/stop decisions, accept a candidate or delete data. PREPARED gets the original one-time dispatch grant; SENT/UNKNOWN only inspects the original object. Successful starts retain their immutable receipt while periodic observations check current health. Original expiry decisions use the existing deterministic key, and accepted ownership blocks expiry/stop. Terminal history is excluded by the original lifecycle query; active pages rotate. API reads do not dispatch or refresh health.
+
+Bounds are one binding per project, at most 32 projects, 1–10 second polling, 1–32 scopes and 1–20 lifecycles per scope per pass, with at most two projects concurrent and each project serial. Ticks coalesce, backend methods are pinned at construction, and errors expose only safe codes. Scan budgets can let health expire; availability then closes until a fresh independent observation succeeds.
+
+Stop immediately closes scan and final execution authorization, checks again after preflight and before a dispatch grant or expiry decision, and drains active calls before storage closes. An interrupted grant remains the same original operation. The interface cannot forcibly cancel an external call; actual adapters must bound I/O. Runner-side expiry/ownership and original physical stage grants remain separate safeguards. This explicit host composition does not establish physical Linux/gVisor, OCI or custody correctness.
+
 ## Trusted acceptance preparation
 
 `startPlatform` has no default preparation backend. A trusted host may install an already constructed backend after registering its immutable policy through the private storage service. This factory is executable host composition, not a public HTTP/MCP registration or JSON option.

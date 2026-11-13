@@ -1346,6 +1346,10 @@ RunnerAcceptanceAbortCoordinator核实清理器与finalizer的Runner／controlle
 
 停止同步中止信号，原清理阶段许可前后、driver最终授权、数据Worker授权与进入后续finalizer步骤检查停止。数据Worker超时／退出后，父进程仍排空其未返回的authority RPC，之后才结束advance、释放名额或关闭存储。适配器无强制取消，须自行有界I/O；真实物理Driver／fence／源恢复与后继业务链继续单独验收。
 
+#### 12. 原预览生命周期后台消费
+
+startPlatform显式previewLifecycle工厂提供固定项目／策略／service主体／backendRef／Runner和PreviewExecutionBackend，启动按DB原策略核实，全部后续宿主组合成功后才扫描；默认无后端，持久存储必需，Input API／网关／身份单独装配。只恢复已登记原预览，不自动创建dataset或owner决定，不自动接受／发布。原一次启动／停止、SENT／UNKNOWN只查询、周期健康保持原receipt、确定键到期停止和Release归属保护沿用原内核。最多32项目、跨项目2并发、单项目串行、有界轮转／页预算和tick合并；stop同步关闭扫描及最终授权，预检后复核，实际调用排空后才关闭存储。
+
 ---
 
 ## 13. 执行恢复与交付
@@ -2358,5 +2362,7 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 已经记录的 fence 改变、查询不确定、当前接受指针改变、原配置不一致须阻止后续物理阶段；配置恢复后只能继续原 profile。Runner v11→v12 保留旧 action／profile／历史，旧 profile 的配额只查询，不追加配额执行；v12 DDL／历史写失败完整回滚，历史摘要漂移拒绝。实际控制／Runner／数据 Worker 和模板 HTTP 能核实该协议；物理 provider、正式第二轮保留／替换 T5、门换代后的源恢复、导出及完整产品组合另行验证，不由本专项替代。
 
 验收准备数据排空专项使用真实文件 Worker，分别暂停 preflight、最终授权、可信迁移加载、acquire前／后、verify及原完整回执的inspect；超时后检查调用和名额仍保留、排队不超额、迟到授权关闭和原不完整日志不重派。消费者 stop 组合实际控制／Runner／数据 Worker，等待真实RPC返回后才完成，重开仅查原操作、无新服务或Release。物理custody／镜像／容器事实为明确夹具，不作为真实Linux或围栏验收。
+
+原预览后台消费专项使用实际文件控制Worker验证原策略身份、终态过滤／活跃分页、唯一派发及观察丢ACK、预检／execute停止与原查询恢复、三项目有界并发／故障隔离。真实时钟超过30秒健康窗口及原TTL后验证周期刷新、唯一到期停止和显式Release归属保护；归属投影不代表T5。实际dataset／Runner日志与loopback HTTP组合验证停止保留业务字节；宿主默认关闭、错配及后续启动失败零派发、存储排空和重开恢复。物理容器／网络／OCI与候选上游事实为明确夹具，真实Linux及完整产品流程继续验收。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

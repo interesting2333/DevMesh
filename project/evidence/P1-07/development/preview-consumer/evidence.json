@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "23fa8e9142f4df6476e9ea9e28e949f57aa409c1",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "consumer",
+      "record": "consumer-2026-11-13T13-39-36-712Z.json",
+      "tests": 13,
+      "pass": 13,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lifecycle",
+      "record": "lifecycle-2026-11-13T13-39-36-722Z.json",
+      "tests": 17,
+      "pass": 16,
+      "skipped": 1,
+      "skippedTests": [
+        "CLI shuts down on POSIX SIGTERM"
+      ],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "domain",
+      "record": "domain-2026-11-13T13-39-36-719Z.json",
+      "tests": 81,
+      "pass": 81,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T13-38-26-728Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T13-38-26-752Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T13-38-26-733Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T13-38-26-752Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 110,
+  "totalSkipped": 1,
+  "failedRuns": [
+    {
+      "file": "consumer-2026-11-13T13-30-28-531Z.json",
+      "name": "consumer",
+      "code": 1,
+      "stdoutHash": "8c736385ec3c8cbf1c54ea555ce9389f443c62d19fdf156804b22d68527a0137",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changedDuringRun": []
+    },
+    {
+      "file": "consumer-2026-11-13T13-34-45-664Z.json",
+      "name": "consumer",
+      "code": 1,
+      "stdoutHash": "21657f4e88c90bbbcddbcfc9a559a5b2d5a08ca7caa7a00e1e1487ab9a8884a7",
+      "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changedDuringRun": []
+    }
+  ],
+  "inputAssessment": "All final groups/checks have identical recorded final source/test inventories with no changes during or after execution. Config files are included in the final binding. Complete workspace rebuilt before tests. Bundled source-map source bytes match current source and vendor files. Historical control SQL 1..44 is unchanged. Runner source and persistent schema are unchanged; its persistent store schema and dependencies are unchanged.",
+  "scope": "Local development only: actual file-backed control/Runner/data Workers, original preview dispatch, health, real timer expiry, queued project concurrency, consumer stop and original recovery. Container/network/OCI and physical custody/fences remain explicit fixtures. No actual model/OIDC/Linux/gVisor/physical provider or formal successor preserve/replace acceptance. No default physical authority.",
+  "actualChecks": [
+    "The private getPreviewLifecycleScope authenticates the registered original service identity. Factory validation rejects foreign project/policy/principal/backendRef/Runner, disabled or duplicate bindings and invalid budgets before backend work.",
+    "Ticks coalesce, terminal history is excluded, active pages rotate, and installed adapter methods remain pinned. Actual dispatch/runtime ACK loss plus control Worker reopen retain one original start and never replay execution.",
+    "Stop during paused preflight leaves PREPARED; stop during execution denies final authorization and waits for the real Promise before completing. The manager checks closed state again after preflight and before new dispatch/expiry.",
+    "Three actual control Workers joined by an explicit local dispatcher demonstrate scope rotation, at most two unfinished project calls and failure isolation. This is not distributed deployment evidence.",
+    "Actual clocks and file-backed Workers wait more than 30 seconds to expire health, then independent periodic consumption restores it. At real original TTL, one preview gets one original expiry stop while another project retains its explicit Release ownership projection beyond its own TTL. The projection is not a T5 acceptance.",
+    "Actual dataset files, Runner store/journal and loopback HTTP health compose with the consumer. A recorded original stop survives owner removal; business database bytes remain identical and no Release is created.",
+    "Actual foundation startup defaults this consumer off, rejects invalid scopes and later MCP-factory failure without backend work, releases storage for restart, closes authorization on stop and drains before SQLite closes. Restart inspects only the original operation without Input API or a model identity."
+  ],
+  "reproduction": "validation-driver.mjs records complete build/type/lint/contracts and consumer/domain/lifecycle commands with input/log hashes; binding-driver.mjs checks final input bytes, source maps, historical SQL and unchanged Runner/dependencies.",
+  "limits": [
+    "Container/network/OCI, upstream candidate/source facts and Release ownership projection remain explicit fixtures.",
+    "No actual model/OIDC/Linux/gVisor/physical provider or complete successor preserve/replace acceptance.",
+    "Consumer does not create datasets, owner decisions, acceptances or publication. Runner watchdog and physical stage authority remain separate safeguards.",
+    "No forced cancellation; actual adapters must bound I/O and callers own their resources.",
+    "No full pnpm check or fixed-commit clean-checkout validation."
+  ],
+  "skipped": "Existing foundation POSIX SIGTERM case is conditionally skipped on Windows; not counted as passed.",
+  "managementChecks": "management-checks.json"
+}

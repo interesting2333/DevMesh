@@ -671,3 +671,18 @@ The system SHALL retain an acceptance data preparation call and its bounded Work
 - **WHEN** a trusted preparation consumer stops after original custody was acquired but its external call has not returned
 - **THEN** stop closes new physical authorization and remains pending through Worker timeout until the original call drains
 - **AND** restart queries the same original preparation, preserves incomplete evidence and does not create a Release or replacement physical action
+
+### Requirement: Trusted preview lifecycle consumption retains original authority
+The system SHALL allow only explicit executable host composition to install a bounded preview lifecycle consumer. Each project, policy hash, service principal, backend reference and Runner binding MUST match its original registered policy before any backend work. No preview backend SHALL be installed by default. Later startup failure MUST NOT start this consumer.
+
+#### Scenario: Original preview recovery without an API request
+- **WHEN** a trusted consumer scans existing original lifecycle work
+- **THEN** PREPARED can obtain only its original one-time execution grant, while SENT or UNKNOWN only inspects the original object
+- **AND** periodic current health does not rewrite the original start receipt, expiry retains one deterministic original stop, and accepted ownership prevents expiry or stop
+- **AND** work is bounded and rotated with one serial scope per project, at most two unfinished projects, coalesced ticks and safe per-scope errors
+- **AND** no dataset creation, new owner decision, acceptance, publication or data deletion is inferred from consumption or API reads
+
+#### Scenario: Stop during original preflight or execution
+- **WHEN** the consumer or host stops while preflight or an original execution call remains unfinished
+- **THEN** new scan and final physical authorization close immediately, preflight is rechecked before the original grant, and shutdown awaits actual backend drain before storage closes
+- **AND** any already committed original grant remains available for query-only recovery without a replacement execution
