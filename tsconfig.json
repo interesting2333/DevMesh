@@ -59,11 +59,13 @@
       "@devmesh/preview-gateway": [
         "./packages/preview-gateway/src/index.ts"
       ]
-    }
+    },
+    "jsx": "react-jsx"
   },
   "include": [
     "apps/*/src/**/*.ts",
     "packages/*/src/**/*.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "packages/*/src/**/*.tsx"
   ]
 }

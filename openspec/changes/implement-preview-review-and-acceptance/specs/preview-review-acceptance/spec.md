@@ -548,3 +548,22 @@ The system SHALL enable local export consumption only with an explicit platform 
 - **WHEN** releaseExports is omitted or disabled, or it is enabled without durable storage
 - **THEN** omission or disablement installs no consumer, and enabled configuration without storage rejects startup
 - **AND** enabling local export consumption does not enable identity, models, A2A Runtime or a physical Runner
+
+### Requirement: Private accepted-release export entry preserves the original operation
+The system SHALL expose a current-member React delivery page and protected local browser asset for an accepted Release, including historical accepted versions. GET SHALL NOT enqueue, retry or pack exports. The page SHALL show the exact original version, bounded cursor pages, server-computed retry capability and immutable READY download.
+
+#### Scenario: A committed create response is lost and the tab reloads
+- **WHEN** a user explicitly creates an export and the response cannot be verified
+- **THEN** the page retains the original UUID in tab session storage and offers explicit recovery with that same key after reload
+- **AND** load or polling never creates or retries an operation; unavailable session storage prevents a new create
+
+#### Scenario: State changes, failure or revoked membership
+- **WHEN** visible QUEUED or PACKING jobs need a current status
+- **THEN** the page uses bounded GET polling, pauses in the background and serializes requests; pagination remains limited to20 jobs
+- **AND** retry is offered only through the server capability for the original creator and exact generation; uncertain state disables writes and hides download
+- **AND** authorization failure clears displayed jobs and disables actions, with no automatic replacement identity or request
+
+#### Scenario: Unsafe metadata and browser download
+- **WHEN** an accepted-release page contains untrusted error metadata or a READY archive is downloaded
+- **THEN** bootstrap JSON is escaped, React renders only fixed error labels and inert metadata under nonce CSP with protected local assets
+- **AND** the browser receives the original immutable attachment; real enterprise login and physical acceptance require their own evidence

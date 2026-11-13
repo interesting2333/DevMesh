@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "080b8e4b73cffdc5c3c395dacc9acd1d634b2d50",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "finalGroups": [
+    {
+      "name": "entry",
+      "record": "entry-2026-11-13T08-50-32-049Z.json",
+      "tests": 2,
+      "pass": 2,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-13T08-50-32-023Z.json",
+      "tests": 3,
+      "pass": 3,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "scheduler",
+      "record": "scheduler-2026-11-13T08-46-25-537Z.json",
+      "tests": 9,
+      "pass": 9,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/release-export-entry.test.mjs",
+        "tests/fixtures/release-export-entry.mjs",
+        "tests/release-export-entry.test.mjs"
+      ],
+      "reuseAssessment": "Only the three new entry/browser test files changed: missing fixture created_at and an explicit local trusted browser identity because Playwright-injected headers are absent on download requests. They are neither built nor selected/imported by the earlier scheduler/regression. Production, shared original fixtures and selected regression code match byte-for-byte. Exact earlier bytes match recorded input hashes and are retained. Final complete entry and browser groups exercise their final fixtures."
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-13T08-46-25-553Z.json",
+      "tests": 70,
+      "pass": 69,
+      "skipped": 1,
+      "changedDuringRun": [
+        "tests/release-export-entry.test.mjs"
+      ],
+      "changedSinceRun": [
+        "tests/browser/release-export-entry.test.mjs",
+        "tests/fixtures/release-export-entry.mjs"
+      ],
+      "reuseAssessment": "Only the three new entry/browser test files changed: missing fixture created_at and an explicit local trusted browser identity because Playwright-injected headers are absent on download requests. They are neither built nor selected/imported by the earlier scheduler/regression. Production, shared original fixtures and selected regression code match byte-for-byte. Exact earlier bytes match recorded input hashes and are retained. Final complete entry and browser groups exercise their final fixtures."
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T08-45-42-076Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/release-export-entry.test.mjs",
+        "tests/fixtures/release-export-entry.mjs",
+        "tests/release-export-entry.test.mjs"
+      ],
+      "reuseAssessment": "Only the three new entry/browser test files changed: missing fixture created_at and an explicit local trusted browser identity because Playwright-injected headers are absent on download requests. They are neither built nor selected/imported by the earlier scheduler/regression. Production, shared original fixtures and selected regression code match byte-for-byte. Exact earlier bytes match recorded input hashes and are retained. Final complete entry and browser groups exercise their final fixtures."
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T08-50-32-063Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T08-50-32-049Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T08-52-11-574Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 83,
+  "totalSkipped": 1,
+  "failedRuns": [
+    {
+      "file": "browser-2026-11-13T08-46-25-535Z.json",
+      "name": "browser",
+      "code": 1
+    },
+    {
+      "file": "build-2026-11-13T08-42-04-511Z.json",
+      "name": "build",
+      "code": 1
+    },
+    {
+      "file": "diagnostic-2026-11-13T08-49-01-621Z.json",
+      "name": "diagnostic",
+      "code": 1
+    },
+    {
+      "file": "diagnostic-2026-11-13T08-49-32-731Z.json",
+      "name": "diagnostic",
+      "code": 1
+    },
+    {
+      "file": "entry-2026-11-13T08-46-25-519Z.json",
+      "name": "entry",
+      "code": 1
+    }
+  ],
+  "scope": "Modified-checkout development: real SQLite Worker/CAS/Git/local HTTP/React and Edge browser downloads. Upstream T5/source admission/OCI/physical and browser identity are explicit fixtures. No model, OIDC/cookie login, Linux/gVisor, full workspace, formal successor acceptance or product acceptance.",
+  "inputAssessment": "Final entry/browser/type/lint/contracts inputs match the final source. Earlier final build/scheduler/regression have byte-identical production and selected test/dependency paths; differences in isolated new test files are enumerated and original bytes retained. Regression changed only one unselected new entry test while running. All actual production and browser source maps, including TSX, are matched. The first failed build and intermediate build inventory omitted TSX; they are not final validation. No full earlier checkout snapshot is claimed. Diagnostics are not counted as product tests.",
+  "priorSourceAssessment": "Original failed browser test was copied before edits. Earlier HTTP test and new fixture bytes were reconstructed by reversing the scoped fixture corrections, then checked against recorded earlier build/test input SHA-256; retained under failed-source with distinct names. A full early failed checkout is not retained or claimed.",
+  "diagnostic": "Server request observation proved the Edge download lacked the Playwright-injected Authorization header and received 401. Neither context routing nor extraHTTPHeaders changed that. Final browser fixture explicitly opts into a constant trusted local test IdentityResolver; production default and cookie/auth boundaries are unchanged. HTTP negative tests still require bearer and current membership. The retained diagnostic source is the final instrumented helper, not a claim that all earlier diagnostic source versions are retained.",
+  "screenshots": {
+    "files": [
+      "browser/ready-desktop.png",
+      "browser/ready-mobile.png"
+    ],
+    "visualReview": "Same-agent inspection: headings, original SHA, state/download, paging and actions readable at 1280px and 390px, no overlap or horizontal overflow; fixture acceptance only."
+  },
+  "reproduction": "Copy validation-driver.mjs and binding-driver.mjs to .cache/p127-driver.mjs and .cache/p127-bind.mjs, preserve run files under .cache/p127-evidence. Diagnostic helper originally lives at .cache/p127-download-diagnostic.test.mjs and is not a product test. Test commands require the bundled template Playwright runtime and locally installed Edge. pnpm check as a whole was not run.",
+  "managementChecks": "management-checks.json"
+}

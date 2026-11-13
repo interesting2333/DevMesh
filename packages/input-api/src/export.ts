@@ -5,10 +5,12 @@ import {parseContract,opaqueKey,idempotencyKey,createReleaseExportInput,retryRel
 import {StorageError} from '@devmesh/storage-sqlite';
 import type {LocalContentStore} from '@devmesh/blob-store';
 import type {Identity} from './index.js';
+import {mountExportPages} from './export-page.js';
 type Route=(handler:(request:Request,response:Response,identity:Identity)=>Promise<void>)=>RequestHandler;
 const empty=z.strictObject({});
 const fail=(code:string,status:number):never=>{throw new StorageError(code,status,'Export requires current membership and its original frozen job');};
 export function mountExportRoutes(router:Router,content:LocalContentStore,route:Route){
+ mountExportPages(router,content,route);
  const subject=(request:Request,identity:Identity)=>({principalId:identity.principalId,exportId:parseContract(opaqueKey,request.params.exportId)});
  const guarded:Route=handler=>route(async(request,response,identity)=>{try{empty.parse(request.query);await handler(request,response,identity);}catch(error){const {code,status}=error as {code?:string;status?:number};if(code?.startsWith('EXPORT_'))fail(code==='EXPORT_LIMIT_EXCEEDED'?'LIMIT_EXCEEDED':'EXPORT_UNAVAILABLE',status===413?413:409);throw error;}});
  const body=(request:Request)=>{if(!request.is('application/json'))fail('CONTENT_TYPE_INVALID',415);return request.body as unknown;};

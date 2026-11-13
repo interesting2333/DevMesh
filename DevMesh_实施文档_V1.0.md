@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | e07333da8e19acdad9ce75d88db2fc33546f4267d42e2b32987a7b91330c9ece |
+| DevMesh_技术设计方案_V1.1.md | d33e513991b2d85263e6da84088eaffbe88e9e99d1f92252b0e1fef1223a473a |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 0ec370ae81d0d5fc1a3aaeddb6d97c8720cf401e7ff49fa702e9380220f82d3b |
+| DevMesh_产品验收场景_V10.0.md | c50b35b34c85bb63631b844e4ed60189cae83341855014be3b25bc8cf5826499 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -535,3 +535,9 @@ Runner前向迁移10、私有退役writer与显式RunnerReleaseRetirementBackend
 迁移44、独立原版本 snapshot／材料保留、准确 Git 源读取、ZIP32 生成和原作业重试／下载；API GET不启动任务，显式宿主通过 ReleaseExporter 推进排队作业，接入见 packages/result-verifier/EXPORTS.md。归档失败或恢复不调用开发、迁移或发布，也不改验收。原配置／协作／质量／源码分别保留实际依据与处理清单；业务库和平台私有权限排除。产品界面与完整运行回放、正式后继保留／替换和实际物理验收继续；正式 P1-07 与门槛按整体证据评审。
 
 宿主通过 `releaseExports.enabled: true` 显式启用本地持久队列消费，要求已有storage，缺省关闭；私有扫描当前成员原作业、最多两并发、每轮有界，活跃租约／普通FAILED不抢占或重跑。重启从QUEUED续跑，过期PACKING按原代际CAS重排，失败仍用户显式retry；停止先关闭API再取消并等待导出后关闭存储。配置、源码读取器和关闭路径已接平台宿主；此本地增量不启用身份／模型／物理后端，完整正式前置及阶段门槛仍单独评审。
+
+### P1-07 React 交付入口开发增量
+
+原 Release 页新增交付入口，独立 React 18 页与受保护本地 client.js；使用既有 tsdown 构建此小型嵌入入口并保留许可证，完整工作台沿用 React／Vite 选型。展示原接受版本／SHA、20条稳定游标分页、可见活跃任务2秒 GET 核实、后台暂停、单在途／15秒合作取消、当前原任务下载与服务端 canRetry。创建先保存标签会话原 UUID，回执未知时显式找回原请求；加载／轮询不自动创建或重试。撤权清除作业并关闭动作，暂时无法核实时关闭下载／写动作。
+
+浏览器使用明确本地可信身份夹具验证，与真实 OIDC／Cookie 登录分开；HTTP 负例仍要求认证并验证成员及原创建者。独立交付入口不等于完整工作台、默认产品装配、完整后继 T5／换代源恢复或物理验收完成。P1-07 的正式前置及 G0～G4 保持单独评审。代码及开发复核见 project/evidence/P1-07/release-export-entry-development-review.md。

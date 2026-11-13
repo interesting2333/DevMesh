@@ -14,4 +14,4 @@ export * from './events.js';
 export * from './openapi.js';
 export * from './preview.js';
 export * from './release-access.js';
-export {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView} from './release-export.js';
+export {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView,releaseExportEntryView} from './release-export.js';

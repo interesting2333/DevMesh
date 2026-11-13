@@ -7,6 +7,7 @@ const claim={...target,generation:z.number().int().positive(),claimToken:z.uuid(
 export const releaseExportRequests={
  createReleaseExport:z.strictObject({meta:z.strictObject({principalId:opaqueKey,scopeId:opaqueKey,idempotencyKey:z.uuid()}),releaseId:opaqueKey,format:z.literal('zip')}),
  getReleaseExport:z.strictObject(target),
+ getReleaseExportEntry:z.strictObject({principalId:opaqueKey,releaseId:opaqueKey}),
  listReleaseExports:z.strictObject({principalId:opaqueKey,releaseId:opaqueKey,afterExportId:opaqueKey.optional(),limit:z.number().int().min(1).max(200).default(50)}),
  // Private trusted-host scan; never mapped to a public API or an Agent tool.
  listReleaseExportWork:z.strictObject({afterExportId:opaqueKey.optional(),limit:z.number().int().min(1).max(200).default(32)}),
@@ -21,7 +22,7 @@ export type ReleaseExportInput<M extends ReleaseExportMethod>=z.infer<(typeof re
 export interface ReleaseExportJob {
  exportId:string;releaseId:string;runId:string;candidateId:string;codeCommit:string;cutoffSeq:number;snapshotHash:string;
  state:'QUEUED'|'PACKING'|'FAILED'|'READY';generation:number;leaseUntil:string|null;
- archiveHash:string|null;archiveSize:number|null;errorCode:string|null;createdAt:string;updatedAt:string;
+  archiveHash:string|null;archiveSize:number|null;errorCode:string|null;createdAt:string;updatedAt:string;canRetry:boolean;
 }
 export interface ReleaseExportMaterial {key:string;path:string;contentHash:string;byteSize:number;transform:'EXACT'|'REDACT_JSON'}
 export interface ReleaseExportSnapshot {
@@ -34,6 +35,7 @@ export interface ReleaseExportResults {
  createReleaseExport:ReleaseExportJob;getReleaseExport:ReleaseExportJob;retryReleaseExport:ReleaseExportJob;
  listReleaseExports:{jobs:ReleaseExportJob[];nextCursor:string|null};
  listReleaseExportWork:{jobs:{exportId:string;principalId:string;state:'QUEUED'|'PACKING';generation:number}[];nextCursor:string|null};
+ getReleaseExportEntry:{releaseId:string;runId:string;candidateId:string;codeCommit:string;acceptedAt:string;isCurrentAccepted:boolean};
  claimReleaseExport:ReleaseExportContext|null;getReleaseExportContext:ReleaseExportContext;
  prepareReleaseExportArchive:ReleaseExportJob;failReleaseExport:ReleaseExportJob;
 }

@@ -1,0 +1,41 @@
+TAP version 13
+# (node:16980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: React export page and protected local asset remain read-only, scoped and nonce protected
+ok 1 - React export page and protected local asset remain read-only, scoped and nonce protected
+  ---
+  duration_ms: 11022.9962
+  type: 'test'
+  ...
+# (node:16980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16980) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: retry affordance comes from original creator, current membership and actual state; page escapes unsafe error text
+not ok 2 - retry affordance comes from original creator, current membership and actual state; page escapes unsafe error text
+  ---
+  duration_ms: 13664.8448
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\release-export-entry.test.mjs:13:1'
+  failureType: 'testCodeFailure'
+  error: 'NOT NULL constraint failed: project_members.created_at'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.run (file:///D:/yms/AI/DevMesh/tests/fixtures/acceptance.mjs:19:163)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/release-export-entry.test.mjs:16:5)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26706.392

@@ -107,6 +107,10 @@ export function createOpenApiDocument() {
   const releasePath='/api/v1/runs/{runId}/releases/{releaseId}',releaseParameters=[parameter('runId',ids.run),parameter('releaseId',ids.release)];
   add('/api/v1/releases/{releaseId}/exports','post','CreateReleaseExport','ReleaseExport',[parameter('releaseId',ids.release),key],'CreateReleaseExport','202');
   add('/api/v1/releases/{releaseId}/exports','get','ListReleaseExports','ReleaseExportList',[parameter('releaseId',ids.release),parameter('afterExportId',opaqueKey,'query',false),...page]);
+  for(const [suffix,operationId,mime,description] of [['view','ReadReleaseExportPage','text/html','当前成员React交付入口；GET不创建或重试'],['client.js','ReadReleaseExportClient','application/javascript','当前成员读取固定本地React资产；不从CDN加载']] as const){
+    const path='/api/v1/releases/{releaseId}/exports/'+suffix;add(path,'get',operationId,undefined,[parameter('releaseId',ids.release)]);
+    (paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description,content:{[mime]:{schema:{type:'string'}}}};
+  }
   add('/api/v1/exports/{exportId}','get','ReadReleaseExport','ReleaseExport',[parameter('exportId',opaqueKey)]);
   add('/api/v1/exports/{exportId}/retry','post','RetryReleaseExport','ReleaseExport',[parameter('exportId',opaqueKey)],'RetryReleaseExport','202');
   add('/api/v1/exports/{exportId}/download','get','DownloadReleaseExport',undefined,[parameter('exportId',opaqueKey)]);

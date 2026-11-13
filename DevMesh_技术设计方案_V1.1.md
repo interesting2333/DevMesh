@@ -1280,6 +1280,14 @@ EndpointCheck 保存配置 revision、能力／工具 schema 哈希、checkedAt�
 
 独立 RELEASE 用途，dmr_ticket／dmr_session 与 __Host-devmesh-release Cookie；票据最长60秒、会话最长5分钟，哈希持久化，原子兑换，撤权即时检查。r-<摘要> 主机与预览 p- 主机分开。页面先 POST 领票、跨站兑换、GET 核实 Cookie，再加载受限 iframe；仅业务网关收到应用凭据，平台身份不透传。Viewer 只读；每项写与业务响应再次核实当前权限和原门。默认平台／物理适配器未启用，详见 packages/preview-gateway/RELEASE.md。
 
+#### 12. 已接受版本交付入口（2026-11-13 开发增量）
+
+GET /api/v1/releases/:releaseId/exports/view 提供独立 React 18 交付页，原 Release /view 链接到该页；历史已接受版本同样可导出。页面展示原接受时间、准确源码 SHA、当前／历史标识、作业状态及校验信息。GET 只读取原事实，不创建或重试。固定 client.js 也要求当前成员，使用本地 tsdown 浏览器构建、完整第三方许可证和 nonce CSP，不加载 CDN。完整工作台仍按 P1-04 的 React／Vite 选型实施。
+
+创建只由按钮 POST 触发：先在当前标签 sessionStorage 保存每个 Release 的 UUID 原键，再提交；结果丢失或刷新后显示“核实创建请求”，仅用户点击才以原键核实，不在加载／轮询中自动 POST。不能保存原键时拒绝新建。成功后显示固定原任务；分页每页20条，以稳定游标前后翻页，当前创建任务另行固定展示。只有 QUEUED／PACKING 可见任务每2秒 GET 核实，后台标签暂停，单页单在途请求并有15秒合作取消；关闭页面取消在途请求，BFCache 恢复重新加载以鉴权。
+
+canRetry 由服务端基于原创建者、当前成员及 FAILED／过期 PACKING 计算；客户端不推断所有者。重试发送原 generation，下载仅对 READY 原归档提供链接。状态无法核实时隐藏下载并关闭创建／重试，刷新可恢复；401／403／404清除作业并要求重新进入。Bootstrap JSON 转义 HTML 特殊字符，错误只映射固定用户文案。此入口未配置企业身份；实际宿主须注入可信 IdentityResolver，浏览器夹具不是登录实现。
+
 ---
 
 ## 13. 执行恢复与交付
@@ -1596,6 +1604,12 @@ PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实�
 按原 Release 固定候选／源码 SHA、实际需求／计划／角色配置、控制事件 seq 和会话消息游标及正式材料引用，在独立事务登记 export job。QUEUED→PACKING→READY／FAILED；原创建者与当前成员、generation／claim token／租约共同控制材料读取和归档写入。失败需显式重排原任务；启用的宿主消费者可在原租约过期后按原代际 CAS 恢复崩溃打包。首次准备的 ZIP manifest／hash／size 不变，已注册丢回执查询 READY。材料 FK 阻止 GC，物理原字节恢复仍需 CAS 校验；打包不得执行工作、迁移、发布或改动验收。
 
 已实现排队／列出／查询／重试／下载 API 和显式 ReleaseExporter／LocalReleaseExportSources。平台 `releaseExports.enabled: true` 显式装配本地消费者，默认关闭，要求持久存储；不依赖模型或 Runner。私有分页扫描只处理当前成员创建的 QUEUED／过期 PACKING，不自动重跑普通 FAILED；一轮有界、最多两并发。停止先关 API 准入，再取消并等待当前打包，最后关 SQLite；90秒协作取消不是底层调用已退出证明。原受控 bare Git／原正式内容、实际配置与协作记录进入有界 ZIP32 STORE，manifest逐项 hash／size／转换／排除范围，平台字段净化而项目源码／构建／镜像保留原字节；业务数据、平台权限与私有模型输入／推理不导出。交付 scope 完整不等于平台可回放备份。具体边界及接入见 packages/result-verifier/EXPORTS.md；产品界面、完整4.3／5.1／5.2与真实物理、后继流程继续单独验收。
+
+#### 13. 交付页与导出消费者的职责
+
+独立 React 交付页已接入原 Release 页面和现有导出 API，只管理原作业的显式创建／核实、状态、重试和下载。页面加载、分页、轮询和返回均不启动打包；只有配置启用的宿主消费者或显式 ReleaseExporter 推进持久 QUEUED。失联后的 sessionStorage 原键用于恢复创建回执，不保存票据／权限或材料正文。当前成员和原创建者约束仍由服务端逐请求执行，UI 中的能力投影不替代授权。
+
+入口与实际归档通过本地 Worker／CAS／Git／HTTP／React／Edge 联合开发验证；上游 T5／镜像准入和物理事实为显式夹具，企业身份、完整工作台及真实 Linux、后继保留／替换流程继续独立验收。
 
 ---
 

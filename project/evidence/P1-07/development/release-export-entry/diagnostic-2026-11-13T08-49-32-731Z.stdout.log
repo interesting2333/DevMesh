@@ -1,0 +1,42 @@
+TAP version 13
+# (node:35468) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35468) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35468) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: diagnose actual export browser download
+not ok 1 - diagnose actual export browser download
+  ---
+  duration_ms: 24602.387
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p127-download-diagnostic.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'canceled' !== null
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: ~
+  actual: 'canceled'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/.cache/p127-download-diagnostic.test.mjs:14:9)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# {"request":"/api/v1/exports/export_5c6061688f1d4ee89e1e6da495f9e890/download","hasAuth":false,"site":"same-origin","host":"127.0.0.1:60844"}
+# {"error":{"code":"AUTHENTICATION_REQUIRED","message":"Request could not be accepted","requestId":"req_2da7903be1da47f89f210b7097bb2798","retryable":false,"details":{}}}
+# {"status":401,"headers":{"x-powered-by":"Express","cache-control":"no-store","x-content-type-options":"nosniff","x-request-id":"req_2da7903be1da47f89f210b7097bb2798","content-type":"application/json; charset=utf-8","content-length":"168","etag":"W/\\"a8-9ceIvrxG9pgclb6B38sRaL79BPU\\""}}
+# {"filename":"download.json","failure":"canceled"}
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26170.9738

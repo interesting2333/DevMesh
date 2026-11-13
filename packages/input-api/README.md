@@ -23,3 +23,9 @@ workspace 在单个读事务中冻结元数据、材料引用与 eventCursor，�
 查询／打开预览／下载没有接受命令、替代执行或重建材料的路径。共享 HTTPS／企业身份、实际容器和 T5 验收与这些本地入口验证分开记录。公共 DTO 及 OpenAPI 与入口一同维护。
 
 企业身份、真实模型、完整工作台、WebSocket 和真实 Runner 均不由本模块的离线测试宣称验收。运行 `pnpm test:input` 查看实际 HTTP、真实 Worker、迁移和进程 SIGKILL 恢复检查；原始结果随父工作包保存。
+
+## 已接受版本交付页
+
+GET /releases/:releaseId/exports/view 提供独立 React 18 入口，GET 同级 client.js 提供已打包的本地资产；两者均要求当前成员，不依赖预览／Release网关。原 Release /view 包含链接。创建／重试／下载调用原导出 API，详情与消费者启用见 [EXPORTS.md](../result-verifier/EXPORTS.md)。页面加载只读取；创建先保存标签会话原键，响应未知后显式核实。活动任务有界轮询，后台暂停；撤权清除作业，暂时失联关闭下载和写动作。
+
+嵌入入口由本包 tsdown.web.config.ts 构建到 dist/web/export-client.js，包含固定 React／ReactDOM／scheduler／Zod 和完整许可证；tsdown 的 node clean 必须先执行，浏览器构建只 clean dist/web。完整工作台仍是 P1-04 React／Vite 范围。默认身份关闭，浏览器专项的可信 IdentityResolver 仅是测试夹具。

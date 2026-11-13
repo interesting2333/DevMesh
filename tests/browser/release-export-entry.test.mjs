@@ -1,0 +1,30 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';import {mkdir,readFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {releaseExportEntryFixture} from '../fixtures/release-export-entry.mjs';
+import {ReleaseExporter} from '../../packages/result-verifier/dist/index.mjs';
+import {hash,canonical} from '../fixtures/storage-data.mjs';
+const {chromium}=createRequire(new URL('../../templates/web-crud-v1/package.json',import.meta.url))('@playwright/test');
+const root=resolve('.cache/p127-browser'),facts=f=>canonical(Object.fromEntries(['releases','acceptance_commits','release_promotion_outbox','release_publications','projects','runs'].map(table=>[table,f.db.prepare('SELECT * FROM '+table).all()])));
+async function browserFixture(t){const f=await releaseExportEntryFixture(t,{identityMode:'trusted-browser-fixture'}),browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHROMIUM_CHANNEL??'msedge',headless:true});t.after(()=>browser.close());const context=await browser.newContext({acceptDownloads:true,extraHTTPHeaders:f.headers}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));return {...f,browser,context,page,errors};}
+
+test('actual React recovers a committed creation with lost HTTP response after reload, then downloads the original ZIP',{timeout:180000},async t=>{
+  const f=await browserFixture(t),before=facts(f);await mkdir(root,{recursive:true});await f.page.goto(f.origin+f.base+'/view');await f.page.getByRole('heading',{name:'把成果，完整带走。'}).waitFor();assert.equal(f.get('SELECT count(*) n FROM release_exports').n,0);
+  const keys=[];let lose=true;await f.page.route('**/api/v1/releases/*/exports',async route=>{if(route.request().method()!=='POST')return route.continue();keys.push(route.request().headers()['idempotency-key']);const response=await route.fetch({headers:{...route.request().headers(),...f.headers}});if(lose){lose=false;return route.abort('failed');}return route.fulfill({response});});
+  await f.page.getByRole('button',{name:'创建交付包',exact:true}).click();await f.page.getByText('创建结果尚未核实。刷新状态后，点击“核实创建请求”继续找回原任务。',{exact:true}).waitFor();assert.equal(f.get('SELECT count(*) n FROM release_exports').n,1);const original=f.get('SELECT * FROM release_exports');
+  await f.page.reload();await f.page.getByRole('button',{name:'核实创建请求',exact:true}).click();await f.page.getByText('已找到此创建请求的交付包。',{exact:true}).waitFor();assert.equal(keys.length,2);assert.equal(keys[0],keys[1]);assert.equal(f.get('SELECT count(*) n FROM release_exports').n,1);
+  const ready=await f.exporter().advance('user_1',original.export_id);assert.equal(ready.state,'READY');await f.page.getByRole('link',{name:'下载交付包',exact:true}).waitFor();const waiting=f.page.waitForEvent('download');await f.page.getByRole('link',{name:'下载交付包',exact:true}).click();const download=await waiting,downloaded=await readFile(await download.path());assert.equal(hash(downloaded),ready.archiveHash);assert.equal(download.suggestedFilename(),original.export_id+'.zip');
+  await f.page.screenshot({path:resolve(root,'ready-desktop.png'),fullPage:true});await f.page.setViewportSize({width:390,height:844});assert(await f.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await f.page.screenshot({path:resolve(root,'ready-mobile.png'),fullPage:true});assert.deepEqual(f.errors,[]);assert.equal(facts(f),before);
+  t.diagnostic(JSON.stringify({browser:f.browser.version(),actualReact:true,creationRequests:keys.length,durableJobs:1,downloadHash:hash(downloaded),scope:'Actual local control Worker/CAS/Git/HTTP/React/Edge; upstream acceptance and physical facts are explicit fixtures; no OIDC, Linux or product acceptance'}));
+});
+
+test('actual React retries only the failed original and renders unsafe metadata as inert data',{timeout:180000},async t=>{
+  const f=await browserFixture(t),j=await f.create(),before=facts(f),bad=new ReleaseExporter(f.exportContent(),{async read(){throw Error('Explicit original material temporarily unavailable');}});assert.equal((await bad.advance('user_1',j.exportId)).state,'FAILED');
+  f.run('UPDATE release_exports SET error_code=? WHERE export_id=?','</script><img src=x onerror="globalThis.exportXss=true">',j.exportId);await f.page.goto(f.origin+f.base+'/view');await f.page.getByText('打包失败',{exact:true}).waitFor();assert.equal(await f.page.evaluate(()=>globalThis.exportXss??false),false);assert.equal(await f.page.locator('img').count(),0);
+  await f.page.getByRole('button',{name:'重试打包',exact:true}).click();await f.page.getByText('已排队',{exact:true}).waitFor();assert.equal(f.get('SELECT count(*) n FROM release_exports').n,1);assert.equal((await f.exporter().advance('user_1',j.exportId)).state,'READY');await f.page.getByRole('link',{name:'下载交付包',exact:true}).waitFor();assert.equal(facts(f),before);assert.deepEqual(f.errors,[]);
+});
+
+test('actual React traverses the stable cursor and closes protected content after membership revocation',{timeout:180000},async t=>{
+  const f=await browserFixture(t);for(let n=0;n<21;n++)await f.create();await f.page.goto(f.origin+f.base+'/view');await f.page.locator('article.job').first().waitFor();assert.equal(await f.page.locator('article.job').count(),20);await f.page.getByRole('button',{name:'下一页',exact:true}).click();await f.page.getByText('第 2 页',{exact:true}).waitFor();assert.equal(await f.page.locator('article.job').count(),1);
+  await f.page.getByRole('button',{name:'上一页',exact:true}).click();await f.page.getByText('第 1 页',{exact:true}).waitFor();assert.equal(await f.page.locator('article.job').count(),20);f.run('DELETE FROM project_members WHERE project_id=? AND principal_id=?',f.p.projectId,'user_1');await f.page.getByRole('button',{name:'刷新状态',exact:true}).click();await f.page.getByText('访问权限已失效。请重新登录或联系项目负责人。',{exact:true}).waitFor();assert.equal(await f.page.locator('article.job').count(),0);assert(await f.page.getByRole('button',{name:'创建交付包',exact:true}).isDisabled());assert.deepEqual(f.errors,[]);
+});
