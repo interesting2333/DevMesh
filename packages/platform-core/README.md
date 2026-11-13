@@ -26,3 +26,25 @@ Only PREPARED can obtain the original one-time dispatch grant. SENT/UNKNOWN are 
 `stop()` synchronously revokes new scan/dispatch authorization and waits for active calls before the host closes storage. A paused preflight cannot subsequently acquire a dispatch grant. An in-flight backend's authorization callback closes immediately on stop. The interface cannot forcibly cancel a non-returning adapter; trusted adapters must bound their own I/O. Drain does not race against a timeout or pretend an unknown side effect has ended.
 
 The CLI still installs no model identity, OIDC provider or physical Docker/gVisor/fence adapter by default. Local protocol fixtures do not qualify physical isolation, data migration or product acceptance.
+
+## Trusted publication recovery
+
+An explicit trusted host can also consume already accepted original publication Outbox records:
+
+```ts
+await startPlatform(config, {
+  releasePublication: () => ({
+    bindings: [{ projectId, policyHash, principalId, backendRef, runnerId, backend }],
+    pollIntervalMs: 5000,
+    maxConcurrentProjects: 2,
+    maxScopesPerPass: 32,
+    pageSize: 1,
+  }),
+});
+```
+
+Here `backend` implements `ReleasePublicationBackend`; `RunnerReleaseServiceBackend` is one explicit implementation when its actual physical adapters are available. Durable storage and matching original registered acceptance policy are required. Input API and new acceptance entry need not remain enabled for recovery of an already accepted Release. There is no default publisher or public backend registration. The host validates all bindings and completes other startup composition before starting publication consumption. External adapter resources remain caller-owned.
+
+Only the current accepted Release's PENDING/SENT/UNKNOWN publication is work; published and superseded history stays in the separate history query. PENDING receives the original one-time publish grant. SENT/UNKNOWN inspects the original object, then uses optional authorized `resume` to continue the original Runner journal. Each new Runner stage still requires its own durable grant; an uncertain dispatched stage is only queried. No replacement Release, T5 or data migration is initiated. A missing continuation implementation leaves UNKNOWN. Publication failures preserve accepted facts and the closed target write gate; only the writer's validated full publication proof opens that gate.
+
+The bounds are 1–32 projects, one binding per project, 1–30 second polling, 1–32 scopes and 1–20 items per scope per pass, with 1–2 projects concurrent and each project serial. Ticks coalesce and scopes rotate; errors expose only safe codes. The publication consumer shares the stop/drain contract above, including final publish/resume authorization checks. Stopping never opens a gate or pretends a physical operation has completed. Published proof history is not periodically rewritten to refresh health.

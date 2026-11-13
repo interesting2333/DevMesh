@@ -4,6 +4,18 @@
 
 ## ADDED Requirements
 
+### Requirement: Trusted publication consumer preserves accepted facts and original stages
+
+The platform SHALL install publication consumption only through explicitly configured trusted project/policy/backend/Runner bindings verified against the original registered policy. It SHALL scan bounded current unresolved accepted publications, exclude published and superseded history, coalesce passes and serialize each project with bounded cross-project concurrency. Publication recovery SHALL remain available to its explicitly configured original backend when new acceptance entry is disabled.
+
+#### Scenario: Original publication continues after failure or lost acknowledgement
+- **WHEN** an original dispatch, stage or observation acknowledgement is lost or a route remains unavailable
+- **THEN** recovery inspects the same Release and continues only authorized original unstarted stages with unique durable grants, retains T5 and accepted history, performs no data initialization or migration and opens no gate without the complete writer-verified publication proof
+
+#### Scenario: Shutdown closes publication and continuation authorization
+- **WHEN** publication consumption stops during preflight, inspection or an active backend call
+- **THEN** no new publish or resume authorization is granted and storage closes only after the active original call has drained
+
 ### Requirement: Trusted acceptance preparation consumer is bounded and opt in
 
 The platform SHALL consume acceptance preparations only through explicitly installed trusted backends whose project, registered policy, backend principal, backend reference and Runner bindings match the startup policy snapshot. Missing configuration SHALL cause no acceptance scanning or dispatch. The consumer SHALL use bounded unresolved-work pages, exclude closed, aborted and committed originals, coalesce concurrent passes and retain bounded per-project serialization and cross-project concurrency.

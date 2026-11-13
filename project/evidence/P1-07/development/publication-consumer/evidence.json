@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-07",
+  "change": "implement-preview-review-and-acceptance",
+  "date": "2026-11-13",
+  "base": "2e3dcfd56ef99b172e5252818d4c4c41d7e0f07e",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.13.1"
+  },
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "consumer",
+      "record": "consumer-2026-11-13T12-37-44-529Z.json",
+      "tests": 16,
+      "pass": 16,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lifecycle",
+      "record": "lifecycle-2026-11-13T12-37-44-541Z.json",
+      "tests": 33,
+      "pass": 32,
+      "skipped": 1,
+      "skippedTests": [
+        "CLI shuts down on POSIX SIGTERM"
+      ],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "domain",
+      "record": "domain-2026-11-13T12-37-44-542Z.json",
+      "tests": 112,
+      "pass": 112,
+      "skipped": 0,
+      "skippedTests": [],
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-13T12-37-05-306Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-13T12-37-05-272Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-13T12-37-05-299Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-13T12-37-05-296Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 160,
+  "totalSkipped": 1,
+  "failedRuns": [],
+  "inputAssessment": "All final groups/checks have identical final source/test/config inventories with no changes during or after execution. Complete workspace rebuilt before tests. Bundled source-map source bytes match current source and vendor files. Historical SQL 1..44 and Runner/dependency files are unchanged.",
+  "scope": "Local development only: actual file-backed control Workers, accepted T5 and publication transactions, original journal continuation regression, startup/CAS layout and shutdown drain. Physical retirement/fence/route/service/health and upstream source/admission/manual observations remain explicit protocol fixtures. Multi-project concurrency uses an explicit in-process dispatcher over three separate Workers. Superseded history is an explicit metadata projection fixture, not another formal T5. No real model/OIDC/Linux/gVisor/physical provider/data migration or complete successor preserve/replace acceptance. No default physical publisher.",
+  "reproduction": "validation-driver.mjs records full build/type/lint/contracts and consumer/lifecycle/domain commands, input hashes before/after and stdout/stderr. binding-driver.mjs verifies all final inputs, log hashes, source-map bytes and historical SQL.",
+  "actualChecks": [
+    "Default off, durable storage prerequisite, exact original policy/actor/Runner binding, startup rejection and actual lock/resource release. A later MCP factory failure happens before publication starts.",
+    "Actual original T5/PENDING starts publication without Input API or new acceptance entry. Stop closes final authorization, waits for active call, then closes Worker; restart inspects/resumes that same accepted Release.",
+    "Published and superseded records do not consume current-work pages; original history remains complete. The successor metadata projection is explicitly not a second formal T5.",
+    "Concurrent ticks share one pass and one publish grant. Original accepted facts and historical PENDING acceptance receipt remain unchanged after publication.",
+    "Grant and observation ACKs are discarded after actual private Worker commits. Reopened Worker recovers without replaying publish.",
+    "Periodic UNKNOWN route continuation uses inspect/resume on the same original Release; absence of resume stays UNKNOWN. Disabled backend skips scans/effects.",
+    "Stop during preflight/publish/inspect/resume drains real promises. Preflight cannot dispatch after stop; publish/resume final authorization returns false; inspect does not begin resume after stop.",
+    "Explicit dispatcher over three actual Workers verifies scope rotation, at most two unfinished backend calls and progress despite one scan failure.",
+    "Existing domain regression covers original publication proof/gate transactions and Runner stage continuation, with existing acceptance-consumer and foundation lifecycle regressions."
+  ],
+  "limits": [
+    "Physical retirement/fence/route/service/health and upstream source/admission/manual observations are explicit protocol fixtures.",
+    "Superseded history uses explicit metadata projection, not another formal successor T5.",
+    "No actual model, enterprise OIDC, Linux/gVisor, physical provider or data migration acceptance.",
+    "Backend interfaces cannot forcibly cancel a non-returning adapter; drain remains pending. Adapters own bounded I/O, external resources are caller-owned.",
+    "Full pnpm check and fixed-commit clean-checkout validation were not run."
+  ],
+  "skipped": "Original foundation POSIX SIGTERM case is skipped on Windows; it is not counted as passed.",
+  "managementChecks": "management-checks.json"
+}

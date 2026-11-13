@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "b8fd772c435ffeb98c7269e18d2e4eab223ef5bb2eaa6c427c514fb7fe060eaf"
+      "sha256": "44e4d623d8afbc96cc4ba70122437886be018acca8f702867155445c3717e0fd"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "f1dde5f9c030e69250b5f17aeee3bdc8952408df4583298f1d8d24591ce25e7c"
+      "sha256": "bdb1d21415b5c3a868ad51d1ce77dcffbaa81861d8212ef41408ad488ae6d8cf"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "5a3187d02c47eb643b3c9036db37104b576e3f0e0f2439d2e9d8144a7faf679d"
+      "sha256": "77426f2763b783cea597ff610264c88302c5ff486c57b888ecc25dac82a979c3"
     }
   ],
   "gates": [
@@ -1333,7 +1333,10 @@
         "packages/platform-core/src/acceptance-consumer.ts",
         "packages/platform-core/README.md",
         "tests/acceptance-consumer.test.mjs",
-        "tests/acceptance-consumer-host.test.mjs"
+        "tests/acceptance-consumer-host.test.mjs",
+        "packages/platform-core/src/publication-consumer.ts",
+        "tests/publication-consumer.test.mjs",
+        "tests/publication-consumer-host.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-07/review-development-review.md",
@@ -1506,7 +1509,11 @@
         "project/evidence/P1-07/acceptance-consumer-development-review.md",
         "project/evidence/P1-07/development/acceptance-consumer/evidence.json",
         "project/evidence/P1-07/development/acceptance-consumer/final-binding.json",
-        "project/evidence/P1-07/development/acceptance-consumer/manifest.json"
+        "project/evidence/P1-07/development/acceptance-consumer/manifest.json",
+        "project/evidence/P1-07/publication-consumer-development-review.md",
+        "project/evidence/P1-07/development/publication-consumer/evidence.json",
+        "project/evidence/P1-07/development/publication-consumer/final-binding.json",
+        "project/evidence/P1-07/development/publication-consumer/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1570,7 +1577,8 @@
         "2026-11-13：5.1 人工审查HTTP／React入口：原候选准确SHA、逐项实际操作／观察和PASS／FAIL，退回原范围／新增范围、纠正及有理由撤回，历史20条游标；当前owner／成员及服务端撤回能力、If-Match／前条CAS、sessionStorage原正文／键／ETag找回、损坏待核实记录阻止新提交，撤权清空。最终接口3/3、Edge4/4、原交付页Edge3/3、领域／入口／契约回归39/39，共49通过、0跳过；构建／类型／Lint／契约和248条映射（含TSX／第三方）通过，迁移1～44及Runner不变。两次IIFE配置失败、404映射错误及浏览器提前等待断言已修正并保留；所有最终组输入相同且运行无修改。真实Worker／HTTP／React／Edge，上游源／Runner／报告与浏览器身份为明确夹具，不改质量／Work／接受事实。完整5.1／工作台／默认组合、后继T5及物理验收继续，OpenSpec8/13、正式P1-07及门槛不变。",
         "2026-11-13：5.1 接受HTTP入口：准确依据／策略快照与20条原准备游标，原准备意图、独立替换确认、未派发关闭／已派发撤销，AcceptCandidate更新完整两阶段正文并接真实ReleaseAcceptor材料预检；成员／owner、原UUID／正文／If-Match、内部proof／路径投影隔离，宿主显式acceptancePolicies默认关闭新动作。最终接口5/5、准备／T5／撤销51/51、输入／审查／契约22/22、Edge4/4，共82通过、0跳过；构建／类型／Lint／契约及252条映射通过，迁移1～44／Runner不变。首轮类型品牌ID两处错误修正后所有最终组同源码重跑；类型失败及三份原字节快照留存。实际Worker／HTTP／材料字节预检和T5，提交后注入丢ACK可在关闭新配置后原键恢复一份Release／发布Outbox；上游源码／Runner／围栏／健康与人工观察仍为明确夹具。完整工作台／默认后端推进、正向后继保留／替换与物理验收继续，OpenSpec8/13及正式P1-07／门槛不变。",
         "2026-11-13：5.1 接受React页面：准确view／成员保护脚本接入审查链接；固定INITIAL／保留迁移／替换方案及来源、原准备20项游标，独立替换／准备／关闭／有理由撤销／最终接受确认，刷新清除旧勾选。每Run标签页先保存原正文／UUID／If-Match，丢HTTP应答后显式恢复，重开Worker只一份Release／Outbox；UNKNOWN／损坏存储关闭新提交，ABORTING只显示清理待核实，撤权清空保护内容，原回执和当前发布分开。最终入口6/6、输入／审查／契约22/22、接受领域54项、Edge8/8，共90通过、0跳过；构建／类型／Lint／契约及300条源码映射、旧迁移1～44／Runner不变。类型与首轮浏览器等待失败／修正及原字节快照留存，最终生产源码／产物与完整构建一致；之后仅v37迁移测试改为历史SQL夹具并独立3/3复测，原扩展组52通过2失败保留，仅选用其51个通过的原接受用例；其余原组复用有精确SHA与未导入该独立测试的范围评估，最终Lint／Edge重跑，无运行中漂移；早期输入评估及81秒性能剖析保留历史。实际React／Edge／HTTP／Worker／材料预检／T5；上游Runner／围栏／健康及人工观察为明确夹具，REPLACE／PRESERVE展示另为响应夹具，不代替正式后继业务链。完整工作台／可信后端消费、正向业务／物理验收继续，OpenSpec8/13及正式P1-07／门槛不变。",
-        "2026-11-13：4.1／5.1可信接受准备后台消费：AcceptancePreparationConsumer＋startPlatform显式工厂，匹配acceptancePolicies启动快照及DB原project／policy／主体／backendRef／Runner；默认不扫描。未决工作页排除失败／撤销／接受历史，有限范围／页预算、轮转、跨项目最多2并发与每项目串行、tick合并；原一次派发、SENT／UNKNOWN只查原对象，独立周期健康不改proof且GET不刷新。停机立即关闭新授权，preflight后复核，真实排空后端调用再关闭存储，不自动T5／发布／清理。新消费者13/13、宿主／导出19通过1项Windows跳过、接受／T5／撤销／契约45/45，共77通过1跳过；完整构建／类型／Lint／契约通过，301条源码映射及旧迁移1～44／Runner／依赖不变，最终全部输入无漂移。实际文件Worker／CAS／平台启停／31秒健康时效／原HTTP接受回归；物理后端和上游事实为明确夹具。无默认真实Runner／OIDC、物理迁移／清理、正向后继保留替换、完整工作台或产品验收；后端无强制取消、由适配器保证有界I/O。正式P1-07及OpenSpec8/13和门槛保持原状态。"
+        "2026-11-13：4.1／5.1可信接受准备后台消费：AcceptancePreparationConsumer＋startPlatform显式工厂，匹配acceptancePolicies启动快照及DB原project／policy／主体／backendRef／Runner；默认不扫描。未决工作页排除失败／撤销／接受历史，有限范围／页预算、轮转、跨项目最多2并发与每项目串行、tick合并；原一次派发、SENT／UNKNOWN只查原对象，独立周期健康不改proof且GET不刷新。停机立即关闭新授权，preflight后复核，真实排空后端调用再关闭存储，不自动T5／发布／清理。新消费者13/13、宿主／导出19通过1项Windows跳过、接受／T5／撤销／契约45/45，共77通过1跳过；完整构建／类型／Lint／契约通过，301条源码映射及旧迁移1～44／Runner／依赖不变，最终全部输入无漂移。实际文件Worker／CAS／平台启停／31秒健康时效／原HTTP接受回归；物理后端和上游事实为明确夹具。无默认真实Runner／OIDC、物理迁移／清理、正向后继保留替换、完整工作台或产品验收；后端无强制取消、由适配器保证有界I/O。正式P1-07及OpenSpec8/13和门槛保持原状态。",
+        "2026-11-13：4.3／5.1已接受发布后台消费：ReleasePublicationConsumer＋startPlatform显式releasePublication工厂，固定原project／policy／主体／backendRef／Runner并核实DB策略，后续宿主组合成功才启动。无需Input API或新接受入口仍开启，默认无物理发布器。私有工作页只取当前已接受未决发布，保留完整历史；原一次publish、SENT／UNKNOWN先inspect并按原授权resume续接Runner阶段，不重建Release／T5或重做迁移。范围轮转、最多2并发、项目串行和tick合并；停机关闭publish／resume最终授权、真实排空后关闭Worker。consumer 16通过，lifecycle 32通过／1跳过，domain 112通过，共160通过1跳过；完整构建／类型／Lint／契约通过，302条源码映射及旧SQL1～44／Runner／依赖不变，所有最终输入无漂移。真实文件Worker／T5／发布事务／宿主启停；物理后端和上游事实为明确夹具，后继历史仅显式元数据投影。未执行完整pnpm check／固定提交干净checkout；真实身份／Linux／容器／物理迁移与正式后继业务链继续验收，正式P1-07／OpenSpec8/13／阶段门槛保持原状态。"
       ]
     },
     {

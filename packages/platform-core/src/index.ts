@@ -13,6 +13,8 @@ import {ReleaseExportScheduler} from './release-exports.js';
 import {ReleaseAcceptor} from './release-acceptor.js';
 import {AcceptancePreparationConsumer} from './acceptance-consumer.js';
 import type {AcceptancePreparationConsumerOptions} from './acceptance-consumer.js';
+import {ReleasePublicationConsumer} from './publication-consumer.js';
+import type {ReleasePublicationConsumerOptions} from './publication-consumer.js';
 
 export { loadConfig, ConfigError } from './config.js';
 export type { ServerConfig } from './config.js';
@@ -23,6 +25,8 @@ export {AcceptancePreparationConsumer} from './acceptance-consumer.js';
 export type {AcceptancePreparationConsumerOptions,AcceptancePreparationBinding} from './acceptance-consumer.js';
 export {ReleaseAcceptor} from './release-acceptor.js';
 export {ReleasePublisher} from './release-publisher.js';
+export {ReleasePublicationConsumer} from './publication-consumer.js';
+export type {ReleasePublicationConsumerOptions,ReleasePublicationBinding} from './publication-consumer.js';
 export {ReleaseExportScheduler} from './release-exports.js';
 export type {ReleaseExportSchedulerOptions} from './release-exports.js';
 export {PreviewLifecycleManager} from './preview-lifecycle.js';
@@ -40,9 +44,10 @@ export interface FoundationServer {
   mcp?:WorkflowMcpServices|undefined;
   releaseExports?:ReleaseExportScheduler|undefined;
   acceptancePreparation?:AcceptancePreparationConsumer|undefined;
+  releasePublication?:ReleasePublicationConsumer|undefined;
 }
 
-export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;previewGateway?:PreviewAccessGateway;acceptancePolicies?:Readonly<Record<string,string>>;acceptancePreparation?:(services:NonNullable<FoundationServer['services']>)=>Promise<AcceptancePreparationConsumerOptions>|AcceptancePreparationConsumerOptions;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
+export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;previewGateway?:PreviewAccessGateway;acceptancePolicies?:Readonly<Record<string,string>>;acceptancePreparation?:(services:NonNullable<FoundationServer['services']>)=>Promise<AcceptancePreparationConsumerOptions>|AcceptancePreparationConsumerOptions;releasePublication?:(services:NonNullable<FoundationServer['services']>)=>Promise<ReleasePublicationConsumerOptions>|ReleasePublicationConsumerOptions;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
   const acceptancePolicies=options.acceptancePolicies?Object.freeze({...options.acceptancePolicies}):undefined;
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
   if(config.runtime&&(!config.storage||!config.a2a))throw new Error('Runtime requires durable storage and hosted A2A endpoints');
@@ -51,6 +56,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   if(options.previewGateway&&!config.inputApi)throw new Error('Preview entry requires the explicitly configured Input API');
   if(options.acceptancePolicies&&!config.inputApi)throw new Error('Acceptance entry requires the explicitly configured Input API');
   if(options.acceptancePreparation&&(!config.storage||!config.inputApi||!acceptancePolicies))throw new Error('Acceptance preparation requires durable storage, Input API and explicit acceptance policies');
+  if(options.releasePublication&&!config.storage)throw new Error('Release publication requires durable storage');
   if(options.mcp&&!config.storage)throw new Error('MCP services require durable storage');
   if(options.workspaceLifecycle&&!config.runtime)throw new Error('Managed workspaces require an explicitly configured Runtime');
   if(options.scheduler&&(!config.runtime||!config.a2a?.identities.some(identity=>identity.principalId===options.scheduler?.callerId)))
@@ -99,6 +105,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   let mcp:WorkflowMcpServices|undefined;
   let releaseExports:ReleaseExportScheduler|undefined;
   let acceptancePreparation:AcceptancePreparationConsumer|undefined;
+  let releasePublication:ReleasePublicationConsumer|undefined;
   try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
   catch(error){await storageFiber?.dispose();throw error;}
   try{if(inputModule&&inputBaseline&&services){const acceptor=acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,previewGateway:options.previewGateway,...(acceptor?{acceptance:{policies:acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
@@ -147,8 +154,9 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
 
   async function releaseServices(){
     acceptancePreparation?.stopAdmission();
+    releasePublication?.stopAdmission();
     mcp?.stopAdmission();const failures:unknown[]=[];
-    const actions=[()=>inputApi?.stop(),()=>acceptancePreparation?.stop(),()=>releaseExports?.stop(),()=>scheduler?.stop(),()=>preparationConsumer?.stop(),()=>consumer?.stop(),()=>mcp?.close(),()=>agents?.stop(),()=>fiber.dispose(),()=>storageFiber?.dispose()];
+    const actions=[()=>inputApi?.stop(),()=>acceptancePreparation?.stop(),()=>releasePublication?.stop(),()=>releaseExports?.stop(),()=>scheduler?.stop(),()=>preparationConsumer?.stop(),()=>consumer?.stop(),()=>mcp?.close(),()=>agents?.stop(),()=>fiber.dispose(),()=>storageFiber?.dispose()];
     for(const action of actions)try{await action();}catch(error){failures.push(error);}
     if(failures.length){server.closeAllConnections();for(const socket of sockets)socket.destroy();throw new AggregateError(failures,'Platform resource release failed');}
   }
@@ -162,6 +170,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
       acceptancePreparation=await AcceptancePreparationConsumer.create(services.local.storage,configured);
       acceptancePreparation.start();
     }
+    if(options.releasePublication&&services)releasePublication=await ReleasePublicationConsumer.create(services.local.storage,await options.releasePublication(services));
     if(options.mcp&&services){const {startWorkflowMcpServices}=await import('@devmesh/mcp-tools');mcp=await startWorkflowMcpServices(services.local.storage,services.content,await options.mcp(services));}
     if(config.releaseExports&&services){
       const {LocalReleaseExportSources}=await import('@devmesh/code-workspaces');
@@ -195,6 +204,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
         await preparationConsumer.start();
       }
     }
+    releasePublication?.start();
     ready = true;
   } catch (error) {
     await releaseServices().catch(()=>{});
@@ -217,9 +227,11 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     ...(mcp?{mcp}:{}),
     ...(releaseExports?{releaseExports}:{}),
     ...(acceptancePreparation?{acceptancePreparation}:{}),
+    ...(releasePublication?{releasePublication}:{}),
     stop() {
       ready = false;
       acceptancePreparation?.stopAdmission();
+      releasePublication?.stopAdmission();
       mcp?.stopAdmission();
       stopping ??= (async () => {
         await releaseServices();

@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | b8fd772c435ffeb98c7269e18d2e4eab223ef5bb2eaa6c427c514fb7fe060eaf |
+| DevMesh_技术设计方案_V1.1.md | 44e4d623d8afbc96cc4ba70122437886be018acca8f702867155445c3717e0fd |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | f1dde5f9c030e69250b5f17aeee3bdc8952408df4583298f1d8d24591ce25e7c |
+| DevMesh_产品验收场景_V10.0.md | bdb1d21415b5c3a868ad51d1ce77dcffbaa81861d8212ef41408ad488ae6d8cf |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -571,3 +571,7 @@ startPlatform显式acceptancePolicies指定项目已登记策略快照，仅在�
 新增AcceptancePreparationConsumer及startPlatform的acceptancePreparation可信工厂，固定原项目／策略／主体／backendRef／Runner并在启动前核实DB登记；必须匹配acceptancePolicies启动快照。未配置默认不扫描，公共API不提供推进或proof回调。未决工作页只返回PREPARED／SENT／UNKNOWN并排除撤销／接受终态，旧历史不挡新准备。显式限制项目数、页预算、轮转和最多2个项目并发，重复tick合并，单项失败不阻断其他范围。
 
 沿用原派发／观察CAS和丢ACK恢复，SENT／UNKNOWN只inspect原对象，独立周期更新原proof的当前健康；没有自动T5／发布／清理。停机先关闭新授权，preflight后复核，排空真实后端调用再关闭存储；不声称能强制取消未返回调用。开发测试使用实际文件Worker／平台start-stop，物理后端事实仍为明确夹具。正式4.1／5.1的后继业务链、真实Runner／gVisor、默认产品部署及阶段验收继续单列。
+
+### P1-07 已接受发布消费增量
+
+实现ReleasePublicationConsumer及startPlatform显式releasePublication工厂，原策略及五项绑定启动校验；只扫描当前已接受原Release未决发布，历史接口保持完整。原唯一publish与inspect／授权resume续接Runner原阶段，有限项目／页预算、轮转、最多2并发和tick合并。停止新接受入口后仍可显式恢复已接受发布，无默认物理后端；停机关闭新publish／resume授权并排空真实调用，再关闭Worker。验证默认关闭／错配启动失败、终态及过期历史过滤、丢许可／观察ACK后重开恢复、周期UNKNOWN续接、失败保留接受事实／闭门、并发／故障隔离和宿主停机／重启。真实物理Runner／路由／围栏／健康仍另行验收，完整4.3／5.1／5.2与正式阶段状态不因局部消费实现自动完成。

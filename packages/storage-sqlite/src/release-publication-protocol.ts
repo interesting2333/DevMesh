@@ -39,6 +39,7 @@ const bound={principalId:opaqueKey,releaseId:ids.release,requestHash:sha256};
 export const releasePublicationRequests={
  getReleasePublication:z.strictObject({principalId:opaqueKey,releaseId:ids.release}),
  listReleasePublications:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:counter.default(0),limit:z.number().int().min(1).max(100).default(20)}),
+ listReleasePublicationWork:z.strictObject({principalId:opaqueKey,projectId:ids.project,policyHash:sha256,afterSequence:counter.default(0),limit:z.number().int().min(1).max(100).default(20)}),
  beginReleasePublication:z.strictObject({...bound,expectedRevision:counter}),
   verifyReleasePublication:z.strictObject(bound),
   verifyReleasePublicationContinuation:z.strictObject(bound),
@@ -58,6 +59,7 @@ export type ReleasePublicationInput<M extends ReleasePublicationMethod>=z.output
 export interface ReleasePublicationResults {
  getReleasePublication:ReleasePublication;
  listReleasePublications:{items:{sequence:number;publication:ReleasePublication}[];nextSequence:number|null};
+ listReleasePublicationWork:{items:{sequence:number;publication:ReleasePublication}[];nextSequence:number|null};
  beginReleasePublication:{dispatch:boolean;publication:ReleasePublication};
   verifyReleasePublication:{allowed:boolean;reasonCode:string|null};
   verifyReleasePublicationContinuation:{allowed:boolean;reasonCode:string|null};

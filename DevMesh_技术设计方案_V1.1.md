@@ -1330,6 +1330,14 @@ startPlatform可通过可信acceptancePreparation工厂显式装配接受准备�
 
 停机同步停止新扫描和派发授权，preflight之后及后端最终授权回调复核停止标志；已经开始的调用真实排空后才关闭Worker。后端接口没有强制取消，不能以超时竞赛假装调用结束或释放名额；实际适配器需自行提供有界I/O。此显式宿主能力不代表CLI默认安装真实Runner，登录／真实Linux与物理围栏／完整工作台仍另行验收。
 
+#### 12. 可信已接受发布后台消费（2026-11-13 开发增量）
+
+startPlatform通过显式releasePublication可信工厂安装原发布消费者，绑定projectId／policyHash／principalId／backendRef／runnerId和后端实例；默认无发布器。要求持久存储与DB已登记原接受策略完全匹配，不要求新接受入口或Input API仍启用，允许关闭新接受后恢复原已接受版本。所有绑定校验和后续宿主组合成功后才启动消费，配置错误拒绝启动并释放资源；外部适配器资源由构造者管理。
+
+私有工作页只返回当前accepted_release_id的PENDING／SENT／UNKNOWN；已发布与被取代历史不占工作页，原历史接口保留。最多32项目、每项目唯一绑定、跨项目最多2并发、范围／页预算、轮转与tick合并。原PENDING经一次许可publish，SENT／UNKNOWN先inspect，仅在原continuation授权成立且后端提供resume时续接原Runner日志；未知已派发阶段只查询，未派发下一阶段仍经独立许可。不得重建Release／T5或重做数据迁移；缺后端／充分事实保持UNKNOWN。失败保留接受事实及关闭的目标写门，完整发布证明仍由writer原子核实并开门。
+
+停机同步关闭新扫描、publish／resume最终授权；preflight后再次复核，实际调用排空后关闭存储。后端无强制取消，由实际适配器保证有界I/O；PUBLISHED不作为工作周期改写或延长健康。该宿主增量不代表默认CLI已安装物理Provider，也不替代真实容器、围栏、后继业务链或产品验收。
+
 ---
 
 ## 13. 执行恢复与交付

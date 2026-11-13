@@ -308,6 +308,8 @@ business_pending_writes 合并预览和 Release 的 DISPATCHED／UNKNOWN 写。�
 
 ### Private React acceptance entry retains explicit decisions
 
+发布原操作的可信宿主消费、未决队列与停机边界见 [publication-consumer-design.md](./publication-consumer-design.md)。
+
 可信接受准备后台消费的范围、固定绑定、未决队列、周期健康和停机排空见 [acceptance-consumer-design.md](./acceptance-consumer-design.md)。
 
 候选审查链接准确接受view／受保护client.js，新增独立单入口IIFE而非多入口IIFE。当前成员／nonce CSP／no-store与共享身份边界保持关闭默认。页面只读固定数据方案／原来源，独立替换确认、准备、关闭、撤销与最终接受；后端ready和当前owner能力是必要条件，刷新或切换准备清空勾选。
