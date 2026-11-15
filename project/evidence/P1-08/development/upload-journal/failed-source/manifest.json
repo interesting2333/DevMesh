@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-15T16:23:11.306Z",
+  "base": "246d875b3bf49fd58932b48a3df3588e56d26bd1",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-local.ts",
+      "sha256": "abae36398344f94ebc1e5bb5fdd9ac183ffa32fa0d34573a459775c218a70ac2"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-upload.ts",
+      "sha256": "a31e3c18dc3463e846974da53919bec17a09928da40b43d51d02fb709eff19ff"
+    },
+    {
+      "file": "tests/browser/workbench-upload.test.mjs",
+      "sha256": "0d926fa1e0920d33b051f97a6af09ffa78d2d934b52d13c1843dca857c02aa9d"
+    }
+  ],
+  "reason": "Initial native upgrade-abort test exposed an unhandled createIndex exception after the upgrade transaction had already aborted. Preserve exact source and test inputs before repair; final raw record supplies actual aggregate."
+}

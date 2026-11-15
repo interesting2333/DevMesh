@@ -1,0 +1,93 @@
+TAP version 13
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: question choices have no default; exact answer draft survives reload and navigation without a POST
+ok 1 - question choices have no default; exact answer draft survives reload and navigation without a POST
+  ---
+  duration_ms: 130350.2223
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: answer journal commits before real POST; lost ACK reopens answered questions and closure verification observes the successful immutable submission
+ok 2 - answer journal commits before real POST; lost ACK reopens answered questions and closure verification observes the successful immutable submission
+  ---
+  duration_ms: 146296.9701
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changed Run refuses the old answer and lookup miss retains original versions, identity and lock
+ok 3 - changed Run refuses the old answer and lookup miss retains original versions, identity and lock
+  ---
+  duration_ms: 111902.8375
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed native answer save retains the choice and blocks internal back, tabs and project navigation until retry
+ok 4 - failed native answer save retains the choice and blocks internal back, tabs and project navigation until retry
+  ---
+  duration_ms: 92025.7081
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native answer journal abort produces zero POST and preserves the saved answer for explicit retry
+ok 5 - native answer journal abort produces zero POST and preserves the saved answer for explicit retry
+  ---
+  duration_ms: 139273.7501
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: viewer receives current questions without answer storage or a writable form
+ok 6 - viewer receives current questions without answer storage or a writable form
+  ---
+  duration_ms: 84397.7091
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: two pages retain conflicting answers until explicit discard reloads the committed draft
+ok 7 - two pages retain conflicting answers until explicit discard reloads the committed draft
+  ---
+  duration_ms: 142004.2852
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: same-basis absence cannot close an original; every attempt needs fresh explicit consent
+ok 8 - same-basis absence cannot close an original; every attempt needs fresh explicit consent
+  ---
+  duration_ms: 114837.6862
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+# (node:6100) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: membership revoked between newer Run read and original lookup cannot masquerade as original absence
+ok 9 - membership revoked between newer Run read and original lookup cannot masquerade as original absence
+  ---
+  duration_ms: 127187.2236
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React, native IndexedDB, official A2A preparation and production PreparationRuntime plus Input API/file Worker. Model output and browser identity explicitly controlled; no model/OIDC/Linux or product acceptance."}
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1128531.7828

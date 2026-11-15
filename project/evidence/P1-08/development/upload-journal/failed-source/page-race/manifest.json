@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-15T17:07:17.330Z",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "a59729c7e73c2d3b3d59f8218ddc455aa2dad20094438b386efc8becfe6df021"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-local.ts",
+      "sha256": "cb5a8392391efc0ba6b359925e16ee77cf3c4060c0a8602c5fa85d96d55c05c0"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-upload.ts",
+      "sha256": "a31e3c18dc3463e846974da53919bec17a09928da40b43d51d02fb709eff19ff"
+    },
+    {
+      "file": "tests/browser/workbench-page.test.mjs",
+      "sha256": "f470fc6069a21e4e2879095a5412396d199df4f7706663b4156db492656edc18"
+    },
+    {
+      "file": "tests/browser/workbench-upload.test.mjs",
+      "sha256": "2612e4beb8ef24cb2ca47fa86aaf4b5063a7457440b26affb92c2c7f5467f9a5"
+    }
+  ],
+  "reason": "Full browser regression: trusted-account case switched the global test identity before clicking. The submit button detached before dispatch; startup project-list authorization can close the protected UI first. Preserve exact frozen inputs before adding a deterministic target-POST identity switch and explicit403 assertion."
+}

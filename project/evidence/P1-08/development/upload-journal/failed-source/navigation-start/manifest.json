@@ -1,0 +1,27 @@
+{
+  "record": "browser-2026-11-15T17-43-57-269Z.json",
+  "at": "2026-11-15T17:51:57.625Z",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "c8ff7268eeb9c9da4eb44734f780b5cb782ba54dcc5cff0a63303276b438fafe"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-answers.tsx",
+      "sha256": "e852f1befddfa3d40d3fa01f14e2112122ae4272691fa4e2de40cd17c2874637"
+    },
+    {
+      "file": "tests/browser/workbench-answers.test.mjs",
+      "sha256": "498b54b30cd69370e9663c3233b8f5f8b6414aae0ee0e90563827df89c6c6310"
+    },
+    {
+      "file": "tests/fixtures/workbench-planning.mjs",
+      "sha256": "0ccb8868f04d720131e24c6b8514afefffebd2dc2dd8b19e32cd7c77bb6a1654"
+    },
+    {
+      "file": "packages/input-api/src/workbench-page.ts",
+      "sha256": "1e51fe30ec153d462b699143f817d28fc0c7324ba8114e20bbf304b5ce130cbb"
+    }
+  ],
+  "reason": "Initial page.goto returned net::ERR_ABORTED before the second answer case reached any submission logic. Preserve exact frozen sources; do not infer success or classify the root cause from that error alone. Recheck the complete answer file unchanged, retaining all HTTP/browser assertions and timeouts."
+}

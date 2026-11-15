@@ -1,0 +1,346 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-16",
+  "base": "246d875b3bf49fd58932b48a3df3588e56d26bd1",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "http",
+      "record": "http-2026-11-15T17-43-57-264Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "tests": 14,
+      "pass": 14,
+      "skipped": 0
+    },
+    {
+      "name": "answers",
+      "record": "answers-2026-11-15T17-51-08-714Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "tests": 9,
+      "pass": 9,
+      "skipped": 0
+    },
+    {
+      "name": "planning",
+      "record": "planning-2026-11-15T18-46-27-232Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "tests": 5,
+      "pass": 5,
+      "skipped": 0
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T17-43-57-269Z.json",
+      "sourceExitCode": 1,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "tests": 29,
+      "pass": 29,
+      "skipped": 0,
+      "selectedCases": [
+        {
+          "status": "ok",
+          "number": 10,
+          "title": "stale original closure preserves exact history and draft; delayed original HTTP cannot commit after a newer Run"
+        },
+        {
+          "status": "ok",
+          "number": 11,
+          "title": "closure CAS rejects competing successful or unknown observation and native abort leaves the original pending"
+        },
+        {
+          "status": "ok",
+          "number": 12,
+          "title": "plan journal binds all reviewed conditions, locks across basis changes and accepts only the exact plan result"
+        },
+        {
+          "status": "ok",
+          "number": 13,
+          "title": "old basis references paginate only exact form contexts without mutating drafts or pending originals"
+        },
+        {
+          "status": "ok",
+          "number": 14,
+          "title": "real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes"
+        },
+        {
+          "status": "ok",
+          "number": 15,
+          "title": "two pages admit one original request, actual project ACK loss reopens and exact replay retains one input"
+        },
+        {
+          "status": "ok",
+          "number": 16,
+          "title": "message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation"
+        },
+        {
+          "status": "ok",
+          "number": 17,
+          "title": "real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission"
+        },
+        {
+          "status": "ok",
+          "number": 18,
+          "title": "version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema"
+        },
+        {
+          "status": "ok",
+          "number": 19,
+          "title": "question journal rejects altered question/option bases, retains old originals and clears only its successful draft"
+        },
+        {
+          "status": "ok",
+          "number": 20,
+          "title": "actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project"
+        },
+        {
+          "status": "ok",
+          "number": 21,
+          "title": "lookup miss retains original; only explicit retry uses exact message key, body and condition"
+        },
+        {
+          "status": "ok",
+          "number": 22,
+          "title": "project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change"
+        },
+        {
+          "status": "ok",
+          "number": 23,
+          "title": "failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers"
+        },
+        {
+          "status": "ok",
+          "number": 24,
+          "title": "changing trusted account rejects old page original before effects; reentry isolates subject drafts"
+        },
+        {
+          "status": "ok",
+          "number": 25,
+          "title": "viewer and revoked contexts expose no composer; stale membership refresh clears protected messages"
+        },
+        {
+          "status": "ok",
+          "number": 26,
+          "title": "rapid project switch aborts an old workspace response and never applies its context"
+        },
+        {
+          "status": "ok",
+          "number": 27,
+          "title": "historical Run is read only and explicitly returns to the current Run"
+        },
+        {
+          "status": "ok",
+          "number": 28,
+          "title": "IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs"
+        },
+        {
+          "status": "ok",
+          "number": 34,
+          "title": "unavailable plan retains an independently recoverable original and exact explicit retry confirms only once"
+        },
+        {
+          "status": "ok",
+          "number": 35,
+          "title": "current terminal Run restores only its original message, permits verified closure and gives viewers no local client"
+        },
+        {
+          "status": "ok",
+          "number": 36,
+          "title": "actual newer understanding makes an old plan historical while its exact pending confirmation remains recoverable"
+        },
+        {
+          "status": "ok",
+          "number": 37,
+          "title": "unreadable question basis still permits original successful answer lookup after actual ACK loss"
+        },
+        {
+          "status": "ok",
+          "number": 38,
+          "title": "native scope lookup isolates pending originals and refuses corrupted draft pointers without changing records"
+        },
+        {
+          "status": "ok",
+          "number": 39,
+          "title": "v1 migration preserves exact pending originals; blocked and aborted upgrades retain the old database"
+        },
+        {
+          "status": "ok",
+          "number": 40,
+          "title": "file validation, atomic selection and two-page CAS preserve exact bytes without sending HTTP"
+        },
+        {
+          "status": "ok",
+          "number": 41,
+          "title": "selection and unresolved byte quotas are bounded; explicit known-result release keeps the original metadata"
+        },
+        {
+          "status": "ok",
+          "number": 42,
+          "title": "actual multipart ACK loss restores one original upload and freezes a verified attachment-only project"
+        },
+        {
+          "status": "ok",
+          "number": 43,
+          "title": "REMOVED and corrupt attachments cannot be omitted or replace immutable input; actual server rechecks READY at T1"
+        }
+      ],
+      "selectedFiles": [
+        "tests/browser/workbench-local.test.mjs",
+        "tests/browser/workbench-page.test.mjs",
+        "tests/browser/workbench-recovery.test.mjs",
+        "tests/browser/workbench-upload.test.mjs"
+      ],
+      "excludedCompleteFiles": [
+        "tests/browser/workbench-answers.test.mjs",
+        "tests/browser/workbench-planning.test.mjs"
+      ],
+      "separatelyVerifiedGroups": [
+        "answers",
+        "planning"
+      ],
+      "rawAggregate": {
+        "tests": 43,
+        "pass": 41,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "selectionReason": "All four other files passed unchanged. Exclude both complete answer/planning files from this total and require each complete unchanged file to pass separately. Retain failed invocations and raw aggregates; this full invocation is not green."
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-15T17-30-59-027Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-15T17-30-59-364Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T17-30-59-323Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T17-30-59-171Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T17-30-59-040Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "repair",
+      "record": "repair-2026-11-15T18-11-08-491Z.json",
+      "sourceExitCode": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "tests": 2,
+      "pass": 2,
+      "skipped": 0
+    }
+  ],
+  "totalPassed": 57,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "真实原生v1旧草稿／未决原命令升级至2准确保留，blocked与注入原生升级abort不清库；旧代码拒绝新版与未来版。",
+    "上传字节／SHA／MIME及文件限制、双页CAS、日记与草稿选择事务abort、正文保存保留选择、主体隔离与零自动POST。",
+    "每主体32份驻留内容与256条日记限额；未知不释放，明确失败／成功后显式释放保留原信封／hash／结果。256条边界以明确归档行夹具验证。",
+    "真实multipart成功丢ACK、刷新无POST、原键lookup和不同multipart边界重放仅一条intake／attachment；实际GET核实准确映射，错误映射拒绝。",
+    "实际仅附件项目创建与唯一绑定，已绑定附件不能删除；未绑定附件移除后主请求T1拒绝且原信封／未决指针保持，损坏字节与错误版本拒绝。",
+    "六份受影响浏览器文件采用完整运行的其他4文件29项、回答整文件9项及计划整文件5项准确不重叠选取，三份HTTP文件14项完整回归；原确认恢复经真实POST和受控放行的真实workspace GET后，成功提示与准确持久回执仍保留，仅一次确认和零实施attempt。",
+    "账号夹具在已持久原请求的目标POST前切换服务端测试主体，明确核对原主体头、原键／正文／日记与真实403及零服务端项目／操作。"
+  ],
+  "retainedFailures": [
+    {
+      "record": "focus-2026-11-15T16-19-33-399Z.json",
+      "tests": 5,
+      "pass": 4,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "snapshots": [
+        "failed-source"
+      ],
+      "excludedFromFinalPassingTotals": true,
+      "reason": "Aborted native upgrade preserved the database but schema setup raised an unhandled createIndex exception; repaired the actual upgrade catch/abort path without relaxing preservation or pageerror assertions."
+    },
+    {
+      "record": "browser-2026-11-15T16-38-01-791Z.json",
+      "tests": 43,
+      "pass": 41,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "snapshots": [
+        "failed-source/page-race",
+        "failed-source/recovery-status",
+        "failed-source/answer-feedback"
+      ],
+      "excludedFromFinalPassingTotals": true,
+      "reason": "The account fixture changed trusted identity before clicking and lost its button to startup authorization; moved the switch to the target real POST and added exact-journal/principal/403 assertions. Separately, successful recovery feedback lived in a child remounted by the refreshed resourceRevision; moved committed feedback to the parent and required it after a gated actual workspace GET. The failed recovery stopped before receipt/SQL checks, so no business-success inference is made from that failed case."
+    },
+    {
+      "record": "browser-2026-11-15T17-43-57-269Z.json",
+      "tests": 43,
+      "pass": 41,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "snapshots": [
+        "failed-source/navigation-start",
+        "failed-source/plan-lookup"
+      ],
+      "excludedFromFinalPassingTotals": true,
+      "reason": "The initial answer page.goto aborted before submission logic, and the plan ACK-loss lookup button remained beyond the assertion window. The latter failed before local receipt assertions, so no saved-local-outcome inference is made. Neither cause was established. Retain both failures and require separate complete unchanged answer and planning files to pass, excluding those whole files from the selected original full run."
+    },
+    {
+      "record": "planning-2026-11-15T18-31-39-768Z.json",
+      "tests": 5,
+      "pass": 4,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "snapshots": [
+        "failed-source/fixture-reset"
+      ],
+      "excludedFromFinalPassingTotals": true,
+      "reason": "The first planning recheck failed at initial fixture POST/projects with fetch failed/ECONNRESET before opening the browser. The response outcome was unknown. An isolated local keep-alive timing experiment returned200 and did not reproduce the reset; no cause is claimed. Require the final complete unchanged planning file to pass after the other browser invocations finish."
+    }
+  ],
+  "accountFixtureReview": "test-account-review.json",
+  "inputAssessment": "All source/check inventories have zero changed-during or changed-since files and no post-build source exception. The full43 browser invocation has41pass/2fail (initial answer navigation abort and a plan lookup button remaining); preserve it as failed. Final nonoverlapping evidence selects29 passes from the other four complete files and requires separate complete unchanged answer9/9 and planning5/5 runs, plus HTTP14, totaling57 selected passing cases. The first planning recheck also failed in initial fixture POST/projects with ECONNRESET; preserve it and require the final full planning file to run after the concurrent browser invocations finish. Causes of these intermittent failures were not established; do not describe the whole sequence as one green invocation. Exact failed sources and logs remain outside final totals. All browser/rerun artifact bytes and source maps match final source. SQL1..45, Runner/store, contracts and dependencies are unchanged.",
+  "scope": "Actual Edge native IndexedDB and production local module; actual multipart/Input API/SQLite/file Worker plus existing protected React/CSP/A2A workbench regressions with controlled model outputs and identities. v1-to-v2 preservation, blocked/aborted upgrades, exact byte/hash/selection CAS, native abort, quotas (256 metadata rows use explicit archived fixtures), ACK loss, original replay, READY mapping and T1 removal rejection. This does not implement or test attachment UI, permanent input closure on removed attachment, new-task entry, real model/OIDC/Linux, WebSocket or complete product acceptance.",
+  "limits": [
+    "This increment provides local attachment storage and transactions; attachment page controls are not implemented.",
+    "Permanent removed-attachment input closure, new project draft reopening and new-task entry remain; task2.3 is unchecked and change progress remains5/13.",
+    "No WebSocket, complete first-use product path, real model/OIDC/Linux or formal gate/product acceptance.",
+    "The256-row metadata boundary uses explicit archived-row fixtures; browser identities and model outputs are controlled.",
+    "Formal P1-08 remains NOT_STARTED pending prerequisites/G0; same-agent development review.",
+    "Committed feedback currently renders inside the conversation pane and is hidden on the mobile detail pane. The next increment must move it to a shared visible area and verify real mobile behavior; local receipt persistence is a separate fact."
+  ],
+  "managementChecks": "management-checks.json"
+}

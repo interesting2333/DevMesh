@@ -1,0 +1,23 @@
+{
+  "record": "planning-2026-11-15T18-31-39-768Z.json",
+  "at": "2026-11-15T18:37:53.909Z",
+  "files": [
+    {
+      "file": "tests/fixtures/workbench-planning.mjs",
+      "sha256": "0ccb8868f04d720131e24c6b8514afefffebd2dc2dd8b19e32cd7c77bb6a1654"
+    },
+    {
+      "file": "tests/fixtures/a2a-data.mjs",
+      "sha256": "e4d786ea743400ba33460530a280633e892f06a48d757c5dcb22a0d8ea6360f3"
+    },
+    {
+      "file": "tests/browser/workbench-planning.test.mjs",
+      "sha256": "61bf5e2c5095a5695973ab5d6198dec7c5421a33039a8487b7b20c2f879a5638"
+    },
+    {
+      "file": "packages/input-api/src/index.ts",
+      "sha256": "85b3ad318eb708dff941aa6207d799f7bc96905f4446f53cb60325e5b189c343"
+    }
+  ],
+  "reason": "The first case failed in fixture initial POST/projects with fetch failed, cause ECONNRESET, before opening its browser. The response and its business outcome were not established. Preserve exact inputs. An isolated keep-alive timing experiment returned200 and did not reproduce the reset, so no root cause is claimed. Complete the active runs, then require one full unchanged planning-file pass without another browser run in parallel."
+}

@@ -1,0 +1,7 @@
+{
+  "run": "browser-2026-11-15T16-38-01-791Z.json",
+  "reason": "The same child-local saved-result callback also exists in answer submission; preserve exact tested source before moving committed feedback to the parent. The failed recovery case alone does not prove an answer failure.",
+  "files": {
+    "packages/input-api/src/web/workbench-answers.tsx": "57078216f32fb30b0ff408913ea7ca0bf9802b6cfc2c3bcb0cde5b54cbe13da9"
+  }
+}

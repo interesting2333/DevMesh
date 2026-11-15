@@ -1,5 +1,7 @@
 import {z} from 'zod';
-import {ids,opaqueKey,revision,timestamp,sha256,commandBodies,createProjectInput,saveMessageInput,answerQuestionsInput,inputOperation,operationReceipt,inputOperationLookup} from '@devmesh/contracts';
+import {ids,opaqueKey,revision,timestamp,sha256,commandBodies,createProjectInput,saveMessageInput,answerQuestionsInput,inputOperation,operationReceipt,inputOperationLookup,attachmentView} from '@devmesh/contracts';
+import {prepareUpload,uploadRecord,uploadResponse,uploadLimits,verifyUploadBytes,sameUploadBytes} from './workbench-upload.js';
+import type {LocalUpload} from './workbench-upload.js';
 
 const answerBasis=z.strictObject({requirementRevision:revision,questions:z.array(z.strictObject({questionId:ids.question,questionRevision:revision,optionIds:z.array(opaqueKey).max(32)})).max(100)}).superRefine((v,c)=>{if(new Set(v.questions.map(q=>q.questionId)).size!==v.questions.length||v.questions.some(q=>new Set(q.optionIds).size!==q.optionIds.length))c.addIssue({code:'custom',message:'Duplicate answer basis'});});
 export const draftContext=z.discriminatedUnion('form',[
@@ -10,7 +12,7 @@ export const draftContext=z.discriminatedUnion('form',[
 ]);
 export type DraftContext=z.output<typeof draftContext>;
 const draftFields=z.strictObject({text:z.string().max(40000),name:z.string().max(80),answers:z.array(answerQuestionsInput.shape.answers.element).max(100).optional()});
-const draftRecord=z.strictObject({key:z.string(),context:draftContext,revision,clientDraftId:z.uuid(),...draftFields.shape,updatedAt:timestamp,pendingKey:z.uuid().nullable(),closedKey:z.uuid().optional()});
+const draftRecord=z.strictObject({key:z.string(),context:draftContext,revision,clientDraftId:z.uuid(),...draftFields.shape,uploadKeys:z.array(z.uuid()).max(3).refine(v=>new Set(v).size===v.length).optional(),updatedAt:timestamp,pendingKey:z.uuid().nullable(),closedKey:z.uuid().optional()});
 export type LocalDraft=z.output<typeof draftRecord>;
 const envelopeBase={key:z.uuid(),context:draftContext,draftRevision:revision,createdAt:timestamp};
 const commandEnvelope=z.discriminatedUnion('kind',[
@@ -38,7 +40,7 @@ const pendingScope=z.strictObject({principalId:opaqueKey,projectId:ids.project,r
 type FormScope=Pick<DraftContext,'principalId'|'projectId'|'runId'|'form'>;
 const formKey=(c:FormScope)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form]);
 export class WorkbenchLocalError extends Error{
-  constructor(readonly code:'STORAGE_UNAVAILABLE'|'STORAGE_BLOCKED'|'STORAGE_CLOSED'|'LOCAL_CONFLICT'|'COMMAND_PENDING'|'COMMAND_CLOSED'|'LOCAL_RECORD_INVALID'){super(code);}
+  constructor(readonly code:'STORAGE_UNAVAILABLE'|'STORAGE_BLOCKED'|'STORAGE_CLOSED'|'LOCAL_CONFLICT'|'COMMAND_PENDING'|'COMMAND_CLOSED'|'LOCAL_RECORD_INVALID'|'UPLOAD_LIMIT'|'UPLOAD_NOT_READY'){super(code);}
 }
 const invalid=():never=>{throw new WorkbenchLocalError('LOCAL_RECORD_INVALID');};
 const stable=(v:unknown)=>JSON.stringify(v,(_k,x:unknown)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.entries(x).sort(([a],[b])=>a<b?-1:a>b?1:0)):x);
@@ -57,20 +59,29 @@ export async function openWorkbenchLocal(principalId:string){
     let settled=false;
     const fail=(code:'STORAGE_UNAVAILABLE'|'STORAGE_BLOCKED')=>{if(!settled){settled=true;reject(new WorkbenchLocalError(code));}};
     let request:IDBOpenDBRequest;
-    try{request=indexedDB.open('devmesh.workbench',1);}catch{fail('STORAGE_UNAVAILABLE');return;}
+    try{request=indexedDB.open('devmesh.workbench',2);}catch{fail('STORAGE_UNAVAILABLE');return;}
     const timer=setTimeout(()=>fail('STORAGE_UNAVAILABLE'),10000);
     request.onblocked=()=>{clearTimeout(timer);fail('STORAGE_BLOCKED');};
     request.onerror=()=>{clearTimeout(timer);fail('STORAGE_UNAVAILABLE');};
-    request.onupgradeneeded=()=>{
+    request.onupgradeneeded=e=>{
       if(settled){request.transaction!.abort();return;}
-      request.result.createObjectStore('drafts',{keyPath:'key'});
-      request.result.createObjectStore('commands',{keyPath:'key'}).createIndex('pendingForm','pendingForm',{unique:true});
+      try{
+        if(e.oldVersion===0){
+          request.result.createObjectStore('drafts',{keyPath:'key'});
+          request.result.createObjectStore('commands',{keyPath:'key'}).createIndex('pendingForm','pendingForm',{unique:true});
+        }
+        request.result.createObjectStore('uploads',{keyPath:'key'}).createIndex('principalId','principalId');
+      }catch{try{request.transaction?.abort();}catch{/* An already aborted upgrade has no active transaction. */}}
     };
     request.onsuccess=()=>{
       clearTimeout(timer);
       if(settled){request.result.close();return;}
       settled=true;
-      if(!request.result.objectStoreNames.contains('drafts')||!request.result.objectStoreNames.contains('commands')){request.result.close();reject(new WorkbenchLocalError('LOCAL_RECORD_INVALID'));return;}
+      const database=request.result;
+      try{
+        const tx=database.transaction(['drafts','commands','uploads'],'readonly'),commands=tx.objectStore('commands'),uploads=tx.objectStore('uploads');
+        if(tx.objectStore('drafts').keyPath!=='key'||commands.keyPath!=='key'||uploads.keyPath!=='key'||commands.index('pendingForm').keyPath!=='pendingForm'||!commands.index('pendingForm').unique||uploads.index('principalId').keyPath!=='principalId'||uploads.index('principalId').unique)throw Error('Invalid schema');
+      }catch{database.close();reject(new WorkbenchLocalError('LOCAL_RECORD_INVALID'));return;}
       resolve(request.result);
     };
   });
@@ -79,7 +90,7 @@ export async function openWorkbenchLocal(principalId:string){
   db.onversionchange=close;
   db.onclose=()=>{closed=true;};
   function context(input:DraftContext){const c=draftContext.parse(input);if(c.principalId!==principalId)invalid();return c;}
-  function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);validateDraftFields(c,d);if(d.key!==contextKey(c)||stable(d.context)!==stable(c)||d.closedKey&&d.pendingKey||c.form==='questions-answer'&&(d.text!==''||d.name!==''||d.answers===undefined)||c.form!=='questions-answer'&&d.answers!==undefined)invalid();return d;}
+  function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);validateDraftFields(c,d);if(d.key!==contextKey(c)||stable(d.context)!==stable(c)||d.closedKey&&d.pendingKey||c.form==='questions-answer'&&(d.text!==''||d.name!==''||d.answers===undefined)||c.form!=='questions-answer'&&d.answers!==undefined||c.form!=='project'&&c.form!=='message'&&d.uploadKeys!==undefined)invalid();return d;}
   function success(envelope:LocalCommand['envelope'],result:unknown){
     const r=z.object({projectId:ids.project,runId:ids.run,revision}).parse(result),c=envelope.context;
     if(c.form!=='project'&&(r.projectId!==c.projectId||r.runId!==c.runId))invalid();
@@ -96,17 +107,17 @@ export async function openWorkbenchLocal(principalId:string){
     }
     return v;
   }
-  type Session={get:(store:IDBObjectStore|IDBIndex,key:IDBValidKey,next:(v:unknown)=>void)=>void;scan:(range:IDBKeyRange,next:(cursor:IDBCursorWithValue|null)=>void)=>void;drafts:IDBObjectStore;commands:IDBObjectStore};
+  type Session={get:(store:IDBObjectStore|IDBIndex,key:IDBValidKey,next:(v:unknown)=>void)=>void;all:(store:IDBObjectStore|IDBIndex,key:IDBValidKey,next:(v:unknown[])=>void)=>void;scan:(range:IDBKeyRange,next:(cursor:IDBCursorWithValue|null)=>void)=>void;drafts:IDBObjectStore;commands:IDBObjectStore;uploads:IDBObjectStore};
   function transaction<T>(mode:IDBTransactionMode,body:(s:Session,done:(value:T)=>void)=>void):Promise<T>{
     if(closed)return Promise.reject(new WorkbenchLocalError('STORAGE_CLOSED'));
     return new Promise((resolve,reject)=>{
       let tx:IDBTransaction;
-      try{tx=db.transaction(['drafts','commands'],mode);}catch{reject(new WorkbenchLocalError('STORAGE_UNAVAILABLE'));return;}
+      try{tx=db.transaction(['drafts','commands','uploads'],mode);}catch{reject(new WorkbenchLocalError('STORAGE_UNAVAILABLE'));return;}
       let result:T,ready=false,reason:unknown;
       const guard=(work:()=>void)=>{try{work();}catch(e){reason=e;tx.abort();}};
       tx.oncomplete=()=>{if(ready)resolve(result);else reject(new WorkbenchLocalError('LOCAL_RECORD_INVALID'));};
       tx.onabort=()=>reject(reason instanceof WorkbenchLocalError?reason:new WorkbenchLocalError(reason?'LOCAL_RECORD_INVALID':'STORAGE_UNAVAILABLE'));
-      const s:Session={drafts:tx.objectStore('drafts'),commands:tx.objectStore('commands'),get(store,key,next){const r=store.get(key);r.onsuccess=()=>guard(()=>next(r.result as unknown));},scan(range,next){const r=tx.objectStore('drafts').openCursor(range,'prev');r.onsuccess=()=>guard(()=>next(r.result));}};
+      const s:Session={drafts:tx.objectStore('drafts'),commands:tx.objectStore('commands'),uploads:tx.objectStore('uploads'),get(store,key,next){const r=store.get(key);r.onsuccess=()=>guard(()=>next(r.result as unknown));},all(store,key,next){const r=store.getAll(key);r.onsuccess=()=>guard(()=>next(r.result as unknown[]));},scan(range,next){const r=tx.objectStore('drafts').openCursor(range,'prev');r.onsuccess=()=>guard(()=>next(r.result));}};
       guard(()=>body(s,value=>{result=value;ready=true;}));
     });
   }
@@ -142,21 +153,29 @@ export async function openWorkbenchLocal(principalId:string){
       if(p)throw new WorkbenchLocalError('COMMAND_PENDING');
       s.get(s.drafts,contextKey(c),raw=>{
         const old=draft(raw,c);if(old?.closedKey)throw new WorkbenchLocalError('COMMAND_CLOSED');if(old?.pendingKey)invalid();if((old?.revision??0)!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');
-        const d=draftRecord.parse({key:contextKey(c),context:c,revision:expectedRevision+1,clientDraftId:old?.clientDraftId??crypto.randomUUID(),...value,updatedAt:new Date().toISOString(),pendingKey:null});s.drafts.put(d);done(d);
+        const d=draftRecord.parse({key:contextKey(c),context:c,revision:expectedRevision+1,clientDraftId:old?.clientDraftId??crypto.randomUUID(),...value,...(old?.uploadKeys?{uploadKeys:old.uploadKeys}:{}),updatedAt:new Date().toISOString(),pendingKey:null});s.drafts.put(d);done(d);
       });
     }));
   }
-  function enqueue(input:DraftContext,expectedRevision:number){
+  async function enqueue(input:DraftContext,expectedRevision:number,expectedUploads:LocalUpload[]=[]){
     const c=context(input);revision.parse(expectedRevision);
+    if(expectedUploads.length>3||new Set(expectedUploads.map(v=>v.key)).size!==expectedUploads.length)return invalid();
+    const verified=await Promise.all(expectedUploads.map(v=>verifyUploadBytes(upload(v))));
     return transaction<{draft:LocalDraft;command:LocalCommand}>('readwrite',(s,done)=>pending(s,c,p=>{
       if(p)throw new WorkbenchLocalError('COMMAND_PENDING');
       s.get(s.drafts,contextKey(c),raw=>{
         const d=draft(raw,c);if(d?.closedKey)throw new WorkbenchLocalError('COMMAND_CLOSED');if(!d||d.revision!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');if(d.pendingKey)invalid();
+        if(stable(d.uploadKeys??[])!==stable(verified.map(v=>v.key)))throw new WorkbenchLocalError('UPLOAD_NOT_READY');
+        selected(s,d,uploads=>{
+        for(let i=0;i<uploads.length;i++)if(!sameUpload(uploads[i]!,verified[i]!))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+        const attachmentIds=uploads.map(v=>{if(v.receipt?.status!=='SUCCEEDED'||v.attachment?.state!=='READY'||!v.verifiedAt)throw new WorkbenchLocalError('UPLOAD_NOT_READY');return v.attachment.attachmentId;});
+        if(new Set(attachmentIds).size!==attachmentIds.length)return invalid();
         const key=crypto.randomUUID(),createdAt=new Date().toISOString(),common={key,context:c,draftRevision:d.revision,createdAt};
         if(c.form==='plan-confirm'&&(d.text!=='CONFIRM_PLAN'||d.name!==''))return invalid();
-        const envelope=commandEnvelope.parse(c.form==='project'?{...common,kind:'project',scope:'projects.create',path:'/api/v1/projects',ifMatch:null,body:{initialRequest:{text:d.text,attachmentIds:[]},clientDraftId:d.clientDraftId,...(d.name?{name:d.name}:{})}}:c.form==='message'?{...common,kind:'message',scope:c.runId,path:`/api/v1/runs/${c.runId}/messages`,ifMatch:`"r${c.basisRevision}"`,body:{text:d.text,attachmentIds:[],clientMessageId:d.clientDraftId}}:c.form==='questions-answer'?{...common,kind:'questions-answer',scope:c.runId,path:`/api/v1/runs/${c.runId}/questions:answer`,ifMatch:`"r${c.basisRevision}"`,body:{answers:d.answers}}:{...common,kind:'plan-confirm',scope:c.runId,path:`/api/v1/runs/${c.runId}/plans/${c.basis.planRevision}:confirm`,ifMatch:`"r${c.basisRevision}"`,body:{requirementRevision:c.basis.requirementRevision,reviewHash:c.basis.reviewHash,...(c.basis.carryForwardHash?{carryForwardHash:c.basis.carryForwardHash}:{})}});
+        const envelope=commandEnvelope.parse(c.form==='project'?{...common,kind:'project',scope:'projects.create',path:'/api/v1/projects',ifMatch:null,body:{initialRequest:{text:d.text,attachmentIds},clientDraftId:d.clientDraftId,...(d.name?{name:d.name}:{})}}:c.form==='message'?{...common,kind:'message',scope:c.runId,path:`/api/v1/runs/${c.runId}/messages`,ifMatch:`"r${c.basisRevision}"`,body:{text:d.text,attachmentIds,clientMessageId:d.clientDraftId}}:c.form==='questions-answer'?{...common,kind:'questions-answer',scope:c.runId,path:`/api/v1/runs/${c.runId}/questions:answer`,ifMatch:`"r${c.basisRevision}"`,body:{answers:d.answers}}:{...common,kind:'plan-confirm',scope:c.runId,path:`/api/v1/runs/${c.runId}/plans/${c.basis.planRevision}:confirm`,ifMatch:`"r${c.basisRevision}"`,body:{requirementRevision:c.basis.requirementRevision,reviewHash:c.basis.reviewHash,...(c.basis.carryForwardHash?{carryForwardHash:c.basis.carryForwardHash}:{})}});
         const v=commandRecord.parse({key,formKey:formKey(c),pendingForm:formKey(c),envelope,receipt:null,observedAt:null}),updated=draftRecord.parse({...d,revision:d.revision+1,pendingKey:key,updatedAt:createdAt});
         s.commands.add(v);s.drafts.put(updated);done({draft:updated,command:v});
+        });
       });
     }));
   }
@@ -180,7 +199,7 @@ export async function openWorkbenchLocal(principalId:string){
       s.get(s.drafts,contextKey(c),rawDraft=>{
         const d=draft(rawDraft,c);if(!d||d.pendingKey!==key||d.revision!==old.envelope.draftRevision+1)return invalid();
         const {pendingForm:_pendingForm,...rest}=old,v=commandRecord.parse({...rest,receipt,observedAt});
-        s.commands.put(v);s.drafts.put(draftRecord.parse({...d,revision:d.revision+1,text:'',name:'',...(c.form==='questions-answer'?{answers:[]}:{}),clientDraftId:crypto.randomUUID(),pendingKey:null,updatedAt:observedAt}));done(v);
+        s.commands.put(v);s.drafts.put(draftRecord.parse({...d,revision:d.revision+1,text:'',name:'',...(c.form==='questions-answer'?{answers:[]}:{}),...(d.uploadKeys?{uploadKeys:[]}:{}),clientDraftId:crypto.randomUUID(),pendingKey:null,updatedAt:observedAt}));done(v);
       });
     }));
   }
@@ -196,5 +215,80 @@ export async function openWorkbenchLocal(principalId:string){
       });});
     }));
   }
-  return {load,getPending,references,save,enqueue,getCommand,observe,closeStale,close};
+  function upload(value:unknown){
+    const v=uploadRecord.parse(value),e=v.envelope,r=v.receipt,a=v.attachment;
+    const suffix=e.metadata.name.toLowerCase().split('.').at(-1),mime=suffix==='txt'?'text/plain':suffix==='md'||suffix==='markdown'?'text/markdown':null;if(mime!==e.mime)return invalid();
+    if(v.key!==e.key||v.principalId!==principalId||e.principalId!==principalId||(r===null)!==(v.observedAt===null)||(a===null)!==(v.verifiedAt===null)||(v.bytes===null)!==(v.releasedAt!==null)||v.bytes!==null&&v.bytes.byteLength!==e.byteSize||v.bytes===null&&r?.status!=='SUCCEEDED'&&r?.status!=='FAILED')invalid();
+    if(r?.status==='SUCCEEDED'){
+      const result=z.strictObject({attachmentId:ids.attachment}).parse(r.result);
+      if(a&&(a.attachmentId!==result.attachmentId||a.clientAttachmentId!==e.metadata.clientAttachmentId||a.name!==e.metadata.name||a.byteSize!==e.byteSize))invalid();
+    }else if(a)invalid();
+    return v;
+  }
+  function sameUpload(a:LocalUpload,b:LocalUpload){const {bytes:x,...left}=a,{bytes:y,...right}=b;return stable(left)===stable(right)&&sameUploadBytes(x,y);}
+  function selected(s:Session,d:LocalDraft,next:(v:LocalUpload[])=>void){
+    const result:LocalUpload[]=[],keys=d.uploadKeys??[];
+    const step=()=>{if(result.length===keys.length){next(result);return;}s.get(s.uploads,keys[result.length]!,raw=>{result.push(upload(raw));step();});};step();
+  }
+  function editable(s:Session,c:DraftContext,expectedRevision:number,next:(d:LocalDraft)=>void){
+    if(c.form!=='project'&&c.form!=='message')return invalid();revision.parse(expectedRevision);
+    pending(s,c,p=>{if(p)throw new WorkbenchLocalError('COMMAND_PENDING');s.get(s.drafts,contextKey(c),raw=>{
+      const d=draft(raw,c);if(!d||d.revision!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');if(d.closedKey)throw new WorkbenchLocalError('COMMAND_CLOSED');if(d.pendingKey)return invalid();next(d);
+    });});
+  }
+  function withSelection(d:LocalDraft,keys:string[]){return draftRecord.parse({...d,revision:d.revision+1,uploadKeys:keys,updatedAt:new Date().toISOString()});}
+  async function checkedUpload(value:LocalUpload){try{return await verifyUploadBytes(value);}catch{return invalid();}}
+  async function addUpload(input:DraftContext,expectedRevision:number,file:File){
+    const c=context(input);if(c.form!=='project'&&c.form!=='message')return invalid();
+    const value=await prepareUpload(principalId,file);
+    return transaction<{draft:LocalDraft;upload:LocalUpload}>('readwrite',(s,done)=>editable(s,c,expectedRevision,d=>{
+      if((d.uploadKeys?.length??0)>=3)throw new WorkbenchLocalError('UPLOAD_LIMIT');
+      s.all(s.uploads.index('principalId'),principalId,raw=>{
+        const rows=raw.map(upload);if(rows.length>=uploadLimits.records||rows.filter(v=>v.bytes!==null).length>=uploadLimits.residentFiles)throw new WorkbenchLocalError('UPLOAD_LIMIT');
+        const updated=withSelection(d,[...(d.uploadKeys??[]),value.key]);s.uploads.add(value);s.drafts.put(updated);done({draft:updated,upload:value});
+      });
+    }));
+  }
+  async function getUpload(key:string){z.uuid().parse(key);const value=await transaction<LocalUpload|null>('readonly',(s,done)=>s.get(s.uploads,key,raw=>{if(raw===undefined){done(null);return;}const v=uploadRecord.parse(raw);done(v.principalId===principalId?upload(v):null);}));return value?checkedUpload(value):null;}
+  async function listUploads(){const rows=await transaction<LocalUpload[]>('readonly',(s,done)=>s.all(s.uploads.index('principalId'),principalId,raw=>{if(raw.length>uploadLimits.records)return invalid();done(raw.map(upload));}));return Promise.all(rows.map(checkedUpload));}
+  async function loadUploads(input:DraftContext){const c=context(input);return Promise.all((await transaction<LocalUpload[]>('readonly',(s,done)=>s.get(s.drafts,contextKey(c),raw=>{const d=draft(raw,c);if(!d){done([]);return;}selected(s,d,done);}))).map(checkedUpload));}
+  function changeUploadSelection(input:DraftContext,expectedRevision:number,key:string,select:boolean){
+    const c=context(input);z.uuid().parse(key);
+    return transaction<LocalDraft>('readwrite',(s,done)=>editable(s,c,expectedRevision,d=>s.get(s.uploads,key,raw=>{
+      const v=upload(raw),keys=d.uploadKeys??[],included=keys.includes(key);
+      if(select&&(included||keys.length>=3))throw new WorkbenchLocalError('UPLOAD_LIMIT');if(!select&&!included)throw new WorkbenchLocalError('LOCAL_CONFLICT');
+      if(select&&(v.bytes===null&&v.receipt?.status!=='SUCCEEDED'||v.attachment?.state==='REMOVED'||v.receipt?.status==='FAILED'))throw new WorkbenchLocalError('UPLOAD_NOT_READY');
+      const updated=withSelection(d,select?[...keys,key]:keys.filter(k=>k!==key));s.drafts.put(updated);done(updated);
+    })));
+  }
+  function selectUpload(input:DraftContext,expectedRevision:number,key:string){return changeUploadSelection(input,expectedRevision,key,true);}
+  function unlinkUpload(input:DraftContext,expectedRevision:number,key:string){return changeUploadSelection(input,expectedRevision,key,false);}
+  function observeUpload(key:string,input:z.input<typeof inputOperation>|z.input<typeof uploadResponse>){
+    z.uuid().parse(key);const response=uploadResponse.safeParse(input),receipt=response.success?inputOperation.parse({operationId:response.data.operationId,status:'SUCCEEDED',result:{attachmentId:response.data.attachment.attachmentId}}):inputOperation.parse(input);
+    return transaction<LocalUpload>('readwrite',(s,done)=>s.get(s.uploads,key,raw=>{
+      const old=upload(raw);
+      if(response.success&&(response.data.attachment.state!=='READY'||response.data.attachment.clientAttachmentId!==old.envelope.metadata.clientAttachmentId||response.data.attachment.name!==old.envelope.metadata.name||response.data.attachment.byteSize!==old.envelope.byteSize))return invalid();
+      if(old.receipt&&(old.receipt.operationId!==receipt.operationId||['SUCCEEDED','FAILED'].includes(old.receipt.status)&&stable(old.receipt)!==stable(receipt)))return invalid();
+      if(stable(old.receipt)===stable(receipt)){done(old);return;}
+      const value=upload({...old,receipt,observedAt:new Date().toISOString(),revision:old.revision+1});s.uploads.put(value);done(value);
+    }));
+  }
+  function verifyUpload(key:string,expectedRevision:number,input:z.input<typeof attachmentView>){
+    z.uuid().parse(key);revision.parse(expectedRevision);const value=attachmentView.parse(input);
+    return transaction<LocalUpload>('readwrite',(s,done)=>s.get(s.uploads,key,raw=>{
+      const old=upload(raw);if(old.revision!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');if(old.receipt?.status!=='SUCCEEDED')throw new WorkbenchLocalError('UPLOAD_NOT_READY');
+      if(old.attachment&&(old.attachment.createdAt!==value.createdAt||old.attachment.state==='REMOVED'&&value.state!=='REMOVED'))return invalid();
+      const updated=upload({...old,attachment:value,verifiedAt:new Date().toISOString(),revision:old.revision+1});s.uploads.put(updated);done(updated);
+    }));
+  }
+  async function releaseUpload(key:string,expectedRevision:number){
+    const snapshot=await getUpload(key);if(!snapshot)return invalid();revision.parse(expectedRevision);
+    return transaction<LocalUpload>('readwrite',(s,done)=>s.get(s.uploads,key,raw=>{
+      const old=upload(raw);if(old.revision!==expectedRevision||!sameUpload(old,snapshot))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+      if(old.receipt?.status!=='SUCCEEDED'&&old.receipt?.status!=='FAILED')throw new WorkbenchLocalError('UPLOAD_NOT_READY');
+      if(old.bytes===null){done(old);return;}
+      const value=upload({...old,bytes:null,releasedAt:new Date().toISOString(),revision:old.revision+1});s.uploads.put(value);done(value);
+    }));
+  }
+  return {load,getPending,references,save,enqueue,getCommand,observe,closeStale,addUpload,getUpload,listUploads,loadUploads,selectUpload,unlinkUpload,observeUpload,verifyUpload,releaseUpload,close};
 }

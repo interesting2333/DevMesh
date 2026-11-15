@@ -60,6 +60,18 @@
 - **WHEN** 当前非viewer的准确Run关闭新消息准入，或原确认／回答所需的计划／问题依据成为历史或不可读
 - **THEN** 系统 SHALL 按准确主体／项目／Run／表单显示独立原提交恢复区域，验证原日记与草稿指针，允许显式原键核实／同信封重试／符合条件的明确关闭；该区域不得登记新请求或提供新确认／回答，历史Run和viewer不挂载命令客户端
 
+### Requirement: Attachment selection preserves original upload facts
+
+系统 SHALL 在同一原生本地数据库事务中保存文件准确字节、原上传 UUID／clientAttachmentId／metadata／hash 与准确草稿选择，本地版本冲突或事务失败 MUST 保留原草稿。升级保留版本 1 的草稿及命令日记；未知上传不得自动重发、替换或释放文件内容。
+
+#### Scenario: Attachment upload succeeds but its reply is lost
+- **WHEN** 文件已按原身份上传成功但客户端未收到回执并重新进入
+- **THEN** 本地保留准确原字节／上传身份／草稿选择且不自动 POST，可查询原操作及准确附件；成功原操作与实际 READY 元数据核对后，主输入事务冻结准确附件 ID，不能漏为无附件或使用其他主体的附件
+
+#### Scenario: Selected file is unresolved, removed, stale or corrupt
+- **WHEN** 选择中存在未知上传、REMOVED 状态、并发修改的映射或 hash 不符的本机文件
+- **THEN** 主命令入队被拒绝，原草稿和上传保留；解除选择独立于服务端删除，明确成功／失败后方可显式释放本机内容并保留原日记
+
 ### Requirement: Navigation and keyboard preserve user work
 
 系统 SHALL 提供三栏和任务、协作、成果、预览、记录五页签，以及窄屏导航／主区／详情切换；导航和事件更新不得覆盖未提交输入、选择、阅读位置或抢焦点。多行Enter换行，Ctrl／Cmd+Enter可提交，输入法组合和重复键 MUST 不触发发送。
@@ -99,3 +111,12 @@
 #### Scenario: Question answer is stale or its acknowledgement is lost
 - **WHEN** 用户填写准确版本的问题回答后刷新、遭遇条件冲突或丢失回执
 - **THEN** 系统保留原答案／问题版本与Run条件，不自动采用默认选项或发送；先持久后提交，原键核实可恢复已回答问题的唯一提交，切换失败时保留本页未保存答案
+
+### Requirement: Committed original results survive workspace refresh
+
+The workbench SHALL retain feedback for a locally committed successful original receipt or verified closure across workspace refresh and child-form remount, independently of refresh progress or failure. It SHALL clear that feedback on context navigation or lost identity or permission, and SHALL reject callbacks from an obsolete context. The feedback SHALL describe only the committed original result and SHALL NOT imply downstream execution success or initiate another POST.
+
+#### Scenario: Confirmed original remains visible after a real workspace refresh
+
+- **WHEN** an authorized user explicitly retries an original plan confirmation while the current plan view is unreadable and the actual successful response has been committed locally
+- **THEN** the workbench retains the original success feedback after the actual workspace refresh completes, retains the exact envelope and successful receipt, and creates only one confirmation without starting an implementation attempt

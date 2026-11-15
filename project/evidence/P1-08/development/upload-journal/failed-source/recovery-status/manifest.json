@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-15T17:21:07.987Z",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "a59729c7e73c2d3b3d59f8218ddc455aa2dad20094438b386efc8becfe6df021"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-planning.tsx",
+      "sha256": "6b775680c7fe848b1e1b846ecceb81bcd31d1ae4f4ffc7bdd71a5e7222d0db51"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-recovery.tsx",
+      "sha256": "ba5f18554c35bcca7369101a5d46ec8870cda86902cf7b8d826b390c6f55352b"
+    },
+    {
+      "file": "tests/browser/workbench-recovery.test.mjs",
+      "sha256": "5ccd4341b011793ec775a39d4ff517785a459d2692838e62fbbf965e666b292f"
+    }
+  ],
+  "reason": "Full frozen regression failed to observe the successful plan retry notice. The child recovery stores the notice locally then refreshes its parent; the higher resourceRevision remounts the child and loses the notice. The failed case had not yet reached native receipt/SQL assertions, so no business-success claim is made from this failure alone. Preserve exact inputs before lifting persisted-result feedback to the workbench parent and asserting it after a gated workspace refresh."
+}

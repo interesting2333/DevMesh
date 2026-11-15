@@ -1,0 +1,8 @@
+{
+  "file": "tests/browser/workbench-page.test.mjs",
+  "before": "f470fc6069a21e4e2879095a5412396d199df4f7706663b4156db492656edc18",
+  "after": "0be6c15150838e923a03cb76f4149ca1808b4ca20a0f97f8408d185b462e4f86",
+  "at": "2026-11-15T17:28:37.380Z",
+  "failureRecord": "browser-2026-11-15T16-38-01-791Z.json",
+  "reason": "Test-only deterministic identity-switch scheduling: keep startup requests under the original test identity, capture the already-persisted original at the target POST interception, then switch the trusted server identity immediately before actual route.fetch. Require the real target POST403, old principal header and exact persisted key/body, zero server facts and original draft isolation. No application source, timeout, business assertion or allowed status is relaxed. This .mjs test is excluded from root application and TypeScript compilation."
+}

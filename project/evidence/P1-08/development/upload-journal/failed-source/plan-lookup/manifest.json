@@ -1,0 +1,27 @@
+{
+  "record": "browser-2026-11-15T17-43-57-269Z.json",
+  "at": "2026-11-15T18:31:25.454Z",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "c8ff7268eeb9c9da4eb44734f780b5cb782ba54dcc5cff0a63303276b438fafe"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-planning.tsx",
+      "sha256": "c7a375170176856c2e1ee89242c7d9a6b6ba80c8cd8f9b9f8ae00b894f65312d"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-recovery.tsx",
+      "sha256": "bb785f1e14812708377729a1ee3234a90b4e48895fe128f0557a3255623beaee"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-local.ts",
+      "sha256": "cb5a8392391efc0ba6b359925e16ee77cf3c4060c0a8602c5fa85d96d55c05c0"
+    },
+    {
+      "file": "tests/browser/workbench-planning.test.mjs",
+      "sha256": "61bf5e2c5095a5695973ab5d6198dec7c5421a33039a8487b7b20c2f879a5638"
+    }
+  ],
+  "reason": "The plan ACK-loss recovery case observed a lookup button remaining after a click. Server confirmation text was already present before that lookup, and the failed test had not reached its local receipt assertions. No cause or successful local observation is inferred from this failure alone. Preserve the exact source and rerun the complete unchanged planning file without relaxing requests, timeouts or assertions."
+}
