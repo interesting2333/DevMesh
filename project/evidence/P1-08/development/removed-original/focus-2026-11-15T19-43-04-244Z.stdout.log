@@ -1,0 +1,60 @@
+TAP version 13
+# (node:28260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: removed proof close and explicit blank start use full native CAS, roll back aborts and retain every original field
+not ok 1 - removed proof close and explicit blank start use full native CAS, roll back aborts and retain every original field
+  ---
+  duration_ms: 63288.8594
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-removed.test.mjs:44:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'LOCAL_RECORD_INVALID'
+    - 'STORAGE_UNAVAILABLE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'STORAGE_UNAVAILABLE'
+  actual: 'LOCAL_RECORD_INVALID'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-removed.test.mjs:47:306)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, Edge native IndexedDB production module, multipart/Input API/SQLite/file Worker. Attachment controls are not yet present: actual files and frozen pending inputs are prepared by an explicit same-origin native fixture. Bearer identity, unavailable-read routes, race injection and synthetic long history are labeled; no real model/OIDC/Linux, WebSocket or product acceptance."}
+# (node:28260) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bounded closed history preserves all originals and rejects cross-page rank cycles, missing and foreign links
+not ok 2 - bounded closed history preserves all originals and rejects cross-page rank cycles, missing and foreign links
+  ---
+  duration_ms: 71482.4106
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-removed.test.mjs:77:1'
+  failureType: 'testCodeFailure'
+  error: '{"ok":false,"code":"LOCAL_RECORD_INVALID"}'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-removed.test.mjs:81:91)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, Edge native IndexedDB production module, multipart/Input API/SQLite/file Worker. Attachment controls are not yet present: actual files and frozen pending inputs are prepared by an explicit same-origin native fixture. Bearer identity, unavailable-read routes, race injection and synthetic long history are labeled; no real model/OIDC/Linux, WebSocket or product acceptance."}
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 153028.4062

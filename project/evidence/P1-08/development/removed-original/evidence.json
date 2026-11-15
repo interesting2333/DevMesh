@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-16",
+  "base": "78d264d01a30bc9dbec78e837b974466a1059786",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "removed",
+      "record": "removed-2026-11-15T19-55-38-449Z.json",
+      "tests": 6,
+      "pass": 6,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "http",
+      "record": "http-2026-11-15T20-09-44-493Z.json",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T20-15-30-056Z.json",
+      "tests": 43,
+      "pass": 43,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-15T20-08-17-101Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-15T20-08-17-097Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T19-59-03-292Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T19-59-02-808Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T19-59-03-785Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 64,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "真实READY上传／冻结原项目或消息／DELETE移除／T1拒绝首次提交；顺序受保护REMOVED读取后，准确主体／scope／UUID的includeAbsence200才可关闭。延迟原请求仍拒绝且原操作仍不存在。",
+    "完整原命令及草稿snapshot、pendingForm／revision的原生CAS；双页关闭／显式空白各只有一个胜出。实际事务abort及明确注入标记要求完整回滚、零HTTP／页面异常；草稿单独变化或并发未知观察不能被关闭覆盖。",
+    "项目和Run版本未变的消息明确空白重开，新clientDraftId／单调revision／空正文和选择；无自动复制／POST。后来真实新输入成功，重开新项目或旧依据参考仍可读准确关闭历史。",
+    "有界历史每页10，25条明确元数据夹具加1条实际关闭原请求共26条全部可读；跨页rank循环、缺失、跨主体及根错配拒绝，不冒充25次真实上传或项目操作。",
+    "实际受保护页面核实遇到503／404／非200成功状态／错误附件或主体时保留原日记；明确未知操作转为观察并继续锁定。已绑定附件DELETE409，正常原键成功回执恢复保持，不伪造移除证明。",
+    "完整新增removed文件6项、原六份浏览器文件43项和既有HTTP15项分别执行，共64项不重复通过；本机事务、恢复／答案／计划／权限／窄屏与来源回归保持。"
+  ],
+  "retainedFailures": [
+    {
+      "record": "focus-2026-11-15T19-43-04-244Z.json",
+      "tests": 2,
+      "pass": 0,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "exactSourcesAndArtifacts": "failed-source/native-first/manifest.json",
+      "excludedFromFinalPassingTotals": true,
+      "reason": "Native abort followed by another write was classified as invalid data; fixed safe abort catch and native-abort DOMException classification. The failing case stopped before rollback assertions, so rollback success is not inferred from this old failure. Separately, synthetic history used an empty optional project name rejected by the existing contract; fixed valid metadata, keeping rank/cycle/identity assertions strict."
+    }
+  ],
+  "preflightNotes": "preflight-zero-match.txt",
+  "inputAssessment": "Every final validation group completed with exit0 and zero changed-during or changed-since inputs. All workspace and standalone source-map contents match final source bytes, and actual browser artifacts match before/after/current hashes. Final HTTP and the existing six-file browser group run sequentially after final build/static checks. The new complete removed group uses the same frozen application/standalone bytes, verified before/after/current across the later final build; no application source or test changes intervene. The separately retained pre-fix red reproduction is excluded from final passing totals. SQL1..45, Runner/store, contracts and dependencies remain unchanged.",
+  "scope": "Actual protected React/CSP, Edge native IndexedDB compiled production module, multipart/Input API/SQLite/file Worker plus existing A2A preparation fixtures with explicit model outputs and bearer identities. Final seven complete browser files49 and protected HTTP15 execute without skipped cases. Actual READY upload/removal/T1 rejection, ordered protected200 removal and positive absence, full native close/blank CAS and abort, concurrent observation, unchanged-Run message reopening, exact original snapshots and retained history after later success are checked. Long history uses25 explicit immutable metadata fixture rows plus one actual closed original; unknown/unavailable read routes are explicit fault fixtures. No attachment picker/upload controls, new-task entry, real model/OIDC/Linux, WebSocket or complete product acceptance. The application build targets the sole changed package input-api; unchanged workspace source-map content and artifact hashes remain verified against current files.",
+  "limits": [
+    "Formal P1-08 remains NOT_STARTED pending prerequisites/G0; same-agent development review, not independent/product approval.",
+    "OpenSpec remains5/13 with2.3 unchecked. Attachment picker/upload page controls, new-task entry and later work remain.",
+    "Actual files and pending originals are prepared through an explicit same-origin native fixture until attachment controls are implemented. Long history, unavailable responses and unknown-operation races are explicit fixtures.",
+    "No real model/OIDC/Linux, WebSocket, complete first-use path or formal gate/product acceptance.",
+    "Only input-api application artifacts need rebuilding for this increment; all unchanged workspace maps and migration bytes are also checked against current source/base."
+  ],
+  "managementChecks": "management-checks.json"
+}

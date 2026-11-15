@@ -6,7 +6,7 @@ import {workspaceView,ids,opaqueKey,inputOperation,operationReceipt,createProjec
 import {workbenchBoot} from './workbench-context.js';
 import type {WorkbenchBoot,WorkbenchSelection} from './workbench-context.js';
 import {openWorkbenchLocal} from './workbench-local.js';
-import {CloseOriginal,verifyStaleOriginal} from './workbench-original.js';
+import {CloseOriginal,verifyStaleOriginal,CloseRemovedOriginal,verifyRemovedOriginal} from './workbench-original.js';
 import type {DraftContext,LocalCommand,LocalDraft} from './workbench-local.js';
 import {WorkbenchApiError as ApiError} from './workbench-api.js';
 import {WorkbenchPlanning} from './workbench-planning.js';
@@ -21,11 +21,11 @@ const clock=(value:string)=>new Intl.DateTimeFormat('zh-CN',{dateStyle:'medium',
 const draftKey=(c:DraftContext)=>JSON.stringify(c);
 
 function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,{form:'project'|'message'}>;api:Api;guard:MutableRefObject<()=>Promise<boolean>>;onConfirmed:(selection:WorkbenchSelection)=>Promise<void>}){
- const [fields,setFields]=useState({text:'',name:''}),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[status,setStatus]=useState('正在读取本机草稿…'),[problem,setProblem]=useState(''),[pending,setPending]=useState<LocalCommand|null>(null),[references,setReferences]=useState<{items:LocalDraft[];nextCursor:string|null}>({items:[],nextCursor:null}),[discard,setDiscard]=useState(false),[closed,setClosed]=useState(false);
- const local=useRef<Store|null>(null),latest=useRef(fields),revision=useRef(0),dirty=useRef(false),serial=useRef(0),failed=useRef(false),pumping=useRef(false),queue=useRef(Promise.resolve()),working=useRef(false),original=useRef<LocalCommand|null>(null),disposed=useRef(false),composition=useRef(false);
+ const [fields,setFields]=useState({text:'',name:''}),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[status,setStatus]=useState('正在读取本机草稿…'),[problem,setProblem]=useState(''),[pending,setPending]=useState<LocalCommand|null>(null),[references,setReferences]=useState<{items:LocalDraft[];nextCursor:string|null}>({items:[],nextCursor:null}),[discard,setDiscard]=useState(false),[closed,setClosed]=useState(false),[closedCommand,setClosedCommand]=useState<LocalCommand|null>(null),[history,setHistory]=useState<Awaited<ReturnType<Store['closedHistory']>>>({items:[],nextCursor:null}),[historyContext,setHistoryContext]=useState<DraftContext>(context);
+ const currentDraft=useRef<LocalDraft|null>(null),local=useRef<Store|null>(null),latest=useRef(fields),revision=useRef(0),dirty=useRef(false),serial=useRef(0),failed=useRef(false),pumping=useRef(false),queue=useRef(Promise.resolve()),working=useRef(false),original=useRef<LocalCommand|null>(null),disposed=useRef(false),composition=useRef(false);
  function localFailure(e:unknown){failed.current=true;if(disposed.current)return;setProblem(e&&typeof e==='object'&&'code'in e&&e.code==='LOCAL_CONFLICT'?'另一页已修改这份草稿。本页修改仍保留，请读取并核对后再选择。':'本页输入尚未保存。请重试；离开前需成功保存或明确放弃未保存的修改。');setStatus('尚未保存在本机');}
  function hydrate(value:Awaited<ReturnType<Store['load']>>){
-  const f={text:value.draft?.text??'',name:value.draft?.name??''};latest.current=f;revision.current=value.draft?.revision??0;dirty.current=false;failed.current=false;original.current=value.pending;setFields(f);setPending(value.pending);setClosed(!!value.draft?.closedKey);setProblem('');setDiscard(false);setStatus(value.pending?'原提交结果待核实':value.draft?.closedKey?'此依据的原提交已关闭，旧草稿保留。请切换当前依据。':value.draft?'草稿已保存在本机':'尚未填写');
+  currentDraft.current=value.draft;setClosedCommand(null);const f={text:value.draft?.text??'',name:value.draft?.name??''};latest.current=f;revision.current=value.draft?.revision??0;dirty.current=false;failed.current=false;original.current=value.pending;setFields(f);setPending(value.pending);setClosed(!!value.draft?.closedKey);setProblem('');setDiscard(false);setStatus(value.pending?'原提交结果待核实':value.draft?.closedKey?'此依据的原提交已关闭，旧草稿保留。请切换当前依据。':value.draft?'草稿已保存在本机':'尚未填写');
  }
  async function initialize(preserve=false){
   await queue.current;
@@ -39,6 +39,7 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
     failed.current=false;setProblem('');schedule();await queue.current;
    }else hydrate(value);
    if(context.form==='message'){const refs=await store.references(context);if(!disposed.current)setReferences(refs);}
+   const savedHistory=await store.closedHistory(context),savedClosed=value.draft?.closedKey?await store.getCommand(value.draft.closedKey):null;if(!disposed.current){setHistory(savedHistory);setHistoryContext(context);setClosedCommand(savedClosed);}
   }catch(e){if(local.current!==store)store.close();throw e;}
  }
  function schedule(){
@@ -78,6 +79,22 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
   const e=command.envelope,value=await api(e.path,{method:'POST',headers:{'content-type':'application/json','idempotency-key':e.key,...(e.ifMatch?{'if-match':e.ifMatch}:{})},body:JSON.stringify(e.body)});await accept(command,value);
  }
   async function closeOriginal(){const p=original.current!;let committed=false;try{const verified=await verifyStaleOriginal(p,path=>api(path));if(verified.kind==='operation'){await accept(p,verified.value);return;}await local.current!.closeStale(p,verified.proof);committed=true;hydrate(await local.current!.load(context));setStatus('过期原提交已核实关闭，旧草稿仍保留。');const c=p.envelope.context;if(c.form==='project')throw Error('Wrong closure');working.current=false;await onConfirmed({projectId:c.projectId,runId:c.runId});}catch{setProblem(committed?'关闭已保存在本机，但当前执行尚未刷新，请重新进入。':'尚不能关闭原提交。请核实当前权限、执行依据及原操作；原记录继续保留。');}}
+ async function closeRemoved(){
+  const p=original.current!;let committed=false;
+  try{
+   const d=(await local.current!.load(p.envelope.context)).draft;if(!d)throw Error('Missing original draft');
+   const verified=await verifyRemovedOriginal(p,path=>api(path));if(verified.kind==='operation'){await accept(p,verified.value);return;}
+   const saved=await local.current!.closeRemoved(p,d,verified.proof);committed=true;original.current=null;currentDraft.current=null;setPending(null);setClosed(true);setClosedCommand(saved);setReady(false);
+   await initialize();setStatus('已核实附件移除并关闭原提交，原内容保留。');
+  }catch{setProblem(committed?'关闭已保存在本机，但记录尚未重新读到，请重试读取或重新进入。':'尚不能关闭原提交。请核实附件、权限及原操作；原记录继续保留。');}
+  finally{if(committed&&!disposed.current)setReady(true);}
+ }
+ async function startBlank(){
+  if(!closedCommand||!currentDraft.current)return;
+  try{await local.current!.startBlankInput(closedCommand,currentDraft.current);await initialize();setStatus('已开始空白输入，原请求仍在已关闭记录中。');}
+  catch{setProblem('尚不能开始空白输入，另一页可能已更新记录。请重新读取；原请求仍保留。');}
+ }
+ async function readHistory(c:DraftContext,more=false){const value=await local.current!.closedHistory(c,more?history.nextCursor??undefined:undefined);if(!disposed.current){setHistory(old=>({items:more?[...old.items,...value.items]:value.items,nextCursor:value.nextCursor}));setHistoryContext(c);}}
  function submit(){if(!ready||closed||original.current||failed.current)return;void exclusive(async()=>{
   if(!await flush()||!local.current)return;
   // Validate user input before creating an immutable pending original.
@@ -100,8 +117,10 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
    <div className="actions"><button className="primary" type="submit" disabled={disabled||failed.current||!fields.text.trim()}>{context.form==='project'?'创建项目并保存需求':'提交输入'}</button><span className="muted">Enter 换行 · Ctrl / Cmd + Enter 提交</span></div>
   </form>
   {problem&&!pending&&<div className="actions"><button disabled={busy} onClick={()=>void exclusive(async()=>{try{await initialize(true);}catch(e){localFailure(e);}})}>重试本机保存</button><label><input type="checkbox" checked={discard} onChange={e=>setDiscard(e.target.checked)}/>我确认放弃本页未保存的修改</label><button disabled={busy||!discard} onClick={()=>void exclusive(async()=>{dirty.current=false;await initialize();})}>放弃本页修改并重新读取</button></div>}
-   {pending&&<section className="notice" aria-label="待核实原提交"><h3>原提交结果待核实</h3><p>刷新或重新进入不会自动发送。核实会查询同一原操作，继续提交会使用原正文与原条件。</p><div className="actions"><button disabled={busy} onClick={()=>void lookup()}>核实原提交</button><button disabled={busy} onClick={()=>void exclusive(()=>send(pending))}>使用原请求继续提交</button></div><details><summary>查看原提交内容</summary><p>{pending.envelope.kind==='project'?pending.envelope.body.initialRequest.text:pending.envelope.kind==='message'?pending.envelope.body.text:'计划确认'}</p></details>{pending.envelope.kind!=='project'&&<CloseOriginal key={pending.key} busy={busy} onClose={()=>void exclusive(closeOriginal)}/>}</section>}
-  {!!references.items.length&&<details><summary>其他依据的本机草稿</summary><p className="muted">这些草稿仅供参考，不会自动采用旧提交条件。</p>{references.items.map(d=><article key={d.key}><p className="muted">依据版本 {d.context.basisRevision} · {clock(d.updatedAt)}</p><p>{d.text}</p><button disabled={disabled||dirty.current||failed.current} onClick={()=>edit({text:d.text,name:d.name})}>以当前依据复制此正文</button></article>)}{references.nextCursor&&<button disabled={busy} onClick={()=>void exclusive(async()=>{const more=await local.current!.references(context,references.nextCursor!);setReferences({items:[...references.items,...more.items],nextCursor:more.nextCursor});})}>读取更多旧草稿</button>}</details>}
+   {pending&&<section className="notice" aria-label="待核实原提交"><h3>原提交结果待核实</h3><p>刷新或重新进入不会自动发送。核实会查询同一原操作，继续提交会使用原正文与原条件。</p><div className="actions"><button disabled={busy} onClick={()=>void lookup()}>核实原提交</button><button disabled={busy} onClick={()=>void exclusive(()=>send(pending))}>使用原请求继续提交</button></div><details><summary>查看原提交内容</summary><p>{pending.envelope.kind==='project'?pending.envelope.body.initialRequest.text:pending.envelope.kind==='message'?pending.envelope.body.text:'计划确认'}</p></details>{(pending.envelope.kind==='project'?pending.envelope.body.initialRequest.attachmentIds.length:pending.envelope.kind==='message'?pending.envelope.body.attachmentIds.length:0)>0&&<CloseRemovedOriginal key={'removed:'+pending.key} busy={busy} onClose={()=>void exclusive(closeRemoved)}/>} {pending.envelope.kind!=='project'&&<CloseOriginal key={pending.key} busy={busy} onClose={()=>void exclusive(closeOriginal)}/>}</section>}
+  {closed&&closedCommand?.closure?.reason==='REMOVED_ATTACHMENT'&&<section aria-label="开始新的空白输入"><p>原提交已关闭。你可以开始一份空白输入，旧内容和附件记录仍保留。</p><button disabled={!ready||busy||failed.current||!currentDraft.current} onClick={()=>void exclusive(startBlank)}>开始空白输入，保留原记录</button></section>}
+  {!!history.items.length&&<section aria-label="已关闭的原提交"><h3>已关闭的原提交{historyContext.form==='message'?' · 依据版本 '+historyContext.basisRevision:''}</h3><p className="muted">这些记录仅供核对，不会自动复制或发送。</p>{history.items.map(item=>{const proof=item.closure;if(proof?.reason!=='REMOVED_ATTACHMENT')return null;return <article className="card" key={item.key}><h4>{proof.draftSnapshot.name||'原输入'}</h4><p>{proof.draftSnapshot.text||'原输入仅包含附件。'}</p><p>原附件已移除：{proof.attachment.name}</p><p className="muted">原输入时间 {clock(item.envelope.createdAt)} · 核实关闭 {clock(proof.lookupReadAt)}</p></article>;})}{history.nextCursor&&<button disabled={busy} onClick={()=>void exclusive(()=>readHistory(historyContext,true))}>读取更多已关闭记录</button>}</section>}
+  {!!references.items.length&&<details><summary>其他依据的本机草稿</summary><p className="muted">这些草稿仅供参考，不会自动采用旧提交条件。</p>{references.items.map(d=><article key={d.key}><p className="muted">依据版本 {d.context.basisRevision} · {clock(d.updatedAt)}</p><p>{d.text}</p>{(d.closedKey||d.previousClosedKey)&&<button disabled={busy} onClick={()=>void exclusive(()=>readHistory(d.context))}>查看此依据的已关闭记录</button>}<button disabled={disabled||dirty.current||failed.current} onClick={()=>edit({text:d.text,name:d.name})}>以当前依据复制此正文</button></article>)}{references.nextCursor&&<button disabled={busy} onClick={()=>void exclusive(async()=>{const more=await local.current!.references(context,references.nextCursor!);setReferences({items:[...references.items,...more.items],nextCursor:more.nextCursor});})}>读取更多旧草稿</button>}</details>}
  </section>;
 }
 
@@ -117,6 +136,7 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
    const headers=new Headers(init.headers);headers.set('x-devmesh-principal',boot.principalId);
    const r=await fetch(path,{...init,headers,credentials:'same-origin',cache:'no-store',redirect:'error',signal:AbortSignal.any([controller.signal,AbortSignal.timeout(15000)])});
     if(!r.ok){if([401,403].includes(r.status)&&token===generation.current&&!disposed.current)closeProtected('登录身份或项目权限已变化，请重新进入工作台。',controller);let code='REQUEST_FAILED';try{const v=await r.json() as {error?:{code?:unknown}};if(typeof v.error?.code==='string')code=v.error.code;}catch{/* Error bodies carry no business facts. */}throw new ApiError(r.status,code);}
+    if((init.method??'GET').toUpperCase()==='GET'&&r.status!==200)throw Error('Unexpected protected read status');
     if(!r.headers.get('content-type')?.includes('application/json'))throw Error('Invalid response');const value=await r.json() as unknown;if(token!==generation.current||disposed.current)throw new DOMException('Obsolete workspace request','AbortError');return value;
   }finally{controllers.current.delete(controller);}
  }

@@ -130,3 +130,22 @@ The workbench SHALL retain feedback for a locally committed successful original 
 
 - **WHEN** reading the current planning projection fails and no readable plan is available
 - **THEN** the page reports the plan as temporarily unreadable and does not assert that no saved plan exists
+
+### Requirement: Permanently removed attachment originals can close without losing input
+
+The workbench SHALL preserve the complete immutable project/message original and draft snapshot when explicitly closing a pending original proven impossible by permanent attachment removal. It SHALL first read the exact protected REMOVED attachment and then the exact principal/scope/key positive absence with200;404, non200, unknown operation or failed authorization SHALL NOT release the lock. The native closure SHALL compare the complete original observation, pending index and draft atomically, retain the original input and record a separate closure without inventing success.
+
+#### Scenario: User explicitly starts blank after verified removal closure
+
+- **WHEN** the user explicitly starts blank from an exactly matching removed closure and draft, including a message whose Run basis did not advance
+- **THEN** a native CAS creates a fresh input identity with empty fields and selection at a greater local revision, retains the full closed original and does not copy or POST input automatically
+
+#### Scenario: Current input succeeds after an older original was closed
+
+- **WHEN** a later input succeeds or the user reopens the project/message context or an old-basis draft reference
+- **THEN** the closed original remains discoverable through bounded immutable history links, each checked for exact principal/context and decreasing original draft rank across pagination; missing, foreign or cyclic links fail explicitly
+
+#### Scenario: Another page changes the original during verification
+
+- **WHEN** another page observes an operation, closes the same original, changes the draft or starts blank before the native CAS
+- **THEN** the stale action fails without replacing that observation, clearing history, inventing a receipt or sending another request

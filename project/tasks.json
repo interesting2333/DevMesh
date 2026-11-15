@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "4b8d37e3ab7a6fe2d11135b35029b4abb66307b2c5857a3d299d0d2eb70e8c7e"
+      "sha256": "fd9c819479339fce5fe4f4277455d3d820800b6a14d965ec2140d168a03f0263"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "a87d71c5afe060b82990d758f26938d53b4b2e0d287f332e9470bdd72f903842"
+      "sha256": "53aac75a651c184e6d574195038c21d975d1f57fc0f56f0e55e56a56764678b8"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "7583ef0cb6ef0242ac2ef48901d8d8718ebbf30d3aa1f5016754a4a61f5afcc7"
+      "sha256": "4a131855353b9034efa81460796814083c9b164d4d9ef51bcec8b5b162918705"
     }
   ],
   "gates": [
@@ -1700,7 +1700,8 @@
         "packages/input-api/src/web/workbench-recovery.tsx",
         "tests/browser/workbench-recovery.test.mjs",
         "packages/input-api/src/web/workbench-upload.ts",
-        "tests/browser/workbench-upload.test.mjs"
+        "tests/browser/workbench-upload.test.mjs",
+        "tests/browser/workbench-removed.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-08/local-input-development-review.md",
@@ -1734,7 +1735,11 @@
         "project/evidence/P1-08/global-feedback-development-review.md",
         "project/evidence/P1-08/development/global-feedback/evidence.json",
         "project/evidence/P1-08/development/global-feedback/final-binding.json",
-        "project/evidence/P1-08/development/global-feedback/manifest.json"
+        "project/evidence/P1-08/development/global-feedback/manifest.json",
+        "project/evidence/P1-08/removed-original-development-review.md",
+        "project/evidence/P1-08/development/removed-original/evidence.json",
+        "project/evidence/P1-08/development/removed-original/final-binding.json",
+        "project/evidence/P1-08/development/removed-original/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1745,7 +1750,8 @@
         "2026-11-15：P1-08过期Run原提交关闭开发增量，implement-workbench-first-path仍5/13，2.3附件／新任务及缺计划时恢复入口继续；正式状态等待前置／G0。消息／回答／计划确认每次明确勾选后，先准确授权更高Run版本、后原主体／scope／UUID查询，只有includeAbsence=true的受保护200准确返回主体／scope／key及operation:null允许独立STALE_BASIS关闭；已有成功走原回执，未知／网络／权限／同版本404不关闭。原生事务完整观察CAS、准确pending指针／草稿版本，释放锁但保留原信封／旧内容／clientDraftId；closedKey拒绝旧依据原地新提交，不自动复制／换键／POST。实际双页仅一方关闭，事务abort不丢原锁，成功／未知观察不被覆盖；迟到旧POST仍412且无业务输入。实际HTTP29＋浏览器33＝62通过、0跳过；初步根构建保留，修正后最终根／独立模块构建、类型／Lint／契约及测试输入字节一致，543映射／719输入产物与最终浏览器JS／map前后SHA匹配。首轮类型TS18047及准确失败源码保留；修正显式null返回并补充关闭落盘后刷新失败提示。OpenAPI61路径，SQL1～45／Runner／依赖不变；真实资源、WS、完整首次路径和正式验收未执行。",
         "2026-11-16：P1-08原提交独立恢复入口开发增量，implement-workbench-first-path仍5/13、2.3附件／新任务继续，正式状态等待前置／G0。消息新准入关闭、计划history／不可读、问题依据不可读时，当前非viewer准确Run挂载独立恢复区域，与正常表单互斥；只读pendingForm scope查询核对原信封与草稿pendingKey／revision，不创建新草稿／UUID／命令，不改schema1。仅明确原键核实／同信封重试／顺序证明关闭；成功仅说明原请求，不确认新计划或实施。实际计划不可读／终态消息的两个修复前按钮缺失失败保留原始输出与六份准确输入，字节对应基线d79aae4；首轮组合18通过／1原生夹具项目ID错误，原存储断言尚未执行；仅修正ID后重跑完整受影响恢复文件。最终HTTP3＋浏览器5＝8通过、0跳过，应用源码与产物一致；构建／类型后仅修正独立.mjs测试的请求计数与原生项目ID，最终Lint／契约／测试绑定修改后输入，544源码映射／721输入产物与最终浏览器摘要匹配。实际新需求使旧计划history，原确认仍可关闭且迟到旧POST拒绝；回答丢ACK后问题不可读仍恢复唯一原回执；终态SQL仅状态夹具，不代签CancelRun／物理停止。OpenAPI61路径／控制SQL1～45／Runner／依赖不变；真实资源、WS、完整首次路径和正式验收未执行。",
         "2026-11-16：P1-08附件本机日记基础开发增量，implement-workbench-first-path仍5/13、2.3未勾选，正式P1-08等待前置／G0。本地库1→2只新增uploads／主体索引，旧草稿／未决信封准确保留，blocked／abort不清库；旧客户端拒绝新版。上传准确字节／SHA、原键／clientAttachmentId先保存，日记与选择／草稿CAS同事务；主输入只冻结准确已核实READY映射，未知／移除／损坏／并发变化不能省略为[]。32份驻留／256条日记有界，未知不释放；已知结果显式释放保留信封／hash／结果。实际multipart丢ACK、原键重放、仅附件项目、唯一绑定及T1拒绝移除附件验证；256条边界使用明确归档行夹具。修复升级abort未捕获异常与成功反馈被刷新重挂载清除，账号夹具改为目标真实POST前切身份；加强刷新完成后提示和准确回执／唯一事实断言。最终不重叠HTTP14＋浏览器43（其他4文件29＋回答9／计划5整文件复跑）＝57通过、0选取失败／取消／跳过；根／独立构建、类型、Lint、契约及全部最终输入零漂移，546源码映射与723输入产物匹配。首轮5项4通过／1失败、冻结完整浏览器43项41通过／2失败及准确源码原日志均保留，不计入最终绿色总数。修复后完整43项41通过／2失败（初次页面导航中断、原计划核实按钮未消失）；第一次计划整文件复跑4通过／1初始化POST ECONNRESET。原因未查明，响应或本机观察未获验证的部分不推断成功；最终准确源码未改的回答9项、计划5项整文件分别通过，当前完整调用及首次复跑原日志保留，不称一次全绿。SQL1～45／Runner／依赖／OpenAPI61路径未改。复核另发现当前结果提示位于conversation区，小屏详情面板会将其隐藏，下一增量迁移至跨面板区并补实际浏览器检查；当前不声称该布局已完成。附件UI、永久移除后的原输入关闭／新草稿、新任务、交付导航、WS／完整首次路径及真实资源／正式验收继续。",
-        "2026-11-16：P1-08小屏恢复反馈修正。修复前实际Edge复现1项0通过／1失败：原确认回执已持久且桌面刷新后可见，390px切详情隐藏提示，准确源码／原日志／截图保留。将唯一已提交结果节点移到共享顶部区，保留上下文／身份／权限清除及旧回调保护；无可读计划时区分读取中／暂不可读，不再把503显示为尚无计划。最终HTTP3＋完整恢复浏览器5＝8通过、零失败／取消／跳过；实际workspace刷新后核对准确原回执及唯一确认／零实施attempt，再验证390px全部面板可见、无横向溢出、零额外POST。最终根／独立构建、类型、Lint、契约和回归输入零漂移，546源码映射及723输入产物匹配。SQL1～45、Runner／依赖／契约未改。同一Agent开发复核；正式P1-08仍等待前置／G0，变更5/13、2.3未勾选，附件UI／永久移除关闭与新草稿／新任务／WS和真实资源／产品验收继续。"
+        "2026-11-16：P1-08小屏恢复反馈修正。修复前实际Edge复现1项0通过／1失败：原确认回执已持久且桌面刷新后可见，390px切详情隐藏提示，准确源码／原日志／截图保留。将唯一已提交结果节点移到共享顶部区，保留上下文／身份／权限清除及旧回调保护；无可读计划时区分读取中／暂不可读，不再把503显示为尚无计划。最终HTTP3＋完整恢复浏览器5＝8通过、零失败／取消／跳过；实际workspace刷新后核对准确原回执及唯一确认／零实施attempt，再验证390px全部面板可见、无横向溢出、零额外POST。最终根／独立构建、类型、Lint、契约和回归输入零漂移，546源码映射及723输入产物匹配。SQL1～45、Runner／依赖／契约未改。同一Agent开发复核；正式P1-08仍等待前置／G0，变更5/13、2.3未勾选，附件UI／永久移除关闭与新草稿／新任务／WS和真实资源／产品验收继续。",
+        "2026-11-16：P1-08永久移除原输入处置开发增量完成本机验证。新增独立REMOVED_ATTACHMENT顺序证明，受保护GET严格200，普通404／非200／未知或权限失败不关闭；完整原观察／草稿CAS关闭，保留信封和完整快照，不伪造成功。项目和同Run版本消息均可明确空白开始，生成新输入身份、保持单调revision且零自动复制／POST；原历史链接在新提交成功和旧依据参考中保留，分页严格下降。原生abort及双页竞争／并发观察、实际multipart移除／T1拒绝／延迟原请求、受保护页面及26条历史（25条明确夹具＋1条实际原请求）验证。最终新增浏览器6＋既有完整浏览器43＋HTTP15＝64通过，零失败／取消／跳过；应用／独立模块构建、类型／Lint／契约及最终输入零漂移，546源码映射／724输入产物匹配。首轮定向2项0通过／2失败原日志／准确源码／实际JS／map保留：事务中止后继续写被归类为坏记录，修正已中止事务的异常处理；长历史夹具误填不合法空项目名，改为有效名，未放宽断言。最初shell筛选实际0业务用例，不计通过。SQL1～45、Runner／依赖／公共契约未改。同一Agent开发复核；正式P1-08／前置／G0和5/13、2.3未变；附件控件／新任务／WS与真实资源／产品验收继续。"
       ]
     },
     {

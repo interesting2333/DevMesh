@@ -1,0 +1,43 @@
+{
+  "record": "focus-2026-11-15T19-43-04-244Z.json",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-local.ts",
+      "sha256": "67e5cb777188376edf861805abd3b019b9b73b4c9c790239ee66f913eea13085"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "390d61bf68d7ca0b44973ffc33d74b2e5cf0ef2b0cf47ea93988274e785eacef"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-original.tsx",
+      "sha256": "39dec73cf4227e5c38a0fbabdd2e30cc3c4ca68e52c539376dc3182e04d27066"
+    },
+    {
+      "file": "tests/browser/workbench-removed.test.mjs",
+      "sha256": "4e7d8beab84f3650497d10918b4ed0e8966f209d1cf132b220ed6b1e890b1276"
+    }
+  ],
+  "artifacts": [
+    {
+      "source": ".cache/workbench-local-build/local.js",
+      "file": "artifacts/cache/workbench-local-build/local.js",
+      "sha256": "199a8919fdfeae0a3a152dd43c7143528517964f7dfbddec607c5ea6b4f35758"
+    },
+    {
+      "source": ".cache/workbench-local-build/local.js.map",
+      "file": "artifacts/cache/workbench-local-build/local.js.map",
+      "sha256": "cc93f13eef9e3fa3b70ab2a8cdb19a340bf4901c32c344f750f862e948d22b12"
+    },
+    {
+      "source": "packages/input-api/dist/web/workbench/workbench-client.js",
+      "file": "artifacts/packages/input-api/dist/web/workbench/workbench-client.js",
+      "sha256": "745199dc9f84c39ea52f8a7bfeb81d11b436bea165d2064b5030114108b80e29"
+    },
+    {
+      "source": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "file": "artifacts/packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "sha256": "fe3edecc42a6aff69c7d5dfcc37d11f66a49f9f6b3e6d7f728be682ff73cfc3c"
+    }
+  ]
+}

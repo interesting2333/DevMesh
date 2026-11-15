@@ -1,0 +1,2 @@
+Exploratory shell command used a quoted --test-name-pattern and matched no declared business cases. Its Node file wrapper exited0, but the output included1..0. No business checks from that invocation are counted. The structured validation driver requires actual named cases and records subsequent runs.
+Initial TypeScript exploration returned TS18047 for the possibly-null parsed snapshot in workbench-local.ts116/117; explicit early return narrows the validated snapshot. These exploratory checks precede final validation.

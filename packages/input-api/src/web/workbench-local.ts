@@ -12,7 +12,7 @@ export const draftContext=z.discriminatedUnion('form',[
 ]);
 export type DraftContext=z.output<typeof draftContext>;
 const draftFields=z.strictObject({text:z.string().max(40000),name:z.string().max(80),answers:z.array(answerQuestionsInput.shape.answers.element).max(100).optional()});
-const draftRecord=z.strictObject({key:z.string(),context:draftContext,revision,clientDraftId:z.uuid(),...draftFields.shape,uploadKeys:z.array(z.uuid()).max(3).refine(v=>new Set(v).size===v.length).optional(),updatedAt:timestamp,pendingKey:z.uuid().nullable(),closedKey:z.uuid().optional()});
+const draftRecord=z.strictObject({key:z.string(),context:draftContext,revision,clientDraftId:z.uuid(),...draftFields.shape,uploadKeys:z.array(z.uuid()).max(3).refine(v=>new Set(v).size===v.length).optional(),updatedAt:timestamp,pendingKey:z.uuid().nullable(),closedKey:z.uuid().optional(),previousClosedKey:z.uuid().optional()});
 export type LocalDraft=z.output<typeof draftRecord>;
 const envelopeBase={key:z.uuid(),context:draftContext,draftRevision:revision,createdAt:timestamp};
 const commandEnvelope=z.discriminatedUnion('kind',[
@@ -33,7 +33,10 @@ const commandEnvelope=z.discriminatedUnion('kind',[
   }
 });
 export const staleOriginalProof=z.strictObject({reason:z.literal('STALE_BASIS'),key:z.uuid(),projectId:ids.project,runId:ids.run,resourceRevision:revision,workspaceReadAt:timestamp,lookupReadAt:timestamp,lookup:inputOperationLookup.extend({operation:z.null()})});
-const commandRecord=z.strictObject({key:z.uuid(),formKey:z.string(),envelope:commandEnvelope,receipt:inputOperation.nullable(),observedAt:timestamp.nullable(),pendingForm:z.string().optional(),closure:staleOriginalProof.optional()});
+export const removedOriginalProof=z.strictObject({reason:z.literal('REMOVED_ATTACHMENT'),key:z.uuid(),attachment:attachmentView.extend({state:z.literal('REMOVED')}),attachmentReadAt:timestamp,lookupReadAt:timestamp,lookup:inputOperationLookup.extend({operation:z.null()})});
+const removedClosure=removedOriginalProof.extend({draftSnapshot:draftRecord});
+const closedHistoryCursor=z.strictObject({rootKey:z.uuid(),anchorKey:z.uuid()});
+const commandRecord=z.strictObject({key:z.uuid(),formKey:z.string(),envelope:commandEnvelope,receipt:inputOperation.nullable(),observedAt:timestamp.nullable(),pendingForm:z.string().optional(),closure:z.discriminatedUnion('reason',[staleOriginalProof,removedClosure]).optional()});
 export type LocalCommand=z.output<typeof commandRecord>;
 const contextKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form,c.basisRevision,...(c.form==='plan-confirm'?[c.basis.planRevision,c.basis.requirementRevision,c.basis.reviewHash,c.basis.carryForwardHash??null]:c.form==='questions-answer'?[c.basis.requirementRevision,c.basis.questions.map(q=>[q.questionId,q.questionRevision])]:[])]);
 const pendingScope=z.strictObject({principalId:opaqueKey,projectId:ids.project,runId:ids.run,form:z.enum(['message','questions-answer','plan-confirm'])});
@@ -90,7 +93,7 @@ export async function openWorkbenchLocal(principalId:string){
   db.onversionchange=close;
   db.onclose=()=>{closed=true;};
   function context(input:DraftContext){const c=draftContext.parse(input);if(c.principalId!==principalId)invalid();return c;}
-  function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);validateDraftFields(c,d);if(d.key!==contextKey(c)||stable(d.context)!==stable(c)||d.closedKey&&d.pendingKey||c.form==='questions-answer'&&(d.text!==''||d.name!==''||d.answers===undefined)||c.form!=='questions-answer'&&d.answers!==undefined||c.form!=='project'&&c.form!=='message'&&d.uploadKeys!==undefined)invalid();return d;}
+  function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);validateDraftFields(c,d);if(d.key!==contextKey(c)||stable(d.context)!==stable(c)||d.closedKey&&d.pendingKey||c.form==='questions-answer'&&(d.text!==''||d.name!==''||d.answers===undefined)||c.form!=='questions-answer'&&d.answers!==undefined||c.form!=='project'&&c.form!=='message'&&(d.uploadKeys!==undefined||d.previousClosedKey!==undefined)||d.previousClosedKey===d.closedKey&&d.closedKey!==undefined)invalid();return d;}
   function success(envelope:LocalCommand['envelope'],result:unknown){
     const r=z.object({projectId:ids.project,runId:ids.run,revision}).parse(result),c=envelope.context;
     if(c.form!=='project'&&(r.projectId!==c.projectId||r.runId!==c.runId))invalid();
@@ -101,7 +104,19 @@ export async function openWorkbenchLocal(principalId:string){
   function command(value:unknown){
     const v=commandRecord.parse(value),c=v.envelope.context;
     if(v.key!==v.envelope.key||c.principalId!==principalId||v.formKey!==formKey(c)||(v.pendingForm!==undefined&&v.pendingForm!==v.formKey)||((v.pendingForm===undefined)!==(v.receipt?.status==='SUCCEEDED'||v.closure!==undefined))||((v.receipt===null)!==(v.observedAt===null)))invalid();
-    if(v.closure&&(v.receipt!==null||c.form==='project'||v.closure.key!==v.key||v.closure.lookup.principalId!==c.principalId||v.closure.lookup.scope!==v.envelope.scope||v.closure.lookup.key!==v.key||v.closure.projectId!==c.projectId||v.closure.runId!==c.runId||v.closure.resourceRevision<=c.basisRevision||Date.parse(v.closure.lookupReadAt)<Date.parse(v.closure.workspaceReadAt)))invalid();
+    const proof=v.closure;
+    if(proof){
+      if(v.receipt!==null||proof.key!==v.key||proof.lookup.principalId!==c.principalId||proof.lookup.scope!==v.envelope.scope||proof.lookup.key!==v.key)invalid();
+      if(proof.reason==='STALE_BASIS'){
+        if(c.form==='project'||proof.projectId!==c.projectId||proof.runId!==c.runId||proof.resourceRevision<=c.basisRevision||Date.parse(proof.lookupReadAt)<Date.parse(proof.workspaceReadAt))invalid();
+      }else{
+        const e=v.envelope,ids=e.kind==='project'?e.body.initialRequest.attachmentIds:e.kind==='message'?e.body.attachmentIds:[];
+        if((e.kind!=='project'&&e.kind!=='message')||!ids.includes(proof.attachment.attachmentId)||Date.parse(proof.lookupReadAt)<Date.parse(proof.attachmentReadAt))invalid();
+        const d=draft(proof.draftSnapshot,c);if(!d)return invalid();if(d.pendingKey!==v.key||d.closedKey||d.revision!==e.draftRevision+1)invalid();
+        if(e.kind==='project'&&(d.clientDraftId!==e.body.clientDraftId||d.text!==e.body.initialRequest.text||d.name!==(e.body.name??'')))invalid();
+        if(e.kind==='message'&&(d.clientDraftId!==e.body.clientMessageId||d.text!==e.body.text))invalid();
+      }
+    }
     if(v.receipt?.status==='SUCCEEDED'){
       success(v.envelope,v.receipt.result);
     }
@@ -114,9 +129,9 @@ export async function openWorkbenchLocal(principalId:string){
       let tx:IDBTransaction;
       try{tx=db.transaction(['drafts','commands','uploads'],mode);}catch{reject(new WorkbenchLocalError('STORAGE_UNAVAILABLE'));return;}
       let result:T,ready=false,reason:unknown;
-      const guard=(work:()=>void)=>{try{work();}catch(e){reason=e;tx.abort();}};
+      const guard=(work:()=>void)=>{try{work();}catch(e){reason=e;try{tx.abort();}catch{/* A native abort may already have ended this transaction. */}}};
       tx.oncomplete=()=>{if(ready)resolve(result);else reject(new WorkbenchLocalError('LOCAL_RECORD_INVALID'));};
-      tx.onabort=()=>reject(reason instanceof WorkbenchLocalError?reason:new WorkbenchLocalError(reason?'LOCAL_RECORD_INVALID':'STORAGE_UNAVAILABLE'));
+      tx.onabort=()=>reject(reason instanceof WorkbenchLocalError?reason:new WorkbenchLocalError(!reason||reason instanceof DOMException&&['AbortError','InvalidStateError','TransactionInactiveError'].includes(reason.name)?'STORAGE_UNAVAILABLE':'LOCAL_RECORD_INVALID'));
       const s:Session={drafts:tx.objectStore('drafts'),commands:tx.objectStore('commands'),uploads:tx.objectStore('uploads'),get(store,key,next){const r=store.get(key);r.onsuccess=()=>guard(()=>next(r.result as unknown));},all(store,key,next){const r=store.getAll(key);r.onsuccess=()=>guard(()=>next(r.result as unknown[]));},scan(range,next){const r=tx.objectStore('drafts').openCursor(range,'prev');r.onsuccess=()=>guard(()=>next(r.result));}};
       guard(()=>body(s,value=>{result=value;ready=true;}));
     });
@@ -142,7 +157,7 @@ export async function openWorkbenchLocal(principalId:string){
       s.scan(range,cursor=>{
         if(!cursor){done({items,nextCursor:null});return;}
         const raw=draftRecord.parse(cursor.value),d=draft(raw,context(raw.context));if(!d||formKey(d.context)!==formKey(c))return invalid();
-        scanned++;if(d.context.basisRevision!==c.basisRevision&&(d.text||d.name||d.answers?.length))items.push(d);
+        scanned++;if(d.context.basisRevision!==c.basisRevision&&(d.text||d.name||d.answers?.length||d.closedKey||d.previousClosedKey))items.push(d);
         if(items.length===10||scanned===50){done({items,nextCursor:String(cursor.key)});return;}cursor.continue();
       });
     });
@@ -153,7 +168,7 @@ export async function openWorkbenchLocal(principalId:string){
       if(p)throw new WorkbenchLocalError('COMMAND_PENDING');
       s.get(s.drafts,contextKey(c),raw=>{
         const old=draft(raw,c);if(old?.closedKey)throw new WorkbenchLocalError('COMMAND_CLOSED');if(old?.pendingKey)invalid();if((old?.revision??0)!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');
-        const d=draftRecord.parse({key:contextKey(c),context:c,revision:expectedRevision+1,clientDraftId:old?.clientDraftId??crypto.randomUUID(),...value,...(old?.uploadKeys?{uploadKeys:old.uploadKeys}:{}),updatedAt:new Date().toISOString(),pendingKey:null});s.drafts.put(d);done(d);
+        const d=draftRecord.parse({key:contextKey(c),context:c,revision:expectedRevision+1,clientDraftId:old?.clientDraftId??crypto.randomUUID(),...value,...(old?.uploadKeys?{uploadKeys:old.uploadKeys}:{}),...(old?.previousClosedKey?{previousClosedKey:old.previousClosedKey}:{}),updatedAt:new Date().toISOString(),pendingKey:null});s.drafts.put(d);done(d);
       });
     }));
   }
@@ -213,6 +228,61 @@ export async function openWorkbenchLocal(principalId:string){
         const {pendingForm:_pendingForm,...rest}=old,v=commandRecord.parse({...rest,closure:proof});
         s.commands.put(v);s.drafts.put(draftRecord.parse({...d,revision:d.revision+1,pendingKey:null,closedKey:old.key,updatedAt:proof.lookupReadAt}));done(v);
       });});
+    }));
+  }
+  /** A removed original is historical only after a protected ordered proof and exact native CAS. */
+  function closeRemoved(expected:LocalCommand,expectedDraft:LocalDraft,input:z.input<typeof removedOriginalProof>){
+    const snapshot=command(expected),c=snapshot.envelope.context,proof=removedOriginalProof.parse(input),d=draft(expectedDraft,c);
+    if(snapshot.receipt||snapshot.closure||!d)return invalid();
+    const {pendingForm:_pendingForm,...rest}=snapshot,value=command({...rest,closure:{...proof,draftSnapshot:d}});
+    return transaction<LocalCommand>('readwrite',(s,done)=>s.get(s.commands,snapshot.key,raw=>{
+      if(stable(command(raw))!==stable(snapshot))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+      pending(s,c,p=>{if(!p||p.key!==snapshot.key)throw new WorkbenchLocalError('LOCAL_CONFLICT');s.get(s.drafts,contextKey(c),rawDraft=>{
+        const current=draft(rawDraft,c);if(!current||stable(current)!==stable(d))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+        s.commands.put(value);s.drafts.put(draftRecord.parse({...current,revision:current.revision+1,pendingKey:null,closedKey:value.key,updatedAt:proof.lookupReadAt}));done(value);
+      });});
+    }));
+  }
+  /** Explicit blank start preserves the complete closed original; it never sends or copies input. */
+  function startBlankInput(expectedClosed:LocalCommand,expectedDraft:LocalDraft){
+    const original=command(expectedClosed),proof=original.closure,c=original.envelope.context,d=draft(expectedDraft,c);
+    if(!proof||proof.reason!=='REMOVED_ATTACHMENT'||!d||(c.form!=='project'&&c.form!=='message'))return invalid();
+    const expected=draftRecord.parse({...proof.draftSnapshot,revision:proof.draftSnapshot.revision+1,pendingKey:null,closedKey:original.key,updatedAt:proof.lookupReadAt});if(stable(d)!==stable(expected))return invalid();
+    return transaction<LocalDraft>('readwrite',(s,done)=>s.get(s.commands,original.key,raw=>{
+      if(stable(command(raw))!==stable(original))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+      pending(s,c,p=>{if(p)throw new WorkbenchLocalError('COMMAND_PENDING');s.get(s.drafts,contextKey(c),rawDraft=>{
+        const current=draft(rawDraft,c);if(!current||stable(current)!==stable(d))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+        const value=draftRecord.parse({key:d.key,context:c,revision:d.revision+1,clientDraftId:crypto.randomUUID(),text:'',name:'',uploadKeys:[],updatedAt:new Date().toISOString(),pendingKey:null,previousClosedKey:original.key});s.drafts.put(value);done(value);
+      });});
+    }));
+  }
+  /** Bounded immutable links, with rank checked again across the pagination anchor. */
+  function closedHistory(input:DraftContext,after?:z.input<typeof closedHistoryCursor>){
+    const c=context(input),cursor=after===undefined?null:closedHistoryCursor.parse(after);if(c.form!=='project'&&c.form!=='message')return invalid();
+    return transaction<{items:LocalCommand[];nextCursor:z.output<typeof closedHistoryCursor>|null}>('readonly',(s,done)=>s.get(s.drafts,contextKey(c),raw=>{
+      const d=draft(raw,c),items:LocalCommand[]=[];
+      function item(raw:unknown){const v=command(raw);if(contextKey(v.envelope.context)!==contextKey(c)||v.closure?.reason!=='REMOVED_ATTACHMENT')return invalid();return {...v,closure:v.closure};}
+      function begin(rootKey:string|undefined){
+        if(!rootKey){if(cursor)return invalid();done({items,nextCursor:null});return;}
+        if(cursor&&cursor.rootKey!==rootKey)throw new WorkbenchLocalError('LOCAL_CONFLICT');
+        s.get(s.commands,rootKey,rawRoot=>{
+          const root=item(rawRoot);
+          function walk(key:string|undefined,upper:number|null){
+            if(!key){done({items,nextCursor:null});return;}
+            s.get(s.commands,key,rawItem=>{
+              const v=item(rawItem);if(upper!==null&&v.envelope.draftRevision>=upper)return invalid();items.push(v);
+              const next=v.closure.draftSnapshot.previousClosedKey;
+              if(items.length===10){done({items,nextCursor:next?{rootKey:rootKey!,anchorKey:v.key}:null});return;}
+              walk(next,v.envelope.draftRevision);
+            });
+          }
+          if(!cursor){walk(rootKey,null);return;}
+          s.get(s.commands,cursor.anchorKey,rawAnchor=>{const anchor=item(rawAnchor);if(anchor.key!==root.key&&anchor.envelope.draftRevision>=root.envelope.draftRevision)return invalid();walk(anchor.closure.draftSnapshot.previousClosedKey,anchor.envelope.draftRevision);});
+        });
+      }
+      if(!d){begin(undefined);return;}
+      if(!d.closedKey){begin(d.previousClosedKey);return;}
+      s.get(s.commands,d.closedKey,rawClosed=>{const closed=command(rawClosed);if(contextKey(closed.envelope.context)!==contextKey(c)||!closed.closure)return invalid();begin(closed.closure.reason==='REMOVED_ATTACHMENT'?closed.key:d.previousClosedKey);});
     }));
   }
   function upload(value:unknown){
@@ -290,5 +360,5 @@ export async function openWorkbenchLocal(principalId:string){
       const value=upload({...old,bytes:null,releasedAt:new Date().toISOString(),revision:old.revision+1});s.uploads.put(value);done(value);
     }));
   }
-  return {load,getPending,references,save,enqueue,getCommand,observe,closeStale,addUpload,getUpload,listUploads,loadUploads,selectUpload,unlinkUpload,observeUpload,verifyUpload,releaseUpload,close};
+  return {load,getPending,references,save,enqueue,getCommand,observe,closeStale,closeRemoved,startBlankInput,closedHistory,addUpload,getUpload,listUploads,loadUploads,selectUpload,unlinkUpload,observeUpload,verifyUpload,releaseUpload,close};
 }
