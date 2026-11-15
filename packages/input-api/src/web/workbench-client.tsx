@@ -6,6 +6,7 @@ import {workspaceView,ids,opaqueKey,inputOperation,operationReceipt,createProjec
 import {workbenchBoot} from './workbench-context.js';
 import type {WorkbenchBoot,WorkbenchSelection} from './workbench-context.js';
 import {openWorkbenchLocal} from './workbench-local.js';
+import {CloseOriginal,verifyStaleOriginal} from './workbench-original.js';
 import type {DraftContext,LocalCommand,LocalDraft} from './workbench-local.js';
 import {WorkbenchApiError as ApiError} from './workbench-api.js';
 import {WorkbenchPlanning} from './workbench-planning.js';
@@ -19,11 +20,11 @@ const clock=(value:string)=>new Intl.DateTimeFormat('zh-CN',{dateStyle:'medium',
 const draftKey=(c:DraftContext)=>JSON.stringify(c);
 
 function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,{form:'project'|'message'}>;api:Api;guard:MutableRefObject<()=>Promise<boolean>>;onConfirmed:(selection:WorkbenchSelection)=>Promise<void>}){
- const [fields,setFields]=useState({text:'',name:''}),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[status,setStatus]=useState('正在读取本机草稿…'),[problem,setProblem]=useState(''),[pending,setPending]=useState<LocalCommand|null>(null),[references,setReferences]=useState<{items:LocalDraft[];nextCursor:string|null}>({items:[],nextCursor:null}),[discard,setDiscard]=useState(false);
+ const [fields,setFields]=useState({text:'',name:''}),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[status,setStatus]=useState('正在读取本机草稿…'),[problem,setProblem]=useState(''),[pending,setPending]=useState<LocalCommand|null>(null),[references,setReferences]=useState<{items:LocalDraft[];nextCursor:string|null}>({items:[],nextCursor:null}),[discard,setDiscard]=useState(false),[closed,setClosed]=useState(false);
  const local=useRef<Store|null>(null),latest=useRef(fields),revision=useRef(0),dirty=useRef(false),serial=useRef(0),failed=useRef(false),pumping=useRef(false),queue=useRef(Promise.resolve()),working=useRef(false),original=useRef<LocalCommand|null>(null),disposed=useRef(false),composition=useRef(false);
  function localFailure(e:unknown){failed.current=true;if(disposed.current)return;setProblem(e&&typeof e==='object'&&'code'in e&&e.code==='LOCAL_CONFLICT'?'另一页已修改这份草稿。本页修改仍保留，请读取并核对后再选择。':'本页输入尚未保存。请重试；离开前需成功保存或明确放弃未保存的修改。');setStatus('尚未保存在本机');}
  function hydrate(value:Awaited<ReturnType<Store['load']>>){
-  const f={text:value.draft?.text??'',name:value.draft?.name??''};latest.current=f;revision.current=value.draft?.revision??0;dirty.current=false;failed.current=false;original.current=value.pending;setFields(f);setPending(value.pending);setProblem('');setDiscard(false);setStatus(value.pending?'原提交结果待核实':value.draft?'草稿已保存在本机':'尚未填写');
+  const f={text:value.draft?.text??'',name:value.draft?.name??''};latest.current=f;revision.current=value.draft?.revision??0;dirty.current=false;failed.current=false;original.current=value.pending;setFields(f);setPending(value.pending);setClosed(!!value.draft?.closedKey);setProblem('');setDiscard(false);setStatus(value.pending?'原提交结果待核实':value.draft?.closedKey?'此依据的原提交已关闭，旧草稿保留。请切换当前依据。':value.draft?'草稿已保存在本机':'尚未填写');
  }
  async function initialize(preserve=false){
   await queue.current;
@@ -75,7 +76,8 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
  async function send(command:LocalCommand){
   const e=command.envelope,value=await api(e.path,{method:'POST',headers:{'content-type':'application/json','idempotency-key':e.key,...(e.ifMatch?{'if-match':e.ifMatch}:{})},body:JSON.stringify(e.body)});await accept(command,value);
  }
- function submit(){if(!ready||original.current||failed.current)return;void exclusive(async()=>{
+  async function closeOriginal(){const p=original.current!;let committed=false;try{const verified=await verifyStaleOriginal(p,path=>api(path));if(verified.kind==='operation'){await accept(p,verified.value);return;}await local.current!.closeStale(p,verified.proof);committed=true;hydrate(await local.current!.load(context));setStatus('过期原提交已核实关闭，旧草稿仍保留。');const c=p.envelope.context;if(c.form==='project')throw Error('Wrong closure');working.current=false;await onConfirmed({projectId:c.projectId,runId:c.runId});}catch{setProblem(committed?'关闭已保存在本机，但当前执行尚未刷新，请重新进入。':'尚不能关闭原提交。请核实当前权限、执行依据及原操作；原记录继续保留。');}}
+ function submit(){if(!ready||closed||original.current||failed.current)return;void exclusive(async()=>{
   if(!await flush()||!local.current)return;
   // Validate user input before creating an immutable pending original.
   const draft=(await local.current.load(context)).draft;if(!draft)throw Error('Missing draft');
@@ -87,7 +89,7 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
   try{const value=await api('/api/v1/operations/lookup?scope='+encodeURIComponent(p.envelope.scope)+'&key='+encodeURIComponent(p.key));await accept(p,value);}
   catch(e){if(e instanceof ApiError&&e.status===404){setProblem('当前未查到原操作。请保留原记录；可明确使用同一原请求继续提交。');return;}throw e;}
  });}
- const disabled=!ready||busy||pending!==null;
+ const disabled=!ready||busy||pending!==null||closed;
  return <section className="card composer" aria-label={context.form==='project'?'新项目输入':'补充输入'}>
   <h2>{context.form==='project'?'从一个需求开始':'补充说明或提问'}</h2>
   <form onSubmit={e=>{e.preventDefault();submit();}}>
@@ -97,7 +99,7 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
    <div className="actions"><button className="primary" type="submit" disabled={disabled||failed.current||!fields.text.trim()}>{context.form==='project'?'创建项目并保存需求':'提交输入'}</button><span className="muted">Enter 换行 · Ctrl / Cmd + Enter 提交</span></div>
   </form>
   {problem&&!pending&&<div className="actions"><button disabled={busy} onClick={()=>void exclusive(async()=>{try{await initialize(true);}catch(e){localFailure(e);}})}>重试本机保存</button><label><input type="checkbox" checked={discard} onChange={e=>setDiscard(e.target.checked)}/>我确认放弃本页未保存的修改</label><button disabled={busy||!discard} onClick={()=>void exclusive(async()=>{dirty.current=false;await initialize();})}>放弃本页修改并重新读取</button></div>}
-   {pending&&<section className="notice" aria-label="待核实原提交"><h3>原提交结果待核实</h3><p>刷新或重新进入不会自动发送。核实会查询同一原操作，继续提交会使用原正文与原条件。</p><div className="actions"><button disabled={busy} onClick={()=>void lookup()}>核实原提交</button><button disabled={busy} onClick={()=>void exclusive(()=>send(pending))}>使用原请求继续提交</button></div><details><summary>查看原提交内容</summary><p>{pending.envelope.kind==='project'?pending.envelope.body.initialRequest.text:pending.envelope.kind==='message'?pending.envelope.body.text:'计划确认'}</p></details></section>}
+   {pending&&<section className="notice" aria-label="待核实原提交"><h3>原提交结果待核实</h3><p>刷新或重新进入不会自动发送。核实会查询同一原操作，继续提交会使用原正文与原条件。</p><div className="actions"><button disabled={busy} onClick={()=>void lookup()}>核实原提交</button><button disabled={busy} onClick={()=>void exclusive(()=>send(pending))}>使用原请求继续提交</button></div><details><summary>查看原提交内容</summary><p>{pending.envelope.kind==='project'?pending.envelope.body.initialRequest.text:pending.envelope.kind==='message'?pending.envelope.body.text:'计划确认'}</p></details>{pending.envelope.kind!=='project'&&<CloseOriginal key={pending.key} busy={busy} onClose={()=>void exclusive(closeOriginal)}/>}</section>}
   {!!references.items.length&&<details><summary>其他依据的本机草稿</summary><p className="muted">这些草稿仅供参考，不会自动采用旧提交条件。</p>{references.items.map(d=><article key={d.key}><p className="muted">依据版本 {d.context.basisRevision} · {clock(d.updatedAt)}</p><p>{d.text}</p><button disabled={disabled||dirty.current||failed.current} onClick={()=>edit({text:d.text,name:d.name})}>以当前依据复制此正文</button></article>)}{references.nextCursor&&<button disabled={busy} onClick={()=>void exclusive(async()=>{const more=await local.current!.references(context,references.nextCursor!);setReferences({items:[...references.items,...more.items],nextCursor:more.nextCursor});})}>读取更多旧草稿</button>}</details>}
  </section>;
 }

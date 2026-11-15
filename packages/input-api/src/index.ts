@@ -192,7 +192,11 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     response.status(202).json(receipt(await content.storage.request('confirmReviewedPlan',{meta,runId,planRevision,...body,...(ifMatch===undefined?{}:{ifMatch:scalar(ifMatch,'If-Match')})})));
   }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
-    const result=await content.storage.request('lookupInputOperation',{principalId:identity.principalId,scopeId:parseContract(opaqueKey,request.query.scope),idempotencyKey:parseContract(idempotencyKey,request.query.key)});
+    const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');
+    if(!['true','false'].includes(includeAbsence))fail('SCHEMA_INVALID',422,'Invalid absence selection');
+    const scope=parseContract(opaqueKey,request.query.scope),key=parseContract(idempotencyKey,request.query.key);
+    const result=await content.storage.request('lookupInputOperation',{principalId:identity.principalId,scopeId:scope,idempotencyKey:key});
+    if(includeAbsence==='true'){response.json({principalId:identity.principalId,scope,key,operation:result});return;}
     if(!result)fail('RESOURCE_NOT_FOUND',404,'Original operation has not been recorded');response.json(result);
   }));
   router.get('/operations/:operationId',route(async(request,response,identity)=>{

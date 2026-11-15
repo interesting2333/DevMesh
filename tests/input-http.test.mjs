@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {request as httpRequest} from 'node:http';
 import {inputFixture} from './fixtures/input-data.mjs';
-import {createProjectInput,saveMessageInput,operationReceipt,workspaceView,errorEnvelope} from '../packages/contracts/dist/index.js';
+import {createProjectInput,saveMessageInput,operationReceipt,workspaceView,errorEnvelope,inputOperationLookup} from '../packages/contracts/dist/index.js';
 
 test('input contracts preserve Unicode and original whitespace while enforcing nonempty material',()=>{
   const draft={initialRequest:{text:'🧪'.repeat(20000),attachmentIds:[]},clientDraftId:randomUUID()};
@@ -13,6 +13,16 @@ test('input contracts preserve Unicode and original whitespace while enforcing n
   assert.equal(createProjectInput.safeParse({...draft,initialRequest:{text:'',attachmentIds:['attachment_material']}}).success,true);
   assert.equal(createProjectInput.safeParse({...draft,principalId:'self_reported'}).success,false);
   assert.equal(saveMessageInput.safeParse({text:' ',attachmentIds:[],clientMessageId:randomUUID()}).success,false);
+});
+
+test('explicit original absence is protected and distinct from an invisible scope or operation',{timeout:240000},async t=>{
+ const f=await inputFixture(t),key=randomUUID(),created=await f.create({},key),p=created.body.result,missingKey=randomUUID(),query=`/operations/lookup?scope=${p.runId}&key=${missingKey}`;
+ assert.equal((await f.call(query)).response.status,404);const absent=await f.call(query+'&includeAbsence=true');assert.equal(absent.response.status,200);assert.equal(inputOperationLookup.safeParse(absent.body).success,true);assert.deepEqual(absent.body,{principalId:'user_1',scope:p.runId,key:missingKey,operation:null});assert.equal(absent.response.headers.get('cache-control'),'no-store');
+ const saved=await f.call(`/operations/lookup?scope=projects.create&key=${key}&includeAbsence=true`);assert.equal(saved.response.status,200);assert.equal(saved.body.operation.operationId,created.body.operationId);assert.equal(saved.body.operation.status,'SUCCEEDED');const normal=await f.call(`/operations/lookup?scope=projects.create&key=${key}`);assert.equal(normal.body.operationId,created.body.operationId);assert.equal(normal.body.operation,undefined);
+ const foreign=await f.call(query+'&includeAbsence=true',{headers:{authorization:'Bearer test_other'}});assert.equal(foreign.response.status,404);assert.equal(inputOperationLookup.safeParse(foreign.body).success,false);
+ for(const suffix of ['&includeAbsence=unknown','&includeAbsence=true&includeAbsence=true'])assert.equal((await f.call(query+suffix)).response.status,422);
+ f.sql('DELETE FROM project_members WHERE project_id=? AND principal_id=?',p.projectId,'user_1');for(const path of [query+'&includeAbsence=true',`/operations/lookup?scope=projects.create&key=${key}&includeAbsence=true`]){const revoked=await f.call(path);assert.equal(revoked.response.status,404);assert.equal(inputOperationLookup.safeParse(revoked.body).success,false);}
+ assert.equal(f.sql('SELECT count(*) n FROM operations WHERE kind=\'CreateInputProject\'')[0].n,1);assert.equal(f.sql('SELECT count(*) n FROM input_messages')[0].n,1);
 });
 
 test('input HTTP rejects missing identity, forged user fields, Origin and oversized JSON without business facts',{timeout:240000},async t=>{

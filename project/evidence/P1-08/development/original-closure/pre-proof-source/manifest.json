@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "reason": "Preserve exact inputs before replacing ambiguous lookup404 closure with an explicit authorized absence envelope.",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-local.ts",
+      "sha256": "23072c5aa7d868ca9535f4587a6bef58601a36cc00957d58f2b8bb1bd0c1cb80"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-original.tsx",
+      "sha256": "fd588ff6a11d561a89747e7e97cd9230fe45463beca42a93e8b30a4457a99d37"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "23bdcdca9640e525a9f81d83a302084943cae7c2c7fa7dbd82e68a3f3042f431"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-answers.tsx",
+      "sha256": "57078216f32fb30b0ff408913ea7ca0bf9802b6cfc2c3bcb0cde5b54cbe13da9"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-planning.tsx",
+      "sha256": "8e009e1803007f1892001d73b14ff2a0cbc2037ed47ceb16646f5260afc9a3ce"
+    },
+    {
+      "file": "packages/contracts/src/input.ts",
+      "sha256": "027b881001acde0aae6feb4f0054f3d0988b7a4218c9982262ae0bf32b145e77"
+    },
+    {
+      "file": "packages/contracts/src/openapi.ts",
+      "sha256": "64627e21dcd20b41f429692af4e6c8db3c6f4399a115fa25ce0ed140e6ce38b3"
+    },
+    {
+      "file": "packages/input-api/src/index.ts",
+      "sha256": "62a3b83adf5c94d38eb677c491b2f33fde1ffe09ce6a3452d9972267481e82d1"
+    },
+    {
+      "file": "tests/browser/workbench-local.test.mjs",
+      "sha256": "335c00eaffbbb4ecff51bd7b68af893a66d38de4b8daa1dae191b80a742a29ef"
+    },
+    {
+      "file": "tests/browser/workbench-answers.test.mjs",
+      "sha256": "b499fce6d3f25dc330813a779066e5219955311bcad35dcfb609216c63e13f90"
+    },
+    {
+      "file": "tests/input-http.test.mjs",
+      "sha256": "e3bc2670f32e2c7b0cbc735c9269f9ed01fe7b2fbb7f9d3bab5132f76935afef"
+    }
+  ]
+}

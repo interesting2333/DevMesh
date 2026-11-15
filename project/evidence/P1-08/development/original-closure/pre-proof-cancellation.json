@@ -1,0 +1,60 @@
+﻿{
+    "ownedDrivers":  [
+                         {
+                             "runner":  2096,
+                             "processes":  [
+                                               {
+                                                   "ProcessId":  2096,
+                                                   "ParentProcessId":  31980,
+                                                   "Name":  "node.exe",
+                                                   "CreationDate":  "\/Date(1794751487838)\/"
+                                               },
+                                               {
+                                                   "ProcessId":  34492,
+                                                   "ParentProcessId":  2096,
+                                                   "Name":  "node.exe",
+                                                   "CreationDate":  "\/Date(1794751490099)\/"
+                                               },
+                                               {
+                                                   "ProcessId":  33536,
+                                                   "ParentProcessId":  34492,
+                                                   "Name":  "msedge.exe",
+                                                   "CreationDate":  "\/Date(1794751964986)\/"
+                                               },
+                                               {
+                                                   "ProcessId":  35168,
+                                                   "ParentProcessId":  33536,
+                                                   "Name":  "msedge.exe",
+                                                   "CreationDate":  "\/Date(1794751965164)\/"
+                                               },
+                                               {
+                                                   "ProcessId":  25744,
+                                                   "ParentProcessId":  33536,
+                                                   "Name":  "msedge.exe",
+                                                   "CreationDate":  "\/Date(1794751967001)\/"
+                                               }
+                                           ],
+                             "driver":  31980
+                         },
+                         {
+                             "runner":  40364,
+                             "processes":  [
+                                               {
+                                                   "ProcessId":  40364,
+                                                   "ParentProcessId":  30960,
+                                                   "Name":  "node.exe",
+                                                   "CreationDate":  "\/Date(1794751487772)\/"
+                                               },
+                                               {
+                                                   "ProcessId":  22204,
+                                                   "ParentProcessId":  40364,
+                                                   "Name":  "node.exe",
+                                                   "CreationDate":  "\/Date(1794751768627)\/"
+                                               }
+                                           ],
+                             "driver":  30960
+                         }
+                     ],
+    "reason":  "Design hardening: ordinary lookup404 cannot distinguish an absent original from a revoked resource scope. Stop these diagnostic runs before adding an explicit authorized absence response; no partial results count as final passes.",
+    "at":  "2026-11-15T14:14:03.8758127Z"
+}

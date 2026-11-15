@@ -1,0 +1,13 @@
+ℹ entry: packages/input-api/src/web/workbench-local.ts
+ℹ target: es2022
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ Cleaning 3 files
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- zod
+ℹ .cache\workbench-local-build\local.js      214.82 kB │ gzip:  43.89 kB
+ℹ .cache\workbench-local-build\local.js.map  558.45 kB │ gzip: 108.72 kB
+ℹ 2 files, total: 773.27 kB
+✔ Build complete in 7143ms

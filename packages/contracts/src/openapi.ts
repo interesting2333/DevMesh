@@ -11,7 +11,7 @@ import { executionPermit, executionOwner } from './permits.js';
 import { roleOutput, productOutput, architectOutput, developerOutput, testerOutput, workRevision, planDraft, workDelegation, invocationDelegation, inputManifest } from './outputs.js';
 import { errorEnvelope } from './errors.js';
 import { strongETag, contentBasis } from './versions.js';
-import { createTaskInput,uploadMetadata,attachmentView,inputOperation,workspaceView,workbenchSourceView } from './input.js';
+import { createTaskInput,uploadMetadata,attachmentView,inputOperation,inputOperationLookup,workspaceView,workbenchSourceView } from './input.js';
 import { preparationDelegation,preparationInput,retryUnderstandingInput,understandingOutput,understandingView } from './preparation.js';
 import { planReviewView } from './plans.js';
 
@@ -27,7 +27,7 @@ export const schemas = {
   JobState: jobState, OperationStatus: operationStatus, A2ATaskState: a2aTaskState,
   OperationReceipt: operationReceipt, ErrorEnvelope: errorEnvelope, StrongETag: strongETag, ContentBasis: contentBasis,
   InputText: inputText, ProjectName: projectName, TaskTitle: taskTitle,
-  CreateTask:createTaskInput,UploadMetadata:uploadMetadata,Attachment:attachmentView,InputOperation:inputOperation,Workspace:workspaceView,
+  CreateTask:createTaskInput,UploadMetadata:uploadMetadata,Attachment:attachmentView,InputOperation:inputOperation,InputOperationLookup:inputOperationLookup,Workspace:workspaceView,
   Understanding:understandingView,UnderstandingOutput:understandingOutput,RetryUnderstanding:retryUnderstandingInput,
   PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
   PlanReview:planReviewView,
@@ -105,7 +105,8 @@ export function createOpenApiDocument() {
   add('/api/v1/projects/{projectId}/workspace','get','ReadWorkspace','Workspace',[parameter('projectId',ids.project),parameter('runId',ids.run,'query',false),{name:'afterMessageId',in:'query',schema:{type:'string',maxLength:256}},...page]);
   add('/api/v1/runs/{runId}/sources','get','ReadWorkbenchSource','WorkbenchSource',[parameter('runId',ids.run),{name:'ref',in:'query',required:true,description:'严格sourceRef的JSON；消息属于准确Run，材料为已保存依据中的同ID/hash引用，需求按准确版本。最多2 MiB纯文本，无下载或写入副作用。',schema:{type:'string',minLength:1,maxLength:4096}}]);
   add('/api/v1/projects/{projectId}/runs/{runId}/events','get','ReadEvents',undefined,[parameter('projectId',ids.project),parameter('runId',ids.run),{name:'afterSeq',in:'query',schema:{type:'integer',minimum:0,default:0}},...page]);
-  add('/api/v1/operations/lookup','get','LookupInputOperation','InputOperation',[{name:'scope',in:'query',required:true,schema:{type:'string',maxLength:128}},parameter('key',idempotencyKey,'query')]);
+  add('/api/v1/operations/lookup','get','LookupInputOperation','InputOperation',[{name:'scope',in:'query',required:true,schema:{type:'string',maxLength:128}},parameter('key',idempotencyKey,'query'),{name:'includeAbsence',in:'query',required:false,schema:{type:'boolean',default:false},description:'true时返回准确主体／scope／key和operation（明确不存在为null）；权限失败仍为错误，404不构成不存在证明。'}]);
+  (paths['/api/v1/operations/lookup']!.get as {responses:Record<string,unknown>}).responses['200']={description:'默认返回原InputOperation；includeAbsence=true返回受保护的明确查询结果。',content:{'application/json':{schema:{oneOf:[{$ref:'#/components/schemas/InputOperation'},{$ref:'#/components/schemas/InputOperationLookup'}]}}}};
   add('/api/v1/operations/{operationId}','get','ReadInputOperation','InputOperation',[parameter('operationId',ids.operation)]);
   add('/api/v1/attachments','post','UploadAttachment',undefined,[key]);
   (paths['/api/v1/attachments']!.post as Record<string,unknown>).requestBody={required:true,content:{'multipart/form-data':{schema:{type:'object',additionalProperties:false,required:['clientAttachmentId','file'],properties:{clientAttachmentId:{type:'string',format:'uuid'},file:{type:'string',format:'binary',description:'非空 UTF-8 .md/.markdown/.txt；每文件最多 2 MiB，单次只接收一个文件'}}}}}};

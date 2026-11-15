@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-15",
+  "base": "e00ebb08480421b8aae448232d9c4afc0f4f4cc7",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "http",
+      "record": "http-2026-11-15T14-31-04-112Z.json",
+      "tests": 29,
+      "pass": 29,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T14-31-04-090Z.json",
+      "tests": 33,
+      "pass": 33,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-15T14-19-46-073Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-15T14-23-31-792Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T14-19-46-236Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T14-19-46-532Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T14-23-32-473Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 62,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "原键查询默认响应保持兼容；includeAbsence=true严格区分准确不存在与不可见；实际更高Run读取后撤权，lookup404不关闭。",
+    "实际更高版本Run读取先于原键lookup；原回答关闭后迟到原POST仍412，零新增答案。",
+    "同版本原键404保持原锁；每次关闭须重新勾选；失败不自动换键或POST。",
+    "原回答已成功但丢ACK时，关闭核实读取真实SUCCEEDED回执，恢复成功且不生成closure。",
+    "两个原生IndexedDB页同时关闭仅一个CAS成功，原信封／clientDraftId／正文／答案保留。",
+    "关闭事务abort回滚命令和草稿；另一页成功观察不能被旧关闭覆盖，已知OUTCOME_UNKNOWN保持锁。",
+    "关闭的旧依据草稿拒绝原地保存／新键入队；重进当前依据不自动创建草稿，可明确参考旧正文。",
+    "无版本的新项目原提交拒绝该关闭证明；实际API拒绝其他主体读取不存在结果，原生关闭拒绝错误Run／UUID／非更高版本／倒置时间证明。",
+    "既有回答、计划、来源、只读权限、IME／键盘、输入草稿和真实API回归保持。"
+  ],
+  "failures": [
+    {
+      "record": "browser-2026-11-15T14-04-45-947Z.json",
+      "code": 1,
+      "changedDuringRun": [],
+      "excludedFromFinalTotals": true
+    },
+    {
+      "record": "http-2026-11-15T14-04-45-938Z.json",
+      "code": 1,
+      "changedDuringRun": [],
+      "excludedFromFinalTotals": true
+    },
+    {
+      "record": "type-2026-11-15T13-50-56-068Z.json",
+      "code": 2,
+      "changedDuringRun": [],
+      "excludedFromFinalTotals": true
+    }
+  ],
+  "finalBuild": {
+    "name": "build",
+    "record": "build-2026-11-15T14-19-46-073Z.json",
+    "changedDuringRun": [],
+    "changedSinceRun": []
+  },
+  "inputAssessment": "Final root application and standalone builds, compiler/lint/contracts, HTTP and browser inventories match final source files byte-for-byte, with zero changed-during/since inputs. Earlier type failure and pre-proof diagnostic cancellation records are retained outside final totals. Every workspace/module source-map source matches final source bytes. Browser JS/map hashes match both test boundaries and final files. SQL1..45, Runner/store and dependencies are unchanged.",
+  "scope": "Actual protected React, Edge native IndexedDB and Input API/file Worker plus official A2A PreparationRuntime; explicit controlled model output and bearer identity fixtures. Stale-original ordered verification, durable closure/CAS/abort/history and late-request rejection plus existing planning/question/input regressions. No real model, enterprise identity, Linux isolation, WebSocket or full product acceptance.",
+  "limits": [
+    "Task2.3 remains incomplete: attachments, new-task entry and independent pending recovery when a plan becomes historical/unavailable still need implementation/verification.",
+    "Only current non-viewer Run contexts expose this closure; no versionless project creation cancellation proof.",
+    "No real model/OIDC/Linux, WebSocket or full product/gate acceptance.",
+    "Formal P1-08 remains NOT_STARTED pending prerequisites/G0; same-agent review."
+  ],
+  "managementChecks": "management-checks.json"
+}

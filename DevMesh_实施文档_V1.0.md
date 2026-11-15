@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 01c5144510175123f1afbdd26dae13f10cb35bdeaeea7c6ac332709e0e035e02 |
+| DevMesh_技术设计方案_V1.1.md | 39c337154c6a175544361b8f8a9b627c7cfd26b322855d26f871826936464bd3 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | 841ab29fcfc19e530e9ea6f5d799dcff075318a8d6125e4f907e82e112777377 |
+| DevMesh_产品验收场景_V10.0.md | e68f4f4fb04d9fcea21a8f9e643bcd65ed6ad9c9270a68c43921b14dbec71b5f |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -643,3 +643,7 @@ implement-workbench-first-path的2.2接入既有understanding／plan review与�
 2.3继续实施questions-answer独立本机表单与严格原信封，绑定准确Run／需求／问题版本及选项；不默认采用答案。事务CAS保存、导航排空和保留内存失败处理与已有输入保持一致，恢复已回答问题的原请求不依赖当前OPEN数量。旧schema1记录保持可读，不改控制SQL、Runner、依赖或既有API。
 
 实际浏览器／HTTP／文件Worker与官方A2A准备路径验证草稿、默认选择、丢ACK、条件冲突和原生事务abort，并执行既有preparation版本／部分回答／崩溃恢复回归。子链开发复核和完整2.3分别登记；附件与新任务尚未结束，2.3保持未勾选，正式P1-08和门槛等待条件不变。
+
+### P1-08 原提交关闭实施约束
+
+在2.3输入恢复中补充Run原消息／回答／计划确认的STALE_BASIS明确关闭。先按当前权限读准确更高Run版本，再顺序原键lookup；仅includeAbsence=true的受保护200明确返回准确主体／scope／key及operation:null可关闭；撤权／不可见的404不构成证明，已有／未知操作走观察。IDB同事务CAS核实原观察／未决指针／原草稿版本，独立closure及closedKey保留旧正文与clientDraftId，禁止旧依据原地再次入队；不改原信封、不伪造成功、不自动换键或POST。实际浏览器／API验证顺序、迟到请求、同版本404、双页、成功／未知观察和事务abort；执行证据与正式验收分开。附件／新任务、缺计划时的原确认恢复入口及其他2.3工作仍须继续核实，不因本增量勾选整个任务。

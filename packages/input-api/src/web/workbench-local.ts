@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {ids,opaqueKey,revision,timestamp,sha256,commandBodies,createProjectInput,saveMessageInput,answerQuestionsInput,inputOperation,operationReceipt} from '@devmesh/contracts';
+import {ids,opaqueKey,revision,timestamp,sha256,commandBodies,createProjectInput,saveMessageInput,answerQuestionsInput,inputOperation,operationReceipt,inputOperationLookup} from '@devmesh/contracts';
 
 const answerBasis=z.strictObject({requirementRevision:revision,questions:z.array(z.strictObject({questionId:ids.question,questionRevision:revision,optionIds:z.array(opaqueKey).max(32)})).max(100)}).superRefine((v,c)=>{if(new Set(v.questions.map(q=>q.questionId)).size!==v.questions.length||v.questions.some(q=>new Set(q.optionIds).size!==q.optionIds.length))c.addIssue({code:'custom',message:'Duplicate answer basis'});});
 export const draftContext=z.discriminatedUnion('form',[
@@ -10,7 +10,7 @@ export const draftContext=z.discriminatedUnion('form',[
 ]);
 export type DraftContext=z.output<typeof draftContext>;
 const draftFields=z.strictObject({text:z.string().max(40000),name:z.string().max(80),answers:z.array(answerQuestionsInput.shape.answers.element).max(100).optional()});
-const draftRecord=z.strictObject({key:z.string(),context:draftContext,revision,clientDraftId:z.uuid(),...draftFields.shape,updatedAt:timestamp,pendingKey:z.uuid().nullable()});
+const draftRecord=z.strictObject({key:z.string(),context:draftContext,revision,clientDraftId:z.uuid(),...draftFields.shape,updatedAt:timestamp,pendingKey:z.uuid().nullable(),closedKey:z.uuid().optional()});
 export type LocalDraft=z.output<typeof draftRecord>;
 const envelopeBase={key:z.uuid(),context:draftContext,draftRevision:revision,createdAt:timestamp};
 const commandEnvelope=z.discriminatedUnion('kind',[
@@ -30,12 +30,13 @@ const commandEnvelope=z.discriminatedUnion('kind',[
     if(!b||v.context.form!=='plan-confirm'||v.scope!==v.context.runId||v.path!==`/api/v1/runs/${v.context.runId}/plans/${b.planRevision}:confirm`||v.ifMatch!==`"r${v.context.basisRevision}"`||v.body.requirementRevision!==b.requirementRevision||v.body.reviewHash!==b.reviewHash||v.body.carryForwardHash!==b.carryForwardHash)c.addIssue({code:'custom',message:'Wrong plan confirmation basis'});
   }
 });
-const commandRecord=z.strictObject({key:z.uuid(),formKey:z.string(),envelope:commandEnvelope,receipt:inputOperation.nullable(),observedAt:timestamp.nullable(),pendingForm:z.string().optional()});
+export const staleOriginalProof=z.strictObject({reason:z.literal('STALE_BASIS'),key:z.uuid(),projectId:ids.project,runId:ids.run,resourceRevision:revision,workspaceReadAt:timestamp,lookupReadAt:timestamp,lookup:inputOperationLookup.extend({operation:z.null()})});
+const commandRecord=z.strictObject({key:z.uuid(),formKey:z.string(),envelope:commandEnvelope,receipt:inputOperation.nullable(),observedAt:timestamp.nullable(),pendingForm:z.string().optional(),closure:staleOriginalProof.optional()});
 export type LocalCommand=z.output<typeof commandRecord>;
 const contextKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form,c.basisRevision,...(c.form==='plan-confirm'?[c.basis.planRevision,c.basis.requirementRevision,c.basis.reviewHash,c.basis.carryForwardHash??null]:c.form==='questions-answer'?[c.basis.requirementRevision,c.basis.questions.map(q=>[q.questionId,q.questionRevision])]:[])]);
 const formKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form]);
 export class WorkbenchLocalError extends Error{
-  constructor(readonly code:'STORAGE_UNAVAILABLE'|'STORAGE_BLOCKED'|'STORAGE_CLOSED'|'LOCAL_CONFLICT'|'COMMAND_PENDING'|'LOCAL_RECORD_INVALID'){super(code);}
+  constructor(readonly code:'STORAGE_UNAVAILABLE'|'STORAGE_BLOCKED'|'STORAGE_CLOSED'|'LOCAL_CONFLICT'|'COMMAND_PENDING'|'COMMAND_CLOSED'|'LOCAL_RECORD_INVALID'){super(code);}
 }
 const invalid=():never=>{throw new WorkbenchLocalError('LOCAL_RECORD_INVALID');};
 const stable=(v:unknown)=>JSON.stringify(v,(_k,x:unknown)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.entries(x).sort(([a],[b])=>a<b?-1:a>b?1:0)):x);
@@ -76,7 +77,7 @@ export async function openWorkbenchLocal(principalId:string){
   db.onversionchange=close;
   db.onclose=()=>{closed=true;};
   function context(input:DraftContext){const c=draftContext.parse(input);if(c.principalId!==principalId)invalid();return c;}
-  function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);validateDraftFields(c,d);if(d.key!==contextKey(c)||stable(d.context)!==stable(c)||c.form==='questions-answer'&&(d.text!==''||d.name!==''||d.answers===undefined)||c.form!=='questions-answer'&&d.answers!==undefined)invalid();return d;}
+  function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);validateDraftFields(c,d);if(d.key!==contextKey(c)||stable(d.context)!==stable(c)||d.closedKey&&d.pendingKey||c.form==='questions-answer'&&(d.text!==''||d.name!==''||d.answers===undefined)||c.form!=='questions-answer'&&d.answers!==undefined)invalid();return d;}
   function success(envelope:LocalCommand['envelope'],result:unknown){
     const r=z.object({projectId:ids.project,runId:ids.run,revision}).parse(result),c=envelope.context;
     if(c.form!=='project'&&(r.projectId!==c.projectId||r.runId!==c.runId))invalid();
@@ -86,7 +87,8 @@ export async function openWorkbenchLocal(principalId:string){
   }
   function command(value:unknown){
     const v=commandRecord.parse(value),c=v.envelope.context;
-    if(v.key!==v.envelope.key||c.principalId!==principalId||v.formKey!==formKey(c)||(v.pendingForm!==undefined&&v.pendingForm!==v.formKey)||((v.pendingForm===undefined)!==(v.receipt?.status==='SUCCEEDED'))||((v.receipt===null)!==(v.observedAt===null)))invalid();
+    if(v.key!==v.envelope.key||c.principalId!==principalId||v.formKey!==formKey(c)||(v.pendingForm!==undefined&&v.pendingForm!==v.formKey)||((v.pendingForm===undefined)!==(v.receipt?.status==='SUCCEEDED'||v.closure!==undefined))||((v.receipt===null)!==(v.observedAt===null)))invalid();
+    if(v.closure&&(v.receipt!==null||c.form==='project'||v.closure.key!==v.key||v.closure.lookup.principalId!==c.principalId||v.closure.lookup.scope!==v.envelope.scope||v.closure.lookup.key!==v.key||v.closure.projectId!==c.projectId||v.closure.runId!==c.runId||v.closure.resourceRevision<=c.basisRevision||Date.parse(v.closure.lookupReadAt)<Date.parse(v.closure.workspaceReadAt)))invalid();
     if(v.receipt?.status==='SUCCEEDED'){
       success(v.envelope,v.receipt.result);
     }
@@ -135,7 +137,7 @@ export async function openWorkbenchLocal(principalId:string){
     return transaction<LocalDraft>('readwrite',(s,done)=>pending(s,c,p=>{
       if(p)throw new WorkbenchLocalError('COMMAND_PENDING');
       s.get(s.drafts,contextKey(c),raw=>{
-        const old=draft(raw,c);if(old?.pendingKey)invalid();if((old?.revision??0)!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');
+        const old=draft(raw,c);if(old?.closedKey)throw new WorkbenchLocalError('COMMAND_CLOSED');if(old?.pendingKey)invalid();if((old?.revision??0)!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');
         const d=draftRecord.parse({key:contextKey(c),context:c,revision:expectedRevision+1,clientDraftId:old?.clientDraftId??crypto.randomUUID(),...value,updatedAt:new Date().toISOString(),pendingKey:null});s.drafts.put(d);done(d);
       });
     }));
@@ -145,7 +147,7 @@ export async function openWorkbenchLocal(principalId:string){
     return transaction<{draft:LocalDraft;command:LocalCommand}>('readwrite',(s,done)=>pending(s,c,p=>{
       if(p)throw new WorkbenchLocalError('COMMAND_PENDING');
       s.get(s.drafts,contextKey(c),raw=>{
-        const d=draft(raw,c);if(!d||d.revision!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');if(d.pendingKey)invalid();
+        const d=draft(raw,c);if(d?.closedKey)throw new WorkbenchLocalError('COMMAND_CLOSED');if(!d||d.revision!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');if(d.pendingKey)invalid();
         const key=crypto.randomUUID(),createdAt=new Date().toISOString(),common={key,context:c,draftRevision:d.revision,createdAt};
         if(c.form==='plan-confirm'&&(d.text!=='CONFIRM_PLAN'||d.name!==''))return invalid();
         const envelope=commandEnvelope.parse(c.form==='project'?{...common,kind:'project',scope:'projects.create',path:'/api/v1/projects',ifMatch:null,body:{initialRequest:{text:d.text,attachmentIds:[]},clientDraftId:d.clientDraftId,...(d.name?{name:d.name}:{})}}:c.form==='message'?{...common,kind:'message',scope:c.runId,path:`/api/v1/runs/${c.runId}/messages`,ifMatch:`"r${c.basisRevision}"`,body:{text:d.text,attachmentIds:[],clientMessageId:d.clientDraftId}}:c.form==='questions-answer'?{...common,kind:'questions-answer',scope:c.runId,path:`/api/v1/runs/${c.runId}/questions:answer`,ifMatch:`"r${c.basisRevision}"`,body:{answers:d.answers}}:{...common,kind:'plan-confirm',scope:c.runId,path:`/api/v1/runs/${c.runId}/plans/${c.basis.planRevision}:confirm`,ifMatch:`"r${c.basisRevision}"`,body:{requirementRevision:c.basis.requirementRevision,reviewHash:c.basis.reviewHash,...(c.basis.carryForwardHash?{carryForwardHash:c.basis.carryForwardHash}:{})}});
@@ -165,7 +167,7 @@ export async function openWorkbenchLocal(principalId:string){
     }
     const receipt=inputOperation.parse({operationId:value.operationId,status:value.status,result:value.result??null});
     return transaction<LocalCommand>('readwrite',(s,done)=>s.get(s.commands,key,raw=>{
-      const old=command(raw),c=old.envelope.context;
+      const old=command(raw),c=old.envelope.context;if(old.closure)throw new WorkbenchLocalError('LOCAL_CONFLICT');
       if(old.receipt&&old.receipt.operationId!==receipt.operationId)invalid();
       if(old.receipt?.status==='SUCCEEDED'){if(stable(old.receipt)!==stable(receipt))invalid();done(old);return;}
       const observedAt=new Date().toISOString();
@@ -178,5 +180,17 @@ export async function openWorkbenchLocal(principalId:string){
       });
     }));
   }
-  return {load,references,save,enqueue,getCommand,observe,close};
+  function closeStale(expected:LocalCommand,input:z.input<typeof staleOriginalProof>){
+    const snapshot=command(expected),proof=staleOriginalProof.parse(input),c=snapshot.envelope.context;
+    if(c.form==='project'||snapshot.receipt||snapshot.closure||proof.key!==snapshot.key||proof.lookup.principalId!==c.principalId||proof.lookup.scope!==snapshot.envelope.scope||proof.lookup.key!==snapshot.key||proof.projectId!==c.projectId||proof.runId!==c.runId||proof.resourceRevision<=c.basisRevision||Date.parse(proof.lookupReadAt)<Date.parse(proof.workspaceReadAt))return invalid();
+    return transaction<LocalCommand>('readwrite',(s,done)=>s.get(s.commands,snapshot.key,raw=>{
+      const old=command(raw);if(stable(old)!==stable(snapshot))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+      pending(s,c,p=>{if(!p||p.key!==old.key)throw new WorkbenchLocalError('LOCAL_CONFLICT');s.get(s.drafts,contextKey(c),rawDraft=>{
+        const d=draft(rawDraft,c);if(!d)return invalid();if(d.pendingKey!==old.key||d.revision!==old.envelope.draftRevision+1||d.closedKey)return invalid();
+        const {pendingForm:_pendingForm,...rest}=old,v=commandRecord.parse({...rest,closure:proof});
+        s.commands.put(v);s.drafts.put(draftRecord.parse({...d,revision:d.revision+1,pendingKey:null,closedKey:old.key,updatedAt:proof.lookupReadAt}));done(v);
+      });});
+    }));
+  }
+  return {load,references,save,enqueue,getCommand,observe,closeStale,close};
 }

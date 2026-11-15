@@ -3514,6 +3514,16 @@
             }
           },
           {
+            "name": "includeAbsence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "true时返回准确主体／scope／key和operation（明确不存在为null）；权限失败仍为错误，404不构成不存在证明。"
+          },
+          {
             "name": "X-DevMesh-Principal",
             "in": "header",
             "required": false,
@@ -3526,11 +3536,18 @@
         ],
         "responses": {
           "200": {
-            "description": "已提交的输入事实或当前权限下的读取",
+            "description": "默认返回原InputOperation；includeAbsence=true返回受保护的明确查询结果。",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InputOperation"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/InputOperation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/InputOperationLookup"
+                    }
+                  ]
                 }
               }
             }
@@ -24165,6 +24182,113 @@
                 },
                 "additionalProperties": {
                   "$ref": "#/components/schemas/InputOperation/$defs/__schema0"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "InputOperationLookup": {
+        "type": "object",
+        "properties": {
+          "principalId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "scope": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "key": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "operation": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "operationId": {
+                    "type": "string",
+                    "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "ACCEPTED",
+                      "RUNNING",
+                      "WAITING",
+                      "SUCCEEDED",
+                      "FAILED",
+                      "OUTCOME_UNKNOWN"
+                    ]
+                  },
+                  "result": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "$ref": "#/components/schemas/InputOperationLookup/$defs/__schema0"
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "operationId",
+                  "status",
+                  "result"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "principalId",
+          "scope",
+          "key",
+          "operation"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "__schema0": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/InputOperationLookup/$defs/__schema0"
+                }
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/InputOperationLookup/$defs/__schema0"
                 }
               }
             ]

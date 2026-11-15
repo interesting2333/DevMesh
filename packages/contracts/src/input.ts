@@ -19,6 +19,7 @@ export const saveMessageInput = z.strictObject({ text: inputText.refine(v=>v.tri
 export const uploadMetadata = z.strictObject({ clientAttachmentId: z.uuid(), name: attachmentName });
 export const attachmentView = z.strictObject({ attachmentId: ids.attachment, clientAttachmentId: z.uuid(), name: attachmentName, byteSize: z.number().int().min(1).max(inputLimits.attachmentBytes), state: z.enum(['READY','REMOVED']), createdAt: timestamp });
 export const inputOperation = z.strictObject({ operationId: ids.operation, status: operationStatus, result: z.record(z.string(),z.json()).nullable() });
+export const inputOperationLookup=z.strictObject({principalId:opaqueKey,scope:opaqueKey,key:z.uuid(),operation:inputOperation.nullable()});
 export const workspaceView = z.strictObject({
   project: z.strictObject({ projectId: ids.project, name: projectName, revision, acceptedReleaseId: ids.release.nullable() }),
   run: z.strictObject({ runId: ids.run, projectId: ids.project, taskId: ids.userTask, resourceRevision: revision, runEpoch: revision, controlRevision: revision, phase: z.string(), controlGate: z.string(), terminalOutcome: z.string().nullable(), currentPlanRevision: revision.nullable(), currentRequirementRevision: revision.nullable(), eventSeq: epoch }),
