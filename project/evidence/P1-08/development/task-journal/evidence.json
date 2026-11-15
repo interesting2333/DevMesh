@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-16",
+  "base": "32ac753f60c684c639226b6d6888e51bd3ab798e",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "native",
+      "record": "native-2026-11-15T22-11-22-253Z.json",
+      "tests": 6,
+      "pass": 6,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T22-17-58-225Z.json",
+      "tests": 21,
+      "pass": 21,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": []
+    },
+    {
+      "name": "http",
+      "record": "http-2026-11-15T22-18-58-480Z.json",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-15T21-57-40-570Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": [
+        "tests/browser/workbench-task-local.test.mjs"
+      ]
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-15T21-57-40-749Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": [
+        "tests/browser/workbench-task-local.test.mjs"
+      ]
+    },
+    {
+      "name": "taskbuild",
+      "record": "taskbuild-2026-11-15T21-57-40-771Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": [
+        "tests/browser/workbench-task-local.test.mjs"
+      ]
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T21-59-14-592Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": [
+        "tests/browser/workbench-task-local.test.mjs"
+      ]
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T22-09-54-453Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T21-57-40-274Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": [
+        "tests/browser/workbench-task-local.test.mjs"
+      ]
+    }
+  ],
+  "totalPassed": 42,
+  "totalSkipped": 0,
+  "failures": [
+    {
+      "record": "native-2026-11-15T22-03-31-542Z.json",
+      "code": 1,
+      "changedDuringRun": [],
+      "pass": 2,
+      "fail": 4,
+      "cancelled": 0,
+      "skipped": 0,
+      "errors": [
+        "  error: 'FOREIGN KEY constraint failed'",
+        "  error: 'FOREIGN KEY constraint failed'",
+        "  error: 'FOREIGN KEY constraint failed'",
+        "  error: 'FOREIGN KEY constraint failed'"
+      ],
+      "sourceSnapshot": "failed-source/native-2026-11-15T22-03-31-542Z/manifest.json"
+    }
+  ],
+  "actualChecks": [
+    "任务未完成字段可保存，缺kind／title／真实release不得入队；旧表单拒绝task字段。null发布依据仍可保存独立下一目标，准确新依据只作旧稿参考。",
+    "实际双页入队仅一方获准，跨项目revision／发布的原锁仍唯一；严格原路径／scope／If-Match／正文／身份不变，错任务回执不清稿，准确成功仅清该任务。",
+    "实际任务POST201丢ACK重进零自动POST；新Run出现、createTask入口关闭后，按当前项目和原键找到唯一成功，明确重放只保留一项新任务／消息／活动Run，项目名和已接受代码起点准确。",
+    "先当前授权更高项目revision、后准确includeAbsence正向不存在；独立STALE_PROJECT_BASIS核实和完整命令／草稿CAS，草稿并发字段变化／原生abort／双页关闭竞争／未知观察均保留原事实。迟到旧任务POST412，无额外任务。",
+    "实际上传准确任务材料，缺完整READY快照不能入队；服务端移除后原任务拒绝，独立移除证明关闭和明确空白保留任务kind／title／原文／文件选择／身份的完整历史，无虚构成功。",
+    "完整旧local10／upload5／removed6和HTTP15回归；Native夹具只测试生产模块，不声称新任务保护页面已经存在。"
+  ],
+  "inputAssessment": "Every final group exit0 with no changed-during/since actual command inputs. The standalone native .test.mjs fixture was corrected after TS/build/contract checks; it is neither compiled nor imported by those commands, is explicitly listed as non-input inventory drift, and is covered by final Lint and complete runtime rerun. Actual application and TypeScript source stayed frozen after final checks. Current workspace, native task proof and local storage source maps equal exact source bytes. Eight actual server/browser/local/task JS/map artifacts match before/after/current for both sequential browser groups. New native6, then existing complete local10/upload5/removed6 and independent HTTP15 with disjoint temporary fixtures run only after final changed-package, standalone builds and static checks;42 distinct case passes. The existing browser and HTTP groups may overlap in wall time; each has exact stable before/after/current artifact hashes. SQL1..45, Runner/store, contracts and dependencies unchanged. Preparatory checks or failed runs are not included in final pass counts.",
+  "scope": "Actual Edge/native IndexedDB production task journal/proof modules in an explicit fixture; real project-scoped Input API/SQLite/file Worker task creates, exact original lookup/replay, attachment READY and permanent removal. Accepted release/terminal Run are explicit SQL metadata fixtures, not actual acceptance or physical-stop evidence. Raw draft/transaction abort and synthetic protected projection faults are explicit fixtures. Complete existing local/upload/removed browser files retain prior forms. No task product UI, model/OIDC/Linux, WebSocket or formal product/gate acceptance.",
+  "limits": [
+    "新任务产品入口尚未实现；本增量只完成任务原生日记和项目依据证明。2.3未勾选，OpenSpec5/13、正式P1-08和G0仍等待前置。",
+    "实际浏览器为明确同源native fixture；身份是可信测试夹具，accepted release／终态Run为SQL元数据准备，不证明真实接受或物理停止。事务中止、原始草稿改写和不确定projection为显式故障夹具。",
+    "首轮新文件2通过／4失败，均在候选准备SQL外键处，尚未执行后续任务断言；修正为先通过实际存储publishPlan建立需求／计划，再插入明确接受元数据夹具。未改应用／TS／构建产物或外键约束。该唯一.test.mjs不由build／type／contracts编译或导入；绑定单独列出其非输入inventory变化，最终Lint和完整运行严格绑定修正后的文件。",
+    "模型、企业OIDC、Linux Docker＋gVisor仍未配置；WebSocket、完整产品路径和正式阶段验收未执行。",
+    "原生关闭后旧basis不可原地新发；STALE_PROJECT关闭不能空白复活旧条件。REMOVED的明确空白与新basis审阅是不同操作。",
+    "复核由同一Codex Agent执行，不冒充独立人员或用户签认。"
+  ],
+  "managementChecks": "management-checks.json"
+}

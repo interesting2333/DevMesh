@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 3ea28e0abcb7cf676b28e5528c20ac68e2e76c2dfc9d7d5fca4d17dcaedd1452 |
+| DevMesh_技术设计方案_V1.1.md | d2928c527cefc1dd31c50a406c93bf02a76e9f64c47608c9623ad2e64b3c242b |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | bad71e7311e275365930d9567bb3e8add1e58b25671fb0ff45adbbe52fc2a49b |
+| DevMesh_产品验收场景_V10.0.md | e6bb8cc5c8ba1f308dece1c895ace6b8c7426aa68b3002ac7c767831f097f259 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -680,3 +680,8 @@ implement-workbench-first-path的2.2接入既有understanding／plan review与�
 ### 附件选择与明确上传开发增量实施范围
 
 继续P1-08变更2.3：接入单文件选择、未保存File保留／重试／明确放弃、原上传明确发送／查询、准确主输入附件CAS、按需本机上传库、已知结果字节释放和明确新身份复制。复用IndexedDB2，不改SQL1～45／Runner／依赖／公共契约；补充实际受保护页面测试并保存准确源码／构建／日志证据。2.3须连同新任务完成后再评审，不因附件子链实现直接勾选。
+
+
+### 新任务原信封与项目依据日记实施范围
+
+继续P1-08的2.3，先实现task原生草稿／严格项目原信封、跨basis锁、新Run回执校验、项目更高版本正向不存在关闭证明／完整CAS和附件移除历史。页面入口仍待实施，不因原生模块完成勾选2.3；保持SQL／Runner／依赖和正式门槛。

@@ -1,0 +1,85 @@
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\input-api\package.json 
+ℹ entry: src/index.ts
+ℹ target: node24
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Cleaning 20 files
+ℹ dist\index.mjs       96.12 kB │ gzip: 21.37 kB
+ℹ dist\index.mjs.map  149.50 kB │ gzip: 32.82 kB
+ℹ dist\index.d.mts      2.98 kB │ gzip:  1.01 kB
+ℹ 3 files, total: 248.59 kB
+✔ Build complete in 38496ms
+ℹ tsdown v0.22.2 powered by rolldown v1.1.5
+ℹ config file: D:\yms\AI\DevMesh\packages\input-api\tsdown.web.config.ts 
+ℹ entry: src/web/export-client.tsx
+ℹ target: es2022
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ entry: src/web/review-client.tsx
+ℹ target: es2022
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ entry: src/web/acceptance-client.tsx
+ℹ target: es2022
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ entry: src/web/preview-management-client.tsx
+ℹ target: es2022
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ entry: src/web/workbench-client.tsx
+ℹ target: es2022
+ℹ tsconfig: ..\..\tsconfig.json
+ℹ Build start
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- react
+- scheduler
+- react-dom
+- zod
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- react
+- scheduler
+- react-dom
+- zod
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- react
+- scheduler
+- react-dom
+- zod
+ℹ dist\web\workbench\workbench-client.js      350.94 kB │ gzip: 101.54 kB
+ℹ dist\web\workbench\workbench-client.js.map    1.08 MB
+ℹ 2 files, total: 1.43 MB
+✔ Build complete in 9253ms
+ℹ dist\web\acceptance\acceptance-client.js      273.22 kB │ gzip:  81.37 kB
+ℹ dist\web\acceptance\acceptance-client.js.map  881.44 kB │ gzip: 185.67 kB
+ℹ 2 files, total: 1.15 MB
+✔ Build complete in 9496ms
+ℹ dist\web\preview-management\preview-management-client.js      270.14 kB │ gzip:  80.67 kB
+ℹ dist\web\preview-management\preview-management-client.js.map  875.54 kB │ gzip: 184.30 kB
+ℹ 2 files, total: 1.15 MB
+✔ Build complete in 9812ms
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- react
+- scheduler
+- react-dom
+- zod
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- react
+- scheduler
+- react-dom
+- zod
+ℹ dist\web\review\review-client.js      270.91 kB │ gzip:  80.63 kB
+ℹ dist\web\review\review-client.js.map  877.09 kB │ gzip: 184.72 kB
+ℹ 2 files, total: 1.15 MB
+✔ Build complete in 11931ms
+ℹ dist\web\export\export-client.js      264.08 kB │ gzip:  79.08 kB
+ℹ dist\web\export\export-client.js.map  862.94 kB │ gzip: 182.07 kB
+ℹ 2 files, total: 1.13 MB
+✔ Build complete in 12363ms

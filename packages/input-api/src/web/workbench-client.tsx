@@ -119,7 +119,7 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
  async function send(command:LocalCommand){
   const e=command.envelope,value=await api(e.path,{method:'POST',headers:{'content-type':'application/json','idempotency-key':e.key,...(e.ifMatch?{'if-match':e.ifMatch}:{})},body:JSON.stringify(e.body)});await accept(command,value);
  }
-  async function closeOriginal(){const p=original.current!;let committed=false;try{const verified=await verifyStaleOriginal(p,path=>api(path));if(verified.kind==='operation'){await accept(p,verified.value);return;}await local.current!.closeStale(p,verified.proof);committed=true;hydrate(await local.current!.load(context));setStatus('过期原提交已核实关闭，旧草稿仍保留。');const c=p.envelope.context;if(c.form==='project')throw Error('Wrong closure');working.current=false;await onConfirmed({projectId:c.projectId,runId:c.runId});}catch{setProblem(committed?'关闭已保存在本机，但当前执行尚未刷新，请重新进入。':'尚不能关闭原提交。请核实当前权限、执行依据及原操作；原记录继续保留。');}}
+  async function closeOriginal(){const p=original.current!;let committed=false;try{const verified=await verifyStaleOriginal(p,path=>api(path));if(verified.kind==='operation'){await accept(p,verified.value);return;}await local.current!.closeStale(p,verified.proof);committed=true;hydrate(await local.current!.load(context));setStatus('过期原提交已核实关闭，旧草稿仍保留。');const c=p.envelope.context;if(c.form==='project'||c.form==='task')throw Error('Wrong closure');working.current=false;await onConfirmed({projectId:c.projectId,runId:c.runId});}catch{setProblem(committed?'关闭已保存在本机，但当前执行尚未刷新，请重新进入。':'尚不能关闭原提交。请核实当前权限、执行依据及原操作；原记录继续保留。');}}
  async function closeRemoved(){
   const p=original.current!;let committed=false;
   try{

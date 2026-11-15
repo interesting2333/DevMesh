@@ -173,3 +173,27 @@ The workbench SHALL retain a chosen File until its exact bytes, immutable upload
 #### Scenario: Releasing local bytes
 - **WHEN** a known-result original file is explicitly released
 - **THEN** the upload identity, hash and receipt SHALL remain, and unknown-result original bytes SHALL never be released by this action
+
+
+### Requirement: Task originals bind project and accepted release
+The local journal SHALL isolate task drafts by principal, project, project revision and accepted release, keep task intent separate from Run input, and freeze the exact project-scoped create-task envelope before sending. One pending task SHALL lock all task bases for the same principal and project.
+
+#### Scenario: A new Run exists after task acknowledgement loss
+- **WHEN** the exact task may already have created a Run and fresh createTask admission is unavailable
+- **THEN** project-scoped original lookup and explicit exact replay SHALL retain the original identity and recover one task; no reload SHALL POST automatically
+
+#### Scenario: Task success is observed
+- **WHEN** a successful receipt has the exact project, a new Run at revision1, project revision equal to original basis plus1 and all task, message and understanding-operation identifiers
+- **THEN** the native transaction SHALL release only that task lock, clear only that exact draft and retain the immutable envelope; mismatched results SHALL preserve the lock
+
+#### Scenario: A task original has an obsolete project basis
+- **WHEN** an authorized current project at a strictly greater revision is read before exact principal/project/key positive absence
+- **THEN** explicit closure SHALL compare the full command and draft snapshot atomically and retain the complete original; Run proofs, inconclusive reads and observed unknown operations SHALL NOT close it
+
+#### Scenario: An original task attachment is permanently removed
+- **WHEN** ordered exact removal and positive absence are verified for the task original
+- **THEN** full native CAS closure and explicit blank start SHALL retain task fields, selection and identity in immutable history while a new blank receives a distinct input identity
+
+#### Scenario: Next target is drafted before the first accepted release
+- **WHEN** the current project still has no accepted release
+- **THEN** an isolated task draft SHALL remain saveable with an explicit null release basis, but SHALL NOT enqueue a create-task original; switching later to a real accepted release SHALL require explicit review

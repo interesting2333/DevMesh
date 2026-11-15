@@ -1,0 +1,106 @@
+TAP version 13
+# (node:38428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: task drafts and project-wide original locks retain exact release, title and identity across bases and pages
+ok 1 - task drafts and project-wide original locks retain exact release, title and identity across bases and pages
+  ---
+  duration_ms: 40849.7119
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Native Edge IndexedDB and production task journal/proof modules in an explicit fixture page; optional real Input API/SQLite/file Worker. Accepted release/terminal Run are explicit SQL metadata fixtures, not actual acceptance or physical-stop evidence. No task product UI, OIDC/model/Linux or product approval."}
+# (node:38428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual task ACK loss restores the project original after a new Run exists; exact replay binds one new task
+not ok 2 - actual task ACK loss restores the project original after a new Run exists; exact replay binds one new task
+  ---
+  duration_ms: 96758.8538
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-task-local.test.mjs:44:1'
+  failureType: 'testCodeFailure'
+  error: 'FOREIGN KEY constraint failed'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.sql (file:///D:/yms/AI/DevMesh/tests/fixtures/input-data.mjs:22:190)
+    seed (file:///D:/yms/AI/DevMesh/tests/browser/workbench-task-local.test.mjs:23:163)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-task-local.test.mjs:45:36)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# {"browser":"157.0.4341.42","scope":"Native Edge IndexedDB and production task journal/proof modules in an explicit fixture page; optional real Input API/SQLite/file Worker. Accepted release/terminal Run are explicit SQL metadata fixtures, not actual acceptance or physical-stop evidence. No task product UI, OIDC/model/Linux or product approval."}
+# (node:38428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: newer project proof closes an absent task with complete CAS and immutable history; delayed original gets412
+not ok 3 - newer project proof closes an absent task with complete CAS and immutable history; delayed original gets412
+  ---
+  duration_ms: 38720.0362
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-task-local.test.mjs:53:1'
+  failureType: 'testCodeFailure'
+  error: 'FOREIGN KEY constraint failed'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.sql (file:///D:/yms/AI/DevMesh/tests/fixtures/input-data.mjs:22:190)
+    seed (file:///D:/yms/AI/DevMesh/tests/browser/workbench-task-local.test.mjs:23:163)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-task-local.test.mjs:54:36)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# {"browser":"157.0.4341.42","scope":"Native Edge IndexedDB and production task journal/proof modules in an explicit fixture page; optional real Input API/SQLite/file Worker. Accepted release/terminal Run are explicit SQL metadata fixtures, not actual acceptance or physical-stop evidence. No task product UI, OIDC/model/Linux or product approval."}
+# Subtest: task enqueue abort and unknown observations preserve the original; Run proofs and unproved project absence cannot close it
+ok 4 - task enqueue abort and unknown observations preserve the original; Run proofs and unproved project absence cannot close it
+  ---
+  duration_ms: 21014.4432
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Native Edge IndexedDB and production task journal/proof modules in an explicit fixture page; optional real Input API/SQLite/file Worker. Accepted release/terminal Run are explicit SQL metadata fixtures, not actual acceptance or physical-stop evidence. No task product UI, OIDC/model/Linux or product approval."}
+# (node:38428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: task attachments require exact READY snapshots; permanent removal closes original then explicit blank preserves task history
+not ok 5 - task attachments require exact READY snapshots; permanent removal closes original then explicit blank preserves task history
+  ---
+  duration_ms: 31986.1247
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-task-local.test.mjs:70:1'
+  failureType: 'testCodeFailure'
+  error: 'FOREIGN KEY constraint failed'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.sql (file:///D:/yms/AI/DevMesh/tests/fixtures/input-data.mjs:22:190)
+    seed (file:///D:/yms/AI/DevMesh/tests/browser/workbench-task-local.test.mjs:23:163)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-task-local.test.mjs:71:36)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# {"browser":"157.0.4341.42","scope":"Native Edge IndexedDB and production task journal/proof modules in an explicit fixture page; optional real Input API/SQLite/file Worker. Accepted release/terminal Run are explicit SQL metadata fixtures, not actual acceptance or physical-stop evidence. No task product UI, OIDC/model/Linux or product approval."}
+# (node:38428) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: task proof reads current project before exact original lookup and refuses inconclusive or foreign facts
+not ok 6 - task proof reads current project before exact original lookup and refuses inconclusive or foreign facts
+  ---
+  duration_ms: 66870.1889
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-task-local.test.mjs:78:1'
+  failureType: 'testCodeFailure'
+  error: 'FOREIGN KEY constraint failed'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.sql (file:///D:/yms/AI/DevMesh/tests/fixtures/input-data.mjs:22:190)
+    seed (file:///D:/yms/AI/DevMesh/tests/browser/workbench-task-local.test.mjs:23:163)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/browser/workbench-task-local.test.mjs:79:36)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# {"browser":"157.0.4341.42","scope":"Native Edge IndexedDB and production task journal/proof modules in an explicit fixture page; optional real Input API/SQLite/file Worker. Accepted release/terminal Run are explicit SQL metadata fixtures, not actual acceptance or physical-stop evidence. No task product UI, OIDC/model/Linux or product approval."}
+1..6
+# tests 6
+# suites 0
+# pass 2
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 310669.0331

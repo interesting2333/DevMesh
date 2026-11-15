@@ -442,3 +442,18 @@ Enter换行；Ctrl／Cmd+Enter提交时检查IME及重复键，操作期间同�
 已选文件可明确从本次输入移除，这只改变本机选择，不执行服务端DELETE。上传库按当前主体隔离，显式打开后才读取，32份驻留文件／256条日记不变。未知结果不可释放或重建身份；已知结果可明确释放原文件字节并保留回执／hash／信封。旧READY可能已绑定其他输入，库不直接重选旧附件ID；再次使用须明确把可读已知结果原字节作为一个新File添加，产生独立上传身份和新附件，保留旧日记。已释放原文件需用户重新选择磁盘文件。
 
 待核实主请求只读显示其原上下文的所选文件；不采用新basis的附件代替。页面保持原权限、账号失效、CSP和窄屏边界。现阶段不增加服务端删除交互。真实选文件、实际multipart／文件Worker、丢ACK、原键恢复、原生事务中止／双页竞争、失效附件和身份变化将分别验证；真实模型／OIDC／Linux和产品门槛仍未执行。
+
+
+### 新任务原信封与项目依据日记（本机开发验证）
+
+继续P1-08／implement-workbench-first-path的2.3，当前增量已经完成原生存储与项目版本证明的上述本机开发验证。新任务页面与完整2.3另行继续；正式前置／G0未变，不以基础模块代替产品入口。沿用IndexedDB2，新增task记录判别与可选字段，不改旧项目／Run表单键、SQL1～45、Runner或公共契约；旧代码遇到不认识的记录安全拒绝，不清库。
+
+任务草稿按主体／项目／task／项目revision／准确baseAcceptedReleaseId隔离，runId固定null；任务草稿在尚无已接受发布时可记录baseAcceptedReleaseId:null，独立保存下一目标以满足PRD5.2.1；该上下文不能通过既有createTaskInput入队，不产生待核实命令或POST。取得已接受发布后明确切换依据，旧草稿只供参考和明确复制，不自动采用发布或生成任务。与当前执行消息、回答、计划确认草稿分开。kind可空、title可暂空以保存未完成目标；只有明确ITERATION／FIX和满足既有createTaskInput标题、目标、附件规则才入队。task字段不得出现在旧表单，任务不得包含项目改名或问题答案。标题是任务标题，项目名不变。
+
+原命令scope为项目ID，路径projects/:projectId/tasks，If-Match使用项目revision；冻结kind／title／goal／baseAcceptedReleaseId／clientDraftId／原UUID，不借用Run版本。唯一pendingForm按主体／项目／task跨项目版本和发布依据锁定；新Run出现或createTask动作隐藏也不能绕过原请求，可从准确项目范围读取待核实原信封。重进不自动POST，明确原键查询／重放；成功必须是同项目、新Run初始revision1、项目revision=原依据+1，且task／message／understandingOperationId齐全。成功观察与只清空该准确任务草稿同事务，重置输入身份，原信封保留。
+
+过期任务只用独立STALE_PROJECT_BASIS：先受保护200读取准确授权当前项目的更高project.revision，再按主体／项目scope／原UUID受保护200查询includeAbsence=true。已有操作走原回执，404／非200／未知／失权／同版本均无关闭证明。Run的STALE_BASIS不得关闭任务。原生关闭比较完整命令观察、pending索引和完整草稿snapshot，保留kind／title／目标／附件选择／clientDraftId；单独记关闭，不伪造成功。过期项目依据不能原地开始空白或重发新命令，必须明确切当前依据并审阅；旧稿和关闭快照可查。
+
+任务附件复用准确原上传字节／READY映射与完整选择CAS。永久移除则沿用独立REMOVED_ATTACHMENT顺序证明及完整关闭CAS；只有该证明允许明确空白开始，清任务字段／选择、生成新输入身份并保留不可变历史。未知观察不得被证明覆盖，原生事务abort或双页竞争均不丢锁／原稿。已接受发布和终态Run在本轮测试中用明确SQL元数据夹具提供，后续创建任务／附件／原键重放走真实API、SQLite和文件Worker，不声称真实发布接受或物理停止。
+
+后续页面须在执行中允许独立保存下一目标，但仅当前准确acceptedRelease且无active Run时提交；原任务丢ACK后即使新入口消失仍可恢复。历史／viewer不挂载命令连接，旧依据只供明确审阅和复制，不默认答案或生成假模型结果。

@@ -1,0 +1,185 @@
+TAP version 13
+# (node:36184) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36184) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: stale original closure preserves exact history and draft; delayed original HTTP cannot commit after a newer Run
+ok 1 - stale original closure preserves exact history and draft; delayed original HTTP cannot commit after a newer Run
+  ---
+  duration_ms: 79470.157
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: closure CAS rejects competing successful or unknown observation and native abort leaves the original pending
+ok 2 - closure CAS rejects competing successful or unknown observation and native abort leaves the original pending
+  ---
+  duration_ms: 46913.3039
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: plan journal binds all reviewed conditions, locks across basis changes and accepts only the exact plan result
+ok 3 - plan journal binds all reviewed conditions, locks across basis changes and accepts only the exact plan result
+  ---
+  duration_ms: 64608.2757
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: old basis references paginate only exact form contexts without mutating drafts or pending originals
+ok 4 - old basis references paginate only exact form contexts without mutating drafts or pending originals
+  ---
+  duration_ms: 25764.8503
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes
+ok 5 - real IndexedDB survives reload, isolates exact contexts and rejects competing stale page writes
+  ---
+  duration_ms: 27891.7885
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:36184) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: two pages admit one original request, actual project ACK loss reopens and exact replay retains one input
+ok 6 - two pages admit one original request, actual project ACK loss reopens and exact replay retains one input
+  ---
+  duration_ms: 105130.2871
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:36184) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation
+ok 7 - message journal locks across changed Run basis and does not unlock on lookup miss or unknown observation
+  ---
+  duration_ms: 45643.0763
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission
+ok 8 - real transaction abort rolls back both original command and draft pointer, and corrupt local records close admission
+  ---
+  duration_ms: 29225.8625
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema
+ok 9 - version change closes old connections, blocked future upgrade retains old rows and old code refuses newer schema
+  ---
+  duration_ms: 42111.8222
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# Subtest: question journal rejects altered question/option bases, retains old originals and clears only its successful draft
+ok 10 - question journal rejects altered question/option bases, retains old originals and clears only its successful draft
+  ---
+  duration_ms: 30981.8222
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge IndexedDB and compiled production local module in an explicit test harness. Optional actual Input API/file Worker; browser identity is a fixture. This does not test a workbench UI, OIDC, WebSocket, model or Runner."}
+# (node:26932) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:26932) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: removed proof close and explicit blank start use full native CAS, roll back aborts and retain every original field
+ok 11 - removed proof close and explicit blank start use full native CAS, roll back aborts and retain every original field
+  ---
+  duration_ms: 33473.5955
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, Edge native IndexedDB production module, multipart/Input API/SQLite/file Worker. Attachment controls are not yet present: actual files and frozen pending inputs are prepared by an explicit same-origin native fixture. Bearer identity, unavailable-read routes, race injection and synthetic long history are labeled; no real model/OIDC/Linux, WebSocket or product acceptance."}
+# (node:26932) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual protected project closes only after ordered removal and positive absence; explicit blank success preserves history
+ok 12 - actual protected project closes only after ordered removal and positive absence; explicit blank success preserves history
+  ---
+  duration_ms: 68037.6736
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, Edge native IndexedDB production module, multipart/Input API/SQLite/file Worker. Attachment controls are not yet present: actual files and frozen pending inputs are prepared by an explicit same-origin native fixture. Bearer identity, unavailable-read routes, race injection and synthetic long history are labeled; no real model/OIDC/Linux, WebSocket or product acceptance."}
+# (node:26932) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: removed original message can explicitly start blank at the unchanged Run basis and later exposes old-basis history
+ok 13 - removed original message can explicitly start blank at the unchanged Run basis and later exposes old-basis history
+  ---
+  duration_ms: 62007.5184
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, Edge native IndexedDB production module, multipart/Input API/SQLite/file Worker. Attachment controls are not yet present: actual files and frozen pending inputs are prepared by an explicit same-origin native fixture. Bearer identity, unavailable-read routes, race injection and synthetic long history are labeled; no real model/OIDC/Linux, WebSocket or product acceptance."}
+# (node:26932) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: inconclusive protected reads never close originals; observed unknown operation keeps the lock
+ok 14 - inconclusive protected reads never close originals; observed unknown operation keeps the lock
+  ---
+  duration_ms: 67649.4911
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, Edge native IndexedDB production module, multipart/Input API/SQLite/file Worker. Attachment controls are not yet present: actual files and frozen pending inputs are prepared by an explicit same-origin native fixture. Bearer identity, unavailable-read routes, race injection and synthetic long history are labeled; no real model/OIDC/Linux, WebSocket or product acceptance."}
+# (node:26932) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bounded closed history preserves all originals and rejects cross-page rank cycles, missing and foreign links
+ok 15 - bounded closed history preserves all originals and rejects cross-page rank cycles, missing and foreign links
+  ---
+  duration_ms: 37761.1053
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, Edge native IndexedDB production module, multipart/Input API/SQLite/file Worker. Attachment controls are not yet present: actual files and frozen pending inputs are prepared by an explicit same-origin native fixture. Bearer identity, unavailable-read routes, race injection and synthetic long history are labeled; no real model/OIDC/Linux, WebSocket or product acceptance."}
+# (node:26932) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bound successful original uses normal receipt recovery and cannot supply a removal proof
+ok 16 - bound successful original uses normal receipt recovery and cannot supply a removal proof
+  ---
+  duration_ms: 62327.3535
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, Edge native IndexedDB production module, multipart/Input API/SQLite/file Worker. Attachment controls are not yet present: actual files and frozen pending inputs are prepared by an explicit same-origin native fixture. Bearer identity, unavailable-read routes, race injection and synthetic long history are labeled; no real model/OIDC/Linux, WebSocket or product acceptance."}
+# (node:10852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v1 migration preserves exact pending originals; blocked and aborted upgrades retain the old database
+ok 17 - v1 migration preserves exact pending originals; blocked and aborted upgrades retain the old database
+  ---
+  duration_ms: 40037.6232
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge native IndexedDB and compiled production module; optional actual Input API, SQLite and file Worker. Explicit browser/identity harness, no attachment UI, real model, enterprise OIDC, Linux Runner or product acceptance."}
+# Subtest: file validation, atomic selection and two-page CAS preserve exact bytes without sending HTTP
+ok 18 - file validation, atomic selection and two-page CAS preserve exact bytes without sending HTTP
+  ---
+  duration_ms: 38881.7741
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge native IndexedDB and compiled production module; optional actual Input API, SQLite and file Worker. Explicit browser/identity harness, no attachment UI, real model, enterprise OIDC, Linux Runner or product acceptance."}
+# Subtest: selection and unresolved byte quotas are bounded; explicit known-result release keeps the original metadata
+ok 19 - selection and unresolved byte quotas are bounded; explicit known-result release keeps the original metadata
+  ---
+  duration_ms: 51121.2552
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge native IndexedDB and compiled production module; optional actual Input API, SQLite and file Worker. Explicit browser/identity harness, no attachment UI, real model, enterprise OIDC, Linux Runner or product acceptance."}
+# (node:10852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual multipart ACK loss restores one original upload and freezes a verified attachment-only project
+ok 20 - actual multipart ACK loss restores one original upload and freezes a verified attachment-only project
+  ---
+  duration_ms: 58564.8804
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge native IndexedDB and compiled production module; optional actual Input API, SQLite and file Worker. Explicit browser/identity harness, no attachment UI, real model, enterprise OIDC, Linux Runner or product acceptance."}
+# (node:10852) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: REMOVED and corrupt attachments cannot be omitted or replace immutable input; actual server rechecks READY at T1
+ok 21 - REMOVED and corrupt attachments cannot be omitted or replace immutable input; actual server rechecks READY at T1
+  ---
+  duration_ms: 79034.9734
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual Edge native IndexedDB and compiled production module; optional actual Input API, SQLite and file Worker. Explicit browser/identity harness, no attachment UI, real model, enterprise OIDC, Linux Runner or product acceptance."}
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1150323.0508

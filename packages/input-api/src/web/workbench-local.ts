@@ -1,27 +1,30 @@
 import {z} from 'zod';
-import {ids,opaqueKey,revision,timestamp,sha256,commandBodies,createProjectInput,saveMessageInput,answerQuestionsInput,inputOperation,operationReceipt,inputOperationLookup,attachmentView} from '@devmesh/contracts';
+import {ids,opaqueKey,revision,timestamp,sha256,commandBodies,createProjectInput,createTaskInput,saveMessageInput,answerQuestionsInput,inputOperation,operationReceipt,inputOperationLookup,attachmentView} from '@devmesh/contracts';
 import {prepareUpload,uploadRecord,uploadResponse,uploadLimits,verifyUploadBytes,sameUploadBytes} from './workbench-upload.js';
 import type {LocalUpload} from './workbench-upload.js';
 
 const answerBasis=z.strictObject({requirementRevision:revision,questions:z.array(z.strictObject({questionId:ids.question,questionRevision:revision,optionIds:z.array(opaqueKey).max(32)})).max(100)}).superRefine((v,c)=>{if(new Set(v.questions.map(q=>q.questionId)).size!==v.questions.length||v.questions.some(q=>new Set(q.optionIds).size!==q.optionIds.length))c.addIssue({code:'custom',message:'Duplicate answer basis'});});
 export const draftContext=z.discriminatedUnion('form',[
   z.strictObject({principalId:opaqueKey,form:z.literal('project'),projectId:z.null(),runId:z.null(),basisRevision:z.null()}),
+  z.strictObject({principalId:opaqueKey,form:z.literal('task'),projectId:ids.project,runId:z.null(),basisRevision:revision,basis:z.strictObject({baseAcceptedReleaseId:ids.release.nullable()})}),
   z.strictObject({principalId:opaqueKey,form:z.literal('message'),projectId:ids.project,runId:ids.run,basisRevision:revision}),
   z.strictObject({principalId:opaqueKey,form:z.literal('questions-answer'),projectId:ids.project,runId:ids.run,basisRevision:revision,basis:answerBasis}),
   z.strictObject({principalId:opaqueKey,form:z.literal('plan-confirm'),projectId:ids.project,runId:ids.run,basisRevision:revision,basis:z.strictObject({planRevision:revision,requirementRevision:revision,reviewHash:sha256,carryForwardHash:sha256.optional()})}),
 ]);
 export type DraftContext=z.output<typeof draftContext>;
-const draftFields=z.strictObject({text:z.string().max(40000),name:z.string().max(80),answers:z.array(answerQuestionsInput.shape.answers.element).max(100).optional()});
+const draftFields=z.strictObject({text:z.string().max(40000),name:z.string().max(80),answers:z.array(answerQuestionsInput.shape.answers.element).max(100).optional(),task:z.strictObject({kind:z.enum(['ITERATION','FIX']).nullable(),title:z.string().max(240)}).optional()});
 const draftRecord=z.strictObject({key:z.string(),context:draftContext,revision,clientDraftId:z.uuid(),...draftFields.shape,uploadKeys:z.array(z.uuid()).max(3).refine(v=>new Set(v).size===v.length).optional(),updatedAt:timestamp,pendingKey:z.uuid().nullable(),closedKey:z.uuid().optional(),previousClosedKey:z.uuid().optional()});
 export type LocalDraft=z.output<typeof draftRecord>;
 const envelopeBase={key:z.uuid(),context:draftContext,draftRevision:revision,createdAt:timestamp};
 const commandEnvelope=z.discriminatedUnion('kind',[
   z.strictObject({...envelopeBase,kind:z.literal('project'),scope:z.literal('projects.create'),path:z.literal('/api/v1/projects'),ifMatch:z.null(),body:createProjectInput}),
+  z.strictObject({...envelopeBase,kind:z.literal('task'),scope:ids.project,path:z.string(),ifMatch:z.string(),body:createTaskInput}),
   z.strictObject({...envelopeBase,kind:z.literal('message'),scope:ids.run,path:z.string(),ifMatch:z.string(),body:saveMessageInput}),
   z.strictObject({...envelopeBase,kind:z.literal('questions-answer'),scope:ids.run,path:z.string(),ifMatch:z.string(),body:answerQuestionsInput}),
   z.strictObject({...envelopeBase,kind:z.literal('plan-confirm'),scope:ids.run,path:z.string(),ifMatch:z.string(),body:commandBodies.ConfirmPlan}),
 ]).superRefine((v,c)=>{
   if(v.kind!==v.context.form)c.addIssue({code:'custom',message:'Wrong command context'});
+  if(v.kind==='task'&&(v.context.form!=='task'||v.scope!==v.context.projectId||v.path!==`/api/v1/projects/${v.context.projectId}/tasks`||v.ifMatch!==`"r${v.context.basisRevision}"`||v.body.baseAcceptedReleaseId!==v.context.basis.baseAcceptedReleaseId))c.addIssue({code:'custom',message:'Wrong original project task basis'});
   if(v.kind==='message'&&(v.context.form!=='message'||v.scope!==v.context.runId||v.path!==`/api/v1/runs/${v.context.runId}/messages`||v.ifMatch!==`"r${v.context.basisRevision}"`))c.addIssue({code:'custom',message:'Wrong original request'});
   if(v.kind==='questions-answer'){
     if(v.context.form!=='questions-answer'||v.scope!==v.context.runId||v.path!==`/api/v1/runs/${v.context.runId}/questions:answer`||v.ifMatch!==`"r${v.context.basisRevision}"`)c.addIssue({code:'custom',message:'Wrong answer request'});
@@ -33,13 +36,15 @@ const commandEnvelope=z.discriminatedUnion('kind',[
   }
 });
 export const staleOriginalProof=z.strictObject({reason:z.literal('STALE_BASIS'),key:z.uuid(),projectId:ids.project,runId:ids.run,resourceRevision:revision,workspaceReadAt:timestamp,lookupReadAt:timestamp,lookup:inputOperationLookup.extend({operation:z.null()})});
+export const staleProjectProof=z.strictObject({reason:z.literal('STALE_PROJECT_BASIS'),key:z.uuid(),projectId:ids.project,projectRevision:revision,workspaceReadAt:timestamp,lookupReadAt:timestamp,lookup:inputOperationLookup.extend({operation:z.null()})});
 export const removedOriginalProof=z.strictObject({reason:z.literal('REMOVED_ATTACHMENT'),key:z.uuid(),attachment:attachmentView.extend({state:z.literal('REMOVED')}),attachmentReadAt:timestamp,lookupReadAt:timestamp,lookup:inputOperationLookup.extend({operation:z.null()})});
 const removedClosure=removedOriginalProof.extend({draftSnapshot:draftRecord});
 const closedHistoryCursor=z.strictObject({rootKey:z.uuid(),anchorKey:z.uuid()});
-const commandRecord=z.strictObject({key:z.uuid(),formKey:z.string(),envelope:commandEnvelope,receipt:inputOperation.nullable(),observedAt:timestamp.nullable(),pendingForm:z.string().optional(),closure:z.discriminatedUnion('reason',[staleOriginalProof,removedClosure]).optional()});
+const staleProjectClosure=staleProjectProof.extend({draftSnapshot:draftRecord});
+const commandRecord=z.strictObject({key:z.uuid(),formKey:z.string(),envelope:commandEnvelope,receipt:inputOperation.nullable(),observedAt:timestamp.nullable(),pendingForm:z.string().optional(),closure:z.discriminatedUnion('reason',[staleOriginalProof,removedClosure,staleProjectClosure]).optional()});
 export type LocalCommand=z.output<typeof commandRecord>;
-const contextKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form,c.basisRevision,...(c.form==='plan-confirm'?[c.basis.planRevision,c.basis.requirementRevision,c.basis.reviewHash,c.basis.carryForwardHash??null]:c.form==='questions-answer'?[c.basis.requirementRevision,c.basis.questions.map(q=>[q.questionId,q.questionRevision])]:[])]);
-const pendingScope=z.strictObject({principalId:opaqueKey,projectId:ids.project,runId:ids.run,form:z.enum(['message','questions-answer','plan-confirm'])});
+const contextKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form,c.basisRevision,...(c.form==='task'?[c.basis.baseAcceptedReleaseId]:c.form==='plan-confirm'?[c.basis.planRevision,c.basis.requirementRevision,c.basis.reviewHash,c.basis.carryForwardHash??null]:c.form==='questions-answer'?[c.basis.requirementRevision,c.basis.questions.map(q=>[q.questionId,q.questionRevision])]:[])]);
+const pendingScope=z.union([z.strictObject({principalId:opaqueKey,projectId:ids.project,runId:ids.run,form:z.enum(['message','questions-answer','plan-confirm'])}),z.strictObject({principalId:opaqueKey,projectId:ids.project,runId:z.null(),form:z.literal('task')})]);
 type FormScope=Pick<DraftContext,'principalId'|'projectId'|'runId'|'form'>;
 const formKey=(c:FormScope)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form]);
 export class WorkbenchLocalError extends Error{
@@ -48,6 +53,8 @@ export class WorkbenchLocalError extends Error{
 const invalid=():never=>{throw new WorkbenchLocalError('LOCAL_RECORD_INVALID');};
 const stable=(v:unknown)=>JSON.stringify(v,(_k,x:unknown)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.entries(x).sort(([a],[b])=>a<b?-1:a>b?1:0)):x);
 function validateDraftFields(c:DraftContext,value:z.output<typeof draftFields>){
+ if(c.form==='task'){if(value.name!==''||value.answers!==undefined||value.task===undefined)invalid();return;}
+ if(value.task!==undefined)invalid();
  if(c.form!=='questions-answer'){if(value.answers!==undefined)invalid();return;}
  if(value.answers===undefined)return invalid();
  if(value.text!==''||value.name!==''||new Set(value.answers.map(a=>a.questionId)).size!==value.answers.length||new TextEncoder().encode(JSON.stringify({answers:value.answers})).byteLength>128*1024)invalid();
@@ -93,10 +100,13 @@ export async function openWorkbenchLocal(principalId:string){
   db.onversionchange=close;
   db.onclose=()=>{closed=true;};
   function context(input:DraftContext){const c=draftContext.parse(input);if(c.principalId!==principalId)invalid();return c;}
-  function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);validateDraftFields(c,d);if(d.key!==contextKey(c)||stable(d.context)!==stable(c)||d.closedKey&&d.pendingKey||c.form==='questions-answer'&&(d.text!==''||d.name!==''||d.answers===undefined)||c.form!=='questions-answer'&&d.answers!==undefined||c.form!=='project'&&c.form!=='message'&&(d.uploadKeys!==undefined||d.previousClosedKey!==undefined)||d.previousClosedKey===d.closedKey&&d.closedKey!==undefined)invalid();return d;}
+  function draft(value:unknown,c:DraftContext){if(value===undefined)return null;const d=draftRecord.parse(value);validateDraftFields(c,d);if(d.key!==contextKey(c)||stable(d.context)!==stable(c)||d.closedKey&&d.pendingKey||c.form==='questions-answer'&&(d.text!==''||d.name!==''||d.answers===undefined)||c.form!=='questions-answer'&&d.answers!==undefined||c.form!=='project'&&c.form!=='message'&&c.form!=='task'&&(d.uploadKeys!==undefined||d.previousClosedKey!==undefined)||d.previousClosedKey===d.closedKey&&d.closedKey!==undefined)invalid();return d;}
   function success(envelope:LocalCommand['envelope'],result:unknown){
     const r=z.object({projectId:ids.project,runId:ids.run,revision}).parse(result),c=envelope.context;
-    if(c.form!=='project'&&(r.projectId!==c.projectId||r.runId!==c.runId))invalid();
+    if(c.form==='task'){
+      const task=z.object({taskId:ids.userTask,messageId:ids.message,understandingOperationId:ids.operation,projectRevision:revision}).parse(result);
+      if(r.projectId!==c.projectId||r.revision!==1||task.projectRevision!==c.basisRevision+1)invalid();
+    }else if(c.form!=='project'&&(r.projectId!==c.projectId||r.runId!==c.runId))invalid();
     if(envelope.kind==='plan-confirm'){const p=z.object({planRevision:revision}).parse(result);if(c.form!=='plan-confirm'||p.planRevision!==c.basis.planRevision)invalid();}
     else if(envelope.kind==='questions-answer')z.object({interpretationOperationId:ids.operation}).parse(result);
     else z.object({messageId:ids.message}).parse(result);
@@ -108,13 +118,19 @@ export async function openWorkbenchLocal(principalId:string){
     if(proof){
       if(v.receipt!==null||proof.key!==v.key||proof.lookup.principalId!==c.principalId||proof.lookup.scope!==v.envelope.scope||proof.lookup.key!==v.key)invalid();
       if(proof.reason==='STALE_BASIS'){
-        if(c.form==='project'||proof.projectId!==c.projectId||proof.runId!==c.runId||proof.resourceRevision<=c.basisRevision||Date.parse(proof.lookupReadAt)<Date.parse(proof.workspaceReadAt))invalid();
+        if(c.form==='project'||c.form==='task'||proof.projectId!==c.projectId||proof.runId!==c.runId||proof.resourceRevision<=c.basisRevision||Date.parse(proof.lookupReadAt)<Date.parse(proof.workspaceReadAt))invalid();
       }else{
-        const e=v.envelope,ids=e.kind==='project'?e.body.initialRequest.attachmentIds:e.kind==='message'?e.body.attachmentIds:[];
-        if((e.kind!=='project'&&e.kind!=='message')||!ids.includes(proof.attachment.attachmentId)||Date.parse(proof.lookupReadAt)<Date.parse(proof.attachmentReadAt))invalid();
+        const e=v.envelope;
+        if(proof.reason==='STALE_PROJECT_BASIS'){
+          if(c.form!=='task'||proof.projectId!==c.projectId||proof.projectRevision<=c.basisRevision||Date.parse(proof.lookupReadAt)<Date.parse(proof.workspaceReadAt))invalid();
+        }else{
+          const ids=e.kind==='project'?e.body.initialRequest.attachmentIds:e.kind==='message'?e.body.attachmentIds:e.kind==='task'?e.body.goal.attachmentIds:[];
+          if((e.kind!=='project'&&e.kind!=='message'&&e.kind!=='task')||!ids.includes(proof.attachment.attachmentId)||Date.parse(proof.lookupReadAt)<Date.parse(proof.attachmentReadAt))invalid();
+        }
         const d=draft(proof.draftSnapshot,c);if(!d)return invalid();if(d.pendingKey!==v.key||d.closedKey||d.revision!==e.draftRevision+1)invalid();
         if(e.kind==='project'&&(d.clientDraftId!==e.body.clientDraftId||d.text!==e.body.initialRequest.text||d.name!==(e.body.name??'')))invalid();
         if(e.kind==='message'&&(d.clientDraftId!==e.body.clientMessageId||d.text!==e.body.text))invalid();
+        if(e.kind==='task'&&(d.clientDraftId!==e.body.clientDraftId||d.text!==e.body.goal.text||d.task?.kind!==e.body.kind||d.task.title!==e.body.title))invalid();
       }
     }
     if(v.receipt?.status==='SUCCEEDED'){
@@ -157,7 +173,7 @@ export async function openWorkbenchLocal(principalId:string){
       s.scan(range,cursor=>{
         if(!cursor){done({items,nextCursor:null});return;}
         const raw=draftRecord.parse(cursor.value),d=draft(raw,context(raw.context));if(!d||formKey(d.context)!==formKey(c))return invalid();
-        scanned++;if(d.context.basisRevision!==c.basisRevision&&(d.text||d.name||d.answers?.length||d.closedKey||d.previousClosedKey))items.push(d);
+        scanned++;if((d.context.basisRevision!==c.basisRevision||c.form==='task'&&d.context.form==='task'&&d.context.basis.baseAcceptedReleaseId!==c.basis.baseAcceptedReleaseId)&&(d.text||d.name||d.answers?.length||d.task?.title||d.task?.kind||d.closedKey||d.previousClosedKey))items.push(d);
         if(items.length===10||scanned===50){done({items,nextCursor:String(cursor.key)});return;}cursor.continue();
       });
     });
@@ -187,7 +203,7 @@ export async function openWorkbenchLocal(principalId:string){
         if(new Set(attachmentIds).size!==attachmentIds.length)return invalid();
         const key=crypto.randomUUID(),createdAt=new Date().toISOString(),common={key,context:c,draftRevision:d.revision,createdAt};
         if(c.form==='plan-confirm'&&(d.text!=='CONFIRM_PLAN'||d.name!==''))return invalid();
-        const envelope=commandEnvelope.parse(c.form==='project'?{...common,kind:'project',scope:'projects.create',path:'/api/v1/projects',ifMatch:null,body:{initialRequest:{text:d.text,attachmentIds},clientDraftId:d.clientDraftId,...(d.name?{name:d.name}:{})}}:c.form==='message'?{...common,kind:'message',scope:c.runId,path:`/api/v1/runs/${c.runId}/messages`,ifMatch:`"r${c.basisRevision}"`,body:{text:d.text,attachmentIds,clientMessageId:d.clientDraftId}}:c.form==='questions-answer'?{...common,kind:'questions-answer',scope:c.runId,path:`/api/v1/runs/${c.runId}/questions:answer`,ifMatch:`"r${c.basisRevision}"`,body:{answers:d.answers}}:{...common,kind:'plan-confirm',scope:c.runId,path:`/api/v1/runs/${c.runId}/plans/${c.basis.planRevision}:confirm`,ifMatch:`"r${c.basisRevision}"`,body:{requirementRevision:c.basis.requirementRevision,reviewHash:c.basis.reviewHash,...(c.basis.carryForwardHash?{carryForwardHash:c.basis.carryForwardHash}:{})}});
+        const envelope=commandEnvelope.parse(c.form==='project'?{...common,kind:'project',scope:'projects.create',path:'/api/v1/projects',ifMatch:null,body:{initialRequest:{text:d.text,attachmentIds},clientDraftId:d.clientDraftId,...(d.name?{name:d.name}:{})}}:c.form==='task'?{...common,kind:'task',scope:c.projectId,path:`/api/v1/projects/${c.projectId}/tasks`,ifMatch:`"r${c.basisRevision}"`,body:{kind:d.task?.kind,title:d.task?.title,goal:{text:d.text,attachmentIds},baseAcceptedReleaseId:c.basis.baseAcceptedReleaseId,clientDraftId:d.clientDraftId}}:c.form==='message'?{...common,kind:'message',scope:c.runId,path:`/api/v1/runs/${c.runId}/messages`,ifMatch:`"r${c.basisRevision}"`,body:{text:d.text,attachmentIds,clientMessageId:d.clientDraftId}}:c.form==='questions-answer'?{...common,kind:'questions-answer',scope:c.runId,path:`/api/v1/runs/${c.runId}/questions:answer`,ifMatch:`"r${c.basisRevision}"`,body:{answers:d.answers}}:{...common,kind:'plan-confirm',scope:c.runId,path:`/api/v1/runs/${c.runId}/plans/${c.basis.planRevision}:confirm`,ifMatch:`"r${c.basisRevision}"`,body:{requirementRevision:c.basis.requirementRevision,reviewHash:c.basis.reviewHash,...(c.basis.carryForwardHash?{carryForwardHash:c.basis.carryForwardHash}:{})}});
         const v=commandRecord.parse({key,formKey:formKey(c),pendingForm:formKey(c),envelope,receipt:null,observedAt:null}),updated=draftRecord.parse({...d,revision:d.revision+1,pendingKey:key,updatedAt:createdAt});
         s.commands.add(v);s.drafts.put(updated);done({draft:updated,command:v});
         });
@@ -214,13 +230,13 @@ export async function openWorkbenchLocal(principalId:string){
       s.get(s.drafts,contextKey(c),rawDraft=>{
         const d=draft(rawDraft,c);if(!d||d.pendingKey!==key||d.revision!==old.envelope.draftRevision+1)return invalid();
         const {pendingForm:_pendingForm,...rest}=old,v=commandRecord.parse({...rest,receipt,observedAt});
-        s.commands.put(v);s.drafts.put(draftRecord.parse({...d,revision:d.revision+1,text:'',name:'',...(c.form==='questions-answer'?{answers:[]}:{}),...(d.uploadKeys?{uploadKeys:[]}:{}),clientDraftId:crypto.randomUUID(),pendingKey:null,updatedAt:observedAt}));done(v);
+        s.commands.put(v);s.drafts.put(draftRecord.parse({...d,revision:d.revision+1,text:'',name:'',...(c.form==='questions-answer'?{answers:[]}:{}),...(c.form==='task'?{task:{kind:null,title:''}}:{}),...(d.uploadKeys?{uploadKeys:[]}:{}),clientDraftId:crypto.randomUUID(),pendingKey:null,updatedAt:observedAt}));done(v);
       });
     }));
   }
   function closeStale(expected:LocalCommand,input:z.input<typeof staleOriginalProof>){
     const snapshot=command(expected),proof=staleOriginalProof.parse(input),c=snapshot.envelope.context;
-    if(c.form==='project'||snapshot.receipt||snapshot.closure||proof.key!==snapshot.key||proof.lookup.principalId!==c.principalId||proof.lookup.scope!==snapshot.envelope.scope||proof.lookup.key!==snapshot.key||proof.projectId!==c.projectId||proof.runId!==c.runId||proof.resourceRevision<=c.basisRevision||Date.parse(proof.lookupReadAt)<Date.parse(proof.workspaceReadAt))return invalid();
+    if(c.form==='project'||c.form==='task'||snapshot.receipt||snapshot.closure||proof.key!==snapshot.key||proof.lookup.principalId!==c.principalId||proof.lookup.scope!==snapshot.envelope.scope||proof.lookup.key!==snapshot.key||proof.projectId!==c.projectId||proof.runId!==c.runId||proof.resourceRevision<=c.basisRevision||Date.parse(proof.lookupReadAt)<Date.parse(proof.workspaceReadAt))return invalid();
     return transaction<LocalCommand>('readwrite',(s,done)=>s.get(s.commands,snapshot.key,raw=>{
       const old=command(raw);if(stable(old)!==stable(snapshot))throw new WorkbenchLocalError('LOCAL_CONFLICT');
       pending(s,c,p=>{if(!p||p.key!==old.key)throw new WorkbenchLocalError('LOCAL_CONFLICT');s.get(s.drafts,contextKey(c),rawDraft=>{
@@ -230,7 +246,20 @@ export async function openWorkbenchLocal(principalId:string){
       });});
     }));
   }
-  /** A removed original is historical only after a protected ordered proof and exact native CAS. */
+  /** A stale project task closes only after an ordered project proof and full snapshot CAS. */
+  function closeStaleProject(expected:LocalCommand,expectedDraft:LocalDraft,input:z.input<typeof staleProjectProof>){
+    const snapshot=command(expected),c=snapshot.envelope.context,proof=staleProjectProof.parse(input),d=draft(expectedDraft,c);
+    if(c.form!=='task'||snapshot.receipt||snapshot.closure||!d)return invalid();
+    const {pendingForm:_pendingForm,...rest}=snapshot,value=command({...rest,closure:{...proof,draftSnapshot:d}});
+    return transaction<LocalCommand>('readwrite',(s,done)=>s.get(s.commands,snapshot.key,raw=>{
+      if(stable(command(raw))!==stable(snapshot))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+      pending(s,c,p=>{if(!p||p.key!==snapshot.key)throw new WorkbenchLocalError('LOCAL_CONFLICT');s.get(s.drafts,contextKey(c),rawDraft=>{
+        const current=draft(rawDraft,c);if(!current||stable(current)!==stable(d))throw new WorkbenchLocalError('LOCAL_CONFLICT');
+        s.commands.put(value);s.drafts.put(draftRecord.parse({...current,revision:current.revision+1,pendingKey:null,closedKey:value.key,updatedAt:proof.lookupReadAt}));done(value);
+      });});
+    }));
+  }
+  /** Permanent attachment removal is independent of project/Run revision changes. */
   function closeRemoved(expected:LocalCommand,expectedDraft:LocalDraft,input:z.input<typeof removedOriginalProof>){
     const snapshot=command(expected),c=snapshot.envelope.context,proof=removedOriginalProof.parse(input),d=draft(expectedDraft,c);
     if(snapshot.receipt||snapshot.closure||!d)return invalid();
@@ -246,22 +275,22 @@ export async function openWorkbenchLocal(principalId:string){
   /** Explicit blank start preserves the complete closed original; it never sends or copies input. */
   function startBlankInput(expectedClosed:LocalCommand,expectedDraft:LocalDraft){
     const original=command(expectedClosed),proof=original.closure,c=original.envelope.context,d=draft(expectedDraft,c);
-    if(!proof||proof.reason!=='REMOVED_ATTACHMENT'||!d||(c.form!=='project'&&c.form!=='message'))return invalid();
+    if(!proof||proof.reason!=='REMOVED_ATTACHMENT'||!d||(c.form!=='project'&&c.form!=='message'&&c.form!=='task'))return invalid();
     const expected=draftRecord.parse({...proof.draftSnapshot,revision:proof.draftSnapshot.revision+1,pendingKey:null,closedKey:original.key,updatedAt:proof.lookupReadAt});if(stable(d)!==stable(expected))return invalid();
     return transaction<LocalDraft>('readwrite',(s,done)=>s.get(s.commands,original.key,raw=>{
       if(stable(command(raw))!==stable(original))throw new WorkbenchLocalError('LOCAL_CONFLICT');
       pending(s,c,p=>{if(p)throw new WorkbenchLocalError('COMMAND_PENDING');s.get(s.drafts,contextKey(c),rawDraft=>{
         const current=draft(rawDraft,c);if(!current||stable(current)!==stable(d))throw new WorkbenchLocalError('LOCAL_CONFLICT');
-        const value=draftRecord.parse({key:d.key,context:c,revision:d.revision+1,clientDraftId:crypto.randomUUID(),text:'',name:'',uploadKeys:[],updatedAt:new Date().toISOString(),pendingKey:null,previousClosedKey:original.key});s.drafts.put(value);done(value);
+        const value=draftRecord.parse({key:d.key,context:c,revision:d.revision+1,clientDraftId:crypto.randomUUID(),text:'',name:'',...(c.form==='task'?{task:{kind:null,title:''}}:{}),uploadKeys:[],updatedAt:new Date().toISOString(),pendingKey:null,previousClosedKey:original.key});s.drafts.put(value);done(value);
       });});
     }));
   }
   /** Bounded immutable links, with rank checked again across the pagination anchor. */
   function closedHistory(input:DraftContext,after?:z.input<typeof closedHistoryCursor>){
-    const c=context(input),cursor=after===undefined?null:closedHistoryCursor.parse(after);if(c.form!=='project'&&c.form!=='message')return invalid();
+    const c=context(input),cursor=after===undefined?null:closedHistoryCursor.parse(after);if(c.form!=='project'&&c.form!=='message'&&c.form!=='task')return invalid();
     return transaction<{items:LocalCommand[];nextCursor:z.output<typeof closedHistoryCursor>|null}>('readonly',(s,done)=>s.get(s.drafts,contextKey(c),raw=>{
       const d=draft(raw,c),items:LocalCommand[]=[];
-      function item(raw:unknown){const v=command(raw);if(contextKey(v.envelope.context)!==contextKey(c)||v.closure?.reason!=='REMOVED_ATTACHMENT')return invalid();return {...v,closure:v.closure};}
+      function item(raw:unknown){const v=command(raw);if(contextKey(v.envelope.context)!==contextKey(c)||v.closure?.reason!=='REMOVED_ATTACHMENT'&&v.closure?.reason!=='STALE_PROJECT_BASIS')return invalid();return {...v,closure:v.closure};}
       function begin(rootKey:string|undefined){
         if(!rootKey){if(cursor)return invalid();done({items,nextCursor:null});return;}
         if(cursor&&cursor.rootKey!==rootKey)throw new WorkbenchLocalError('LOCAL_CONFLICT');
@@ -282,7 +311,7 @@ export async function openWorkbenchLocal(principalId:string){
       }
       if(!d){begin(undefined);return;}
       if(!d.closedKey){begin(d.previousClosedKey);return;}
-      s.get(s.commands,d.closedKey,rawClosed=>{const closed=command(rawClosed);if(contextKey(closed.envelope.context)!==contextKey(c)||!closed.closure)return invalid();begin(closed.closure.reason==='REMOVED_ATTACHMENT'?closed.key:d.previousClosedKey);});
+      s.get(s.commands,d.closedKey,rawClosed=>{const closed=command(rawClosed);if(contextKey(closed.envelope.context)!==contextKey(c)||!closed.closure)return invalid();begin(closed.closure.reason==='REMOVED_ATTACHMENT'||closed.closure.reason==='STALE_PROJECT_BASIS'?closed.key:d.previousClosedKey);});
     }));
   }
   function upload(value:unknown){
@@ -301,7 +330,7 @@ export async function openWorkbenchLocal(principalId:string){
     const step=()=>{if(result.length===keys.length){next(result);return;}s.get(s.uploads,keys[result.length]!,raw=>{result.push(upload(raw));step();});};step();
   }
   function editable(s:Session,c:DraftContext,expectedRevision:number,next:(d:LocalDraft)=>void){
-    if(c.form!=='project'&&c.form!=='message')return invalid();revision.parse(expectedRevision);
+    if(c.form!=='project'&&c.form!=='message'&&c.form!=='task')return invalid();revision.parse(expectedRevision);
     pending(s,c,p=>{if(p)throw new WorkbenchLocalError('COMMAND_PENDING');s.get(s.drafts,contextKey(c),raw=>{
       const d=draft(raw,c);if(!d||d.revision!==expectedRevision)throw new WorkbenchLocalError('LOCAL_CONFLICT');if(d.closedKey)throw new WorkbenchLocalError('COMMAND_CLOSED');if(d.pendingKey)return invalid();next(d);
     });});
@@ -309,7 +338,7 @@ export async function openWorkbenchLocal(principalId:string){
   function withSelection(d:LocalDraft,keys:string[]){return draftRecord.parse({...d,revision:d.revision+1,uploadKeys:keys,updatedAt:new Date().toISOString()});}
   async function checkedUpload(value:LocalUpload){try{return await verifyUploadBytes(value);}catch{return invalid();}}
   async function addUpload(input:DraftContext,expectedRevision:number,file:File){
-    const c=context(input);if(c.form!=='project'&&c.form!=='message')return invalid();
+    const c=context(input);if(c.form!=='project'&&c.form!=='message'&&c.form!=='task')return invalid();
     const value=await prepareUpload(principalId,file);
     return transaction<{draft:LocalDraft;upload:LocalUpload}>('readwrite',(s,done)=>editable(s,c,expectedRevision,d=>{
       if((d.uploadKeys?.length??0)>=3)throw new WorkbenchLocalError('UPLOAD_LIMIT');
@@ -360,5 +389,5 @@ export async function openWorkbenchLocal(principalId:string){
       const value=upload({...old,bytes:null,releasedAt:new Date().toISOString(),revision:old.revision+1});s.uploads.put(value);done(value);
     }));
   }
-  return {load,getPending,references,save,enqueue,getCommand,observe,closeStale,closeRemoved,startBlankInput,closedHistory,addUpload,getUpload,listUploads,loadUploads,selectUpload,unlinkUpload,observeUpload,verifyUpload,releaseUpload,close};
+  return {load,getPending,references,save,enqueue,getCommand,observe,closeStale,closeStaleProject,closeRemoved,startBlankInput,closedHistory,addUpload,getUpload,listUploads,loadUploads,selectUpload,unlinkUpload,observeUpload,verifyUpload,releaseUpload,close};
 }
