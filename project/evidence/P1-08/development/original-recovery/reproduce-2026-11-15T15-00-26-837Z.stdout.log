@@ -1,0 +1,70 @@
+TAP version 13
+# (node:37500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: reproduction: original plan confirmation remains reachable when the plan read is unavailable
+not ok 1 - reproduction: original plan confirmation remains reachable when the plan read is unavailable
+  ---
+  duration_ms: 155773.3135
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p147-reproduction.test.mjs:11:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    expect(locator).toBeVisible() failed
+    
+    Locator: getByRole('button', { name: '核实原计划确认', exact: true })
+    Expected: visible
+    Timeout: 35000ms
+    Error: element(s) not found
+    
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '核实原计划确认', exact: true }) with timeout 35000ms
+      - waiting for getByRole('button', { name: '核实原计划确认', exact: true })
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    captureRawStack (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright-core@1.65.0\node_modules\playwright-core\lib\coreBundle.js:9551:17)
+    callMatcherAsStep (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright@1.65.0\node_modules\playwright\lib\matchers\expect.js:13342:57)
+    Object.toBeVisible (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright@1.65.0\node_modules\playwright\lib\matchers\expect.js:13334:23)
+    TestContext.<anonymous> (D:\yms\AI\DevMesh\.cache\p147-reproduction.test.mjs:13:536)
+  ...
+# Existing exact pending command retained; controlled plan GET failure, zero confirmation business writes.
+# (node:37500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: reproduction: current terminal Run exposes its pending original message without admitting new input
+not ok 2 - reproduction: current terminal Run exposes its pending original message without admitting new input
+  ---
+  duration_ms: 149728.1353
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\.cache\\p147-reproduction.test.mjs:15:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    expect(locator).toBeVisible() failed
+    
+    Locator: getByRole('button', { name: '核实原提交', exact: true })
+    Expected: visible
+    Timeout: 35000ms
+    Error: element(s) not found
+    
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '核实原提交', exact: true }) with timeout 35000ms
+      - waiting for getByRole('button', { name: '核实原提交', exact: true })
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    captureRawStack (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright-core@1.65.0\node_modules\playwright-core\lib\coreBundle.js:9551:17)
+    callMatcherAsStep (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright@1.65.0\node_modules\playwright\lib\matchers\expect.js:13342:57)
+    Object.toBeVisible (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright@1.65.0\node_modules\playwright\lib\matchers\expect.js:13334:23)
+    TestContext.<anonymous> (D:\yms\AI\DevMesh\.cache\p147-reproduction.test.mjs:18:574)
+  ...
+# Explicit seeded terminal state; actual authorized workspace and native stored original; no new message.
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 332528.1797

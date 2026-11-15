@@ -1,0 +1,8 @@
+{
+  "file": "tests/browser/workbench-recovery.test.mjs",
+  "before": "850a14b4bcd0da8b6342e9984c233e4804e3813eaf1b2ad283c9cf105ea3fbae",
+  "after": "006f595591b60d16e60a110a938b369582530b0a08fb35cab110c7af23e29f47",
+  "at": "2026-11-15T15:57:03.712Z",
+  "failureRecord": "browser-2026-11-15T15-34-45-526Z.json",
+  "reason": "Only the new native harness project ID was invalid: project_1 violates the prj_ prefix contract. Replace with prj_1. The failed case stopped at initial getPending validation; no storage assertion or production source was changed. The other 18 cases passed. Rerun the complete affected recovery test file and page HTTP guards; retain this failed aggregate outside final green totals."
+}

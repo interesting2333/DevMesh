@@ -1,0 +1,7 @@
+$ pnpm build:vendor && pnpm --filter @devmesh/contracts --filter @devmesh/storage-sqlite --filter @devmesh/blob-store --filter @devmesh/result-verifier --filter @devmesh/code-workspaces --filter @devmesh/a2a-adapter --filter @devmesh/agent-runtime --filter @devmesh/runner --filter @devmesh/mcp-tools --filter @devmesh/input-api --filter @devmesh/preview-gateway --filter @devmesh/platform-core --filter @devmesh/server --fail-if-no-match -r run build
+$ node scripts/build-vendor.mjs
+
+ WARN  We recommend using the ESM format instead of CommonJS.
+The ESM format is compatible with modern platforms and runtimes, and most new libraries are now distributed only in ESM format.
+Learn more at https://nodejs.org/en/learn/modules/publishing-a-package#how-did-we-get-here
+

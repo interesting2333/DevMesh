@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "39c337154c6a175544361b8f8a9b627c7cfd26b322855d26f871826936464bd3"
+      "sha256": "79ee10d6cb397a9c62389452b02d3e64d32791ec80c1afc11dccc43046dddb17"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "e68f4f4fb04d9fcea21a8f9e643bcd65ed6ad9c9270a68c43921b14dbec71b5f"
+      "sha256": "1db84acd9ce387a79f6c6162fc6f32813fb00d35e7663a17e3db8ddfdbcd4ca3"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "f4480afcac0cba47e9fd038ff9cfe906e6ff597ff0d181ccca74d66885300cb4"
+      "sha256": "8d7e0d5c09ad3fd3e84492babb80260ab97445ff4c393588dae80ed431a8c098"
     }
   ],
   "gates": [
@@ -1696,7 +1696,9 @@
         "tests/browser/workbench-planning.test.mjs",
         "packages/input-api/src/web/workbench-answers.tsx",
         "tests/browser/workbench-answers.test.mjs",
-        "packages/input-api/src/web/workbench-original.tsx"
+        "packages/input-api/src/web/workbench-original.tsx",
+        "packages/input-api/src/web/workbench-recovery.tsx",
+        "tests/browser/workbench-recovery.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-08/local-input-development-review.md",
@@ -1718,7 +1720,11 @@
         "project/evidence/P1-08/original-closure-development-review.md",
         "project/evidence/P1-08/development/original-closure/evidence.json",
         "project/evidence/P1-08/development/original-closure/final-binding.json",
-        "project/evidence/P1-08/development/original-closure/manifest.json"
+        "project/evidence/P1-08/development/original-closure/manifest.json",
+        "project/evidence/P1-08/original-recovery-development-review.md",
+        "project/evidence/P1-08/development/original-recovery/evidence.json",
+        "project/evidence/P1-08/development/original-recovery/final-binding.json",
+        "project/evidence/P1-08/development/original-recovery/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1726,7 +1732,8 @@
         "2026-11-14：P1-08工作台页面增量完成1.3／2.1，implement-workbench-first-path累计4/13，正式状态仍等待前置／G0。新增受保护HTML／React脚本、严格准确上下文、nonce CSP及无副作用GET；新项目／消息先本机事务保存原UUID／正文／条件才POST，丢ACK重进不自动发送，lookup404只允许明确同原信封恢复。X-DevMesh-Principal只约束已有可信身份，账号变化在JSON解析及副作用前403；旧客户端可省略，重复头400。三栏／五页签、原消息事实、双项目草稿／页签恢复、快速切换旧读取取消／代际隔离；手动刷新保留basis／焦点／选择，新basis明确切换，旧正文有界参考且不改未知原提交。存储失败保留内存输入并阻止导航／POST，可重试或明确放弃未保存修改。历史／viewer不挂载命令输入或本机命令连接；撤权／账号变化清除保护UI并使迟到列表失效。真实Edge157／生产页面CSP／原生IndexedDB、实际HTTP／文件Worker及存储模块回归最终HTTP14＋浏览器15＝29项通过，0跳过；IME／重复键、Ctrl+Enter、页签方向键与390px截图已核实，事件期间交互仍待WS。根应用／独立模块构建、类型／Lint／契约通过，OpenAPI60路径，539映射与711输入／产物绑定，最终JS／map前后SHA一致。初次12通过／1失败为只读成员夹具缺created_at，另修复测试未使用变量；原日志／源码保留，未削弱断言。SQL1～45、Runner实现／格式及依赖不变。历史接受事实与IdentityResolver为明确夹具；理解／问题／计划详情、附件／新任务、准确候选交付导航、WS／完整D01／T08、真实OIDC／模型／Linux和正式验收继续。",
         "2026-11-14：P1-08计划与来源开发增量完成2.2，implement-workbench-first-path累计5/13；正式工作包仍等待前置／G0。任务页接入真实理解／问题／计划审阅和DAG／工作／准确来源内部返回栈，保持输入草稿；来源GET限定同Run消息、已保存依据中的准确artifact ID／SHA或准确需求版本，2MiB／严格UTF-8、hash及异步权限复核，纯文本转义、无磁盘路径。读取仅产生已释放READ租约，无业务事实；新增公共CONTENT_CORRUPT／CONTENT_TOO_LARGE错误码。独立plan-confirm原命令先本机事务后POST，绑定Run版本／计划／需求／review／carry hash，刷新无自动确认，丢ACK原键核实；412／lookup404保留原UUID与锁，真实事务abort零POST，恢复后须重新勾选。必要问题无默认回答，viewer无确认或本机命令连接。实际官方A2A准备／PreparationRuntime、HTTP／文件Worker和Edge157／原生IndexedDB最终HTTP18＋浏览器21＝39通过，0跳过；根／独立构建、类型／Lint／契约通过，OpenAPI61路径，541映射／716输入产物及最终浏览器JS／map前后SHA绑定。首轮HTTP14/4、浏览器16/5为跨作业bootstrap引用夹具；第二轮HTTP15/3揭示错误码与READ租约断言，原日志／源码保留。SQL1～45／Runner／依赖不变，模型输出／身份／边界来源为明确夹具；附件／回答／新任务、交付导航、WS和完整T08／D01及真实环境继续。",
         "2026-11-15：P1-08问题回答子链开发增量，implement-workbench-first-path仍5/13，2.3附件／新任务未结束不勾选；正式状态仍等待前置／G0。新增questions-answer独立草稿／严格原信封，绑定主体／项目／Run／Run版本／需求／问题版本及选项，不采用默认答案。原生事务CAS保存，内部返回／页签／项目切换和刷新先排空，失败保留内存答案并阻止离开；双页冲突须明确勾选放弃本页未保存内容才重新读取，不清除未决原提交；先本机日记后POST，原lookup／原信封明确恢复。即使服务端已ANSWERED或新回答入口关闭，仍可核实原提交；旧Run条件／问题依据拒绝及lookup404不换UUID／版本或解锁。成功核实interpretationOperationId，只表示答案已保存；viewer／历史不挂载回答命令。旧草稿可读、项目／消息键不变，其他依据仅明确复制匹配当前问题版本项。实际A2A准备／PreparationRuntime、HTTP／文件Worker、Edge／原生IndexedDB最终http28＋browser29＝57通过、0跳过；初步根构建及最终Input API／独立构建、类型／Lint／契约通过，OpenAPI61路径，542映射／718输入产物和最终浏览器JS／map前后SHA绑定。模型／身份为明确夹具，真实资源、附件／新任务、交付导航、WS及完整T08／首次路径继续；SQL1～45／Runner／依赖不变。",
-        "2026-11-15：P1-08过期Run原提交关闭开发增量，implement-workbench-first-path仍5/13，2.3附件／新任务及缺计划时恢复入口继续；正式状态等待前置／G0。消息／回答／计划确认每次明确勾选后，先准确授权更高Run版本、后原主体／scope／UUID查询，只有includeAbsence=true的受保护200准确返回主体／scope／key及operation:null允许独立STALE_BASIS关闭；已有成功走原回执，未知／网络／权限／同版本404不关闭。原生事务完整观察CAS、准确pending指针／草稿版本，释放锁但保留原信封／旧内容／clientDraftId；closedKey拒绝旧依据原地新提交，不自动复制／换键／POST。实际双页仅一方关闭，事务abort不丢原锁，成功／未知观察不被覆盖；迟到旧POST仍412且无业务输入。实际HTTP29＋浏览器33＝62通过、0跳过；初步根构建保留，修正后最终根／独立模块构建、类型／Lint／契约及测试输入字节一致，543映射／719输入产物与最终浏览器JS／map前后SHA匹配。首轮类型TS18047及准确失败源码保留；修正显式null返回并补充关闭落盘后刷新失败提示。OpenAPI61路径，SQL1～45／Runner／依赖不变；真实资源、WS、完整首次路径和正式验收未执行。"
+        "2026-11-15：P1-08过期Run原提交关闭开发增量，implement-workbench-first-path仍5/13，2.3附件／新任务及缺计划时恢复入口继续；正式状态等待前置／G0。消息／回答／计划确认每次明确勾选后，先准确授权更高Run版本、后原主体／scope／UUID查询，只有includeAbsence=true的受保护200准确返回主体／scope／key及operation:null允许独立STALE_BASIS关闭；已有成功走原回执，未知／网络／权限／同版本404不关闭。原生事务完整观察CAS、准确pending指针／草稿版本，释放锁但保留原信封／旧内容／clientDraftId；closedKey拒绝旧依据原地新提交，不自动复制／换键／POST。实际双页仅一方关闭，事务abort不丢原锁，成功／未知观察不被覆盖；迟到旧POST仍412且无业务输入。实际HTTP29＋浏览器33＝62通过、0跳过；初步根构建保留，修正后最终根／独立模块构建、类型／Lint／契约及测试输入字节一致，543映射／719输入产物与最终浏览器JS／map前后SHA匹配。首轮类型TS18047及准确失败源码保留；修正显式null返回并补充关闭落盘后刷新失败提示。OpenAPI61路径，SQL1～45／Runner／依赖不变；真实资源、WS、完整首次路径和正式验收未执行。",
+        "2026-11-16：P1-08原提交独立恢复入口开发增量，implement-workbench-first-path仍5/13、2.3附件／新任务继续，正式状态等待前置／G0。消息新准入关闭、计划history／不可读、问题依据不可读时，当前非viewer准确Run挂载独立恢复区域，与正常表单互斥；只读pendingForm scope查询核对原信封与草稿pendingKey／revision，不创建新草稿／UUID／命令，不改schema1。仅明确原键核实／同信封重试／顺序证明关闭；成功仅说明原请求，不确认新计划或实施。实际计划不可读／终态消息的两个修复前按钮缺失失败保留原始输出与六份准确输入，字节对应基线d79aae4；首轮组合18通过／1原生夹具项目ID错误，原存储断言尚未执行；仅修正ID后重跑完整受影响恢复文件。最终HTTP3＋浏览器5＝8通过、0跳过，应用源码与产物一致；构建／类型后仅修正独立.mjs测试的请求计数与原生项目ID，最终Lint／契约／测试绑定修改后输入，544源码映射／721输入产物与最终浏览器摘要匹配。实际新需求使旧计划history，原确认仍可关闭且迟到旧POST拒绝；回答丢ACK后问题不可读仍恢复唯一原回执；终态SQL仅状态夹具，不代签CancelRun／物理停止。OpenAPI61路径／控制SQL1～45／Runner／依赖不变；真实资源、WS、完整首次路径和正式验收未执行。"
       ]
     },
     {

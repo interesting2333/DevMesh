@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-16",
+  "base": "d79aae43837bda2515c8b0a492e30a68c810d66f",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "http",
+      "record": "http-2026-11-15T15-58-23-582Z.json",
+      "tests": 3,
+      "pass": 3,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T15-58-23-609Z.json",
+      "tests": 5,
+      "pass": 5,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-15T15-22-18-319Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/workbench-recovery.test.mjs"
+      ],
+      "reviewedTestOnly": {
+        "file": "tests/browser/workbench-recovery.test.mjs",
+        "before": "ef2a689d3a5313ee135b7280e3419dc6b478c5a8eff454f2b0dee99d6c10d033",
+        "after": "006f595591b60d16e60a110a938b369582530b0a08fb35cab110c7af23e29f47",
+        "reviews": [
+          {
+            "file": "tests/browser/workbench-recovery.test.mjs",
+            "before": "ef2a689d3a5313ee135b7280e3419dc6b478c5a8eff454f2b0dee99d6c10d033",
+            "after": "850a14b4bcd0da8b6342e9984c233e4804e3813eaf1b2ad283c9cf105ea3fbae",
+            "at": "2026-11-15T15:33:33.403Z",
+            "reason": "Test-only strengthening: count every answer POST using the page request event, rather than counting only the one-shot ACK-loss interception. No application source, fixture behavior or expected business outcome changed. Root build does not consume this .mjs test; tsconfig includes only tests/**/*.ts. Rerun lint, syntax check and actual final browser/HTTP suites against these exact final test bytes."
+          },
+          {
+            "file": "tests/browser/workbench-recovery.test.mjs",
+            "before": "850a14b4bcd0da8b6342e9984c233e4804e3813eaf1b2ad283c9cf105ea3fbae",
+            "after": "006f595591b60d16e60a110a938b369582530b0a08fb35cab110c7af23e29f47",
+            "at": "2026-11-15T15:57:03.712Z",
+            "failureRecord": "browser-2026-11-15T15-34-45-526Z.json",
+            "reason": "Only the new native harness project ID was invalid: project_1 violates the prj_ prefix contract. Replace with prj_1. The failed case stopped at initial getPending validation; no storage assertion or production source was changed. The other 18 cases passed. Rerun the complete affected recovery test file and page HTTP guards; retain this failed aggregate outside final green totals."
+          }
+        ],
+        "reason": "Two strictly test-only changes after frozen root build/typecheck: count all answer POST requests, then correct one native fixture project ID. Neither .mjs file is consumed by application build or TypeScript compilation. Final independent module/lint/contracts and actual browser/HTTP suites use the final exact test bytes."
+      }
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-15T15-57-17-330Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T15-22-18-756Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/workbench-recovery.test.mjs"
+      ],
+      "reviewedTestOnly": {
+        "file": "tests/browser/workbench-recovery.test.mjs",
+        "before": "ef2a689d3a5313ee135b7280e3419dc6b478c5a8eff454f2b0dee99d6c10d033",
+        "after": "006f595591b60d16e60a110a938b369582530b0a08fb35cab110c7af23e29f47",
+        "reviews": [
+          {
+            "file": "tests/browser/workbench-recovery.test.mjs",
+            "before": "ef2a689d3a5313ee135b7280e3419dc6b478c5a8eff454f2b0dee99d6c10d033",
+            "after": "850a14b4bcd0da8b6342e9984c233e4804e3813eaf1b2ad283c9cf105ea3fbae",
+            "at": "2026-11-15T15:33:33.403Z",
+            "reason": "Test-only strengthening: count every answer POST using the page request event, rather than counting only the one-shot ACK-loss interception. No application source, fixture behavior or expected business outcome changed. Root build does not consume this .mjs test; tsconfig includes only tests/**/*.ts. Rerun lint, syntax check and actual final browser/HTTP suites against these exact final test bytes."
+          },
+          {
+            "file": "tests/browser/workbench-recovery.test.mjs",
+            "before": "850a14b4bcd0da8b6342e9984c233e4804e3813eaf1b2ad283c9cf105ea3fbae",
+            "after": "006f595591b60d16e60a110a938b369582530b0a08fb35cab110c7af23e29f47",
+            "at": "2026-11-15T15:57:03.712Z",
+            "failureRecord": "browser-2026-11-15T15-34-45-526Z.json",
+            "reason": "Only the new native harness project ID was invalid: project_1 violates the prj_ prefix contract. Replace with prj_1. The failed case stopped at initial getPending validation; no storage assertion or production source was changed. The other 18 cases passed. Rerun the complete affected recovery test file and page HTTP guards; retain this failed aggregate outside final green totals."
+          }
+        ],
+        "reason": "Two strictly test-only changes after frozen root build/typecheck: count all answer POST requests, then correct one native fixture project ID. Neither .mjs file is consumed by application build or TypeScript compilation. Final independent module/lint/contracts and actual browser/HTTP suites use the final exact test bytes."
+      }
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T15-57-17-499Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T15-57-17-509Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 8,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "计划GET明确失败时原确认仍可见；普通lookup404保留准确原记录；只有明确同UUID／正文／If-Match重试产生一次确认。",
+    "实际PreparationRuntime／官方A2A从新消息保存第二版需求，旧计划mode=history仍能核实关闭原确认；无新确认按钮、无确认记录，迟到旧POST仍拒绝。",
+    "明确SQL终态夹具仅关闭新消息准入；原消息恢复仍可见，明确顺序证明关闭保留正文／clientDraftId，零新消息与自动POST，viewer无IDB客户端。",
+    "回答实际成功丢ACK，问题依据GET失败后仍可查询原键，保存唯一SUCCEEDED且无closure，不重复提交答案。",
+    "原生IndexedDB scope查询隔离主体／Run／表单，拒绝附加依据和project表单；坏pending指针／草稿revision拒绝，恢复准确原行后读取保持，查询不生成新命令。",
+    "此前组合回归中既有页面／计划14项分别通过；组合共18通过1夹具错误，保留失败汇总，不计入本轮最终绿色通过数。"
+  ],
+  "initialCombinedFailure": {
+    "record": "browser-2026-11-15T15-34-45-526Z.json",
+    "code": 1,
+    "tests": 19,
+    "passed": 18,
+    "failed": 1,
+    "cancelled": 0,
+    "reason": "Invalid native fixture project ID; failed before storage assertions. Corrected ID only, reran entire affected recovery file and page HTTP; no app source or assertions changed.",
+    "snapshot": "test-fixture-original.mjs",
+    "review": "test-fixture-review.json",
+    "excludedFromFinalPassingTotals": true
+  },
+  "preFixReproduction": {
+    "record": "reproduce-2026-11-15T15-00-26-837Z.json",
+    "code": 1,
+    "tests": 2,
+    "failed": 2,
+    "cancelled": 0,
+    "excludedFromFinalPassingTotals": true,
+    "snapshot": "failed-source/manifest.json",
+    "binding": "reproduction-baseline-binding.json"
+  },
+  "reviewedTestOnlyDelta": {
+    "file": "tests/browser/workbench-recovery.test.mjs",
+    "before": "ef2a689d3a5313ee135b7280e3419dc6b478c5a8eff454f2b0dee99d6c10d033",
+    "after": "006f595591b60d16e60a110a938b369582530b0a08fb35cab110c7af23e29f47",
+    "reviews": [
+      {
+        "file": "tests/browser/workbench-recovery.test.mjs",
+        "before": "ef2a689d3a5313ee135b7280e3419dc6b478c5a8eff454f2b0dee99d6c10d033",
+        "after": "850a14b4bcd0da8b6342e9984c233e4804e3813eaf1b2ad283c9cf105ea3fbae",
+        "at": "2026-11-15T15:33:33.403Z",
+        "reason": "Test-only strengthening: count every answer POST using the page request event, rather than counting only the one-shot ACK-loss interception. No application source, fixture behavior or expected business outcome changed. Root build does not consume this .mjs test; tsconfig includes only tests/**/*.ts. Rerun lint, syntax check and actual final browser/HTTP suites against these exact final test bytes."
+      },
+      {
+        "file": "tests/browser/workbench-recovery.test.mjs",
+        "before": "850a14b4bcd0da8b6342e9984c233e4804e3813eaf1b2ad283c9cf105ea3fbae",
+        "after": "006f595591b60d16e60a110a938b369582530b0a08fb35cab110c7af23e29f47",
+        "at": "2026-11-15T15:57:03.712Z",
+        "failureRecord": "browser-2026-11-15T15-34-45-526Z.json",
+        "reason": "Only the new native harness project ID was invalid: project_1 violates the prj_ prefix contract. Replace with prj_1. The failed case stopped at initial getPending validation; no storage assertion or production source was changed. The other 18 cases passed. Rerun the complete affected recovery test file and page HTTP guards; retain this failed aggregate outside final green totals."
+      }
+    ],
+    "reason": "Two strictly test-only changes after frozen root build/typecheck: count all answer POST requests, then correct one native fixture project ID. Neither .mjs file is consumed by application build or TypeScript compilation. Final independent module/lint/contracts and actual browser/HTTP suites use the final exact test bytes."
+  },
+  "inputAssessment": "All compiled application sources match final files byte-for-byte. Root build and typecheck have two explicitly reviewed post-check .mjs test-only corrections (full request counting and a native fixture project ID), excluded from compilation; exact original/final hashes and original test bytes are retained. Final standalone build, lint/contracts and selected HTTP/browser regression inventories match final files with zero changed-during/since inputs. Two actual pre-fix missing-recovery-button failures, their raw logs and exact source snapshot are retained outside final passing totals. Every workspace/module source-map source matches final source bytes; browser JS/map hashes match both test boundaries and final files. SQL1..45, Runner/store, public contracts and dependencies are unchanged.",
+  "scope": "Actual protected React/CSP, Edge native IndexedDB, Input API/file Worker and official A2A PreparationRuntime, with explicit controlled model output and bearer identities. Terminal SQL state is a fixture, not a CancelRun or physical-stop test. Independent original recovery on unreadable/historical planning, unreadable answers and closed message admission, exact retry/lookup/closure and native scope validation, plus existing page/planning regressions. No real model/OIDC/Linux, WebSocket or full product acceptance.",
+  "limits": [
+    "Task2.3 remains incomplete: attachments and new-task entry.",
+    "Terminal SQL seed only; no CancelRun or physical stopping evidence.",
+    "No real model/OIDC/Linux, WebSocket or complete product/gate acceptance.",
+    "Formal P1-08 remains NOT_STARTED pending prerequisites/G0; same-agent review."
+  ],
+  "managementChecks": "management-checks.json"
+}

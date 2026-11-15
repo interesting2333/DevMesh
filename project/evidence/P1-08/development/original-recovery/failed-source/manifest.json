@@ -1,0 +1,30 @@
+{
+  "base": "e00ebb08480421b8aae448232d9c4afc0f4f4cc7",
+  "note": "Reproduced against frozen P146 working inputs before its final test/commit. Both failures are missing original recovery buttons; exact originals remained durable and no business input/confirmation was created.",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "23bdcdca9640e525a9f81d83a302084943cae7c2c7fa7dbd82e68a3f3042f431"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-local.ts",
+      "sha256": "f3b5fc74116d9d2da23d07b2aad9363a6a6b7f16e742f1235d6ddc638d41fb13"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-planning.tsx",
+      "sha256": "8e009e1803007f1892001d73b14ff2a0cbc2037ed47ceb16646f5260afc9a3ce"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-original.tsx",
+      "sha256": "4f4bcdfc0e7f850ab66e145ba1e9fe6dba348cef44b62af387af6d69b86a2fa7"
+    },
+    {
+      "file": "tests/fixtures/workbench-planning.mjs",
+      "sha256": "ea153af4054440ec5c3bd2a8091bc922ab2fc557e47ccb6fbfd89f3960618ded"
+    },
+    {
+      "file": ".cache/p147-reproduction.test.mjs",
+      "sha256": "f9f7de73161087a92316c109eb05131c15c1123adf96da80733a8803da642ffe"
+    }
+  ]
+}

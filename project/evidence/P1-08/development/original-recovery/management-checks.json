@@ -1,0 +1,89 @@
+{
+  "checkedAt": "2026-11-15T16:07:46.699Z",
+  "results": [
+    {
+      "name": "lockfile",
+      "command": "cmd.exe",
+      "args": [
+        "/d",
+        "/s",
+        "/c",
+        "pnpm.cmd install --offline --frozen-lockfile --ignore-scripts"
+      ],
+      "start": "2026-11-15T16:06:39.162Z",
+      "end": "2026-11-15T16:07:02.025Z",
+      "code": 0,
+      "stdout": "Scope: all 19 workspace projects\nAlready up to date\nDone in 9.3s using pnpm v11.28.5\n",
+      "stderr": ""
+    },
+    {
+      "name": "ledger",
+      "command": "node",
+      "args": [
+        "project/manage.mjs",
+        "check"
+      ],
+      "start": "2026-11-15T16:07:02.025Z",
+      "end": "2026-11-15T16:07:03.909Z",
+      "code": 0,
+      "stdout": "台账检查通过：36 个工作包、5 个阶段门槛；依赖无环、来源一致、基线匹配。\n此检查只验证记录结构与引用，不执行产品验收。\n",
+      "stderr": ""
+    },
+    {
+      "name": "design",
+      "command": "node",
+      "args": [
+        "design/生成完整方案.mjs",
+        "--check"
+      ],
+      "start": "2026-11-15T16:07:03.909Z",
+      "end": "2026-11-15T16:07:05.184Z",
+      "code": 0,
+      "stdout": "完整主文与六份专题正文一致。\n",
+      "stderr": ""
+    },
+    {
+      "name": "openspec",
+      "command": "node",
+      "args": [
+        "project/openspec.mjs",
+        "validate",
+        "implement-workbench-first-path",
+        "--strict"
+      ],
+      "start": "2026-11-15T16:07:05.185Z",
+      "end": "2026-11-15T16:07:15.227Z",
+      "code": 0,
+      "stdout": "Change 'implement-workbench-first-path' is valid\n",
+      "stderr": ""
+    },
+    {
+      "name": "diff",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "start": "2026-11-15T16:07:15.227Z",
+      "end": "2026-11-15T16:07:16.661Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "evidence-lint",
+      "command": "cmd.exe",
+      "args": [
+        "/d",
+        "/s",
+        "/c",
+        "pnpm.cmd lint"
+      ],
+      "start": "2026-11-15T16:07:16.661Z",
+      "end": "2026-11-15T16:07:46.698Z",
+      "code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

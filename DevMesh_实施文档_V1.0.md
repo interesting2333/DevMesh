@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 39c337154c6a175544361b8f8a9b627c7cfd26b322855d26f871826936464bd3 |
+| DevMesh_技术设计方案_V1.1.md | 79ee10d6cb397a9c62389452b02d3e64d32791ec80c1afc11dccc43046dddb17 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | e68f4f4fb04d9fcea21a8f9e643bcd65ed6ad9c9270a68c43921b14dbec71b5f |
+| DevMesh_产品验收场景_V10.0.md | 1db84acd9ce387a79f6c6162fc6f32813fb00d35e7663a17e3db8ddfdbcd4ca3 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -647,3 +647,7 @@ implement-workbench-first-path的2.2接入既有understanding／plan review与�
 ### P1-08 原提交关闭实施约束
 
 在2.3输入恢复中补充Run原消息／回答／计划确认的STALE_BASIS明确关闭。先按当前权限读准确更高Run版本，再顺序原键lookup；仅includeAbsence=true的受保护200明确返回准确主体／scope／key及operation:null可关闭；撤权／不可见的404不构成证明，已有／未知操作走观察。IDB同事务CAS核实原观察／未决指针／原草稿版本，独立closure及closedKey保留旧正文与clientDraftId，禁止旧依据原地再次入队；不改原信封、不伪造成功、不自动换键或POST。实际浏览器／API验证顺序、迟到请求、同版本404、双页、成功／未知观察和事务abort；执行证据与正式验收分开。附件／新任务、缺计划时的原确认恢复入口及其他2.3工作仍须继续核实，不因本增量勾选整个任务。
+
+### P1-08 原提交独立恢复实施增量
+
+任务2.3继续：按准确主体／项目／Run／表单复用pendingForm索引，严格核对原命令及草稿指针／版本；当前非viewer在新准入关闭或计划／问题依据不可读时保留只恢复原请求的区域，与正常表单互斥。只读事务无新草稿／UUID；原键核实、准确原信封重试与STALE_BASIS关闭沿用既有服务端授权及版本约束。新增实际浏览器故障／终态夹具／新需求使旧计划历史化／原回答丢ACK及原生scope校验，保留复现失败和修复后证据。附件与新任务仍待继续，2.3不据该子链勾选；正式P1-08状态与G0等前置／门槛独立。

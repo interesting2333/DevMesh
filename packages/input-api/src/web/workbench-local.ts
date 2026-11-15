@@ -34,7 +34,9 @@ export const staleOriginalProof=z.strictObject({reason:z.literal('STALE_BASIS'),
 const commandRecord=z.strictObject({key:z.uuid(),formKey:z.string(),envelope:commandEnvelope,receipt:inputOperation.nullable(),observedAt:timestamp.nullable(),pendingForm:z.string().optional(),closure:staleOriginalProof.optional()});
 export type LocalCommand=z.output<typeof commandRecord>;
 const contextKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form,c.basisRevision,...(c.form==='plan-confirm'?[c.basis.planRevision,c.basis.requirementRevision,c.basis.reviewHash,c.basis.carryForwardHash??null]:c.form==='questions-answer'?[c.basis.requirementRevision,c.basis.questions.map(q=>[q.questionId,q.questionRevision])]:[])]);
-const formKey=(c:DraftContext)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form]);
+const pendingScope=z.strictObject({principalId:opaqueKey,projectId:ids.project,runId:ids.run,form:z.enum(['message','questions-answer','plan-confirm'])});
+type FormScope=Pick<DraftContext,'principalId'|'projectId'|'runId'|'form'>;
+const formKey=(c:FormScope)=>JSON.stringify([c.principalId,c.projectId,c.runId,c.form]);
 export class WorkbenchLocalError extends Error{
   constructor(readonly code:'STORAGE_UNAVAILABLE'|'STORAGE_BLOCKED'|'STORAGE_CLOSED'|'LOCAL_CONFLICT'|'COMMAND_PENDING'|'COMMAND_CLOSED'|'LOCAL_RECORD_INVALID'){super(code);}
 }
@@ -108,7 +110,7 @@ export async function openWorkbenchLocal(principalId:string){
       guard(()=>body(s,value=>{result=value;ready=true;}));
     });
   }
-  function pending(s:Session,c:DraftContext,next:(v:LocalCommand|null)=>void){s.get(s.commands.index('pendingForm'),formKey(c),raw=>{
+  function pending(s:Session,c:FormScope,next:(v:LocalCommand|null)=>void){s.get(s.commands.index('pendingForm'),formKey(c),raw=>{
     if(raw===undefined){next(null);return;}
     const p=command(raw);if(p.pendingForm!==formKey(c)||p.formKey!==formKey(c))invalid();
     s.get(s.drafts,contextKey(p.envelope.context),rawDraft=>{
@@ -118,6 +120,8 @@ export async function openWorkbenchLocal(principalId:string){
   function load(input:DraftContext){const c=context(input);return transaction<{draft:LocalDraft|null;pending:LocalCommand|null}>('readonly',(s,done)=>s.get(s.drafts,contextKey(c),raw=>{
     const d=draft(raw,c);pending(s,c,p=>{if(d?.pendingKey&&p?.key!==d.pendingKey)invalid();done({draft:d,pending:p});});
   }));}
+  /** Recover an existing Run command even when no fresh form basis is readable. */
+  function getPending(input:z.input<typeof pendingScope>){const c=pendingScope.parse(input);if(c.principalId!==principalId)return invalid();return transaction<LocalCommand|null>('readonly',(s,done)=>pending(s,c,done));}
   /** Old basis drafts are references, never silently copied into a new request. */
   function references(input:DraftContext,afterKey?:string){
     const c=context(input),prefix=formKey(c).slice(0,-1)+',';
@@ -192,5 +196,5 @@ export async function openWorkbenchLocal(principalId:string){
       });});
     }));
   }
-  return {load,references,save,enqueue,getCommand,observe,closeStale,close};
+  return {load,getPending,references,save,enqueue,getCommand,observe,closeStale,close};
 }

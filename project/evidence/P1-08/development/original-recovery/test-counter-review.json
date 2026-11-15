@@ -1,0 +1,7 @@
+{
+  "file": "tests/browser/workbench-recovery.test.mjs",
+  "before": "ef2a689d3a5313ee135b7280e3419dc6b478c5a8eff454f2b0dee99d6c10d033",
+  "after": "850a14b4bcd0da8b6342e9984c233e4804e3813eaf1b2ad283c9cf105ea3fbae",
+  "at": "2026-11-15T15:33:33.403Z",
+  "reason": "Test-only strengthening: count every answer POST using the page request event, rather than counting only the one-shot ACK-loss interception. No application source, fixture behavior or expected business outcome changed. Root build does not consume this .mjs test; tsconfig includes only tests/**/*.ts. Rerun lint, syntax check and actual final browser/HTTP suites against these exact final test bytes."
+}

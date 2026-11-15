@@ -56,6 +56,10 @@
 - **WHEN** 当前未查到原操作
 - **THEN** 页面不把缺少记录当作新键许可，不自动更改正文、版本条件或提交身份
 
+#### Scenario: New form is unavailable but its original request remains pending
+- **WHEN** 当前非viewer的准确Run关闭新消息准入，或原确认／回答所需的计划／问题依据成为历史或不可读
+- **THEN** 系统 SHALL 按准确主体／项目／Run／表单显示独立原提交恢复区域，验证原日记与草稿指针，允许显式原键核实／同信封重试／符合条件的明确关闭；该区域不得登记新请求或提供新确认／回答，历史Run和viewer不挂载命令客户端
+
 ### Requirement: Navigation and keyboard preserve user work
 
 系统 SHALL 提供三栏和任务、协作、成果、预览、记录五页签，以及窄屏导航／主区／详情切换；导航和事件更新不得覆盖未提交输入、选择、阅读位置或抢焦点。多行Enter换行，Ctrl／Cmd+Enter可提交，输入法组合和重复键 MUST 不触发发送。
