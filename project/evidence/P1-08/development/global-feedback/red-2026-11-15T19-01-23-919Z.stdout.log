@@ -1,0 +1,41 @@
+TAP version 13
+# (node:16060) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:16060) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unavailable plan retains an independently recoverable original and exact explicit retry confirms only once
+not ok 1 - unavailable plan retains an independently recoverable original and exact explicit retry confirms only once
+  ---
+  duration_ms: 95118.1187
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-recovery.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    expect(locator).toBeVisible() failed
+    
+    Locator: getByRole('status').filter({ hasText: '已核实原请求成功' })
+    Expected: visible
+    Timeout: 35000ms
+    Error: element(s) not found
+    
+    Call log:
+      - Expect "toBeVisible" getByRole('status').filter({ hasText: '已核实原请求成功' }) with timeout 35000ms
+      - waiting for getByRole('status').filter({ hasText: '已核实原请求成功' })
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    captureRawStack (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright-core@1.65.0\node_modules\playwright-core\lib\coreBundle.js:9551:17)
+    callMatcherAsStep (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright@1.65.0\node_modules\playwright\lib\matchers\expect.js:13342:57)
+    Object.toBeVisible (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright@1.65.0\node_modules\playwright\lib\matchers\expect.js:13334:23)
+    TestContext.<anonymous> (D:\yms\AI\DevMesh\tests\browser\workbench-recovery.test.mjs:23:421)
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual React/CSP/native IndexedDB/Input API/file Worker and production A2A PreparationRuntime; controlled model outputs and bearer identities. Explicit terminal SQL seed is a state fixture, not CancelRun execution. No real model/OIDC/Linux, WebSocket or product acceptance."}
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 109447.9054

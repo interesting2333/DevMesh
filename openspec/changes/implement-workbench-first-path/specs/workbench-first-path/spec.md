@@ -120,3 +120,13 @@ The workbench SHALL retain feedback for a locally committed successful original 
 
 - **WHEN** an authorized user explicitly retries an original plan confirmation while the current plan view is unreadable and the actual successful response has been committed locally
 - **THEN** the workbench retains the original success feedback after the actual workspace refresh completes, retains the exact envelope and successful receipt, and creates only one confirmation without starting an implementation attempt
+
+#### Scenario: Saved original result remains visible across mobile panels
+
+- **WHEN** the original successful receipt has been committed and the user switches between project, input and detail panels at a 390px viewport
+- **THEN** exactly one committed-result status remains visible in the shared header, the layout does not overflow horizontally and switching panels does not issue another confirmation POST
+
+#### Scenario: Planning read fails before a plan is available
+
+- **WHEN** reading the current planning projection fails and no readable plan is available
+- **THEN** the page reports the plan as temporarily unreadable and does not assert that no saved plan exists

@@ -1,0 +1,19 @@
+{
+  "base": "aac191b161eaddb4297a4f0df1503624a30c79ba",
+  "at": "2026-11-15T19:00:38.060Z",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "c8ff7268eeb9c9da4eb44734f780b5cb782ba54dcc5cff0a63303276b438fafe"
+    },
+    {
+      "file": "packages/input-api/src/workbench-page.ts",
+      "sha256": "1e51fe30ec153d462b699143f817d28fc0c7324ba8114e20bbf304b5ce130cbb"
+    },
+    {
+      "file": "tests/browser/workbench-recovery.test.mjs",
+      "sha256": "ab661b29f3825653f9f7f11b9af70fab3111cf95e5abc336c8b856d767a47172"
+    }
+  ],
+  "reason": "Desktop original recovery succeeds and commits its receipt, but the parent feedback node is inside the conversation pane. At390px selecting detail hides that node. Stronger same-case checks require one committed result to remain visible across all mobile panes with no extra POST."
+}

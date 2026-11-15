@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-16",
+  "base": "aac191b161eaddb4297a4f0df1503624a30c79ba",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "http",
+      "record": "http-2026-11-15T19-21-03-860Z.json",
+      "tests": 3,
+      "pass": 3,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T19-22-21-755Z.json",
+      "tests": 5,
+      "pass": 5,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-15T19-09-54-761Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-15T19-09-53-994Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T19-09-54-949Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T19-09-54-650Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T19-09-54-274Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 8,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "实际503计划读取显示暂不可读，不能出现尚无已保存计划；原信封、显式核实与原键重试保持。",
+    "真实确认POST后经实际workspace GET闸门等待刷新结束，成功提示、准确原回执／信封仍保留；SQLite仅一次确认／原操作，零实施attempt。",
+    "390×844切项目／输入／详情，唯一结果提示始终可见，无横向溢出且确认POST仍仅一次；保存修复前后截图。",
+    "整份恢复文件5项以及受保护页面／脚本／CSP HTTP文件3项完整串行通过；原终态Run、未知／404、历史／viewer与跨主体恢复隔离断言保持。"
+  ],
+  "retainedFailures": [
+    {
+      "record": "red-2026-11-15T19-01-23-919Z.json",
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "exactSources": "failed-source/manifest.json",
+      "screenshot": "failed-source/feedback-390.png",
+      "excludedFromFinalPassingTotals": true,
+      "reason": "Committed success is visible on desktop after the actual gated workspace refresh, but switching to detail at390px hides the status inside the conversation pane. The exact red test precedes the subsequent explicit unknown-plan wording assertions."
+    }
+  ],
+  "finalScreenshot": "screenshots/feedback-390.png",
+  "inputAssessment": "Every final validation group completed with exit0 and zero changed-during or changed-since inputs. All workspace and standalone source-map contents match final source bytes, and actual browser artifacts match before/after/current hashes. Final HTTP and browser run sequentially after all build/static checks. The separately retained pre-fix red reproduction is excluded from final passing totals. SQL1..45, Runner/store, contracts and dependencies remain unchanged.",
+  "scope": "Actual protected React/CSP/Input API, Edge native IndexedDB, SQLite/file Worker and A2A preparation fixture with explicit model outputs and bearer identities. All five existing recovery cases execute in full; the first additionally checks actual503 unknown-state wording, the gated actual workspace GET, exact committed original receipt, unique SQL confirmation and zero implementation attempts, followed by390px project/input/detail feedback visibility, width and no extra POST. This does not implement attachment controls, permanent removed-attachment closure/new draft, new-task entry, WebSocket, real model/OIDC/Linux or complete product acceptance.",
+  "limits": [
+    "Same Codex Agent development review; formal P1-08 remains NOT_STARTED pending prerequisites/G0.",
+    "OpenSpec remains5/13 and task2.3 unchecked; attachment UI, permanent removed-attachment closure/new draft, new-task entry and later steps remain.",
+    "Model outputs, bearer identities and terminal SQL state are explicit fixtures; this is not real model/OIDC/Linux, CancelRun execution, WebSocket or complete product acceptance.",
+    "Only the affected recovery/browser and protected-page HTTP files were rerun for this presentation change; this is not a rerun of all43 browser cases from the prior increment."
+  ],
+  "managementChecks": "management-checks.json"
+}
