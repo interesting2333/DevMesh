@@ -5,7 +5,10 @@ import {randomUUID} from 'node:crypto';
 import {mkdir} from 'node:fs/promises';
 import {inputFixture} from '../fixtures/input-data.mjs';
 import {requirements,plan,meta} from '../fixtures/storage-data.mjs';
-const {chromium,expect}=createRequire(new URL('../../templates/web-crud-v1/package.json',import.meta.url))('@playwright/test');
+const {chromium,expect:baseExpect}=createRequire(new URL('../../templates/web-crud-v1/package.json',import.meta.url))('@playwright/test');
+// Snapshot then planning each use a bounded 15s request; keep assertions within
+// the combined request/render budget instead of the default 5s.
+const expect=baseExpect.configure({timeout:35_000});
 
 async function harness(t,options={}){
  let principal='user_1';const api=await inputFixture(t,{identityResolver:()=>({principalId:principal}),...options}),browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHROMIUM_CHANNEL??'msedge',headless:true}),context=await browser.newContext(),errors=[],csp=[];
@@ -21,9 +24,9 @@ async function journal(page){return page.evaluate(()=>new Promise((resolve,rejec
 const scope=p=>`?projectId=${p.projectId}&runId=${p.runId}`;
 
 test('actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project',{timeout:120000},async t=>{
- const h=await harness(t),page=await h.open();await expect(projectInput(page)).toBeEnabled();await page.getByLabel('项目名称（可选）').fill('真实工作台项目');await projectInput(page).fill('建立任务看板\n保留原始正文 🧪');await saved(page);let posts=0,original;
- await page.route('**/api/v1/projects',async route=>{if(route.request().method()!=='POST')return route.continue();posts++;const state=await journal(page);assert.equal(state.commands.length,1);original=state.commands[0].envelope;assert.equal(state.drafts[0].pendingKey,original.key);assert.equal(route.request().headers()['idempotency-key'],original.key);assert.equal(route.request().headers()['x-devmesh-principal'],'user_1');assert.deepEqual(route.request().postDataJSON(),original.body);assert.equal((await route.fetch()).status(),201);await route.abort('failed');},{times:1});
- await page.getByRole('button',{name:'创建项目并保存需求',exact:true}).click();await expect(page.getByRole('alert')).toContainText('原请求已保留');assert.equal(h.api.sql('SELECT count(*) n FROM projects')[0].n,1);
+ const h=await harness(t),page=await h.open();await expect(projectInput(page)).toBeEnabled();await page.getByLabel('项目名称（可选）').fill('真实工作台项目');await projectInput(page).fill('建立任务看板\n保留原始正文 🧪');await saved(page);let posts=0,original,notifyAbort;const aborted=new Promise(resolve=>{notifyAbort=resolve;});
+ await page.route('**/api/v1/projects',async route=>{if(route.request().method()!=='POST')return route.continue();posts++;const state=await journal(page);assert.equal(state.commands.length,1);original=state.commands[0].envelope;assert.equal(state.drafts[0].pendingKey,original.key);assert.equal(route.request().headers()['idempotency-key'],original.key);assert.equal(route.request().headers()['x-devmesh-principal'],'user_1');assert.deepEqual(route.request().postDataJSON(),original.body);assert.equal((await route.fetch()).status(),201);await route.abort('failed');notifyAbort();},{times:1});
+ await page.getByRole('button',{name:'创建项目并保存需求',exact:true}).click();await aborted;await expect(page.getByRole('alert')).toContainText('原请求已保留');assert.equal(h.api.sql('SELECT count(*) n FROM projects')[0].n,1);
  await page.reload();await expect(page.getByRole('button',{name:'核实原提交',exact:true})).toBeVisible();assert.equal(posts,1);await expect(projectInput(page)).toBeDisabled();assert.deepEqual((await journal(page)).commands[0].envelope,original);
  await page.getByRole('button',{name:'核实原提交',exact:true}).click();await expect(input(page)).toBeEnabled();await expect(page.getByRole('heading',{name:'真实工作台项目',exact:true})).toBeVisible();await expect(page.getByRole('region',{name:'已提交输入'})).toContainText(original.body.initialRequest.text);assert.equal(h.api.sql('SELECT count(*) n FROM input_messages')[0].n,1);const record=(await journal(page)).commands[0];assert.equal(record.receipt.status,'SUCCEEDED');assert.deepEqual(record.envelope,original);
 });

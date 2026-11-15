@@ -83,3 +83,7 @@
 #### Scenario: Plan review has changed or its reply is lost
 - **WHEN** 用户明确确认已审阅计划后发生版本冲突或丢失回执
 - **THEN** 原确认UUID、版本、审阅hash与继承依据被持久保留；重进不自动确认或替换原键，核实成功只表示原计划已确认，不表示实施或发布完成
+
+#### Scenario: Question answer is stale or its acknowledgement is lost
+- **WHEN** 用户填写准确版本的问题回答后刷新、遭遇条件冲突或丢失回执
+- **THEN** 系统保留原答案／问题版本与Run条件，不自动采用默认选项或发送；先持久后提交，原键核实可恢复已回答问题的唯一提交，切换失败时保留本页未保存答案

@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-15T13:04:21.608Z",
+  "files": [
+    {
+      "file": "tests/browser/workbench-answers.test.mjs",
+      "before": "fc4609473b7a87f579babf9baf1442cd3a349f9d087b69bb253daa6606a7d762",
+      "after": "b1ff99d1c742ca2d9b46b3ec026eb0ec745cb27da0f5aa29824dc9bf3ce83668",
+      "change": "Only expect import alias and bounded 35s assertion wait budget; assertions and product request deadlines unchanged"
+    },
+    {
+      "file": "tests/browser/workbench-page.test.mjs",
+      "before": "5cd176c7f099c77b3e69c6c5799d0432483bbcceb1c48ca87fcf4064404217ed",
+      "after": "5b1b19b69903769d5fb66d121ca92c6c218a311700a2f20c41a86eb25275025f",
+      "change": "Only expect import alias and bounded 35s assertion wait budget; assertions and product request deadlines unchanged"
+    },
+    {
+      "file": "tests/browser/workbench-planning.test.mjs",
+      "before": "d9b63e929bf4ada870e7ef69f691d25c24381007f3c82c0bf5885688ed588729",
+      "after": "de268fac3acd7a811a2282cd3d9cc0e776fb0aff9024ef529d9eaaab68ecdd8e",
+      "change": "Only expect import alias and bounded 35s assertion wait budget; assertions and product request deadlines unchanged"
+    }
+  ]
+}

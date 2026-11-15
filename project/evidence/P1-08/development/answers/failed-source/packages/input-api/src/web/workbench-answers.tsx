@@ -1,0 +1,49 @@
+import {useEffect,useRef,useState} from 'react';
+import type {MutableRefObject} from 'react';
+import {z} from 'zod';
+import {understandingView,workspaceView,answerQuestionsInput} from '@devmesh/contracts';
+import {openWorkbenchLocal} from './workbench-local.js';
+import type {DraftContext,LocalCommand,LocalDraft} from './workbench-local.js';
+import type {WorkbenchRead,WorkbenchCommand} from './workbench-api.js';
+import {WorkbenchApiError} from './workbench-api.js';
+
+type Understanding=z.output<typeof understandingView>;
+type Workspace=z.output<typeof workspaceView>;
+type Answers=z.output<typeof answerQuestionsInput>['answers'];
+type Store=Awaited<ReturnType<typeof openWorkbenchLocal>>;
+export function WorkbenchAnswers({principalId,workspace,understanding,read,write,guard,before,onChanged}:{
+ principalId:string;workspace:Workspace;understanding:Understanding;read:WorkbenchRead;write:WorkbenchCommand;
+ guard:MutableRefObject<()=>Promise<boolean>>;before:()=>Promise<boolean>;onChanged:()=>Promise<void>;
+}){
+ const questions=understanding.questions.filter(q=>q.state!=='SUPERSEDED');
+ const context:Extract<DraftContext,{form:'questions-answer'}>={principalId,form:'questions-answer',projectId:workspace.project.projectId,runId:workspace.run.runId,basisRevision:workspace.run.resourceRevision,basis:{requirementRevision:understanding.requirementRevision!,questions:questions.map(q=>({questionId:q.questionId,questionRevision:q.questionRevision,optionIds:q.content.options.map(o=>o.id)}))}};
+ const [answers,setAnswers]=useState<Answers>([]),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[pending,setPending]=useState<LocalCommand|null>(null),[status,setStatus]=useState('正在读取本机回答…'),[problem,setProblem]=useState(''),[refs,setRefs]=useState<{items:LocalDraft[];nextCursor:string|null}>({items:[],nextCursor:null});
+ const store=useRef<Store|null>(null),latest=useRef<Answers>([]),revision=useRef(0),dirty=useRef(false),serial=useRef(0),failed=useRef(false),pumping=useRef(false),queue=useRef(Promise.resolve()),working=useRef(false),original=useRef<LocalCommand|null>(null),disposed=useRef(false);
+ function localFailure(){failed.current=true;if(disposed.current)return;setProblem('本页回答尚未保存，可能与另一页冲突。回答仍保留，请重试本机保存；离开前须成功保存。');setStatus('回答尚未保存在本机');}
+ function hydrate(value:Awaited<ReturnType<Store['load']>>){const a=value.draft?.answers??[];latest.current=a;setAnswers(a);revision.current=value.draft?.revision??0;dirty.current=false;failed.current=false;original.current=value.pending;setPending(value.pending);setProblem('');setStatus(value.pending?'原回答提交结果待核实':value.draft?'回答草稿已保存在本机':'尚未填写回答');}
+ async function initialize(preserve=false){
+  await queue.current;const local=await openWorkbenchLocal(principalId);if(disposed.current){local.close();return;}
+  try{const value=await local.load(context);if(disposed.current){local.close();return;}store.current?.close();store.current=local;
+   if(preserve&&dirty.current){if(value.pending||value.draft?.revision!==revision.current&&!(value.draft===null&&revision.current===0))throw Error('Local conflict');failed.current=false;setProblem('');schedule();await queue.current;}else hydrate(value);
+   const references=await local.references(context);if(!disposed.current)setRefs(references);
+  }catch(e){if(store.current!==local)local.close();throw e;}
+ }
+ function schedule(){if(pumping.current||failed.current||original.current||!store.current)return;pumping.current=true;queue.current=(async()=>{while(dirty.current&&!failed.current&&!original.current&&!disposed.current){const at=serial.current,values=structuredClone(latest.current);try{const saved=await store.current!.save(context,revision.current,{text:'',name:'',answers:values});revision.current=saved.revision;if(at===serial.current)dirty.current=false;if(!disposed.current)setStatus(dirty.current?'正在保存回答…':'回答草稿已保存在本机');}catch{localFailure();}}})().finally(()=>{pumping.current=false;});}
+ function edit(questionId:Answers[number]['questionId'],questionRevision:number,value:string){const a=latest.current.filter(a=>a.questionId!==questionId);if(value!=='')a.push({questionId,questionRevision,value});a.sort((a,b)=>a.questionId.localeCompare(b.questionId));latest.current=a;dirty.current=true;serial.current++;setAnswers(a);setStatus('正在保存回答…');schedule();}
+ async function flush(){await queue.current;if(dirty.current&&!failed.current){schedule();await queue.current;}return !dirty.current&&!failed.current;}
+ useEffect(()=>{disposed.current=false;guard.current=async()=>!working.current&&await flush();const unload=(e:BeforeUnloadEvent)=>{if(dirty.current){e.preventDefault();e.returnValue='';}};window.addEventListener('beforeunload',unload);void initialize().catch(localFailure).finally(()=>{if(!disposed.current)setReady(true);});return()=>{disposed.current=true;guard.current=async()=>true;window.removeEventListener('beforeunload',unload);void queue.current.finally(()=>store.current?.close());};},[]);
+ async function exclusive(work:()=>Promise<void>){if(working.current||disposed.current)return;working.current=true;setBusy(true);try{await work();}catch(e){if(!disposed.current){if(!original.current){setProblem('回答尚未提交。请核对内容，或重新读取本机记录后再试。');}else setProblem(e instanceof WorkbenchApiError&&[409,412,422,428].includes(e.status)?'原回答的问题版本或执行条件已变化，原记录仍保留。请先核实原提交。':'回答提交结果尚未核实，原请求已保留。');}}finally{working.current=false;if(!disposed.current)setBusy(false);}}
+ async function observe(command:LocalCommand,value:unknown){const observed=await store.current!.observe(command.key,value as Parameters<Store['observe']>[1]);if(disposed.current)return;if(observed.receipt?.status!=='SUCCEEDED'){original.current=observed;setPending(observed);setProblem('原回答仍待核实，请保留原记录。');return;}hydrate(await store.current!.load(context));setStatus('回答已保存；后续理解结果另行更新。');working.current=false;await onChanged();}
+ async function send(command:LocalCommand){const e=command.envelope;if(e.kind!=='questions-answer')throw Error('Wrong answer command');await observe(command,await write(e.path,{method:'POST',headers:{'content-type':'application/json','idempotency-key':e.key,'if-match':e.ifMatch},body:JSON.stringify(e.body)}));}
+ function submit(){if(!ready||original.current||failed.current||!workspace.allowedActions.includes('answerQuestions'))return;void exclusive(async()=>{if(!await flush()||!await before())return;answerQuestionsInput.parse({answers:latest.current});const q=await store.current!.enqueue(context,revision.current);revision.current=q.draft.revision;original.current=q.command;setPending(q.command);setProblem('');setStatus('原回答已保存在本机，正在提交…');await send(q.command);});}
+ const disabled=!ready||busy||pending!==null||!workspace.allowedActions.includes('answerQuestions');
+ return <section className="card" aria-label="问题回答"><h3>填写问题回答</h3><p className="muted">需求版本 {context.basis.requirementRevision} · 执行依据 {context.basisRevision}。仅提交本次明确填写的回答，未填写项继续等待。</p>
+  <p role="status">{status}</p>{problem&&<p role="alert" className="notice">{problem}</p>}
+  {pending?<section aria-label="待核实原回答"><p>刷新不会自动提交。即使问题已显示已回答，也请核实原请求。</p><div className="actions"><button disabled={busy} onClick={()=>void exclusive(async()=>{const p=original.current!;try{await observe(p,await read('/api/v1/operations/lookup?scope='+encodeURIComponent(p.envelope.scope)+'&key='+p.key));}catch(e){if(e instanceof WorkbenchApiError&&e.status===404){setProblem('当前未查到原回答，请保留原记录；可明确继续同一原请求。');return;}throw e;}})}>核实原回答提交</button><button disabled={busy} onClick={()=>void exclusive(()=>send(pending))}>使用原请求继续提交回答</button></div><details><summary>原回答内容与问题版本</summary><pre className="source-text">{pending.envelope.kind==='questions-answer'?JSON.stringify(pending.envelope.body,null,2):'原记录类型不匹配'}</pre></details></section>:<form onSubmit={e=>{e.preventDefault();submit();}}>
+   {questions.filter(q=>q.state==='OPEN').map(q=>{const value=answers.find(a=>a.questionId===q.questionId)?.value;return <fieldset key={q.questionId} disabled={disabled}><legend>{q.content.prompt}（{q.content.required?'必要':'可选'} · 问题版本 {q.questionRevision}）</legend>{q.content.options.length?<>{q.content.options.map(o=><label key={o.id}><input type="radio" name={q.questionId} value={o.id} checked={value===o.id} onChange={()=>edit(q.questionId,q.questionRevision,o.id)}/>{o.label}</label>)}<button type="button" onClick={()=>edit(q.questionId,q.questionRevision,'')}>清除此问题的本次选择</button></>:<textarea aria-label={q.content.prompt} value={typeof value==='string'?value:''} maxLength={40000} onChange={e=>edit(q.questionId,q.questionRevision,e.target.value)}/>}</fieldset>;})}
+   {!questions.some(q=>q.state==='OPEN')&&<p>当前没有待回答的问题。</p>}<button className="primary" disabled={disabled||failed.current||!answers.length}>保存本次回答</button>
+  </form>}
+  {problem&&!pending&&<button disabled={busy} onClick={()=>void exclusive(async()=>{try{await initialize(true);}catch{localFailure();}})}>重试本机回答保存</button>}
+  {!!refs.items.length&&!pending&&<details><summary>其他依据的回答草稿</summary><p>旧问题或旧选项不自动采用；只可明确复制仍匹配当前问题版本的内容，再审阅提交。</p>{refs.items.map(d=><article key={d.key}><pre className="source-text">{JSON.stringify(d.answers??[],null,2)}</pre><button disabled={disabled||failed.current||dirty.current} onClick={()=>{for(const a of d.answers??[]){const q=questions.find(q=>q.questionId===a.questionId&&q.questionRevision===a.questionRevision&&q.state==='OPEN');if(q&&typeof a.value==='string'&&(!q.content.options.length||q.content.options.some(o=>o.id===a.value)))edit(a.questionId,a.questionRevision,a.value);}}}>复制匹配当前问题版本的回答</button></article>)}{refs.nextCursor&&<button disabled={busy} onClick={()=>void exclusive(async()=>{const more=await store.current!.references(context,refs.nextCursor!);setRefs({items:[...refs.items,...more.items],nextCursor:more.nextCursor});})}>读取更多旧回答草稿</button>}</details>}
+ </section>;
+}

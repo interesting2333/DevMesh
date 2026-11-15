@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | 7baeba3d04373ac26f7c11f85f438f65bde1706f4b6b294f2d1bb2cb41ce97af |
+| DevMesh_技术设计方案_V1.1.md | 01c5144510175123f1afbdd26dae13f10cb35bdeaeea7c6ac332709e0e035e02 |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | dcf7c1767aff09229f5b24895c57a6d5fcbcc13b9c00dfab10ba3c431ed3892c |
+| DevMesh_产品验收场景_V10.0.md | 841ab29fcfc19e530e9ea6f5d799dcff075318a8d6125e4f907e82e112777377 |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -637,3 +637,9 @@ implement-workbench-first-path的2.2接入既有understanding／plan review与�
 扩展现有IndexedDB严格日记支持独立plan-confirm表单，保持schema1和原项目／消息键兼容；绑定完整审阅依据，先本机事务后发送，重进不自动确认，原键恢复及条件拒绝保留。准确成功回执不改其他表单草稿。使用实际A2A／PreparationRuntime和受控模型输出建立计划，Edge／HTTP／文件Worker验证来源导航、丢ACK、旧依据、必要问题、viewer及真实事务abort，保留初次失败与修复来源。
 
 本增量不新增依赖或控制／Runner迁移，正式P1-08仍等待前置／G0；开发步骤、同一Agent复核、正式门槛与产品验收分别记录。附件／问题回答／新任务、准确交付入口、WS和完整产品路径继续，真实模型／身份／Linux仍依用户要求留空。
+
+### P1-08问题回答子链
+
+2.3继续实施questions-answer独立本机表单与严格原信封，绑定准确Run／需求／问题版本及选项；不默认采用答案。事务CAS保存、导航排空和保留内存失败处理与已有输入保持一致，恢复已回答问题的原请求不依赖当前OPEN数量。旧schema1记录保持可读，不改控制SQL、Runner、依赖或既有API。
+
+实际浏览器／HTTP／文件Worker与官方A2A准备路径验证草稿、默认选择、丢ACK、条件冲突和原生事务abort，并执行既有preparation版本／部分回答／崩溃恢复回归。子链开发复核和完整2.3分别登记；附件与新任务尚未结束，2.3保持未勾选，正式P1-08和门槛等待条件不变。

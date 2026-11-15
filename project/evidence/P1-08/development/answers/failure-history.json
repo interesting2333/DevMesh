@@ -1,0 +1,31 @@
+{
+  "directTypecheck": "Before recorded builds, a direct pnpm typecheck exited2 on an unbranded string questionId in the new edit handler. It was corrected to the contract-branded answer question ID type. That direct command was not captured by the raw driver; no raw log has been fabricated.",
+  "runs": [
+    {
+      "record": "browser-2026-11-15T12-16-47-535Z.json",
+      "code": 1,
+      "excludedFromFinalTotals": true
+    },
+    {
+      "record": "browser-2026-11-15T12-45-46-744Z.json",
+      "code": 1,
+      "excludedFromFinalTotals": true
+    },
+    {
+      "record": "http-2026-11-15T12-16-47-471Z.json",
+      "code": 1,
+      "excludedFromFinalTotals": true
+    },
+    {
+      "record": "type-2026-11-15T12-16-47-414Z.json",
+      "code": 2,
+      "excludedFromFinalTotals": true
+    }
+  ],
+  "notes": [
+    "A subsequent browser run hit the original 5-second open-view assertion while two sequential production reads each have 15-second deadlines. The three browser suites now use a bounded 35-second assertion budget; all assertions and product deadlines are unchanged. Exact before/after test hashes and preserved tests are retained. HTTP/compiler/build inputs were unchanged, so their passing checks are reused with explicit test-only changed-since inventories; lint and browser tests run afterward.",
+    "The first browser run was deliberately cancelled after a failed 5-second ACK-loss alert assertion, with 18 completed case reports and no final TAP aggregate. Its driver actually exited1 with unchanged inputs. That partial run is diagnostic history, excluded from final totals. The final entry test awaits the real 201 response and intentional route abort before asserting the retained original; the assertion is unchanged.",
+    "The first recorded typecheck exited2 with TS18048 on optional answer-array narrowing; exact source and raw output retained.",
+    "First HTTP run:26/28 passed; ENDPOINT_UNAVAILABLE in the pause semantic test and fetch failure during another fixture creation. No test assertion or production TTL/admission rule was weakened. Semantic preparation dispatch now performs actual card health checks on demand, and planning fixture logs nested fetch causes; final runs remain authoritative."
+  ]
+}

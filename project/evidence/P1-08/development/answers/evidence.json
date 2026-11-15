@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-15",
+  "base": "32dbddc60d51f3a678b192a7a18558a4e2ef36f2",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "http",
+      "record": "http-2026-11-15T12-45-47-624Z.json",
+      "tests": 28,
+      "pass": 28,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/workbench-answers.test.mjs",
+        "tests/browser/workbench-page.test.mjs",
+        "tests/browser/workbench-planning.test.mjs"
+      ]
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T13-04-25-817Z.json",
+      "tests": 29,
+      "pass": 29,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/workbench-answers.test.mjs"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "name": "webbuild",
+      "record": "webbuild-2026-11-15T12-43-20-172Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/workbench-answers.test.mjs",
+        "tests/browser/workbench-page.test.mjs",
+        "tests/browser/workbench-planning.test.mjs"
+      ]
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-15T12-43-20-696Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/workbench-answers.test.mjs",
+        "tests/browser/workbench-page.test.mjs",
+        "tests/browser/workbench-planning.test.mjs"
+      ]
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T12-43-19-979Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/workbench-answers.test.mjs",
+        "tests/browser/workbench-page.test.mjs",
+        "tests/browser/workbench-planning.test.mjs"
+      ]
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T13-41-40-689Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T12-43-20-319Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/workbench-answers.test.mjs",
+        "tests/browser/workbench-page.test.mjs",
+        "tests/browser/workbench-planning.test.mjs"
+      ]
+    }
+  ],
+  "totalPassed": 57,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "实际浏览器验证默认不选；准确需求／问题版本的草稿在刷新和页签切换后恢复，浏览不产生回答操作。",
+    "POST前已完成本机日记事务；服务器提交后丢回执，重进不自动发送，已回答问题仍可通过原键核实，回答操作与干预计数均仅一次。",
+    "Run条件变化拒绝旧回答；lookup404仍保留原UUID、正文、问题版本、If-Match和表单锁。",
+    "原生草稿事务中止时保留本页选择，内部返回、页签和项目切换均被阻止，直到本机保存重试成功。",
+    "两个实际浏览器页发生CAS冲突时保留失败页答案；重新明确勾选放弃后读取已保存草稿，不产生服务器POST。",
+    "原生回答日记拒绝错误问题／版本／选项及不匹配回执，跨依据锁保持，成功后只清空对应表单草稿。",
+    "原生日记入队事务中止时原命令和POST均为零，已存答案保留；明确重试后只产生一次真实服务器回答。",
+    "只读成员可查看问题，但没有回答表单或IndexedDB命令连接。",
+    "既有官方A2A准备回归验证严格schema、部分回答、旧问题409／Run412、原键重放、冻结答案的解释重试、权限和实际Worker进程崩溃恢复。",
+    "最终代码通过既有计划／来源、受保护页面、本机存储、上下文、输入法和键盘回归；390px回答截图已检查。"
+  ],
+  "failureHistory": {
+    "directTypecheck": "Before recorded builds, a direct pnpm typecheck exited2 on an unbranded string questionId in the new edit handler. It was corrected to the contract-branded answer question ID type. That direct command was not captured by the raw driver; no raw log has been fabricated.",
+    "runs": [
+      {
+        "record": "browser-2026-11-15T12-16-47-535Z.json",
+        "code": 1,
+        "excludedFromFinalTotals": true
+      },
+      {
+        "record": "browser-2026-11-15T12-45-46-744Z.json",
+        "code": 1,
+        "excludedFromFinalTotals": true
+      },
+      {
+        "record": "http-2026-11-15T12-16-47-471Z.json",
+        "code": 1,
+        "excludedFromFinalTotals": true
+      },
+      {
+        "record": "type-2026-11-15T12-16-47-414Z.json",
+        "code": 2,
+        "excludedFromFinalTotals": true
+      }
+    ],
+    "notes": [
+      "A subsequent browser run hit the original 5-second open-view assertion while two sequential production reads each have 15-second deadlines. The three browser suites now use a bounded 35-second assertion budget; all assertions and product deadlines are unchanged. Exact before/after test hashes and preserved tests are retained. HTTP/compiler/build inputs were unchanged, so their passing checks are reused with explicit test-only changed-since inventories; lint and browser tests run afterward.",
+      "The first browser run was deliberately cancelled after a failed 5-second ACK-loss alert assertion, with 18 completed case reports and no final TAP aggregate. Its driver actually exited1 with unchanged inputs. That partial run is diagnostic history, excluded from final totals. The final entry test awaits the real 201 response and intentional route abort before asserting the retained original; the assertion is unchanged.",
+      "The first recorded typecheck exited2 with TS18048 on optional answer-array narrowing; exact source and raw output retained.",
+      "First HTTP run:26/28 passed; ENDPOINT_UNAVAILABLE in the pause semantic test and fetch failure during another fixture creation. No test assertion or production TTL/admission rule was weakened. Semantic preparation dispatch now performs actual card health checks on demand, and planning fixture logs nested fetch causes; final runs remain authoritative."
+    ]
+  },
+  "preliminaryBuild": {
+    "name": "build",
+    "record": "build-2026-11-15T12-05-27-162Z.json",
+    "changedDuringRun": [],
+    "changedSinceRun": [
+      "packages/input-api/src/web/workbench-answers.tsx",
+      "packages/input-api/src/web/workbench-local.ts",
+      "tests/browser/workbench-answers.test.mjs",
+      "tests/browser/workbench-local.test.mjs",
+      "tests/browser/workbench-page.test.mjs",
+      "tests/browser/workbench-planning.test.mjs",
+      "tests/fixtures/workbench-planning.mjs",
+      "tests/preparation.test.mjs"
+    ]
+  },
+  "inputAssessment": "The successful root application build is preliminary, with its exact changed-since inventory retained and constrained to reviewed browser source/test and fixture changes. The final input-api package (server and protected browser assets) and standalone module were rebuilt before final tests. Final browser inventory differs only by a separately retained, exact one-LF normalization after the test program; executable bytes and assertions are unchanged. Lint is rerun after normalization. HTTP, compiler, contracts and final builds preceded a documented assertion-wait-only edit in three browser .mjs tests outside their executed inputs; their exact changed-since lists are retained. Runtime source/bytes, executed HTTP tests and compiler inputs did not change. Browser JS and map hashes are recorded before/after the final test and match the final files. All workspace and standalone module source-map source bytes match files. Control SQL1..45, Runner/store and dependencies are unchanged. Earlier failed and pre-hardening runs are diagnostic history excluded from final totals.",
+  "scope": "Actual protected React planning page, Edge 157 native IndexedDB, Input API/file Worker and official A2A preparation with production PreparationRuntime. Controlled model output, browser bearer identity and binary/large bootstrap sources are explicit fixtures. Verifies exact sourced understanding/plan, bounded source resolution, question answer drafts and exact versioned journal/CAS/ACK-loss recovery, guarded internal navigation and unchanged input regressions. No real model, OIDC, Linux Runner, WebSocket or full product acceptance.",
+  "retainedBuilds": {
+    "machineLocalOnly": true,
+    "hashes": {
+      ".cache/workbench-local-build/local.js": "00c64c737fcda47527601eaa53960431d080f292bf5fc4644b447ca67e41d84f",
+      ".cache/workbench-local-build/local.js.map": "2c4e3335e0b8d1e7e00b9c7d3689f19c1cf8c75fc2879a1bef28faa78554d2a1",
+      "packages/input-api/dist/web/workbench/workbench-client.js": "fe395bef94ac28c9b362f985b85c339bf0d2d250a659a0bbe9ea37026609b35f",
+      "packages/input-api/dist/web/workbench/workbench-client.js.map": "7aa44aeee63779990467abad52dd32060dd90d675f9294f9ec81803aabd6d552"
+    }
+  },
+  "limits": [
+    "Task2.3 remains incomplete: attachments and new-task entry still outstanding.",
+    "No WebSocket, exact candidate delivery navigation, full product/T08, real model/OIDC/Linux acceptance.",
+    "Formal P1-08 remains NOT_STARTED pending predecessors/G0; this is same-agent development review.",
+    "Definitively rejected original commands remain locked; explicit verified close/re-entry remains outstanding."
+  ],
+  "managementChecks": "management-checks.json",
+  "eofNormalization": "eof-normalization.json"
+}

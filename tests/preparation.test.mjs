@@ -48,7 +48,8 @@ async function fixture(t){
   const dispatch=async(purpose)=>{
     const jobs=await f.storage.request('listPreparationJobs',{});
     const job=jobs.find(j=>j.runId===data.runId&&j.purpose===purpose);assert.ok(job,JSON.stringify(jobs));
-    const task=await runtime.dispatch(job,signal);
+    await f.registry.checkHealth(f.manifest,credential);
+    let task;try{task=await runtime.dispatch(job,signal);}catch(error){t.diagnostic(JSON.stringify({purpose,registry:await f.storage.request('getRegistrySnapshot',{})}));throw error;}
     assert.ok(task,JSON.stringify(sql('SELECT * FROM preparation_attempts')));
     return {job,task};
   };
