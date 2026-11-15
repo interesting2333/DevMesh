@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-16",
+  "base": "9020d7119424c48803dbfb4665cacdab50b6c83a",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "chooser",
+      "record": "chooser-2026-11-15T21-10-49-182Z.json",
+      "tests": 6,
+      "pass": 6,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "http",
+      "record": "http-2026-11-15T21-18-18-408Z.json",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T21-25-24-340Z.json",
+      "tests": 20,
+      "pass": 20,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-15T21-05-54-440Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "localbuild",
+      "record": "localbuild-2026-11-15T21-05-53-578Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T21-05-53-585Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T21-05-53-746Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T21-05-54-008Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": []
+    }
+  ],
+  "totalPassed": 41,
+  "totalSkipped": 0,
+  "actualChecks": [
+    "真实选择文件及准确字节／hash／选择同事务、主原信封先落盘；上传丢ACK刷新零POST、原键查询恢复唯一文件、仅附件项目与正文加附件消息。",
+    "严格上传201与回执schema、查询及元数据200；错误映射／201读取／404／503／实际REMOVED阻止主命令，保留所选文件和正文。",
+    "真实校验失败及原生uploads.add后事务abort保留File，明确中止标记／全回滚／零HTTP；导航被阻止，恢复后明确重试准确保存。双页同revision竞争只有一个胜出，败方保留File直至明确重新读取并重试。",
+    "本机库按需读取且身份隔离；旧绑定原文件明确复制生成新UUID／clientAttachmentId／附件，不复用旧ID。未知原文件无复制／释放入口；已知释放不删除原元数据或服务端附件。",
+    "实际390px切换面板保留附件且无横向溢出；账号变化的上传在真实API403拒绝，原字节／身份保留，新身份重进不读取旧记录。",
+    "适用完整page9／upload5／removed6与HTTP15回归；未改的回答／计划等完整43项在父提交P150已有最终通过记录，本增量不重复列为当前新增通过。"
+  ],
+  "inputAssessment": "Every final validation group completed with exit0 and zero changed-during or changed-since inputs. Current workspace and standalone source-map contents match exact final source bytes. Six actual server/browser/standalone JS/map artifacts match before/after/current hashes for both complete browser groups. The final chooser file, protected HTTP files and three affected complete browser files run sequentially after targeted changed-package build and final static checks. Existing untouched workspace artifacts remain bound to current source. No failed or exploratory invocation is included in final passing totals. SQL1..45, Runner/store, contracts and dependency declarations/lockfile remain unchanged.",
+  "scope": "Actual protected React/CSP, File chooser API and native IndexedDB, multipart/Input API/SQLite/file Worker. New6 complete chooser cases cover exact persistence and upload ACK loss, original lookup/retry, attachment-only project, independent upload copy/message binding, retained unsaved File after validation/abort/CAS failures, exact protected metadata/status recheck before main enqueue, explicit known-byte release, unknown preservation, identity refusal and390px panels. Existing complete page9/upload5/removed6 files and HTTP15 cover affected paths; total41 nonoverlap passes. Long removed-history and unavailable/unknown/identity faults remain explicit fixtures, and no model/OIDC/Linux, new-task entry, WebSocket, complete first-use path or formal product/gate acceptance is claimed. Application build targets the sole changed package input-api; all unchanged workspace source maps and artifacts are checked against current source.",
+  "candidatePreflight": "Two TS2345 diagnostics in cache-only virtual candidate response handling were repaired by explicit endpoint schemas. These are preparatory type diagnostics, not business test failures/pass counts; no pre-fix runtime outcome is inferred.",
+  "limits": [
+    "P1-08 remains formally NOT_STARTED pending prerequisites/G0; OpenSpec5/13 and2.3 unchecked until new-task work is also complete.",
+    "Actual API/Worker and browser identity is an explicit trusted test fixture; no enterprise OIDC, real model or Linux Runner is configured.",
+    "Regression removed-history uses25 metadata fixture rows plus one actual closed original; unavailable/identity responses and transaction abort are explicit fault injection.",
+    "The fixed256 metadata-journal limit remains. Releasing known file bytes frees resident-file capacity, not metadata slots; no metadata archival/deletion UI is implemented. Hitting either bound preserves the unsaved File and refuses new admission.",
+    "Separate1440px/390px screenshots were opened and visually inspected; their execution/artifact/image hashes are saved and add zero business-case passes.",
+    "No server-delete UI, new-task entry, delivery navigation, WebSocket, complete first-use product path or formal gate/product approval is claimed.",
+    "Review is by the same Codex agent; no independent human approval is implied."
+  ],
+  "managementChecks": "management-checks.json"
+}

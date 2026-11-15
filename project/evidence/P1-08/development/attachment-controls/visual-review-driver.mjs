@@ -1,0 +1,6 @@
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const root='.cache/p151-evidence',v=JSON.parse(fs.readFileSync(root+'/visual.json','utf8'));
+if(v.code!==0||v.pageErrors.length||v.cspErrors.length)throw Error('Visual execution failed');
+for(const s of v.screenshots)if(createHash('sha256').update(fs.readFileSync(root+'/screenshots/'+s.file)).digest('hex')!==s.sha256)throw Error('Image drift');
+fs.writeFileSync(root+'/visual-review.json',JSON.stringify({reviewedAt:new Date().toISOString(),reviewer:'Codex / same-agent visual development review',method:'Both exact desktop.png and mobile-390.png were opened with view_image and visually inspected.',screenshots:v.screenshots,findings:['Desktop three-column workbench and new-project form remain readable; selected filename, size, cached status and explicit controls are visible.','At390px, header navigation, text fields, chosen file card and submit controls wrap within the viewport without clipped labels or horizontal overflow.','The chooser is for adding the next file; previously selected material remains in the separate selected-file card.','No visual change is requested by this review; complete product/accessibility approval remains separate.'],businessPassCountAdded:0},null,2)+'\n');console.log('Recorded actual image inspection, excluded from business test counts.');

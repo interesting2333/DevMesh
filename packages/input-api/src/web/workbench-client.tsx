@@ -11,6 +11,8 @@ import type {DraftContext,LocalCommand,LocalDraft} from './workbench-local.js';
 import {WorkbenchApiError as ApiError} from './workbench-api.js';
 import {WorkbenchPlanning} from './workbench-planning.js';
 import {WorkbenchRecovery} from './workbench-recovery.js';
+import {AttachmentControls,sendUploadOriginal,lookupUploadOriginal,verifySelectedUpload} from './workbench-attachments.js';
+import type {LocalUpload} from './workbench-upload.js';
 
 type Workspace=z.output<typeof workspaceView>;
 type Store=Awaited<ReturnType<typeof openWorkbenchLocal>>;
@@ -22,10 +24,18 @@ const draftKey=(c:DraftContext)=>JSON.stringify(c);
 
 function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,{form:'project'|'message'}>;api:Api;guard:MutableRefObject<()=>Promise<boolean>>;onConfirmed:(selection:WorkbenchSelection)=>Promise<void>}){
  const [fields,setFields]=useState({text:'',name:''}),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[status,setStatus]=useState('正在读取本机草稿…'),[problem,setProblem]=useState(''),[pending,setPending]=useState<LocalCommand|null>(null),[references,setReferences]=useState<{items:LocalDraft[];nextCursor:string|null}>({items:[],nextCursor:null}),[discard,setDiscard]=useState(false),[closed,setClosed]=useState(false),[closedCommand,setClosedCommand]=useState<LocalCommand|null>(null),[history,setHistory]=useState<Awaited<ReturnType<Store['closedHistory']>>>({items:[],nextCursor:null}),[historyContext,setHistoryContext]=useState<DraftContext>(context);
+ const [uploads,setUploads]=useState<LocalUpload[]>([]),[library,setLibrary]=useState<LocalUpload[]|null>(null),[memory,setMemory]=useState<File|null>(null),[fileProblem,setFileProblem]=useState(''),[fileStatus,setFileStatus]=useState('');
+ const memoryFile=useRef<File|null>(null),libraryOpen=useRef(false);
  const currentDraft=useRef<LocalDraft|null>(null),local=useRef<Store|null>(null),latest=useRef(fields),revision=useRef(0),dirty=useRef(false),serial=useRef(0),failed=useRef(false),pumping=useRef(false),queue=useRef(Promise.resolve()),working=useRef(false),original=useRef<LocalCommand|null>(null),disposed=useRef(false),composition=useRef(false);
  function localFailure(e:unknown){failed.current=true;if(disposed.current)return;setProblem(e&&typeof e==='object'&&'code'in e&&e.code==='LOCAL_CONFLICT'?'另一页已修改这份草稿。本页修改仍保留，请读取并核对后再选择。':'本页输入尚未保存。请重试；离开前需成功保存或明确放弃未保存的修改。');setStatus('尚未保存在本机');}
  function hydrate(value:Awaited<ReturnType<Store['load']>>){
   currentDraft.current=value.draft;setClosedCommand(null);const f={text:value.draft?.text??'',name:value.draft?.name??''};latest.current=f;revision.current=value.draft?.revision??0;dirty.current=false;failed.current=false;original.current=value.pending;setFields(f);setPending(value.pending);setClosed(!!value.draft?.closedKey);setProblem('');setDiscard(false);setStatus(value.pending?'原提交结果待核实':value.draft?.closedKey?'此依据的原提交已关闭，旧草稿保留。请切换当前依据。':value.draft?'草稿已保存在本机':'尚未填写');
+ }
+ async function refreshUploads(){
+  if(!local.current)return;
+  const selected=await local.current.loadUploads(original.current?.envelope.context??context);
+  const all=libraryOpen.current?await local.current.listUploads():null;
+  if(!disposed.current){setUploads(selected);setLibrary(all);}
  }
  async function initialize(preserve=false){
   await queue.current;
@@ -40,6 +50,7 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
    }else hydrate(value);
    if(context.form==='message'){const refs=await store.references(context);if(!disposed.current)setReferences(refs);}
    const savedHistory=await store.closedHistory(context),savedClosed=value.draft?.closedKey?await store.getCommand(value.draft.closedKey):null;if(!disposed.current){setHistory(savedHistory);setHistoryContext(context);setClosedCommand(savedClosed);}
+   await refreshUploads();
   }catch(e){if(local.current!==store)store.close();throw e;}
  }
  function schedule(){
@@ -56,8 +67,8 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
  function edit(patch:Partial<typeof fields>){latest.current={...latest.current,...patch};dirty.current=true;serial.current++;setFields(latest.current);setDiscard(false);setStatus('正在保存草稿…');schedule();}
  async function flush(){await queue.current;if(dirty.current&&!failed.current){schedule();await queue.current;}return !dirty.current&&!failed.current;}
  useEffect(()=>{
-  disposed.current=false;guard.current=async()=>{if(working.current)return false;return flush();};
-  const before=(e:BeforeUnloadEvent)=>{if(dirty.current){e.preventDefault();e.returnValue='';}};
+  disposed.current=false;guard.current=async()=>{if(working.current)return false;return await flush()&&memoryFile.current===null;};
+  const before=(e:BeforeUnloadEvent)=>{if(dirty.current||memoryFile.current){e.preventDefault();e.returnValue='';}};
   window.addEventListener('beforeunload',before);
   void initialize().catch(localFailure).finally(()=>{if(!disposed.current)setReady(true);});
   return()=>{disposed.current=true;guard.current=async()=>true;window.removeEventListener('beforeunload',before);void queue.current.finally(()=>local.current?.close());};
@@ -68,11 +79,41 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
   setProblem(e instanceof ApiError&&[409,412,422,428].includes(e.status)?'原请求的依据或内容已不适用。记录已保留；请先核实原提交，不能改用新请求替代它。':'暂时无法核实提交结果。原请求已保留，请核实原提交。');
  }
  async function exclusive(work:()=>Promise<void>){if(working.current||disposed.current)return;working.current=true;setBusy(true);try{await work();}catch(e){commandFailure(e);}finally{working.current=false;if(!disposed.current)setBusy(false);}}
+ function attachmentAction(work:()=>Promise<void>){void exclusive(async()=>{
+  setFileProblem('');setFileStatus('');
+  try{await work();await refreshUploads();}
+  catch(e){
+   try{await refreshUploads();}catch{/* Keep the last readable selection and the exact local journal. */}
+   if(disposed.current)return;
+   const code=e&&typeof e==='object'&&'code'in e?e.code:null;
+   if(code==='LOCAL_CONFLICT')localFailure(e);
+   setFileProblem(code==='INVALID_UPLOAD'?'此文件尚未保存。请使用有效的 UTF-8 文本 .txt、.md 或 .markdown，大小为 1 字节至 2 MiB；本页文件仍保留。':code==='UPLOAD_LIMIT'?'本机附件数量已达上限。本次最多选择 3 个；可从本次输入移除附件，或在本机上传记录中明确释放已知结果的原文件。':memoryFile.current?'文件尚未保存，仍在本页。请重试保存或核对本机草稿；离开前需保存成功或明确放弃。':'暂时无法核实附件。原文件和上传记录仍保留；可核实原上传或使用同一原文件重试。');
+  }
+ });}
+ async function persistMemory(){
+  const file=memoryFile.current;if(!file||!local.current||!await flush())return;
+  if(revision.current===0){const d=await local.current.save(context,0,{...latest.current});revision.current=d.revision;currentDraft.current=d;}
+  const result=await local.current.addUpload(context,revision.current,file);revision.current=result.draft.revision;currentDraft.current=result.draft;
+  memoryFile.current=null;if(!disposed.current){setMemory(null);setFileStatus('文件已保存在本机，尚需你明确上传或核实。');}
+ }
+ function chooseFile(file:File){
+  if(working.current||memoryFile.current||disposed.current)return;
+  memoryFile.current=file;setMemory(file);attachmentAction(persistMemory);
+ }
+ function unlinkFile(key:string){attachmentAction(async()=>{
+  if(!local.current||memoryFile.current||!await flush())return;
+  const d=await local.current.unlinkUpload(context,revision.current,key);revision.current=d.revision;currentDraft.current=d;setFileStatus('已从本次输入移除，原上传记录仍保留。');
+ });}
+ function copyFile(key:string){attachmentAction(async()=>{
+  if(!local.current||memoryFile.current)return;const v=await local.current.getUpload(key);
+  if(!v||v.bytes===null||v.receipt?.status!=='SUCCEEDED'&&v.receipt?.status!=='FAILED')throw Error('Unknown upload cannot be copied');
+  const file=new File([new Uint8Array(v.bytes)],v.envelope.metadata.name,{type:v.envelope.mime});memoryFile.current=file;setMemory(file);await persistMemory();
+ });}
  async function accept(command:LocalCommand,value:unknown){
   const parsed=z.union([inputOperation,operationReceipt]).parse(value),observed=await local.current!.observe(command.key,parsed);
   if(disposed.current)return;
   if(observed.receipt?.status!=='SUCCEEDED'){setPending(observed);original.current=observed;setProblem('原操作仍待核实，请保留原记录。');return;}
-  const result=z.object({projectId:ids.project,runId:ids.run}).parse(observed.receipt.result);hydrate(await local.current!.load(context));setStatus('输入已提交保存；后台处理结果另行更新。');
+  const result=z.object({projectId:ids.project,runId:ids.run}).parse(observed.receipt.result);hydrate(await local.current!.load(context));await refreshUploads();setStatus('输入已提交保存；后台处理结果另行更新。');
   working.current=false;await onConfirmed(result);
  }
  async function send(command:LocalCommand){
@@ -95,13 +136,23 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
   catch{setProblem('尚不能开始空白输入，另一页可能已更新记录。请重新读取；原请求仍保留。');}
  }
  async function readHistory(c:DraftContext,more=false){const value=await local.current!.closedHistory(c,more?history.nextCursor??undefined:undefined);if(!disposed.current){setHistory(old=>({items:more?[...old.items,...value.items]:value.items,nextCursor:value.nextCursor}));setHistoryContext(c);}}
- function submit(){if(!ready||closed||original.current||failed.current)return;void exclusive(async()=>{
+ function submit(){if(!ready||closed||original.current||failed.current||memoryFile.current)return;void exclusive(async()=>{
   if(!await flush()||!local.current)return;
   // Validate user input before creating an immutable pending original.
   const draft=(await local.current.load(context)).draft;if(!draft)throw Error('Missing draft');
-  if(context.form==='project')createProjectInput.parse({initialRequest:{text:draft.text,attachmentIds:[]},clientDraftId:draft.clientDraftId,...(draft.name?{name:draft.name}:{})});
-  else saveMessageInput.parse({text:draft.text,attachmentIds:[],clientMessageId:draft.clientDraftId});
-  const q=await local.current.enqueue(context,revision.current);revision.current=q.draft.revision;original.current=q.command;setPending(q.command);setProblem('');setStatus('原请求已保存在本机，正在提交…');await send(q.command);
+  const verified:LocalUpload[]=[];
+  try{
+   for(const upload of await local.current.loadUploads(context)){
+    if(upload.receipt?.status!=='SUCCEEDED')throw Error('Upload result is unknown');
+    const fresh=await verifySelectedUpload(local.current,upload,path=>api(path));
+    if(fresh.attachment?.state!=='READY')throw Error('Attachment is not ready');verified.push(fresh);
+   }
+   await refreshUploads();setFileProblem('');
+  }catch{try{await refreshUploads();}catch{/* Unreadable native records never become an empty selection. */}if(!disposed.current)setFileProblem('所选附件尚不能提交。请逐一上传或核实；已移除或无法读取的附件仍保留在本次选择中，不会自动省略。');return;}
+  const attachmentIds=verified.map(v=>v.attachment!.attachmentId);
+  if(context.form==='project')createProjectInput.parse({initialRequest:{text:draft.text,attachmentIds},clientDraftId:draft.clientDraftId,...(draft.name?{name:draft.name}:{})});
+  else saveMessageInput.parse({text:draft.text,attachmentIds,clientMessageId:draft.clientDraftId});
+  const q=await local.current.enqueue(context,revision.current,verified);revision.current=q.draft.revision;original.current=q.command;setPending(q.command);setProblem('');setStatus('原请求已保存在本机，正在提交…');await send(q.command);
  });}
  async function lookup(){const p=original.current;if(!p||!local.current)return;await exclusive(async()=>{
   try{const value=await api('/api/v1/operations/lookup?scope='+encodeURIComponent(p.envelope.scope)+'&key='+encodeURIComponent(p.key));await accept(p,value);}
@@ -114,9 +165,10 @@ function Composer({context,api,guard,onConfirmed}:{context:Extract<DraftContext,
    {context.form==='project'&&<><label htmlFor="project-name">项目名称（可选）</label><input id="project-name" maxLength={80} value={fields.name} disabled={disabled} onChange={e=>edit({name:e.target.value})}/></>}
    <label htmlFor="input-text">{context.form==='project'?'描述你想完成的事':'输入正文'}</label><textarea id="input-text" value={fields.text} maxLength={40000} disabled={disabled} onChange={e=>edit({text:e.target.value})} onCompositionStart={()=>{composition.current=true;}} onCompositionEnd={()=>{composition.current=false;}} onKeyDown={e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&!e.repeat&&!e.nativeEvent.isComposing&&!composition.current){e.preventDefault();submit();}}}/>
    <p className="status" role="status">{status}</p>{problem&&<p role="alert" className="notice">{problem}</p>}
-   <div className="actions"><button className="primary" type="submit" disabled={disabled||failed.current||!fields.text.trim()}>{context.form==='project'?'创建项目并保存需求':'提交输入'}</button><span className="muted">Enter 换行 · Ctrl / Cmd + Enter 提交</span></div>
+   <AttachmentControls selected={uploads} library={library} memory={memory} busy={busy||!ready} editable={!disabled&&!failed.current} problem={fileProblem} status={fileStatus} onChoose={chooseFile} onRetryMemory={()=>attachmentAction(persistMemory)} onDiscardMemory={()=>{memoryFile.current=null;setMemory(null);setFileProblem('');setFileStatus('已明确放弃尚未保存的文件。');}} onSend={key=>attachmentAction(async()=>{if(local.current)await sendUploadOriginal(local.current,key,(path,init)=>api(path,init),path=>api(path));})} onLookup={key=>attachmentAction(async()=>{if(local.current)await lookupUploadOriginal(local.current,key,path=>api(path));})} onUnlink={unlinkFile} onLibrary={()=>attachmentAction(async()=>{libraryOpen.current=true;})} onRelease={key=>attachmentAction(async()=>{const v=await local.current?.getUpload(key);if(!v||!local.current)throw Error('Missing original');await local.current.releaseUpload(key,v.revision);setFileStatus('已释放本机原文件，原上传记录仍保留。');})} onCopy={copyFile}/>
+   <div className="actions"><button className="primary" type="submit" disabled={disabled||failed.current||memory!==null||uploads.some(v=>v.receipt?.status!=='SUCCEEDED'||v.attachment?.state!=='READY')||(!fields.text.trim()&&(context.form!=='project'||uploads.length===0))}>{context.form==='project'?'创建项目并保存需求':'提交输入'}</button><span className="muted">Enter 换行 · Ctrl / Cmd + Enter 提交</span></div>
   </form>
-  {problem&&!pending&&<div className="actions"><button disabled={busy} onClick={()=>void exclusive(async()=>{try{await initialize(true);}catch(e){localFailure(e);}})}>重试本机保存</button><label><input type="checkbox" checked={discard} onChange={e=>setDiscard(e.target.checked)}/>我确认放弃本页未保存的修改</label><button disabled={busy||!discard} onClick={()=>void exclusive(async()=>{dirty.current=false;await initialize();})}>放弃本页修改并重新读取</button></div>}
+  {problem&&!pending&&<div className="actions"><button disabled={busy} onClick={()=>void exclusive(async()=>{try{await initialize(true);}catch(e){localFailure(e);}})}>重试本机保存</button><label><input type="checkbox" checked={discard} onChange={e=>setDiscard(e.target.checked)}/>我确认放弃本页未保存的修改和文件</label><button disabled={busy||!discard} onClick={()=>void exclusive(async()=>{const wasDirty=dirty.current;try{dirty.current=false;await initialize();memoryFile.current=null;setMemory(null);setFileProblem('');}catch(e){dirty.current=wasDirty;localFailure(e);}})}>放弃本页修改并重新读取</button></div>}
    {pending&&<section className="notice" aria-label="待核实原提交"><h3>原提交结果待核实</h3><p>刷新或重新进入不会自动发送。核实会查询同一原操作，继续提交会使用原正文与原条件。</p><div className="actions"><button disabled={busy} onClick={()=>void lookup()}>核实原提交</button><button disabled={busy} onClick={()=>void exclusive(()=>send(pending))}>使用原请求继续提交</button></div><details><summary>查看原提交内容</summary><p>{pending.envelope.kind==='project'?pending.envelope.body.initialRequest.text:pending.envelope.kind==='message'?pending.envelope.body.text:'计划确认'}</p></details>{(pending.envelope.kind==='project'?pending.envelope.body.initialRequest.attachmentIds.length:pending.envelope.kind==='message'?pending.envelope.body.attachmentIds.length:0)>0&&<CloseRemovedOriginal key={'removed:'+pending.key} busy={busy} onClose={()=>void exclusive(closeRemoved)}/>} {pending.envelope.kind!=='project'&&<CloseOriginal key={pending.key} busy={busy} onClose={()=>void exclusive(closeOriginal)}/>}</section>}
   {closed&&closedCommand?.closure?.reason==='REMOVED_ATTACHMENT'&&<section aria-label="开始新的空白输入"><p>原提交已关闭。你可以开始一份空白输入，旧内容和附件记录仍保留。</p><button disabled={!ready||busy||failed.current||!currentDraft.current} onClick={()=>void exclusive(startBlank)}>开始空白输入，保留原记录</button></section>}
   {!!history.items.length&&<section aria-label="已关闭的原提交"><h3>已关闭的原提交{historyContext.form==='message'?' · 依据版本 '+historyContext.basisRevision:''}</h3><p className="muted">这些记录仅供核对，不会自动复制或发送。</p>{history.items.map(item=>{const proof=item.closure;if(proof?.reason!=='REMOVED_ATTACHMENT')return null;return <article className="card" key={item.key}><h4>{proof.draftSnapshot.name||'原输入'}</h4><p>{proof.draftSnapshot.text||'原输入仅包含附件。'}</p><p>原附件已移除：{proof.attachment.name}</p><p className="muted">原输入时间 {clock(item.envelope.createdAt)} · 核实关闭 {clock(proof.lookupReadAt)}</p></article>;})}{history.nextCursor&&<button disabled={busy} onClick={()=>void exclusive(()=>readHistory(historyContext,true))}>读取更多已关闭记录</button>}</section>}
@@ -137,6 +189,7 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
    const r=await fetch(path,{...init,headers,credentials:'same-origin',cache:'no-store',redirect:'error',signal:AbortSignal.any([controller.signal,AbortSignal.timeout(15000)])});
     if(!r.ok){if([401,403].includes(r.status)&&token===generation.current&&!disposed.current)closeProtected('登录身份或项目权限已变化，请重新进入工作台。',controller);let code='REQUEST_FAILED';try{const v=await r.json() as {error?:{code?:unknown}};if(typeof v.error?.code==='string')code=v.error.code;}catch{/* Error bodies carry no business facts. */}throw new ApiError(r.status,code);}
     if((init.method??'GET').toUpperCase()==='GET'&&r.status!==200)throw Error('Unexpected protected read status');
+    if((init.method??'GET').toUpperCase()==='POST'&&path==='/api/v1/attachments'&&r.status!==201)throw Error('Unexpected upload response status');
     if(!r.headers.get('content-type')?.includes('application/json'))throw Error('Invalid response');const value=await r.json() as unknown;if(token!==generation.current||disposed.current)throw new DOMException('Obsolete workspace request','AbortError');return value;
   }finally{controllers.current.delete(controller);}
  }

@@ -149,3 +149,27 @@ The workbench SHALL preserve the complete immutable project/message original and
 
 - **WHEN** another page observes an operation, closes the same original, changes the draft or starts blank before the native CAS
 - **THEN** the stale action fails without replacing that observation, clearing history, inventing a receipt or sending another request
+
+
+### Requirement: Explicit original attachment controls
+The workbench SHALL retain a chosen File until its exact bytes, immutable upload identity and draft selection commit atomically. It SHALL send uploads only by explicit user action, preserve unknown originals, and freeze main input only after protected exact metadata observations and native snapshot CAS.
+
+#### Scenario: File admission fails locally
+- **WHEN** validation, quota, native abort or a competing draft update prevents attachment admission
+- **THEN** the page SHALL retain the unsaved File, block navigation and main submission, and allow explicit retry or confirmed discard without HTTP upload
+
+#### Scenario: Upload acknowledgement is lost
+- **WHEN** an original upload may have committed but its acknowledgement is unavailable
+- **THEN** reload SHALL not POST automatically, and explicit lookup or retry SHALL preserve its exact original identity and bytes
+
+#### Scenario: Main input rechecks selected material
+- **WHEN** a selected attachment is unknown, removed, unreadable, foreign or changes concurrently
+- **THEN** no attachment SHALL be silently omitted and no main original SHALL be admitted from stale upload snapshots
+
+#### Scenario: Reuse from the local upload library
+- **WHEN** a user explicitly reuses available bytes of a known upload result
+- **THEN** a fresh upload identity SHALL be created and the prior journal SHALL remain, without directly selecting an old possibly bound attachment ID
+
+#### Scenario: Releasing local bytes
+- **WHEN** a known-result original file is explicitly released
+- **THEN** the upload identity, hash and receipt SHALL remain, and unknown-result original bytes SHALL never be released by this action

@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-15T20:51:30.597Z",
+  "scope": "Candidate-only virtual TypeScript read overlay; no application or tested artifact changes, not product/runtime pass evidence.",
+  "diagnostics": [
+    {
+      "code": 2345,
+      "file": "D:/yms/AI/DevMesh/packages/input-api/src/web/workbench-attachments.tsx",
+      "line": 17,
+      "message": "Argument of type 'unknown' is not assignable to parameter of type '{ operationId: string; status: \"FAILED\" | \"OUTCOME_UNKNOWN\" | \"SUCCEEDED\" | \"RUNNING\" | \"ACCEPTED\" | \"WAITING\"; result: Record<string, JSONType> | null; } | { ...; }'."
+    },
+    {
+      "code": 2345,
+      "file": "D:/yms/AI/DevMesh/packages/input-api/src/web/workbench-attachments.tsx",
+      "line": 31,
+      "message": "Argument of type 'unknown' is not assignable to parameter of type '{ operationId: string; status: \"FAILED\" | \"OUTCOME_UNKNOWN\" | \"SUCCEEDED\" | \"RUNNING\" | \"ACCEPTED\" | \"WAITING\"; result: Record<string, JSONType> | null; } | { ...; }'."
+    }
+  ]
+}
