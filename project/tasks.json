@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "d2928c527cefc1dd31c50a406c93bf02a76e9f64c47608c9623ad2e64b3c242b"
+      "sha256": "3ade4133457a58d265651dc8d812b25a3ec825a6169d1922a0cae9c9072b8faa"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "e6bb8cc5c8ba1f308dece1c895ace6b8c7426aa68b3002ac7c767831f097f259"
+      "sha256": "95c80ed87a0a8882c546294ba3aaa384782935a74630aa150aba7561d2f430fd"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "62a275331d6dc2a2131f9efbb5bdf80d7aeaebc3228bbf258bcaad509c0d9391"
+      "sha256": "9495b1656ae2a03c3301a21c433ec115d466de70ea68bfcc8bb406a01eb54ebc"
     }
   ],
   "gates": [
@@ -1706,7 +1706,9 @@
         "tests/browser/workbench-attachment-ui.test.mjs",
         "tests/browser/workbench-task-local.test.mjs",
         "tests/browser/workbench-task-build.mjs",
-        "tests/fixtures/workbench-task-entry.ts"
+        "tests/fixtures/workbench-task-entry.ts",
+        "packages/input-api/src/web/workbench-task-entry.tsx",
+        "tests/browser/workbench-task-ui.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-08/local-input-development-review.md",
@@ -1752,7 +1754,11 @@
         "project/evidence/P1-08/task-journal-development-review.md",
         "project/evidence/P1-08/development/task-journal/evidence.json",
         "project/evidence/P1-08/development/task-journal/final-binding.json",
-        "project/evidence/P1-08/development/task-journal/manifest.json"
+        "project/evidence/P1-08/development/task-journal/manifest.json",
+        "project/evidence/P1-08/task-ui-development-review.md",
+        "project/evidence/P1-08/development/task-ui/evidence.json",
+        "project/evidence/P1-08/development/task-ui/final-binding.json",
+        "project/evidence/P1-08/development/task-ui/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1766,7 +1772,8 @@
         "2026-11-16：P1-08小屏恢复反馈修正。修复前实际Edge复现1项0通过／1失败：原确认回执已持久且桌面刷新后可见，390px切详情隐藏提示，准确源码／原日志／截图保留。将唯一已提交结果节点移到共享顶部区，保留上下文／身份／权限清除及旧回调保护；无可读计划时区分读取中／暂不可读，不再把503显示为尚无计划。最终HTTP3＋完整恢复浏览器5＝8通过、零失败／取消／跳过；实际workspace刷新后核对准确原回执及唯一确认／零实施attempt，再验证390px全部面板可见、无横向溢出、零额外POST。最终根／独立构建、类型、Lint、契约和回归输入零漂移，546源码映射及723输入产物匹配。SQL1～45、Runner／依赖／契约未改。同一Agent开发复核；正式P1-08仍等待前置／G0，变更5/13、2.3未勾选，附件UI／永久移除关闭与新草稿／新任务／WS和真实资源／产品验收继续。",
         "2026-11-16：P1-08永久移除原输入处置开发增量完成本机验证。新增独立REMOVED_ATTACHMENT顺序证明，受保护GET严格200，普通404／非200／未知或权限失败不关闭；完整原观察／草稿CAS关闭，保留信封和完整快照，不伪造成功。项目和同Run版本消息均可明确空白开始，生成新输入身份、保持单调revision且零自动复制／POST；原历史链接在新提交成功和旧依据参考中保留，分页严格下降。原生abort及双页竞争／并发观察、实际multipart移除／T1拒绝／延迟原请求、受保护页面及26条历史（25条明确夹具＋1条实际原请求）验证。最终新增浏览器6＋既有完整浏览器43＋HTTP15＝64通过，零失败／取消／跳过；应用／独立模块构建、类型／Lint／契约及最终输入零漂移，546源码映射／724输入产物匹配。首轮定向2项0通过／2失败原日志／准确源码／实际JS／map保留：事务中止后继续写被归类为坏记录，修正已中止事务的异常处理；长历史夹具误填不合法空项目名，改为有效名，未放宽断言。最初shell筛选实际0业务用例，不计通过。SQL1～45、Runner／依赖／公共契约未改。同一Agent开发复核；正式P1-08／前置／G0和5/13、2.3未变；附件控件／新任务／WS与真实资源／产品验收继续。",
         "2026-11-16：P1-08附件选择与明确上传开发增量完成本机验证。真实File chooser先保存准确字节／原身份及草稿选择，零自动HTTP；校验／事务abort／多页CAS失败保留页内File，阻止导航／主输入，明确重试或放弃。明确multipart只用原字节／UUID／clientAttachmentId，上传严格201回执、原lookup严格200操作；丢ACK刷新零POST。主输入重新保护读取全部所选状态，完整上传snapshot／选择／草稿CAS冻结，不省略未知／移除或并发变化；实际仅附件项目及正文加附件消息唯一绑定。按需主体上传库，未知不可释放或换身份；已知明确释放保留原记录，再次使用明确用字节建立新身份而非旧绑定ID。新完整选择浏览器6＋受影响完整page9／upload5／removed6＋HTTP15共41项不重叠通过，零失败／取消／跳过；最终构建／独立模块／类型／Lint／契约与输入零漂移，547源码映射及726输入产物匹配，实际服务端／浏览器／独立模块6份JS／map前后及当前一致。候选静态预检查曾报告两个unknown响应未解析的类型错误，改为端点对应严格schema解析；该预检查不计业务通过。SQL1～45／Runner／依赖／公共契约未改。同一Agent开发复核，正式P1-08前置／G0及5/13、2.3保持；新任务、交付导航／WS、真实资源与完整产品验收继续。",
-        "2026-11-16：P1-08新任务原生日记／项目依据证明开发增量完成本机验证。task草稿按主体／项目／项目revision／准确已接受发布隔离，与当前Run消息分开；无接受发布可保存null依据草稿但不能入队。原请求严格冻结kind／title／goal／release／clientDraftId／UUID，scope及If-Match为项目，跨basis唯一pending锁；成功核实新Run初始版本／项目版本+1／task、message和understandingOperationId，准确清稿及释放锁同事务。新增STALE_PROJECT_BASIS顺序证明，原生完整命令／草稿CAS关闭，保留完整快照且不伪造成功；Run证明不能关闭任务，未知／普通404不解锁。任务附件复用完整READY选择CAS、永久移除关闭和明确空白／不可变历史。最终新原生浏览器6＋既有完整local10／upload5／removed6＋HTTP15共42项不重叠通过，零失败／取消／跳过；应用／两个独立模块构建、类型／Lint／契约和最终输入零漂移，591源码映射与731输入产物匹配，8份实际JS／map前后与当前一致。补充无接受发布草稿之前的准备检查保留，不计最终结果。保留1次先前失败调用及准确输入，详见证据，不计入最终绿色总数。接受发布／终态Run是明确SQL元数据夹具；随后任务创建／原键查询重放／附件操作为真实API／SQLite／文件Worker，不代签真实接受或物理停止。SQL1～45／Runner／依赖／公共契约不变。同一Agent开发复核，任务页面尚未接入，2.3／5/13及正式前置／G0保持；交付导航／WS、真实资源／完整产品验收继续。"
+        "2026-11-16：P1-08新任务原生日记／项目依据证明开发增量完成本机验证。task草稿按主体／项目／项目revision／准确已接受发布隔离，与当前Run消息分开；无接受发布可保存null依据草稿但不能入队。原请求严格冻结kind／title／goal／release／clientDraftId／UUID，scope及If-Match为项目，跨basis唯一pending锁；成功核实新Run初始版本／项目版本+1／task、message和understandingOperationId，准确清稿及释放锁同事务。新增STALE_PROJECT_BASIS顺序证明，原生完整命令／草稿CAS关闭，保留完整快照且不伪造成功；Run证明不能关闭任务，未知／普通404不解锁。任务附件复用完整READY选择CAS、永久移除关闭和明确空白／不可变历史。最终新原生浏览器6＋既有完整local10／upload5／removed6＋HTTP15共42项不重叠通过，零失败／取消／跳过；应用／两个独立模块构建、类型／Lint／契约和最终输入零漂移，591源码映射与731输入产物匹配，8份实际JS／map前后与当前一致。补充无接受发布草稿之前的准备检查保留，不计最终结果。保留1次先前失败调用及准确输入，详见证据，不计入最终绿色总数。接受发布／终态Run是明确SQL元数据夹具；随后任务创建／原键查询重放／附件操作为真实API／SQLite／文件Worker，不代签真实接受或物理停止。SQL1～45／Runner／依赖／公共契约不变。同一Agent开发复核，任务页面尚未接入，2.3／5/13及正式前置／G0保持；交付导航／WS、真实资源／完整产品验收继续。",
+        "2026-11-16：P1-08新任务目标保护页面开发增量完成本机验证，implement-workbench-first-path的2.3据实际已验证附件／回答／新任务子链勾选，累计6/13；正式工作包仍等待前置／G0。下一目标与当前Run输入明确切换；guard排空正文／任务字段保存，未保存File阻止切换；活动执行和null发布只保存草稿，当前项目非viewer才挂任务入口。类型初始不选，标题可编辑或明确按目标本地生成，不修改项目名；项目／发布依据变化须明确切换并复制旧目标，不复制原身份或旧附件。新提交先受保护重读准确项目及准入，不适用时零主命令／零POST；冻结后竞争仍由T1及原信封处理。新Run使创建入口隐藏后仍显示项目原请求核实，刷新不POST；实际丢ACK恢复唯一任务。项目过期关闭返回当前项目并可读完整旧目标历史；T1移除附件后明确关闭／空白保留原记录。最终新保护页面6＋既有完整page9／attachmentUI6＋HTTP15＝36项独立通过，零失败／取消／跳过；最终应用构建／类型／契约绑定未变的应用字节，Lint和全部运行时绑定最终输入，592源码映射／733输入产物绑定，8份JS／map前后当前一致。未改的原生日记／独立构建输入与父提交一致并核对源码映射，未重复计父测试。实际1440／390px截图已打开复核，图片与本轮UI运行绑定且不增业务通过数。保留先前2次失败调用、准确输入和修正说明，不计最终通过。本次仅修正独立.test.mjs遗漏的旧历史Run到当前项目导航，并增加当前项目再次刷新断言；应用／TS及8份实际产物未改。原构建／类型／契约清单保留该非输入文件的准确差异，最终Lint／全部运行时使用修正后的完整输入。完整HTTP首轮13通过／2失败均发生在来源夹具建立阶段：ENDPOINT_UNAVAILABLE与首次/projects请求ECONNRESET，来源读取／边界断言未执行。未修改应用、夹具、健康规则、超时或断言；完整同字节复跑取得最终HTTP结果，不据其通过推断首次故障根因。接受／终态Run为明确元数据夹具；真实创建／HTTP／文件Worker和浏览器检查不代签真实接受、物理停止或模型／OIDC／Linux。SQL1～45／Runner／依赖／公共契约不变。同一Agent开发复核，交付导航／WS、完整首次产品路径和正式验收继续。"
       ]
     },
     {

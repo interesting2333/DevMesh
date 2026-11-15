@@ -1,0 +1,30 @@
+{
+  "reviewedBy": "Codex / same-agent development visual review",
+  "reviewedAt": "2026-11-15T23:07:54.436Z",
+  "businessPassCountAdded": 0,
+  "screenshots": [
+    {
+      "file": "task-390.png",
+      "sha256": "cda44fbd594413b7bf1a7854947a07138c1813b372e2f399788a1181b03db1a7"
+    },
+    {
+      "file": "task-desktop.png",
+      "sha256": "e09f4b233edf7cd366f4c8ee0fc2db762f27a29648789e64f4daffbf8e4b4e28"
+    }
+  ],
+  "observations": [
+    "Opened both final UI-run images using view_image, after the completed six-case run.",
+    "390px: target kind/title/goal, chooser/upload library controls, submit and complete removed-original history are readable in a single column; runtime scroll-width assertion also passed.",
+    "1440px: project list, independent target form and detail tabs remain separate; task kind/title/edited goal and explicit save status are readable.",
+    "Full-page captures retain the sticky header at the scrolled viewport offset after the form was focused; this is not a viewport screenshot or a claim about event-time focus behavior."
+  ],
+  "followUps": [
+    "The wrapper retains its previous failed-switch warning after the Composer saves successfully. Navigation retry works, but the warning wording should describe the previous failed action rather than assert the current draft is unsaved. Include that wording repair in the next actual code increment.",
+    "The existing Run-input-disabled notice above the valid next-task form should specify current Run supplemental input, to distinguish it from next-task submission.",
+    "Future full-page capture should scroll to the top first to make sticky-header placement in the captured artifact easier to review."
+  ],
+  "limits": [
+    "No additional business passes are counted from screenshot inspection.",
+    "No claim of completed delivery navigation, WebSocket/event-time focus, real model/OIDC/Linux, real acceptance/physical stop, or product/gate acceptance."
+  ]
+}

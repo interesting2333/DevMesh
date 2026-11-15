@@ -1,0 +1,8 @@
+$ tsdown src/index.ts --format esm --platform node --target node24 --dts --sourcemap --clean && tsdown --config tsdown.web.config.ts
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (58%)
+  - tsdown:deps (40%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `tsdown:deps`. See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+

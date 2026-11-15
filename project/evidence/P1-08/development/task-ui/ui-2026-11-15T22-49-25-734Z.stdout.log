@@ -1,0 +1,86 @@
+TAP version 13
+# (node:38484) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:38484) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: active first Run saves a separate null-release next target; real accepted basis requires explicit review and copying
+ok 1 - active first Run saves a separate null-release next target; real accepted basis requires explicit review and copying
+  ---
+  duration_ms: 95576.4133
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:38484) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: protected task chooser freezes exact material; ACK loss reload recovers one task after fresh admission disappears
+not ok 2 - protected task chooser freezes exact material; ACK loss reload recovers one task after fresh admission disappears
+  ---
+  duration_ms: 118277.3121
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\browser\\workbench-task-ui.test.mjs:23:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    expect(locator).toBeVisible() failed
+    
+    Locator: getByRole('button', { name: '打开新任务原提交核实', exact: true })
+    Expected: visible
+    Timeout: 35000ms
+    Error: element(s) not found
+    
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '打开新任务原提交核实', exact: true }) with timeout 35000ms
+      - waiting for getByRole('button', { name: '打开新任务原提交核实', exact: true })
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    captureRawStack (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright-core@1.65.0\node_modules\playwright-core\lib\coreBundle.js:9551:17)
+    callMatcherAsStep (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright@1.65.0\node_modules\playwright\lib\matchers\expect.js:13342:57)
+    Object.toBeVisible (D:\yms\AI\DevMesh\templates\web-crud-v1\node_modules\.pnpm\playwright@1.65.0\node_modules\playwright\lib\matchers\expect.js:13334:23)
+    TestContext.<anonymous> (D:\yms\AI\DevMesh\tests\browser\workbench-task-ui.test.mjs:25:676)
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:38484) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: obsolete task original closes with project proof and keeps complete old target readable at the current project
+ok 3 - obsolete task original closes with project proof and keeps complete old target readable at the current project
+  ---
+  duration_ms: 45184.6634
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:38484) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: removed task material retains immutable history through explicit blank and mobile; viewer and history mount no task client
+ok 4 - removed task material retains immutable history through explicit blank and mobile; viewer and history mount no task client
+  ---
+  duration_ms: 75396.8419
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:38484) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fresh task preflight refuses a newer actual project before any native command or task POST
+ok 5 - fresh task preflight refuses a newer actual project before any native command or task POST
+  ---
+  duration_ms: 77778.4303
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:38484) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native task draft abort retains edited goal and task fields, blocks switching and retries before any POST
+ok 6 - native task draft abort retains edited goal and task fields, blocks switching and retries before any POST
+  ---
+  duration_ms: 76299.1843
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+1..6
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 504212.0843

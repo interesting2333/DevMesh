@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "record": "ui-2026-11-15T22-49-25-734Z.json",
+  "at": "2026-11-15T22:58:18.071Z",
+  "files": [
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "c0c0dab9503f21c634e8762eca8d9c0a406d961e06399ba7e8915eba8919540f"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-task-entry.tsx",
+      "sha256": "44cd5cfb0e53a12e2df3ecb2993be4bc0e90782adeeb57b1a5100f67d03de2e3"
+    },
+    {
+      "file": "packages/input-api/src/workbench-page.ts",
+      "sha256": "3df99dab26c5bb4ebf6bc97beeab4768bb299ad2d9c5bc124f45e03cc29a17d3"
+    },
+    {
+      "file": "tests/browser/workbench-task-ui.test.mjs",
+      "sha256": "485a938b653ae9579a6aaf94f8aa17af38eb9a234fe66041c68809dc7ab40dfb"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "artifacts/.cache/workbench-task-build/task.js",
+      "source": ".cache/workbench-task-build/task.js",
+      "sha256": "b53acc21a6f2991165637b6a4a5e6257bae7df36f1f8a290cd5e02ea4c121651"
+    },
+    {
+      "file": "artifacts/.cache/workbench-task-build/task.js.map",
+      "source": ".cache/workbench-task-build/task.js.map",
+      "sha256": "7b591bbcda8c7ab0042e56a2a6abe34c16135b10c1a2a2c90d5712bb78dfd9d8"
+    },
+    {
+      "file": "artifacts/packages/input-api/dist/index.mjs",
+      "source": "packages/input-api/dist/index.mjs",
+      "sha256": "d4f6dd353ab8c8b944eb356dde0d9056fe1bb90c61c794fa489e99c7a2fc6adb"
+    },
+    {
+      "file": "artifacts/packages/input-api/dist/index.mjs.map",
+      "source": "packages/input-api/dist/index.mjs.map",
+      "sha256": "63829efded031832802a529fc2d228f9844df649a6a3a33a5beaa077b2049762"
+    },
+    {
+      "file": "artifacts/.cache/workbench-local-build/local.js",
+      "source": ".cache/workbench-local-build/local.js",
+      "sha256": "188fa5976b702d1f0a803003b7a55caad18e0523872e55e8543b9d5011cc68c6"
+    },
+    {
+      "file": "artifacts/.cache/workbench-local-build/local.js.map",
+      "source": ".cache/workbench-local-build/local.js.map",
+      "sha256": "23b7d26d13d67c0b441f309a9934d9e7152498f15d7aa765975643b2817ccf36"
+    },
+    {
+      "file": "artifacts/packages/input-api/dist/web/workbench/workbench-client.js",
+      "source": "packages/input-api/dist/web/workbench/workbench-client.js",
+      "sha256": "3f970839c90eb648baa9946dcde2f92df6afd5b69ef5c97116a2cf4f906af1dc"
+    },
+    {
+      "file": "artifacts/packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "source": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "sha256": "9f06d0a9cc4de4a73bdbda70f3acd3f74ef5b0af6bfea5dc2d8b1cc0554ce6f4"
+    }
+  ],
+  "scope": "Exact changed sources and actual tested artifacts of completed failed invocation, before repair. Remaining inputs remain hashed in raw record and refer to recorded parent commit.",
+  "screenshots": [
+    {
+      "file": "screenshots/task-390.png",
+      "sha256": "256fb19028b98a251f4877e2141b50caf8e2f6c60b1361fe363c2084b569a229",
+      "scope": "Image from the completed 5-pass/1-fail invocation, preserved before whole-file rerun; not an additional business pass or a final visual review."
+    },
+    {
+      "file": "screenshots/task-desktop.png",
+      "sha256": "daf84418631445780e1ea922fc3e16ba6abc9c142549edc6c1f1996fe36e61e5",
+      "scope": "Image from the completed 5-pass/1-fail invocation, preserved before whole-file rerun; not an additional business pass or a final visual review."
+    }
+  ]
+}

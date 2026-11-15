@@ -1,0 +1,12 @@
+{
+  "ui-2026-11-15T22-49-25-734Z.json": {
+    "diagnosis": "ACK-loss task is committed into a new Run, but the test reloads its original explicit runId URL. Storage marks that original Run as history; the product correctly does not mount local task clients in history. The test omitted entering the current project before expecting its pending-task recovery control.",
+    "correction": "Only the standalone browser .test.mjs changed: after old-Run reload assert actual historical read-only context and no task entry, enter current project explicitly, assert pending recovery, then reload that current-project URL again and recover the identical original. Keep exact envelope, one task POST, unique task/material binding and no auto-POST assertions. No application or TypeScript source change.",
+    "validation": "Rerun the complete six-case UI file, followed by complete affected page/attachment browser and HTTP files. Rerun lint. Build/type/contracts do not import the .test.mjs; preserve their original inventories and explicitly disclose that single non-input difference, with source-map checks and all actual artifacts unchanged."
+  },
+  "http-2026-11-15T23-06-52-725Z.json": {
+    "diagnosis": "Completed original full HTTP invocation:13 passed,2 failed,0 cancelled/skipped. Both failures occurred in workbenchPlanningFixture before source-GET assertions. One StorageError ENDPOINT_UNAVAILABLE reports no active/current compatible health check; the log contains no exact endpoint health record, so expiry, probe timeout or another underlying health cause is not proven. The other failure is the initial /projects fetch ECONNRESET (read ECONNRESET), before the UTF-8/size boundary assertions. Underlying reset cause is not established.",
+    "correction": "No application, test, fixture, health rule, timeout, artifact or assertion changed for these failures. Preserve the completed failed source/artifact snapshot and all raw output. Run the full15 HTTP cases again after the separate browser regression finishes, with the same input/artifact bytes. Do not replace failing assertions with retries or fabricated health.",
+    "validation": "Only a completed exact-input full-file HTTP rerun with15 passes/0fail/cancel/skip may be used for final green totals. The original13/2 invocation remains visible and does not count toward final passed cases; a later green result does not prove the original transient causes."
+  }
+}

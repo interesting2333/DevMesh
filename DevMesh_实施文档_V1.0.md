@@ -506,9 +506,9 @@ node --test ./design/contracts/验证核心约束.mjs
 
 | 文件 | SHA-256 |
 | --- | --- |
-| DevMesh_技术设计方案_V1.1.md | d2928c527cefc1dd31c50a406c93bf02a76e9f64c47608c9623ad2e64b3c242b |
+| DevMesh_技术设计方案_V1.1.md | 3ade4133457a58d265651dc8d812b25a3ec825a6169d1922a0cae9c9072b8faa |
 | DevMesh_PRD_V10.0.md | 4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5 |
-| DevMesh_产品验收场景_V10.0.md | e6bb8cc5c8ba1f308dece1c895ace6b8c7426aa68b3002ac7c767831f097f259 |
+| DevMesh_产品验收场景_V10.0.md | 95c80ed87a0a8882c546294ba3aaa384782935a74630aa150aba7561d2f430fd |
 
 ### P1-07 开发增量：Runner 发布退役交接（2026-11-13）
 
@@ -685,3 +685,8 @@ implement-workbench-first-path的2.2接入既有understanding／plan review与�
 ### 新任务原信封与项目依据日记实施范围
 
 继续P1-08的2.3，先实现task原生草稿／严格项目原信封、跨basis锁、新Run回执校验、项目更高版本正向不存在关闭证明／完整CAS和附件移除历史。页面入口仍待实施，不因原生模块完成勾选2.3；保持SQL／Runner／依赖和正式门槛。
+
+
+### 新任务目标入口与原提交恢复实施范围
+
+P1-08的2.3接入task页面：下一目标切换、类型／标题／正文及附件、活动／null发布草稿、当前项目准入重读、原任务独立恢复、项目过期关闭／旧历史、移除后的明确空白；补真实保护页面6项及既有适用回归、1440／390截图。代码复用原生日记，不改SQL／Runner／依赖；完整2.3只在实际验证后评审，正式前置／G0仍未满足。

@@ -197,3 +197,23 @@ The local journal SHALL isolate task drafts by principal, project, project revis
 #### Scenario: Next target is drafted before the first accepted release
 - **WHEN** the current project still has no accepted release
 - **THEN** an isolated task draft SHALL remain saveable with an explicit null release basis, but SHALL NOT enqueue a create-task original; switching later to a real accepted release SHALL require explicit review
+
+
+### Requirement: Separate next-target UI and original task recovery
+The protected workbench SHALL isolate the next target from current Run input, persist its kind, title, goal and selected material, and use guarded explicit switching. Current nonviewer users MAY draft during active execution or before an accepted release; fresh task submission SHALL require the exact current accepted project basis and server admission.
+
+#### Scenario: Project changes before a fresh task freeze
+- **WHEN** the protected current-project recheck finds a newer project, different accepted release or closed createTask admission
+- **THEN** the page SHALL retain the target and material without a native task command or task POST, and SHALL require explicit current-basis review
+
+#### Scenario: Pending task remains after fresh createTask disappears
+- **WHEN** a task acknowledgement is lost and a new Run already exists
+- **THEN** the authorized current project SHALL expose its exact project-scoped original recovery, never POST on reload, and enter only the new Run returned by the verified original receipt
+
+#### Scenario: Native target saving fails
+- **WHEN** a task draft transaction aborts or the chosen File remains unsaved
+- **THEN** the page SHALL retain task fields and memory input, block switching, and allow explicit retry or discard without HTTP submission
+
+#### Scenario: Task history and authority
+- **WHEN** a task original closes from a verified stale-project or removed-attachment proof
+- **THEN** its complete target and original history SHALL remain readable through explicit task references; history and viewer pages SHALL mount no task command client

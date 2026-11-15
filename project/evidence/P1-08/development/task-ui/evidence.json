@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-16",
+  "base": "73e5f483d73571db081e134c71ec444d907f484e",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "ui",
+      "record": "ui-2026-11-15T22-59-19-659Z.json",
+      "tests": 6,
+      "pass": 6,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": []
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-15T23-06-52-742Z.json",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": []
+    },
+    {
+      "name": "http",
+      "record": "http-2026-11-15T23-24-55-290Z.json",
+      "tests": 15,
+      "pass": 15,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-15T22-44-04-465Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": [
+        "tests/browser/workbench-task-ui.test.mjs"
+      ],
+      "nonInputAssessment": [
+        {
+          "file": "tests/browser/workbench-task-ui.test.mjs",
+          "checkedInventoryHash": "485a938b653ae9579a6aaf94f8aa17af38eb9a234fe66041c68809dc7ab40dfb",
+          "currentHash": "d63cdaebb636b4954b5cba7740563bdebf7a88b391bbd7d6c0726606fe565e05",
+          "reason": "Only the standalone browser test navigation changed after this command. The original bytes match the preserved completed failed invocation. App tsdown entries/source maps do not import this .test.mjs, tsconfig includes only .ts/.tsx without allowJs, and contracts.mjs imports only built contracts. Final lint and every runtime group bind the current complete test inputs."
+        }
+      ]
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-15T22-44-04-658Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": [
+        "tests/browser/workbench-task-ui.test.mjs"
+      ],
+      "nonInputAssessment": [
+        {
+          "file": "tests/browser/workbench-task-ui.test.mjs",
+          "checkedInventoryHash": "485a938b653ae9579a6aaf94f8aa17af38eb9a234fe66041c68809dc7ab40dfb",
+          "currentHash": "d63cdaebb636b4954b5cba7740563bdebf7a88b391bbd7d6c0726606fe565e05",
+          "reason": "Only the standalone browser test navigation changed after this command. The original bytes match the preserved completed failed invocation. App tsdown entries/source maps do not import this .test.mjs, tsconfig includes only .ts/.tsx without allowJs, and contracts.mjs imports only built contracts. Final lint and every runtime group bind the current complete test inputs."
+        }
+      ]
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-15T22-58-32-834Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-15T22-44-05-239Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "nonInputTestDrift": [
+        "tests/browser/workbench-task-ui.test.mjs"
+      ],
+      "nonInputAssessment": [
+        {
+          "file": "tests/browser/workbench-task-ui.test.mjs",
+          "checkedInventoryHash": "485a938b653ae9579a6aaf94f8aa17af38eb9a234fe66041c68809dc7ab40dfb",
+          "currentHash": "d63cdaebb636b4954b5cba7740563bdebf7a88b391bbd7d6c0726606fe565e05",
+          "reason": "Only the standalone browser test navigation changed after this command. The original bytes match the preserved completed failed invocation. App tsdown entries/source maps do not import this .test.mjs, tsconfig includes only .ts/.tsx without allowJs, and contracts.mjs imports only built contracts. Final lint and every runtime group bind the current complete test inputs."
+        }
+      ]
+    }
+  ],
+  "totalPassed": 36,
+  "totalSkipped": 0,
+  "failures": [
+    {
+      "record": "http-2026-11-15T23-06-52-725Z.json",
+      "code": 1,
+      "changedDuringRun": []
+    },
+    {
+      "record": "ui-2026-11-15T22-49-25-734Z.json",
+      "code": 1,
+      "changedDuringRun": []
+    }
+  ],
+  "failureNotes": {
+    "ui-2026-11-15T22-49-25-734Z.json": {
+      "diagnosis": "ACK-loss task is committed into a new Run, but the test reloads its original explicit runId URL. Storage marks that original Run as history; the product correctly does not mount local task clients in history. The test omitted entering the current project before expecting its pending-task recovery control.",
+      "correction": "Only the standalone browser .test.mjs changed: after old-Run reload assert actual historical read-only context and no task entry, enter current project explicitly, assert pending recovery, then reload that current-project URL again and recover the identical original. Keep exact envelope, one task POST, unique task/material binding and no auto-POST assertions. No application or TypeScript source change.",
+      "validation": "Rerun the complete six-case UI file, followed by complete affected page/attachment browser and HTTP files. Rerun lint. Build/type/contracts do not import the .test.mjs; preserve their original inventories and explicitly disclose that single non-input difference, with source-map checks and all actual artifacts unchanged."
+    },
+    "http-2026-11-15T23-06-52-725Z.json": {
+      "diagnosis": "Completed original full HTTP invocation:13 passed,2 failed,0 cancelled/skipped. Both failures occurred in workbenchPlanningFixture before source-GET assertions. One StorageError ENDPOINT_UNAVAILABLE reports no active/current compatible health check; the log contains no exact endpoint health record, so expiry, probe timeout or another underlying health cause is not proven. The other failure is the initial /projects fetch ECONNRESET (read ECONNRESET), before the UTF-8/size boundary assertions. Underlying reset cause is not established.",
+      "correction": "No application, test, fixture, health rule, timeout, artifact or assertion changed for these failures. Preserve the completed failed source/artifact snapshot and all raw output. Run the full15 HTTP cases again after the separate browser regression finishes, with the same input/artifact bytes. Do not replace failing assertions with retries or fabricated health.",
+      "validation": "Only a completed exact-input full-file HTTP rerun with15 passes/0fail/cancel/skip may be used for final green totals. The original13/2 invocation remains visible and does not count toward final passed cases; a later green result does not prove the original transient causes."
+    }
+  },
+  "visual": {
+    "reviewedBy": "Codex / same-agent development visual review",
+    "reviewedAt": "2026-11-15T23:07:54.436Z",
+    "businessPassCountAdded": 0,
+    "screenshots": [
+      {
+        "file": "task-390.png",
+        "sha256": "cda44fbd594413b7bf1a7854947a07138c1813b372e2f399788a1181b03db1a7"
+      },
+      {
+        "file": "task-desktop.png",
+        "sha256": "e09f4b233edf7cd366f4c8ee0fc2db762f27a29648789e64f4daffbf8e4b4e28"
+      }
+    ],
+    "observations": [
+      "Opened both final UI-run images using view_image, after the completed six-case run.",
+      "390px: target kind/title/goal, chooser/upload library controls, submit and complete removed-original history are readable in a single column; runtime scroll-width assertion also passed.",
+      "1440px: project list, independent target form and detail tabs remain separate; task kind/title/edited goal and explicit save status are readable.",
+      "Full-page captures retain the sticky header at the scrolled viewport offset after the form was focused; this is not a viewport screenshot or a claim about event-time focus behavior."
+    ],
+    "followUps": [
+      "The wrapper retains its previous failed-switch warning after the Composer saves successfully. Navigation retry works, but the warning wording should describe the previous failed action rather than assert the current draft is unsaved. Include that wording repair in the next actual code increment.",
+      "The existing Run-input-disabled notice above the valid next-task form should specify current Run supplemental input, to distinguish it from next-task submission.",
+      "Future full-page capture should scroll to the top first to make sticky-header placement in the captured artifact easier to review."
+    ],
+    "limits": [
+      "No additional business passes are counted from screenshot inspection.",
+      "No claim of completed delivery navigation, WebSocket/event-time focus, real model/OIDC/Linux, real acceptance/physical stop, or product/gate acceptance."
+    ]
+  },
+  "actualChecks": [
+    "活动首轮null发布草稿独立保存，切回／刷新不混入当前输入；实际接受依据改变后明确空白与旧目标／kind／title复制，clientDraftId不同，项目名不变。",
+    "真实保护页面选择与上传材料，原任务先本机持久再POST；丢ACK重新进入当前项目仍提供原请求核实，准确新Run与唯一任务／材料绑定。",
+    "更高项目依据原请求关闭、完整旧稿／title／原信封和关闭历史保留；延迟旧任务412，没有额外任务。",
+    "实际T1附件移除拒绝原任务，REMOVED顺序证明关闭与明确空白清任务字段／选择，保留原历史；390px切面板保留输入且无横向溢出。",
+    "新任务冻结前实际并发项目推进，受保护当前项目重读阻止主命令／POST并保留准确草稿；刷新后只读旧Run和当前任务入口正确。",
+    "原生任务草稿abort保留页内goal／kind／title，阻止切换，明确重试后准确提交与只清本任务；新viewer／历史上下文无任务或本机连接。",
+    "既有完整page9／attachmentUI6与HTTP15回归；实际桌面／移动截图由同一Agent打开检查，不将截图当额外业务测试。"
+  ],
+  "inputAssessment": "Final changed-package build and type/lint/contracts complete before UI6. Complete old page9/attachmentUI6 and independent HTTP15 follow UI6, using disjoint temporary fixtures;36 distinct cases. All runtime inputs and eight actual server/browser/local/task JS/maps are stable before/after/current. Build/type/contracts retain an explicitly disclosed one-file inventory difference: only the standalone browser .test.mjs navigation was corrected after those checks; it is excluded from their actual inputs by the TS config, build entry/source maps and contracts script. Exact old test bytes are preserved with the completed failed run. Final lint and runtime inventories match the corrected test. Current source maps match source bytes, including unchanged native modules already validated at the parent commit. No standalone native rebuild or repeat is needed because their sources/entry/build inputs remain unchanged. SQL1..45, Runner/store, contracts and dependencies remain unchanged.",
+  "scope": "Actual protected React/CSP and Edge/native IndexedDB, File chooser, HTTP/SQLite/file Worker task UI. Accepted release/ended Run use explicit metadata fixtures after actual storage publishPlan. Actual next-target isolation, null-release draft, explicit basis review/copy, title generation, file/task ACK loss and unique original recovery, stale-project close/history, T1 removed attachment/explicit blank, fresh rival-task preflight refusal, real native draft abort/retry, fresh viewer/history authority and mobile layout. No real acceptance/physical-stop/model/OIDC/Linux, WebSocket or complete product/gate acceptance.",
+  "limits": [
+    "正式P1-08仍NOT_STARTED，前置及G0未满足；OpenSpec子步骤勾选不等于整个工作包或阶段验收通过。",
+    "接受发布／终态Run为明确元数据夹具，故不声称真实接受或物理停止；真实身份／模型／Linux资源继续空置。",
+    "新任务保护页面的本机保存／附件／请求恢复已验证；交付导航、WebSocket、完整D01／T08及正式产品／门槛验收继续。",
+    "视觉复核保留两项提示措辞改进：保存成功后旧切换警告未自动清除、当前Run补充输入与下一目标的禁用提示需区分；导航／保存实际行为已验证，下一代码增量修订措辞。全页截图保留聚焦后的sticky偏移，不声称事件期间焦点／布局验收。",
+    "复核者为同一Codex Agent，不冒充独立人员或用户签认。"
+  ],
+  "managementChecks": "management-checks.json"
+}
