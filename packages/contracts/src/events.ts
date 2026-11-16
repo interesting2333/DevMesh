@@ -16,7 +16,7 @@ export const eventPayloads = {
   ArtifactRegistered: z.strictObject({ artifact: artifactRef }),
   ChangeApplied: z.strictObject({ changeId: ids.change, requirementRevision: revision, planRevision: revision }),
   DecisionSaved: z.strictObject({ decisionId: ids.decision }),
-  ControlProgress: z.strictObject({ state: runState, controlRevision: revision, runEpoch: epoch }),
+  ControlProgress: z.strictObject({ state: runState, controlRevision: revision, runEpoch: epoch, unresolvedTargets: z.number().int().nonnegative().optional(), lastCheckedAt: z.string().min(1).optional() }),
   ConfigurationApplied: z.strictObject({ configurationRef: artifactRef }),
   CandidateUpdated: z.strictObject({ candidateId: ids.candidate, state: z.enum(['PREPARING', 'READY', 'BLOCKED', 'SUPERSEDED']) }),
   CandidateReviewRecorded:z.strictObject({candidateId:ids.candidate,resultId:opaqueKey}),

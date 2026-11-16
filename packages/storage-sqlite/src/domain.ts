@@ -216,6 +216,10 @@ export function createDomain(db: DatabaseSync) {
     for (const row of all('SELECT preparation_attempt_id FROM preparation_attempts WHERE run_id=? AND ended_at IS NULL ORDER BY preparation_attempt_id', runId))
       exec("INSERT OR IGNORE INTO run_control_targets(run_id,target_kind,target_id,state,attempts,last_checked_at,created_at,updated_at) VALUES(?, 'PREPARATION', ?, 'PENDING', 0, ?, ?, ?)", runId, String(row.preparation_attempt_id), time, time, time);
   }
+  function controlProgress(runId: string, operationId: string) {
+    const row = run(runId), targets = controlTargets(runId);
+    event(runId, operationId, 'ControlProgress', { state: { phase: row.phase, controlGate: row.control_gate, terminalOutcome: row.terminal_outcome }, controlRevision: Number(row.control_revision), runEpoch: Number(row.run_epoch), unresolvedTargets: targets.filter(target => !['SAVED', 'RELEASED'].includes(target.state)).length, ...(targets.length ? { lastCheckedAt: targets.map(target => target.lastCheckedAt).sort().at(-1) } : {}) });
+  }
   const outboxView = (row: Row): OutboxView => ({ outboxId: String(row.outbox_id), operationId: String(row.operation_id), destination: String(row.destination), payload: JSON.parse(String(row.payload_json)), status: String(row.status), deliveryAttempt: Number(row.delivery_attempts), leaseOwner: row.lease_owner as string | null, leaseUntil: row.lease_until as string | null });
   const operationView = (row: Row) => ({ operationId: String(row.operation_id), status: String(row.status), result: row.result_json === null ? null : JSON.parse(String(row.result_json)) as Record<string, unknown> });
   const lookup = (meta: Meta) => get('SELECT * FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?', meta.principalId, meta.scopeId, meta.idempotencyKey);
@@ -494,7 +498,7 @@ export function createDomain(db: DatabaseSync) {
         if (current.control_gate !== gate) exec('UPDATE runs SET control_gate=?,run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1 WHERE run_id=?', gate, input.runId);
         exec("UPDATE execution_grants SET status='REVOKED' WHERE run_id=? AND status='ACTIVE'", input.runId);
         const updated = run(input.runId);
-        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        controlProgress(input.runId, operationId);
         outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: input.action });
         return { ...runView(updated) };
       });
@@ -511,7 +515,7 @@ export function createDomain(db: DatabaseSync) {
         exec("UPDATE runs SET control_gate='PAUSING',run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1 WHERE run_id=?", input.runId);
         exec("UPDATE execution_grants SET status='REVOKED' WHERE run_id=? AND status='ACTIVE'", input.runId);
         const updated = run(input.runId);
-        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        controlProgress(input.runId, operationId);
         outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: 'pause' });
         return { ...runView(updated), revision: Number(updated.resource_revision), targets: controlTargets(input.runId) };
       });
@@ -527,7 +531,7 @@ export function createDomain(db: DatabaseSync) {
         exec("UPDATE runs SET control_gate='CANCELLING',run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1 WHERE run_id=?", input.runId);
         exec("UPDATE execution_grants SET status='REVOKED' WHERE run_id=? AND status='ACTIVE'", input.runId);
         const updated = run(input.runId);
-        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        controlProgress(input.runId, operationId);
         outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: 'cancel' });
         return { ...runView(updated), revision: Number(updated.resource_revision), targets: controlTargets(input.runId) };
       });
@@ -545,13 +549,13 @@ export function createDomain(db: DatabaseSync) {
         if (unresolvedTargets(input.runId).length) throw new StorageError('CONTROL_TARGETS_UNRESOLVED', 409, 'Control targets are still unresolved');
         exec("UPDATE runs SET control_gate='OPEN',run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1,recovery_review_hash=NULL WHERE run_id=?", input.runId);
         const updated = run(input.runId);
-        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        controlProgress(input.runId, operationId);
         return { ...runView(updated), revision: Number(updated.resource_revision) };
       });
     },
     recordControlTarget(input: Parsed<'recordControlTarget'>) {
       const { meta, ...payload } = input;
-      return operation(meta, 'RecordControlTarget', payload, () => {
+      return operation(meta, 'RecordControlTarget', payload, operationId => {
         const current = required(get('SELECT * FROM run_control_targets WHERE run_id=? AND target_kind=? AND target_id=?', input.runId, input.targetKind, input.targetId));
         const transitions: Record<string, string[]> = {
           PENDING: ['STOPPING', 'SAVED', 'RELEASED', 'UNKNOWN', 'FAILED'],
@@ -564,6 +568,7 @@ export function createDomain(db: DatabaseSync) {
         if (!transitions[String(current.state)]?.includes(input.state)) throw new StorageError('CONTROL_TARGET_STATE_INVALID', 409, 'Illegal control target transition');
         const time = now();
         exec('UPDATE run_control_targets SET state=?,attempts=attempts+?,failure_code=?,evidence_json=?,last_checked_at=?,updated_at=? WHERE run_id=? AND target_kind=? AND target_id=?', input.state, input.state === 'STOPPING' ? 1 : 0, input.failureCode ?? null, input.evidence ? canonical(input.evidence) : null, time, time, input.runId, input.targetKind, input.targetId);
+        controlProgress(input.runId, operationId);
         return controlTargetView(required(get('SELECT * FROM run_control_targets WHERE run_id=? AND target_kind=? AND target_id=?', input.runId, input.targetKind, input.targetId)));
       });
     },
@@ -580,7 +585,7 @@ export function createDomain(db: DatabaseSync) {
         const recoveryReviewHash = digest(canonical({ runId: input.runId, controlRevision: Number(current.control_revision), targets: targets.map(target => ({ targetKind: target.targetKind, targetId: target.targetId, state: target.state, evidence: target.evidence })) }));
         exec("UPDATE runs SET control_gate='PAUSED',control_revision=control_revision+1,resource_revision=resource_revision+1,recovery_review_hash=? WHERE run_id=?", recoveryReviewHash, input.runId);
         const updated = run(input.runId);
-        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        controlProgress(input.runId, operationId);
         return { ...runView(updated), revision: Number(updated.resource_revision), targets, recoveryReviewHash };
       });
     },

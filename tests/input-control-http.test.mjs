@@ -5,11 +5,14 @@ import {inputFixture} from './fixtures/input-data.mjs';
 import {RunControlCoordinator} from '../packages/platform-core/dist/index.mjs';
 
 test('run control HTTP requires the current control revision and exposes pause, status and resume',{timeout:120000},async t=>{
-  const f=await inputFixture(t),created=await f.create({}),runId=created.body.result.runId;
+  const f=await inputFixture(t),created=await f.create({}),p=created.body.result,runId=p.runId;
   let status=await f.call(`/runs/${runId}/control`);
   assert.equal(status.response.status,200);
   assert.equal(status.body.controlGate,'OPEN');
   const revision=status.body.controlRevision;
+  const before=await f.call(`/projects/${p.projectId}/runs/${runId}/events?afterSeq=0`);
+  assert.equal(before.response.status,200);
+  const cursor=before.body.nextCursor;
   const headers=extra=>({'content-type':'application/json','idempotency-key':randomUUID(),...extra});
   const missing=await f.call(`/runs/${runId}:pause`,{method:'POST',headers:headers({}),body:'{}'});
   assert.equal(missing.response.status,428);
@@ -20,6 +23,11 @@ test('run control HTTP requires the current control revision and exposes pause, 
   status=await f.call(`/runs/${runId}/control`);
   assert.equal(status.body.controlGate,'PAUSING');
   assert.deepEqual(status.body.unresolved,[]);
+  const events=await f.call(`/projects/${p.projectId}/runs/${runId}/events?afterSeq=${cursor}`);
+  assert.equal(events.response.status,200);
+  const progress=events.body.events.filter(event=>event.type==='ControlProgress').at(-1);
+  assert.equal(progress.payload.unresolvedTargets,0);
+  assert.equal(progress.payload.state.controlGate,'PAUSING');
   const coordinator=new RunControlCoordinator(f.storage,{configured:true,async stop(){throw new Error('no targets expected');}},{principalId:'coordinator.local'});
   await coordinator.tick();
   status=await f.call(`/runs/${runId}/control`);

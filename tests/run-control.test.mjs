@@ -15,6 +15,9 @@ test('pause records per-target cleanup, finish derives recovery review and resum
   assert.equal(paused.result.runEpoch, current.runEpoch + 1);
   const targets = await storage.request('listControlTargets', { runId: context.runId });
   assert.deepEqual(targets.map(target => [target.targetKind, target.targetId, target.state]), [['ATTEMPT', attemptId, 'PENDING']]);
+  let progress = (await storage.request('listEvents', { runId: context.runId, afterSeq: 0, limit: 50 })).events.filter(event => event.type === 'ControlProgress').at(-1);
+  assert.equal(progress.payload.unresolvedTargets, 1);
+  assert.ok(progress.payload.lastCheckedAt);
   const status = await storage.request('getControlStatus', { runId: context.runId });
   assert.equal(status.unresolved.length, 1);
   assert.ok(status.lastCheckedAt);
@@ -27,6 +30,8 @@ test('pause records per-target cleanup, finish derives recovery review and resum
   await rejects(storage.request('finishControl', { meta: meta(context.runId), runId: context.runId, controlRevision: paused.result.controlRevision, outcome: 'PAUSED' }), 'CONTROL_TARGETS_UNRESOLVED');
   await storage.request('recordControlTarget', { meta: meta(context.runId), runId: context.runId, targetKind: 'ATTEMPT', targetId: attemptId, state: 'SAVED', evidence: { materialKey: 'attempt-output' } });
   await storage.request('recordControlTarget', { meta: meta(context.runId), runId: context.runId, targetKind: 'ATTEMPT', targetId: attemptId, state: 'RELEASED' });
+  progress = (await storage.request('listEvents', { runId: context.runId, afterSeq: 0, limit: 100 })).events.filter(event => event.type === 'ControlProgress').at(-1);
+  assert.equal(progress.payload.unresolvedTargets, 0);
   await storage.request('transitionAttempt', { meta: meta(context.runId), runId: context.runId, attemptId, expectedState: 'STOPPING', state: 'CANCELLED' });
   const finished = await storage.request('finishControl', { meta: meta(context.runId), runId: context.runId, controlRevision: paused.result.controlRevision, outcome: 'PAUSED' });
   assert.equal(finished.result.controlGate, 'PAUSED');

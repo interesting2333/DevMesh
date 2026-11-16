@@ -65,3 +65,10 @@ corepack pnpm@11.28.5 typecheck                                                 
 - 存储控制结果补充 `revision`，使既有 receipt 形状可用；`getControlStatus` 暴露 `recoveryReviewHash` 供恢复审查。
 - 契约错误码新增控制类代码并重新生成 OpenAPI；新增 `ReadRunControlStatus` 路径，路径总数 65→66。
 - 验证：`tests/contracts.test.mjs` 18/18、`tests/input-control-http.test.mjs` 1/1；`contracts:check` 通过。
+
+## 追加：ControlProgress 事件投影（3.2 部分）
+
+- `ControlProgress` 事件新增可选 `unresolvedTargets` 与 `lastCheckedAt`。
+- pause／cancel／resume／finishControl／recordControlTarget 都发出携带未解决目标数与最近检查时间的 ControlProgress；事件仍持久化、可按 seq 续读。
+- 断点续读验证：记录 pause 前的事件 cursor，pause 后按该 cursor 读取，能取得 `controlGate=PAUSING`、`unresolvedTargets=0` 的真实持久事件。
+- 未完成：工作台 UI 的控制状态展示与真实浏览器断线重连验证；事件本身已可被现有 WS 客户端消费，但 3.2 不据此勾选。
