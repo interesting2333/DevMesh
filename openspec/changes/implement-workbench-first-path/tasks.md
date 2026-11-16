@@ -21,7 +21,7 @@
 
 ## 4. Integration and review
 
-- [ ] 4.1 在实际文件Worker／HTTP／浏览器贯通可独立于外部资源的空项目输入及已有交付页面链，执行适用回归／构建／类型／Lint／契约，保存真实日志与夹具边界。
+- [x] 4.1 在实际文件Worker／HTTP／浏览器贯通可独立于外部资源的空项目输入及已有交付页面链，执行适用回归／构建／类型／Lint／契约，保存真实日志与夹具边界。
 - [ ] 4.2 同步设计专题、验收、实施文档、基线、OpenSpec和P1-08台账，完成同一Agent开发复核；核对生成文档、严格变更校验和证据。
 - [ ] 4.3 具备真实模型／企业身份／Linux后执行完整产品路径一及T08，按前置和门槛记录正式P1-08复核；缺资源保持未执行，不用本地夹具代签。
 
@@ -70,3 +70,5 @@
 2026-11-16：完成3.2临时模型输出与中断显示，变更累计9/13。DeepSeek显式responseMode:sse按实际HTTP协议增量解析，默认JSON及旧配置hash保持；只读content片段独立streamId/index，无领域seq或历史重放，最终响应落盘后才显示已保存及执行工具。WS逐帧复核权限并有界排队；浏览器断线／截断显示中断，保留草稿、页签和焦点，刷新只读取已保存结果。最终协议18、Runtime／Preparation28、契约18、WS13、既有实时浏览器6及新实际平台浏览器3，共86通过，零失败／跳过／取消；构建／类型／Lint／OpenAPI通过。初次类型错误和浏览器旧依据草稿预期错误的准确输入／原日志保留，修复后验证通过。实际本地SSE／官方A2A／平台／文件Worker／Edge不代签真实模型、OIDC、Linux或完整产品验收。按用户指令完成本项后统一提交并暂停，不执行3.3或下一项；正式P1-08、P0-06及G0～G4不变。 证据：`project/evidence/P1-08/model-stream-development-review.md`。
 
 2026-11-16：按用户“全部完成实现”授权继续，完成3.3键盘、窄屏与事件期间焦点／选择验证，变更累计10/13；本轮无生产代码改动，仅执行并记录既有实现的实际浏览器验证。实际Edge157（headless）：页面测试1通过，覆盖Enter换行、IME composition与repeat期间Ctrl/Cmd+Enter零POST、页签ArrowRight／End／Home焦点移动、390×844无横向溢出且切换详情／输入不丢正文、截图保存及Ctrl+Enter单次提交；实时事件测试6通过，覆盖快照订阅缺口、真实TCP断线重连、乱序／重复帧、服务端缓冲溢出与空闲撤权，均保留草稿／页签／焦点／选区（focus:true,start:1,end:4）且零额外POST。构建／类型／Lint／契约及4.1全量回归尚未执行，4.2文档／台账同步与4.3真实资源验收继续；正式P1-08、P0-06及G0～G4不变，身份／模型／Runner仍为明确夹具，不代签真实OIDC／模型／Linux或产品验收。 证据：`project/evidence/P1-08/event-continuity-development-review.md`。
+
+2026-11-16：完成4.1集成回归，变更累计11/13。仓库全量`check`执行到acceptance组，终止前顶层TAP 224通过、0失败，覆盖toolchain／vendor／build／typecheck／lint及smoke／contracts／storage／content／a2a／runtime／runner／mcp／workspaces／input／events／preparation／scheduler／verification与部分acceptance；单个验收场景在宿主100%负载下耗时5～6分钟，故主动终止，未宣称完整check全绿。另独立执行构建与`contracts:check`均通过；浏览器补跑空项目输入1、实时事件6、交付导航1，共8通过。完整13文件浏览器矩阵尝试后终止，不计通过；既有回答／附件／上传／移除／任务页记录由各增量review承载。完整验收组、完整浏览器矩阵留待5.2与门槛复核；4.2文档／基线／台账同步与4.3真实资源验收继续，正式P1-08／G0不变。 证据：`project/evidence/P1-08/integration-regression-development-review.md`。
