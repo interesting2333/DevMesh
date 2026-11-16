@@ -15,6 +15,7 @@ export const inputRequests = {
   getInputWorkspace: z.strictObject({ ...principal, projectId:ids.project, runId:ids.run.optional(), afterMessageId:z.string().max(256).optional(), ...page }),
   getWorkbenchSource:z.strictObject({...principal,runId:ids.run,ref:sourceRef}),
   listInputProjects: z.strictObject({ ...principal, cursor:z.strictObject({ updatedAt:z.iso.datetime({precision:3}), projectId:ids.project }).optional(), limit:z.number().int().min(1).max(100).default(20) }),
+  getInputEventWindow: z.strictObject({ ...principal, projectId:ids.project, runId:ids.run, afterSeq:epoch.default(0), ...page }),
   listInputEvents: z.strictObject({ ...principal, projectId:ids.project, runId:ids.run, afterSeq:epoch.default(0), ...page }),
   getInputAttachment: z.strictObject({ ...principal, attachmentId:ids.attachment }),
   removeInputAttachment: z.strictObject({ ...principal, attachmentId:ids.attachment }),
@@ -43,6 +44,7 @@ export interface InputResults {
   getInputOperation:OperationResult; lookupInputOperation:OperationResult|null;
   getInputWorkspace:WorkspaceView;
   listInputProjects:{projects:{projectId:string;name:string;updatedAt:string;membership:string}[];nextCursor:{updatedAt:string;projectId:string}|null};
+  getInputEventWindow:{events:Record<string,unknown>[];nextCursor:number;headSeq:number;retainedFromSeq:number};
   listInputEvents:{events:Record<string,unknown>[];nextCursor:number};
   getInputAttachment:AttachmentView; removeInputAttachment:AttachmentView;
   claimUploadIntake:UploadIntake;getUploadIntake:UploadIntake;validateUploadIntake:UploadIntake;commitUploadIntake:UploadIntake;failUploadIntake:UploadIntake;

@@ -1,0 +1,40 @@
+-- Retain original dispatch and abort decision; completion is an additional fact.
+CREATE TABLE acceptance_abort_completions (
+ preparation_operation_id TEXT PRIMARY KEY REFERENCES acceptance_abort_decisions(preparation_operation_id),
+ decision_hash TEXT NOT NULL UNIQUE REFERENCES acceptance_abort_decisions(decision_hash),
+ evidence_hash TEXT NOT NULL,evidence_json TEXT NOT NULL CHECK(json_valid(evidence_json)),
+ source_dataset_id TEXT REFERENCES preview_write_gates(dataset_id),source_gate_revision INTEGER,source_gate_fence INTEGER,
+ source_close_operation_id TEXT,source_close_request_hash TEXT,completed_at TEXT NOT NULL,
+ CHECK((source_dataset_id IS NULL AND source_gate_revision IS NULL AND source_gate_fence IS NULL AND source_close_operation_id IS NULL AND source_close_request_hash IS NULL) OR (source_dataset_id IS NOT NULL AND source_gate_revision>=0 AND source_gate_fence>=0))
+) STRICT;
+CREATE TRIGGER acceptance_abort_completion_insert BEFORE INSERT ON acceptance_abort_completions WHEN
+ NOT EXISTS(SELECT 1 FROM acceptance_abort_decisions a JOIN acceptance_preparations p ON p.operation_id=a.preparation_operation_id JOIN projects j ON j.project_id=p.project_id JOIN preview_write_gates t ON t.dataset_id=p.target_dataset_id
+  WHERE a.preparation_operation_id=NEW.preparation_operation_id AND a.decision_hash=NEW.decision_hash
+  AND json_extract(NEW.evidence_json,'$.operationId')=p.operation_id AND json_extract(NEW.evidence_json,'$.requestHash')=p.request_hash AND json_extract(NEW.evidence_json,'$.decisionHash')=a.decision_hash
+  AND j.accepted_release_id IS json_extract(p.request_json,'$.expectedAcceptedReleaseId') AND t.state='CLOSED'
+  AND NEW.source_dataset_id IS json_extract(p.request_json,'$.source.datasetId')
+  AND NOT EXISTS(SELECT 1 FROM acceptance_commits c WHERE c.preparation_operation_id=p.operation_id)
+  AND NOT EXISTS(SELECT 1 FROM releases r WHERE r.release_id=p.release_id OR r.prepared_data_ref=p.target_dataset_id)) OR
+ (NEW.source_dataset_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM preview_write_gates g WHERE g.dataset_id=NEW.source_dataset_id AND g.revision=NEW.source_gate_revision AND g.fence=NEW.source_gate_fence AND g.close_operation_id IS NEW.source_close_operation_id AND g.close_request_hash IS NEW.source_close_request_hash AND (g.state='OPEN' OR g.close_operation_id=NEW.preparation_operation_id))) OR
+ EXISTS(SELECT 1 FROM preview_access_requests w WHERE w.dataset_id=NEW.source_dataset_id AND w.is_write=1 AND w.state IN ('DISPATCHED','UNKNOWN'))
+BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_ABORT_COMPLETION_INVALID'); END;
+CREATE TRIGGER acceptance_abort_completion_update BEFORE UPDATE ON acceptance_abort_completions BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_ABORT_COMPLETION_IMMUTABLE'); END;
+CREATE TRIGGER acceptance_abort_completion_delete BEFORE DELETE ON acceptance_abort_completions BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_ABORT_COMPLETION_RETAINED'); END;
+
+DROP TRIGGER acceptance_one_unresolved_project;
+CREATE TRIGGER acceptance_one_unresolved_project BEFORE INSERT ON acceptance_preparations
+WHEN NEW.state<>'FAILED' AND EXISTS(SELECT 1 FROM acceptance_preparations p WHERE p.project_id=NEW.project_id AND p.state<>'FAILED'
+ AND NOT EXISTS(SELECT 1 FROM acceptance_commits c WHERE c.preparation_operation_id=p.operation_id)
+ AND NOT EXISTS(SELECT 1 FROM acceptance_abort_completions a WHERE a.preparation_operation_id=p.operation_id))
+BEGIN SELECT RAISE(ABORT,'ACCEPTANCE_PREPARATION_UNRESOLVED'); END;
+
+DROP TRIGGER preview_write_gate_update;
+CREATE TRIGGER preview_write_gate_update BEFORE UPDATE ON preview_write_gates WHEN
+ NEW.dataset_id IS NOT OLD.dataset_id OR NEW.project_id IS NOT OLD.project_id OR NEW.dataset_operation_id IS NOT OLD.dataset_operation_id OR NEW.dataset_request_hash IS NOT OLD.dataset_request_hash OR NEW.created_at IS NOT OLD.created_at OR NEW.fence<>OLD.fence+1 OR NEW.revision<>OLD.revision+1 OR
+ NOT ((OLD.state='OPEN' AND NEW.state='CLOSED') OR
+ (OLD.state='CLOSED' AND NEW.state='OPEN' AND NEW.close_operation_id IS NULL AND NEW.close_request_hash IS NULL AND EXISTS(
+ SELECT 1 FROM acceptance_abort_completions a WHERE a.preparation_operation_id=OLD.close_operation_id AND a.source_dataset_id=OLD.dataset_id AND a.source_gate_revision=OLD.revision AND a.source_gate_fence=OLD.fence AND a.source_close_operation_id=OLD.close_operation_id AND a.source_close_request_hash=OLD.close_request_hash)))
+BEGIN
+ SELECT CASE WHEN NEW.state='OPEN' AND EXISTS(SELECT 1 FROM acceptance_preparations p JOIN acceptance_abort_decisions a ON a.preparation_operation_id=p.operation_id WHERE p.target_dataset_id=NEW.dataset_id) THEN RAISE(ABORT,'ACCEPTANCE_ABORT_REQUESTED') END;
+ SELECT RAISE(ABORT,'PREVIEW_WRITE_GATE_IMMUTABLE');
+END;

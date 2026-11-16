@@ -1,0 +1,249 @@
+import { t as RunnerError } from "./protocol-CrzCRB9P.mjs";
+import { i as RunnerDatasetPaths } from "./dataset-backend-qZrMml_D.mjs";
+import { a as readDatasetJournal, c as initializeDatasetProfile, i as datasetHash, l as validateDatasetProfile, n as acceptanceDatasetJournal, o as readDatasetJson, r as acceptanceDatasetReceipt, s as validateStoredDataset, u as webCrudDatasetMarker } from "./dataset-journal-BxtC082T.mjs";
+import { a as validateAcceptanceMigration, i as validateAcceptanceFences, n as acceptanceDataOptions, r as validateAcceptanceDataset } from "./acceptance-dataset-backend-lXOInqKH.mjs";
+import { z } from "zod";
+import { randomUUID } from "node:crypto";
+import { dirname } from "node:path";
+import { canonical } from "@devmesh/storage-sqlite";
+import { parentPort, workerData } from "node:worker_threads";
+import { closeSync, constants, existsSync, fsyncSync, linkSync, lstatSync, openSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
+import { DatabaseSync, backup } from "node:sqlite";
+//#region src/acceptance-dataset-worker.ts
+const port = parentPort;
+if (!port) throw Error("Acceptance data actions require their dedicated Worker");
+let sequence = 0;
+const pending = /* @__PURE__ */ new Map();
+port.on("message", (m) => {
+	const p = pending.get(m.id);
+	if (!p) return;
+	pending.delete(m.id);
+	if (m.error) p.reject(new RunnerError(m.error.code, m.error.status));
+	else p.resolve(m.value);
+});
+function rpc(action) {
+	return new Promise((resolve, reject) => {
+		const id = ++sequence;
+		pending.set(id, {
+			resolve,
+			reject
+		});
+		port.postMessage({
+			rpc: action,
+			id
+		});
+	});
+}
+function durable(path, value) {
+	const fd = openSync(path, constants.O_CREAT | constants.O_EXCL | constants.O_WRONLY | constants.O_NOFOLLOW, 384);
+	try {
+		writeFileSync(fd, canonical(value) + "\n");
+		fsyncSync(fd);
+	} finally {
+		closeSync(fd);
+	}
+}
+const unknown = (errorCode) => ({
+	state: "UNKNOWN",
+	errorCode
+});
+async function main() {
+	const { action, preparation, options: rawOptions, trustedMigrationHashes } = workerData;
+	const options = acceptanceDataOptions.parse(rawOptions), r = validateAcceptanceDataset(preparation, options), paths = new RunnerDatasetPaths(options), target = {
+		projectId: r.projectId,
+		datasetId: r.target.datasetId
+	};
+	if (existsSync(paths.resolve(target).abortJournalPath)) {
+		if (action === "inspect") return unknown("ACCEPTANCE_DATA_ABORT_REQUESTED");
+		throw new RunnerError("ACCEPTANCE_DATA_ABORT_REQUESTED", 409);
+	}
+	const verify = async (f, kind) => {
+		if (canonical(validateAcceptanceFences(await rpc(kind), preparation)) !== canonical(f)) throw new RunnerError("ACCEPTANCE_DATA_CUSTODY_CHANGED", 409);
+	};
+	function source() {
+		if (!r.source) return null;
+		const p = paths.resolve({
+			projectId: r.projectId,
+			datasetId: r.source.datasetId
+		}), j = readDatasetJournal(p);
+		if (j.purpose !== "ACCEPTANCE" || j.projectId !== r.projectId || j.datasetId !== r.source.datasetId || j.storageKey !== r.source.storageKey || j.operationId !== r.source.datasetOperationId || j.releaseId !== r.source.releaseId || j.runnerId !== r.runnerId || j.schemaRevision !== r.source.schemaRevision || j.templateVersion !== r.dataPlan.templateVersion) throw new RunnerError("ACCEPTANCE_DATA_SOURCE_CHANGED", 409);
+		validateStoredDataset(p, j, options.maximumBytes);
+		return {
+			p,
+			j
+		};
+	}
+	async function inspect() {
+		try {
+			const p = paths.resolve(target);
+			if (!existsSync(p.journalPath)) return unknown("ACCEPTANCE_DATA_ORIGINAL_NOT_OBSERVED");
+			const j = readDatasetJournal(p);
+			if (j.purpose !== "ACCEPTANCE" || j.requestHash !== preparation.requestHash || canonical(j.journal.request) !== canonical(r)) return unknown("ACCEPTANCE_DATA_ORIGINAL_CHANGED");
+			if (![
+				p.fencesPath,
+				p.receiptPath,
+				p.databasePath,
+				p.markerPath
+			].every(existsSync)) return unknown("ACCEPTANCE_DATA_ORIGINAL_INCOMPLETE");
+			const fences = readDatasetJson(p.fencesPath), f = validateAcceptanceFences(fences.value, preparation), receipt = acceptanceDatasetReceipt.parse(readDatasetJson(p.receiptPath).value);
+			if (receipt.fencesHash !== datasetHash(fences.bytes)) return unknown("ACCEPTANCE_DATA_CUSTODY_CHANGED");
+			await verify(f, "inspect");
+			validateStoredDataset(p, j, options.maximumBytes, true);
+			return {
+				state: "MATERIALIZED",
+				receipt
+			};
+		} catch (e) {
+			return unknown(e instanceof RunnerError ? e.code : "ACCEPTANCE_DATA_ORIGINAL_UNVERIFIED");
+		}
+	}
+	if (action === "inspect") return inspect();
+	const existing = paths.resolve(target);
+	if (existsSync(existing.journalPath)) {
+		if (action === "prepare") return inspect();
+		const j = readDatasetJournal(existing);
+		if (j.purpose !== "ACCEPTANCE" || canonical(j.journal.request) !== canonical(r)) throw new RunnerError("ACCEPTANCE_DATA_ORIGINAL_CHANGED", 409);
+		return;
+	}
+	await rpc("preflight");
+	if (r.dataPlan.strategy === "PRESERVE_MIGRATE") validateAcceptanceMigration(await rpc("migration"), preparation, trustedMigrationHashes);
+	source();
+	if (action === "preflight") return void 0;
+	if (preparation.state !== "SENT") throw new RunnerError("ACCEPTANCE_DATA_DISPATCH_GRANT_REQUIRED", 409);
+	if (!await rpc("authorize")) throw new RunnerError("ACCEPTANCE_DATA_AUTHORIZATION_CHANGED", 409);
+	const p = paths.resolve(target, true);
+	if (existsSync(p.journalPath)) return inspect();
+	if (readdirSync(p.directory).length) return unknown("ACCEPTANCE_DATA_UNRECOGNIZED_DIRECTORY");
+	const j = acceptanceDatasetJournal.parse({
+		schemaVersion: "devmesh.local-dataset-operation.v2",
+		purpose: "ACCEPTANCE",
+		request: r,
+		requestHash: preparation.requestHash,
+		appDatasetId: randomUUID(),
+		createdAt: (/* @__PURE__ */ new Date()).toISOString()
+	});
+	function syncParents() {
+		if (process.platform === "win32") return;
+		for (const directory of [
+			paths.root,
+			dirname(p.directory),
+			p.directory
+		]) {
+			const fd = openSync(directory, constants.O_RDONLY);
+			try {
+				fsyncSync(fd);
+			} finally {
+				closeSync(fd);
+			}
+		}
+	}
+	try {
+		durable(p.journalPath, j);
+	} catch (e) {
+		if (e.code === "EEXIST") return inspect();
+		throw e;
+	}
+	try {
+		syncParents();
+		const f = validateAcceptanceFences(await rpc("acquire"), preparation);
+		durable(p.fencesPath, f);
+		syncParents();
+		await verify(f, "verify");
+		closeSync(openSync(p.stagingPath, constants.O_CREAT | constants.O_EXCL | constants.O_WRONLY | constants.O_NOFOLLOW, 384));
+		const originalSource = source(), s = r.dataPlan.strategy === "PRESERVE_MIGRATE" ? originalSource : null;
+		let snapshotAt = (/* @__PURE__ */ new Date()).toISOString();
+		if (s) {
+			const db = new DatabaseSync(s.p.databasePath, {
+				readOnly: true,
+				allowExtension: false,
+				enableDoubleQuotedStringLiterals: false
+			});
+			try {
+				db.exec("PRAGMA trusted_schema=OFF; PRAGMA query_only=ON; PRAGMA busy_timeout=1000; BEGIN");
+				validateDatasetProfile(db, s.j.appDatasetId);
+				snapshotAt = (/* @__PURE__ */ new Date()).toISOString();
+				const pageSize = Number(db.prepare("PRAGMA page_size").get().page_size);
+				if (pageSize * Number(db.prepare("PRAGMA page_count").get().page_count) > options.maximumBytes) throw new RunnerError("DATASET_SIZE_LIMIT", 413);
+				await backup(db, p.stagingPath, {
+					rate: 128,
+					progress({ totalPages }) {
+						if (totalPages * pageSize > options.maximumBytes) throw new RunnerError("DATASET_SIZE_LIMIT", 413);
+					}
+				});
+			} finally {
+				db.close();
+			}
+		}
+		const db = new DatabaseSync(p.stagingPath, {
+			allowExtension: false,
+			enableDoubleQuotedStringLiterals: false
+		});
+		try {
+			db.exec("PRAGMA trusted_schema=OFF; PRAGMA synchronous=FULL; PRAGMA journal_mode=DELETE");
+			if (s) {
+				validateDatasetProfile(db, s.j.appDatasetId);
+				db.prepare("UPDATE dataset_identity SET dataset_id=? WHERE singleton=1").run(j.appDatasetId);
+			} else initializeDatasetProfile(db, j.appDatasetId, r.dataPlan.initialData, snapshotAt);
+			validateDatasetProfile(db, j.appDatasetId);
+		} finally {
+			db.close();
+		}
+		const sync = openSync(p.stagingPath, constants.O_RDWR | constants.O_NOFOLLOW);
+		try {
+			if (lstatSync(p.stagingPath).size > options.maximumBytes) throw new RunnerError("DATASET_SIZE_LIMIT", 413);
+			fsyncSync(sync);
+		} finally {
+			closeSync(sync);
+		}
+		await verify(f, "verify");
+		paths.resolve(target);
+		linkSync(p.stagingPath, p.databasePath);
+		unlinkSync(p.stagingPath);
+		durable(p.markerPath, webCrudDatasetMarker.parse({
+			kind: "web-crud-dataset",
+			templateId: "web-crud-v1",
+			layoutVersion: 1,
+			datasetId: j.appDatasetId
+		}));
+		const bytes = readFileSync(p.databasePath), journalBytes = readDatasetJson(p.journalPath, 320 * 1024).bytes, fencesBytes = readDatasetJson(p.fencesPath).bytes;
+		const receipt = acceptanceDatasetReceipt.parse({
+			schemaVersion: "devmesh.local-dataset-receipt.v2",
+			purpose: "ACCEPTANCE",
+			operationId: preparation.operationId,
+			requestHash: preparation.requestHash,
+			fencesHash: datasetHash(fencesBytes),
+			data: {
+				datasetId: r.target.datasetId,
+				storageKey: r.target.storageKey,
+				schemaRevision: r.target.schemaRevision,
+				originDatasetId: s ? r.source.datasetId : null,
+				sourceReleaseId: r.expectedAcceptedReleaseId,
+				snapshotAt,
+				sha256: datasetHash(bytes),
+				byteSize: bytes.length,
+				integrity: "ok",
+				journalHash: datasetHash(journalBytes),
+				migrationRef: r.dataPlan.migrationRef
+			}
+		});
+		durable(p.receiptPath, receipt);
+		syncParents();
+		return await inspect();
+	} catch (e) {
+		return unknown(e instanceof RunnerError ? e.code : "ACCEPTANCE_DATA_PREPARATION_INTERRUPTED");
+	}
+}
+try {
+	port.postMessage({ value: await main() });
+} catch (e) {
+	port.postMessage({ error: {
+		code: e instanceof RunnerError ? e.code : e instanceof z.ZodError ? "ACCEPTANCE_DATA_REQUEST_INVALID" : "ACCEPTANCE_DATA_BACKEND_FAILURE",
+		status: e instanceof RunnerError ? e.status : e instanceof z.ZodError ? 422 : 503
+	} });
+} finally {
+	port.close();
+}
+//#endregion
+export {};
+
+//# sourceMappingURL=acceptance-dataset-worker.mjs.map

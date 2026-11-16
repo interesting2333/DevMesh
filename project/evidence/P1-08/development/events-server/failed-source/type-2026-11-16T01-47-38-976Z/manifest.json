@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "base": "df901feb544ee5465213ad57d414fe54ca65a058",
+  "record": "type-2026-11-16T01-47-38-976Z.json",
+  "at": "2026-11-16T01:48:53.771Z",
+  "preserved": [
+    {
+      "file": "packages/contracts/src/index.ts",
+      "sha256": "2f20963c89768ecc5256cae8ea36f748a32e750da3aa558f6c1c24b001b24c07",
+      "baseHash": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "packages/contracts/src/workbench-events.ts",
+      "sha256": "1cfe11aaf7789d2b8c17e1ff0e37dd2364b4ef9f605a48ec5fb9d0f7f82bc029",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/package.json",
+      "sha256": "98213e8dfd44d07ffeb311cb371ccdd1cc0c7a4dca373446f9e99b41d251eeea",
+      "baseHash": "52f982a159309971f82b3a5e4543a2424261339e5b5dded95b4ba83d60c7d847"
+    },
+    {
+      "file": "packages/input-api/src/index.ts",
+      "sha256": "fac1eb1a641d0992ff041c72854223216b58d84e5d084d6328ad8328a7caa83b",
+      "baseHash": "85b3ad318eb708dff941aa6207d799f7bc96905f4446f53cb60325e5b189c343"
+    },
+    {
+      "file": "packages/input-api/src/input-auth.ts",
+      "sha256": "cd425a77631826a3e05eae1a5c54769f7c35478d5e72f464811dfb523731c30e",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/workbench-events-server.ts",
+      "sha256": "ff5267a960b1f175746b99066c4e3aaaf0c6b3b5a69cb51fdae8470cc914aa88",
+      "baseHash": null
+    },
+    {
+      "file": "packages/platform-core/src/index.ts",
+      "sha256": "addfb3c49e2389a121173baff65c9463f833910e4cd44d0e412df3faf6022f3d",
+      "baseHash": "3396f53812b12420e674d519f7c97d082f56e5704c6c540f8503340a5ac37418"
+    },
+    {
+      "file": "packages/storage-sqlite/src/index.ts",
+      "sha256": "5c430b2c4383061acdb3796eca9bf636a1dc04294baa7d2232e257425fdcd36a",
+      "baseHash": "1f4a7f57ad3f98c357c866d3c69028488e44ad57575103c98fe9aa5dc4db10e5"
+    },
+    {
+      "file": "packages/storage-sqlite/src/input-domain.ts",
+      "sha256": "8493b813f22f512d897a62350cfbcc81dabff1eb2305b3028bdfaad79dc9a417",
+      "baseHash": "d692d9e623ea51906eb98992dbea660594bd844f3c39a3079bf0ac3a5a70ea53"
+    },
+    {
+      "file": "packages/storage-sqlite/src/input-protocol.ts",
+      "sha256": "0101f9725129aff28aa0c856c9ff6212979aac559900749499501ef736611b91",
+      "baseHash": "e877842609a392e3f8a791ef7825e01b824562b0b77c1c77bc1bcfe3c9ecc869"
+    },
+    {
+      "file": "packages/storage-sqlite/src/worker.ts",
+      "sha256": "392d80347353f396c137695f6ef2a9e556253003506dd3725ba1e0db805f086f",
+      "baseHash": "26baa1124be22de4432b84e0dd6706c3a662b54f6924e8aec8c72ddcde2e9b09"
+    },
+    {
+      "file": "pnpm-lock.yaml",
+      "sha256": "e70b0d3f367bbddb20ed55985625bd29a42d11b970fec1f47424419c2867af1f",
+      "baseHash": "13a881d65265117fc1894e15919be4fa1888c5cf3b61a985b8e031304f72d5da"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "packages/contracts/dist/index.d.ts",
+      "sha256": "b52751a0026f433a629a23a0efd96f269ae5cf29377e2ee07dabe5f07b779d22"
+    },
+    {
+      "file": "packages/contracts/dist/index.js",
+      "sha256": "7acaa18f7591379e900225c75e4b270024d5ef209b5b0c6490720821ea8349e6"
+    },
+    {
+      "file": "packages/contracts/dist/index.js.map",
+      "sha256": "6fa23c4828b456be3889384ba7185a83abf115c3034d9f5c679f4c242e2e40ff"
+    },
+    {
+      "file": "packages/input-api/dist/index.d.mts",
+      "sha256": "f8b2ac024578131dd578c82923552e32f36dc67f7db84ed190501f401ec40f41"
+    },
+    {
+      "file": "packages/input-api/dist/index.mjs",
+      "sha256": "a913eec706fd6b1c10fd19c56d4a019792d11f10009bb8f3c58824d5b748029a"
+    },
+    {
+      "file": "packages/input-api/dist/index.mjs.map",
+      "sha256": "ae0897cb17daf6dfaaa9542a7d34b7ca8beee5cbbfed54f79750f231799ad01f"
+    },
+    {
+      "file": "packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "sha256": "1fe4fcc7890b9ebbd1743727c29f801acb2224865890b193ab6eba2a7e056410"
+    },
+    {
+      "file": "packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "sha256": "e3d085fc7b6bdca18fc80262d2c9197af87674f5d14812624ade45035bf17948"
+    },
+    {
+      "file": "packages/input-api/dist/web/export/export-client.js",
+      "sha256": "77411e1f51f9ea731c1b9f27c9ad5fe8fb910999c67755f9ecacecddcd06330e"
+    },
+    {
+      "file": "packages/input-api/dist/web/export/export-client.js.map",
+      "sha256": "e1949e972178766ceaffba8048febc8a02610e2e8a885dda89908444066b1dfa"
+    },
+    {
+      "file": "packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "sha256": "8fbc8fdb0a40978e61c8695ad6cb20cd0a8ef88a2b1aba26ccdcfcb05696ae42"
+    },
+    {
+      "file": "packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "sha256": "1b1283c8dca5c15a59895869764a60130dd87912355efcc0cd12dfbf12ca9f4a"
+    },
+    {
+      "file": "packages/input-api/dist/web/review/review-client.js",
+      "sha256": "630594f2f840f6526f0e10f302ffbb51f5822945617f8fd64a0da9effb243bdd"
+    },
+    {
+      "file": "packages/input-api/dist/web/review/review-client.js.map",
+      "sha256": "457a1ff1a9dd0dfab8f566afac024f76e2cde5513fa7f37b6d9737f98f3673cb"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench/workbench-client.js",
+      "sha256": "4d90805b6670996b8a3337a2ee746dcd5ceb74f2cfd5dac58d086d708ae45e95"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "sha256": "82daa8e172422d9ba394cade3af57f25889ddb1ccabb34d5053e0ec97e6e11c1"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "sha256": "4ad64c6ab5683b15fb49228dd9fde862e8c4d0b483480ce18cc1beee8f733d8c"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "sha256": "2d05d55a4225121857e99a75639323cc5f875ba774543d9ef9ee60805c6a45bb"
+    }
+  ],
+  "inputReconstruction": "Unchanged inputs are exactly the Git base blobs; every differing or new input in the invocation inventory is retained here. Original full inventory and logs are in the invocation record."
+}

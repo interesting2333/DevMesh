@@ -485,3 +485,18 @@ Enter换行；Ctrl／Cmd+Enter提交时检查IME及重复键，操作期间同�
 缺模型／认证／Linux时仅显示真实已保存事实和目标页面的实际配置状态。本轮另将旧切换失败提示改成过去事实，并区分当前Run补充输入与下一任务。2.4已按实际本机检查完成，证据见准确交付导航开发复核；WebSocket和完整产品／门槛验收继续。
 
 准确候选交付导航的OpenAPI同时列出有界delivery读取、工作台返回脚本，以及原有acceptance/view和client.js的受保护只读入口；页面GET不代表准备或接受命令。既有契约测试的旧路径总数／实现列表按实际已公开入口补齐，并保留共享schema、参数引用和GET边界断言。
+
+
+### 实时事件服务（3.1 本机连接验证）
+
+服务端选用ws 8.23.0（MIT）及@types/ws 8.18.2，浏览器后续使用原生WebSocket；版本与完整性由锁文件固定。使用noServer挂在实际平台HTTP宿主的/events，关闭压缩，限制并发升级、连接数、载荷、历史补发量、提交唤醒计数、发送字节与期限。共享HTTP原边界／可信IdentityResolver，底层请求类型为IncomingMessage（Express Request的基类）；升级要求准确同源Origin，principalId只作为当前身份匹配条件。Cookie／企业认证继续未配置，不授予默认身份。
+
+Worker仅在已结束事务后发无payload提交唤醒；先订阅有界唤醒缓冲再按当前权限读取准确Run事件窗口，以连续seq补发，不把唤醒当业务事实。新增只读getInputEventWindow RPC，在同一事务返回head／保留边界；原HTTP事件分页形状不变，无SQL迁移。每页异步读取后、发送该页前重新鉴权及授权，空闲定期核实；游标超前、保留缺口、慢客户端或缓存超限明确resync并关闭。平台停止先关闭升级准入、撤销身份读取、清订阅与有界关闭，排空后再关存储。WebSocket关闭宽限不超过宿主shutdownTimeoutMs；它不改变其他既有后台服务的停止契约。模型临时token和客户端合并在3.2继续，不能写假持久seq。
+
+实际升级路径为`/events?principalId=user_1&projectId=prj_01&runId=run_01&afterSeq=17`，必须同时满足可信身份、准确Host／Origin和当前Run成员权限；查询不得携带token、任意目标、重复或未知字段。未配置身份为503，无身份401，Origin／主体不符403，目标不可见404，非法订阅422，容量或停止503。普通HTTP GET不建立订阅。当前企业Cookie认证未配置，不能将上述URL当作匿名连接地址。
+
+每帧严格包含`schemaVersion:1`、`projectId`、`runId`及kind对应字段；领域事件使用`{kind:'domain-event',event:<完整持久envelope>}`，不是自由文本。`subscribed`带afterSeq，`caught-up`带throughSeq；`resync-required`带最后实际发送cursor和RETAINED_GAP／CURSOR_AHEAD／BUFFER_OVERFLOW／SLOW_CLIENT／CATCHUP_LIMIT／STORAGE_UNAVAILABLE／PROTOCOL_INVALID之一。`authorization-lost`和`service-stopping`不含业务payload。断线可能来不及送达控制帧，客户端仍须重新鉴权／快照，不能据正常或异常关闭推断业务成功。服务不接受客户端命令，收到应用消息按1008关闭；授权失效1008、停止1001，其他resync通常1013，强制终止可能观察到1006。
+
+默认上限：64连接、16待升级、每连接256条提交唤醒、每页50事件（最大200）、首次补发2000事件、256KiB待发送字节、5秒发送期限、10秒空闲重新鉴权／ping、250ms关闭宽限。压缩关闭、客户端应用载荷最大4096字节。所有上限在构造时校验；无未配置的无限队列。临时数据库缺失历史测试明确注入故障并恢复不可变触发器，不能据此宣称归档删除已经实现；背压测试cork实际服务端TCP写入，不替代真实远程网络验收。
+
+选型来源：[ws官方README与认证示例](https://github.com/websockets/ws#client-authentication)，实际冻结版本按官方npm元数据与pnpm锁文件记录。真实文件Worker／平台宿主／网络连接完成本机开发验证，客户端接入、完整产品及正式门槛按后续步骤核实。

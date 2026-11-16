@@ -19,3 +19,6 @@ export {createReleaseExportInput,retryReleaseExportInput,releaseExportView,relea
 export * from './candidate-review.js';
 
 export * from './release-acceptance.js';
+
+export {workbenchEventSubscription,workbenchEventFrame} from './workbench-events.js';
+export type {WorkbenchEventSubscription,WorkbenchEventFrame} from './workbench-events.js';

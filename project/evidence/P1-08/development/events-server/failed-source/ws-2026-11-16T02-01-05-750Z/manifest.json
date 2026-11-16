@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "base": "df901feb544ee5465213ad57d414fe54ca65a058",
+  "record": "ws-2026-11-16T02-01-05-750Z.json",
+  "at": "2026-11-16T02:01:59.754Z",
+  "preserved": [
+    {
+      "file": "packages/contracts/src/index.ts",
+      "sha256": "2f20963c89768ecc5256cae8ea36f748a32e750da3aa558f6c1c24b001b24c07",
+      "baseHash": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "packages/contracts/src/workbench-events.ts",
+      "sha256": "1cfe11aaf7789d2b8c17e1ff0e37dd2364b4ef9f605a48ec5fb9d0f7f82bc029",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/package.json",
+      "sha256": "98213e8dfd44d07ffeb311cb371ccdd1cc0c7a4dca373446f9e99b41d251eeea",
+      "baseHash": "52f982a159309971f82b3a5e4543a2424261339e5b5dded95b4ba83d60c7d847"
+    },
+    {
+      "file": "packages/input-api/src/index.ts",
+      "sha256": "fac1eb1a641d0992ff041c72854223216b58d84e5d084d6328ad8328a7caa83b",
+      "baseHash": "85b3ad318eb708dff941aa6207d799f7bc96905f4446f53cb60325e5b189c343"
+    },
+    {
+      "file": "packages/input-api/src/input-auth.ts",
+      "sha256": "54e413db507144d83ba8a836b14f9f55f16215de9eb04602c9ce5af0e85105d6",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/workbench-events-server.ts",
+      "sha256": "c8cd5ecde7f2d5ffecb644d66edbcb2c29a7ef60f999cc54339efe859f677cf9",
+      "baseHash": null
+    },
+    {
+      "file": "packages/platform-core/src/index.ts",
+      "sha256": "719045c62ac81d401a1758f1ba7a23c2a2140b2003d33b7efdd5d1608f25b41e",
+      "baseHash": "3396f53812b12420e674d519f7c97d082f56e5704c6c540f8503340a5ac37418"
+    },
+    {
+      "file": "packages/storage-sqlite/src/index.ts",
+      "sha256": "5c430b2c4383061acdb3796eca9bf636a1dc04294baa7d2232e257425fdcd36a",
+      "baseHash": "1f4a7f57ad3f98c357c866d3c69028488e44ad57575103c98fe9aa5dc4db10e5"
+    },
+    {
+      "file": "packages/storage-sqlite/src/input-domain.ts",
+      "sha256": "8493b813f22f512d897a62350cfbcc81dabff1eb2305b3028bdfaad79dc9a417",
+      "baseHash": "d692d9e623ea51906eb98992dbea660594bd844f3c39a3079bf0ac3a5a70ea53"
+    },
+    {
+      "file": "packages/storage-sqlite/src/input-protocol.ts",
+      "sha256": "0101f9725129aff28aa0c856c9ff6212979aac559900749499501ef736611b91",
+      "baseHash": "e877842609a392e3f8a791ef7825e01b824562b0b77c1c77bc1bcfe3c9ecc869"
+    },
+    {
+      "file": "packages/storage-sqlite/src/worker.ts",
+      "sha256": "392d80347353f396c137695f6ef2a9e556253003506dd3725ba1e0db805f086f",
+      "baseHash": "26baa1124be22de4432b84e0dd6706c3a662b54f6924e8aec8c72ddcde2e9b09"
+    },
+    {
+      "file": "tests/fixtures/workbench-events.mjs",
+      "sha256": "b074b627489a2172cd1c3d1614c0507ff603bfa201238e517b1ab241ce07ee7b",
+      "baseHash": null
+    },
+    {
+      "file": "tests/workbench-events.test.mjs",
+      "sha256": "22300749d9ebba878e1242cf0648771c292bb88d3f4093496ef2e33627c1ccdd",
+      "baseHash": null
+    },
+    {
+      "file": "pnpm-lock.yaml",
+      "sha256": "e70b0d3f367bbddb20ed55985625bd29a42d11b970fec1f47424419c2867af1f",
+      "baseHash": "13a881d65265117fc1894e15919be4fa1888c5cf3b61a985b8e031304f72d5da"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "packages/contracts/dist/index.d.ts",
+      "sha256": "f7e5f3e5e880927fe0a0bcbefbdfa641b7d97e4375718b4fabccb8531f4c661b"
+    },
+    {
+      "file": "packages/contracts/dist/index.js",
+      "sha256": "371a975d18e436a3f03d1a26e8e726851a72e861096795919cf9f1439fc7a554"
+    },
+    {
+      "file": "packages/contracts/dist/index.js.map",
+      "sha256": "bce5b410b31fe05262fc6aa19884272c6586b7ab35df13e1d3c1b7927ebe691d"
+    },
+    {
+      "file": "packages/input-api/dist/index.d.mts",
+      "sha256": "2697c851154f5d671199ec778732fb60cb310bd1c6cb48c971c7681e4996d333"
+    },
+    {
+      "file": "packages/input-api/dist/index.mjs",
+      "sha256": "3e350fe6072c4cc21ab6a026ed547f3637b25d1cc1e3262dde8c749113024e9e"
+    },
+    {
+      "file": "packages/input-api/dist/index.mjs.map",
+      "sha256": "a40e86f27db36e482f890353f6ac7cfb77c05058c7e2d135cdcf3cc3da2dc20e"
+    },
+    {
+      "file": "packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "sha256": "c2b5517b7197266b44d312e17701b11bc03856532b7bffbf2b70a0446d3fd721"
+    },
+    {
+      "file": "packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "sha256": "16bb873981f033568e1a7cc9c6bd44b4568c6535ec43d7761ebd402541ae9444"
+    },
+    {
+      "file": "packages/input-api/dist/web/export/export-client.js",
+      "sha256": "bc2b1f018afd040060faae5530d44ceaa0b4724e942feebc5b5a98602f28d157"
+    },
+    {
+      "file": "packages/input-api/dist/web/export/export-client.js.map",
+      "sha256": "81ac5f52657ea8268d4f7b642fd8fd8214dbbddd370fa954259998849e3ef28a"
+    },
+    {
+      "file": "packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "sha256": "a6c5bd8b990617cb25ad4a252c551271198db8822222ccbb56741fdd5c6c0f00"
+    },
+    {
+      "file": "packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "sha256": "67cdb9202781855e7f6db02064dfbdca7c4b21acadfe42400b228bf71a75894e"
+    },
+    {
+      "file": "packages/input-api/dist/web/review/review-client.js",
+      "sha256": "c409c900800287b62c81767d2ab0f36a4e4bd25c5732742d3a05ede1d7cadef8"
+    },
+    {
+      "file": "packages/input-api/dist/web/review/review-client.js.map",
+      "sha256": "bc6e0acdf218dab45d72da6dbbf8856d49d7facfa5cf81501f9a203519ded991"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench/workbench-client.js",
+      "sha256": "95a1e8ba6bbd19563f0e29b7ad92cd8229fec854573ccf5641a3a182b6e9d465"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "sha256": "f5173c2cc7684684dbfbe4fb0e753efd7b4cc0abc537b2c28e958b34365fe1ee"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "sha256": "8d81e14d3e980ad7b799629018415ca30ff44ad5adb2919381d7aa492472f333"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "sha256": "5647a1629c917179bcf89f18d8fd549adfa5ba0abbabb1c59e3587ae0166ac4c"
+    }
+  ],
+  "artifactNote": "Captured driver artifact set preserved; see invocation for hashes.",
+  "inputReconstruction": "Unchanged inputs are base Git blobs; all differing/new inputs preserved."
+}

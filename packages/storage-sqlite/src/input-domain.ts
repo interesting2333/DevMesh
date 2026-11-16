@@ -71,6 +71,13 @@ export function createInputDomain(db:DatabaseSync,h:Helpers){
     exec("UPDATE operations SET status='SUCCEEDED',result_json=?,updated_at=? WHERE operation_id=?",canonical({attachmentId}),time,row.operation_id!);
   }
   function readTransaction<T>(fn:()=>T):T{db.exec('BEGIN');try{const value=fn();db.exec('COMMIT');return value;}catch(error){if(db.isTransaction)db.exec('ROLLBACK');throw error;}}
+  function eventWindow(input:InputParsed<'getInputEventWindow'>){return readTransaction(()=>{
+      const r=authorizedRun(input.principalId,input.runId);if(r.project_id!==input.projectId)fail('RESOURCE_NOT_FOUND',404,'Run is not in this project');
+      if(input.afterSeq>Number(r.event_seq))fail('EVENT_CURSOR_INVALID',409,'Event cursor is ahead of this Run');
+      const events=all('SELECT * FROM events WHERE run_id=? AND seq>? ORDER BY seq LIMIT ?',input.runId,input.afterSeq,input.limit).map(r=>parseContract(domainEvent,{schemaVersion:r.schema_version,eventId:r.event_id,projectId:r.project_id,runId:r.run_id,seq:r.seq,type:r.type,occurredAt:r.occurred_at,observedAt:r.observed_at,timeSource:r.time_source,resourceRevision:r.resource_revision,requirementRevision:r.requirement_revision,planRevision:r.plan_revision,operationId:r.operation_id,...(r.work_id?{workId:r.work_id}:{}),...(r.attempt_id?{attemptId:r.attempt_id}:{}),payload:JSON.parse(String(r.payload_json))}));
+      const headSeq=Number(r.event_seq),first=get('SELECT min(seq) AS seq FROM events WHERE run_id=?',input.runId);
+      return {events,nextCursor:events.at(-1)?.seq??input.afterSeq,headSeq,retainedFromSeq:first?.seq===null?Math.min(Number.MAX_SAFE_INTEGER,headSeq+1):Number(first?.seq??headSeq+1)};
+    });}
   const handlers={
     checkInputAccess(input:InputParsed<'checkInputAccess'>){const projectId=input.projectId??String(authorizedRun(input.principalId,input.runId!,input.write).project_id);return {projectId,membership:authorize(input.principalId,projectId,input.write)};},
     getWorkbenchSource(input:InputParsed<'getWorkbenchSource'>){return readTransaction(()=>{
@@ -185,12 +192,8 @@ export function createInputDomain(db:DatabaseSync,h:Helpers){
       const projects=rows.slice(0,input.limit).map(r=>({projectId:String(r.project_id),name:String(r.name),updatedAt:String(r.updated_at),membership:String(r.role)})),last=projects.at(-1);
       return {projects,nextCursor:rows.length>input.limit&&last?{updatedAt:last.updatedAt,projectId:last.projectId}:null};
     });},
-    listInputEvents(input:InputParsed<'listInputEvents'>){return readTransaction(()=>{
-      const r=authorizedRun(input.principalId,input.runId);if(r.project_id!==input.projectId)fail('RESOURCE_NOT_FOUND',404,'Run is not in this project');
-      if(input.afterSeq>Number(r.event_seq))fail('EVENT_CURSOR_INVALID',409,'Event cursor is ahead of this Run');
-      const events=all('SELECT * FROM events WHERE run_id=? AND seq>? ORDER BY seq LIMIT ?',input.runId,input.afterSeq,input.limit).map(r=>parseContract(domainEvent,{schemaVersion:r.schema_version,eventId:r.event_id,projectId:r.project_id,runId:r.run_id,seq:r.seq,type:r.type,occurredAt:r.occurred_at,observedAt:r.observed_at,timeSource:r.time_source,resourceRevision:r.resource_revision,requirementRevision:r.requirement_revision,planRevision:r.plan_revision,operationId:r.operation_id,...(r.work_id?{workId:r.work_id}:{}),...(r.attempt_id?{attemptId:r.attempt_id}:{}),payload:JSON.parse(String(r.payload_json))}));
-      return {events,nextCursor:events.at(-1)?.seq??input.afterSeq};
-    });},
+    getInputEventWindow:eventWindow,
+    listInputEvents(input:InputParsed<'listInputEvents'>){const {events,nextCursor}=eventWindow(input);return {events,nextCursor};},
     getInputAttachment(input:InputParsed<'getInputAttachment'>){return attachmentView(attachment(input.principalId,input.attachmentId));},
     removeInputAttachment(input:InputParsed<'removeInputAttachment'>){return transaction(db,()=>{
       const r=attachment(input.principalId,input.attachmentId);if(r.owner_id!==input.principalId)fail('FORBIDDEN',403,'Only the uploader can remove an unbound attachment');

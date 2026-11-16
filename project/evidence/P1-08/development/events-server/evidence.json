@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-16T02:09:57.621Z",
+  "base": "df901feb544ee5465213ad57d414fe54ca65a058",
+  "checks": [
+    {
+      "name": "ws",
+      "record": "ws-2026-11-16T02-03-30-876Z.json",
+      "pass": 11,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "name": "input",
+      "record": "input-2026-11-16T02-03-30-897Z.json",
+      "pass": 26,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "name": "storage",
+      "record": "storage-2026-11-16T02-03-30-888Z.json",
+      "pass": 47,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "name": "foundation",
+      "record": "foundation-2026-11-16T02-03-30-896Z.json",
+      "pass": 9,
+      "fail": 0,
+      "skipped": 1
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-16T02-06-17-006Z.json",
+      "pass": 47,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "name": "browser-page",
+      "record": "browser-page-followup-tool-output.json",
+      "pass": 9,
+      "fail": 0,
+      "skipped": 0,
+      "capture": "Tool output continuation with final TAP totals; first two subtests were in the initial tool response, not a full raw stdout capture."
+    }
+  ],
+  "totals": {
+    "pass": 149,
+    "fail": 0,
+    "skipped": 1
+  },
+  "failures": [
+    "type-2026-11-16T01-47-38-976Z.json",
+    "lint-2026-11-16T01-59-01-967Z.json",
+    "ws-2026-11-16T01-59-58-040Z.json",
+    "ws-2026-11-16T02-01-05-750Z.json",
+    "ws-2026-11-16T02-02-44-717Z.json"
+  ],
+  "scope": "Same-agent local development verification. Real file Worker/HTTP/ws TCP; explicit identity and retention/transport fault fixtures. No real model/OIDC/Linux/remote network/product/gate acceptance.",
+  "sourceMapProof": "source-map-proof.json"
+}

@@ -20,11 +20,14 @@ import {mountPreviewRoutes} from './preview.js';
 import {mountPreviewManagementRoutes} from './preview-management.js';
 import {mountWorkbenchRoutes} from './workbench.js';
 import type {PreviewAccessGateway} from './preview.js';
-import type {TLSSocket} from 'node:tls';
+import {createInputAuthenticator} from './input-auth.js';
+import type {Identity,IdentityResolver} from './input-auth.js';
+export type {Identity,IdentityResolver} from './input-auth.js';
+import {createWorkbenchEventServer} from './workbench-events-server.js';
+import type {WorkbenchEventLimits} from './workbench-events-server.js';
+export type {WorkbenchEventLimits} from './workbench-events-server.js';
 export type {PreviewAccessGateway} from './preview.js';
 
-export interface Identity { principalId:string }
-export type IdentityResolver=(request:Request,context:{signal:AbortSignal})=>Identity|null|Promise<Identity|null>;
 export interface TemplateBaseline { readonly version:string;readonly baseCommit:string }
 export type InputApiOptions={enabled?:false}|{
   enabled:true; identityResolver?:IdentityResolver|undefined; baseline:TemplateBaseline;
@@ -32,6 +35,7 @@ export type InputApiOptions={enabled?:false}|{
   previewPolicies?:Readonly<Record<string,string>>|undefined;
   releaseGateway?:ReleaseAccessGateway|undefined;
   acceptance?:AcceptanceAccess|undefined;
+  events?:WorkbenchEventLimits|undefined;
   maximumUploads?:number;diagnostic?:(detail:{requestId:string;error:unknown})=>void;
 };
 const runFile=promisify(execFile);
@@ -54,29 +58,15 @@ const positive=(value:unknown,fallback:number,max:number)=>{
   const text=scalar(value,'limit');if(!/^\d+$/.test(text)||Number(text)<1||Number(text)>max)fail('SCHEMA_INVALID',422,'Invalid page size');return Number(text);
 };
 const scopeMeta=(principalId:string,scopeId:string,request:Request)=>({principalId,scopeId,idempotencyKey:parseContract(idempotencyKey,request.headers['idempotency-key'])});
-function publicBoundary(request:Request){
-  if(!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(request.socket.remoteAddress??''))fail('REQUEST_ORIGIN_INVALID',403,'Input API requires its configured local transport');
-  for(const name of ['host','origin','authorization','cookie','idempotency-key','if-match','x-devmesh-principal']){
-    let count=0;for(let i=0;i<request.rawHeaders.length;i+=2)if(request.rawHeaders[i]!.toLowerCase()===name)count++;
-    if(count>1)fail('REQUEST_HEADERS_INVALID',400,'Ambiguous request headers');
-  }
-  const host=request.socket.localAddress==='::1'?`[::1]:${request.socket.localPort}`:`127.0.0.1:${request.socket.localPort}`;
-  if(request.headers.host!==host)fail('REQUEST_HOST_INVALID',403,'Unexpected request host');
-  const protocol=(request.socket as TLSSocket).encrypted?'https':'http';
-  if(request.headers.origin!==undefined&&request.headers.origin!==`${protocol}://${host}`)fail('REQUEST_ORIGIN_INVALID',403,'Unexpected request origin');
-  if(request.headers['sec-fetch-site']==='cross-site')fail('REQUEST_ORIGIN_INVALID',403,'Cross site input is not allowed');
-  // Enterprise cookie sessions require a future trusted resolver with explicit
-  // CSRF validation. This version never issues or accepts cookies by itself.
-  if(request.headers.cookie!==undefined)fail('COOKIE_AUTH_NOT_CONFIGURED',401,'Cookie authentication is not configured');
-}
 
 export function mountInputApi(app:Express,content:LocalContentStore,options:InputApiOptions={enabled:false}){
-  if(!options.enabled)return {enabled:false as const,stop:async()=>{}};
+  if(!options.enabled)return {enabled:false as const,stopAdmission:()=>{},stop:async()=>{}};
   parseContract(gitCommit,options.baseline.baseCommit);parseContract(opaqueKey,options.baseline.version);
   const baseline=Object.freeze({...options.baseline}),maximumUploads=options.maximumUploads??4;
   if(!Number.isInteger(maximumUploads)||maximumUploads<1||maximumUploads>8)throw new Error('maximumUploads must be 1..8');
+  const auth=createInputAuthenticator(options.identityResolver),events=createWorkbenchEventServer(content,auth,options.events);
   let accepting=true,activeUploads=0;
-  const pending=new Map<Promise<void>,Request>(),identityControllers=new Set<AbortController>();
+  const pending=new Map<Promise<void>,Request>();
   const router=express.Router(),identities=new WeakMap<Request,Identity>(),requestIds=new WeakMap<Request,string>();
   const route=(handler:(request:Request,response:Response,identity:Identity)=>Promise<void>)=>(request:Request,response:Response,next:NextFunction)=>{
     const work=Promise.resolve().then(()=>{if(!accepting)fail('SERVICE_STOPPING',503,'Input API is stopping');return handler(request,response,identities.get(request)!);});
@@ -86,23 +76,10 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const requestId=`req_${randomUUID().replaceAll('-','')}`;requestIds.set(request,requestId);
     response.setHeader('Cache-Control','no-store');response.setHeader('X-Content-Type-Options','nosniff');response.setHeader('X-Request-Id',requestId);
     const work=(async()=>{try{
-      if(!accepting)fail('SERVICE_STOPPING',503,'Input API is stopping');publicBoundary(request);
-      const resolver=options.identityResolver;
-      if(!resolver)fail('IDENTITY_NOT_CONFIGURED',503,'Identity provider is not configured');
-      const controller=new AbortController();identityControllers.add(controller);
-      const timer=setTimeout(()=>controller.abort(new StorageError('SERVICE_UNAVAILABLE',503,'Identity deadline exceeded')),15000);timer.unref();
-      const disconnected=()=>controller.abort(new StorageError('SERVICE_STOPPING',503,'Identity request was disconnected'));
-      request.once('aborted',disconnected);
-      let abortListener:(()=>void)|undefined;
-      let identity:Identity|null;
-      try{
-        identity=await Promise.race([Promise.resolve().then(()=>resolver(request,{signal:controller.signal})),new Promise<never>((_resolve,reject)=>{abortListener=()=>reject(controller.signal.reason);controller.signal.addEventListener('abort',abortListener,{once:true});})]);
-      }finally{clearTimeout(timer);request.off('aborted',disconnected);if(abortListener)controller.signal.removeEventListener('abort',abortListener);identityControllers.delete(controller);}
       if(!accepting)fail('SERVICE_STOPPING',503,'Input API is stopping');
-      if(!identity)fail('AUTHENTICATION_REQUIRED',401,'Authentication is required');
-      const principalId=parseContract(opaqueKey,identity.principalId),expected=request.headers['x-devmesh-principal'];
-      if(expected!==undefined&&parseContract(opaqueKey,expected)!==principalId)fail('FORBIDDEN',403,'Page identity has changed');
-      identities.set(request,{principalId});next();
+       const {principalId}=await auth.authenticate(request);
+       if(!accepting)fail('SERVICE_STOPPING',503,'Input API is stopping');
+       identities.set(request,{principalId});next();
     }catch(error){next(error);}})();
     pending.set(work,request);void work.finally(()=>{pending.delete(work);});
   });
@@ -242,10 +219,10 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     if(!response.headersSent&&!response.destroyed)response.status(status).json({error:{code,message:status>=500?'Service is unavailable; query the original operation before retrying':'Request could not be accepted',requestId,retryable:status>=500||status===429,details}});
   });
   app.use('/api/v1',router);
-  return {enabled:true as const,async stop(){
-    accepting=false;
-    for(const controller of identityControllers)controller.abort(new StorageError('SERVICE_STOPPING',503,'Input API is stopping'));
+  function stopAdmission(){accepting=false;auth.stop();events.stopAdmission();}
+  return {enabled:true as const,attachEvents:events.attach,stopAdmission,async stop(){
+    stopAdmission();
     const timer=setTimeout(()=>{for(const request of pending.values())request.destroy();},10000);timer.unref();
-    try{await Promise.allSettled(pending.keys());}finally{clearTimeout(timer);}
+    try{await Promise.all([events.stop(),Promise.allSettled(pending.keys())]);}finally{clearTimeout(timer);}
   }};
 }

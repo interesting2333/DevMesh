@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "base": "df901feb544ee5465213ad57d414fe54ca65a058",
+  "record": "lint-2026-11-16T01-59-01-967Z.json",
+  "at": "2026-11-16T02:01:05.350Z",
+  "preserved": [
+    {
+      "file": "packages/contracts/src/index.ts",
+      "sha256": "2f20963c89768ecc5256cae8ea36f748a32e750da3aa558f6c1c24b001b24c07",
+      "baseHash": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "packages/contracts/src/workbench-events.ts",
+      "sha256": "1cfe11aaf7789d2b8c17e1ff0e37dd2364b4ef9f605a48ec5fb9d0f7f82bc029",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/package.json",
+      "sha256": "98213e8dfd44d07ffeb311cb371ccdd1cc0c7a4dca373446f9e99b41d251eeea",
+      "baseHash": "52f982a159309971f82b3a5e4543a2424261339e5b5dded95b4ba83d60c7d847"
+    },
+    {
+      "file": "packages/input-api/src/index.ts",
+      "sha256": "fac1eb1a641d0992ff041c72854223216b58d84e5d084d6328ad8328a7caa83b",
+      "baseHash": "85b3ad318eb708dff941aa6207d799f7bc96905f4446f53cb60325e5b189c343"
+    },
+    {
+      "file": "packages/input-api/src/input-auth.ts",
+      "sha256": "54e413db507144d83ba8a836b14f9f55f16215de9eb04602c9ce5af0e85105d6",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/workbench-events-server.ts",
+      "sha256": "c8cd5ecde7f2d5ffecb644d66edbcb2c29a7ef60f999cc54339efe859f677cf9",
+      "baseHash": null
+    },
+    {
+      "file": "packages/platform-core/src/index.ts",
+      "sha256": "719045c62ac81d401a1758f1ba7a23c2a2140b2003d33b7efdd5d1608f25b41e",
+      "baseHash": "3396f53812b12420e674d519f7c97d082f56e5704c6c540f8503340a5ac37418"
+    },
+    {
+      "file": "packages/storage-sqlite/src/index.ts",
+      "sha256": "5c430b2c4383061acdb3796eca9bf636a1dc04294baa7d2232e257425fdcd36a",
+      "baseHash": "1f4a7f57ad3f98c357c866d3c69028488e44ad57575103c98fe9aa5dc4db10e5"
+    },
+    {
+      "file": "packages/storage-sqlite/src/input-domain.ts",
+      "sha256": "8493b813f22f512d897a62350cfbcc81dabff1eb2305b3028bdfaad79dc9a417",
+      "baseHash": "d692d9e623ea51906eb98992dbea660594bd844f3c39a3079bf0ac3a5a70ea53"
+    },
+    {
+      "file": "packages/storage-sqlite/src/input-protocol.ts",
+      "sha256": "0101f9725129aff28aa0c856c9ff6212979aac559900749499501ef736611b91",
+      "baseHash": "e877842609a392e3f8a791ef7825e01b824562b0b77c1c77bc1bcfe3c9ecc869"
+    },
+    {
+      "file": "packages/storage-sqlite/src/worker.ts",
+      "sha256": "392d80347353f396c137695f6ef2a9e556253003506dd3725ba1e0db805f086f",
+      "baseHash": "26baa1124be22de4432b84e0dd6706c3a662b54f6924e8aec8c72ddcde2e9b09"
+    },
+    {
+      "file": "tests/fixtures/workbench-events.mjs",
+      "sha256": "25965542524aab4a45e216c82fe203cb5b6a0d7f5b342cbf20b42d27554be4bd",
+      "baseHash": null
+    },
+    {
+      "file": "tests/workbench-events.test.mjs",
+      "sha256": "5416c90fb3094adf2be9f0159f2361c480bedd6f08ad678a4cd348c566df9fee",
+      "baseHash": null
+    },
+    {
+      "file": "pnpm-lock.yaml",
+      "sha256": "e70b0d3f367bbddb20ed55985625bd29a42d11b970fec1f47424419c2867af1f",
+      "baseHash": "13a881d65265117fc1894e15919be4fa1888c5cf3b61a985b8e031304f72d5da"
+    }
+  ],
+  "artifacts": [],
+  "artifactNote": "Lint reads source files only. Type source check uses existing workspace declaration/build outputs; this later type/lint record is not used as a runtime execution result. Earlier failed type artifacts were separately preserved.",
+  "inputReconstruction": "Unchanged inputs are base Git blobs; all differing/new inputs preserved."
+}

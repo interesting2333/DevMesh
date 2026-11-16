@@ -39,6 +39,7 @@ type Reply = { id: number; value?: unknown; error?: { code: string; status: numb
 export class SqliteStorage {
   readonly #worker: Worker;
   readonly #capacity: number;
+  readonly #eventSubscribers=new Set<()=>void>();
   readonly #pending = new Map<number, { resolve: (value: unknown) => void; reject: (error: Error) => void }>();
   readonly #exited: Promise<void>;
   #nextId = 1;
@@ -56,6 +57,8 @@ export class SqliteStorage {
     this.ready = new Promise<void>((resolve, reject) => { readyResolve = resolve; readyReject = reject; });
     this.#exited = new Promise<void>(resolve => this.#worker.once('exit', () => {
       this.#closed = true;
+      for(const listener of this.#eventSubscribers)try{listener();}catch{/* A projection listener cannot prevent Worker disposal. */}
+      this.#eventSubscribers.clear();
       const error = new StorageError('OUTCOME_UNKNOWN', 503, 'Database Worker exited before acknowledgement; query the original operation key');
       readyReject(error);
       for (const pending of this.#pending.values()) pending.reject(error);
@@ -65,7 +68,11 @@ export class SqliteStorage {
       finally { resolve(); }
     }));
     this.#worker.on('message', (message: Reply | { type: string }) => {
-      if ('type' in message) { if (message.type === 'ready') readyResolve(); return; }
+      if ('type' in message) {
+        if(message.type==='ready')readyResolve();
+        else if(message.type==='event-commit')for(const listener of this.#eventSubscribers)try{listener();}catch{this.#eventSubscribers.delete(listener);}
+        return;
+      }
       const error = message.error ? new StorageError(message.error.code, message.error.status, message.error.message, message.error.details) : undefined;
       if (message.id === 0) { if (error) readyReject(error); return; }
       if (message.id === -1) { if (error) this.#closeError = error; return; }
@@ -75,6 +82,12 @@ export class SqliteStorage {
       if (error) pending.reject(error); else pending.resolve(message.value);
     });
     this.#worker.on('error', error => readyReject(error));
+  }
+  /** Subscribe before an authorized event-window read; hints contain no facts or authorization. */
+  subscribeEventCommits(listener:()=>void):()=>void{
+    if(this.#closed)throw new StorageError('STORAGE_CLOSED',503,'Storage is closing or closed');
+    if(this.#eventSubscribers.size>=256)throw new StorageError('STORAGE_OVERLOADED',503,'Event subscription capacity is full');
+    this.#eventSubscribers.add(listener);return()=>{this.#eventSubscribers.delete(listener);};
   }
   request<M extends Method>(method: M, payload: Request<M>): Promise<Results[M]> {
     return this.#send(method, payload) as Promise<Results[M]>;

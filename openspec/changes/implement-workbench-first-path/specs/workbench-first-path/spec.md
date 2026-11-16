@@ -92,6 +92,26 @@
 - **WHEN** 快照读取后发生新事件且连接重建
 - **THEN** 客户端恢复连续序列，不遗漏、不重复应用，不重置草稿或执行重复命令
 
+### Requirement: Protected event host bounds transport and replay
+
+The host SHALL attach `/events` to its actual HTTP server, require exact same-origin upgrade and the configured trusted identity, and authorize the exact project/Run before upgrading. Subscription parameters SHALL carry context and cursor only; the expected principal SHALL constrain the current identity and SHALL NOT act as a credential. The server SHALL subscribe to bounded payload-free commit notifications before reading authorized persisted history, validate consecutive sequence numbers, and reauthorize after asynchronous reads before exposing facts.
+
+#### Scenario: Membership or account changes during replay or idle subscription
+- **WHEN** current membership disappears or the trusted resolver returns another principal
+- **THEN** the server SHALL send an authorization-lost control when transport permits, close the connection, and expose no facts from the earlier pending read
+
+#### Scenario: Replay or transport exceeds a limit
+- **WHEN** the cursor is ahead, retained history has a gap, initial catchup exceeds its limit, pending commit notifications overflow, or sends exceed their byte/deadline budget
+- **THEN** the server SHALL require resnapshot and close within its bounded transport-close allowance; it SHALL NOT claim complete catchup or retain an unbounded queue
+
+#### Scenario: Event service stops
+- **WHEN** the host stops
+- **THEN** it SHALL reject new upgrades, abort pending identity reads, unsubscribe and close active transports, drain their pumps before closing storage, and retain all durable event facts for a later authorized reconnect
+
+#### Scenario: Client tries to execute a command over the event socket
+- **WHEN** any application message is received from the client
+- **THEN** the server SHALL close the read-only subscription without creating domain commands or events
+
 ### Requirement: First path links real planning and delivery facts
 
 系统 SHALL 从准确工作台上下文展示真实理解、问题、计划／DAG／来源以及已有审查、预览、接受和导出入口，区分分析等待、验证、人工记录、接受和发布。没有模型或执行资源时 MUST 显示实际未配置／等待事实，不能用模拟结果完成产品验收。

@@ -1,0 +1,24 @@
+{
+  "failures": [
+    {
+      "record": "type-2026-11-16T01-47-38-976Z.json",
+      "reason": "Two nullable identity narrowing diagnostics; replaced helper-based branch with direct StorageError throw. Exact initial source and then-existing artifact set preserved."
+    },
+    {
+      "record": "lint-2026-11-16T01-59-01-967Z.json",
+      "reason": "New fixture spread iterable warning. Removed redundant spread. Inputs were copied before repair; old generic preservation failed on concurrently rebuilt, unused lint artifacts. Safe preservation recovered the exact copied fixture bytes and marks artifacts unconsumed. No runtime outcome inferred."
+    },
+    {
+      "record": "ws-2026-11-16T01-59-58-040Z.json",
+      "reason": "Fixture imported contracts/dist/index.mjs; existing package exports index.js. Module import failed before any business case. Fixed import; noticed existing message contract fields/resourceRevision/202 before the next run and aligned the new fixture."
+    },
+    {
+      "record": "ws-2026-11-16T02-01-05-750Z.json",
+      "reason": "9 passed, 1 failed: temporary history deletion hit EVENT_IMMUTABLE. Now first asserts normal deletion forbidden, then explicitly injects temporary DB corruption under a transaction and restores the exact trigger definition. Product guard and migrations unchanged."
+    },
+    {
+      "record": "ws-2026-11-16T02-02-44-717Z.json",
+      "reason": "10 passed, 1 failed: new capacity test reconnected after only client close, before server transport close/drain released capacity. Now waits actual server TCP close and a scheduling turn before replacement; limits, deadlines and product code unchanged."
+    }
+  ]
+}

@@ -22,6 +22,6 @@
 
 ## Impact
 
-主要影响packages/input-api的受保护路由、页面与浏览器构建，按需扩展contracts的公开显示契约及测试。复用现有React／Zod／构建器与原生IndexedDB，不新增依赖，不迁移控制库或Runner格式。项目台账关联P1-08；未满足前置／门槛时只记录已授权开发增量，正式状态保持等待。
+主要影响packages/input-api的受保护路由、页面与浏览器构建，按需扩展contracts的公开显示契约及测试。复用现有React／Zod／构建器与原生IndexedDB，实时事件服务新增固定ws 8.23.0与类型声明@types/ws 8.18.2，不迁移控制库或Runner格式。项目台账关联P1-08；未满足前置／门槛时只记录已授权开发增量，正式状态保持等待。
 
 验证分为真实HTTP／文件Worker、实际Edge／React／IndexedDB及故障／双页／窄屏行为。完整首次路径须真实模型和Linux资源后另验；当前用户要求未配置这些资源，不能用合成事件或浏览器身份夹具宣布正式验收。

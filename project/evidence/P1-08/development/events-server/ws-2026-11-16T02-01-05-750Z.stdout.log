@@ -1,0 +1,127 @@
+TAP version 13
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual host replays the snapshot-subscription gap and streams committed events once in exact sequence
+ok 1 - actual host replays the snapshot-subscription gap and streams committed events once in exact sequence
+  ---
+  duration_ms: 1521.6973
+  type: 'test'
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: subscribe-before-replay retains actual commits arriving after a held history read
+ok 2 - subscribe-before-replay retains actual commits arriving after a held history read
+  ---
+  duration_ms: 1432.6445
+  type: 'test'
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: upgrades require exact host/origin/trusted identity and authorized project/Run; query cannot carry credentials
+ok 3 - upgrades require exact host/origin/trusted identity and authorized project/Run; query cannot carry credentials
+  ---
+  duration_ms: 1170.9154
+  type: 'test'
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: idle subscription reauthorizes actual membership and changed trusted identity
+ok 4 - idle subscription reauthorizes actual membership and changed trusted identity
+  ---
+  duration_ms: 1083.0879
+  type: 'test'
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: membership lost while replay is pending prevents facts from the previously authorized read
+ok 5 - membership lost while replay is pending prevents facts from the previously authorized read
+  ---
+  duration_ms: 1022.8451
+  type: 'test'
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: future cursor, retained gap and missing entire history explicitly require resnapshot
+not ok 6 - future cursor, retained gap and missing entire history explicitly require resnapshot
+  ---
+  duration_ms: 1091.0454
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workbench-events.test.mjs:49:1'
+  failureType: 'testCodeFailure'
+  error: 'EVENT_IMMUTABLE'
+  code: 'ERR_SQLITE_ERROR'
+  stack: |-
+    Object.sql (file:///D:/yms/AI/DevMesh/tests/fixtures/workbench-events.mjs:29:191)
+    TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workbench-events.test.mjs:52:155)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bounded replay buffer and initial catchup limits close explicitly instead of reporting complete
+ok 7 - bounded replay buffer and initial catchup limits close explicitly instead of reporting complete
+  ---
+  duration_ms: 2370.986
+  type: 'test'
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual transport write backpressure closes within its deadline and reconnect replays the durable event
+ok 8 - actual transport write backpressure closes within its deadline and reconnect replays the durable event
+  ---
+  duration_ms: 1183.4043
+  type: 'test'
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: host stop aborts pending authentication, drains upgraded peers and releases the writer lock
+ok 9 - host stop aborts pending authentication, drains upgraded peers and releases the writer lock
+  ---
+  duration_ms: 1588.1587
+  type: 'test'
+  ...
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:33524) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Worker commit notifications contain no facts, skip pure reads/rolled-back input, and unsubscribe
+ok 10 - Worker commit notifications contain no facts, skip pure reads/rolled-back input, and unsubscribe
+  ---
+  duration_ms: 1180.9727
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 9
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14351.0377

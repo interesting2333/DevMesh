@@ -33,6 +33,8 @@ try {
   const installedVersion = applyMigrations(db, migrations, options.storeId, options.layoutVersion, target);
   if (db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok' || db.prepare('PRAGMA foreign_key_check').get()) throw new StorageError('DATABASE_INTEGRITY_FAILURE', 500, 'Database integrity check failed');
   const domain = createDomain(db);
+  const lastEvent=()=>String(db!.prepare('SELECT event_id FROM events ORDER BY rowid DESC LIMIT 1').get()?.event_id??'');
+  let notifiedEvent=installedVersion===migrations.length?lastEvent():null;
   port.on('message', (message: { id: number; method: string; payload: unknown }) => {
     try {
       if (!Number.isSafeInteger(message.id)) throw new StorageError('RPC_INVALID', 422, 'Request id is invalid');
@@ -52,6 +54,9 @@ try {
     } catch (error) {
       port.postMessage({ id: message.id, error: error instanceof z.ZodError ? { code: 'SCHEMA_INVALID', status: 422, message: 'Invalid storage request', details: { issues: error.issues } } : failure(error) });
       if (message.method === 'close' && message.id === -1) port.close();
+    } finally {
+      // Hints follow committed transactions; actual protected replay reads remain authoritative.
+      if(installedVersion===migrations.length&&db!.isOpen&&!db!.isTransaction){const latest=lastEvent();if(latest!==notifiedEvent){notifiedEvent=latest;port.postMessage({type:'event-commit'});}}
     }
   });
   port.postMessage({ type: 'ready' });

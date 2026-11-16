@@ -1,0 +1,13652 @@
+import { z } from "zod";
+import { DeliveryDataPlan, Draft, QualityEvaluation, QualityExecution, QualityPolicy, ReleaseDeliveryPolicy, WorkRevision, acceptanceBasisView, acceptancePreparationList, candidatePreviewWorkspace, executionPermit, planDraft, planReviewView, previewDatasetManagement, previewImageIdentity, previewManagement, requirement, understandingView, workDelegation } from "@devmesh/contracts";
+import { DatabaseSync } from "node:sqlite";
+
+//#region src/acceptance-commit-protocol.d.ts
+declare const releasePromotionRequest: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.release-promotion.v1">;
+  acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  preparation: z.ZodObject<{
+    runEpoch: z.ZodNumber;
+    requirementRevision: z.ZodNumber;
+    planRevision: z.ZodNumber;
+    codeCommit: z.ZodString;
+    image: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-image-identity.v1">;
+      imageDigest: z.ZodString;
+      configDigest: z.ZodString;
+      targetCommit: z.ZodString;
+      buildArtifactHash: z.ZodString;
+      os: z.ZodLiteral<"linux">;
+      architecture: z.ZodEnum<{
+        amd64: "amd64";
+        arm64: "arm64";
+      }>;
+      layers: z.ZodArray<z.ZodObject<{
+        digest: z.ZodString;
+        diffId: z.ZodString;
+        byteSize: z.ZodNumber;
+        expandedByteSize: z.ZodNumber;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    dataPlan: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      strategy: z.ZodLiteral<"INITIAL">;
+      initialData: z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>;
+      sourceReleaseId: z.ZodNull;
+      migrationRef: z.ZodNull;
+      replacementDecisionId: z.ZodNull;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      strategy: z.ZodLiteral<"PRESERVE_MIGRATE">;
+      initialData: z.ZodNull;
+      sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      migrationRef: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>;
+      replacementDecisionId: z.ZodNull;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      strategy: z.ZodLiteral<"REPLACE">;
+      initialData: z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>;
+      sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      migrationRef: z.ZodNull;
+      replacementDecisionId: z.core.$ZodBranded<z.ZodString, "decision", "out">;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>], "strategy">;
+    policyHash: z.ZodString;
+    backendPrincipalId: z.ZodString;
+    backendRef: z.ZodString;
+    runnerId: z.ZodString;
+    source: z.ZodNullable<z.ZodObject<{
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      storageKey: z.ZodString;
+      schemaRevision: z.ZodString;
+    }, z.core.$strict>>;
+    target: z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      storageKey: z.ZodString;
+      schemaRevision: z.ZodString;
+    }, z.core.$strict>;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    candidateRevision: z.ZodNumber;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    dataPlanHash: z.ZodString;
+    schemaVersion: z.ZodLiteral<"devmesh.acceptance-prepare.v1">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  preparedProof: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.acceptance-prepared.v1">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    dataPlanHash: z.ZodString;
+    runnerId: z.ZodString;
+    backendRef: z.ZodString;
+    data: z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      storageKey: z.ZodString;
+      schemaRevision: z.ZodString;
+      originDatasetId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "dataset", "out">>;
+      sourceReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+      snapshotAt: z.ZodISODateTime;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      integrity: z.ZodLiteral<"ok">;
+      journalHash: z.ZodString;
+      migrationRef: z.ZodNullable<z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    sourceFence: z.ZodNullable<z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      closeRequestHash: z.ZodString;
+      gateFence: z.ZodNumber;
+      physical: z.ZodObject<{
+        kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        heldAt: z.ZodISODateTime;
+        state: z.ZodLiteral<"HELD">;
+      }, z.core.$strict>;
+    }, z.core.$strict>>;
+    targetFence: z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      physical: z.ZodObject<{
+        kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        heldAt: z.ZodISODateTime;
+        state: z.ZodLiteral<"HELD">;
+      }, z.core.$strict>;
+      writeState: z.ZodLiteral<"CLOSED">;
+    }, z.core.$strict>;
+    service: z.ZodObject<{
+      reservationId: z.ZodString;
+      profileHash: z.ZodString;
+      endpoint: z.ZodObject<{
+        host: z.ZodLiteral<"127.0.0.1">;
+        port: z.ZodNumber;
+      }, z.core.$strict>;
+      claim: z.ZodDiscriminatedUnion<[z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.preview-release-claim.v1">;
+        operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+        manifestHash: z.ZodString;
+        previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        imageDigest: z.ZodString;
+        startOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        startRequestHash: z.ZodString;
+        instanceId: z.ZodString;
+        acceptanceRequestHash: z.ZodString;
+      }, z.core.$strict>, z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.acceptance-service-claim.v1">;
+        purpose: z.ZodLiteral<"ACCEPTANCE">;
+        operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        acceptanceRequestHash: z.ZodString;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+        runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+        candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+        manifestHash: z.ZodString;
+        reviewHash: z.ZodString;
+        dataPlanHash: z.ZodString;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        imageDigest: z.ZodString;
+        reservationId: z.ZodString;
+        profileHash: z.ZodString;
+        serviceRequestHash: z.ZodString;
+        instanceId: z.ZodString;
+      }, z.core.$strict>], "schemaVersion">;
+      claimHash: z.ZodString;
+      custodyState: z.ZodLiteral<"RELEASE_HELD">;
+      custodyRevision: z.ZodNumber;
+    }, z.core.$strict>;
+    preparedAt: z.ZodISODateTime;
+  }, z.core.$strict>;
+  proofHash: z.ZodString;
+}, z.core.$strict>;
+declare const acceptanceCommitRequests: {
+  commitReleaseAcceptance: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    expectedPreparationRevision: z.ZodNumber;
+    expectedObservationSequence: z.ZodNumber;
+    proofHash: z.ZodString;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    candidateRevision: z.ZodNumber;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    dataPlanHash: z.ZodString;
+    confirmation: z.ZodLiteral<"ACCEPT_RELEASE">;
+  }, z.core.$strict>;
+  getAcceptedRelease: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  }, z.core.$strict>;
+};
+type AcceptanceCommitMethod = keyof typeof acceptanceCommitRequests;
+type AcceptanceCommitInput<M extends AcceptanceCommitMethod> = z.output<(typeof acceptanceCommitRequests)[M]>;
+interface AcceptedRelease {
+  releaseId: string;
+  projectId: string;
+  runId: string;
+  candidateId: string;
+  candidateRevision: number;
+  manifestHash: string;
+  reviewHash: string;
+  preparationOperationId: string;
+  acceptanceOperationId: string;
+  requestHash: string;
+  proofHash: string;
+  datasetId: string;
+  previousReleaseId: string | null;
+  acceptedBy: string;
+  acceptedAt: string;
+  acceptanceState: 'ACCEPTED';
+  publicationState: 'PENDING';
+}
+interface AcceptanceCommitResults {
+  commitReleaseAcceptance: OperationResult;
+  getAcceptedRelease: AcceptedRelease;
+}
+//#endregion
+//#region src/workspace-protocol.d.ts
+declare const managedSourcePath: z.ZodString;
+declare const sourceManifest: z.ZodObject<{
+  commit: z.ZodString;
+  tree: z.ZodString;
+  files: z.ZodArray<z.ZodObject<{
+    path: z.ZodString;
+    mode: z.ZodEnum<{
+      100644: "100644";
+      100755: "100755";
+    }>;
+    objectId: z.ZodString;
+    byteSize: z.ZodNumber;
+    sha256: z.ZodString;
+  }, z.core.$strict>>;
+  byteSize: z.ZodNumber;
+  sha256: z.ZodString;
+}, z.core.$strict>;
+declare const gitDirectoryIdentity: z.ZodObject<{
+  root: z.ZodString;
+  gitDirectory: z.ZodString;
+  commonDirectory: z.ZodString;
+  rootDevice: z.ZodString;
+  rootFileId: z.ZodString;
+  gitDevice: z.ZodString;
+  gitFileId: z.ZodString;
+}, z.core.$strict>;
+type GitDirectoryIdentity = z.output<typeof gitDirectoryIdentity>;
+type SourceManifest = z.output<typeof sourceManifest>;
+interface ManagedRepository {
+  projectId: string;
+  resourceId: string;
+  operationId: string;
+  requestHash: string;
+  templateCommit: string;
+  state: string;
+  identity: GitDirectoryIdentity | null;
+  manifest: SourceManifest | null;
+}
+interface WorkspaceAllocation {
+  workspaceRef: string;
+  operationId: string;
+  projectId: string;
+  runId: string;
+  attemptId: string;
+  activationId: string;
+  grantId: string;
+  runnerId: string;
+  kind: 'development' | 'verification';
+  baseCommit: string;
+  scope: string[];
+  requestHash: string;
+  state: string;
+  identity: GitDirectoryIdentity | null;
+  manifest: SourceManifest | null;
+  errorCode: string | null;
+}
+interface WorkspaceResults {
+  beginManagedRepository: ManagedRepository & {
+    created: boolean;
+  };
+  completeManagedRepository: ManagedRepository;
+  getManagedRepository: ManagedRepository;
+  beginWorkspaceAllocation: WorkspaceAllocation & {
+    created: boolean;
+  };
+  getWorkspaceAllocation: WorkspaceAllocation;
+  completeWorkspaceAllocation: WorkspaceAllocation;
+  markWorkspaceAllocationUncertain: WorkspaceAllocation;
+  getAllocationRepository: ManagedRepository;
+  authorizeWorkspaceAllocation: WorkspaceAllocation;
+}
+//#endregion
+//#region src/release-export-protocol.d.ts
+interface ReleaseExportJob {
+  exportId: string;
+  releaseId: string;
+  runId: string;
+  candidateId: string;
+  codeCommit: string;
+  cutoffSeq: number;
+  snapshotHash: string;
+  state: 'QUEUED' | 'PACKING' | 'FAILED' | 'READY';
+  generation: number;
+  leaseUntil: string | null;
+  archiveHash: string | null;
+  archiveSize: number | null;
+  errorCode: string | null;
+  createdAt: string;
+  updatedAt: string;
+  canRetry: boolean;
+}
+interface ReleaseExportMaterial {
+  key: string;
+  path: string;
+  contentHash: string;
+  byteSize: number;
+  transform: 'EXACT' | 'REDACT_JSON';
+}
+interface ReleaseExportSnapshot {
+  schemaVersion: 'devmesh.release-export-snapshot.v1';
+  release: AcceptedRelease;
+  candidateId: string;
+  candidateRevision: number;
+  manifestHash: string;
+  codeCommit: string;
+  requirementRevision: number;
+  planRevision: number;
+  checkConfigHash: string;
+  templateVersion: string;
+  cutoffSeq: number;
+  source: {
+    identity: GitDirectoryIdentity;
+    manifest: SourceManifest;
+  };
+  records: Record<string, unknown>;
+  materials: ReleaseExportMaterial[];
+}
+interface ReleaseExportContext {
+  job: ReleaseExportJob;
+  generation: number;
+  claimToken: string;
+  snapshot: ReleaseExportSnapshot;
+  writeKey: string;
+}
+interface ReleaseExportResults {
+  createReleaseExport: ReleaseExportJob;
+  getReleaseExport: ReleaseExportJob;
+  retryReleaseExport: ReleaseExportJob;
+  listReleaseExports: {
+    jobs: ReleaseExportJob[];
+    nextCursor: string | null;
+  };
+  listReleaseExportWork: {
+    jobs: {
+      exportId: string;
+      principalId: string;
+      state: 'QUEUED' | 'PACKING';
+      generation: number;
+    }[];
+    nextCursor: string | null;
+  };
+  getReleaseExportEntry: {
+    releaseId: string;
+    runId: string;
+    candidateId: string;
+    codeCommit: string;
+    acceptedAt: string;
+    isCurrentAccepted: boolean;
+  };
+  claimReleaseExport: ReleaseExportContext | null;
+  getReleaseExportContext: ReleaseExportContext;
+  prepareReleaseExportArchive: ReleaseExportJob;
+  failReleaseExport: ReleaseExportJob;
+}
+//#endregion
+//#region src/session-protocol.d.ts
+declare const contextManifest: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.context.v1">;
+  sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  roleSnapshotId: z.core.$ZodBranded<z.ZodString, "role", "out">;
+  throughMessageSeq: z.ZodNumber;
+  configHash: z.ZodString;
+  messages: z.ZodArray<z.ZodObject<{
+    messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+    seq: z.ZodNumber;
+    sha256: z.ZodString;
+  }, z.core.$strict>>;
+  summaryContentHash: z.ZodOptional<z.ZodString>;
+}, z.core.$strict>;
+declare const objectTarget: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  kind: z.ZodLiteral<"releaseExport">;
+  exportId: z.ZodString;
+  generation: z.ZodNumber;
+  claimToken: z.ZodUUID;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  materialKey: z.ZodString;
+  kind: z.ZodLiteral<"releaseDelivery">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  kind: z.ZodLiteral<"verifiedRepair">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  kind: z.ZodLiteral<"workVerification">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  materialKey: z.ZodString;
+  kind: z.ZodLiteral<"qualityMaterial">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  materialKey: z.ZodString;
+  kind: z.ZodLiteral<"workspacePreservation">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  ordinal: z.ZodNumber;
+  materialKey: z.ZodUnion<readonly [z.ZodLiteral<"report">, z.ZodString]>;
+  kind: z.ZodLiteral<"candidateMaterial">;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"content">;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"attachment">;
+  clientAttachmentId: z.ZodUUID;
+  name: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"message">;
+  sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  clientMessageId: z.ZodString;
+  activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  stepNo: z.ZodOptional<z.ZodNumber>;
+  messageKind: z.ZodEnum<{
+    user: "user";
+    assistant: "assistant";
+    "tool-call": "tool-call";
+    "tool-result": "tool-result";
+    "context-summary": "context-summary";
+  }>;
+  toolCallId: z.ZodOptional<z.ZodString>;
+  sourceRef: z.ZodOptional<z.ZodObject<{
+    messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+  }, z.core.$strict>>;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"context">;
+  manifest: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.context.v1">;
+    sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+    roleSnapshotId: z.core.$ZodBranded<z.ZodString, "role", "out">;
+    throughMessageSeq: z.ZodNumber;
+    configHash: z.ZodString;
+    messages: z.ZodArray<z.ZodObject<{
+      messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+      seq: z.ZodNumber;
+      sha256: z.ZodString;
+    }, z.core.$strict>>;
+    summaryContentHash: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"modelRequest">;
+  sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  stepNo: z.ZodNumber;
+  contextSnapshotId: z.ZodString;
+  configHash: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"modelResponse">;
+  sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  stepNo: z.ZodNumber;
+  activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  state: z.ZodEnum<{
+    FAILED: "FAILED";
+    RESPONDED: "RESPONDED";
+    INTERRUPTED: "INTERRUPTED";
+  }>;
+  providerRequestId: z.ZodOptional<z.ZodString>;
+  usage: z.ZodOptional<z.ZodObject<{
+    inputTokens: z.ZodNumber;
+    outputTokens: z.ZodNumber;
+    source: z.ZodEnum<{
+      provider: "provider";
+      estimated: "estimated";
+    }>;
+  }, z.core.$strict>>;
+}, z.core.$strict>], "kind">;
+declare const contentReference: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  kind: z.ZodLiteral<"releaseExport">;
+  exportId: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"exportMaterial">;
+  exportId: z.ZodString;
+  materialKey: z.ZodString;
+  generation: z.ZodNumber;
+  claimToken: z.ZodUUID;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  materialKey: z.ZodString;
+  kind: z.ZodLiteral<"releaseDelivery">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  kind: z.ZodLiteral<"verifiedRepair">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  kind: z.ZodLiteral<"workVerification">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  materialKey: z.ZodString;
+  kind: z.ZodLiteral<"qualityMaterial">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  materialKey: z.ZodString;
+  kind: z.ZodLiteral<"workspacePreservation">;
+}, z.core.$strict>, z.ZodObject<{
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  ordinal: z.ZodNumber;
+  materialKey: z.ZodUnion<readonly [z.ZodLiteral<"report">, z.ZodString]>;
+  kind: z.ZodLiteral<"candidateMaterial">;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"attachment">;
+  attachmentId: z.core.$ZodBranded<z.ZodString, "attachment", "out">;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"message">;
+  messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"inputMessage">;
+  messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"preparationInput">;
+  preparationAttemptId: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"preparationResponse">;
+  preparationAttemptId: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"artifact">;
+  artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"context">;
+  contextSnapshotId: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"modelRequest">;
+  sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  stepNo: z.ZodNumber;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"modelResponse">;
+  sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  stepNo: z.ZodNumber;
+}, z.core.$strict>], "kind">;
+type ObjectTarget = z.input<typeof objectTarget>;
+type ContentReference = z.input<typeof contentReference>;
+type ContextManifest = z.input<typeof contextManifest>;
+interface ContentInfo {
+  contentHash: string;
+  byteSize: number;
+  mimeType: string;
+  storageKey: string;
+  state: string;
+}
+interface ObjectWrite {
+  writeId: string;
+  operationId: string;
+  ownerId: string;
+  expectedHash: string;
+  expectedSize: number;
+  mimeType: string;
+  target: z.output<typeof objectTarget>;
+  stagingKey: string;
+  state: string;
+  result: Record<string, unknown> | null;
+}
+interface SessionInfo {
+  sessionId: string;
+  runId: string;
+  attemptId: string;
+  roleSnapshotId: string;
+  lastMessageSeq: number;
+  lastStepNo: number;
+  status: string;
+}
+interface SessionMessage {
+  messageId: string;
+  seq: number;
+  sessionId: string;
+  activationId: string;
+  stepNo: number | null;
+  kind: string;
+  contentHash: string;
+  toolCallId: string | null;
+  sourceRef: unknown;
+  createdAt: string;
+}
+interface ModelStep {
+  sessionId: string;
+  stepNo: number;
+  state: string;
+  requestHash: string;
+  responseHash: string | null;
+  contextSnapshotId: string;
+  usage: unknown;
+  providerRequestId: string | null;
+}
+interface SessionResults {
+  beginObjectWrite: ObjectWrite;
+  getObjectWrite: ObjectWrite;
+  sealObjectWrite: ObjectWrite;
+  commitObjectWrite: ObjectWrite;
+  failObjectWrite: ObjectWrite;
+  scanObjectWrites: ObjectWrite[];
+  ensureSession: SessionInfo;
+  getSession: SessionInfo;
+  closeSession: SessionInfo;
+  listSessionMessages: {
+    messages: SessionMessage[];
+    nextCursor: number;
+  };
+  getModelStep: ModelStep;
+  markModelStepSent: ModelStep;
+  resolveContentRead: ContentInfo & {
+    pinId: string;
+  };
+  releaseContentRead: {
+    released: boolean;
+  };
+  recoverContentReads: {
+    released: number;
+  };
+  listContentObjects: ContentInfo[];
+  markContentMissing: {
+    contentHash: string;
+    state: string;
+  };
+  beginContentDeletion: ContentInfo;
+  finishContentDeletion: {
+    contentHash: string;
+    deleted: boolean;
+  };
+}
+//#endregion
+//#region src/registry-protocol.d.ts
+declare const endpointConfig: z.ZodObject<{
+  endpointId: z.ZodString;
+  revision: z.ZodNumber;
+  role: z.ZodOptional<z.ZodEnum<{
+    product: "product";
+    architect: "architect";
+    developer: "developer";
+    tester: "tester";
+  }>>;
+  agentKey: z.ZodString;
+  hosting: z.ZodEnum<{
+    local: "local";
+    remote: "remote";
+  }>;
+  implementationVersion: z.ZodString;
+  address: z.ZodURL;
+  cardUrl: z.ZodURL;
+  cardHash: z.ZodString;
+  protocol: z.ZodLiteral<"1.0">;
+  sdkVersion: z.ZodLiteral<"1.3.0">;
+  supportedSkills: z.ZodArray<z.ZodString>;
+  streaming: z.ZodBoolean;
+  credentialRef: z.ZodString;
+  allowedCallers: z.ZodArray<z.ZodString>;
+  enabled: z.ZodBoolean;
+}, z.core.$strict>;
+declare const agentManifest: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.agent-manifest.v1">;
+  manifestRevision: z.ZodString;
+  endpoints: z.ZodArray<z.ZodObject<{
+    endpointId: z.ZodString;
+    revision: z.ZodNumber;
+    role: z.ZodOptional<z.ZodEnum<{
+      product: "product";
+      architect: "architect";
+      developer: "developer";
+      tester: "tester";
+    }>>;
+    agentKey: z.ZodString;
+    hosting: z.ZodEnum<{
+      local: "local";
+      remote: "remote";
+    }>;
+    implementationVersion: z.ZodString;
+    address: z.ZodURL;
+    cardUrl: z.ZodURL;
+    cardHash: z.ZodString;
+    protocol: z.ZodLiteral<"1.0">;
+    sdkVersion: z.ZodLiteral<"1.3.0">;
+    supportedSkills: z.ZodArray<z.ZodString>;
+    streaming: z.ZodBoolean;
+    credentialRef: z.ZodString;
+    allowedCallers: z.ZodArray<z.ZodString>;
+    enabled: z.ZodBoolean;
+  }, z.core.$strict>>;
+}, z.core.$strict>;
+type EndpointConfig = z.infer<typeof endpointConfig>;
+type AgentManifest = z.infer<typeof agentManifest>;
+type EndpointView = {
+  config: EndpointConfig;
+  configHash: string;
+  lifecycle: string;
+  checkId: string | null;
+  status: string;
+  expiresAt: string | null;
+  checkSequence: number;
+};
+type RegistrySnapshot = {
+  generationId: string | null;
+  projectionRevision: number;
+  manifestRevision: string | null;
+  manifestHash: string | null;
+  endpoints: EndpointView[];
+  bindings: {
+    role: string;
+    endpointId: string;
+    revision: number;
+  }[];
+};
+type A2ATaskRecord = {
+  endpointId: string;
+  taskId: string;
+  contextId: string;
+  state: string;
+  revision: number;
+  cancelRequested: boolean;
+  snapshot: Record<string, unknown>;
+};
+interface RegistryResults {
+  getRegistrySnapshot: RegistrySnapshot;
+  issueEndpointProbe: {
+    checkId: string;
+    sequence: number;
+  };
+  commitRegistry: RegistrySnapshot;
+  recordEndpointCheck: {
+    applied: boolean;
+    projectionRevision: number;
+  };
+  setEndpointLifecycle: RegistrySnapshot;
+  assertRegistryTarget: EndpointView;
+  acceptA2AWork: A2ATaskRecord;
+  getA2ATask: A2ATaskRecord;
+  listA2ATasks: {
+    tasks: A2ATaskRecord[];
+    nextPageToken: string;
+    totalSize: number;
+  };
+  listA2ATaskEvents: {
+    seq: number;
+    snapshot: Record<string, unknown>;
+  }[];
+  cancelA2ATask: A2ATaskRecord;
+  claimAcceptedWork: {
+    endpointId: string;
+    taskId: string;
+    workerId: string;
+    claimToken: string;
+    delegation: z.infer<typeof workDelegation>;
+  }[];
+  settleAcceptedWork: A2ATaskRecord;
+  recoverAcceptedWork: {
+    reconcileCount: number;
+  };
+}
+//#endregion
+//#region src/runtime-protocol.d.ts
+interface ExecutionHostView {
+  principalId: string;
+  runId: string;
+  attemptId: string;
+  activationId: string;
+  grantId: string;
+  sessionId: string | null;
+  roleSnapshot: Record<string, unknown>;
+  permit: Record<string, unknown>;
+  inputManifest: Record<string, unknown>;
+  inputFingerprint: string;
+  work: Record<string, unknown>;
+  requirements: Record<string, unknown>;
+  taskSnapshot: Record<string, unknown>;
+}
+interface RuntimeActivationView {
+  activationId: string;
+  sessionId: string;
+  state: string;
+  tokensUsed: number;
+  tokenLimit: number;
+  maxSteps: number;
+  unknownUsage: boolean;
+  configHash: string;
+}
+interface RuntimeToolView {
+  operationId: string;
+  activationId: string;
+  sessionId: string;
+  stepNo: number;
+  toolCallId: string;
+  toolName: string;
+  state: string;
+  resultMessageId: string | null;
+  argsHash: string;
+  errorCode: string | null;
+}
+interface RuntimeWorkspaceResult {
+  activationId: string;
+  allocationOperationId: string;
+  commitOperationId: string | null;
+  archiveOperationId: string | null;
+  stepNo: number;
+  contentHash: string;
+  output: Record<string, unknown>;
+}
+interface RuntimeWorkspaceRecovery {
+  host: ExecutionHostView;
+  config: Record<string, unknown>;
+  result: RuntimeWorkspaceResult | null;
+}
+interface RuntimeResults {
+  getExecutionHost: ExecutionHostView;
+  getRuntimeWorkspaceRecovery: RuntimeWorkspaceRecovery;
+  reconcileRuntimeWorkspaceResult: {
+    artifactId: string;
+    sha256: string;
+    schemaId: string;
+  };
+  prepareRuntimeWorkspaceResult: RuntimeWorkspaceResult;
+  renewExecutionHost: {
+    permit: Record<string, unknown>;
+  };
+  getAcceptedTaskSnapshot: Record<string, unknown>;
+  reconcileRuntimeTask: {
+    state: 'RECONCILE';
+  };
+  beginRuntimeActivation: RuntimeActivationView;
+  assertRuntimeActivation: RuntimeActivationView;
+  accountRuntimeModel: RuntimeActivationView;
+  markRuntimeModelSent: {
+    state: 'SENT';
+  };
+  setRuntimeState: RuntimeActivationView;
+  prepareRuntimeTool: RuntimeToolView;
+  getRuntimeTool: RuntimeToolView | null;
+  markRuntimeToolSent: RuntimeToolView;
+  finishRuntimeTool: RuntimeToolView;
+  markRuntimeToolUnknown: RuntimeToolView;
+  recoverRuntimeActivations: {
+    activations: number;
+    tools: number;
+  };
+  publishRuntimeResult: {
+    artifactId: string;
+    sha256: string;
+    schemaId: string;
+  };
+}
+//#endregion
+//#region src/input-protocol.d.ts
+interface AttachmentView {
+  attachmentId: string;
+  clientAttachmentId: string;
+  name: string;
+  byteSize: number;
+  state: string;
+  createdAt: string;
+}
+interface UploadIntake {
+  intakeId: string;
+  operationId: string;
+  state: string;
+  stagingKey: string;
+  requestHash: string | null;
+  attachmentId: string | null;
+  errorCode: string | null;
+  claimed: boolean;
+}
+interface WorkspaceView {
+  project: {
+    projectId: string;
+    name: string;
+    revision: number;
+    acceptedReleaseId: string | null;
+  };
+  run: RunView;
+  mode: 'current' | 'history';
+  membership: 'owner' | 'operator' | 'viewer';
+  allowedActions: ('saveMessage' | 'createTask' | 'answerQuestions')[];
+  eventCursor: number;
+  preparation: {
+    understandingAvailable: boolean;
+    requiredOpenQuestions: number;
+    pending: boolean;
+  };
+  messages: {
+    messageId: string;
+    author: string;
+    bodyArtifactId: string;
+    clientMessageId: string;
+    createdAt: string;
+    attachmentIds: string[];
+    intentHint: 'query' | 'change' | 'unsure' | null;
+  }[];
+  nextMessageCursor: string | null;
+}
+interface InputResults {
+  getWorkbenchSource: {
+    projectId: string;
+    runId: string;
+    artifactId: string;
+    contentHash: string;
+    label: string;
+    requirement: null;
+  } | {
+    projectId: string;
+    runId: string;
+    artifactId: null;
+    contentHash: null;
+    label: string;
+    requirement: z.output<typeof requirement>;
+  };
+  checkInputAccess: {
+    projectId: string;
+    membership: string;
+  };
+  createInputProject: OperationResult;
+  createInputTask: OperationResult;
+  appendInputMessage: OperationResult;
+  getInputOperation: OperationResult;
+  lookupInputOperation: OperationResult | null;
+  getInputWorkspace: WorkspaceView;
+  listInputProjects: {
+    projects: {
+      projectId: string;
+      name: string;
+      updatedAt: string;
+      membership: string;
+    }[];
+    nextCursor: {
+      updatedAt: string;
+      projectId: string;
+    } | null;
+  };
+  getInputEventWindow: {
+    events: Record<string, unknown>[];
+    nextCursor: number;
+    headSeq: number;
+    retainedFromSeq: number;
+  };
+  listInputEvents: {
+    events: Record<string, unknown>[];
+    nextCursor: number;
+  };
+  getInputAttachment: AttachmentView;
+  removeInputAttachment: AttachmentView;
+  claimUploadIntake: UploadIntake;
+  getUploadIntake: UploadIntake;
+  validateUploadIntake: UploadIntake;
+  commitUploadIntake: UploadIntake;
+  failUploadIntake: UploadIntake;
+  recoverUploadIntakes: {
+    interrupted: number;
+  };
+}
+//#endregion
+//#region src/preparation-protocol.d.ts
+interface PreparationJob {
+  jobId: string;
+  runId: string;
+  operationId: string;
+  principalId: string;
+  purpose: string;
+  role: 'product' | 'architect';
+  state: string;
+  basisHash: string | null;
+  basis: Record<string, unknown> | null;
+  retryOf: string | null;
+  errorCode: string | null;
+  resultArtifactId: string | null;
+}
+type UnderstandingView = z.output<typeof understandingView>;
+interface PreparationContext {
+  job: PreparationJob;
+  basisHash: string;
+  basis: Record<string, unknown>;
+  baseCommit: string;
+  requirementRevision: number | null;
+  sources: {
+    ref: Record<string, unknown>;
+    contentHash: string;
+    byteSize: number;
+    label: string;
+  }[];
+  requirements: Record<string, unknown> | null;
+  answers: {
+    answerId: string;
+    questionId: string;
+    questionRevision: number;
+    value: unknown;
+  }[];
+}
+interface PreparationAttempt {
+  preparationAttemptId: string;
+  jobId: string;
+  runId: string;
+  state: string;
+  delegation: Record<string, unknown>;
+  endpointId: string;
+  endpointRevision: number;
+  callerId: string;
+  dispatchSent: boolean;
+}
+interface PreparationTask {
+  endpointId: string;
+  taskId: string;
+  contextId: string;
+  state: string;
+  revision: number;
+  snapshot: Record<string, unknown>;
+}
+interface PreparationClaim {
+  preparationAttemptId: string;
+  workerId: string;
+  claimToken: string;
+}
+interface PreparationHost {
+  claim: PreparationClaim;
+  attempt: PreparationAttempt;
+  job: PreparationJob;
+  principalId: string;
+  profile: Record<string, unknown>;
+  profileHash: string;
+  inputHash: string;
+  requestHash: string | null;
+  responseHash: string | null;
+  stepState: string | null;
+}
+interface PreparationResults {
+  ensurePreparationJob: PreparationJob;
+  getPreparationJob: PreparationJob;
+  getUnderstanding: UnderstandingView;
+  answerPreparationQuestions: OperationResult;
+  retryPreparationInterpretation: OperationResult;
+  listPreparationJobs: PreparationJob[];
+  getPreparationContext: PreparationContext;
+  reservePreparation: PreparationAttempt;
+  failUnreservedPreparation: {
+    closed: boolean;
+  };
+  registerPreparationBootstrap: {
+    artifactId: string;
+    sha256: string;
+  };
+  markPreparationDispatchSent: PreparationAttempt;
+  lookupPreparationDispatch: PreparationTask | null;
+  reconcilePreparationDispatch: PreparationTask | null;
+  acceptPreparationTask: PreparationTask;
+  getPreparationTask: PreparationTask;
+  listPreparationTasks: {
+    tasks: PreparationTask[];
+    nextPageToken: string;
+    totalSize: number;
+  };
+  listPreparationTaskEvents: {
+    seq: number;
+    snapshot: Record<string, unknown>;
+  }[];
+  cancelPreparationTask: PreparationTask;
+  claimPreparationTasks: PreparationClaim[];
+  getPreparationHost: PreparationHost;
+  preparePreparationStep: {
+    state: string;
+  };
+  markPreparationSent: {
+    state: string;
+  };
+  savePreparationResponse: {
+    state: string;
+  };
+  failPreparation: {
+    state: string;
+  };
+  applyPreparationResponse: {
+    artifactId: string;
+    sha256: string;
+    requirementRevision?: number;
+    planRevision?: number;
+  };
+  recoverPreparations: {
+    unresolved: number;
+    notSent: number;
+  };
+}
+//#endregion
+//#region src/tool-protocol.d.ts
+declare const issueCreateArgs: z.ZodObject<{
+  title: z.ZodString;
+  description: z.ZodString;
+  severity: z.ZodEnum<{
+    LOW: "LOW";
+    MEDIUM: "MEDIUM";
+    HIGH: "HIGH";
+    CRITICAL: "CRITICAL";
+  }>;
+  evidence: z.ZodObject<{
+    artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+    sha256: z.ZodString;
+  }, z.core.$strict>;
+}, z.core.$strict>;
+declare const issueLinkArgs: z.ZodObject<{
+  issueId: z.ZodString;
+  issueRevision: z.ZodNumber;
+  fixWorkId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+}, z.core.$strict>;
+declare const issueVerifyArgs: z.ZodObject<{
+  issueId: z.ZodString;
+  issueRevision: z.ZodNumber;
+  fixAttemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+  verificationAttemptId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "attempt", "out">>;
+  outcome: z.ZodEnum<{
+    FAILED: "FAILED";
+    PASSED: "PASSED";
+    NOT_VERIFIED: "NOT_VERIFIED";
+  }>;
+  evidence: z.ZodObject<{
+    artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+    sha256: z.ZodString;
+  }, z.core.$strict>;
+}, z.core.$strict>;
+interface IssueView {
+  issueId: string;
+  projectId: string;
+  runId: string;
+  sourceAttemptId: string;
+  revision: number;
+  state: string;
+  title: string;
+  description: string;
+  severity: string;
+  fixWorkId: string | null;
+  history: {
+    revision: number;
+    kind: string;
+    operationId: string;
+    value: unknown;
+    createdAt: string;
+  }[];
+  nextRevision: number | null;
+}
+interface IssueOperation {
+  operationId: string;
+  toolName: string;
+  issueId: string;
+  issueRevision: number;
+  state: 'SUCCEEDED';
+}
+interface ToolResults {
+  authorizeMcpAction: {
+    principalId: string;
+    projectId: string;
+    runId: string;
+  };
+  refreshMcpPermit: z.output<typeof executionPermit>;
+  createIssue: IssueOperation;
+  linkIssueFix: IssueOperation;
+  recordIssueVerification: IssueOperation;
+  getIssue: IssueView;
+  getIssueOperation: IssueOperation;
+}
+//#endregion
+//#region src/pipeline-protocol.d.ts
+declare const pipelineJobFact: z.ZodObject<{
+  jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  requestHash: z.ZodString;
+  request: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+  executionProfile: z.ZodDefault<z.ZodNullable<z.ZodObject<{
+    runnerId: z.ZodString;
+    commandHash: z.ZodString;
+  }, z.core.$strict>>>;
+  endedAt: z.ZodDefault<z.ZodNullable<z.ZodISODateTime>>;
+  state: z.ZodEnum<{
+    EXITED: "EXITED";
+    QUEUED: "QUEUED";
+    STARTING: "STARTING";
+    RUNNING: "RUNNING";
+    STOPPING: "STOPPING";
+    OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+  }>;
+  exitCode: z.ZodNullable<z.ZodNumber>;
+  errorCode: z.ZodNullable<z.ZodString>;
+  stopRequested: z.ZodBoolean;
+  logCursor: z.ZodNumber;
+  containerId: z.ZodNullable<z.ZodString>;
+  startedAt: z.ZodNullable<z.ZodISODateTime>;
+  stopEvidence: z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
+  outputRefs: z.ZodArray<z.ZodObject<{
+    path: z.ZodString;
+    sha256: z.ZodString;
+    byteSize: z.ZodNumber;
+  }, z.core.$strict>>;
+}, z.core.$strict>;
+declare const pipelineRequests: {
+  createPipeline: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    definition: z.ZodObject<{
+      definitionId: z.ZodString;
+      version: z.ZodString;
+      stages: z.ZodArray<z.ZodObject<{
+        stageId: z.ZodString;
+        kind: z.ZodEnum<{
+          preview: "preview";
+          build: "build";
+          install: "install";
+          unit: "unit";
+          e2e: "e2e";
+        }>;
+        imageDigest: z.ZodString;
+        resourceLimits: z.ZodObject<{
+          cpu: z.ZodNumber;
+          memoryMiB: z.ZodNumber;
+          pids: z.ZodNumber;
+          temporaryMiB: z.ZodNumber;
+          timeoutMs: z.ZodNumber;
+        }, z.core.$strict>;
+        networkPolicyRef: z.ZodLiteral<"none">;
+        outputSpec: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    workspaceRef: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  getPipeline: z.ZodObject<{
+    pipelineId: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  getPipelineOperation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  stopPipeline: z.ZodObject<{
+    pipelineId: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  listPipelineStages: z.ZodObject<{
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  markPipelineStageSent: z.ZodObject<{
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+  }, z.core.$strict>;
+  getPipelineStagePermit: z.ZodObject<{
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+  }, z.core.$strict>;
+  recordPipelineStage: z.ZodObject<{
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+    job: z.ZodObject<{
+      jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      requestHash: z.ZodString;
+      request: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+      executionProfile: z.ZodDefault<z.ZodNullable<z.ZodObject<{
+        runnerId: z.ZodString;
+        commandHash: z.ZodString;
+      }, z.core.$strict>>>;
+      endedAt: z.ZodDefault<z.ZodNullable<z.ZodISODateTime>>;
+      state: z.ZodEnum<{
+        EXITED: "EXITED";
+        QUEUED: "QUEUED";
+        STARTING: "STARTING";
+        RUNNING: "RUNNING";
+        STOPPING: "STOPPING";
+        OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+      }>;
+      exitCode: z.ZodNullable<z.ZodNumber>;
+      errorCode: z.ZodNullable<z.ZodString>;
+      stopRequested: z.ZodBoolean;
+      logCursor: z.ZodNumber;
+      containerId: z.ZodNullable<z.ZodString>;
+      startedAt: z.ZodNullable<z.ZodISODateTime>;
+      stopEvidence: z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
+      outputRefs: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        sha256: z.ZodString;
+        byteSize: z.ZodNumber;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  markPipelineStageUnknown: z.ZodObject<{
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+    errorCode: z.ZodString;
+  }, z.core.$strict>;
+};
+type PipelineMethod = keyof typeof pipelineRequests;
+type PipelineInput<M extends PipelineMethod> = z.output<(typeof pipelineRequests)[M]>;
+interface PipelineStageView {
+  ordinal: number;
+  stageId: string;
+  operationId: string;
+  state: string;
+  jobId: string | null;
+  exitCode: number | null;
+  errorCode: string | null;
+  logCursor: number;
+  outputRefs: z.output<typeof pipelineJobFact>['outputRefs'];
+}
+interface PipelineView {
+  pipelineId: string;
+  operationId: string;
+  runId: string;
+  attemptId: string;
+  definitionId: string;
+  definitionVersion: string;
+  definitionHash: string;
+  workspaceRef: string;
+  state: string;
+  stopRequested: boolean;
+  stages: PipelineStageView[];
+}
+interface PipelineDispatch {
+  pipelineId: string;
+  ordinal: number;
+  operationId: string;
+  state: string;
+  jobId: string | null;
+  stopRequested: boolean;
+  request: Record<string, unknown> | null;
+}
+interface PipelineResults {
+  createPipeline: PipelineView;
+  getPipeline: PipelineView;
+  getPipelineOperation: PipelineView;
+  stopPipeline: PipelineView;
+  listPipelineStages: PipelineDispatch[];
+  markPipelineStageSent: {
+    send: boolean;
+    request: Record<string, unknown> | null;
+  };
+  getPipelineStagePermit: z.output<typeof executionPermit>;
+  recordPipelineStage: PipelineView;
+  markPipelineStageUnknown: PipelineView;
+}
+//#endregion
+//#region src/repo-protocol.d.ts
+declare const repoCommitArgs: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  baseCommit: z.ZodString;
+  message: z.ZodString;
+}, z.core.$strict>;
+declare const repoIntegrateArgs: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  baseCommit: z.ZodString;
+  commit: z.ZodString;
+}, z.core.$strict>;
+declare const repoBinding: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  resourceId: z.ZodString;
+  projectResourceId: z.ZodString;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+  baseCommit: z.ZodString;
+}, z.core.$strict>;
+declare const prepared: z.ZodObject<{
+  commit: z.ZodString;
+  tree: z.ZodString;
+  ref: z.ZodString;
+  expected: z.ZodNullable<z.ZodString>;
+  commitBody: z.ZodNullable<z.ZodString>;
+}, z.core.$strict>;
+interface RepoOperation {
+  operationId: string;
+  toolName: 'repo.commit' | 'repo.integrate';
+  requestHash: string;
+  state: string;
+  createdAt: string;
+  scope: string[];
+  request: {
+    args: z.output<typeof repoCommitArgs> | z.output<typeof repoIntegrateArgs>;
+    binding: z.output<typeof repoBinding>;
+  };
+  prepared: z.output<typeof prepared> | null;
+  result: Record<string, unknown> | null;
+}
+interface RepoResults {
+  beginRepoOperation: RepoOperation & {
+    created: boolean;
+  };
+  getRepoOperation: RepoOperation;
+  prepareRepoOperation: RepoOperation;
+  finishRepoOperation: RepoOperation;
+}
+//#endregion
+//#region src/repo-file-protocol.d.ts
+declare const repoFileReadArgs: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  baseCommit: z.ZodString;
+  path: z.ZodString;
+  offset: z.ZodDefault<z.ZodNumber>;
+  length: z.ZodDefault<z.ZodNumber>;
+}, z.core.$strict>;
+declare const repoWriteFileArgs: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  baseCommit: z.ZodString;
+  path: z.ZodString;
+  expectedSha256: z.ZodNullable<z.ZodString>;
+  text: z.ZodString;
+}, z.core.$strict>;
+declare const repoDeleteFileArgs: z.ZodObject<{
+  workspaceRef: z.ZodString;
+  baseCommit: z.ZodString;
+  path: z.ZodString;
+  expectedSha256: z.ZodString;
+}, z.core.$strict>;
+declare const repoFileProof: z.ZodObject<{
+  directories: z.ZodArray<z.ZodObject<{
+    path: z.ZodString;
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>>;
+  file: z.ZodObject<{
+    path: z.ZodString;
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+}, z.core.$strict>;
+interface RepoFileOperation {
+  operationId: string;
+  toolName: 'repo.writeFile' | 'repo.deleteFile';
+  requestHash: string;
+  state: string;
+  cleanupConfirmed: boolean;
+  scope: string[];
+  request: {
+    args: z.output<typeof repoWriteFileArgs> | z.output<typeof repoDeleteFileArgs>;
+    binding: z.output<typeof repoBinding>;
+  };
+  proof: z.output<typeof repoFileProof> | null;
+  result: Record<string, unknown> | null;
+}
+interface RepoFileResults {
+  beginRepoFileOperation: RepoFileOperation & {
+    created: boolean;
+  };
+  getRepoFileOperation: RepoFileOperation;
+  prepareRepoFileOperation: RepoFileOperation;
+  finishRepoFileOperation: RepoFileOperation;
+  confirmRepoFileCleanup: RepoFileOperation;
+  assertRepoWorkspaceSettled: {
+    settled: true;
+  };
+}
+//#endregion
+//#region src/source-archive-protocol.d.ts
+declare const acknowledgement$1: z.ZodObject<{
+  commit: z.ZodString;
+  tree: z.ZodString;
+  manifestSha256: z.ZodString;
+  repositoryIdentity: z.ZodObject<{
+    root: z.ZodString;
+    gitDirectory: z.ZodString;
+    commonDirectory: z.ZodString;
+    rootDevice: z.ZodString;
+    rootFileId: z.ZodString;
+    gitDevice: z.ZodString;
+    gitFileId: z.ZodString;
+  }, z.core.$strict>;
+  archiveRef: z.ZodString;
+  sourceRef: z.ZodString;
+}, z.core.$strict>;
+interface SourceArchive {
+  operationId: string;
+  allocationOperationId: string;
+  commitOperationId: string;
+  workspaceRef: string;
+  requestHash: string;
+  state: 'SENT' | 'PREPARED' | 'ACKNOWLEDGED' | 'FAILED';
+  basis: {
+    allocation: WorkspaceAllocation;
+    repository: ManagedRepository;
+    commitOperation: RepoOperation;
+  };
+  manifest: SourceManifest | null;
+  acknowledgement: z.output<typeof acknowledgement$1> | null;
+  errorCode: string | null;
+  acknowledgedAt: string | null;
+}
+interface SourceArchiveResults {
+  beginSourceArchive: SourceArchive & {
+    created: boolean;
+  };
+  getSourceArchive: SourceArchive;
+  prepareSourceArchive: SourceArchive;
+  completeSourceArchive: SourceArchive;
+  markSourceArchiveUncertain: SourceArchive;
+  failSourceArchive: SourceArchive;
+}
+//#endregion
+//#region src/plan-domain.d.ts
+type Row = Record<string, string | number | null>;
+declare function createPlanDomain(db: DatabaseSync): {
+  authorized: (principalId: string, runId: string, write?: boolean) => Row;
+  inspect: (row: Row, plan: Draft, requireDelivery?: boolean) => {
+    issues: {
+      code: string;
+      path: string;
+      workId?: (string & import("zod").$brand<"work">) | undefined;
+      relatedWorkId?: (string & import("zod").$brand<"work">) | undefined;
+      requirementId?: (string & import("zod").$brand<"requirement">) | undefined;
+    }[];
+    topology: {
+      workId: string & import("zod").$brand<"work">;
+      layer: number;
+    }[];
+  };
+  pendingQuestions: (runId: string) => boolean;
+  pendingInterpretation: (runId: string, requirementRevision: number) => boolean;
+  pendingSource: (runId: string, requirementRevision: number) => boolean;
+  getPlanReview: (input: Parsed<"getPlanReview">) => {
+    projectId: string & import("zod").$brand<"prj">;
+    runId: string & import("zod").$brand<"run">;
+    resourceRevision: number;
+    planRevision: number;
+    requirementRevision: number;
+    reviewHash: string;
+    baseCommit: string;
+    plan: {
+      requirementRevision: number;
+      works: {
+        workId: string & import("zod").$brand<"work">;
+        workRevision: number;
+        role: "product" | "architect" | "developer" | "tester";
+        goal: string;
+        inputRefs: ({
+          artifactId: string & import("zod").$brand<"artifact">;
+          sha256: string;
+          kind: "artifact";
+        } | {
+          kind: "output";
+          workId: string & import("zod").$brand<"work">;
+          outputSlot: string;
+        })[];
+        outputSpec: {
+          slot: string;
+          schemaId: string;
+        }[];
+        completionChecks: ({
+          kind: "artifact-exists";
+          outputSlot: string;
+        } | {
+          kind: "schema-valid";
+          outputSlot: string;
+          schemaId: string;
+        } | {
+          kind: "commit-resolved";
+          outputSlot: string;
+        } | {
+          kind: "command-exit-zero";
+          checkId: string & import("zod").$brand<"check">;
+        } | {
+          kind: "required-tests-pass";
+          checkId: string & import("zod").$brand<"check">;
+        } | {
+          kind: "coverage-threshold";
+          lines: number;
+          branches: number;
+        } | {
+          kind: "human-decision";
+          checkId: string & import("zod").$brand<"check">;
+        })[];
+        dependencies: {
+          workId: string & import("zod").$brand<"work">;
+          requiredOutcome: "success" | "completed-with-findings";
+        }[];
+        writeScope: string[];
+        estimatedResources: {
+          cpu: number;
+          memoryMiB: number;
+          timeoutMs: number;
+        };
+        requirementIds: (string & import("zod").$brand<"requirement">)[];
+      }[];
+    };
+    mode: "current" | "history";
+    canConfirm: boolean;
+    confirmation: {
+      actor: string;
+      operationId: string & import("zod").$brand<"op">;
+      confirmedAt: string;
+    } | null;
+    issues: {
+      code: string;
+      path: string;
+      workId?: (string & import("zod").$brand<"work">) | undefined;
+      relatedWorkId?: (string & import("zod").$brand<"work">) | undefined;
+      requirementId?: (string & import("zod").$brand<"requirement">) | undefined;
+    }[];
+    topology: {
+      workId: string & import("zod").$brand<"work">;
+      layer: number;
+    }[];
+    carryForward?: {
+      sha256: string;
+      round: number;
+      sourcePlanRevision: number;
+      results: {
+        workId: string & import("zod").$brand<"work">;
+        workRevision: number;
+        attemptId: string & import("zod").$brand<"attempt">;
+        sourcePlanRevision: number;
+        outcome: "success" | "completed-with-findings";
+        codeCommit: string | null;
+        evidence: {
+          artifactId: string & import("zod").$brand<"artifact">;
+          sha256: string;
+        };
+        checkConfigHash: string;
+        templateVersion: string;
+        inputManifestSha256: string;
+        snapshotSha256: string;
+        origin: "FORMAL" | "HISTORICAL";
+      }[];
+    } | undefined;
+  };
+};
+//#endregion
+//#region src/candidate-basis.d.ts
+interface CandidateSubject {
+  principalId: string;
+  runId: string;
+  purpose: 'run-candidate' | 'work-input';
+  workId?: string | undefined;
+}
+interface CandidateWorkFact {
+  workId: string;
+  workRevision: number;
+  workEpoch: number;
+  attemptId: string;
+  role: string;
+  outcome: string;
+  admittedRunEpoch: number;
+  codeCommit: string | null;
+  inputManifestSha256: string;
+  evidence: {
+    artifactId: string;
+    sha256: string;
+  };
+  outputs: {
+    slot: string;
+    ref: {
+      artifactId: string;
+      sha256: string;
+    };
+  }[];
+}
+interface CandidateSource {
+  workId: string;
+  attemptId: string;
+  archiveOperationId: string;
+  allocationOperationId: string;
+  commitOperationId: string;
+  workspaceRef: string;
+  baseCommit: string;
+  commit: string;
+  tree: string;
+  manifestSha256: string;
+  archiveRef: string;
+  sourceRef: string;
+}
+interface CandidateBasis {
+  schemaVersion: 'devmesh.candidate-basis.v1';
+  projectId: string;
+  runId: string;
+  runEpoch: number;
+  requirementRevision: number;
+  planRevision: number;
+  planHash: string;
+  planDecisionId: string;
+  purpose: 'run-candidate' | 'work-input';
+  target: {
+    workId: string;
+    workRevision: number;
+    workEpoch: number;
+  } | null;
+  baseCommit: string;
+  repository: {
+    resourceId: string;
+    identity: GitDirectoryIdentity;
+  };
+  works: CandidateWorkFact[];
+  sources: CandidateSource[];
+  sha256: string;
+}
+//#endregion
+//#region src/candidate-protocol.d.ts
+interface CandidateResults {
+  getCandidateSourceBasis: CandidateBasis;
+  assertCandidateSourceBasis: CandidateBasis;
+}
+//#endregion
+//#region src/candidate-material-protocol.d.ts
+declare const candidateMaterialDescriptor: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  kind: z.ZodLiteral<"REPORT">;
+  mergeSha256: z.ZodString;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+}, z.core.$strict>, z.ZodObject<{
+  objectId: z.ZodString;
+  mode: z.ZodEnum<{
+    100644: "100644";
+    100755: "100755";
+  }>;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+  path: z.ZodString;
+  version: z.ZodString;
+  kind: z.ZodLiteral<"FILE">;
+}, z.core.$strict>, z.ZodObject<{
+  objectId: z.ZodString;
+  path: z.ZodString;
+  version: z.ZodString;
+  kind: z.ZodLiteral<"DIRECTORY">;
+}, z.core.$strict>, z.ZodObject<{
+  path: z.ZodString;
+  version: z.ZodString;
+  kind: z.ZodLiteral<"ABSENT">;
+}, z.core.$strict>], "kind">;
+type CandidateMaterialDescriptor = z.output<typeof candidateMaterialDescriptor>;
+declare function candidateMaterialKey(descriptor: CandidateMaterialDescriptor): string;
+interface CandidateMaterial {
+  operationId: string;
+  ordinal: number;
+  materialKey: string;
+  descriptor: CandidateMaterialDescriptor;
+  writeKey: string | null;
+  contentHash: string | null;
+  writeId: string | null;
+}
+interface CandidateConflictAcknowledgement {
+  repositoryIdentity: z.output<typeof gitDirectoryIdentity>;
+  reportSha256: string;
+  manifestSha256: string;
+  materialCount: number;
+}
+interface CandidateMaterialResults {
+  getCandidateMaterial: CandidateMaterial | null;
+  declareCandidateMaterials: CandidateMaterial[];
+  listCandidateMaterials: CandidateMaterial[];
+  sealCandidateConflictMaterials: {
+    manifestSha256: string;
+    materialCount: number;
+  };
+  acknowledgeCandidateConflict: {
+    operationId: string;
+    state: 'CONFLICT';
+    acknowledgement: CandidateConflictAcknowledgement;
+  };
+}
+declare const candidateMergeReport: z.ZodObject<{
+  clean: z.ZodBoolean;
+  tree: z.ZodString;
+  base: z.ZodNullable<z.ZodString>;
+  bases: z.ZodArray<z.ZodString>;
+  ours: z.ZodString;
+  theirs: z.ZodString;
+  stages: z.ZodArray<z.ZodObject<{
+    path: z.ZodString;
+    mode: z.ZodEnum<{
+      100644: "100644";
+      100755: "100755";
+    }>;
+    objectId: z.ZodString;
+    stage: z.ZodUnion<readonly [z.ZodLiteral<1>, z.ZodLiteral<2>, z.ZodLiteral<3>]>;
+  }, z.core.$strict>>;
+  messages: z.ZodArray<z.ZodObject<{
+    paths: z.ZodArray<z.ZodString>;
+    kind: z.ZodString;
+    message: z.ZodString;
+  }, z.core.$strict>>;
+}, z.core.$strict>;
+declare const candidateReportEnvelope: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.candidate-report.v1">;
+  merge: z.ZodObject<{
+    clean: z.ZodBoolean;
+    tree: z.ZodString;
+    base: z.ZodNullable<z.ZodString>;
+    bases: z.ZodArray<z.ZodString>;
+    ours: z.ZodString;
+    theirs: z.ZodString;
+    stages: z.ZodArray<z.ZodObject<{
+      path: z.ZodString;
+      mode: z.ZodEnum<{
+        100644: "100644";
+        100755: "100755";
+      }>;
+      objectId: z.ZodString;
+      stage: z.ZodUnion<readonly [z.ZodLiteral<1>, z.ZodLiteral<2>, z.ZodLiteral<3>]>;
+    }, z.core.$strict>>;
+    messages: z.ZodArray<z.ZodObject<{
+      paths: z.ZodArray<z.ZodString>;
+      kind: z.ZodString;
+      message: z.ZodString;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  virtualBaseBlobs: z.ZodArray<z.ZodObject<{
+    objectId: z.ZodString;
+    base64: z.ZodString;
+  }, z.core.$strict>>;
+}, z.core.$strict>;
+//#endregion
+//#region src/candidate-integration-protocol.d.ts
+declare const acknowledgement: z.ZodObject<{
+  repositoryIdentity: z.ZodObject<{
+    root: z.ZodString;
+    gitDirectory: z.ZodString;
+    commonDirectory: z.ZodString;
+    rootDevice: z.ZodString;
+    rootFileId: z.ZodString;
+    gitDevice: z.ZodString;
+    gitFileId: z.ZodString;
+  }, z.core.$strict>;
+  refs: z.ZodArray<z.ZodObject<{
+    ref: z.ZodString;
+    commit: z.ZodString;
+  }, z.core.$strict>>;
+  manifestSha256: z.ZodString;
+}, z.core.$strict>;
+declare const candidateIntegrationRequests: {
+  beginCandidateIntegration: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    originOperationId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    purpose: z.ZodEnum<{
+      "run-candidate": "run-candidate";
+      "work-input": "work-input";
+    }>;
+    workId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+  }, z.core.$strict>;
+  getCandidateIntegration: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getCandidateIntegrationBasis: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getCandidateIntegrationManifest: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getCandidateIntegrationStep: z.ZodObject<{
+    ordinal: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  beginCandidateStep: z.ZodObject<{
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareCandidateStep: z.ZodObject<{
+    bases: z.ZodArray<z.ZodString>;
+    tree: z.ZodString;
+    clean: z.ZodBoolean;
+    reportSha256: z.ZodString;
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markCandidateStepSent: z.ZodObject<{
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  acknowledgeCandidateStep: z.ZodObject<{
+    proof: z.ZodObject<{
+      repositoryIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      commit: z.ZodString;
+      tree: z.ZodString;
+      ref: z.ZodString;
+    }, z.core.$strict>;
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareCandidateIntegration: z.ZodObject<{
+    manifest: z.ZodObject<{
+      commit: z.ZodString;
+      tree: z.ZodString;
+      files: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        mode: z.ZodEnum<{
+          100644: "100644";
+          100755: "100755";
+        }>;
+        objectId: z.ZodString;
+        byteSize: z.ZodNumber;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+      byteSize: z.ZodNumber;
+      sha256: z.ZodString;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markCandidateIntegrationSent: z.ZodObject<{
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  acknowledgeCandidateIntegration: z.ZodObject<{
+    acknowledgement: z.ZodObject<{
+      repositoryIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      refs: z.ZodArray<z.ZodObject<{
+        ref: z.ZodString;
+        commit: z.ZodString;
+      }, z.core.$strict>>;
+      manifestSha256: z.ZodString;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  failUnsentCandidateIntegration: z.ZodObject<{
+    errorCode: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  recordCandidateCasRejection: z.ZodObject<{
+    originalRefsAbsent: z.ZodLiteral<true>;
+    gitChildExited: z.ZodLiteral<true>;
+    observedHead: z.ZodNullable<z.ZodString>;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markCandidateIntegrationUncertain: z.ZodObject<{
+    errorCode: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getQualifiedCandidateSnapshot: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    purpose: z.ZodEnum<{
+      "run-candidate": "run-candidate";
+      "work-input": "work-input";
+    }>;
+    workId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+  }, z.core.$strict>;
+};
+type CandidateIntegrationMethod = keyof typeof candidateIntegrationRequests;
+interface CandidateHead {
+  operationId: string;
+  commit: string;
+}
+interface CandidateRefUpdate {
+  ref: string;
+  commit: string;
+  expected: string | null;
+}
+interface CandidateIntegration {
+  operationId: string;
+  projectId: string;
+  runId: string;
+  principalId: string;
+  purpose: 'run-candidate' | 'work-input';
+  workId: string | null;
+  originOperationId: string | null;
+  requestHash: string;
+  basisSha256: string;
+  expectedHead: CandidateHead | null;
+  sourceCount: number;
+  acknowledgedSteps: number;
+  state: 'BUILDING' | 'PREPARED' | 'CAS_SENT' | 'ACKNOWLEDGED' | 'CONFLICT_PENDING' | 'CONFLICT' | 'FAILED';
+  manifest: {
+    commit: string;
+    tree: string;
+    sha256: string;
+  } | null;
+  updates: CandidateRefUpdate[];
+  acknowledgement: z.output<typeof acknowledgement> | null;
+  conflictAcknowledgement: CandidateConflictAcknowledgement | null;
+  errorCode: string | null;
+  createdAt: string;
+  acknowledgedAt: string | null;
+  failureProof: {
+    originalRefsAbsent: true;
+    gitChildExited: true;
+    observedHead: string | null;
+  } | null;
+}
+interface CandidateIntegrationStep {
+  operationId: string;
+  ordinal: number;
+  ours: string;
+  theirs: string;
+  state: 'COMPUTING' | 'PREPARED' | 'REF_SENT' | 'ACKNOWLEDGED' | 'CONFLICT_PENDING' | 'CONFLICT' | 'ABANDONED';
+  preparation: {
+    bases: string[];
+    tree: string;
+    clean: boolean;
+    reportSha256: string;
+    commit: string | null;
+    commitBody: string | null;
+    ref: string | null;
+  } | null;
+  acknowledgement: {
+    repositoryIdentity: GitDirectoryIdentity;
+    commit: string;
+    tree: string;
+    ref: string;
+  } | null;
+  conflictAcknowledgement: CandidateConflictAcknowledgement | null;
+  createdAt: string;
+  acknowledgedAt: string | null;
+}
+interface CandidateIntegrationResults {
+  beginCandidateIntegration: CandidateIntegration & {
+    created: boolean;
+  };
+  getCandidateIntegration: CandidateIntegration;
+  getCandidateIntegrationBasis: CandidateBasis;
+  getCandidateIntegrationManifest: SourceManifest | null;
+  getCandidateIntegrationStep: CandidateIntegrationStep | null;
+  beginCandidateStep: CandidateIntegrationStep & {
+    created: boolean;
+  };
+  prepareCandidateStep: CandidateIntegrationStep;
+  markCandidateStepSent: CandidateIntegrationStep & {
+    send: boolean;
+  };
+  acknowledgeCandidateStep: CandidateIntegrationStep;
+  prepareCandidateIntegration: CandidateIntegration;
+  markCandidateIntegrationSent: CandidateIntegration & {
+    send: boolean;
+  };
+  acknowledgeCandidateIntegration: CandidateIntegration;
+  failUnsentCandidateIntegration: CandidateIntegration;
+  recordCandidateCasRejection: CandidateIntegration;
+  markCandidateIntegrationUncertain: CandidateIntegration;
+  getQualifiedCandidateSnapshot: CandidateIntegration;
+}
+//#endregion
+//#region src/workspace-preservation-protocol.d.ts
+declare const workspaceMaterialEntry: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  kind: z.ZodLiteral<"FILE">;
+  path: z.ZodString;
+  identity: z.ZodObject<{
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>;
+  mode: z.ZodNumber;
+  links: z.ZodNumber;
+  mtimeNs: z.ZodString;
+  ctimeNs: z.ZodString;
+  byteSize: z.ZodNumber;
+  sha256: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"DIRECTORY">;
+  path: z.ZodString;
+  identity: z.ZodObject<{
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>;
+  mode: z.ZodNumber;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"ABSENT">;
+  path: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"EXCLUDED">;
+  path: z.ZodString;
+  reason: z.ZodEnum<{
+    "retained-git-repository": "retained-git-repository";
+    "rebuildable-node-modules": "rebuildable-node-modules";
+  }>;
+  identity: z.ZodObject<{
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>;
+}, z.core.$strict>], "kind">;
+declare const workspaceMaterialSnapshot: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.workspace-materials.v1">;
+  root: z.ZodString;
+  identity: z.ZodObject<{
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>;
+  entries: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+    kind: z.ZodLiteral<"FILE">;
+    path: z.ZodString;
+    identity: z.ZodObject<{
+      device: z.ZodString;
+      fileId: z.ZodString;
+    }, z.core.$strict>;
+    mode: z.ZodNumber;
+    links: z.ZodNumber;
+    mtimeNs: z.ZodString;
+    ctimeNs: z.ZodString;
+    byteSize: z.ZodNumber;
+    sha256: z.ZodString;
+  }, z.core.$strict>, z.ZodObject<{
+    kind: z.ZodLiteral<"DIRECTORY">;
+    path: z.ZodString;
+    identity: z.ZodObject<{
+      device: z.ZodString;
+      fileId: z.ZodString;
+    }, z.core.$strict>;
+    mode: z.ZodNumber;
+  }, z.core.$strict>, z.ZodObject<{
+    kind: z.ZodLiteral<"ABSENT">;
+    path: z.ZodString;
+  }, z.core.$strict>, z.ZodObject<{
+    kind: z.ZodLiteral<"EXCLUDED">;
+    path: z.ZodString;
+    reason: z.ZodEnum<{
+      "retained-git-repository": "retained-git-repository";
+      "rebuildable-node-modules": "rebuildable-node-modules";
+    }>;
+    identity: z.ZodObject<{
+      device: z.ZodString;
+      fileId: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>], "kind">>;
+  byteSize: z.ZodNumber;
+  sha256: z.ZodString;
+}, z.core.$strict>;
+declare const workspacePreservationManifest: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.workspace-preservation.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  allocationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  workspaceRef: z.ZodString;
+  basisSha256: z.ZodString;
+  headCommit: z.ZodString;
+  repositoryIdentity: z.ZodObject<{
+    root: z.ZodString;
+    gitDirectory: z.ZodString;
+    commonDirectory: z.ZodString;
+    rootDevice: z.ZodString;
+    rootFileId: z.ZodString;
+    gitDevice: z.ZodString;
+    gitFileId: z.ZodString;
+  }, z.core.$strict>;
+  workspaceIdentity: z.ZodObject<{
+    root: z.ZodString;
+    gitDirectory: z.ZodString;
+    commonDirectory: z.ZodString;
+    rootDevice: z.ZodString;
+    rootFileId: z.ZodString;
+    gitDevice: z.ZodString;
+    gitFileId: z.ZodString;
+  }, z.core.$strict>;
+  parentMarkerSha256: z.ZodString;
+  retained: z.ZodArray<z.ZodObject<{
+    ref: z.ZodString;
+    commit: z.ZodString;
+    manifest: z.ZodObject<{
+      commit: z.ZodString;
+      tree: z.ZodString;
+      files: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        mode: z.ZodEnum<{
+          100644: "100644";
+          100755: "100755";
+        }>;
+        objectId: z.ZodString;
+        byteSize: z.ZodNumber;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+      byteSize: z.ZodNumber;
+      sha256: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>>;
+  snapshot: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.workspace-materials.v1">;
+    root: z.ZodString;
+    identity: z.ZodObject<{
+      device: z.ZodString;
+      fileId: z.ZodString;
+    }, z.core.$strict>;
+    entries: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+      kind: z.ZodLiteral<"FILE">;
+      path: z.ZodString;
+      identity: z.ZodObject<{
+        device: z.ZodString;
+        fileId: z.ZodString;
+      }, z.core.$strict>;
+      mode: z.ZodNumber;
+      links: z.ZodNumber;
+      mtimeNs: z.ZodString;
+      ctimeNs: z.ZodString;
+      byteSize: z.ZodNumber;
+      sha256: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"DIRECTORY">;
+      path: z.ZodString;
+      identity: z.ZodObject<{
+        device: z.ZodString;
+        fileId: z.ZodString;
+      }, z.core.$strict>;
+      mode: z.ZodNumber;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"ABSENT">;
+      path: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"EXCLUDED">;
+      path: z.ZodString;
+      reason: z.ZodEnum<{
+        "retained-git-repository": "retained-git-repository";
+        "rebuildable-node-modules": "rebuildable-node-modules";
+      }>;
+      identity: z.ZodObject<{
+        device: z.ZodString;
+        fileId: z.ZodString;
+      }, z.core.$strict>;
+    }, z.core.$strict>], "kind">>;
+    byteSize: z.ZodNumber;
+    sha256: z.ZodString;
+  }, z.core.$strict>;
+}, z.core.$strict>;
+declare const ack: z.ZodObject<{
+  manifestSha256: z.ZodString;
+  snapshotSha256: z.ZodString;
+  materialCount: z.ZodNumber;
+  repositoryIdentity: z.ZodObject<{
+    root: z.ZodString;
+    gitDirectory: z.ZodString;
+    commonDirectory: z.ZodString;
+    rootDevice: z.ZodString;
+    rootFileId: z.ZodString;
+    gitDevice: z.ZodString;
+    gitFileId: z.ZodString;
+  }, z.core.$strict>;
+  workspaceIdentity: z.ZodObject<{
+    root: z.ZodString;
+    gitDirectory: z.ZodString;
+    commonDirectory: z.ZodString;
+    rootDevice: z.ZodString;
+    rootFileId: z.ZodString;
+    gitDevice: z.ZodString;
+    gitFileId: z.ZodString;
+  }, z.core.$strict>;
+  parentIdentity: z.ZodObject<{
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>;
+}, z.core.$strict>;
+type WorkspacePreservationManifest = z.output<typeof workspacePreservationManifest>;
+interface WorkspacePreservationInputs {
+  principalId: string;
+  allocation: WorkspaceAllocation;
+  repository: ManagedRepository;
+  commits: {
+    operationId: string;
+    requestHash: string;
+    commit: string;
+    tree: string;
+    ref: string;
+    archive: {
+      operationId: string;
+      manifest: z.output<typeof sourceManifest>;
+      acknowledgement: {
+        archiveRef: string;
+        sourceRef: string;
+        commit: string;
+        tree: string;
+        manifestSha256: string;
+        repositoryIdentity: z.output<typeof gitDirectoryIdentity>;
+      };
+    } | null;
+  }[];
+  fileOperations: {
+    operationId: string;
+    requestHash: string;
+    state: string;
+    cleanupConfirmed: boolean;
+    proof: unknown;
+    result: unknown;
+  }[];
+}
+interface WorkspacePreservation {
+  operationId: string;
+  allocationOperationId: string;
+  workspaceRef: string;
+  principalId: string;
+  requestHash: string;
+  basisSha256: string;
+  state: 'SENT' | 'PREPARED' | 'ACKNOWLEDGED';
+  basis: WorkspacePreservationInputs;
+  manifest: WorkspacePreservationManifest | null;
+  acknowledgement: z.output<typeof ack> | null;
+  acknowledgedAt: string | null;
+}
+interface WorkspacePreservationMaterial {
+  operationId: string;
+  materialKey: string;
+  sha256: string;
+  byteSize: number;
+  writeKey: string;
+  contentHash: string | null;
+  writeId: string | null;
+}
+interface WorkspacePreservationResults {
+  getWorkspacePreservationInputs: WorkspacePreservationInputs;
+  beginWorkspacePreservation: WorkspacePreservation & {
+    created: boolean;
+  };
+  getWorkspacePreservation: WorkspacePreservation;
+  prepareWorkspacePreservation: WorkspacePreservation;
+  listWorkspacePreservationMaterials: WorkspacePreservationMaterial[];
+  completeWorkspacePreservation: WorkspacePreservation;
+  assertWorkspacePreservationReclaimable: WorkspacePreservation;
+}
+//#endregion
+//#region src/workspace-maintenance-protocol.d.ts
+interface WorkspaceMaintenanceAuthority {
+  operationId: string;
+  operationKind: 'allocation' | 'repoGit' | 'repoFile' | 'sourceArchive' | 'preservation' | 'reclamation';
+  workspaceRef: string;
+  allocationOperationId: string;
+  projectId: string;
+  runnerId: string;
+  attemptId: string;
+  activationId: string;
+  grantId: string;
+}
+interface WorkspaceMaintenanceResults {
+  getManagedWorkspaceBinding: {
+    allocation: WorkspaceAllocation;
+    repository: ManagedRepository;
+  };
+  authorizeWorkspaceMaintenance: WorkspaceMaintenanceAuthority;
+  authorizeManagedWorkspaceAccess: WorkspaceAllocation;
+}
+//#endregion
+//#region src/workspace-reclamation-protocol.d.ts
+declare const isolationProof: z.ZodObject<{
+  sourceAbsent: z.ZodLiteral<true>;
+  trashIdentity: z.ZodObject<{
+    device: z.ZodString;
+    fileId: z.ZodString;
+  }, z.core.$strict>;
+  manifestSha256: z.ZodString;
+  receiptSha256: z.ZodString;
+}, z.core.$strict>;
+declare const deletionProof: z.ZodObject<{
+  sourceAbsent: z.ZodLiteral<true>;
+  trashAbsent: z.ZodLiteral<true>;
+  receiptSha256: z.ZodString;
+}, z.core.$strict>;
+interface WorkspaceReclamation {
+  operationId: string;
+  preservationOperationId: string;
+  workspaceRef: string;
+  projectId: string;
+  principalId: string;
+  requestHash: string;
+  createdAt: string;
+  state: 'PREPARED' | 'ISOLATION_SENT' | 'ISOLATED' | 'DELETE_SENT' | 'DELETED';
+  basis: {
+    preservation: WorkspacePreservation;
+    sourcePath: string;
+    trashPath: string;
+  };
+  isolationIntentSha256: string | null;
+  isolationProof: z.output<typeof isolationProof> | null;
+  deleteIntentSha256: string | null;
+  deletionProof: z.output<typeof deletionProof> | null;
+  errorCode: string | null;
+}
+interface WorkspaceReclamationResults {
+  beginWorkspaceReclamation: WorkspaceReclamation & {
+    created: boolean;
+  };
+  getWorkspaceReclamation: WorkspaceReclamation;
+  assertWorkspaceReclamationReady: WorkspaceReclamation;
+  markWorkspaceIsolationSent: WorkspaceReclamation;
+  acknowledgeWorkspaceIsolation: WorkspaceReclamation;
+  markWorkspaceDeletionSent: WorkspaceReclamation;
+  acknowledgeWorkspaceDeletion: WorkspaceReclamation;
+  markWorkspaceReclamationUncertain: WorkspaceReclamation;
+}
+//#endregion
+//#region src/quality-protocol.d.ts
+declare const qualityMaterialDescriptor: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  sourceManifestSha256: z.ZodString;
+  topologySha256: z.ZodString;
+  allocationManifestSha256: z.ZodString;
+  instrumentation: z.ZodOptional<z.ZodObject<{
+    providerId: z.ZodString;
+    toolchainHash: z.ZodString;
+  }, z.core.$strict>>;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+  kind: z.ZodLiteral<"SOURCE">;
+}, z.core.$strict>, z.ZodObject<{
+  report: z.ZodObject<{
+    reportId: z.ZodString;
+    execution: z.ZodObject<{
+      producerId: z.ZodString;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      runnerId: z.ZodString;
+      jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      requestHash: z.ZodString;
+      targetCommit: z.ZodString;
+      checkConfigHash: z.ZodString;
+      commandHash: z.ZodString;
+      imageDigest: z.ZodString;
+      state: z.ZodEnum<{
+        EXITED: "EXITED";
+        QUEUED: "QUEUED";
+        STARTING: "STARTING";
+        RUNNING: "RUNNING";
+        STOPPING: "STOPPING";
+        OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+      }>;
+      exitCode: z.ZodNullable<z.ZodNumber>;
+      errorCode: z.ZodNullable<z.ZodString>;
+      stopRequested: z.ZodBoolean;
+      startedAt: z.ZodNullable<z.ZodISODateTime>;
+      finishedAt: z.ZodNullable<z.ZodISODateTime>;
+      log: z.ZodObject<{
+        sha256: z.ZodString;
+        size: z.ZodNumber;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    outputPath: z.ZodString;
+    sha256: z.ZodString;
+    size: z.ZodNumber;
+  }, z.core.$strict>;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+  kind: z.ZodLiteral<"REPORT">;
+}, z.core.$strict>, z.ZodObject<{
+  producerId: z.ZodString;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+  kind: z.ZodLiteral<"LOG">;
+}, z.core.$strict>, z.ZodObject<{
+  evaluation: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.quality-evaluation.v1">;
+    targetCommit: z.ZodString;
+    checkConfigHash: z.ZodString;
+    sourceManifestSha256: z.ZodString;
+    topologySha256: z.ZodString;
+    automaticStatus: z.ZodEnum<{
+      PASS: "PASS";
+      FAIL: "FAIL";
+      MISSING: "MISSING";
+      STALE: "STALE";
+    }>;
+    reviewStatus: z.ZodEnum<{
+      PENDING: "PENDING";
+      NOT_REQUIRED: "NOT_REQUIRED";
+    }>;
+    checks: z.ZodArray<z.ZodObject<{
+      checkId: z.ZodString;
+      status: z.ZodEnum<{
+        PASS: "PASS";
+        FAIL: "FAIL";
+        MISSING: "MISSING";
+        STALE: "STALE";
+        PENDING: "PENDING";
+        NOT_APPLICABLE: "NOT_APPLICABLE";
+      }>;
+      codes: z.ZodArray<z.ZodString>;
+      reportIds: z.ZodArray<z.ZodString>;
+      tests: z.ZodOptional<z.ZodObject<{
+        passed: z.ZodNumber;
+        failed: z.ZodNumber;
+        skipped: z.ZodNumber;
+        missing: z.ZodNumber;
+      }, z.core.$strict>>;
+      coverage: z.ZodOptional<z.ZodObject<{
+        lines: z.ZodObject<{
+          covered: z.ZodNumber;
+          total: z.ZodNumber;
+          minimum: z.ZodNumber;
+          status: z.ZodEnum<{
+            PASS: "PASS";
+            FAIL: "FAIL";
+            MISSING: "MISSING";
+            STALE: "STALE";
+            PENDING: "PENDING";
+            NOT_APPLICABLE: "NOT_APPLICABLE";
+          }>;
+        }, z.core.$strict>;
+        branches: z.ZodObject<{
+          covered: z.ZodNumber;
+          total: z.ZodNumber;
+          minimum: z.ZodNumber;
+          status: z.ZodEnum<{
+            PASS: "PASS";
+            FAIL: "FAIL";
+            MISSING: "MISSING";
+            STALE: "STALE";
+            PENDING: "PENDING";
+            NOT_APPLICABLE: "NOT_APPLICABLE";
+          }>;
+        }, z.core.$strict>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+  kind: z.ZodLiteral<"RESULT">;
+}, z.core.$strict>], "kind">;
+type QualityMaterialDescriptor = z.output<typeof qualityMaterialDescriptor>;
+declare const qualityMaterialKey: (d: QualityMaterialDescriptor) => string;
+declare const qualityRequests: {
+  registerQualityPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.quality-policy.v1">;
+      templateVersion: z.ZodString;
+      delivery: z.ZodOptional<z.ZodObject<{
+        producerId: z.ZodString;
+        architecture: z.ZodEnum<{
+          amd64: "amd64";
+          arm64: "arm64";
+        }>;
+        materials: z.ZodArray<z.ZodObject<{
+          key: z.ZodString;
+          path: z.ZodString;
+        }, z.core.$strict>>;
+      }, z.core.$strict>>;
+      producers: z.ZodArray<z.ZodObject<{
+        producerId: z.ZodString;
+        command: z.ZodArray<z.ZodString>;
+        imageDigest: z.ZodString;
+        pathPrefixes: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+      reports: z.ZodArray<z.ZodObject<{
+        reportId: z.ZodString;
+        producerId: z.ZodString;
+        format: z.ZodEnum<{
+          "istanbul-v1": "istanbul-v1";
+          "vitest-json-v1": "vitest-json-v1";
+        }>;
+        path: z.ZodString;
+        sourceInclude: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+      checks: z.ZodArray<z.ZodObject<{
+        checkId: z.ZodString;
+        kind: z.ZodEnum<{
+          command: "command";
+          tests: "tests";
+          coverage: "coverage";
+          human: "human";
+        }>;
+        producerIds: z.ZodArray<z.ZodString>;
+        reportIds: z.ZodArray<z.ZodString>;
+        requiredTests: z.ZodArray<z.ZodObject<{
+          path: z.ZodString;
+          fullName: z.ZodString;
+          requirementIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "requirement", "out">>;
+        }, z.core.$strict>>;
+      }, z.core.$strict>>;
+      business: z.ZodObject<{
+        include: z.ZodArray<z.ZodString>;
+        exclude: z.ZodArray<z.ZodObject<{
+          glob: z.ZodString;
+          reason: z.ZodString;
+        }, z.core.$strict>>;
+      }, z.core.$strict>;
+      thresholds: z.ZodObject<{
+        lines: z.ZodNumber;
+        branches: z.ZodNumber;
+      }, z.core.$strict>;
+      zeroBranches: z.ZodEnum<{
+        reject: "reject";
+        "complete-map-proves-none": "complete-map-proves-none";
+      }>;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getQualityPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    configHash: z.ZodString;
+  }, z.core.$strict>;
+  beginQualityVerification: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    allocationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    configHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getQualityVerification: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getQualitySourceManifest: z.ZodObject<{
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  bindQualityStage: z.ZodObject<{
+    producerId: z.ZodString;
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  listQualityStages: z.ZodObject<{
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  declareQualityOrigin: z.ZodObject<{
+    producerId: z.ZodString;
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+    execution: z.ZodObject<{
+      producerId: z.ZodString;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      runnerId: z.ZodString;
+      jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      requestHash: z.ZodString;
+      targetCommit: z.ZodString;
+      checkConfigHash: z.ZodString;
+      commandHash: z.ZodString;
+      imageDigest: z.ZodString;
+      state: z.ZodEnum<{
+        EXITED: "EXITED";
+        QUEUED: "QUEUED";
+        STARTING: "STARTING";
+        RUNNING: "RUNNING";
+        STOPPING: "STOPPING";
+        OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+      }>;
+      exitCode: z.ZodNullable<z.ZodNumber>;
+      errorCode: z.ZodNullable<z.ZodString>;
+      stopRequested: z.ZodBoolean;
+      startedAt: z.ZodNullable<z.ZodISODateTime>;
+      finishedAt: z.ZodNullable<z.ZodISODateTime>;
+      log: z.ZodObject<{
+        sha256: z.ZodString;
+        size: z.ZodNumber;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  declareQualityMaterial: z.ZodObject<{
+    descriptor: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      sourceManifestSha256: z.ZodString;
+      topologySha256: z.ZodString;
+      allocationManifestSha256: z.ZodString;
+      instrumentation: z.ZodOptional<z.ZodObject<{
+        providerId: z.ZodString;
+        toolchainHash: z.ZodString;
+      }, z.core.$strict>>;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      kind: z.ZodLiteral<"SOURCE">;
+    }, z.core.$strict>, z.ZodObject<{
+      report: z.ZodObject<{
+        reportId: z.ZodString;
+        execution: z.ZodObject<{
+          producerId: z.ZodString;
+          attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+          runnerId: z.ZodString;
+          jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+          operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          requestHash: z.ZodString;
+          targetCommit: z.ZodString;
+          checkConfigHash: z.ZodString;
+          commandHash: z.ZodString;
+          imageDigest: z.ZodString;
+          state: z.ZodEnum<{
+            EXITED: "EXITED";
+            QUEUED: "QUEUED";
+            STARTING: "STARTING";
+            RUNNING: "RUNNING";
+            STOPPING: "STOPPING";
+            OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+          }>;
+          exitCode: z.ZodNullable<z.ZodNumber>;
+          errorCode: z.ZodNullable<z.ZodString>;
+          stopRequested: z.ZodBoolean;
+          startedAt: z.ZodNullable<z.ZodISODateTime>;
+          finishedAt: z.ZodNullable<z.ZodISODateTime>;
+          log: z.ZodObject<{
+            sha256: z.ZodString;
+            size: z.ZodNumber;
+          }, z.core.$strict>;
+        }, z.core.$strict>;
+        outputPath: z.ZodString;
+        sha256: z.ZodString;
+        size: z.ZodNumber;
+      }, z.core.$strict>;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      kind: z.ZodLiteral<"REPORT">;
+    }, z.core.$strict>, z.ZodObject<{
+      producerId: z.ZodString;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      kind: z.ZodLiteral<"LOG">;
+    }, z.core.$strict>, z.ZodObject<{
+      evaluation: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.quality-evaluation.v1">;
+        targetCommit: z.ZodString;
+        checkConfigHash: z.ZodString;
+        sourceManifestSha256: z.ZodString;
+        topologySha256: z.ZodString;
+        automaticStatus: z.ZodEnum<{
+          PASS: "PASS";
+          FAIL: "FAIL";
+          MISSING: "MISSING";
+          STALE: "STALE";
+        }>;
+        reviewStatus: z.ZodEnum<{
+          PENDING: "PENDING";
+          NOT_REQUIRED: "NOT_REQUIRED";
+        }>;
+        checks: z.ZodArray<z.ZodObject<{
+          checkId: z.ZodString;
+          status: z.ZodEnum<{
+            PASS: "PASS";
+            FAIL: "FAIL";
+            MISSING: "MISSING";
+            STALE: "STALE";
+            PENDING: "PENDING";
+            NOT_APPLICABLE: "NOT_APPLICABLE";
+          }>;
+          codes: z.ZodArray<z.ZodString>;
+          reportIds: z.ZodArray<z.ZodString>;
+          tests: z.ZodOptional<z.ZodObject<{
+            passed: z.ZodNumber;
+            failed: z.ZodNumber;
+            skipped: z.ZodNumber;
+            missing: z.ZodNumber;
+          }, z.core.$strict>>;
+          coverage: z.ZodOptional<z.ZodObject<{
+            lines: z.ZodObject<{
+              covered: z.ZodNumber;
+              total: z.ZodNumber;
+              minimum: z.ZodNumber;
+              status: z.ZodEnum<{
+                PASS: "PASS";
+                FAIL: "FAIL";
+                MISSING: "MISSING";
+                STALE: "STALE";
+                PENDING: "PENDING";
+                NOT_APPLICABLE: "NOT_APPLICABLE";
+              }>;
+            }, z.core.$strict>;
+            branches: z.ZodObject<{
+              covered: z.ZodNumber;
+              total: z.ZodNumber;
+              minimum: z.ZodNumber;
+              status: z.ZodEnum<{
+                PASS: "PASS";
+                FAIL: "FAIL";
+                MISSING: "MISSING";
+                STALE: "STALE";
+                PENDING: "PENDING";
+                NOT_APPLICABLE: "NOT_APPLICABLE";
+              }>;
+            }, z.core.$strict>;
+          }, z.core.$strict>>;
+        }, z.core.$strict>>;
+      }, z.core.$strict>;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      kind: z.ZodLiteral<"RESULT">;
+    }, z.core.$strict>], "kind">;
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  listQualityMaterials: z.ZodObject<{
+    afterKey: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  completeQualityVerification: z.ZodObject<{
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  publishQualityArtifacts: z.ZodObject<{
+    contentHashes: z.ZodArray<z.ZodString>;
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+};
+type QualityMethod = keyof typeof qualityRequests;
+interface QualityBasis {
+  attemptId: string;
+  workId: string;
+  workRevision: number;
+  workEpoch: number;
+  runEpoch: number;
+  planRevision: number;
+  requirementRevision: number;
+  inputFingerprint: string;
+  inputManifest: Record<string, unknown>;
+  allocationOperationId: string;
+  allocationRequestHash: string;
+  allocationManifestSha256: string;
+  sourceIntegrationOperationId: string;
+  sourceBasisSha256: string;
+  runnerId: string;
+  workspaceRef: string;
+  targetCommit: string;
+}
+interface QualityOrigin {
+  producerId: string;
+  pipelineId: string;
+  ordinal: number;
+  execution: QualityExecution;
+}
+interface QualityVerification {
+  operationId: string;
+  principalId: string;
+  projectId: string;
+  runId: string;
+  attemptId: string;
+  allocationOperationId: string;
+  configHash: string;
+  requestHash: string;
+  basis: QualityBasis;
+  state: 'PREPARED' | 'EVALUATED';
+  qualification: 'CURRENT' | 'STALE';
+  evaluation: QualityEvaluation | null;
+  origins: QualityOrigin[];
+}
+interface QualityMaterial {
+  operationId: string;
+  materialKey: string;
+  descriptor: QualityMaterialDescriptor;
+  writeKey: string;
+  contentHash: string | null;
+  writeId: string | null;
+}
+interface QualityStage {
+  producerId: string;
+  pipelineId: string;
+  ordinal: number;
+  operationId: string;
+  state: string;
+  job: PipelineInput<'recordPipelineStage'>['job'] | null;
+}
+interface QualityArtifactRef {
+  materialKey: string;
+  artifactId: string;
+  sha256: string;
+  targetCommit: string;
+}
+interface QualityResults {
+  registerQualityPolicy: {
+    configHash: string;
+    policy: QualityPolicy;
+  };
+  getQualityPolicy: {
+    configHash: string;
+    policy: QualityPolicy;
+  };
+  beginQualityVerification: QualityVerification;
+  getQualityVerification: QualityVerification;
+  declareQualityOrigin: QualityOrigin;
+  getQualitySourceManifest: SourceManifest;
+  bindQualityStage: QualityStage;
+  listQualityStages: QualityStage[];
+  declareQualityMaterial: QualityMaterial;
+  listQualityMaterials: QualityMaterial[];
+  completeQualityVerification: QualityVerification;
+  publishQualityArtifacts: QualityArtifactRef[];
+}
+//#endregion
+//#region src/work-verification-protocol.d.ts
+declare const workVerificationRequests: {
+  getWorkVerificationCandidate: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+  }, z.core.$strict>;
+  beginWorkVerification: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    candidate: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.requirements.v1">;
+      role: z.ZodLiteral<"product">;
+      requirements: z.ZodArray<z.ZodObject<{
+        id: z.core.$ZodBranded<z.ZodString, "requirement", "out">;
+        statement: z.ZodString;
+        sourceRefs: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+          kind: z.ZodLiteral<"artifact">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"message">;
+          messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"requirement">;
+          requirementId: z.core.$ZodBranded<z.ZodString, "requirement", "out">;
+          requirementRevision: z.ZodNumber;
+        }, z.core.$strict>], "kind">>;
+        acceptance: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+      assumptions: z.ZodArray<z.ZodString>;
+      questions: z.ZodArray<z.ZodObject<{
+        id: z.core.$ZodBranded<z.ZodString, "question", "out">;
+        required: z.ZodBoolean;
+        reason: z.ZodString;
+        blockingScope: z.ZodArray<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+        defaultOption: z.ZodOptional<z.ZodString>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>, z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.architecture.v1">;
+      role: z.ZodLiteral<"architect">;
+      interfaces: z.ZodArray<z.ZodObject<{
+        name: z.ZodString;
+        specificationRef: z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>;
+      }, z.core.$strict>>;
+      planDraft: z.ZodObject<{
+        requirementRevision: z.ZodNumber;
+        works: z.ZodArray<z.ZodObject<{
+          workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+          workRevision: z.ZodNumber;
+          role: z.ZodEnum<{
+            product: "product";
+            architect: "architect";
+            developer: "developer";
+            tester: "tester";
+          }>;
+          goal: z.ZodString;
+          inputRefs: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+            artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+            sha256: z.ZodString;
+            kind: z.ZodLiteral<"artifact">;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"output">;
+            workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+            outputSlot: z.ZodString;
+          }, z.core.$strict>], "kind">>;
+          outputSpec: z.ZodArray<z.ZodObject<{
+            slot: z.ZodString;
+            schemaId: z.ZodString;
+          }, z.core.$strict>>;
+          completionChecks: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+            kind: z.ZodLiteral<"artifact-exists">;
+            outputSlot: z.ZodString;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"schema-valid">;
+            outputSlot: z.ZodString;
+            schemaId: z.ZodString;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"commit-resolved">;
+            outputSlot: z.ZodString;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"command-exit-zero">;
+            checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"required-tests-pass">;
+            checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"coverage-threshold">;
+            lines: z.ZodNumber;
+            branches: z.ZodNumber;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"human-decision">;
+            checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+          }, z.core.$strict>], "kind">>;
+          dependencies: z.ZodArray<z.ZodObject<{
+            workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+            requiredOutcome: z.ZodEnum<{
+              success: "success";
+              "completed-with-findings": "completed-with-findings";
+            }>;
+          }, z.core.$strict>>;
+          writeScope: z.ZodArray<z.ZodString>;
+          estimatedResources: z.ZodObject<{
+            cpu: z.ZodNumber;
+            memoryMiB: z.ZodNumber;
+            timeoutMs: z.ZodNumber;
+          }, z.core.$strict>;
+          requirementIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "requirement", "out">>;
+        }, z.core.$strict>>;
+      }, z.core.$strict>;
+      risks: z.ZodArray<z.ZodString>;
+      capabilityFit: z.ZodObject<{
+        supported: z.ZodBoolean;
+        gaps: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>;
+    }, z.core.$strict>, z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.development-result.v1">;
+      role: z.ZodLiteral<"developer">;
+      baseCommit: z.ZodString;
+      resultCommit: z.ZodString;
+      changedFiles: z.ZodArray<z.ZodString>;
+      checkRefs: z.ZodArray<z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+      unverified: z.ZodArray<z.ZodString>;
+      handoffProposal: z.ZodNullable<z.ZodObject<{
+        targetRole: z.ZodEnum<{
+          product: "product";
+          architect: "architect";
+          developer: "developer";
+          tester: "tester";
+        }>;
+        goal: z.ZodString;
+        artifactRefs: z.ZodArray<z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>>;
+        reason: z.ZodString;
+      }, z.core.$strict>>;
+    }, z.core.$strict>, z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.test-result.v1">;
+      role: z.ZodLiteral<"tester">;
+      targetCommit: z.ZodString;
+      caseResults: z.ZodArray<z.ZodObject<{
+        checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+        requirementIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "requirement", "out">>;
+        status: z.ZodEnum<{
+          FAILED: "FAILED";
+          PASSED: "PASSED";
+          SKIPPED: "SKIPPED";
+          MISSING: "MISSING";
+        }>;
+        reportRef: z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+          targetCommit: z.ZodString;
+        }, z.core.$strict>;
+      }, z.core.$strict>>;
+      coverageRef: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+        targetCommit: z.ZodString;
+      }, z.core.$strict>;
+      defects: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        severity: z.ZodEnum<{
+          LOW: "LOW";
+          MEDIUM: "MEDIUM";
+          HIGH: "HIGH";
+          CRITICAL: "CRITICAL";
+        }>;
+        description: z.ZodString;
+        evidenceRefs: z.ZodArray<z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>>;
+      }, z.core.$strict>>;
+      buildRef: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+        targetCommit: z.ZodString;
+      }, z.core.$strict>;
+      previewRef: z.ZodOptional<z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+        targetCommit: z.ZodString;
+      }, z.core.$strict>>;
+    }, z.core.$strict>], "role">;
+    qualityOperationId: z.ZodDefault<z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getWorkVerification: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listWorkVerifications: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    afterOperationId: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+};
+type WorkVerificationMethod = keyof typeof workVerificationRequests;
+interface WorkArtifactRef {
+  artifactId: string;
+  sha256: string;
+}
+interface WorkAssessment {
+  schemaVersion: 'devmesh.work-verification.v1';
+  runId: string;
+  attemptId: string;
+  workId: string;
+  workRevision: number;
+  inputFingerprint: string;
+  basisSha256: string;
+  candidate: WorkArtifactRef;
+  outputs: {
+    slot: string;
+    ref: WorkArtifactRef;
+  }[];
+  codeCommit: string | null;
+  qualityOperationId: string | null;
+  checks: {
+    kind: string;
+    status: 'PASS' | 'FAIL' | 'MISSING' | 'PENDING';
+    code: string;
+  }[];
+  automaticStatus: 'PASS' | 'FAIL' | 'MISSING' | 'PENDING';
+  outcome: 'success' | 'completed-with-findings' | null;
+}
+interface WorkVerification {
+  operationId: string;
+  principalId: string;
+  runId: string;
+  attemptId: string;
+  requestHash: string;
+  state: 'PREPARED' | 'READY' | 'APPLIED';
+  qualification: 'CURRENT' | 'STALE';
+  evaluation: WorkAssessment;
+  expectedHash: string;
+  byteSize: number;
+  writeKey: string;
+  completionKey: string;
+  artifactId: string | null;
+  contentHash: string | null;
+  writeId: string | null;
+}
+interface WorkVerificationResults {
+  getWorkVerificationCandidate: {
+    candidate: WorkArtifactRef;
+    work: WorkRevision;
+  };
+  beginWorkVerification: WorkVerification;
+  getWorkVerification: WorkVerification;
+  listWorkVerifications: WorkVerification[];
+}
+//#endregion
+//#region src/verified-finding-protocol.d.ts
+interface OriginalFailure {
+  schemaVersion: 'devmesh.original-failure.v1';
+  workVerificationId: string;
+  qualityOperationId: string;
+  attemptId: string;
+  workId: string;
+  targetCommit: string;
+  checkConfigHash: string;
+  sourceManifestSha256: string;
+  topologySha256: string;
+  check: QualityPolicy['checks'][number];
+  result: QualityEvaluation['checks'][number];
+  reproduction: {
+    producer: QualityPolicy['producers'][number];
+    origin: QualityOrigin;
+  }[];
+  expectedRequirements: {
+    requirementId: string;
+    sha256: string;
+  }[];
+  expectedAcceptance: {
+    requirementId: string;
+    statement: string;
+    acceptance: string[];
+  }[];
+  materials: {
+    key: string;
+    sha256: string;
+    byteSize: number;
+  }[];
+  evidence: {
+    artifactId: string;
+    sha256: string;
+  };
+}
+interface VerifiedFindingView extends IssueView {
+  failure: OriginalFailure;
+  failureSha256: string;
+}
+interface VerifiedFindingResults {
+  getVerifiedFinding: VerifiedFindingView;
+  listVerifiedFindings: VerifiedFindingView[];
+  linkVerifiedFindingFix: IssueOperation;
+  recordVerifiedFindingResult: IssueOperation;
+}
+//#endregion
+//#region src/release-delivery-protocol.d.ts
+declare const releaseDeliveryRequests: {
+  registerReleaseDeliveryPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      producerId: z.ZodString;
+      architecture: z.ZodEnum<{
+        amd64: "amd64";
+        arm64: "arm64";
+      }>;
+      materials: z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        path: z.ZodString;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.delivery-policy.v1">;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getReleaseDeliveryPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+  }, z.core.$strict>;
+  beginReleaseDelivery: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    qualityOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    policyHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getReleaseDelivery: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getReleaseDeliveryOrigin: z.ZodObject<{
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listReleaseDeliveryMaterials: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  completeReleaseDelivery: z.ZodObject<{
+    image: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-image-identity.v1">;
+      imageDigest: z.ZodString;
+      configDigest: z.ZodString;
+      targetCommit: z.ZodString;
+      buildArtifactHash: z.ZodString;
+      os: z.ZodLiteral<"linux">;
+      architecture: z.ZodEnum<{
+        amd64: "amd64";
+        arm64: "arm64";
+      }>;
+      layers: z.ZodArray<z.ZodObject<{
+        digest: z.ZodString;
+        diffId: z.ZodString;
+        byteSize: z.ZodNumber;
+        expandedByteSize: z.ZodNumber;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    dataPlan: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      strategy: z.ZodLiteral<"INITIAL">;
+      initialData: z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>;
+      sourceReleaseId: z.ZodNull;
+      migrationRef: z.ZodNull;
+      replacementDecisionId: z.ZodNull;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      strategy: z.ZodLiteral<"PRESERVE_MIGRATE">;
+      initialData: z.ZodNull;
+      sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      migrationRef: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>;
+      replacementDecisionId: z.ZodNull;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      strategy: z.ZodLiteral<"REPLACE">;
+      initialData: z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>;
+      sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      migrationRef: z.ZodNull;
+      replacementDecisionId: z.core.$ZodBranded<z.ZodString, "decision", "out">;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>], "strategy">;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+};
+type ReleaseDeliveryMethod = keyof typeof releaseDeliveryRequests;
+interface ReleaseDeliveryMaterial {
+  operationId: string;
+  materialKey: string;
+  path: string;
+  outputIndex: number;
+  expectedHash: string;
+  byteSize: number;
+  writeKey: string;
+  contentHash: string | null;
+  writeId: string | null;
+}
+interface ReleaseDeliveryBasis {
+  runId: string;
+  runEpoch: number;
+  planRevision: number;
+  requirementRevision: number;
+  targetCommit: string;
+  sourceManifestSha256: string;
+  checkConfigHash: string;
+  templateVersion: string;
+  qualityOperationId: string;
+  qualityBasisSha256: string;
+  qualityResultHash: string;
+  attemptId: string;
+  workEpoch: number;
+  jobHash: string;
+  sourceReleaseId: string | null;
+}
+interface ReleaseDelivery {
+  operationId: string;
+  principalId: string;
+  projectId: string;
+  runId: string;
+  requestHash: string;
+  policyHash: string;
+  basis: ReleaseDeliveryBasis;
+  state: 'PREPARED' | 'READY';
+  qualification: 'CURRENT' | 'STALE';
+  image: z.output<typeof previewImageIdentity> | null;
+  dataPlan: DeliveryDataPlan | null;
+}
+interface ReleaseDeliveryResults {
+  registerReleaseDeliveryPolicy: {
+    policyHash: string;
+    policy: ReleaseDeliveryPolicy;
+  };
+  getReleaseDeliveryPolicy: {
+    policyHash: string;
+    policy: ReleaseDeliveryPolicy;
+  };
+  beginReleaseDelivery: ReleaseDelivery;
+  getReleaseDelivery: ReleaseDelivery;
+  getReleaseDeliveryOrigin: {
+    job: PipelineInput<'recordPipelineStage'>['job'];
+    policy: ReleaseDeliveryPolicy;
+  };
+  listReleaseDeliveryMaterials: ReleaseDeliveryMaterial[];
+  completeReleaseDelivery: ReleaseDelivery;
+}
+//#endregion
+//#region src/release-freeze-protocol.d.ts
+declare const releaseFreezeRequests: {
+  prepareReleaseCandidateFreeze: z.ZodObject<{
+    integrationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    deliveryOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  freezeReleaseCandidate: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    integrationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    deliveryOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    basisHash: z.ZodString;
+    contentHashes: z.ZodArray<z.ZodString>;
+  }, z.core.$strict>;
+  getReleaseCandidate: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCurrentReleaseCandidate: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  listReleaseCandidates: z.ZodObject<{
+    afterRevision: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+};
+type ReleaseFreezeMethod = keyof typeof releaseFreezeRequests;
+type ReleaseFreezeInput<M extends ReleaseFreezeMethod> = z.output<(typeof releaseFreezeRequests)[M]>;
+interface CandidateWorkProof {
+  workId: string;
+  workRevision: number;
+  workEpoch: number;
+  attemptId: string;
+  role: string;
+  relation: 'CURRENT' | 'CARRIED' | 'MANUAL_PENDING';
+  operationId: string;
+  evidence: WorkArtifactRef;
+  assessment: WorkAssessment;
+  inputManifestHash: string;
+  roleSnapshotHash: string;
+  carryHash: string | null;
+}
+interface ReleaseCandidateManifest {
+  schemaVersion: 'devmesh.release-candidate-manifest.v1';
+  runId: string;
+  projectId: string;
+  runEpoch: number;
+  planRevision: number;
+  requirementRevision: number;
+  checkConfigHash: string;
+  templateVersion: string;
+  codeCommit: string;
+  automaticStatus: 'PASS';
+  reviewStatus: 'PENDING' | 'NOT_REQUIRED';
+  source: {
+    operationId: string;
+    basis: CandidateBasis;
+    manifestSha256: string;
+  };
+  works: CandidateWorkProof[];
+  quality: {
+    verification: QualityVerification;
+    materials: QualityMaterial[];
+  }[];
+  delivery: {
+    record: ReleaseDelivery;
+    materials: ReleaseDeliveryMaterial[];
+  };
+  issues: {
+    issueId: string;
+    revision: number;
+    state: string;
+    severity: string;
+  }[];
+}
+interface ReleaseCandidateRevision {
+  candidateId: string;
+  operationId: string;
+  runId: string;
+  projectId: string;
+  revision: number;
+  manifestHash: string;
+  createdAt: string;
+  qualification: 'CURRENT' | 'STALE';
+  manifest: ReleaseCandidateManifest;
+  preflightHashes: string[];
+}
+interface ReleaseCandidateSummary {
+  candidateId: string;
+  operationId: string;
+  revision: number;
+  manifestHash: string;
+  codeCommit: string;
+  createdAt: string;
+  qualification: 'CURRENT' | 'STALE';
+  automaticStatus: 'PASS';
+  reviewStatus: 'PENDING' | 'NOT_REQUIRED';
+}
+interface ReleaseFreezeResults {
+  prepareReleaseCandidateFreeze: {
+    manifestHash: string;
+    manifest: ReleaseCandidateManifest;
+  };
+  freezeReleaseCandidate: ReleaseCandidateRevision;
+  getReleaseCandidate: ReleaseCandidateRevision;
+  getCurrentReleaseCandidate: ReleaseCandidateRevision | null;
+  listReleaseCandidates: {
+    items: ReleaseCandidateSummary[];
+    nextRevision: number | null;
+  };
+}
+//#endregion
+//#region src/candidate-review-protocol.d.ts
+declare const candidateReviewRequests: {
+  getCandidateReview: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  }, z.core.$strict>;
+  recordCandidateReview: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    manifestHash: z.ZodString;
+    itemId: z.ZodString;
+    itemHash: z.ZodString;
+    previousResultId: z.ZodNullable<z.ZodString>;
+    verdict: z.ZodEnum<{
+      PASS: "PASS";
+      FAIL: "FAIL";
+    }>;
+    procedure: z.ZodString;
+    expected: z.ZodString;
+    observed: z.ZodString;
+    evidence: z.ZodArray<z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  recordCandidateRejection: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    manifestHash: z.ZodString;
+    rejectionId: z.ZodString;
+    previousResultId: z.ZodNullable<z.ZodString>;
+    classification: z.ZodEnum<{
+      IN_SCOPE_DEFECT: "IN_SCOPE_DEFECT";
+      SCOPE_CHANGE: "SCOPE_CHANGE";
+    }>;
+    state: z.ZodEnum<{
+      OPEN: "OPEN";
+      WITHDRAWN: "WITHDRAWN";
+    }>;
+    itemId: z.ZodNullable<z.ZodString>;
+    itemHash: z.ZodNullable<z.ZodString>;
+    description: z.ZodString;
+    reason: z.ZodString;
+    evidence: z.ZodArray<z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  listCandidateReviewHistory: z.ZodObject<{
+    itemId: z.ZodOptional<z.ZodString>;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  }, z.core.$strict>;
+  listCandidateRejectionHistory: z.ZodObject<{
+    rejectionId: z.ZodOptional<z.ZodString>;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  }, z.core.$strict>;
+};
+type CandidateReviewMethod = keyof typeof candidateReviewRequests;
+type CandidateReviewInput<M extends CandidateReviewMethod> = z.output<(typeof candidateReviewRequests)[M]>;
+interface CandidateReviewItem {
+  itemId: string;
+  itemHash: string;
+  kind: 'requirement' | 'work-human' | 'quality-human';
+  requirementIds: string[];
+  subjectId: string;
+  checkId: string;
+  expected: string;
+}
+interface CandidateHumanResult {
+  resultId: string;
+  operationId: string;
+  candidateId: string;
+  candidateRevision: number;
+  manifestHash: string;
+  item: CandidateReviewItem;
+  previousResultId: string | null;
+  principalId: string;
+  verdict: 'PASS' | 'FAIL';
+  procedure: string;
+  expected: string;
+  observed: string;
+  evidence: {
+    artifactId: string;
+    sha256: string;
+  }[];
+  createdAt: string;
+}
+interface CandidateReviewView {
+  candidateId: string;
+  candidateRevision: number;
+  manifestHash: string;
+  qualification: 'CURRENT' | 'STALE';
+  resourceRevision: number;
+  automaticStatus: 'PASS';
+  humanStatus: 'PASS' | 'FAIL' | 'MISSING' | 'STALE';
+  reviewHash: string;
+  items: (CandidateReviewItem & {
+    status: 'PASS' | 'FAIL' | 'MISSING' | 'STALE';
+    result: CandidateHumanResult | null;
+  })[];
+  automaticChecks: {
+    operationId: string;
+    checkId: string;
+    status: string;
+    codes: string[];
+  }[];
+  rejections: CandidateRejectionResult[];
+  rejectionStatus: 'OPEN' | 'NONE';
+  canRecord: boolean;
+  canPrepareAcceptance: boolean;
+  canWithdrawRejections: boolean;
+}
+interface CandidateRejectionResult {
+  resultId: string;
+  operationId: string;
+  candidateId: string;
+  candidateRevision: number;
+  manifestHash: string;
+  rejectionId: string;
+  previousResultId: string | null;
+  classification: 'IN_SCOPE_DEFECT' | 'SCOPE_CHANGE';
+  state: 'OPEN' | 'WITHDRAWN';
+  item: CandidateReviewItem | null;
+  description: string;
+  reason: string;
+  evidence: {
+    artifactId: string;
+    sha256: string;
+  }[];
+  principalId: string;
+  createdAt: string;
+  nextAction: 'REPAIR_REVIEW_REQUIRED' | 'CHANGE_REVIEW_REQUIRED' | 'NONE';
+  applicationState: 'NOT_APPLIED';
+}
+interface CandidateReviewResults {
+  getCandidateReview: CandidateReviewView;
+  recordCandidateReview: CandidateHumanResult;
+  listCandidateReviewHistory: {
+    items: {
+      sequence: number;
+      result: CandidateHumanResult;
+    }[];
+    nextSequence: number | null;
+  };
+  recordCandidateRejection: CandidateRejectionResult;
+  listCandidateRejectionHistory: {
+    items: {
+      sequence: number;
+      result: CandidateRejectionResult;
+    }[];
+    nextSequence: number | null;
+  };
+}
+//#endregion
+//#region src/preview-protocol.d.ts
+declare const previewBackendPolicy: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.preview-backend.v1">;
+  backendPrincipalId: z.ZodString;
+  backendRef: z.ZodString;
+  runnerId: z.ZodString;
+  templateVersion: z.ZodString;
+  schemaRevision: z.ZodString;
+  retentionDays: z.ZodNumber;
+  initialModes: z.ZodArray<z.ZodEnum<{
+    EMPTY: "EMPTY";
+    DEMO: "DEMO";
+  }>>;
+  allowSnapshots: z.ZodBoolean;
+}, z.core.$strict>;
+declare const previewEffectReceipt: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  kind: z.ZodLiteral<"DATASET_READY">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  storageKey: z.ZodString;
+  originDatasetId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "dataset", "out">>;
+  schemaRevision: z.ZodString;
+  snapshotAt: z.ZodISODateTime;
+  sha256: z.ZodString;
+  byteSize: z.ZodNumber;
+  integrity: z.ZodLiteral<"ok">;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"PREVIEW_READY">;
+  previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  instanceId: z.ZodString;
+  healthy: z.ZodLiteral<true>;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"PREVIEW_STOPPED">;
+  previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  instanceId: z.ZodString;
+  exitVerified: z.ZodLiteral<true>;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>, z.ZodObject<{
+  kind: z.ZodLiteral<"PREVIEW_REMOVED">;
+  previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  instanceId: z.ZodString;
+  removalVerified: z.ZodLiteral<true>;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>], "kind">;
+declare const datasetPreparationRequest: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.dataset-prepare.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  manifestHash: z.ZodString;
+  policyHash: z.ZodString;
+  backendRef: z.ZodString;
+  runnerId: z.ZodString;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  storageKey: z.ZodString;
+  schemaRevision: z.ZodString;
+  sourceDatasetId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "dataset", "out">>;
+  sourceStorageKey: z.ZodNullable<z.ZodString>;
+  sourceReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+  initialData: z.ZodNullable<z.ZodEnum<{
+    EMPTY: "EMPTY";
+    DEMO: "DEMO";
+  }>>;
+  templateVersion: z.ZodString;
+}, z.core.$strict>;
+declare const previewStartRequest: z.ZodObject<{
+  manifestHash: z.ZodString;
+  storageKey: z.ZodString;
+  datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  templateVersion: z.ZodString;
+  schemaRevision: z.ZodString;
+  imageIdentity: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.preview-image-identity.v1">;
+    imageDigest: z.ZodString;
+    configDigest: z.ZodString;
+    targetCommit: z.ZodString;
+    buildArtifactHash: z.ZodString;
+    os: z.ZodLiteral<"linux">;
+    architecture: z.ZodEnum<{
+      amd64: "amd64";
+      arm64: "arm64";
+    }>;
+    layers: z.ZodArray<z.ZodObject<{
+      digest: z.ZodString;
+      diffId: z.ZodString;
+      byteSize: z.ZodNumber;
+      expandedByteSize: z.ZodNumber;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  expiresAt: z.ZodISODateTime;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  policyHash: z.ZodString;
+  backendRef: z.ZodString;
+  runnerId: z.ZodString;
+  previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  schemaVersion: z.ZodLiteral<"devmesh.preview-start.v1">;
+}, z.core.$strict>;
+declare const previewStopRequest: z.ZodObject<{
+  startOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  startRequestHash: z.ZodString;
+  instanceId: z.ZodString;
+  reason: z.ZodEnum<{
+    USER: "USER";
+    EXPIRED: "EXPIRED";
+  }>;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  policyHash: z.ZodString;
+  backendRef: z.ZodString;
+  runnerId: z.ZodString;
+  previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  schemaVersion: z.ZodLiteral<"devmesh.preview-stop.v1">;
+}, z.core.$strict>;
+declare const previewRuntimeFact: z.ZodObject<{
+  previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  state: z.ZodEnum<{
+    UNKNOWN: "UNKNOWN";
+    HEALTHY: "HEALTHY";
+    UNHEALTHY: "UNHEALTHY";
+    CREATED: "CREATED";
+    EXITED: "EXITED";
+    REMOVED: "REMOVED";
+  }>;
+  instanceId: z.ZodNullable<z.ZodString>;
+  endpoint: z.ZodNullable<z.ZodObject<{
+    host: z.ZodLiteral<"127.0.0.1">;
+    port: z.ZodNumber;
+  }, z.core.$strict>>;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>;
+declare const previewRequests: {
+  registerPreviewBackendPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-backend.v1">;
+      backendPrincipalId: z.ZodString;
+      backendRef: z.ZodString;
+      runnerId: z.ZodString;
+      templateVersion: z.ZodString;
+      schemaRevision: z.ZodString;
+      retentionDays: z.ZodNumber;
+      initialModes: z.ZodArray<z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>>;
+      allowSnapshots: z.ZodBoolean;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getPreviewBackendPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+  }, z.core.$strict>;
+  createPreviewDataset: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    manifestHash: z.ZodString;
+    policyHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  getPreviewDataset: z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  createPreviewIntent: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    manifestHash: z.ZodString;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    expiresAt: z.ZodISODateTime;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  getPreview: z.ZodObject<{
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCandidatePreviewWorkspace: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    policyHash: z.ZodOptional<z.ZodString>;
+    afterDatasetSequence: z.ZodDefault<z.ZodNumber>;
+    afterPreviewSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCandidatePreviewDataset: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    policyHash: z.ZodOptional<z.ZodString>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCandidatePreview: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  stopPreviewIntent: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    previewRevision: z.ZodNumber;
+    impactReviewHash: z.ZodString;
+    reason: z.ZodEnum<{
+      USER: "USER";
+      EXPIRED: "EXPIRED";
+    }>;
+  }, z.core.$strict>;
+  getPreviewEffect: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listPreviewEffects: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    states: z.ZodDefault<z.ZodArray<z.ZodEnum<{
+      UNKNOWN: "UNKNOWN";
+      PREPARED: "PREPARED";
+      SENT: "SENT";
+      SUCCEEDED: "SUCCEEDED";
+      FAILED: "FAILED";
+    }>>>;
+  }, z.core.$strict>;
+  markPreviewEffectSent: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  recordPreviewEffectObservation: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    observation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      state: z.ZodLiteral<"UNKNOWN">;
+      errorCode: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"FAILED">;
+      errorCode: z.ZodString;
+      absenceVerified: z.ZodLiteral<true>;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"SUCCEEDED">;
+      receipt: z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"DATASET_READY">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        storageKey: z.ZodString;
+        originDatasetId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "dataset", "out">>;
+        schemaRevision: z.ZodString;
+        snapshotAt: z.ZodISODateTime;
+        sha256: z.ZodString;
+        byteSize: z.ZodNumber;
+        integrity: z.ZodLiteral<"ok">;
+      }, z.core.$strict>, z.ZodObject<{
+        kind: z.ZodLiteral<"PREVIEW_READY">;
+        previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        imageDigest: z.ZodString;
+        instanceId: z.ZodString;
+        healthy: z.ZodLiteral<true>;
+        checkedAt: z.ZodISODateTime;
+      }, z.core.$strict>, z.ZodObject<{
+        kind: z.ZodLiteral<"PREVIEW_STOPPED">;
+        previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+        instanceId: z.ZodString;
+        exitVerified: z.ZodLiteral<true>;
+        checkedAt: z.ZodISODateTime;
+      }, z.core.$strict>, z.ZodObject<{
+        kind: z.ZodLiteral<"PREVIEW_REMOVED">;
+        previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+        instanceId: z.ZodString;
+        removalVerified: z.ZodLiteral<true>;
+        checkedAt: z.ZodISODateTime;
+      }, z.core.$strict>], "kind">;
+    }, z.core.$strict>], "state">;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listPreviewEffectHistory: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  getPreviewLifecycle: z.ZodObject<{
+    principalId: z.ZodString;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  }, z.core.$strict>;
+  getPreviewLifecycleScope: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+  }, z.core.$strict>;
+  listPreviewLifecycles: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  listPreviewDatasetWork: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  verifyPreviewExecution: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  recordPreviewRuntimeObservation: z.ZodObject<{
+    expectedSequence: z.ZodNumber;
+    fact: z.ZodObject<{
+      previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      imageDigest: z.ZodString;
+      state: z.ZodEnum<{
+        UNKNOWN: "UNKNOWN";
+        HEALTHY: "HEALTHY";
+        UNHEALTHY: "UNHEALTHY";
+        CREATED: "CREATED";
+        EXITED: "EXITED";
+        REMOVED: "REMOVED";
+      }>;
+      instanceId: z.ZodNullable<z.ZodString>;
+      endpoint: z.ZodNullable<z.ZodObject<{
+        host: z.ZodLiteral<"127.0.0.1">;
+        port: z.ZodNumber;
+      }, z.core.$strict>>;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listPreviewRuntimeHistory: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  preparePreviewExpiry: z.ZodObject<{
+    principalId: z.ZodString;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  }, z.core.$strict>;
+};
+type PreviewMethod = keyof typeof previewRequests;
+type PreviewInput<M extends PreviewMethod> = z.output<(typeof previewRequests)[M]>;
+type PreviewBackendPolicy = z.output<typeof previewBackendPolicy>;
+type PreviewEffectReceipt = z.output<typeof previewEffectReceipt>;
+type DatasetPreparationRequest = z.output<typeof datasetPreparationRequest>;
+type PreviewStartRequest = z.output<typeof previewStartRequest>;
+type PreviewStopRequest = z.output<typeof previewStopRequest>;
+type PreviewRuntimeFact = z.output<typeof previewRuntimeFact>;
+interface PreviewRuntimeObservation {
+  sequence: number;
+  fact: PreviewRuntimeFact;
+  observedAt: string;
+}
+type PreviewExecutionObservation = {
+  state: 'UNKNOWN';
+  errorCode: string;
+} | {
+  state: 'FAILED';
+  errorCode: string;
+  absenceVerified: true;
+} | {
+  state: 'SUCCEEDED';
+  receipt: Extract<PreviewEffectReceipt, {
+    kind: 'PREVIEW_READY' | 'PREVIEW_STOPPED' | 'PREVIEW_REMOVED';
+  }>;
+};
+interface PreviewExecutionResult {
+  observation: PreviewExecutionObservation;
+  fact: PreviewRuntimeFact;
+}
+interface PreviewExecutionBackend {
+  readonly configured: boolean;
+  preflight(effect: PreviewEffect, datasetEffect: PreviewEffect): Promise<void>;
+  execute(effect: PreviewEffect, datasetEffect: PreviewEffect, authorize: () => Promise<boolean>): Promise<PreviewExecutionResult>;
+  inspect(effect: PreviewEffect): Promise<PreviewExecutionResult>;
+}
+type DatasetPreparationObservation = {
+  state: 'UNKNOWN';
+  errorCode: string;
+} | {
+  state: 'FAILED';
+  errorCode: string;
+  absenceVerified: true;
+} | {
+  state: 'SUCCEEDED';
+  receipt: Extract<PreviewEffectReceipt, {
+    kind: 'DATASET_READY';
+  }>;
+};
+interface DatasetPreparationBackend {
+  readonly configured: boolean;
+  preflight(effect: PreviewEffect): Promise<void>;
+  prepare(effect: PreviewEffect, authorize?: () => Promise<boolean>): Promise<DatasetPreparationObservation>;
+  inspect(effect: PreviewEffect): Promise<DatasetPreparationObservation>;
+}
+interface DatasetView {
+  datasetId: string;
+  projectId: string;
+  runId: string;
+  candidateId: string;
+  operationId: string;
+  policyHash: string;
+  sourceDatasetId: string | null;
+  sourceReleaseId: string | null;
+  storageKey: string;
+  schemaRevision: string;
+  state: 'PREPARING' | 'READY' | 'WRITE_FROZEN' | 'RETIRED' | 'MISSING';
+  revision: number;
+  snapshotAt: string | null;
+  retentionUntil: string;
+  createdAt: string;
+}
+interface PreviewView {
+  previewId: string;
+  projectId: string;
+  runId: string;
+  candidateId: string;
+  operationId: string;
+  datasetId: string;
+  policyHash: string;
+  imageDigest: string;
+  state: 'STARTING' | 'READY' | 'STOPPING' | 'STOPPED' | 'EXPIRED' | 'UNKNOWN';
+  revision: number;
+  instanceId: string | null;
+  expiresAt: string;
+  createdAt: string;
+  impactReviewHash: string;
+  stopOperationId: string | null;
+  availability: 'AVAILABLE' | 'UNAVAILABLE';
+  healthState: PreviewRuntimeFact['state'];
+  healthCheckedAt: string | null;
+}
+interface PreviewLifecycle {
+  preview: PreviewView;
+  startEffect: PreviewEffect;
+  datasetEffect: PreviewEffect;
+  stopEffect: PreviewEffect | null;
+  runtime: PreviewRuntimeObservation | null;
+  accepted: boolean;
+}
+interface PreviewEffect {
+  operationId: string;
+  projectId: string;
+  runId: string;
+  candidateId: string;
+  datasetId: string;
+  previewId: string | null;
+  policyHash: string;
+  kind: 'DATASET_PREPARE' | 'PREVIEW_START' | 'PREVIEW_STOP';
+  remoteKey: string;
+  requestHash: string;
+  request: Record<string, unknown>;
+  state: 'PREPARED' | 'SENT' | 'UNKNOWN' | 'SUCCEEDED' | 'FAILED';
+  revision: number;
+  receipt: PreviewEffectReceipt | null;
+  errorCode: string | null;
+  createdAt: string;
+}
+interface PreviewResults {
+  registerPreviewBackendPolicy: {
+    policyHash: string;
+    policy: PreviewBackendPolicy;
+  };
+  getPreviewBackendPolicy: {
+    policyHash: string;
+    policy: PreviewBackendPolicy;
+  };
+  createPreviewDataset: DatasetView;
+  getPreviewDataset: DatasetView;
+  createPreviewIntent: PreviewView;
+  getPreview: PreviewView;
+  stopPreviewIntent: PreviewView;
+  getCandidatePreviewWorkspace: z.output<typeof candidatePreviewWorkspace>;
+  getCandidatePreviewDataset: z.output<typeof previewDatasetManagement>;
+  getCandidatePreview: z.output<typeof previewManagement>;
+  getPreviewEffect: PreviewEffect;
+  markPreviewEffectSent: {
+    dispatch: boolean;
+    effect: PreviewEffect;
+  };
+  recordPreviewEffectObservation: PreviewEffect;
+  listPreviewEffects: {
+    items: {
+      sequence: number;
+      effect: PreviewEffect;
+    }[];
+    nextSequence: number | null;
+  };
+  listPreviewEffectHistory: {
+    items: {
+      sequence: number;
+      observation: PreviewInput<'recordPreviewEffectObservation'>['observation'];
+      observedAt: string;
+    }[];
+    nextSequence: number | null;
+  };
+  getPreviewLifecycle: PreviewLifecycle;
+  getPreviewLifecycleScope: {
+    policyHash: string;
+    policy: PreviewBackendPolicy;
+  };
+  listPreviewLifecycles: {
+    items: {
+      sequence: number;
+      lifecycle: PreviewLifecycle;
+    }[];
+    nextSequence: number | null;
+  };
+  listPreviewDatasetWork: {
+    items: {
+      sequence: number;
+      effect: PreviewEffect;
+    }[];
+    nextSequence: number | null;
+  };
+  verifyPreviewExecution: {
+    allowed: boolean;
+    reasonCode: string | null;
+  };
+  recordPreviewRuntimeObservation: PreviewRuntimeObservation;
+  listPreviewRuntimeHistory: {
+    items: PreviewRuntimeObservation[];
+    nextSequence: number | null;
+  };
+  preparePreviewExpiry: PreviewView;
+}
+//#endregion
+//#region src/preview-access-protocol.d.ts
+declare const previewAccessPolicy: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.preview-access-policy.v1">;
+  gatewayId: z.ZodString;
+  gatewayPrincipalId: z.ZodString;
+  configurationHash: z.ZodString;
+}, z.core.$strict>;
+declare const previewAccessHttpRequest: z.ZodObject<{
+  method: z.ZodEnum<{
+    GET: "GET";
+    HEAD: "HEAD";
+    POST: "POST";
+    PUT: "PUT";
+    PATCH: "PATCH";
+    DELETE: "DELETE";
+  }>;
+  path: z.ZodString;
+  bodySha256: z.ZodString;
+  headersSha256: z.ZodOptional<z.ZodString>;
+}, z.core.$strict>;
+declare const previewWriteCloseRequest: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.preview-write-close.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  datasetRequestHash: z.ZodString;
+  expectedFence: z.ZodNumber;
+}, z.core.$strict>;
+declare const previewAccessObservation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  state: z.ZodLiteral<"FINISHED">;
+  httpStatus: z.ZodNumber;
+  responseSha256: z.ZodString;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>, z.ZodObject<{
+  state: z.ZodLiteral<"UNKNOWN">;
+  errorCode: z.ZodString;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>, z.ZodObject<{
+  state: z.ZodLiteral<"NOT_SENT">;
+  errorCode: z.ZodString;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>], "state">;
+interface PreviewWriteGate {
+  datasetId: string;
+  projectId: string;
+  datasetOperationId: string;
+  datasetRequestHash: string;
+  state: 'OPEN' | 'CLOSED';
+  fence: number;
+  revision: number;
+  closeOperationId: string | null;
+  closeRequestHash: string | null;
+  pendingWrites: number;
+  createdAt: string;
+  updatedAt: string;
+}
+interface PreviewAccessTarget {
+  projectId: string;
+  runId: string;
+  previewId: string;
+  candidateId: string;
+  manifestHash: string;
+  policyHash: string;
+  datasetId: string;
+  datasetOperationId: string;
+  datasetRequestHash: string;
+  imageDigest: string;
+  instanceId: string;
+  startOperationId: string;
+  startRequestHash: string;
+  runnerId: string;
+  backendRef: string;
+  endpoint: {
+    host: '127.0.0.1';
+    port: number;
+  };
+  expiresAt: string;
+}
+interface PreviewAccessBinding {
+  target: PreviewAccessTarget;
+  gate: PreviewWriteGate;
+  canWrite: boolean;
+  healthCheckedAt: string;
+}
+interface PreviewAccessRecord {
+  accessRequestId: string;
+  gatewayId: string;
+  configurationHash: string;
+  subjectPrincipalId: string;
+  target: PreviewAccessTarget;
+  request: z.output<typeof previewAccessHttpRequest>;
+  requestHash: string;
+  gateFence: number;
+  state: 'PREPARED' | 'DISPATCHED' | 'UNKNOWN' | 'FINISHED' | 'NOT_SENT';
+  revision: number;
+  observation: z.output<typeof previewAccessObservation> | null;
+  createdAt: string;
+  dispatchedAt: string | null;
+  finishedAt: string | null;
+}
+interface PreviewAccessResults {
+  registerPreviewAccessPolicy: {
+    policy: z.output<typeof previewAccessPolicy>;
+  };
+  enrollPreviewWriteGate: PreviewWriteGate;
+  getPreviewWriteGate: PreviewWriteGate;
+  closePreviewWriteGate: {
+    gate: PreviewWriteGate;
+    closeRequest: z.output<typeof previewWriteCloseRequest>;
+    current: boolean;
+  };
+  resolvePreviewAccess: PreviewAccessBinding;
+  preparePreviewAccessRequest: PreviewAccessRecord;
+  getPreviewAccessRequest: PreviewAccessRecord;
+  beginPreviewAccessRequest: {
+    dispatch: boolean;
+    record: PreviewAccessRecord;
+  };
+  previewAccessRequestAuthorized: {
+    allowed: boolean;
+  };
+  recordPreviewAccessObservation: PreviewAccessRecord;
+  listPreviewAccessRequests: {
+    items: {
+      sequence: number;
+      record: PreviewAccessRecord;
+    }[];
+    nextSequence: number | null;
+  };
+}
+//#endregion
+//#region src/preview-session-protocol.d.ts
+declare const previewOrigin: z.ZodString;
+interface PreviewTicket {
+  ticketId: string;
+  projectId: string;
+  gatewayId: string;
+  subjectPrincipalId: string;
+  target: PreviewAccessTarget;
+  platformOrigin: string;
+  previewOrigin: string;
+  createdAt: string;
+  expiresAt: string;
+  state: 'ISSUED' | 'CONSUMED';
+  sessionId: string | null;
+}
+interface PreviewSession {
+  sessionId: string;
+  ticketId: string;
+  projectId: string;
+  gatewayId: string;
+  subjectPrincipalId: string;
+  target: PreviewAccessTarget;
+  platformOrigin: string;
+  previewOrigin: string;
+  createdAt: string;
+  expiresAt: string;
+  state: 'ACTIVE' | 'REVOKED';
+  revokedAt: string | null;
+}
+interface PreviewSessionResults {
+  issuePreviewTicket: PreviewTicket;
+  exchangePreviewTicket: PreviewSession;
+  authenticatePreviewSession: {
+    session: PreviewSession;
+    binding: PreviewAccessBinding;
+  };
+  revokePreviewSession: PreviewSession;
+}
+//#endregion
+//#region src/acceptance-protocol.d.ts
+declare const acceptanceBackendPolicy: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-backend.v1">;
+  backendPrincipalId: z.ZodString;
+  backendRef: z.ZodString;
+  runnerId: z.ZodString;
+  templateVersion: z.ZodString;
+  schemaRevision: z.ZodString;
+  initialModes: z.ZodArray<z.ZodEnum<{
+    EMPTY: "EMPTY";
+    DEMO: "DEMO";
+  }>>;
+  allowPreserveMigration: z.ZodBoolean;
+  allowReplacement: z.ZodBoolean;
+}, z.core.$strict>;
+declare const acceptancePreparationRequest: z.ZodObject<{
+  runEpoch: z.ZodNumber;
+  requirementRevision: z.ZodNumber;
+  planRevision: z.ZodNumber;
+  codeCommit: z.ZodString;
+  image: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.preview-image-identity.v1">;
+    imageDigest: z.ZodString;
+    configDigest: z.ZodString;
+    targetCommit: z.ZodString;
+    buildArtifactHash: z.ZodString;
+    os: z.ZodLiteral<"linux">;
+    architecture: z.ZodEnum<{
+      amd64: "amd64";
+      arm64: "arm64";
+    }>;
+    layers: z.ZodArray<z.ZodObject<{
+      digest: z.ZodString;
+      diffId: z.ZodString;
+      byteSize: z.ZodNumber;
+      expandedByteSize: z.ZodNumber;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  dataPlan: z.ZodDiscriminatedUnion<[z.ZodObject<{
+    strategy: z.ZodLiteral<"INITIAL">;
+    initialData: z.ZodEnum<{
+      EMPTY: "EMPTY";
+      DEMO: "DEMO";
+    }>;
+    sourceReleaseId: z.ZodNull;
+    migrationRef: z.ZodNull;
+    replacementDecisionId: z.ZodNull;
+    schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    codeCommit: z.ZodString;
+    requirementRevision: z.ZodNumber;
+    planRevision: z.ZodNumber;
+    templateVersion: z.ZodString;
+    checkConfigHash: z.ZodString;
+  }, z.core.$strict>, z.ZodObject<{
+    strategy: z.ZodLiteral<"PRESERVE_MIGRATE">;
+    initialData: z.ZodNull;
+    sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    migrationRef: z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+    }, z.core.$strict>;
+    replacementDecisionId: z.ZodNull;
+    schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    codeCommit: z.ZodString;
+    requirementRevision: z.ZodNumber;
+    planRevision: z.ZodNumber;
+    templateVersion: z.ZodString;
+    checkConfigHash: z.ZodString;
+  }, z.core.$strict>, z.ZodObject<{
+    strategy: z.ZodLiteral<"REPLACE">;
+    initialData: z.ZodEnum<{
+      EMPTY: "EMPTY";
+      DEMO: "DEMO";
+    }>;
+    sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    migrationRef: z.ZodNull;
+    replacementDecisionId: z.core.$ZodBranded<z.ZodString, "decision", "out">;
+    schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    codeCommit: z.ZodString;
+    requirementRevision: z.ZodNumber;
+    planRevision: z.ZodNumber;
+    templateVersion: z.ZodString;
+    checkConfigHash: z.ZodString;
+  }, z.core.$strict>], "strategy">;
+  policyHash: z.ZodString;
+  backendPrincipalId: z.ZodString;
+  backendRef: z.ZodString;
+  runnerId: z.ZodString;
+  source: z.ZodNullable<z.ZodObject<{
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    storageKey: z.ZodString;
+    schemaRevision: z.ZodString;
+  }, z.core.$strict>>;
+  target: z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    storageKey: z.ZodString;
+    schemaRevision: z.ZodString;
+  }, z.core.$strict>;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  candidateRevision: z.ZodNumber;
+  manifestHash: z.ZodString;
+  reviewHash: z.ZodString;
+  expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+  dataPlanHash: z.ZodString;
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-prepare.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+}, z.core.$strict>;
+declare const acceptanceRequests: {
+  getCandidateAcceptanceBasis: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    policyHash: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  listCandidateAcceptancePreparations: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  registerAcceptanceBackendPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.acceptance-backend.v1">;
+      backendPrincipalId: z.ZodString;
+      backendRef: z.ZodString;
+      runnerId: z.ZodString;
+      templateVersion: z.ZodString;
+      schemaRevision: z.ZodString;
+      initialModes: z.ZodArray<z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>>;
+      allowPreserveMigration: z.ZodBoolean;
+      allowReplacement: z.ZodBoolean;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getAcceptancePreparationScope: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+  }, z.core.$strict>;
+  listAcceptancePreparationWork: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  recordAcceptanceReplacementDecision: z.ZodObject<{
+    decisionId: z.core.$ZodBranded<z.ZodString, "decision", "out">;
+    confirmation: z.ZodLiteral<"REPLACE_ACCEPTED_DATA">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    candidateRevision: z.ZodNumber;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    dataPlanHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  beginAcceptancePreparation: z.ZodObject<{
+    policyHash: z.ZodString;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    candidateRevision: z.ZodNumber;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    dataPlanHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  getAcceptancePreparation: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getAcceptanceDataset: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  closeAcceptanceSourceWriteGate: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    expectedFence: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listAcceptancePreparations: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  markAcceptancePreparationSent: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  markAcceptancePreparationUnknown: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    errorCode: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  failUnsentAcceptancePreparation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  listAcceptancePreparationHistory: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+};
+type AcceptancePreparationRequest = z.output<typeof acceptancePreparationRequest>;
+type AcceptanceMethod = keyof typeof acceptanceRequests;
+type AcceptanceInput<M extends AcceptanceMethod> = z.output<(typeof acceptanceRequests)[M]>;
+interface AcceptancePreparation {
+  operationId: string;
+  projectId: string;
+  runId: string;
+  candidateId: string;
+  policyHash: string;
+  releaseId: string;
+  requestHash: string;
+  request: AcceptancePreparationRequest;
+  state: 'PREPARED' | 'SENT' | 'UNKNOWN' | 'FAILED';
+  revision: number;
+  qualification: 'CURRENT' | 'STALE';
+  errorCode: string | null;
+  createdAt: string;
+  updatedAt: string;
+  resolution: 'UNRESOLVED' | 'UNSENT_FAILED' | 'COMMITTED' | 'ABORTING' | 'ABORTED';
+  acceptanceOperationId: string | null;
+}
+interface AcceptanceResults {
+  getCandidateAcceptanceBasis: z.output<typeof acceptanceBasisView>;
+  listCandidateAcceptancePreparations: {
+    items: {
+      sequence: number;
+      preparation: AcceptancePreparation;
+    }[];
+    nextSequence: number | null;
+  };
+  getAcceptanceDataset: {
+    dataset: DatasetView;
+    purpose: 'ACCEPTANCE';
+    baseReleaseId: string | null;
+    requestHash: string;
+    gate: PreviewWriteGate;
+  };
+  closeAcceptanceSourceWriteGate: {
+    gate: PreviewWriteGate;
+    closeRequest: z.output<typeof previewWriteCloseRequest>;
+    current: boolean;
+  };
+  registerAcceptanceBackendPolicy: {
+    policyHash: string;
+    policy: z.output<typeof acceptanceBackendPolicy>;
+  };
+  getAcceptancePreparationScope: {
+    policyHash: string;
+    policy: z.output<typeof acceptanceBackendPolicy>;
+  };
+  listAcceptancePreparationWork: {
+    items: {
+      sequence: number;
+      preparation: AcceptancePreparation;
+    }[];
+    nextSequence: number | null;
+  };
+  recordAcceptanceReplacementDecision: {
+    decisionId: string;
+    operationId: string;
+  };
+  beginAcceptancePreparation: AcceptancePreparation;
+  getAcceptancePreparation: AcceptancePreparation;
+  listAcceptancePreparations: {
+    items: {
+      sequence: number;
+      preparation: AcceptancePreparation;
+    }[];
+    nextSequence: number | null;
+  };
+  markAcceptancePreparationSent: {
+    dispatch: boolean;
+    preparation: AcceptancePreparation;
+  };
+  markAcceptancePreparationUnknown: AcceptancePreparation;
+  failUnsentAcceptancePreparation: AcceptancePreparation;
+  listAcceptancePreparationHistory: {
+    items: {
+      sequence: number;
+      snapshot: {
+        state: AcceptancePreparation['state'];
+        revision: number;
+        errorCode: string | null;
+        observedAt: string;
+      };
+    }[];
+    nextSequence: number | null;
+  };
+}
+//#endregion
+//#region src/acceptance-readiness-protocol.d.ts
+declare const previewAcceptanceReleaseClaim: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.preview-release-claim.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  manifestHash: z.ZodString;
+  previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  startOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  startRequestHash: z.ZodString;
+  instanceId: z.ZodString;
+  acceptanceRequestHash: z.ZodString;
+}, z.core.$strict>;
+declare const acceptanceServiceClaim: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-service-claim.v1">;
+  purpose: z.ZodLiteral<"ACCEPTANCE">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  acceptanceRequestHash: z.ZodString;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  manifestHash: z.ZodString;
+  reviewHash: z.ZodString;
+  dataPlanHash: z.ZodString;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  reservationId: z.ZodString;
+  profileHash: z.ZodString;
+  serviceRequestHash: z.ZodString;
+  instanceId: z.ZodString;
+}, z.core.$strict>;
+declare const acceptanceReleaseClaim: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.preview-release-claim.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  manifestHash: z.ZodString;
+  previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  startOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  startRequestHash: z.ZodString;
+  instanceId: z.ZodString;
+  acceptanceRequestHash: z.ZodString;
+}, z.core.$strict>, z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-service-claim.v1">;
+  purpose: z.ZodLiteral<"ACCEPTANCE">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  acceptanceRequestHash: z.ZodString;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  manifestHash: z.ZodString;
+  reviewHash: z.ZodString;
+  dataPlanHash: z.ZodString;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  reservationId: z.ZodString;
+  profileHash: z.ZodString;
+  serviceRequestHash: z.ZodString;
+  instanceId: z.ZodString;
+}, z.core.$strict>], "schemaVersion">;
+/** Only a trusted adapter may construct this after querying its original objects. */
+declare const acceptancePreparedProof: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-prepared.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  requestHash: z.ZodString;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  manifestHash: z.ZodString;
+  reviewHash: z.ZodString;
+  dataPlanHash: z.ZodString;
+  runnerId: z.ZodString;
+  backendRef: z.ZodString;
+  data: z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    storageKey: z.ZodString;
+    schemaRevision: z.ZodString;
+    originDatasetId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "dataset", "out">>;
+    sourceReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    snapshotAt: z.ZodISODateTime;
+    sha256: z.ZodString;
+    byteSize: z.ZodNumber;
+    integrity: z.ZodLiteral<"ok">;
+    journalHash: z.ZodString;
+    migrationRef: z.ZodNullable<z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  sourceFence: z.ZodNullable<z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    closeRequestHash: z.ZodString;
+    gateFence: z.ZodNumber;
+    physical: z.ZodObject<{
+      kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      heldAt: z.ZodISODateTime;
+      state: z.ZodLiteral<"HELD">;
+    }, z.core.$strict>;
+  }, z.core.$strict>>;
+  targetFence: z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    physical: z.ZodObject<{
+      kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      heldAt: z.ZodISODateTime;
+      state: z.ZodLiteral<"HELD">;
+    }, z.core.$strict>;
+    writeState: z.ZodLiteral<"CLOSED">;
+  }, z.core.$strict>;
+  service: z.ZodObject<{
+    reservationId: z.ZodString;
+    profileHash: z.ZodString;
+    endpoint: z.ZodObject<{
+      host: z.ZodLiteral<"127.0.0.1">;
+      port: z.ZodNumber;
+    }, z.core.$strict>;
+    claim: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-release-claim.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+      manifestHash: z.ZodString;
+      previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      imageDigest: z.ZodString;
+      startOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      startRequestHash: z.ZodString;
+      instanceId: z.ZodString;
+      acceptanceRequestHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.acceptance-service-claim.v1">;
+      purpose: z.ZodLiteral<"ACCEPTANCE">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      acceptanceRequestHash: z.ZodString;
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+      manifestHash: z.ZodString;
+      reviewHash: z.ZodString;
+      dataPlanHash: z.ZodString;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      imageDigest: z.ZodString;
+      reservationId: z.ZodString;
+      profileHash: z.ZodString;
+      serviceRequestHash: z.ZodString;
+      instanceId: z.ZodString;
+    }, z.core.$strict>], "schemaVersion">;
+    claimHash: z.ZodString;
+    custodyState: z.ZodLiteral<"RELEASE_HELD">;
+    custodyRevision: z.ZodNumber;
+  }, z.core.$strict>;
+  preparedAt: z.ZodISODateTime;
+}, z.core.$strict>;
+declare const acceptancePreparationObservation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  state: z.ZodLiteral<"UNKNOWN">;
+  errorCode: z.ZodString;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>, z.ZodObject<{
+  state: z.ZodLiteral<"READY">;
+  proof: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.acceptance-prepared.v1">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    dataPlanHash: z.ZodString;
+    runnerId: z.ZodString;
+    backendRef: z.ZodString;
+    data: z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      storageKey: z.ZodString;
+      schemaRevision: z.ZodString;
+      originDatasetId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "dataset", "out">>;
+      sourceReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+      snapshotAt: z.ZodISODateTime;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      integrity: z.ZodLiteral<"ok">;
+      journalHash: z.ZodString;
+      migrationRef: z.ZodNullable<z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    sourceFence: z.ZodNullable<z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      closeRequestHash: z.ZodString;
+      gateFence: z.ZodNumber;
+      physical: z.ZodObject<{
+        kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        heldAt: z.ZodISODateTime;
+        state: z.ZodLiteral<"HELD">;
+      }, z.core.$strict>;
+    }, z.core.$strict>>;
+    targetFence: z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      physical: z.ZodObject<{
+        kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        heldAt: z.ZodISODateTime;
+        state: z.ZodLiteral<"HELD">;
+      }, z.core.$strict>;
+      writeState: z.ZodLiteral<"CLOSED">;
+    }, z.core.$strict>;
+    service: z.ZodObject<{
+      reservationId: z.ZodString;
+      profileHash: z.ZodString;
+      endpoint: z.ZodObject<{
+        host: z.ZodLiteral<"127.0.0.1">;
+        port: z.ZodNumber;
+      }, z.core.$strict>;
+      claim: z.ZodDiscriminatedUnion<[z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.preview-release-claim.v1">;
+        operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+        manifestHash: z.ZodString;
+        previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        imageDigest: z.ZodString;
+        startOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        startRequestHash: z.ZodString;
+        instanceId: z.ZodString;
+        acceptanceRequestHash: z.ZodString;
+      }, z.core.$strict>, z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.acceptance-service-claim.v1">;
+        purpose: z.ZodLiteral<"ACCEPTANCE">;
+        operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        acceptanceRequestHash: z.ZodString;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+        runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+        candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+        manifestHash: z.ZodString;
+        reviewHash: z.ZodString;
+        dataPlanHash: z.ZodString;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        imageDigest: z.ZodString;
+        reservationId: z.ZodString;
+        profileHash: z.ZodString;
+        serviceRequestHash: z.ZodString;
+        instanceId: z.ZodString;
+      }, z.core.$strict>], "schemaVersion">;
+      claimHash: z.ZodString;
+      custodyState: z.ZodLiteral<"RELEASE_HELD">;
+      custodyRevision: z.ZodNumber;
+    }, z.core.$strict>;
+    preparedAt: z.ZodISODateTime;
+  }, z.core.$strict>;
+  fences: z.ZodObject<{
+    sourceProofHash: z.ZodNullable<z.ZodString>;
+    targetProofHash: z.ZodString;
+    state: z.ZodLiteral<"HELD">;
+    writeState: z.ZodLiteral<"CLOSED">;
+  }, z.core.$strict>;
+  health: z.ZodObject<{
+    instanceId: z.ZodString;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    imageDigest: z.ZodString;
+    endpoint: z.ZodObject<{
+      host: z.ZodLiteral<"127.0.0.1">;
+      port: z.ZodNumber;
+    }, z.core.$strict>;
+    claimHash: z.ZodString;
+    custodyState: z.ZodLiteral<"RELEASE_HELD">;
+    custodyRevision: z.ZodNumber;
+    state: z.ZodLiteral<"HEALTHY">;
+  }, z.core.$strict>;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>], "state">;
+type AcceptancePreparedProof = z.output<typeof acceptancePreparedProof>;
+type AcceptancePreparationObservation = z.output<typeof acceptancePreparationObservation>;
+interface AcceptanceReadiness {
+  operationId: string;
+  requestHash: string;
+  sequence: number;
+  state: 'UNPREPARED' | 'READY' | 'UNAVAILABLE' | 'STALE';
+  reasonCode: string | null;
+  proofHash: string | null;
+  proof: AcceptancePreparedProof | null;
+  observation: AcceptancePreparationObservation | null;
+}
+interface AcceptancePreparationBackend {
+  readonly configured: boolean;
+  preflight(preparation: AcceptancePreparation): Promise<void>;
+  prepare(preparation: AcceptancePreparation, authorize: () => Promise<boolean>): Promise<AcceptancePreparationObservation>;
+  inspect(preparation: AcceptancePreparation): Promise<AcceptancePreparationObservation>;
+}
+interface AcceptanceReadinessResults {
+  getCandidateAcceptancePreparationPage: z.output<typeof acceptancePreparationList>;
+  verifyAcceptancePreparation: {
+    allowed: boolean;
+    reasonCode: string | null;
+  };
+  getAcceptanceReadiness: AcceptanceReadiness;
+  recordAcceptancePreparationObservation: AcceptanceReadiness;
+  listAcceptancePreparationObservations: {
+    items: {
+      sequence: number;
+      observation: AcceptancePreparationObservation;
+      observedAt: string;
+    }[];
+    nextSequence: number | null;
+  };
+}
+//#endregion
+//#region src/acceptance-abort-protocol.d.ts
+/** A durable decision to stop preparation. Cleanup and fence release are separate facts. */
+declare const acceptanceAbortDecision: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-decision.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  preparation: z.ZodObject<{
+    runEpoch: z.ZodNumber;
+    requirementRevision: z.ZodNumber;
+    planRevision: z.ZodNumber;
+    codeCommit: z.ZodString;
+    image: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-image-identity.v1">;
+      imageDigest: z.ZodString;
+      configDigest: z.ZodString;
+      targetCommit: z.ZodString;
+      buildArtifactHash: z.ZodString;
+      os: z.ZodLiteral<"linux">;
+      architecture: z.ZodEnum<{
+        amd64: "amd64";
+        arm64: "arm64";
+      }>;
+      layers: z.ZodArray<z.ZodObject<{
+        digest: z.ZodString;
+        diffId: z.ZodString;
+        byteSize: z.ZodNumber;
+        expandedByteSize: z.ZodNumber;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    dataPlan: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      strategy: z.ZodLiteral<"INITIAL">;
+      initialData: z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>;
+      sourceReleaseId: z.ZodNull;
+      migrationRef: z.ZodNull;
+      replacementDecisionId: z.ZodNull;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      strategy: z.ZodLiteral<"PRESERVE_MIGRATE">;
+      initialData: z.ZodNull;
+      sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      migrationRef: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>;
+      replacementDecisionId: z.ZodNull;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      strategy: z.ZodLiteral<"REPLACE">;
+      initialData: z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>;
+      sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      migrationRef: z.ZodNull;
+      replacementDecisionId: z.core.$ZodBranded<z.ZodString, "decision", "out">;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>], "strategy">;
+    policyHash: z.ZodString;
+    backendPrincipalId: z.ZodString;
+    backendRef: z.ZodString;
+    runnerId: z.ZodString;
+    source: z.ZodNullable<z.ZodObject<{
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      storageKey: z.ZodString;
+      schemaRevision: z.ZodString;
+    }, z.core.$strict>>;
+    target: z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      storageKey: z.ZodString;
+      schemaRevision: z.ZodString;
+    }, z.core.$strict>;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    candidateRevision: z.ZodNumber;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    dataPlanHash: z.ZodString;
+    schemaVersion: z.ZodLiteral<"devmesh.acceptance-prepare.v1">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  preparationRequestHash: z.ZodString;
+  preparationRevision: z.ZodNumber;
+  preparedProofHash: z.ZodNullable<z.ZodString>;
+  requestedBy: z.ZodString;
+  reason: z.ZodString;
+  decidedAt: z.ZodISODateTime;
+}, z.core.$strict>;
+declare const acceptanceAbortRequests: {
+  listAcceptanceAbortWork: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  requestAcceptanceAbort: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    expectedPreparationRevision: z.ZodNumber;
+    reason: z.ZodString;
+    confirmation: z.ZodLiteral<"ABORT_ACCEPTANCE_PREPARATION">;
+  }, z.core.$strict>;
+  getAcceptanceAbortDecision: z.ZodObject<{
+    principalId: z.ZodString;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+};
+type AcceptanceAbortDecision = z.output<typeof acceptanceAbortDecision>;
+interface AcceptanceAbortRecord {
+  decision: AcceptanceAbortDecision;
+  decisionHash: string;
+}
+type AcceptanceAbortMethod = keyof typeof acceptanceAbortRequests;
+type AcceptanceAbortInput<M extends AcceptanceAbortMethod> = z.output<(typeof acceptanceAbortRequests)[M]>;
+interface AcceptanceAbortResults {
+  requestAcceptanceAbort: AcceptanceAbortRecord;
+  getAcceptanceAbortDecision: AcceptanceAbortRecord | null;
+  listAcceptanceAbortWork: {
+    items: {
+      sequence: number;
+      preparation: AcceptancePreparation;
+      record: AcceptanceAbortRecord;
+    }[];
+    nextSequence: number | null;
+  };
+}
+//#endregion
+//#region src/acceptance-abort-recovery-protocol.d.ts
+declare const acceptanceDatasetFences: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.local-dataset-fences.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  requestHash: z.ZodString;
+  sourceFence: z.ZodNullable<z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    closeRequestHash: z.ZodString;
+    gateFence: z.ZodNumber;
+    physical: z.ZodObject<{
+      kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      heldAt: z.ZodISODateTime;
+      state: z.ZodLiteral<"HELD">;
+    }, z.core.$strict>;
+  }, z.core.$strict>>;
+  targetFence: z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    physical: z.ZodObject<{
+      kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      heldAt: z.ZodISODateTime;
+      state: z.ZodLiteral<"HELD">;
+    }, z.core.$strict>;
+    writeState: z.ZodLiteral<"CLOSED">;
+  }, z.core.$strict>;
+}, z.core.$strict>;
+declare const acceptanceDatasetAbortRequest: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-dataset-abort.v1">;
+  decision: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-decision.v1">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    preparation: z.ZodObject<{
+      runEpoch: z.ZodNumber;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      codeCommit: z.ZodString;
+      image: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.preview-image-identity.v1">;
+        imageDigest: z.ZodString;
+        configDigest: z.ZodString;
+        targetCommit: z.ZodString;
+        buildArtifactHash: z.ZodString;
+        os: z.ZodLiteral<"linux">;
+        architecture: z.ZodEnum<{
+          amd64: "amd64";
+          arm64: "arm64";
+        }>;
+        layers: z.ZodArray<z.ZodObject<{
+          digest: z.ZodString;
+          diffId: z.ZodString;
+          byteSize: z.ZodNumber;
+          expandedByteSize: z.ZodNumber;
+        }, z.core.$strict>>;
+      }, z.core.$strict>;
+      dataPlan: z.ZodDiscriminatedUnion<[z.ZodObject<{
+        strategy: z.ZodLiteral<"INITIAL">;
+        initialData: z.ZodEnum<{
+          EMPTY: "EMPTY";
+          DEMO: "DEMO";
+        }>;
+        sourceReleaseId: z.ZodNull;
+        migrationRef: z.ZodNull;
+        replacementDecisionId: z.ZodNull;
+        schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+        runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+        codeCommit: z.ZodString;
+        requirementRevision: z.ZodNumber;
+        planRevision: z.ZodNumber;
+        templateVersion: z.ZodString;
+        checkConfigHash: z.ZodString;
+      }, z.core.$strict>, z.ZodObject<{
+        strategy: z.ZodLiteral<"PRESERVE_MIGRATE">;
+        initialData: z.ZodNull;
+        sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        migrationRef: z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>;
+        replacementDecisionId: z.ZodNull;
+        schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+        runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+        codeCommit: z.ZodString;
+        requirementRevision: z.ZodNumber;
+        planRevision: z.ZodNumber;
+        templateVersion: z.ZodString;
+        checkConfigHash: z.ZodString;
+      }, z.core.$strict>, z.ZodObject<{
+        strategy: z.ZodLiteral<"REPLACE">;
+        initialData: z.ZodEnum<{
+          EMPTY: "EMPTY";
+          DEMO: "DEMO";
+        }>;
+        sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        migrationRef: z.ZodNull;
+        replacementDecisionId: z.core.$ZodBranded<z.ZodString, "decision", "out">;
+        schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+        runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+        codeCommit: z.ZodString;
+        requirementRevision: z.ZodNumber;
+        planRevision: z.ZodNumber;
+        templateVersion: z.ZodString;
+        checkConfigHash: z.ZodString;
+      }, z.core.$strict>], "strategy">;
+      policyHash: z.ZodString;
+      backendPrincipalId: z.ZodString;
+      backendRef: z.ZodString;
+      runnerId: z.ZodString;
+      source: z.ZodNullable<z.ZodObject<{
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        storageKey: z.ZodString;
+        schemaRevision: z.ZodString;
+      }, z.core.$strict>>;
+      target: z.ZodObject<{
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        storageKey: z.ZodString;
+        schemaRevision: z.ZodString;
+      }, z.core.$strict>;
+      candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+      candidateRevision: z.ZodNumber;
+      manifestHash: z.ZodString;
+      reviewHash: z.ZodString;
+      expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+      dataPlanHash: z.ZodString;
+      schemaVersion: z.ZodLiteral<"devmesh.acceptance-prepare.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    }, z.core.$strict>;
+    preparationRequestHash: z.ZodString;
+    preparationRevision: z.ZodNumber;
+    preparedProofHash: z.ZodNullable<z.ZodString>;
+    requestedBy: z.ZodString;
+    reason: z.ZodString;
+    decidedAt: z.ZodISODateTime;
+  }, z.core.$strict>;
+  decisionHash: z.ZodString;
+  controllerId: z.ZodString;
+  serviceCleanupHash: z.ZodString;
+}, z.core.$strict>;
+declare const acceptanceAbortFenceSuccessor: z.ZodObject<{
+  fenceId: z.ZodString;
+  generation: z.ZodNumber;
+  proofHash: z.ZodString;
+  previousHoldHash: z.ZodNullable<z.ZodString>;
+}, z.core.$strict>;
+declare const acceptanceDatasetAbortProof: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-dataset-aborted.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  abortOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  decisionHash: z.ZodString;
+  requestHash: z.ZodString;
+  originalFences: z.ZodNullable<z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.local-dataset-fences.v1">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    sourceFence: z.ZodNullable<z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      closeRequestHash: z.ZodString;
+      gateFence: z.ZodNumber;
+      physical: z.ZodObject<{
+        kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        heldAt: z.ZodISODateTime;
+        state: z.ZodLiteral<"HELD">;
+      }, z.core.$strict>;
+    }, z.core.$strict>>;
+    targetFence: z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      physical: z.ZodObject<{
+        kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        heldAt: z.ZodISODateTime;
+        state: z.ZodLiteral<"HELD">;
+      }, z.core.$strict>;
+      writeState: z.ZodLiteral<"CLOSED">;
+    }, z.core.$strict>;
+  }, z.core.$strict>>;
+  revocation: z.ZodObject<{
+    barrierId: z.ZodString;
+    generation: z.ZodNumber;
+    proofHash: z.ZodString;
+    state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+  }, z.core.$strict>;
+  target: z.ZodObject<{
+    fenceId: z.ZodString;
+    generation: z.ZodNumber;
+    proofHash: z.ZodString;
+    previousHoldHash: z.ZodNullable<z.ZodString>;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    writeState: z.ZodLiteral<"CLOSED">;
+  }, z.core.$strict>;
+  source: z.ZodNullable<z.ZodObject<{
+    fenceId: z.ZodString;
+    generation: z.ZodNumber;
+    proofHash: z.ZodString;
+    previousHoldHash: z.ZodNullable<z.ZodString>;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    owner: z.ZodLiteral<"ORIGINAL_RELEASE">;
+    writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+  }, z.core.$strict>>;
+  settledAt: z.ZodISODateTime;
+}, z.core.$strict>;
+declare const acceptanceDatasetAbortReceipt: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.local-dataset-abort-receipt.v1">;
+  requestHash: z.ZodString;
+  journalHash: z.ZodString;
+  proof: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.acceptance-dataset-aborted.v1">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    abortOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    decisionHash: z.ZodString;
+    requestHash: z.ZodString;
+    originalFences: z.ZodNullable<z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.local-dataset-fences.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      requestHash: z.ZodString;
+      sourceFence: z.ZodNullable<z.ZodObject<{
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        closeRequestHash: z.ZodString;
+        gateFence: z.ZodNumber;
+        physical: z.ZodObject<{
+          kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          heldAt: z.ZodISODateTime;
+          state: z.ZodLiteral<"HELD">;
+        }, z.core.$strict>;
+      }, z.core.$strict>>;
+      targetFence: z.ZodObject<{
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        physical: z.ZodObject<{
+          kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          heldAt: z.ZodISODateTime;
+          state: z.ZodLiteral<"HELD">;
+        }, z.core.$strict>;
+        writeState: z.ZodLiteral<"CLOSED">;
+      }, z.core.$strict>;
+    }, z.core.$strict>>;
+    revocation: z.ZodObject<{
+      barrierId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+    }, z.core.$strict>;
+    target: z.ZodObject<{
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      previousHoldHash: z.ZodNullable<z.ZodString>;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      writeState: z.ZodLiteral<"CLOSED">;
+    }, z.core.$strict>;
+    source: z.ZodNullable<z.ZodObject<{
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      previousHoldHash: z.ZodNullable<z.ZodString>;
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      owner: z.ZodLiteral<"ORIGINAL_RELEASE">;
+      writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+    }, z.core.$strict>>;
+    settledAt: z.ZodISODateTime;
+  }, z.core.$strict>;
+}, z.core.$strict>;
+declare const acceptanceAbortSourceGate: z.ZodObject<{
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  datasetRequestHash: z.ZodString;
+  state: z.ZodEnum<{
+    OPEN: "OPEN";
+    CLOSED: "CLOSED";
+  }>;
+  fence: z.ZodNumber;
+  revision: z.ZodNumber;
+  closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+  closeRequestHash: z.ZodNullable<z.ZodString>;
+}, z.core.$strict>;
+declare const acceptanceAbortSourceRecovery: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-source-recovery.v1">;
+  decisionHash: z.ZodString;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  runnerId: z.ZodString;
+  imageDigest: z.ZodString;
+  instanceId: z.ZodString;
+  profileHash: z.ZodString;
+  serviceRequestHash: z.ZodString;
+  endpoint: z.ZodObject<{
+    host: z.ZodLiteral<"127.0.0.1">;
+    port: z.ZodNumber;
+  }, z.core.$strict>;
+  fence: z.ZodObject<{
+    fenceId: z.ZodString;
+    generation: z.ZodNumber;
+    proofHash: z.ZodString;
+    previousHoldHash: z.ZodNullable<z.ZodString>;
+  }, z.core.$strict>;
+  revocationProofHash: z.ZodString;
+  custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+  accessMode: z.ZodLiteral<"READ_WRITE">;
+  state: z.ZodLiteral<"HEALTHY">;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>;
+declare const acceptanceAbortCompletionEvidence: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-completion.v1">;
+  operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  requestHash: z.ZodString;
+  decisionHash: z.ZodString;
+  service: z.ZodObject<{
+    controllerId: z.ZodString;
+    cleanupHash: z.ZodString;
+    reservationId: z.ZodNullable<z.ZodString>;
+    profileHash: z.ZodNullable<z.ZodString>;
+    instanceId: z.ZodNullable<z.ZodString>;
+    networkId: z.ZodNullable<z.ZodString>;
+    state: z.ZodLiteral<"CLEARED">;
+  }, z.core.$strict>;
+  data: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.local-dataset-abort-receipt.v1">;
+    requestHash: z.ZodString;
+    journalHash: z.ZodString;
+    proof: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.acceptance-dataset-aborted.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      abortOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      decisionHash: z.ZodString;
+      requestHash: z.ZodString;
+      originalFences: z.ZodNullable<z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.local-dataset-fences.v1">;
+        operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        requestHash: z.ZodString;
+        sourceFence: z.ZodNullable<z.ZodObject<{
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          closeRequestHash: z.ZodString;
+          gateFence: z.ZodNumber;
+          physical: z.ZodObject<{
+            kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+            fenceId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            heldAt: z.ZodISODateTime;
+            state: z.ZodLiteral<"HELD">;
+          }, z.core.$strict>;
+        }, z.core.$strict>>;
+        targetFence: z.ZodObject<{
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          physical: z.ZodObject<{
+            kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+            fenceId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            heldAt: z.ZodISODateTime;
+            state: z.ZodLiteral<"HELD">;
+          }, z.core.$strict>;
+          writeState: z.ZodLiteral<"CLOSED">;
+        }, z.core.$strict>;
+      }, z.core.$strict>>;
+      revocation: z.ZodObject<{
+        barrierId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+      }, z.core.$strict>;
+      target: z.ZodObject<{
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        previousHoldHash: z.ZodNullable<z.ZodString>;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        writeState: z.ZodLiteral<"CLOSED">;
+      }, z.core.$strict>;
+      source: z.ZodNullable<z.ZodObject<{
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        previousHoldHash: z.ZodNullable<z.ZodString>;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        owner: z.ZodLiteral<"ORIGINAL_RELEASE">;
+        writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+      }, z.core.$strict>>;
+      settledAt: z.ZodISODateTime;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  sourceGate: z.ZodNullable<z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    datasetRequestHash: z.ZodString;
+    state: z.ZodEnum<{
+      OPEN: "OPEN";
+      CLOSED: "CLOSED";
+    }>;
+    fence: z.ZodNumber;
+    revision: z.ZodNumber;
+    closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+    closeRequestHash: z.ZodNullable<z.ZodString>;
+  }, z.core.$strict>>;
+  sourceRecovery: z.ZodNullable<z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-source-recovery.v1">;
+    decisionHash: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    runnerId: z.ZodString;
+    imageDigest: z.ZodString;
+    instanceId: z.ZodString;
+    profileHash: z.ZodString;
+    serviceRequestHash: z.ZodString;
+    endpoint: z.ZodObject<{
+      host: z.ZodLiteral<"127.0.0.1">;
+      port: z.ZodNumber;
+    }, z.core.$strict>;
+    fence: z.ZodObject<{
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      previousHoldHash: z.ZodNullable<z.ZodString>;
+    }, z.core.$strict>;
+    revocationProofHash: z.ZodString;
+    custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+    accessMode: z.ZodLiteral<"READ_WRITE">;
+    state: z.ZodLiteral<"HEALTHY">;
+    checkedAt: z.ZodISODateTime;
+  }, z.core.$strict>>;
+}, z.core.$strict>;
+declare const acceptanceAbortRecoveryRequests: {
+  getAcceptanceAbortRecovery: z.ZodObject<{
+    principalId: z.ZodString;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    decisionHash: z.ZodString;
+  }, z.core.$strict>;
+  completeAcceptanceAbort: z.ZodObject<{
+    evidence: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-completion.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      requestHash: z.ZodString;
+      decisionHash: z.ZodString;
+      service: z.ZodObject<{
+        controllerId: z.ZodString;
+        cleanupHash: z.ZodString;
+        reservationId: z.ZodNullable<z.ZodString>;
+        profileHash: z.ZodNullable<z.ZodString>;
+        instanceId: z.ZodNullable<z.ZodString>;
+        networkId: z.ZodNullable<z.ZodString>;
+        state: z.ZodLiteral<"CLEARED">;
+      }, z.core.$strict>;
+      data: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.local-dataset-abort-receipt.v1">;
+        requestHash: z.ZodString;
+        journalHash: z.ZodString;
+        proof: z.ZodObject<{
+          schemaVersion: z.ZodLiteral<"devmesh.acceptance-dataset-aborted.v1">;
+          operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          abortOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          decisionHash: z.ZodString;
+          requestHash: z.ZodString;
+          originalFences: z.ZodNullable<z.ZodObject<{
+            schemaVersion: z.ZodLiteral<"devmesh.local-dataset-fences.v1">;
+            operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            requestHash: z.ZodString;
+            sourceFence: z.ZodNullable<z.ZodObject<{
+              datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+              datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+              closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+              closeRequestHash: z.ZodString;
+              gateFence: z.ZodNumber;
+              physical: z.ZodObject<{
+                kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+                fenceId: z.ZodString;
+                generation: z.ZodNumber;
+                proofHash: z.ZodString;
+                heldAt: z.ZodISODateTime;
+                state: z.ZodLiteral<"HELD">;
+              }, z.core.$strict>;
+            }, z.core.$strict>>;
+            targetFence: z.ZodObject<{
+              datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+              physical: z.ZodObject<{
+                kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+                fenceId: z.ZodString;
+                generation: z.ZodNumber;
+                proofHash: z.ZodString;
+                heldAt: z.ZodISODateTime;
+                state: z.ZodLiteral<"HELD">;
+              }, z.core.$strict>;
+              writeState: z.ZodLiteral<"CLOSED">;
+            }, z.core.$strict>;
+          }, z.core.$strict>>;
+          revocation: z.ZodObject<{
+            barrierId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+          }, z.core.$strict>;
+          target: z.ZodObject<{
+            fenceId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            previousHoldHash: z.ZodNullable<z.ZodString>;
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            writeState: z.ZodLiteral<"CLOSED">;
+          }, z.core.$strict>;
+          source: z.ZodNullable<z.ZodObject<{
+            fenceId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            previousHoldHash: z.ZodNullable<z.ZodString>;
+            releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            owner: z.ZodLiteral<"ORIGINAL_RELEASE">;
+            writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+          }, z.core.$strict>>;
+          settledAt: z.ZodISODateTime;
+        }, z.core.$strict>;
+      }, z.core.$strict>;
+      sourceGate: z.ZodNullable<z.ZodObject<{
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        datasetRequestHash: z.ZodString;
+        state: z.ZodEnum<{
+          OPEN: "OPEN";
+          CLOSED: "CLOSED";
+        }>;
+        fence: z.ZodNumber;
+        revision: z.ZodNumber;
+        closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+        closeRequestHash: z.ZodNullable<z.ZodString>;
+      }, z.core.$strict>>;
+      sourceRecovery: z.ZodNullable<z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-source-recovery.v1">;
+        decisionHash: z.ZodString;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        runnerId: z.ZodString;
+        imageDigest: z.ZodString;
+        instanceId: z.ZodString;
+        profileHash: z.ZodString;
+        serviceRequestHash: z.ZodString;
+        endpoint: z.ZodObject<{
+          host: z.ZodLiteral<"127.0.0.1">;
+          port: z.ZodNumber;
+        }, z.core.$strict>;
+        fence: z.ZodObject<{
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          previousHoldHash: z.ZodNullable<z.ZodString>;
+        }, z.core.$strict>;
+        revocationProofHash: z.ZodString;
+        custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+        accessMode: z.ZodLiteral<"READ_WRITE">;
+        state: z.ZodLiteral<"HEALTHY">;
+        checkedAt: z.ZodISODateTime;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    principalId: z.ZodString;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    decisionHash: z.ZodString;
+  }, z.core.$strict>;
+};
+type AcceptanceAbortCompletionEvidence = z.output<typeof acceptanceAbortCompletionEvidence>;
+interface AcceptanceAbortCompletion {
+  evidence: AcceptanceAbortCompletionEvidence;
+  evidenceHash: string;
+  completedAt: string;
+}
+type AcceptanceAbortFinalization = {
+  state: 'ABORTED';
+  completion: AcceptanceAbortCompletion;
+} | {
+  state: 'UNKNOWN';
+  errorCode: string;
+};
+/** Trusted executable composition only. Implementations must honor stop before
+ * new stages and drain active external calls before resolving advance. */
+interface AcceptanceAbortRecoveryBackend {
+  readonly configured: boolean;
+  advance(input: {
+    operationId: string;
+    requestHash: string;
+  }, signal?: AbortSignal): Promise<AcceptanceAbortFinalization>;
+}
+type AcceptanceAbortRecoveryMethod = keyof typeof acceptanceAbortRecoveryRequests;
+type AcceptanceAbortRecoveryInput<M extends AcceptanceAbortRecoveryMethod> = z.output<(typeof acceptanceAbortRecoveryRequests)[M]>;
+interface AcceptanceAbortRecoveryResults {
+  getAcceptanceAbortRecovery: {
+    completion: AcceptanceAbortCompletion | null;
+    sourceGate: z.output<typeof acceptanceAbortSourceGate> | null;
+    sourceImageDigest: string | null;
+  };
+  completeAcceptanceAbort: AcceptanceAbortCompletion;
+}
+//#endregion
+//#region src/release-publication-protocol.d.ts
+declare const releasePublicationGate: z.ZodObject<{
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  datasetRequestHash: z.ZodString;
+  state: z.ZodEnum<{
+    OPEN: "OPEN";
+    CLOSED: "CLOSED";
+  }>;
+  fence: z.ZodNumber;
+  revision: z.ZodNumber;
+  closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+  closeRequestHash: z.ZodNullable<z.ZodString>;
+}, z.core.$strict>;
+declare const releasePublicationBasis: z.ZodObject<{
+  sourceGate: z.ZodNullable<z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    datasetRequestHash: z.ZodString;
+    state: z.ZodEnum<{
+      OPEN: "OPEN";
+      CLOSED: "CLOSED";
+    }>;
+    fence: z.ZodNumber;
+    revision: z.ZodNumber;
+    closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+    closeRequestHash: z.ZodNullable<z.ZodString>;
+  }, z.core.$strict>>;
+  targetGate: z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    datasetRequestHash: z.ZodString;
+    state: z.ZodEnum<{
+      OPEN: "OPEN";
+      CLOSED: "CLOSED";
+    }>;
+    fence: z.ZodNumber;
+    revision: z.ZodNumber;
+    closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+    closeRequestHash: z.ZodNullable<z.ZodString>;
+  }, z.core.$strict>;
+  previousRoute: z.ZodNullable<z.ZodObject<{
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    routeHash: z.ZodString;
+    generation: z.ZodNumber;
+  }, z.core.$strict>>;
+}, z.core.$strict>;
+declare const releaseServiceClaim: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.release-service-claim.v1">;
+  purpose: z.ZodLiteral<"RELEASE">;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  promotionRequestHash: z.ZodString;
+  preparedProofHash: z.ZodString;
+  runnerId: z.ZodString;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  reservationId: z.ZodString;
+  profileHash: z.ZodString;
+  serviceRequestHash: z.ZodString;
+  instanceId: z.ZodString;
+  networkId: z.ZodString;
+  accessMode: z.ZodLiteral<"READ_WRITE">;
+  custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+  writeAdmission: z.ZodLiteral<"CONTROL_GATE_FENCED">;
+  targetFence: z.ZodObject<{
+    fenceId: z.ZodString;
+    generation: z.ZodNumber;
+    proofHash: z.ZodString;
+    previousHoldHash: z.ZodString;
+  }, z.core.$strict>;
+}, z.core.$strict>;
+declare const releaseRouteBinding: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.release-route.v1">;
+  routeId: z.ZodString;
+  generation: z.ZodNumber;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  previousReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  imageDigest: z.ZodString;
+  instanceId: z.ZodString;
+  endpoint: z.ZodObject<{
+    host: z.ZodLiteral<"127.0.0.1">;
+    port: z.ZodNumber;
+  }, z.core.$strict>;
+  serviceClaimHash: z.ZodString;
+  state: z.ZodLiteral<"BOUND">;
+}, z.core.$strict>;
+/** Stable original publication fact. Fresh observations are deliberately outside
+ * this object so recovery never rewrites the original proof to extend health. */
+declare const releasePublicationProof: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.release-published.v1">;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  promotionRequestHash: z.ZodString;
+  preparedProofHash: z.ZodString;
+  controllerId: z.ZodString;
+  runnerId: z.ZodString;
+  backendRef: z.ZodString;
+  gates: z.ZodObject<{
+    sourceGate: z.ZodNullable<z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      datasetRequestHash: z.ZodString;
+      state: z.ZodEnum<{
+        OPEN: "OPEN";
+        CLOSED: "CLOSED";
+      }>;
+      fence: z.ZodNumber;
+      revision: z.ZodNumber;
+      closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+      closeRequestHash: z.ZodNullable<z.ZodString>;
+    }, z.core.$strict>>;
+    targetGate: z.ZodObject<{
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      datasetRequestHash: z.ZodString;
+      state: z.ZodEnum<{
+        OPEN: "OPEN";
+        CLOSED: "CLOSED";
+      }>;
+      fence: z.ZodNumber;
+      revision: z.ZodNumber;
+      closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+      closeRequestHash: z.ZodNullable<z.ZodString>;
+    }, z.core.$strict>;
+    previousRoute: z.ZodNullable<z.ZodObject<{
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      routeHash: z.ZodString;
+      generation: z.ZodNumber;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  readonlyRetirement: z.ZodObject<{
+    reservationId: z.ZodString;
+    profileHash: z.ZodString;
+    serviceRequestHash: z.ZodString;
+    instanceId: z.ZodString;
+    networkId: z.ZodString;
+    containerAbsent: z.ZodLiteral<true>;
+    networkAbsent: z.ZodLiteral<true>;
+    verifiedAt: z.ZodISODateTime;
+  }, z.core.$strict>;
+  revocation: z.ZodObject<{
+    barrierId: z.ZodString;
+    generation: z.ZodNumber;
+    proofHash: z.ZodString;
+    state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+  }, z.core.$strict>;
+  target: z.ZodObject<{
+    fenceId: z.ZodString;
+    generation: z.ZodNumber;
+    proofHash: z.ZodString;
+    previousHoldHash: z.ZodString;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    owner: z.ZodLiteral<"RELEASE">;
+    state: z.ZodLiteral<"ARMED">;
+    writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+  }, z.core.$strict>;
+  source: z.ZodNullable<z.ZodObject<{
+    fenceId: z.ZodString;
+    generation: z.ZodNumber;
+    proofHash: z.ZodString;
+    previousHoldHash: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    state: z.ZodLiteral<"RETIRED">;
+    writeState: z.ZodLiteral<"CLOSED">;
+  }, z.core.$strict>>;
+  service: z.ZodObject<{
+    claim: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.release-service-claim.v1">;
+      purpose: z.ZodLiteral<"RELEASE">;
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+      acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      promotionRequestHash: z.ZodString;
+      preparedProofHash: z.ZodString;
+      runnerId: z.ZodString;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      imageDigest: z.ZodString;
+      reservationId: z.ZodString;
+      profileHash: z.ZodString;
+      serviceRequestHash: z.ZodString;
+      instanceId: z.ZodString;
+      networkId: z.ZodString;
+      accessMode: z.ZodLiteral<"READ_WRITE">;
+      custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+      writeAdmission: z.ZodLiteral<"CONTROL_GATE_FENCED">;
+      targetFence: z.ZodObject<{
+        fenceId: z.ZodString;
+        generation: z.ZodNumber;
+        proofHash: z.ZodString;
+        previousHoldHash: z.ZodString;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    claimHash: z.ZodString;
+    endpoint: z.ZodObject<{
+      host: z.ZodLiteral<"127.0.0.1">;
+      port: z.ZodNumber;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  route: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.release-route.v1">;
+    routeId: z.ZodString;
+    generation: z.ZodNumber;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    previousReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    imageDigest: z.ZodString;
+    instanceId: z.ZodString;
+    endpoint: z.ZodObject<{
+      host: z.ZodLiteral<"127.0.0.1">;
+      port: z.ZodNumber;
+    }, z.core.$strict>;
+    serviceClaimHash: z.ZodString;
+    state: z.ZodLiteral<"BOUND">;
+  }, z.core.$strict>;
+  routeHash: z.ZodString;
+  publishedAt: z.ZodISODateTime;
+}, z.core.$strict>;
+declare const releasePublicationObservation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  state: z.ZodLiteral<"UNKNOWN">;
+  errorCode: z.ZodString;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>, z.ZodObject<{
+  state: z.ZodLiteral<"PUBLISHED">;
+  proof: z.ZodObject<{
+    schemaVersion: z.ZodLiteral<"devmesh.release-published.v1">;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    promotionRequestHash: z.ZodString;
+    preparedProofHash: z.ZodString;
+    controllerId: z.ZodString;
+    runnerId: z.ZodString;
+    backendRef: z.ZodString;
+    gates: z.ZodObject<{
+      sourceGate: z.ZodNullable<z.ZodObject<{
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        datasetRequestHash: z.ZodString;
+        state: z.ZodEnum<{
+          OPEN: "OPEN";
+          CLOSED: "CLOSED";
+        }>;
+        fence: z.ZodNumber;
+        revision: z.ZodNumber;
+        closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+        closeRequestHash: z.ZodNullable<z.ZodString>;
+      }, z.core.$strict>>;
+      targetGate: z.ZodObject<{
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        datasetRequestHash: z.ZodString;
+        state: z.ZodEnum<{
+          OPEN: "OPEN";
+          CLOSED: "CLOSED";
+        }>;
+        fence: z.ZodNumber;
+        revision: z.ZodNumber;
+        closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+        closeRequestHash: z.ZodNullable<z.ZodString>;
+      }, z.core.$strict>;
+      previousRoute: z.ZodNullable<z.ZodObject<{
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        routeHash: z.ZodString;
+        generation: z.ZodNumber;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    readonlyRetirement: z.ZodObject<{
+      reservationId: z.ZodString;
+      profileHash: z.ZodString;
+      serviceRequestHash: z.ZodString;
+      instanceId: z.ZodString;
+      networkId: z.ZodString;
+      containerAbsent: z.ZodLiteral<true>;
+      networkAbsent: z.ZodLiteral<true>;
+      verifiedAt: z.ZodISODateTime;
+    }, z.core.$strict>;
+    revocation: z.ZodObject<{
+      barrierId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+    }, z.core.$strict>;
+    target: z.ZodObject<{
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      previousHoldHash: z.ZodString;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      owner: z.ZodLiteral<"RELEASE">;
+      state: z.ZodLiteral<"ARMED">;
+      writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+    }, z.core.$strict>;
+    source: z.ZodNullable<z.ZodObject<{
+      fenceId: z.ZodString;
+      generation: z.ZodNumber;
+      proofHash: z.ZodString;
+      previousHoldHash: z.ZodString;
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      state: z.ZodLiteral<"RETIRED">;
+      writeState: z.ZodLiteral<"CLOSED">;
+    }, z.core.$strict>>;
+    service: z.ZodObject<{
+      claim: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.release-service-claim.v1">;
+        purpose: z.ZodLiteral<"RELEASE">;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+        runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+        candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+        acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        promotionRequestHash: z.ZodString;
+        preparedProofHash: z.ZodString;
+        runnerId: z.ZodString;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        imageDigest: z.ZodString;
+        reservationId: z.ZodString;
+        profileHash: z.ZodString;
+        serviceRequestHash: z.ZodString;
+        instanceId: z.ZodString;
+        networkId: z.ZodString;
+        accessMode: z.ZodLiteral<"READ_WRITE">;
+        custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+        writeAdmission: z.ZodLiteral<"CONTROL_GATE_FENCED">;
+        targetFence: z.ZodObject<{
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          previousHoldHash: z.ZodString;
+        }, z.core.$strict>;
+      }, z.core.$strict>;
+      claimHash: z.ZodString;
+      endpoint: z.ZodObject<{
+        host: z.ZodLiteral<"127.0.0.1">;
+        port: z.ZodNumber;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    route: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.release-route.v1">;
+      routeId: z.ZodString;
+      generation: z.ZodNumber;
+      projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+      releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      previousReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      imageDigest: z.ZodString;
+      instanceId: z.ZodString;
+      endpoint: z.ZodObject<{
+        host: z.ZodLiteral<"127.0.0.1">;
+        port: z.ZodNumber;
+      }, z.core.$strict>;
+      serviceClaimHash: z.ZodString;
+      state: z.ZodLiteral<"BOUND">;
+    }, z.core.$strict>;
+    routeHash: z.ZodString;
+    publishedAt: z.ZodISODateTime;
+  }, z.core.$strict>;
+  checkedAt: z.ZodISODateTime;
+  current: z.ZodObject<{
+    service: z.ZodObject<{
+      instanceId: z.ZodString;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      imageDigest: z.ZodString;
+      profileHash: z.ZodString;
+      claimHash: z.ZodString;
+      endpoint: z.ZodObject<{
+        host: z.ZodLiteral<"127.0.0.1">;
+        port: z.ZodNumber;
+      }, z.core.$strict>;
+      accessMode: z.ZodLiteral<"READ_WRITE">;
+      custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+      writeAdmission: z.ZodLiteral<"CONTROL_GATE_FENCED">;
+      state: z.ZodLiteral<"HEALTHY">;
+    }, z.core.$strict>;
+    route: z.ZodObject<{
+      routeId: z.ZodString;
+      routeHash: z.ZodString;
+      generation: z.ZodNumber;
+      instanceId: z.ZodString;
+      state: z.ZodLiteral<"BOUND">;
+    }, z.core.$strict>;
+    fences: z.ZodObject<{
+      targetProofHash: z.ZodString;
+      sourceProofHash: z.ZodNullable<z.ZodString>;
+      revocationProofHash: z.ZodString;
+      targetState: z.ZodLiteral<"ARMED">;
+      targetWriteState: z.ZodLiteral<"CONTROL_CLOSED">;
+      sourceWriteState: z.ZodLiteral<"CLOSED">;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+}, z.core.$strict>], "state">;
+declare const releasePublicationRequests: {
+  getReleasePublication: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  }, z.core.$strict>;
+  listReleasePublications: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  listReleasePublicationWork: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  beginReleasePublication: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  verifyReleasePublication: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  verifyReleasePublicationContinuation: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  recordReleasePublicationObservation: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    expectedSequence: z.ZodNumber;
+    observation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      state: z.ZodLiteral<"UNKNOWN">;
+      errorCode: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"PUBLISHED">;
+      proof: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.release-published.v1">;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        promotionRequestHash: z.ZodString;
+        preparedProofHash: z.ZodString;
+        controllerId: z.ZodString;
+        runnerId: z.ZodString;
+        backendRef: z.ZodString;
+        gates: z.ZodObject<{
+          sourceGate: z.ZodNullable<z.ZodObject<{
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            datasetRequestHash: z.ZodString;
+            state: z.ZodEnum<{
+              OPEN: "OPEN";
+              CLOSED: "CLOSED";
+            }>;
+            fence: z.ZodNumber;
+            revision: z.ZodNumber;
+            closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+            closeRequestHash: z.ZodNullable<z.ZodString>;
+          }, z.core.$strict>>;
+          targetGate: z.ZodObject<{
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            datasetRequestHash: z.ZodString;
+            state: z.ZodEnum<{
+              OPEN: "OPEN";
+              CLOSED: "CLOSED";
+            }>;
+            fence: z.ZodNumber;
+            revision: z.ZodNumber;
+            closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+            closeRequestHash: z.ZodNullable<z.ZodString>;
+          }, z.core.$strict>;
+          previousRoute: z.ZodNullable<z.ZodObject<{
+            releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+            routeHash: z.ZodString;
+            generation: z.ZodNumber;
+          }, z.core.$strict>>;
+        }, z.core.$strict>;
+        readonlyRetirement: z.ZodObject<{
+          reservationId: z.ZodString;
+          profileHash: z.ZodString;
+          serviceRequestHash: z.ZodString;
+          instanceId: z.ZodString;
+          networkId: z.ZodString;
+          containerAbsent: z.ZodLiteral<true>;
+          networkAbsent: z.ZodLiteral<true>;
+          verifiedAt: z.ZodISODateTime;
+        }, z.core.$strict>;
+        revocation: z.ZodObject<{
+          barrierId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+        }, z.core.$strict>;
+        target: z.ZodObject<{
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          previousHoldHash: z.ZodString;
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          owner: z.ZodLiteral<"RELEASE">;
+          state: z.ZodLiteral<"ARMED">;
+          writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+        }, z.core.$strict>;
+        source: z.ZodNullable<z.ZodObject<{
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          previousHoldHash: z.ZodString;
+          releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          state: z.ZodLiteral<"RETIRED">;
+          writeState: z.ZodLiteral<"CLOSED">;
+        }, z.core.$strict>>;
+        service: z.ZodObject<{
+          claim: z.ZodObject<{
+            schemaVersion: z.ZodLiteral<"devmesh.release-service-claim.v1">;
+            purpose: z.ZodLiteral<"RELEASE">;
+            releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+            projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+            runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+            candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+            acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            promotionRequestHash: z.ZodString;
+            preparedProofHash: z.ZodString;
+            runnerId: z.ZodString;
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            imageDigest: z.ZodString;
+            reservationId: z.ZodString;
+            profileHash: z.ZodString;
+            serviceRequestHash: z.ZodString;
+            instanceId: z.ZodString;
+            networkId: z.ZodString;
+            accessMode: z.ZodLiteral<"READ_WRITE">;
+            custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+            writeAdmission: z.ZodLiteral<"CONTROL_GATE_FENCED">;
+            targetFence: z.ZodObject<{
+              fenceId: z.ZodString;
+              generation: z.ZodNumber;
+              proofHash: z.ZodString;
+              previousHoldHash: z.ZodString;
+            }, z.core.$strict>;
+          }, z.core.$strict>;
+          claimHash: z.ZodString;
+          endpoint: z.ZodObject<{
+            host: z.ZodLiteral<"127.0.0.1">;
+            port: z.ZodNumber;
+          }, z.core.$strict>;
+        }, z.core.$strict>;
+        route: z.ZodObject<{
+          schemaVersion: z.ZodLiteral<"devmesh.release-route.v1">;
+          routeId: z.ZodString;
+          generation: z.ZodNumber;
+          projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+          releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+          previousReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          imageDigest: z.ZodString;
+          instanceId: z.ZodString;
+          endpoint: z.ZodObject<{
+            host: z.ZodLiteral<"127.0.0.1">;
+            port: z.ZodNumber;
+          }, z.core.$strict>;
+          serviceClaimHash: z.ZodString;
+          state: z.ZodLiteral<"BOUND">;
+        }, z.core.$strict>;
+        routeHash: z.ZodString;
+        publishedAt: z.ZodISODateTime;
+      }, z.core.$strict>;
+      checkedAt: z.ZodISODateTime;
+      current: z.ZodObject<{
+        service: z.ZodObject<{
+          instanceId: z.ZodString;
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          imageDigest: z.ZodString;
+          profileHash: z.ZodString;
+          claimHash: z.ZodString;
+          endpoint: z.ZodObject<{
+            host: z.ZodLiteral<"127.0.0.1">;
+            port: z.ZodNumber;
+          }, z.core.$strict>;
+          accessMode: z.ZodLiteral<"READ_WRITE">;
+          custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+          writeAdmission: z.ZodLiteral<"CONTROL_GATE_FENCED">;
+          state: z.ZodLiteral<"HEALTHY">;
+        }, z.core.$strict>;
+        route: z.ZodObject<{
+          routeId: z.ZodString;
+          routeHash: z.ZodString;
+          generation: z.ZodNumber;
+          instanceId: z.ZodString;
+          state: z.ZodLiteral<"BOUND">;
+        }, z.core.$strict>;
+        fences: z.ZodObject<{
+          targetProofHash: z.ZodString;
+          sourceProofHash: z.ZodNullable<z.ZodString>;
+          revocationProofHash: z.ZodString;
+          targetState: z.ZodLiteral<"ARMED">;
+          targetWriteState: z.ZodLiteral<"CONTROL_CLOSED">;
+          sourceWriteState: z.ZodLiteral<"CLOSED">;
+        }, z.core.$strict>;
+      }, z.core.$strict>;
+    }, z.core.$strict>], "state">;
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listReleasePublicationHistory: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+};
+type ReleasePublicationObservation = z.output<typeof releasePublicationObservation>;
+type ReleasePublicationProof = z.output<typeof releasePublicationProof>;
+interface ReleasePublication {
+  releaseId: string;
+  projectId: string;
+  runId: string;
+  requestHash: string;
+  request: z.output<typeof releasePromotionRequest>;
+  state: 'PENDING' | 'SENT' | 'UNKNOWN' | 'PUBLISHED';
+  revision: number;
+  sequence: number;
+  errorCode: string | null;
+  basis: z.output<typeof releasePublicationBasis> | null;
+  proof: ReleasePublicationProof | null;
+  proofHash: string | null;
+  acceptedAt: string;
+  dispatchedAt: string | null;
+  updatedAt: string;
+  publishedAt: string | null;
+  isCurrentAccepted: boolean;
+}
+type ReleasePublicationMethod = keyof typeof releasePublicationRequests;
+type ReleasePublicationInput<M extends ReleasePublicationMethod> = z.output<(typeof releasePublicationRequests)[M]>;
+interface ReleasePublicationResults {
+  getReleasePublication: ReleasePublication;
+  listReleasePublications: {
+    items: {
+      sequence: number;
+      publication: ReleasePublication;
+    }[];
+    nextSequence: number | null;
+  };
+  listReleasePublicationWork: {
+    items: {
+      sequence: number;
+      publication: ReleasePublication;
+    }[];
+    nextSequence: number | null;
+  };
+  beginReleasePublication: {
+    dispatch: boolean;
+    publication: ReleasePublication;
+  };
+  verifyReleasePublication: {
+    allowed: boolean;
+    reasonCode: string | null;
+  };
+  verifyReleasePublicationContinuation: {
+    allowed: boolean;
+    reasonCode: string | null;
+  };
+  recordReleasePublicationObservation: ReleasePublication;
+  listReleasePublicationHistory: {
+    items: {
+      sequence: number;
+      revision: number;
+      state: ReleasePublication['state'];
+      errorCode: string | null;
+      observedAt: string;
+    }[];
+    nextSequence: number | null;
+  };
+}
+interface ReleasePublicationBackend {
+  readonly configured: boolean;
+  /** Check exact configured physical capabilities only; never publish or acquire. */
+  preflight(publication: ReleasePublication): Promise<void>;
+  /** Only the unique durable grant winner may call this. The trusted adapter must
+   * durably identify every original stage, permanently revoke old preparation,
+   * retire the exact readonly service and install a distinct, physically fenced
+   * writable service/route. No data initialization or migration belongs here. */
+  publish(publication: ReleasePublication, authorize: () => Promise<boolean>): Promise<ReleasePublicationObservation>;
+  /** Query the original result and current objects; never acquire, renew, create,
+   * migrate, start a replacement, switch routes or open a gate in this method. */
+  inspect(publication: ReleasePublication): Promise<ReleasePublicationObservation>;
+  /** Explicit original-stage coordination. Each unstarted physical stage needs a
+   * new unique durable Runner grant. Uncertain dispatched stages are query-only. */
+  resume?(publication: ReleasePublication, authorize: () => Promise<boolean>): Promise<ReleasePublicationObservation>;
+}
+//#endregion
+//#region src/release-access-protocol.d.ts
+declare const releaseAccessPolicy: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.release-access-policy.v1">;
+  gatewayId: z.ZodString;
+  gatewayPrincipalId: z.ZodString;
+  configurationHash: z.ZodString;
+}, z.core.$strict>;
+declare const releaseAccessHttpRequest: z.ZodObject<{
+  method: z.ZodEnum<{
+    GET: "GET";
+    HEAD: "HEAD";
+    POST: "POST";
+    PUT: "PUT";
+    PATCH: "PATCH";
+    DELETE: "DELETE";
+  }>;
+  path: z.ZodString;
+  bodySha256: z.ZodString;
+  headersSha256: z.ZodString;
+}, z.core.$strict>;
+declare const releaseAccessObservation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+  state: z.ZodLiteral<"FINISHED">;
+  httpStatus: z.ZodNumber;
+  responseSha256: z.ZodString;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>, z.ZodObject<{
+  state: z.ZodLiteral<"UNKNOWN">;
+  errorCode: z.ZodString;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>, z.ZodObject<{
+  state: z.ZodLiteral<"NOT_SENT">;
+  errorCode: z.ZodString;
+  checkedAt: z.ZodISODateTime;
+}, z.core.$strict>], "state">;
+declare const releaseAccessTarget: z.ZodObject<{
+  schemaVersion: z.ZodLiteral<"devmesh.release-access-target.v1">;
+  purpose: z.ZodLiteral<"RELEASE">;
+  projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  manifestHash: z.ZodString;
+  policyHash: z.ZodString;
+  datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+  datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  datasetRequestHash: z.ZodString;
+  imageDigest: z.ZodString;
+  runnerId: z.ZodString;
+  controllerId: z.ZodString;
+  backendRef: z.ZodString;
+  promotionRequestHash: z.ZodString;
+  preparedProofHash: z.ZodString;
+  publicationProofHash: z.ZodString;
+  reservationId: z.ZodString;
+  profileHash: z.ZodString;
+  serviceRequestHash: z.ZodString;
+  claimHash: z.ZodString;
+  instanceId: z.ZodString;
+  networkId: z.ZodString;
+  routeHash: z.ZodString;
+  routeGeneration: z.ZodNumber;
+  endpoint: z.ZodObject<{
+    host: z.ZodLiteral<"127.0.0.1">;
+    port: z.ZodNumber;
+  }, z.core.$strict>;
+}, z.core.$strict>;
+type ReleaseAccessTarget = z.output<typeof releaseAccessTarget>;
+interface ReleaseAccessBinding {
+  target: ReleaseAccessTarget;
+  gate: PreviewWriteGate;
+  canWrite: boolean;
+}
+interface ReleaseAccessRecord {
+  accessRequestId: string;
+  gatewayId: string;
+  configurationHash: string;
+  subjectPrincipalId: string;
+  target: ReleaseAccessTarget;
+  request: z.output<typeof releaseAccessHttpRequest>;
+  requestHash: string;
+  gateFence: number;
+  gateRevision: number;
+  state: 'PREPARED' | 'DISPATCHED' | 'UNKNOWN' | 'FINISHED' | 'NOT_SENT';
+  revision: number;
+  observation: z.output<typeof releaseAccessObservation> | null;
+  createdAt: string;
+  dispatchedAt: string | null;
+  finishedAt: string | null;
+}
+/** A stable identity, never a statement of current physical health or admission. */
+declare function releaseTargetForPublication(p: ReleasePublication): ReleaseAccessTarget;
+declare function releaseAccessRequestHash(r: Pick<ReleaseAccessRecord, 'target' | 'request' | 'gateFence' | 'gateRevision' | 'subjectPrincipalId' | 'gatewayId' | 'configurationHash'>): string;
+interface ReleaseAccessResults {
+  registerReleaseAccessPolicy: {
+    policy: z.output<typeof releaseAccessPolicy>;
+  };
+  getReleaseWriteGate: PreviewWriteGate;
+  resolveReleaseAccess: ReleaseAccessBinding;
+  prepareReleaseAccessRequest: ReleaseAccessRecord;
+  beginReleaseAccessRequest: {
+    dispatch: boolean;
+    record: ReleaseAccessRecord;
+  };
+  releaseAccessRequestAuthorized: {
+    allowed: boolean;
+  };
+  getReleaseAccessRequest: ReleaseAccessRecord;
+  recordReleaseAccessObservation: ReleaseAccessRecord;
+  listReleaseAccessRequests: {
+    items: {
+      sequence: number;
+      record: ReleaseAccessRecord;
+    }[];
+    nextSequence: number | null;
+  };
+}
+//#endregion
+//#region src/release-session-protocol.d.ts
+interface ReleaseTicket {
+  ticketId: string;
+  projectId: string;
+  gatewayId: string;
+  subjectPrincipalId: string;
+  target: ReleaseAccessTarget;
+  platformOrigin: string;
+  releaseOrigin: string;
+  createdAt: string;
+  expiresAt: string;
+  state: 'ISSUED' | 'CONSUMED';
+  sessionId: string | null;
+}
+interface ReleaseSession {
+  sessionId: string;
+  ticketId: string;
+  projectId: string;
+  gatewayId: string;
+  subjectPrincipalId: string;
+  target: ReleaseAccessTarget;
+  platformOrigin: string;
+  releaseOrigin: string;
+  createdAt: string;
+  expiresAt: string;
+  state: 'ACTIVE' | 'REVOKED';
+  revokedAt: string | null;
+}
+interface ReleaseSessionResults {
+  issueReleaseTicket: ReleaseTicket;
+  exchangeReleaseTicket: ReleaseSession;
+  authenticateReleaseSession: {
+    session: ReleaseSession;
+    binding: ReleaseAccessBinding;
+  };
+  revokeReleaseSession: ReleaseSession;
+}
+//#endregion
+//#region src/plan-results.d.ts
+interface CarriedResult {
+  workId: string;
+  workRevision: number;
+  workEpoch: number;
+  attemptId: string;
+  sourcePlanRevision: number;
+  requirementRevision: number;
+  requirementSha256: string;
+  definitionSha256: string;
+  sourcePlanDecisionId: string;
+  outcome: string;
+  state: string;
+  codeCommit: string | null;
+  inputFingerprint: string;
+  inputManifestSha256: string;
+  checkConfigHash: string;
+  templateVersion: string;
+  admittedRunEpoch: number;
+  roleSnapshotSha256: string;
+  evidence: {
+    artifactId: string;
+    sha256: string;
+  };
+  outputs: unknown;
+  workVerification: {
+    operationId: string;
+    sha256: string;
+  } | null;
+}
+//#endregion
+//#region src/verified-repair-protocol.d.ts
+interface VerifiedRepair {
+  operationId: string;
+  principalId: string;
+  runId: string;
+  state: 'PREPARED' | 'READY' | 'PUBLISHED';
+  qualification: 'CURRENT' | 'STALE';
+  round: number;
+  planRevision: number;
+  requirementRevision: number;
+  fixWorkId: string;
+  verificationWorkId: string;
+  plan: Draft;
+  carriedResults: CarriedResult[];
+  carryForwardHash: string;
+  expectedHash: string;
+  byteSize: number;
+  writeKey: string;
+  publishKey: string;
+  contentHash: string | null;
+}
+interface VerifiedRepairResults {
+  prepareVerifiedRepair: VerifiedRepair;
+  getVerifiedRepair: VerifiedRepair;
+  listVerifiedRepairs: VerifiedRepair[];
+}
+//#endregion
+//#region src/protocol.d.ts
+declare const meta: z.ZodObject<{
+  principalId: z.ZodString;
+  scopeId: z.ZodString;
+  idempotencyKey: z.ZodUUID;
+}, z.core.$strict>;
+declare const requests: {
+  registerContent: z.ZodObject<{
+    contentHash: z.ZodString;
+    byteSize: z.ZodNumber;
+    mimeType: z.ZodString;
+  }, z.core.$strict>;
+  createProjectWithRun: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    projectId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "prj", "out">>;
+    name: z.ZodString;
+    baseCommit: z.ZodString;
+    contentHash: z.ZodString;
+    kind: z.ZodDefault<z.ZodEnum<{
+      ITERATION: "ITERATION";
+      FIX: "FIX";
+      NEW: "NEW";
+    }>>;
+    clientMessageId: z.ZodUUID;
+  }, z.core.$strict>;
+  publishPlan: z.ZodObject<{
+    requirementRevision: z.ZodNumber;
+    planRevision: z.ZodNumber;
+    requirements: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.requirements.v1">;
+      role: z.ZodLiteral<"product">;
+      requirements: z.ZodArray<z.ZodObject<{
+        id: z.core.$ZodBranded<z.ZodString, "requirement", "out">;
+        statement: z.ZodString;
+        sourceRefs: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+          kind: z.ZodLiteral<"artifact">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"message">;
+          messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"requirement">;
+          requirementId: z.core.$ZodBranded<z.ZodString, "requirement", "out">;
+          requirementRevision: z.ZodNumber;
+        }, z.core.$strict>], "kind">>;
+        acceptance: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+      assumptions: z.ZodArray<z.ZodString>;
+      questions: z.ZodArray<z.ZodObject<{
+        id: z.core.$ZodBranded<z.ZodString, "question", "out">;
+        required: z.ZodBoolean;
+        reason: z.ZodString;
+        blockingScope: z.ZodArray<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+        defaultOption: z.ZodOptional<z.ZodString>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    plan: z.ZodObject<{
+      requirementRevision: z.ZodNumber;
+      works: z.ZodArray<z.ZodObject<{
+        workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+        workRevision: z.ZodNumber;
+        role: z.ZodEnum<{
+          product: "product";
+          architect: "architect";
+          developer: "developer";
+          tester: "tester";
+        }>;
+        goal: z.ZodString;
+        inputRefs: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+          kind: z.ZodLiteral<"artifact">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"output">;
+          workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+          outputSlot: z.ZodString;
+        }, z.core.$strict>], "kind">>;
+        outputSpec: z.ZodArray<z.ZodObject<{
+          slot: z.ZodString;
+          schemaId: z.ZodString;
+        }, z.core.$strict>>;
+        completionChecks: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+          kind: z.ZodLiteral<"artifact-exists">;
+          outputSlot: z.ZodString;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"schema-valid">;
+          outputSlot: z.ZodString;
+          schemaId: z.ZodString;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"commit-resolved">;
+          outputSlot: z.ZodString;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"command-exit-zero">;
+          checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"required-tests-pass">;
+          checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"coverage-threshold">;
+          lines: z.ZodNumber;
+          branches: z.ZodNumber;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"human-decision">;
+          checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+        }, z.core.$strict>], "kind">>;
+        dependencies: z.ZodArray<z.ZodObject<{
+          workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+          requiredOutcome: z.ZodEnum<{
+            success: "success";
+            "completed-with-findings": "completed-with-findings";
+          }>;
+        }, z.core.$strict>>;
+        writeScope: z.ZodArray<z.ZodString>;
+        estimatedResources: z.ZodObject<{
+          cpu: z.ZodNumber;
+          memoryMiB: z.ZodNumber;
+          timeoutMs: z.ZodNumber;
+        }, z.core.$strict>;
+        requirementIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "requirement", "out">>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    planContentHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  confirmPlan: z.ZodObject<{
+    planRevision: z.ZodNumber;
+    requirementRevision: z.ZodNumber;
+    reviewHash: z.ZodString;
+    carryForwardHash: z.ZodOptional<z.ZodString>;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  getPlanReview: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    planRevision: z.ZodOptional<z.ZodNumber>;
+  }, z.core.$strict>;
+  confirmReviewedPlan: z.ZodObject<{
+    planRevision: z.ZodNumber;
+    requirementRevision: z.ZodNumber;
+    reviewHash: z.ZodString;
+    carryForwardHash: z.ZodOptional<z.ZodString>;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  admitWorks: z.ZodObject<{
+    runEpoch: z.ZodNumber;
+    planRevision: z.ZodNumber;
+    works: z.ZodArray<z.ZodObject<{
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workRevision: z.ZodNumber;
+      workEpoch: z.ZodNumber;
+      inputManifest: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.input-manifest.v1">;
+        requirements: z.ZodArray<z.ZodObject<{
+          requirementId: z.core.$ZodBranded<z.ZodString, "requirement", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>>;
+        interfaces: z.ZodArray<z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>>;
+        artifacts: z.ZodArray<z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>>;
+        codeCommit: z.ZodNullable<z.ZodString>;
+        templateVersion: z.ZodString;
+        checkConfigHash: z.ZodString;
+        decisionIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "decision", "out">>;
+      }, z.core.$strict>;
+      roleSnapshot: z.ZodObject<{
+        role: z.ZodEnum<{
+          product: "product";
+          architect: "architect";
+          developer: "developer";
+          tester: "tester";
+        }>;
+        revision: z.ZodString;
+        provider: z.ZodString;
+        model: z.ZodString;
+        promptArtifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        outputSchemaId: z.ZodString;
+        allowedTools: z.ZodArray<z.ZodString>;
+        maxSteps: z.ZodNumber;
+        contextLimitTokens: z.ZodNumber;
+        outputReserveTokens: z.ZodNumber;
+        requestTimeoutMs: z.ZodNumber;
+        maxReadOnlyRetries: z.ZodNumber;
+      }, z.core.$strict>;
+      endpoint: z.ZodObject<{
+        endpointId: z.ZodString;
+        revision: z.ZodNumber;
+        cardHash: z.ZodString;
+        registryGenerationId: z.ZodString;
+      }, z.core.$strict>;
+      resources: z.ZodArray<z.ZodObject<{
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>>;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  nextScheduledWork: z.ZodObject<{
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  deferScheduledWork: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    resourceRevision: z.ZodNumber;
+  }, z.core.$strict>;
+  admitScheduledWork: z.ZodObject<{
+    runEpoch: z.ZodNumber;
+    planRevision: z.ZodNumber;
+    work: z.ZodObject<{
+      endpoint: z.ZodObject<{
+        endpointId: z.ZodString;
+        revision: z.ZodNumber;
+        cardHash: z.ZodString;
+        registryGenerationId: z.ZodString;
+      }, z.core.$strict>;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workRevision: z.ZodNumber;
+      workEpoch: z.ZodNumber;
+      resources: z.ZodArray<z.ZodObject<{
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+      }, z.core.$strict>>;
+      roleSnapshot: z.ZodObject<{
+        role: z.ZodEnum<{
+          product: "product";
+          architect: "architect";
+          developer: "developer";
+          tester: "tester";
+        }>;
+        revision: z.ZodString;
+        provider: z.ZodString;
+        model: z.ZodString;
+        promptArtifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        outputSchemaId: z.ZodString;
+        allowedTools: z.ZodArray<z.ZodString>;
+        maxSteps: z.ZodNumber;
+        contextLimitTokens: z.ZodNumber;
+        outputReserveTokens: z.ZodNumber;
+        requestTimeoutMs: z.ZodNumber;
+        maxReadOnlyRetries: z.ZodNumber;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    callerId: z.ZodString;
+    runnerId: z.ZodString;
+    reservationKey: z.ZodString;
+    runnerCapacity: z.ZodNumber;
+    runnerLimits: z.ZodObject<{
+      cpu: z.ZodNumber;
+      memoryMiB: z.ZodNumber;
+      timeoutMs: z.ZodNumber;
+    }, z.core.$strict>;
+    maximumAttempts: z.ZodNumber;
+    maximumReservedMs: z.ZodNumber;
+    templateVersion: z.ZodString;
+    checkConfigHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  recordVerifiedWork: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    outcome: z.ZodEnum<{
+      success: "success";
+      "completed-with-findings": "completed-with-findings";
+    }>;
+    evidence: z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+    }, z.core.$strict>;
+    outputs: z.ZodArray<z.ZodObject<{
+      slot: z.ZodString;
+      ref: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>;
+    }, z.core.$strict>>;
+    codeCommit: z.ZodNullable<z.ZodString>;
+    verificationOperationId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+  }, z.core.$strict>;
+  listScheduledDispatches: z.ZodObject<{
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  markScheduledDispatchSent: z.ZodObject<{
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    callerId: z.ZodString;
+  }, z.core.$strict>;
+  reconcileScheduledDispatch: z.ZodObject<{
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    callerId: z.ZodString;
+  }, z.core.$strict>;
+  transitionAttempt: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    expectedState: z.ZodEnum<{
+      SUCCEEDED: "SUCCEEDED";
+      FAILED: "FAILED";
+      STOPPING: "STOPPING";
+      OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+      INTERRUPTED: "INTERRUPTED";
+      RESERVED: "RESERVED";
+      SUBMITTED: "SUBMITTED";
+      WORKING: "WORKING";
+      INPUT_REQUIRED: "INPUT_REQUIRED";
+      VERIFYING: "VERIFYING";
+      CANCELLED: "CANCELLED";
+    }>;
+    state: z.ZodEnum<{
+      SUCCEEDED: "SUCCEEDED";
+      FAILED: "FAILED";
+      STOPPING: "STOPPING";
+      OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+      INTERRUPTED: "INTERRUPTED";
+      RESERVED: "RESERVED";
+      SUBMITTED: "SUBMITTED";
+      WORKING: "WORKING";
+      INPUT_REQUIRED: "INPUT_REQUIRED";
+      VERIFYING: "VERIFYING";
+      CANCELLED: "CANCELLED";
+    }>;
+    evidenceRef: z.ZodOptional<z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  setControlIntent: z.ZodObject<{
+    action: z.ZodEnum<{
+      pause: "pause";
+      cancel: "cancel";
+    }>;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  finishRun: z.ZodObject<{
+    outcome: z.ZodEnum<{
+      FAILED: "FAILED";
+      CANCELLED: "CANCELLED";
+    }>;
+    reason: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  lookupOperation: z.ZodObject<{
+    principalId: z.ZodString;
+    scopeId: z.ZodString;
+    idempotencyKey: z.ZodUUID;
+  }, z.core.$strict>;
+  getOperation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getRun: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getAttempt: z.ZodObject<{
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+  }, z.core.$strict>;
+  listEvents: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    afterSeq: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  claimOutbox: z.ZodObject<{
+    workerId: z.ZodString;
+    limit: z.ZodDefault<z.ZodNumber>;
+    leaseMs: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  settleOutbox: z.ZodObject<{
+    outboxId: z.ZodString;
+    workerId: z.ZodString;
+    deliveryAttempt: z.ZodNumber;
+    outcome: z.ZodEnum<{
+      RECONCILE: "RECONCILE";
+      ACKED: "ACKED";
+    }>;
+  }, z.core.$strict>;
+  inspect: z.ZodObject<{}, z.core.$strict>;
+  beginObjectWrite: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    expectedHash: z.ZodString;
+    expectedSize: z.ZodNumber;
+    mimeType: z.ZodString;
+    target: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      kind: z.ZodLiteral<"releaseExport">;
+      exportId: z.ZodString;
+      generation: z.ZodNumber;
+      claimToken: z.ZodUUID;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      materialKey: z.ZodString;
+      kind: z.ZodLiteral<"releaseDelivery">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      kind: z.ZodLiteral<"verifiedRepair">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      kind: z.ZodLiteral<"workVerification">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      materialKey: z.ZodString;
+      kind: z.ZodLiteral<"qualityMaterial">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      materialKey: z.ZodString;
+      kind: z.ZodLiteral<"workspacePreservation">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      ordinal: z.ZodNumber;
+      materialKey: z.ZodUnion<readonly [z.ZodLiteral<"report">, z.ZodString]>;
+      kind: z.ZodLiteral<"candidateMaterial">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"content">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"attachment">;
+      clientAttachmentId: z.ZodUUID;
+      name: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"message">;
+      sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+      clientMessageId: z.ZodString;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      stepNo: z.ZodOptional<z.ZodNumber>;
+      messageKind: z.ZodEnum<{
+        user: "user";
+        assistant: "assistant";
+        "tool-call": "tool-call";
+        "tool-result": "tool-result";
+        "context-summary": "context-summary";
+      }>;
+      toolCallId: z.ZodOptional<z.ZodString>;
+      sourceRef: z.ZodOptional<z.ZodObject<{
+        messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+      }, z.core.$strict>>;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"context">;
+      manifest: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.context.v1">;
+        sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+        roleSnapshotId: z.core.$ZodBranded<z.ZodString, "role", "out">;
+        throughMessageSeq: z.ZodNumber;
+        configHash: z.ZodString;
+        messages: z.ZodArray<z.ZodObject<{
+          messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+          seq: z.ZodNumber;
+          sha256: z.ZodString;
+        }, z.core.$strict>>;
+        summaryContentHash: z.ZodOptional<z.ZodString>;
+      }, z.core.$strict>;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"modelRequest">;
+      sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+      stepNo: z.ZodNumber;
+      contextSnapshotId: z.ZodString;
+      configHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"modelResponse">;
+      sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+      stepNo: z.ZodNumber;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      state: z.ZodEnum<{
+        FAILED: "FAILED";
+        RESPONDED: "RESPONDED";
+        INTERRUPTED: "INTERRUPTED";
+      }>;
+      providerRequestId: z.ZodOptional<z.ZodString>;
+      usage: z.ZodOptional<z.ZodObject<{
+        inputTokens: z.ZodNumber;
+        outputTokens: z.ZodNumber;
+        source: z.ZodEnum<{
+          provider: "provider";
+          estimated: "estimated";
+        }>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>], "kind">;
+  }, z.core.$strict>;
+  getObjectWrite: z.ZodObject<{
+    principalId: z.ZodString;
+    writeId: z.ZodString;
+  }, z.core.$strict>;
+  sealObjectWrite: z.ZodObject<{
+    principalId: z.ZodString;
+    writeId: z.ZodString;
+  }, z.core.$strict>;
+  commitObjectWrite: z.ZodObject<{
+    principalId: z.ZodString;
+    writeId: z.ZodString;
+  }, z.core.$strict>;
+  failObjectWrite: z.ZodObject<{
+    principalId: z.ZodString;
+    writeId: z.ZodString;
+    error: z.ZodString;
+  }, z.core.$strict>;
+  scanObjectWrites: z.ZodObject<{
+    afterWriteId: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  ensureSession: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+  }, z.core.$strict>;
+  getSession: z.ZodObject<{
+    principalId: z.ZodString;
+    sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  }, z.core.$strict>;
+  closeSession: z.ZodObject<{
+    principalId: z.ZodString;
+    sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  }, z.core.$strict>;
+  listSessionMessages: z.ZodObject<{
+    afterSeq: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+  }, z.core.$strict>;
+  getModelStep: z.ZodObject<{
+    principalId: z.ZodString;
+    sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+    stepNo: z.ZodNumber;
+  }, z.core.$strict>;
+  markModelStepSent: z.ZodObject<{
+    principalId: z.ZodString;
+    sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+    stepNo: z.ZodNumber;
+  }, z.core.$strict>;
+  resolveContentRead: z.ZodObject<{
+    principalId: z.ZodString;
+    reference: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      kind: z.ZodLiteral<"releaseExport">;
+      exportId: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"exportMaterial">;
+      exportId: z.ZodString;
+      materialKey: z.ZodString;
+      generation: z.ZodNumber;
+      claimToken: z.ZodUUID;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      materialKey: z.ZodString;
+      kind: z.ZodLiteral<"releaseDelivery">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      kind: z.ZodLiteral<"verifiedRepair">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      kind: z.ZodLiteral<"workVerification">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      materialKey: z.ZodString;
+      kind: z.ZodLiteral<"qualityMaterial">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      materialKey: z.ZodString;
+      kind: z.ZodLiteral<"workspacePreservation">;
+    }, z.core.$strict>, z.ZodObject<{
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      ordinal: z.ZodNumber;
+      materialKey: z.ZodUnion<readonly [z.ZodLiteral<"report">, z.ZodString]>;
+      kind: z.ZodLiteral<"candidateMaterial">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"attachment">;
+      attachmentId: z.core.$ZodBranded<z.ZodString, "attachment", "out">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"message">;
+      messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"inputMessage">;
+      messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"preparationInput">;
+      preparationAttemptId: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"preparationResponse">;
+      preparationAttemptId: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"artifact">;
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"context">;
+      contextSnapshotId: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"modelRequest">;
+      sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+      stepNo: z.ZodNumber;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"modelResponse">;
+      sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+      stepNo: z.ZodNumber;
+    }, z.core.$strict>], "kind">;
+  }, z.core.$strict>;
+  releaseContentRead: z.ZodObject<{
+    principalId: z.ZodString;
+    pinId: z.ZodString;
+  }, z.core.$strict>;
+  recoverContentReads: z.ZodObject<{}, z.core.$strict>;
+  listContentObjects: z.ZodObject<{
+    afterHash: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  markContentMissing: z.ZodObject<{
+    contentHash: z.ZodString;
+    error: z.ZodString;
+  }, z.core.$strict>;
+  beginContentDeletion: z.ZodObject<{
+    contentHash: z.ZodString;
+  }, z.core.$strict>;
+  finishContentDeletion: z.ZodObject<{
+    contentHash: z.ZodString;
+  }, z.core.$strict>;
+  getRegistrySnapshot: z.ZodObject<{}, z.core.$strict>;
+  issueEndpointProbe: z.ZodObject<{
+    endpoint: z.ZodObject<{
+      endpointId: z.ZodString;
+      revision: z.ZodNumber;
+      role: z.ZodOptional<z.ZodEnum<{
+        product: "product";
+        architect: "architect";
+        developer: "developer";
+        tester: "tester";
+      }>>;
+      agentKey: z.ZodString;
+      hosting: z.ZodEnum<{
+        local: "local";
+        remote: "remote";
+      }>;
+      implementationVersion: z.ZodString;
+      address: z.ZodURL;
+      cardUrl: z.ZodURL;
+      cardHash: z.ZodString;
+      protocol: z.ZodLiteral<"1.0">;
+      sdkVersion: z.ZodLiteral<"1.3.0">;
+      supportedSkills: z.ZodArray<z.ZodString>;
+      streaming: z.ZodBoolean;
+      credentialRef: z.ZodString;
+      allowedCallers: z.ZodArray<z.ZodString>;
+      enabled: z.ZodBoolean;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  commitRegistry: z.ZodObject<{
+    manifest: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.agent-manifest.v1">;
+      manifestRevision: z.ZodString;
+      endpoints: z.ZodArray<z.ZodObject<{
+        endpointId: z.ZodString;
+        revision: z.ZodNumber;
+        role: z.ZodOptional<z.ZodEnum<{
+          product: "product";
+          architect: "architect";
+          developer: "developer";
+          tester: "tester";
+        }>>;
+        agentKey: z.ZodString;
+        hosting: z.ZodEnum<{
+          local: "local";
+          remote: "remote";
+        }>;
+        implementationVersion: z.ZodString;
+        address: z.ZodURL;
+        cardUrl: z.ZodURL;
+        cardHash: z.ZodString;
+        protocol: z.ZodLiteral<"1.0">;
+        sdkVersion: z.ZodLiteral<"1.3.0">;
+        supportedSkills: z.ZodArray<z.ZodString>;
+        streaming: z.ZodBoolean;
+        credentialRef: z.ZodString;
+        allowedCallers: z.ZodArray<z.ZodString>;
+        enabled: z.ZodBoolean;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    expectedProjectionRevision: z.ZodNumber;
+    checks: z.ZodArray<z.ZodObject<{
+      checkId: z.ZodString;
+      status: z.ZodEnum<{
+        HEALTHY: "HEALTHY";
+        UNHEALTHY: "UNHEALTHY";
+        NEEDS_REVIEW: "NEEDS_REVIEW";
+      }>;
+      observedCardHash: z.ZodNullable<z.ZodString>;
+      checkedAt: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+      errorCode: z.ZodNullable<z.ZodString>;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  recordEndpointCheck: z.ZodObject<{
+    checkId: z.ZodString;
+    status: z.ZodEnum<{
+      HEALTHY: "HEALTHY";
+      UNHEALTHY: "UNHEALTHY";
+      NEEDS_REVIEW: "NEEDS_REVIEW";
+    }>;
+    observedCardHash: z.ZodNullable<z.ZodString>;
+    checkedAt: z.ZodISODateTime;
+    expiresAt: z.ZodISODateTime;
+    errorCode: z.ZodNullable<z.ZodString>;
+  }, z.core.$strict>;
+  setEndpointLifecycle: z.ZodObject<{
+    actorId: z.ZodString;
+    endpointId: z.ZodString;
+    revision: z.ZodNumber;
+    lifecycle: z.ZodEnum<{
+      RETIRED: "RETIRED";
+      ACTIVE: "ACTIVE";
+      DRAINING: "DRAINING";
+    }>;
+    reason: z.ZodString;
+  }, z.core.$strict>;
+  assertRegistryTarget: z.ZodObject<{
+    endpointId: z.ZodString;
+    revision: z.ZodNumber;
+    role: z.ZodOptional<z.ZodEnum<{
+      product: "product";
+      architect: "architect";
+      developer: "developer";
+      tester: "tester";
+    }>>;
+    cardHash: z.ZodString;
+    generationId: z.ZodString;
+    projectionRevision: z.ZodNumber;
+  }, z.core.$strict>;
+  acceptA2AWork: z.ZodObject<{
+    generationId: z.ZodString;
+    projectionRevision: z.ZodNumber;
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    endpointRevision: z.ZodNumber;
+    delegation: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.work.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workRevision: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      endpointId: z.ZodString;
+      endpointRevision: z.ZodNumber;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      runEpoch: z.ZodNumber;
+      workEpoch: z.ZodNumber;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      inputManifestId: z.core.$ZodBranded<z.ZodString, "manifest", "out">;
+      roleSnapshotId: z.core.$ZodBranded<z.ZodString, "role", "out">;
+      originRole: z.ZodEnum<{
+        product: "product";
+        architect: "architect";
+        developer: "developer";
+        tester: "tester";
+      }>;
+      targetRole: z.ZodEnum<{
+        product: "product";
+        architect: "architect";
+        developer: "developer";
+        tester: "tester";
+      }>;
+      requestedOutputSchema: z.ZodString;
+    }, z.core.$strict>;
+    message: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+  }, z.core.$strict>;
+  getA2ATask: z.ZodObject<{
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+  }, z.core.$strict>;
+  listA2ATasks: z.ZodObject<{
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    afterId: z.ZodOptional<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  listA2ATaskEvents: z.ZodObject<{
+    afterSeq: z.ZodDefault<z.ZodNumber>;
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+  }, z.core.$strict>;
+  cancelA2ATask: z.ZodObject<{
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+  }, z.core.$strict>;
+  claimAcceptedWork: z.ZodObject<{
+    endpointId: z.ZodString;
+    workerId: z.ZodString;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  settleAcceptedWork: z.ZodObject<{
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+    state: z.ZodEnum<{
+      failed: "failed";
+      working: "working";
+      "input-required": "input-required";
+      "auth-required": "auth-required";
+      completed: "completed";
+      canceled: "canceled";
+      rejected: "rejected";
+    }>;
+    snapshot: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+    stopVerified: z.ZodDefault<z.ZodBoolean>;
+  }, z.core.$strict>;
+  recoverAcceptedWork: z.ZodObject<{}, z.core.$strict>;
+  getExecutionHost: z.ZodObject<{
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  getRuntimeWorkspaceRecovery: z.ZodObject<{
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  reconcileRuntimeWorkspaceResult: z.ZodObject<{
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  renewExecutionHost: z.ZodObject<{
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  getAcceptedTaskSnapshot: z.ZodObject<{
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  reconcileRuntimeTask: z.ZodObject<{
+    reason: z.ZodString;
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  beginRuntimeActivation: z.ZodObject<{
+    principalId: z.ZodString;
+    sessionId: z.core.$ZodBranded<z.ZodString, "session", "out">;
+    configHash: z.ZodString;
+    config: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+    maxSteps: z.ZodNumber;
+    tokenLimit: z.ZodNumber;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  assertRuntimeActivation: z.ZodObject<{
+    reservedTokens: z.ZodDefault<z.ZodNumber>;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  accountRuntimeModel: z.ZodObject<{
+    stepNo: z.ZodNumber;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  markRuntimeModelSent: z.ZodObject<{
+    stepNo: z.ZodNumber;
+    reservedTokens: z.ZodNumber;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  setRuntimeState: z.ZodObject<{
+    state: z.ZodEnum<{
+      FINISHED: "FINISHED";
+      FAILED: "FAILED";
+      WAITING: "WAITING";
+      RECONCILE: "RECONCILE";
+    }>;
+    reason: z.ZodOptional<z.ZodString>;
+    unknownUsage: z.ZodDefault<z.ZodBoolean>;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  prepareRuntimeTool: z.ZodObject<{
+    stepNo: z.ZodNumber;
+    toolCallId: z.ZodString;
+    toolName: z.ZodString;
+    argsHash: z.ZodString;
+    responseHash: z.ZodString;
+    effectClass: z.ZodEnum<{
+      READ: "READ";
+      IDEMPOTENT_WRITE: "IDEMPOTENT_WRITE";
+      NONIDEMPOTENT_WRITE: "NONIDEMPOTENT_WRITE";
+    }>;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  getRuntimeTool: z.ZodObject<{
+    stepNo: z.ZodNumber;
+    toolCallId: z.ZodString;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  markRuntimeToolSent: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  finishRuntimeTool: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    resultMessageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+    failed: z.ZodBoolean;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  markRuntimeToolUnknown: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    errorCode: z.ZodString;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  recoverRuntimeActivations: z.ZodObject<{}, z.core.$strict>;
+  publishRuntimeResult: z.ZodObject<{
+    stepNo: z.ZodNumber;
+    contentHash: z.ZodString;
+    output: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  prepareRuntimeWorkspaceResult: z.ZodObject<{
+    stepNo: z.ZodNumber;
+    contentHash: z.ZodString;
+    output: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+    activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+  }, z.core.$strict>;
+  checkInputAccess: z.ZodObject<{
+    projectId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "prj", "out">>;
+    runId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "run", "out">>;
+    write: z.ZodDefault<z.ZodBoolean>;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  createInputProject: z.ZodObject<{
+    meta: z.ZodObject<{
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+      principalId: z.ZodString;
+    }, z.core.$strict>;
+    name: z.ZodString;
+    baseCommit: z.ZodString;
+    bodyHash: z.ZodString;
+    attachmentIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "attachment", "out">>;
+    clientDraftId: z.ZodUUID;
+  }, z.core.$strict>;
+  createInputTask: z.ZodObject<{
+    meta: z.ZodObject<{
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+      principalId: z.ZodString;
+    }, z.core.$strict>;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    bodyHash: z.ZodString;
+    body: z.ZodObject<{
+      kind: z.ZodEnum<{
+        ITERATION: "ITERATION";
+        FIX: "FIX";
+      }>;
+      title: z.ZodString;
+      goal: z.ZodObject<{
+        text: z.ZodUnion<readonly [z.ZodString, z.ZodLiteral<"">]>;
+        attachmentIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "attachment", "out">>;
+      }, z.core.$strict>;
+      baseAcceptedReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      clientDraftId: z.ZodUUID;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  appendInputMessage: z.ZodObject<{
+    meta: z.ZodObject<{
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+      principalId: z.ZodString;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    bodyHash: z.ZodString;
+    body: z.ZodObject<{
+      text: z.ZodString;
+      attachmentIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "attachment", "out">>;
+      clientMessageId: z.ZodUUID;
+      intentHint: z.ZodOptional<z.ZodEnum<{
+        change: "change";
+        query: "query";
+        unsure: "unsure";
+      }>>;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getInputOperation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  lookupInputOperation: z.ZodObject<{
+    scopeId: z.ZodString;
+    idempotencyKey: z.ZodUUID;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getInputWorkspace: z.ZodObject<{
+    limit: z.ZodDefault<z.ZodNumber>;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    runId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "run", "out">>;
+    afterMessageId: z.ZodOptional<z.ZodString>;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getWorkbenchSource: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ref: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+      kind: z.ZodLiteral<"artifact">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"message">;
+      messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+    }, z.core.$strict>, z.ZodObject<{
+      kind: z.ZodLiteral<"requirement">;
+      requirementId: z.core.$ZodBranded<z.ZodString, "requirement", "out">;
+      requirementRevision: z.ZodNumber;
+    }, z.core.$strict>], "kind">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  listInputProjects: z.ZodObject<{
+    cursor: z.ZodOptional<z.ZodObject<{
+      updatedAt: z.ZodISODateTime;
+      projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    }, z.core.$strict>>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getInputEventWindow: z.ZodObject<{
+    limit: z.ZodDefault<z.ZodNumber>;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    afterSeq: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  listInputEvents: z.ZodObject<{
+    limit: z.ZodDefault<z.ZodNumber>;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    afterSeq: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getInputAttachment: z.ZodObject<{
+    attachmentId: z.core.$ZodBranded<z.ZodString, "attachment", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  removeInputAttachment: z.ZodObject<{
+    attachmentId: z.core.$ZodBranded<z.ZodString, "attachment", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  claimUploadIntake: z.ZodObject<{
+    meta: z.ZodObject<{
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+      principalId: z.ZodString;
+    }, z.core.$strict>;
+    claimToken: z.ZodUUID;
+  }, z.core.$strict>;
+  getUploadIntake: z.ZodObject<{
+    intakeId: z.ZodString;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  validateUploadIntake: z.ZodObject<{
+    requestHash: z.ZodString;
+    contentHash: z.ZodString;
+    byteSize: z.ZodNumber;
+    name: z.ZodString;
+    clientAttachmentId: z.ZodUUID;
+    intakeId: z.ZodString;
+    claimToken: z.ZodUUID;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  commitUploadIntake: z.ZodObject<{
+    contentHash: z.ZodString;
+    attachmentId: z.core.$ZodBranded<z.ZodString, "attachment", "out">;
+    intakeId: z.ZodString;
+    claimToken: z.ZodUUID;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  failUploadIntake: z.ZodObject<{
+    errorCode: z.ZodString;
+    intakeId: z.ZodString;
+    claimToken: z.ZodUUID;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  recoverUploadIntakes: z.ZodObject<{}, z.core.$strict>;
+  ensurePreparationJob: z.ZodObject<{
+    processingOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getPreparationJob: z.ZodObject<{
+    jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getUnderstanding: z.ZodObject<{
+    requirementRevision: z.ZodOptional<z.ZodNumber>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  answerPreparationQuestions: z.ZodObject<{
+    meta: z.ZodObject<{
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+      principalId: z.ZodString;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    body: z.ZodObject<{
+      answers: z.ZodArray<z.ZodObject<{
+        questionId: z.core.$ZodBranded<z.ZodString, "question", "out">;
+        questionRevision: z.ZodNumber;
+        value: z.ZodJSONSchema;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  retryPreparationInterpretation: z.ZodObject<{
+    meta: z.ZodObject<{
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+      principalId: z.ZodString;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    failedInterpretationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listPreparationJobs: z.ZodObject<{
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  failUnreservedPreparation: z.ZodObject<{
+    jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+    errorCode: z.ZodEnum<{
+      BASIS_SUPERSEDED: "BASIS_SUPERSEDED";
+      PREPARATION_INPUT_LIMIT: "PREPARATION_INPUT_LIMIT";
+      CONTENT_UNAVAILABLE: "CONTENT_UNAVAILABLE";
+      PREPARATION_GIT_SOURCE_INVALID: "PREPARATION_GIT_SOURCE_INVALID";
+      PREPARATION_BUDGET_EXHAUSTED: "PREPARATION_BUDGET_EXHAUSTED";
+    }>;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getPreparationContext: z.ZodObject<{
+    jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  registerPreparationBootstrap: z.ZodObject<{
+    jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+    path: z.ZodString;
+    contentHash: z.ZodString;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  reservePreparation: z.ZodObject<{
+    jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+    basisHash: z.ZodString;
+    profile: z.ZodObject<{
+      providerId: z.ZodString;
+      model: z.ZodString;
+      promptHash: z.ZodString;
+      providerHash: z.ZodString;
+      maxOutputTokens: z.ZodNumber;
+      tokenLimit: z.ZodNumber;
+      maxInputBytes: z.ZodNumber;
+    }, z.core.$strict>;
+    profileHash: z.ZodString;
+    inputHash: z.ZodString;
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    endpointRevision: z.ZodNumber;
+    registryGenerationId: z.ZodString;
+    projectionRevision: z.ZodNumber;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  markPreparationDispatchSent: z.ZodObject<{
+    preparationAttemptId: z.ZodString;
+  }, z.core.$strict>;
+  lookupPreparationDispatch: z.ZodObject<{
+    preparationAttemptId: z.ZodString;
+  }, z.core.$strict>;
+  reconcilePreparationDispatch: z.ZodObject<{
+    preparationAttemptId: z.ZodString;
+  }, z.core.$strict>;
+  acceptPreparationTask: z.ZodObject<{
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    endpointRevision: z.ZodNumber;
+    delegation: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preparation.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+      preparationAttemptId: z.ZodString;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      endpointId: z.ZodString;
+      endpointRevision: z.ZodNumber;
+      role: z.ZodEnum<{
+        product: "product";
+        architect: "architect";
+      }>;
+      inputHash: z.ZodString;
+      profileHash: z.ZodString;
+      basisHash: z.ZodString;
+    }, z.core.$strict>;
+    message: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+    registryGenerationId: z.ZodString;
+    projectionRevision: z.ZodNumber;
+  }, z.core.$strict>;
+  getPreparationTask: z.ZodObject<{
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+  }, z.core.$strict>;
+  listPreparationTasks: z.ZodObject<{
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    afterId: z.ZodOptional<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  listPreparationTaskEvents: z.ZodObject<{
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+    afterSeq: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  cancelPreparationTask: z.ZodObject<{
+    callerId: z.ZodString;
+    endpointId: z.ZodString;
+    taskId: z.ZodString;
+  }, z.core.$strict>;
+  claimPreparationTasks: z.ZodObject<{
+    endpointId: z.ZodString;
+    workerId: z.ZodString;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  getPreparationHost: z.ZodObject<{
+    preparationAttemptId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  preparePreparationStep: z.ZodObject<{
+    requestHash: z.ZodString;
+    reservedTokens: z.ZodNumber;
+    preparationAttemptId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  markPreparationSent: z.ZodObject<{
+    preparationAttemptId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  savePreparationResponse: z.ZodObject<{
+    responseHash: z.ZodString;
+    providerRequestId: z.ZodString;
+    usage: z.ZodObject<{
+      inputTokens: z.ZodNumber;
+      outputTokens: z.ZodNumber;
+      source: z.ZodEnum<{
+        provider: "provider";
+        estimated: "estimated";
+      }>;
+    }, z.core.$strict>;
+    preparationAttemptId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  failPreparation: z.ZodObject<{
+    errorCode: z.ZodString;
+    unknown: z.ZodBoolean;
+    knownFailure: z.ZodDefault<z.ZodBoolean>;
+    preparationAttemptId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  applyPreparationResponse: z.ZodObject<{
+    outputHash: z.ZodString;
+    output: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+    planContentHash: z.ZodOptional<z.ZodString>;
+    preparationAttemptId: z.ZodString;
+    workerId: z.ZodString;
+    claimToken: z.ZodString;
+  }, z.core.$strict>;
+  recoverPreparations: z.ZodObject<{}, z.core.$strict>;
+  authorizeMcpAction: z.ZodObject<{
+    toolName: z.ZodString;
+    action: z.ZodEnum<{
+      read: "read";
+      write: "write";
+      stop: "stop";
+    }>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  refreshMcpPermit: z.ZodObject<{
+    toolName: z.ZodString;
+    action: z.ZodEnum<{
+      read: "read";
+      write: "write";
+      stop: "stop";
+    }>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  createIssue: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    args: z.ZodObject<{
+      title: z.ZodString;
+      description: z.ZodString;
+      severity: z.ZodEnum<{
+        LOW: "LOW";
+        MEDIUM: "MEDIUM";
+        HIGH: "HIGH";
+        CRITICAL: "CRITICAL";
+      }>;
+      evidence: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  linkIssueFix: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    args: z.ZodObject<{
+      issueId: z.ZodString;
+      issueRevision: z.ZodNumber;
+      fixWorkId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+    }, z.core.$strict>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  recordIssueVerification: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    args: z.ZodObject<{
+      issueId: z.ZodString;
+      issueRevision: z.ZodNumber;
+      fixAttemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      verificationAttemptId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "attempt", "out">>;
+      outcome: z.ZodEnum<{
+        FAILED: "FAILED";
+        PASSED: "PASSED";
+        NOT_VERIFIED: "NOT_VERIFIED";
+      }>;
+      evidence: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  getIssue: z.ZodObject<{
+    issueId: z.ZodString;
+    afterRevision: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  getIssueOperation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  createPipeline: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    definition: z.ZodObject<{
+      definitionId: z.ZodString;
+      version: z.ZodString;
+      stages: z.ZodArray<z.ZodObject<{
+        stageId: z.ZodString;
+        kind: z.ZodEnum<{
+          preview: "preview";
+          build: "build";
+          install: "install";
+          unit: "unit";
+          e2e: "e2e";
+        }>;
+        imageDigest: z.ZodString;
+        resourceLimits: z.ZodObject<{
+          cpu: z.ZodNumber;
+          memoryMiB: z.ZodNumber;
+          pids: z.ZodNumber;
+          temporaryMiB: z.ZodNumber;
+          timeoutMs: z.ZodNumber;
+        }, z.core.$strict>;
+        networkPolicyRef: z.ZodLiteral<"none">;
+        outputSpec: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    workspaceRef: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  getPipeline: z.ZodObject<{
+    pipelineId: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  getPipelineOperation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  stopPipeline: z.ZodObject<{
+    pipelineId: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+  }, z.core.$strict>;
+  listPipelineStages: z.ZodObject<{
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  markPipelineStageSent: z.ZodObject<{
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+  }, z.core.$strict>;
+  getPipelineStagePermit: z.ZodObject<{
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+  }, z.core.$strict>;
+  recordPipelineStage: z.ZodObject<{
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+    job: z.ZodObject<{
+      jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      requestHash: z.ZodString;
+      request: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+      executionProfile: z.ZodDefault<z.ZodNullable<z.ZodObject<{
+        runnerId: z.ZodString;
+        commandHash: z.ZodString;
+      }, z.core.$strict>>>;
+      endedAt: z.ZodDefault<z.ZodNullable<z.ZodISODateTime>>;
+      state: z.ZodEnum<{
+        EXITED: "EXITED";
+        QUEUED: "QUEUED";
+        STARTING: "STARTING";
+        RUNNING: "RUNNING";
+        STOPPING: "STOPPING";
+        OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+      }>;
+      exitCode: z.ZodNullable<z.ZodNumber>;
+      errorCode: z.ZodNullable<z.ZodString>;
+      stopRequested: z.ZodBoolean;
+      logCursor: z.ZodNumber;
+      containerId: z.ZodNullable<z.ZodString>;
+      startedAt: z.ZodNullable<z.ZodISODateTime>;
+      stopEvidence: z.ZodNullable<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
+      outputRefs: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        sha256: z.ZodString;
+        byteSize: z.ZodNumber;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  markPipelineStageUnknown: z.ZodObject<{
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+    errorCode: z.ZodString;
+  }, z.core.$strict>;
+  beginRepoOperation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    toolName: z.ZodEnum<{
+      "repo.commit": "repo.commit";
+      "repo.integrate": "repo.integrate";
+    }>;
+    args: z.ZodUnion<readonly [z.ZodObject<{
+      workspaceRef: z.ZodString;
+      baseCommit: z.ZodString;
+      message: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      workspaceRef: z.ZodString;
+      baseCommit: z.ZodString;
+      commit: z.ZodString;
+    }, z.core.$strict>]>;
+    binding: z.ZodObject<{
+      workspaceRef: z.ZodString;
+      resourceId: z.ZodString;
+      projectResourceId: z.ZodString;
+      projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      baseCommit: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getRepoOperation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareRepoOperation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    prepared: z.ZodObject<{
+      commit: z.ZodString;
+      tree: z.ZodString;
+      ref: z.ZodString;
+      expected: z.ZodNullable<z.ZodString>;
+      commitBody: z.ZodNullable<z.ZodString>;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  finishRepoOperation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    state: z.ZodEnum<{
+      SUCCEEDED: "SUCCEEDED";
+      FAILED: "FAILED";
+      CONFLICT: "CONFLICT";
+    }>;
+    result: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+  }, z.core.$strict>;
+  beginManagedRepository: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    resourceId: z.ZodString;
+    templateCommit: z.ZodString;
+  }, z.core.$strict>;
+  completeManagedRepository: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    identity: z.ZodObject<{
+      root: z.ZodString;
+      gitDirectory: z.ZodString;
+      commonDirectory: z.ZodString;
+      rootDevice: z.ZodString;
+      rootFileId: z.ZodString;
+      gitDevice: z.ZodString;
+      gitFileId: z.ZodString;
+    }, z.core.$strict>;
+    manifest: z.ZodObject<{
+      commit: z.ZodString;
+      tree: z.ZodString;
+      files: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        mode: z.ZodEnum<{
+          100644: "100644";
+          100755: "100755";
+        }>;
+        objectId: z.ZodString;
+        byteSize: z.ZodNumber;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+      byteSize: z.ZodNumber;
+      sha256: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getManagedRepository: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+  }, z.core.$strict>;
+  beginWorkspaceAllocation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    workspaceRef: z.ZodString;
+    repositoryResourceId: z.ZodString;
+    runnerId: z.ZodString;
+    kind: z.ZodEnum<{
+      development: "development";
+      verification: "verification";
+    }>;
+    baseCommit: z.ZodString;
+  }, z.core.$strict>;
+  getWorkspaceAllocation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getAllocationRepository: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  authorizeWorkspaceAllocation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  completeWorkspaceAllocation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    identity: z.ZodObject<{
+      root: z.ZodString;
+      gitDirectory: z.ZodString;
+      commonDirectory: z.ZodString;
+      rootDevice: z.ZodString;
+      rootFileId: z.ZodString;
+      gitDevice: z.ZodString;
+      gitFileId: z.ZodString;
+    }, z.core.$strict>;
+    manifest: z.ZodObject<{
+      commit: z.ZodString;
+      tree: z.ZodString;
+      files: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        mode: z.ZodEnum<{
+          100644: "100644";
+          100755: "100755";
+        }>;
+        objectId: z.ZodString;
+        byteSize: z.ZodNumber;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+      byteSize: z.ZodNumber;
+      sha256: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  markWorkspaceAllocationUncertain: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    errorCode: z.ZodString;
+  }, z.core.$strict>;
+  beginRepoFileOperation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    toolName: z.ZodEnum<{
+      "repo.writeFile": "repo.writeFile";
+      "repo.deleteFile": "repo.deleteFile";
+    }>;
+    args: z.ZodUnion<readonly [z.ZodObject<{
+      workspaceRef: z.ZodString;
+      baseCommit: z.ZodString;
+      path: z.ZodString;
+      expectedSha256: z.ZodNullable<z.ZodString>;
+      text: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      workspaceRef: z.ZodString;
+      baseCommit: z.ZodString;
+      path: z.ZodString;
+      expectedSha256: z.ZodString;
+    }, z.core.$strict>]>;
+    binding: z.ZodObject<{
+      workspaceRef: z.ZodString;
+      resourceId: z.ZodString;
+      projectResourceId: z.ZodString;
+      projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      baseCommit: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getRepoFileOperation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareRepoFileOperation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    proof: z.ZodObject<{
+      directories: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        device: z.ZodString;
+        fileId: z.ZodString;
+      }, z.core.$strict>>;
+      file: z.ZodObject<{
+        path: z.ZodString;
+        device: z.ZodString;
+        fileId: z.ZodString;
+      }, z.core.$strict>;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  finishRepoFileOperation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    state: z.ZodEnum<{
+      SUCCEEDED: "SUCCEEDED";
+      FAILED: "FAILED";
+    }>;
+    result: z.ZodRecord<z.ZodString, z.ZodJSONSchema>;
+  }, z.core.$strict>;
+  confirmRepoFileCleanup: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  assertRepoWorkspaceSettled: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    workspaceRef: z.ZodString;
+  }, z.core.$strict>;
+  beginSourceArchive: z.ZodObject<{
+    allocationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    commitOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getSourceArchive: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareSourceArchive: z.ZodObject<{
+    requestHash: z.ZodString;
+    manifest: z.ZodObject<{
+      commit: z.ZodString;
+      tree: z.ZodString;
+      files: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        mode: z.ZodEnum<{
+          100644: "100644";
+          100755: "100755";
+        }>;
+        objectId: z.ZodString;
+        byteSize: z.ZodNumber;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+      byteSize: z.ZodNumber;
+      sha256: z.ZodString;
+    }, z.core.$strict>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  completeSourceArchive: z.ZodObject<{
+    requestHash: z.ZodString;
+    acknowledgement: z.ZodObject<{
+      commit: z.ZodString;
+      tree: z.ZodString;
+      manifestSha256: z.ZodString;
+      repositoryIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      archiveRef: z.ZodString;
+      sourceRef: z.ZodString;
+    }, z.core.$strict>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markSourceArchiveUncertain: z.ZodObject<{
+    requestHash: z.ZodString;
+    errorCode: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  failSourceArchive: z.ZodObject<{
+    requestHash: z.ZodString;
+    errorCode: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getCandidateSourceBasis: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    purpose: z.ZodEnum<{
+      "run-candidate": "run-candidate";
+      "work-input": "work-input";
+    }>;
+    workId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+  }, z.core.$strict>;
+  assertCandidateSourceBasis: z.ZodObject<{
+    basisSha256: z.ZodString;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    purpose: z.ZodEnum<{
+      "run-candidate": "run-candidate";
+      "work-input": "work-input";
+    }>;
+    workId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+  }, z.core.$strict>;
+  beginCandidateIntegration: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    originOperationId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    purpose: z.ZodEnum<{
+      "run-candidate": "run-candidate";
+      "work-input": "work-input";
+    }>;
+    workId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+  }, z.core.$strict>;
+  getCandidateIntegration: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getCandidateIntegrationBasis: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getCandidateIntegrationManifest: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getCandidateIntegrationStep: z.ZodObject<{
+    ordinal: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  beginCandidateStep: z.ZodObject<{
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareCandidateStep: z.ZodObject<{
+    bases: z.ZodArray<z.ZodString>;
+    tree: z.ZodString;
+    clean: z.ZodBoolean;
+    reportSha256: z.ZodString;
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markCandidateStepSent: z.ZodObject<{
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  acknowledgeCandidateStep: z.ZodObject<{
+    proof: z.ZodObject<{
+      repositoryIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      commit: z.ZodString;
+      tree: z.ZodString;
+      ref: z.ZodString;
+    }, z.core.$strict>;
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareCandidateIntegration: z.ZodObject<{
+    manifest: z.ZodObject<{
+      commit: z.ZodString;
+      tree: z.ZodString;
+      files: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        mode: z.ZodEnum<{
+          100644: "100644";
+          100755: "100755";
+        }>;
+        objectId: z.ZodString;
+        byteSize: z.ZodNumber;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+      byteSize: z.ZodNumber;
+      sha256: z.ZodString;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markCandidateIntegrationSent: z.ZodObject<{
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  acknowledgeCandidateIntegration: z.ZodObject<{
+    acknowledgement: z.ZodObject<{
+      repositoryIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      refs: z.ZodArray<z.ZodObject<{
+        ref: z.ZodString;
+        commit: z.ZodString;
+      }, z.core.$strict>>;
+      manifestSha256: z.ZodString;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  failUnsentCandidateIntegration: z.ZodObject<{
+    errorCode: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  recordCandidateCasRejection: z.ZodObject<{
+    originalRefsAbsent: z.ZodLiteral<true>;
+    gitChildExited: z.ZodLiteral<true>;
+    observedHead: z.ZodNullable<z.ZodString>;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markCandidateIntegrationUncertain: z.ZodObject<{
+    errorCode: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getQualifiedCandidateSnapshot: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    purpose: z.ZodEnum<{
+      "run-candidate": "run-candidate";
+      "work-input": "work-input";
+    }>;
+    workId: z.ZodOptional<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+  }, z.core.$strict>;
+  getCandidateMaterial: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    ordinal: z.ZodNumber;
+    materialKey: z.ZodUnion<readonly [z.ZodLiteral<"report">, z.ZodString]>;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  declareCandidateMaterials: z.ZodObject<{
+    materials: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+      kind: z.ZodLiteral<"REPORT">;
+      mergeSha256: z.ZodString;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+    }, z.core.$strict>, z.ZodObject<{
+      objectId: z.ZodString;
+      mode: z.ZodEnum<{
+        100644: "100644";
+        100755: "100755";
+      }>;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      path: z.ZodString;
+      version: z.ZodString;
+      kind: z.ZodLiteral<"FILE">;
+    }, z.core.$strict>, z.ZodObject<{
+      objectId: z.ZodString;
+      path: z.ZodString;
+      version: z.ZodString;
+      kind: z.ZodLiteral<"DIRECTORY">;
+    }, z.core.$strict>, z.ZodObject<{
+      path: z.ZodString;
+      version: z.ZodString;
+      kind: z.ZodLiteral<"ABSENT">;
+    }, z.core.$strict>], "kind">>;
+    requestHash: z.ZodString;
+    ordinal: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listCandidateMaterials: z.ZodObject<{
+    afterKey: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    ordinal: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  sealCandidateConflictMaterials: z.ZodObject<{
+    materialCount: z.ZodNumber;
+    manifestSha256: z.ZodString;
+    requestHash: z.ZodString;
+    ordinal: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  acknowledgeCandidateConflict: z.ZodObject<{
+    proof: z.ZodObject<{
+      repositoryIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      reportSha256: z.ZodString;
+      manifestSha256: z.ZodString;
+      materialCount: z.ZodNumber;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    ordinal: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getWorkspacePreservationInputs: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    allocationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  beginWorkspacePreservation: z.ZodObject<{
+    allocationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getWorkspacePreservation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareWorkspacePreservation: z.ZodObject<{
+    manifest: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.workspace-preservation.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      allocationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      workspaceRef: z.ZodString;
+      basisSha256: z.ZodString;
+      headCommit: z.ZodString;
+      repositoryIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      workspaceIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      parentMarkerSha256: z.ZodString;
+      retained: z.ZodArray<z.ZodObject<{
+        ref: z.ZodString;
+        commit: z.ZodString;
+        manifest: z.ZodObject<{
+          commit: z.ZodString;
+          tree: z.ZodString;
+          files: z.ZodArray<z.ZodObject<{
+            path: z.ZodString;
+            mode: z.ZodEnum<{
+              100644: "100644";
+              100755: "100755";
+            }>;
+            objectId: z.ZodString;
+            byteSize: z.ZodNumber;
+            sha256: z.ZodString;
+          }, z.core.$strict>>;
+          byteSize: z.ZodNumber;
+          sha256: z.ZodString;
+        }, z.core.$strict>;
+      }, z.core.$strict>>;
+      snapshot: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.workspace-materials.v1">;
+        root: z.ZodString;
+        identity: z.ZodObject<{
+          device: z.ZodString;
+          fileId: z.ZodString;
+        }, z.core.$strict>;
+        entries: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+          kind: z.ZodLiteral<"FILE">;
+          path: z.ZodString;
+          identity: z.ZodObject<{
+            device: z.ZodString;
+            fileId: z.ZodString;
+          }, z.core.$strict>;
+          mode: z.ZodNumber;
+          links: z.ZodNumber;
+          mtimeNs: z.ZodString;
+          ctimeNs: z.ZodString;
+          byteSize: z.ZodNumber;
+          sha256: z.ZodString;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"DIRECTORY">;
+          path: z.ZodString;
+          identity: z.ZodObject<{
+            device: z.ZodString;
+            fileId: z.ZodString;
+          }, z.core.$strict>;
+          mode: z.ZodNumber;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"ABSENT">;
+          path: z.ZodString;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"EXCLUDED">;
+          path: z.ZodString;
+          reason: z.ZodEnum<{
+            "retained-git-repository": "retained-git-repository";
+            "rebuildable-node-modules": "rebuildable-node-modules";
+          }>;
+          identity: z.ZodObject<{
+            device: z.ZodString;
+            fileId: z.ZodString;
+          }, z.core.$strict>;
+        }, z.core.$strict>], "kind">>;
+        byteSize: z.ZodNumber;
+        sha256: z.ZodString;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listWorkspacePreservationMaterials: z.ZodObject<{
+    afterKey: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  completeWorkspacePreservation: z.ZodObject<{
+    acknowledgement: z.ZodObject<{
+      manifestSha256: z.ZodString;
+      snapshotSha256: z.ZodString;
+      materialCount: z.ZodNumber;
+      repositoryIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      workspaceIdentity: z.ZodObject<{
+        root: z.ZodString;
+        gitDirectory: z.ZodString;
+        commonDirectory: z.ZodString;
+        rootDevice: z.ZodString;
+        rootFileId: z.ZodString;
+        gitDevice: z.ZodString;
+        gitFileId: z.ZodString;
+      }, z.core.$strict>;
+      parentIdentity: z.ZodObject<{
+        device: z.ZodString;
+        fileId: z.ZodString;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  assertWorkspacePreservationReclaimable: z.ZodObject<{
+    manifestSha256: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  beginWorkspaceReclamation: z.ZodObject<{
+    preservationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getWorkspaceReclamation: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  assertWorkspaceReclamationReady: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markWorkspaceIsolationSent: z.ZodObject<{
+    receiptSha256: z.ZodString;
+    requestHash: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  acknowledgeWorkspaceIsolation: z.ZodObject<{
+    proof: z.ZodObject<{
+      sourceAbsent: z.ZodLiteral<true>;
+      trashIdentity: z.ZodObject<{
+        device: z.ZodString;
+        fileId: z.ZodString;
+      }, z.core.$strict>;
+      manifestSha256: z.ZodString;
+      receiptSha256: z.ZodString;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markWorkspaceDeletionSent: z.ZodObject<{
+    receiptSha256: z.ZodString;
+    requestHash: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  acknowledgeWorkspaceDeletion: z.ZodObject<{
+    proof: z.ZodObject<{
+      sourceAbsent: z.ZodLiteral<true>;
+      trashAbsent: z.ZodLiteral<true>;
+      receiptSha256: z.ZodString;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  markWorkspaceReclamationUncertain: z.ZodObject<{
+    errorCode: z.ZodString;
+    requestHash: z.ZodString;
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getManagedWorkspaceBinding: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    workspaceRef: z.ZodString;
+    runnerId: z.ZodString;
+  }, z.core.$strict>;
+  authorizeWorkspaceMaintenance: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    workspaceRef: z.ZodString;
+    runnerId: z.ZodString;
+  }, z.core.$strict>;
+  authorizeManagedWorkspaceAccess: z.ZodObject<{
+    permit: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      ownerKind: z.ZodLiteral<"workflowAttempt">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      runEpoch: z.ZodNumber;
+      workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+      workEpoch: z.ZodNumber;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      resources: z.ZodArray<z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodEnum<{
+          dataset: "dataset";
+          snapshot: "snapshot";
+          workspace: "workspace";
+          projectRepository: "projectRepository";
+        }>;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      ownerKind: z.ZodLiteral<"invocationAttempt">;
+      invocationId: z.core.$ZodBranded<z.ZodString, "invocation", "out">;
+      invocationEpoch: z.ZodNumber;
+      invocationAttemptId: z.core.$ZodBranded<z.ZodString, "iattempt", "out">;
+      resources: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"snapshot">;
+        resourceId: z.ZodString;
+        access: z.ZodLiteral<"read">;
+      }, z.core.$strict>, z.ZodObject<{
+        resourceId: z.ZodString;
+        access: z.ZodEnum<{
+          read: "read";
+          write: "write";
+        }>;
+        kind: z.ZodLiteral<"workspace">;
+      }, z.core.$strict>], "kind">>;
+      schemaVersion: z.ZodLiteral<"devmesh.permit.v1">;
+      grantId: z.core.$ZodBranded<z.ZodString, "grant", "out">;
+      activationId: z.core.$ZodBranded<z.ZodString, "activation", "out">;
+      notBefore: z.ZodISODateTime;
+      expiresAt: z.ZodISODateTime;
+    }, z.core.$strict>], "ownerKind">;
+    workspaceRef: z.ZodString;
+    runnerId: z.ZodString;
+    purpose: z.ZodEnum<{
+      fence: "fence";
+      execution: "execution";
+    }>;
+  }, z.core.$strict>;
+  registerQualityPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.quality-policy.v1">;
+      templateVersion: z.ZodString;
+      delivery: z.ZodOptional<z.ZodObject<{
+        producerId: z.ZodString;
+        architecture: z.ZodEnum<{
+          amd64: "amd64";
+          arm64: "arm64";
+        }>;
+        materials: z.ZodArray<z.ZodObject<{
+          key: z.ZodString;
+          path: z.ZodString;
+        }, z.core.$strict>>;
+      }, z.core.$strict>>;
+      producers: z.ZodArray<z.ZodObject<{
+        producerId: z.ZodString;
+        command: z.ZodArray<z.ZodString>;
+        imageDigest: z.ZodString;
+        pathPrefixes: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+      reports: z.ZodArray<z.ZodObject<{
+        reportId: z.ZodString;
+        producerId: z.ZodString;
+        format: z.ZodEnum<{
+          "istanbul-v1": "istanbul-v1";
+          "vitest-json-v1": "vitest-json-v1";
+        }>;
+        path: z.ZodString;
+        sourceInclude: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+      checks: z.ZodArray<z.ZodObject<{
+        checkId: z.ZodString;
+        kind: z.ZodEnum<{
+          command: "command";
+          tests: "tests";
+          coverage: "coverage";
+          human: "human";
+        }>;
+        producerIds: z.ZodArray<z.ZodString>;
+        reportIds: z.ZodArray<z.ZodString>;
+        requiredTests: z.ZodArray<z.ZodObject<{
+          path: z.ZodString;
+          fullName: z.ZodString;
+          requirementIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "requirement", "out">>;
+        }, z.core.$strict>>;
+      }, z.core.$strict>>;
+      business: z.ZodObject<{
+        include: z.ZodArray<z.ZodString>;
+        exclude: z.ZodArray<z.ZodObject<{
+          glob: z.ZodString;
+          reason: z.ZodString;
+        }, z.core.$strict>>;
+      }, z.core.$strict>;
+      thresholds: z.ZodObject<{
+        lines: z.ZodNumber;
+        branches: z.ZodNumber;
+      }, z.core.$strict>;
+      zeroBranches: z.ZodEnum<{
+        reject: "reject";
+        "complete-map-proves-none": "complete-map-proves-none";
+      }>;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getQualityPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    configHash: z.ZodString;
+  }, z.core.$strict>;
+  beginQualityVerification: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    allocationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    configHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getQualityVerification: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getQualitySourceManifest: z.ZodObject<{
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  bindQualityStage: z.ZodObject<{
+    producerId: z.ZodString;
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  listQualityStages: z.ZodObject<{
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  declareQualityOrigin: z.ZodObject<{
+    producerId: z.ZodString;
+    pipelineId: z.ZodString;
+    ordinal: z.ZodNumber;
+    execution: z.ZodObject<{
+      producerId: z.ZodString;
+      attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+      runnerId: z.ZodString;
+      jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      requestHash: z.ZodString;
+      targetCommit: z.ZodString;
+      checkConfigHash: z.ZodString;
+      commandHash: z.ZodString;
+      imageDigest: z.ZodString;
+      state: z.ZodEnum<{
+        EXITED: "EXITED";
+        QUEUED: "QUEUED";
+        STARTING: "STARTING";
+        RUNNING: "RUNNING";
+        STOPPING: "STOPPING";
+        OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+      }>;
+      exitCode: z.ZodNullable<z.ZodNumber>;
+      errorCode: z.ZodNullable<z.ZodString>;
+      stopRequested: z.ZodBoolean;
+      startedAt: z.ZodNullable<z.ZodISODateTime>;
+      finishedAt: z.ZodNullable<z.ZodISODateTime>;
+      log: z.ZodObject<{
+        sha256: z.ZodString;
+        size: z.ZodNumber;
+      }, z.core.$strict>;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  declareQualityMaterial: z.ZodObject<{
+    descriptor: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      sourceManifestSha256: z.ZodString;
+      topologySha256: z.ZodString;
+      allocationManifestSha256: z.ZodString;
+      instrumentation: z.ZodOptional<z.ZodObject<{
+        providerId: z.ZodString;
+        toolchainHash: z.ZodString;
+      }, z.core.$strict>>;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      kind: z.ZodLiteral<"SOURCE">;
+    }, z.core.$strict>, z.ZodObject<{
+      report: z.ZodObject<{
+        reportId: z.ZodString;
+        execution: z.ZodObject<{
+          producerId: z.ZodString;
+          attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+          runnerId: z.ZodString;
+          jobId: z.core.$ZodBranded<z.ZodString, "job", "out">;
+          operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          requestHash: z.ZodString;
+          targetCommit: z.ZodString;
+          checkConfigHash: z.ZodString;
+          commandHash: z.ZodString;
+          imageDigest: z.ZodString;
+          state: z.ZodEnum<{
+            EXITED: "EXITED";
+            QUEUED: "QUEUED";
+            STARTING: "STARTING";
+            RUNNING: "RUNNING";
+            STOPPING: "STOPPING";
+            OUTCOME_UNKNOWN: "OUTCOME_UNKNOWN";
+          }>;
+          exitCode: z.ZodNullable<z.ZodNumber>;
+          errorCode: z.ZodNullable<z.ZodString>;
+          stopRequested: z.ZodBoolean;
+          startedAt: z.ZodNullable<z.ZodISODateTime>;
+          finishedAt: z.ZodNullable<z.ZodISODateTime>;
+          log: z.ZodObject<{
+            sha256: z.ZodString;
+            size: z.ZodNumber;
+          }, z.core.$strict>;
+        }, z.core.$strict>;
+        outputPath: z.ZodString;
+        sha256: z.ZodString;
+        size: z.ZodNumber;
+      }, z.core.$strict>;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      kind: z.ZodLiteral<"REPORT">;
+    }, z.core.$strict>, z.ZodObject<{
+      producerId: z.ZodString;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      kind: z.ZodLiteral<"LOG">;
+    }, z.core.$strict>, z.ZodObject<{
+      evaluation: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.quality-evaluation.v1">;
+        targetCommit: z.ZodString;
+        checkConfigHash: z.ZodString;
+        sourceManifestSha256: z.ZodString;
+        topologySha256: z.ZodString;
+        automaticStatus: z.ZodEnum<{
+          PASS: "PASS";
+          FAIL: "FAIL";
+          MISSING: "MISSING";
+          STALE: "STALE";
+        }>;
+        reviewStatus: z.ZodEnum<{
+          PENDING: "PENDING";
+          NOT_REQUIRED: "NOT_REQUIRED";
+        }>;
+        checks: z.ZodArray<z.ZodObject<{
+          checkId: z.ZodString;
+          status: z.ZodEnum<{
+            PASS: "PASS";
+            FAIL: "FAIL";
+            MISSING: "MISSING";
+            STALE: "STALE";
+            PENDING: "PENDING";
+            NOT_APPLICABLE: "NOT_APPLICABLE";
+          }>;
+          codes: z.ZodArray<z.ZodString>;
+          reportIds: z.ZodArray<z.ZodString>;
+          tests: z.ZodOptional<z.ZodObject<{
+            passed: z.ZodNumber;
+            failed: z.ZodNumber;
+            skipped: z.ZodNumber;
+            missing: z.ZodNumber;
+          }, z.core.$strict>>;
+          coverage: z.ZodOptional<z.ZodObject<{
+            lines: z.ZodObject<{
+              covered: z.ZodNumber;
+              total: z.ZodNumber;
+              minimum: z.ZodNumber;
+              status: z.ZodEnum<{
+                PASS: "PASS";
+                FAIL: "FAIL";
+                MISSING: "MISSING";
+                STALE: "STALE";
+                PENDING: "PENDING";
+                NOT_APPLICABLE: "NOT_APPLICABLE";
+              }>;
+            }, z.core.$strict>;
+            branches: z.ZodObject<{
+              covered: z.ZodNumber;
+              total: z.ZodNumber;
+              minimum: z.ZodNumber;
+              status: z.ZodEnum<{
+                PASS: "PASS";
+                FAIL: "FAIL";
+                MISSING: "MISSING";
+                STALE: "STALE";
+                PENDING: "PENDING";
+                NOT_APPLICABLE: "NOT_APPLICABLE";
+              }>;
+            }, z.core.$strict>;
+          }, z.core.$strict>>;
+        }, z.core.$strict>>;
+      }, z.core.$strict>;
+      sha256: z.ZodString;
+      byteSize: z.ZodNumber;
+      kind: z.ZodLiteral<"RESULT">;
+    }, z.core.$strict>], "kind">;
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  listQualityMaterials: z.ZodObject<{
+    afterKey: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  completeQualityVerification: z.ZodObject<{
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  publishQualityArtifacts: z.ZodObject<{
+    contentHashes: z.ZodArray<z.ZodString>;
+    requestHash: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+  }, z.core.$strict>;
+  getWorkVerificationCandidate: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+  }, z.core.$strict>;
+  beginWorkVerification: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    attemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    candidate: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.requirements.v1">;
+      role: z.ZodLiteral<"product">;
+      requirements: z.ZodArray<z.ZodObject<{
+        id: z.core.$ZodBranded<z.ZodString, "requirement", "out">;
+        statement: z.ZodString;
+        sourceRefs: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+          kind: z.ZodLiteral<"artifact">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"message">;
+          messageId: z.core.$ZodBranded<z.ZodString, "message", "out">;
+        }, z.core.$strict>, z.ZodObject<{
+          kind: z.ZodLiteral<"requirement">;
+          requirementId: z.core.$ZodBranded<z.ZodString, "requirement", "out">;
+          requirementRevision: z.ZodNumber;
+        }, z.core.$strict>], "kind">>;
+        acceptance: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>>;
+      assumptions: z.ZodArray<z.ZodString>;
+      questions: z.ZodArray<z.ZodObject<{
+        id: z.core.$ZodBranded<z.ZodString, "question", "out">;
+        required: z.ZodBoolean;
+        reason: z.ZodString;
+        blockingScope: z.ZodArray<z.core.$ZodBranded<z.ZodString, "work", "out">>;
+        defaultOption: z.ZodOptional<z.ZodString>;
+      }, z.core.$strict>>;
+    }, z.core.$strict>, z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.architecture.v1">;
+      role: z.ZodLiteral<"architect">;
+      interfaces: z.ZodArray<z.ZodObject<{
+        name: z.ZodString;
+        specificationRef: z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>;
+      }, z.core.$strict>>;
+      planDraft: z.ZodObject<{
+        requirementRevision: z.ZodNumber;
+        works: z.ZodArray<z.ZodObject<{
+          workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+          workRevision: z.ZodNumber;
+          role: z.ZodEnum<{
+            product: "product";
+            architect: "architect";
+            developer: "developer";
+            tester: "tester";
+          }>;
+          goal: z.ZodString;
+          inputRefs: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+            artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+            sha256: z.ZodString;
+            kind: z.ZodLiteral<"artifact">;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"output">;
+            workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+            outputSlot: z.ZodString;
+          }, z.core.$strict>], "kind">>;
+          outputSpec: z.ZodArray<z.ZodObject<{
+            slot: z.ZodString;
+            schemaId: z.ZodString;
+          }, z.core.$strict>>;
+          completionChecks: z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
+            kind: z.ZodLiteral<"artifact-exists">;
+            outputSlot: z.ZodString;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"schema-valid">;
+            outputSlot: z.ZodString;
+            schemaId: z.ZodString;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"commit-resolved">;
+            outputSlot: z.ZodString;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"command-exit-zero">;
+            checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"required-tests-pass">;
+            checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"coverage-threshold">;
+            lines: z.ZodNumber;
+            branches: z.ZodNumber;
+          }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"human-decision">;
+            checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+          }, z.core.$strict>], "kind">>;
+          dependencies: z.ZodArray<z.ZodObject<{
+            workId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+            requiredOutcome: z.ZodEnum<{
+              success: "success";
+              "completed-with-findings": "completed-with-findings";
+            }>;
+          }, z.core.$strict>>;
+          writeScope: z.ZodArray<z.ZodString>;
+          estimatedResources: z.ZodObject<{
+            cpu: z.ZodNumber;
+            memoryMiB: z.ZodNumber;
+            timeoutMs: z.ZodNumber;
+          }, z.core.$strict>;
+          requirementIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "requirement", "out">>;
+        }, z.core.$strict>>;
+      }, z.core.$strict>;
+      risks: z.ZodArray<z.ZodString>;
+      capabilityFit: z.ZodObject<{
+        supported: z.ZodBoolean;
+        gaps: z.ZodArray<z.ZodString>;
+      }, z.core.$strict>;
+    }, z.core.$strict>, z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.development-result.v1">;
+      role: z.ZodLiteral<"developer">;
+      baseCommit: z.ZodString;
+      resultCommit: z.ZodString;
+      changedFiles: z.ZodArray<z.ZodString>;
+      checkRefs: z.ZodArray<z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>>;
+      unverified: z.ZodArray<z.ZodString>;
+      handoffProposal: z.ZodNullable<z.ZodObject<{
+        targetRole: z.ZodEnum<{
+          product: "product";
+          architect: "architect";
+          developer: "developer";
+          tester: "tester";
+        }>;
+        goal: z.ZodString;
+        artifactRefs: z.ZodArray<z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>>;
+        reason: z.ZodString;
+      }, z.core.$strict>>;
+    }, z.core.$strict>, z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.test-result.v1">;
+      role: z.ZodLiteral<"tester">;
+      targetCommit: z.ZodString;
+      caseResults: z.ZodArray<z.ZodObject<{
+        checkId: z.core.$ZodBranded<z.ZodString, "check", "out">;
+        requirementIds: z.ZodArray<z.core.$ZodBranded<z.ZodString, "requirement", "out">>;
+        status: z.ZodEnum<{
+          FAILED: "FAILED";
+          PASSED: "PASSED";
+          SKIPPED: "SKIPPED";
+          MISSING: "MISSING";
+        }>;
+        reportRef: z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+          targetCommit: z.ZodString;
+        }, z.core.$strict>;
+      }, z.core.$strict>>;
+      coverageRef: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+        targetCommit: z.ZodString;
+      }, z.core.$strict>;
+      defects: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        severity: z.ZodEnum<{
+          LOW: "LOW";
+          MEDIUM: "MEDIUM";
+          HIGH: "HIGH";
+          CRITICAL: "CRITICAL";
+        }>;
+        description: z.ZodString;
+        evidenceRefs: z.ZodArray<z.ZodObject<{
+          artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+          sha256: z.ZodString;
+        }, z.core.$strict>>;
+      }, z.core.$strict>>;
+      buildRef: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+        targetCommit: z.ZodString;
+      }, z.core.$strict>;
+      previewRef: z.ZodOptional<z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+        targetCommit: z.ZodString;
+      }, z.core.$strict>>;
+    }, z.core.$strict>], "role">;
+    qualityOperationId: z.ZodDefault<z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getWorkVerification: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listWorkVerifications: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    afterOperationId: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  getVerifiedFinding: z.ZodObject<{
+    issueId: z.ZodString;
+    afterRevision: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  listVerifiedFindings: z.ZodObject<{
+    afterIssueId: z.ZodDefault<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  linkVerifiedFindingFix: z.ZodObject<{
+    fixWorkId: z.core.$ZodBranded<z.ZodString, "work", "out">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    issueId: z.ZodString;
+    issueRevision: z.ZodNumber;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  recordVerifiedFindingResult: z.ZodObject<{
+    fixAttemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    verificationAttemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    issueId: z.ZodString;
+    issueRevision: z.ZodNumber;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  publishVerifiedRepair: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareVerifiedRepair: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    sourceAttemptId: z.core.$ZodBranded<z.ZodString, "attempt", "out">;
+    issueIds: z.ZodArray<z.ZodString>;
+    writeScope: z.ZodArray<z.ZodString>;
+    planRevision: z.ZodNumber;
+    requirementRevision: z.ZodNumber;
+    reviewHash: z.ZodString;
+    changeImpact: z.ZodEnum<{
+      "implementation-only": "implementation-only";
+      requirements: "requirements";
+      interfaces: "interfaces";
+    }>;
+  }, z.core.$strict>;
+  getVerifiedRepair: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listVerifiedRepairs: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  registerReleaseDeliveryPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      producerId: z.ZodString;
+      architecture: z.ZodEnum<{
+        amd64: "amd64";
+        arm64: "arm64";
+      }>;
+      materials: z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        path: z.ZodString;
+      }, z.core.$strict>>;
+      schemaVersion: z.ZodLiteral<"devmesh.delivery-policy.v1">;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getReleaseDeliveryPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+  }, z.core.$strict>;
+  beginReleaseDelivery: z.ZodObject<{
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    qualityOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    policyHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getReleaseDelivery: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getReleaseDeliveryOrigin: z.ZodObject<{
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listReleaseDeliveryMaterials: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  completeReleaseDelivery: z.ZodObject<{
+    image: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-image-identity.v1">;
+      imageDigest: z.ZodString;
+      configDigest: z.ZodString;
+      targetCommit: z.ZodString;
+      buildArtifactHash: z.ZodString;
+      os: z.ZodLiteral<"linux">;
+      architecture: z.ZodEnum<{
+        amd64: "amd64";
+        arm64: "arm64";
+      }>;
+      layers: z.ZodArray<z.ZodObject<{
+        digest: z.ZodString;
+        diffId: z.ZodString;
+        byteSize: z.ZodNumber;
+        expandedByteSize: z.ZodNumber;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    dataPlan: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      strategy: z.ZodLiteral<"INITIAL">;
+      initialData: z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>;
+      sourceReleaseId: z.ZodNull;
+      migrationRef: z.ZodNull;
+      replacementDecisionId: z.ZodNull;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      strategy: z.ZodLiteral<"PRESERVE_MIGRATE">;
+      initialData: z.ZodNull;
+      sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      migrationRef: z.ZodObject<{
+        artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+        sha256: z.ZodString;
+      }, z.core.$strict>;
+      replacementDecisionId: z.ZodNull;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      strategy: z.ZodLiteral<"REPLACE">;
+      initialData: z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>;
+      sourceReleaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+      migrationRef: z.ZodNull;
+      replacementDecisionId: z.core.$ZodBranded<z.ZodString, "decision", "out">;
+      schemaVersion: z.ZodLiteral<"devmesh.data-plan.v1">;
+      runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+      codeCommit: z.ZodString;
+      requirementRevision: z.ZodNumber;
+      planRevision: z.ZodNumber;
+      templateVersion: z.ZodString;
+      checkConfigHash: z.ZodString;
+    }, z.core.$strict>], "strategy">;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  prepareReleaseCandidateFreeze: z.ZodObject<{
+    integrationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    deliveryOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  freezeReleaseCandidate: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    integrationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    deliveryOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    basisHash: z.ZodString;
+    contentHashes: z.ZodArray<z.ZodString>;
+  }, z.core.$strict>;
+  getReleaseCandidate: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCurrentReleaseCandidate: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  listReleaseCandidates: z.ZodObject<{
+    afterRevision: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCandidateReview: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  }, z.core.$strict>;
+  recordCandidateReview: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    manifestHash: z.ZodString;
+    itemId: z.ZodString;
+    itemHash: z.ZodString;
+    previousResultId: z.ZodNullable<z.ZodString>;
+    verdict: z.ZodEnum<{
+      PASS: "PASS";
+      FAIL: "FAIL";
+    }>;
+    procedure: z.ZodString;
+    expected: z.ZodString;
+    observed: z.ZodString;
+    evidence: z.ZodArray<z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  recordCandidateRejection: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    manifestHash: z.ZodString;
+    rejectionId: z.ZodString;
+    previousResultId: z.ZodNullable<z.ZodString>;
+    classification: z.ZodEnum<{
+      IN_SCOPE_DEFECT: "IN_SCOPE_DEFECT";
+      SCOPE_CHANGE: "SCOPE_CHANGE";
+    }>;
+    state: z.ZodEnum<{
+      OPEN: "OPEN";
+      WITHDRAWN: "WITHDRAWN";
+    }>;
+    itemId: z.ZodNullable<z.ZodString>;
+    itemHash: z.ZodNullable<z.ZodString>;
+    description: z.ZodString;
+    reason: z.ZodString;
+    evidence: z.ZodArray<z.ZodObject<{
+      artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+      sha256: z.ZodString;
+    }, z.core.$strict>>;
+  }, z.core.$strict>;
+  listCandidateReviewHistory: z.ZodObject<{
+    itemId: z.ZodOptional<z.ZodString>;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  }, z.core.$strict>;
+  listCandidateRejectionHistory: z.ZodObject<{
+    rejectionId: z.ZodOptional<z.ZodString>;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+  }, z.core.$strict>;
+  registerPreviewBackendPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-backend.v1">;
+      backendPrincipalId: z.ZodString;
+      backendRef: z.ZodString;
+      runnerId: z.ZodString;
+      templateVersion: z.ZodString;
+      schemaRevision: z.ZodString;
+      retentionDays: z.ZodNumber;
+      initialModes: z.ZodArray<z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>>;
+      allowSnapshots: z.ZodBoolean;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getPreviewBackendPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+  }, z.core.$strict>;
+  createPreviewDataset: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    manifestHash: z.ZodString;
+    policyHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  getPreviewDataset: z.ZodObject<{
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  createPreviewIntent: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    manifestHash: z.ZodString;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    expiresAt: z.ZodISODateTime;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  getPreview: z.ZodObject<{
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCandidatePreviewWorkspace: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    policyHash: z.ZodOptional<z.ZodString>;
+    afterDatasetSequence: z.ZodDefault<z.ZodNumber>;
+    afterPreviewSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCandidatePreviewDataset: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+    policyHash: z.ZodOptional<z.ZodString>;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  getCandidatePreview: z.ZodObject<{
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+  }, z.core.$strict>;
+  stopPreviewIntent: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    previewRevision: z.ZodNumber;
+    impactReviewHash: z.ZodString;
+    reason: z.ZodEnum<{
+      USER: "USER";
+      EXPIRED: "EXPIRED";
+    }>;
+  }, z.core.$strict>;
+  getPreviewEffect: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  listPreviewEffects: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    states: z.ZodDefault<z.ZodArray<z.ZodEnum<{
+      UNKNOWN: "UNKNOWN";
+      PREPARED: "PREPARED";
+      SENT: "SENT";
+      SUCCEEDED: "SUCCEEDED";
+      FAILED: "FAILED";
+    }>>>;
+  }, z.core.$strict>;
+  markPreviewEffectSent: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  recordPreviewEffectObservation: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    observation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      state: z.ZodLiteral<"UNKNOWN">;
+      errorCode: z.ZodString;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"FAILED">;
+      errorCode: z.ZodString;
+      absenceVerified: z.ZodLiteral<true>;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"SUCCEEDED">;
+      receipt: z.ZodDiscriminatedUnion<[z.ZodObject<{
+        kind: z.ZodLiteral<"DATASET_READY">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        storageKey: z.ZodString;
+        originDatasetId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "dataset", "out">>;
+        schemaRevision: z.ZodString;
+        snapshotAt: z.ZodISODateTime;
+        sha256: z.ZodString;
+        byteSize: z.ZodNumber;
+        integrity: z.ZodLiteral<"ok">;
+      }, z.core.$strict>, z.ZodObject<{
+        kind: z.ZodLiteral<"PREVIEW_READY">;
+        previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        imageDigest: z.ZodString;
+        instanceId: z.ZodString;
+        healthy: z.ZodLiteral<true>;
+        checkedAt: z.ZodISODateTime;
+      }, z.core.$strict>, z.ZodObject<{
+        kind: z.ZodLiteral<"PREVIEW_STOPPED">;
+        previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+        instanceId: z.ZodString;
+        exitVerified: z.ZodLiteral<true>;
+        checkedAt: z.ZodISODateTime;
+      }, z.core.$strict>, z.ZodObject<{
+        kind: z.ZodLiteral<"PREVIEW_REMOVED">;
+        previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+        instanceId: z.ZodString;
+        removalVerified: z.ZodLiteral<true>;
+        checkedAt: z.ZodISODateTime;
+      }, z.core.$strict>], "kind">;
+    }, z.core.$strict>], "state">;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listPreviewEffectHistory: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  getPreviewLifecycle: z.ZodObject<{
+    principalId: z.ZodString;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  }, z.core.$strict>;
+  getPreviewLifecycleScope: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+  }, z.core.$strict>;
+  listPreviewLifecycles: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  listPreviewDatasetWork: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  verifyPreviewExecution: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  recordPreviewRuntimeObservation: z.ZodObject<{
+    expectedSequence: z.ZodNumber;
+    fact: z.ZodObject<{
+      previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      imageDigest: z.ZodString;
+      state: z.ZodEnum<{
+        UNKNOWN: "UNKNOWN";
+        HEALTHY: "HEALTHY";
+        UNHEALTHY: "UNHEALTHY";
+        CREATED: "CREATED";
+        EXITED: "EXITED";
+        REMOVED: "REMOVED";
+      }>;
+      instanceId: z.ZodNullable<z.ZodString>;
+      endpoint: z.ZodNullable<z.ZodObject<{
+        host: z.ZodLiteral<"127.0.0.1">;
+        port: z.ZodNumber;
+      }, z.core.$strict>>;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listPreviewRuntimeHistory: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  preparePreviewExpiry: z.ZodObject<{
+    principalId: z.ZodString;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+  }, z.core.$strict>;
+  registerPreviewAccessPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-access-policy.v1">;
+      gatewayId: z.ZodString;
+      gatewayPrincipalId: z.ZodString;
+      configurationHash: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  enrollPreviewWriteGate: z.ZodObject<{
+    principalId: z.ZodString;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    datasetRequestHash: z.ZodString;
+  }, z.core.$strict>;
+  getPreviewWriteGate: z.ZodObject<{
+    principalId: z.ZodString;
+    datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    datasetRequestHash: z.ZodString;
+  }, z.core.$strict>;
+  closePreviewWriteGate: z.ZodObject<{
+    principalId: z.ZodString;
+    request: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.preview-write-close.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+      datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+      datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      datasetRequestHash: z.ZodString;
+      expectedFence: z.ZodNumber;
+    }, z.core.$strict>;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  resolvePreviewAccess: z.ZodObject<{
+    subjectPrincipalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  preparePreviewAccessRequest: z.ZodObject<{
+    accessRequestId: z.ZodString;
+    request: z.ZodObject<{
+      method: z.ZodEnum<{
+        GET: "GET";
+        HEAD: "HEAD";
+        POST: "POST";
+        PUT: "PUT";
+        PATCH: "PATCH";
+        DELETE: "DELETE";
+      }>;
+      path: z.ZodString;
+      bodySha256: z.ZodString;
+      headersSha256: z.ZodOptional<z.ZodString>;
+    }, z.core.$strict>;
+    subjectPrincipalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  beginPreviewAccessRequest: z.ZodObject<{
+    accessRequestId: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  previewAccessRequestAuthorized: z.ZodObject<{
+    accessRequestId: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  getPreviewAccessRequest: z.ZodObject<{
+    accessRequestId: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  recordPreviewAccessObservation: z.ZodObject<{
+    observation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      state: z.ZodLiteral<"FINISHED">;
+      httpStatus: z.ZodNumber;
+      responseSha256: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"UNKNOWN">;
+      errorCode: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"NOT_SENT">;
+      errorCode: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>], "state">;
+    accessRequestId: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  listPreviewAccessRequests: z.ZodObject<{
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  issuePreviewTicket: z.ZodObject<{
+    subjectPrincipalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+    ticketId: z.ZodString;
+    tokenSha256: z.ZodString;
+    expiresAt: z.ZodISODateTime;
+    platformOrigin: z.ZodString;
+    previewOrigin: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  exchangePreviewTicket: z.ZodObject<{
+    ticketTokenSha256: z.ZodString;
+    sessionId: z.ZodString;
+    sessionTokenSha256: z.ZodString;
+    expiresAt: z.ZodISODateTime;
+    platformOrigin: z.ZodString;
+    previewOrigin: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  authenticatePreviewSession: z.ZodObject<{
+    previewOrigin: z.ZodString;
+    tokenSha256: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  revokePreviewSession: z.ZodObject<{
+    previewOrigin: z.ZodString;
+    tokenSha256: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  getCandidateAcceptanceBasis: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    policyHash: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  listCandidateAcceptancePreparations: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  registerAcceptanceBackendPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.acceptance-backend.v1">;
+      backendPrincipalId: z.ZodString;
+      backendRef: z.ZodString;
+      runnerId: z.ZodString;
+      templateVersion: z.ZodString;
+      schemaRevision: z.ZodString;
+      initialModes: z.ZodArray<z.ZodEnum<{
+        EMPTY: "EMPTY";
+        DEMO: "DEMO";
+      }>>;
+      allowPreserveMigration: z.ZodBoolean;
+      allowReplacement: z.ZodBoolean;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getAcceptancePreparationScope: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+  }, z.core.$strict>;
+  listAcceptancePreparationWork: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  recordAcceptanceReplacementDecision: z.ZodObject<{
+    decisionId: z.core.$ZodBranded<z.ZodString, "decision", "out">;
+    confirmation: z.ZodLiteral<"REPLACE_ACCEPTED_DATA">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    candidateRevision: z.ZodNumber;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    dataPlanHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  beginAcceptancePreparation: z.ZodObject<{
+    policyHash: z.ZodString;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    candidateRevision: z.ZodNumber;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    dataPlanHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  getAcceptancePreparation: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+  }, z.core.$strict>;
+  getAcceptanceDataset: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  closeAcceptanceSourceWriteGate: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    expectedFence: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listAcceptancePreparations: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  markAcceptancePreparationSent: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  markAcceptancePreparationUnknown: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    errorCode: z.ZodString;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  failUnsentAcceptancePreparation: z.ZodObject<{
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+  }, z.core.$strict>;
+  listAcceptancePreparationHistory: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  getCandidateAcceptancePreparationPage: z.ZodObject<{
+    principalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    policyHash: z.ZodOptional<z.ZodString>;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  verifyAcceptancePreparation: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  getAcceptanceReadiness: z.ZodObject<{
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  recordAcceptancePreparationObservation: z.ZodObject<{
+    expectedPreparationRevision: z.ZodNumber;
+    expectedSequence: z.ZodNumber;
+    observation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      state: z.ZodLiteral<"UNKNOWN">;
+      errorCode: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"READY">;
+      proof: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.acceptance-prepared.v1">;
+        operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        requestHash: z.ZodString;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+        runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+        candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+        manifestHash: z.ZodString;
+        reviewHash: z.ZodString;
+        dataPlanHash: z.ZodString;
+        runnerId: z.ZodString;
+        backendRef: z.ZodString;
+        data: z.ZodObject<{
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          storageKey: z.ZodString;
+          schemaRevision: z.ZodString;
+          originDatasetId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "dataset", "out">>;
+          sourceReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+          snapshotAt: z.ZodISODateTime;
+          sha256: z.ZodString;
+          byteSize: z.ZodNumber;
+          integrity: z.ZodLiteral<"ok">;
+          journalHash: z.ZodString;
+          migrationRef: z.ZodNullable<z.ZodObject<{
+            artifactId: z.core.$ZodBranded<z.ZodString, "artifact", "out">;
+            sha256: z.ZodString;
+          }, z.core.$strict>>;
+        }, z.core.$strict>;
+        sourceFence: z.ZodNullable<z.ZodObject<{
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          closeRequestHash: z.ZodString;
+          gateFence: z.ZodNumber;
+          physical: z.ZodObject<{
+            kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+            fenceId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            heldAt: z.ZodISODateTime;
+            state: z.ZodLiteral<"HELD">;
+          }, z.core.$strict>;
+        }, z.core.$strict>>;
+        targetFence: z.ZodObject<{
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          physical: z.ZodObject<{
+            kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+            fenceId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            heldAt: z.ZodISODateTime;
+            state: z.ZodLiteral<"HELD">;
+          }, z.core.$strict>;
+          writeState: z.ZodLiteral<"CLOSED">;
+        }, z.core.$strict>;
+        service: z.ZodObject<{
+          reservationId: z.ZodString;
+          profileHash: z.ZodString;
+          endpoint: z.ZodObject<{
+            host: z.ZodLiteral<"127.0.0.1">;
+            port: z.ZodNumber;
+          }, z.core.$strict>;
+          claim: z.ZodDiscriminatedUnion<[z.ZodObject<{
+            schemaVersion: z.ZodLiteral<"devmesh.preview-release-claim.v1">;
+            operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+            candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+            manifestHash: z.ZodString;
+            previewId: z.core.$ZodBranded<z.ZodString, "preview", "out">;
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            imageDigest: z.ZodString;
+            startOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            startRequestHash: z.ZodString;
+            instanceId: z.ZodString;
+            acceptanceRequestHash: z.ZodString;
+          }, z.core.$strict>, z.ZodObject<{
+            schemaVersion: z.ZodLiteral<"devmesh.acceptance-service-claim.v1">;
+            purpose: z.ZodLiteral<"ACCEPTANCE">;
+            operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            acceptanceRequestHash: z.ZodString;
+            releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+            projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+            runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+            candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+            manifestHash: z.ZodString;
+            reviewHash: z.ZodString;
+            dataPlanHash: z.ZodString;
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            imageDigest: z.ZodString;
+            reservationId: z.ZodString;
+            profileHash: z.ZodString;
+            serviceRequestHash: z.ZodString;
+            instanceId: z.ZodString;
+          }, z.core.$strict>], "schemaVersion">;
+          claimHash: z.ZodString;
+          custodyState: z.ZodLiteral<"RELEASE_HELD">;
+          custodyRevision: z.ZodNumber;
+        }, z.core.$strict>;
+        preparedAt: z.ZodISODateTime;
+      }, z.core.$strict>;
+      fences: z.ZodObject<{
+        sourceProofHash: z.ZodNullable<z.ZodString>;
+        targetProofHash: z.ZodString;
+        state: z.ZodLiteral<"HELD">;
+        writeState: z.ZodLiteral<"CLOSED">;
+      }, z.core.$strict>;
+      health: z.ZodObject<{
+        instanceId: z.ZodString;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        imageDigest: z.ZodString;
+        endpoint: z.ZodObject<{
+          host: z.ZodLiteral<"127.0.0.1">;
+          port: z.ZodNumber;
+        }, z.core.$strict>;
+        claimHash: z.ZodString;
+        custodyState: z.ZodLiteral<"RELEASE_HELD">;
+        custodyRevision: z.ZodNumber;
+        state: z.ZodLiteral<"HEALTHY">;
+      }, z.core.$strict>;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>], "state">;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listAcceptancePreparationObservations: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  commitReleaseAcceptance: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    expectedPreparationRevision: z.ZodNumber;
+    expectedObservationSequence: z.ZodNumber;
+    proofHash: z.ZodString;
+    candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+    candidateRevision: z.ZodNumber;
+    manifestHash: z.ZodString;
+    reviewHash: z.ZodString;
+    expectedAcceptedReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+    dataPlanHash: z.ZodString;
+    confirmation: z.ZodLiteral<"ACCEPT_RELEASE">;
+  }, z.core.$strict>;
+  getAcceptedRelease: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  }, z.core.$strict>;
+  listAcceptanceAbortWork: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  requestAcceptanceAbort: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    ifMatch: z.ZodOptional<z.ZodString>;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    expectedPreparationRevision: z.ZodNumber;
+    reason: z.ZodString;
+    confirmation: z.ZodLiteral<"ABORT_ACCEPTANCE_PREPARATION">;
+  }, z.core.$strict>;
+  getAcceptanceAbortDecision: z.ZodObject<{
+    principalId: z.ZodString;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  getAcceptanceAbortRecovery: z.ZodObject<{
+    principalId: z.ZodString;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    decisionHash: z.ZodString;
+  }, z.core.$strict>;
+  completeAcceptanceAbort: z.ZodObject<{
+    evidence: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-completion.v1">;
+      operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+      requestHash: z.ZodString;
+      decisionHash: z.ZodString;
+      service: z.ZodObject<{
+        controllerId: z.ZodString;
+        cleanupHash: z.ZodString;
+        reservationId: z.ZodNullable<z.ZodString>;
+        profileHash: z.ZodNullable<z.ZodString>;
+        instanceId: z.ZodNullable<z.ZodString>;
+        networkId: z.ZodNullable<z.ZodString>;
+        state: z.ZodLiteral<"CLEARED">;
+      }, z.core.$strict>;
+      data: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.local-dataset-abort-receipt.v1">;
+        requestHash: z.ZodString;
+        journalHash: z.ZodString;
+        proof: z.ZodObject<{
+          schemaVersion: z.ZodLiteral<"devmesh.acceptance-dataset-aborted.v1">;
+          operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          abortOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          decisionHash: z.ZodString;
+          requestHash: z.ZodString;
+          originalFences: z.ZodNullable<z.ZodObject<{
+            schemaVersion: z.ZodLiteral<"devmesh.local-dataset-fences.v1">;
+            operationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            requestHash: z.ZodString;
+            sourceFence: z.ZodNullable<z.ZodObject<{
+              datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+              datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+              closeOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+              closeRequestHash: z.ZodString;
+              gateFence: z.ZodNumber;
+              physical: z.ZodObject<{
+                kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+                fenceId: z.ZodString;
+                generation: z.ZodNumber;
+                proofHash: z.ZodString;
+                heldAt: z.ZodISODateTime;
+                state: z.ZodLiteral<"HELD">;
+              }, z.core.$strict>;
+            }, z.core.$strict>>;
+            targetFence: z.ZodObject<{
+              datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+              physical: z.ZodObject<{
+                kind: z.ZodLiteral<"DURABLE_WRITE_FENCE">;
+                fenceId: z.ZodString;
+                generation: z.ZodNumber;
+                proofHash: z.ZodString;
+                heldAt: z.ZodISODateTime;
+                state: z.ZodLiteral<"HELD">;
+              }, z.core.$strict>;
+              writeState: z.ZodLiteral<"CLOSED">;
+            }, z.core.$strict>;
+          }, z.core.$strict>>;
+          revocation: z.ZodObject<{
+            barrierId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+          }, z.core.$strict>;
+          target: z.ZodObject<{
+            fenceId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            previousHoldHash: z.ZodNullable<z.ZodString>;
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            writeState: z.ZodLiteral<"CLOSED">;
+          }, z.core.$strict>;
+          source: z.ZodNullable<z.ZodObject<{
+            fenceId: z.ZodString;
+            generation: z.ZodNumber;
+            proofHash: z.ZodString;
+            previousHoldHash: z.ZodNullable<z.ZodString>;
+            releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            owner: z.ZodLiteral<"ORIGINAL_RELEASE">;
+            writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+          }, z.core.$strict>>;
+          settledAt: z.ZodISODateTime;
+        }, z.core.$strict>;
+      }, z.core.$strict>;
+      sourceGate: z.ZodNullable<z.ZodObject<{
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        datasetRequestHash: z.ZodString;
+        state: z.ZodEnum<{
+          OPEN: "OPEN";
+          CLOSED: "CLOSED";
+        }>;
+        fence: z.ZodNumber;
+        revision: z.ZodNumber;
+        closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+        closeRequestHash: z.ZodNullable<z.ZodString>;
+      }, z.core.$strict>>;
+      sourceRecovery: z.ZodNullable<z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.acceptance-abort-source-recovery.v1">;
+        decisionHash: z.ZodString;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+        datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        runnerId: z.ZodString;
+        imageDigest: z.ZodString;
+        instanceId: z.ZodString;
+        profileHash: z.ZodString;
+        serviceRequestHash: z.ZodString;
+        endpoint: z.ZodObject<{
+          host: z.ZodLiteral<"127.0.0.1">;
+          port: z.ZodNumber;
+        }, z.core.$strict>;
+        fence: z.ZodObject<{
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          previousHoldHash: z.ZodNullable<z.ZodString>;
+        }, z.core.$strict>;
+        revocationProofHash: z.ZodString;
+        custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+        accessMode: z.ZodLiteral<"READ_WRITE">;
+        state: z.ZodLiteral<"HEALTHY">;
+        checkedAt: z.ZodISODateTime;
+      }, z.core.$strict>>;
+    }, z.core.$strict>;
+    principalId: z.ZodString;
+    preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+    requestHash: z.ZodString;
+    decisionHash: z.ZodString;
+  }, z.core.$strict>;
+  getReleasePublication: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  }, z.core.$strict>;
+  listReleasePublications: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  listReleasePublicationWork: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policyHash: z.ZodString;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  beginReleasePublication: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  verifyReleasePublication: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  verifyReleasePublicationContinuation: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  recordReleasePublicationObservation: z.ZodObject<{
+    expectedRevision: z.ZodNumber;
+    expectedSequence: z.ZodNumber;
+    observation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      state: z.ZodLiteral<"UNKNOWN">;
+      errorCode: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"PUBLISHED">;
+      proof: z.ZodObject<{
+        schemaVersion: z.ZodLiteral<"devmesh.release-published.v1">;
+        releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+        acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+        promotionRequestHash: z.ZodString;
+        preparedProofHash: z.ZodString;
+        controllerId: z.ZodString;
+        runnerId: z.ZodString;
+        backendRef: z.ZodString;
+        gates: z.ZodObject<{
+          sourceGate: z.ZodNullable<z.ZodObject<{
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            datasetRequestHash: z.ZodString;
+            state: z.ZodEnum<{
+              OPEN: "OPEN";
+              CLOSED: "CLOSED";
+            }>;
+            fence: z.ZodNumber;
+            revision: z.ZodNumber;
+            closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+            closeRequestHash: z.ZodNullable<z.ZodString>;
+          }, z.core.$strict>>;
+          targetGate: z.ZodObject<{
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            datasetRequestHash: z.ZodString;
+            state: z.ZodEnum<{
+              OPEN: "OPEN";
+              CLOSED: "CLOSED";
+            }>;
+            fence: z.ZodNumber;
+            revision: z.ZodNumber;
+            closeOperationId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "op", "out">>;
+            closeRequestHash: z.ZodNullable<z.ZodString>;
+          }, z.core.$strict>;
+          previousRoute: z.ZodNullable<z.ZodObject<{
+            releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+            routeHash: z.ZodString;
+            generation: z.ZodNumber;
+          }, z.core.$strict>>;
+        }, z.core.$strict>;
+        readonlyRetirement: z.ZodObject<{
+          reservationId: z.ZodString;
+          profileHash: z.ZodString;
+          serviceRequestHash: z.ZodString;
+          instanceId: z.ZodString;
+          networkId: z.ZodString;
+          containerAbsent: z.ZodLiteral<true>;
+          networkAbsent: z.ZodLiteral<true>;
+          verifiedAt: z.ZodISODateTime;
+        }, z.core.$strict>;
+        revocation: z.ZodObject<{
+          barrierId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          state: z.ZodLiteral<"PERMANENTLY_REVOKED">;
+        }, z.core.$strict>;
+        target: z.ZodObject<{
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          previousHoldHash: z.ZodString;
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          owner: z.ZodLiteral<"RELEASE">;
+          state: z.ZodLiteral<"ARMED">;
+          writeState: z.ZodLiteral<"CONTROL_CLOSED">;
+        }, z.core.$strict>;
+        source: z.ZodNullable<z.ZodObject<{
+          fenceId: z.ZodString;
+          generation: z.ZodNumber;
+          proofHash: z.ZodString;
+          previousHoldHash: z.ZodString;
+          releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          datasetOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+          state: z.ZodLiteral<"RETIRED">;
+          writeState: z.ZodLiteral<"CLOSED">;
+        }, z.core.$strict>>;
+        service: z.ZodObject<{
+          claim: z.ZodObject<{
+            schemaVersion: z.ZodLiteral<"devmesh.release-service-claim.v1">;
+            purpose: z.ZodLiteral<"RELEASE">;
+            releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+            projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+            runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+            candidateId: z.core.$ZodBranded<z.ZodString, "candidate", "out">;
+            acceptanceOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            preparationOperationId: z.core.$ZodBranded<z.ZodString, "op", "out">;
+            promotionRequestHash: z.ZodString;
+            preparedProofHash: z.ZodString;
+            runnerId: z.ZodString;
+            datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+            imageDigest: z.ZodString;
+            reservationId: z.ZodString;
+            profileHash: z.ZodString;
+            serviceRequestHash: z.ZodString;
+            instanceId: z.ZodString;
+            networkId: z.ZodString;
+            accessMode: z.ZodLiteral<"READ_WRITE">;
+            custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+            writeAdmission: z.ZodLiteral<"CONTROL_GATE_FENCED">;
+            targetFence: z.ZodObject<{
+              fenceId: z.ZodString;
+              generation: z.ZodNumber;
+              proofHash: z.ZodString;
+              previousHoldHash: z.ZodString;
+            }, z.core.$strict>;
+          }, z.core.$strict>;
+          claimHash: z.ZodString;
+          endpoint: z.ZodObject<{
+            host: z.ZodLiteral<"127.0.0.1">;
+            port: z.ZodNumber;
+          }, z.core.$strict>;
+        }, z.core.$strict>;
+        route: z.ZodObject<{
+          schemaVersion: z.ZodLiteral<"devmesh.release-route.v1">;
+          routeId: z.ZodString;
+          generation: z.ZodNumber;
+          projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+          releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+          previousReleaseId: z.ZodNullable<z.core.$ZodBranded<z.ZodString, "release", "out">>;
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          imageDigest: z.ZodString;
+          instanceId: z.ZodString;
+          endpoint: z.ZodObject<{
+            host: z.ZodLiteral<"127.0.0.1">;
+            port: z.ZodNumber;
+          }, z.core.$strict>;
+          serviceClaimHash: z.ZodString;
+          state: z.ZodLiteral<"BOUND">;
+        }, z.core.$strict>;
+        routeHash: z.ZodString;
+        publishedAt: z.ZodISODateTime;
+      }, z.core.$strict>;
+      checkedAt: z.ZodISODateTime;
+      current: z.ZodObject<{
+        service: z.ZodObject<{
+          instanceId: z.ZodString;
+          datasetId: z.core.$ZodBranded<z.ZodString, "dataset", "out">;
+          imageDigest: z.ZodString;
+          profileHash: z.ZodString;
+          claimHash: z.ZodString;
+          endpoint: z.ZodObject<{
+            host: z.ZodLiteral<"127.0.0.1">;
+            port: z.ZodNumber;
+          }, z.core.$strict>;
+          accessMode: z.ZodLiteral<"READ_WRITE">;
+          custodyState: z.ZodLiteral<"RELEASE_OWNED">;
+          writeAdmission: z.ZodLiteral<"CONTROL_GATE_FENCED">;
+          state: z.ZodLiteral<"HEALTHY">;
+        }, z.core.$strict>;
+        route: z.ZodObject<{
+          routeId: z.ZodString;
+          routeHash: z.ZodString;
+          generation: z.ZodNumber;
+          instanceId: z.ZodString;
+          state: z.ZodLiteral<"BOUND">;
+        }, z.core.$strict>;
+        fences: z.ZodObject<{
+          targetProofHash: z.ZodString;
+          sourceProofHash: z.ZodNullable<z.ZodString>;
+          revocationProofHash: z.ZodString;
+          targetState: z.ZodLiteral<"ARMED">;
+          targetWriteState: z.ZodLiteral<"CONTROL_CLOSED">;
+          sourceWriteState: z.ZodLiteral<"CLOSED">;
+        }, z.core.$strict>;
+      }, z.core.$strict>;
+    }, z.core.$strict>], "state">;
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  listReleasePublicationHistory: z.ZodObject<{
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    requestHash: z.ZodString;
+  }, z.core.$strict>;
+  issueReleaseTicket: z.ZodObject<{
+    subjectPrincipalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    ticketId: z.ZodString;
+    tokenSha256: z.ZodString;
+    expiresAt: z.ZodISODateTime;
+    platformOrigin: z.ZodString;
+    releaseOrigin: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  exchangeReleaseTicket: z.ZodObject<{
+    ticketTokenSha256: z.ZodString;
+    sessionId: z.ZodString;
+    sessionTokenSha256: z.ZodString;
+    expiresAt: z.ZodISODateTime;
+    platformOrigin: z.ZodString;
+    releaseOrigin: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  authenticateReleaseSession: z.ZodObject<{
+    releaseOrigin: z.ZodString;
+    tokenSha256: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  revokeReleaseSession: z.ZodObject<{
+    releaseOrigin: z.ZodString;
+    tokenSha256: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  registerReleaseAccessPolicy: z.ZodObject<{
+    principalId: z.ZodString;
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    policy: z.ZodObject<{
+      schemaVersion: z.ZodLiteral<"devmesh.release-access-policy.v1">;
+      gatewayId: z.ZodString;
+      gatewayPrincipalId: z.ZodString;
+      configurationHash: z.ZodString;
+    }, z.core.$strict>;
+  }, z.core.$strict>;
+  getReleaseWriteGate: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+  }, z.core.$strict>;
+  resolveReleaseAccess: z.ZodObject<{
+    subjectPrincipalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  prepareReleaseAccessRequest: z.ZodObject<{
+    accessRequestId: z.ZodString;
+    request: z.ZodObject<{
+      method: z.ZodEnum<{
+        GET: "GET";
+        HEAD: "HEAD";
+        POST: "POST";
+        PUT: "PUT";
+        PATCH: "PATCH";
+        DELETE: "DELETE";
+      }>;
+      path: z.ZodString;
+      bodySha256: z.ZodString;
+      headersSha256: z.ZodString;
+    }, z.core.$strict>;
+    subjectPrincipalId: z.ZodString;
+    runId: z.core.$ZodBranded<z.ZodString, "run", "out">;
+    releaseId: z.core.$ZodBranded<z.ZodString, "release", "out">;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  beginReleaseAccessRequest: z.ZodObject<{
+    accessRequestId: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  releaseAccessRequestAuthorized: z.ZodObject<{
+    accessRequestId: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  getReleaseAccessRequest: z.ZodObject<{
+    accessRequestId: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  recordReleaseAccessObservation: z.ZodObject<{
+    observation: z.ZodDiscriminatedUnion<[z.ZodObject<{
+      state: z.ZodLiteral<"FINISHED">;
+      httpStatus: z.ZodNumber;
+      responseSha256: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"UNKNOWN">;
+      errorCode: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>, z.ZodObject<{
+      state: z.ZodLiteral<"NOT_SENT">;
+      errorCode: z.ZodString;
+      checkedAt: z.ZodISODateTime;
+    }, z.core.$strict>], "state">;
+    accessRequestId: z.ZodString;
+    requestHash: z.ZodString;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  listReleaseAccessRequests: z.ZodObject<{
+    projectId: z.core.$ZodBranded<z.ZodString, "prj", "out">;
+    afterSequence: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    principalId: z.ZodString;
+    gatewayId: z.ZodString;
+    configurationHash: z.ZodString;
+  }, z.core.$strict>;
+  createReleaseExport: z.ZodObject<{
+    meta: z.ZodObject<{
+      principalId: z.ZodString;
+      scopeId: z.ZodString;
+      idempotencyKey: z.ZodUUID;
+    }, z.core.$strict>;
+    releaseId: z.ZodString;
+    format: z.ZodLiteral<"zip">;
+  }, z.core.$strict>;
+  getReleaseExport: z.ZodObject<{
+    principalId: z.ZodString;
+    exportId: z.ZodString;
+  }, z.core.$strict>;
+  getReleaseExportEntry: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.ZodString;
+  }, z.core.$strict>;
+  listReleaseExports: z.ZodObject<{
+    principalId: z.ZodString;
+    releaseId: z.ZodString;
+    afterExportId: z.ZodOptional<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  listReleaseExportWork: z.ZodObject<{
+    afterExportId: z.ZodOptional<z.ZodString>;
+    limit: z.ZodDefault<z.ZodNumber>;
+  }, z.core.$strict>;
+  retryReleaseExport: z.ZodObject<{
+    expectedGeneration: z.ZodNumber;
+    principalId: z.ZodString;
+    exportId: z.ZodString;
+  }, z.core.$strict>;
+  claimReleaseExport: z.ZodObject<{
+    principalId: z.ZodString;
+    exportId: z.ZodString;
+  }, z.core.$strict>;
+  getReleaseExportContext: z.ZodObject<{
+    generation: z.ZodNumber;
+    claimToken: z.ZodUUID;
+    principalId: z.ZodString;
+    exportId: z.ZodString;
+  }, z.core.$strict>;
+  prepareReleaseExportArchive: z.ZodObject<{
+    hash: z.ZodString;
+    byteSize: z.ZodNumber;
+    manifest: z.ZodJSONSchema;
+    generation: z.ZodNumber;
+    claimToken: z.ZodUUID;
+    principalId: z.ZodString;
+    exportId: z.ZodString;
+  }, z.core.$strict>;
+  failReleaseExport: z.ZodObject<{
+    errorCode: z.ZodString;
+    generation: z.ZodNumber;
+    claimToken: z.ZodUUID;
+    principalId: z.ZodString;
+    exportId: z.ZodString;
+  }, z.core.$strict>;
+};
+type Method = keyof typeof requests;
+type Request<M extends Method> = z.input<(typeof requests)[M]>;
+type OperationResult = {
+  operationId: string;
+  status: string;
+  result: Record<string, unknown> | null;
+};
+type RunView = {
+  runId: string;
+  projectId: string;
+  taskId: string;
+  resourceRevision: number;
+  runEpoch: number;
+  controlRevision: number;
+  phase: string;
+  controlGate: string;
+  terminalOutcome: string | null;
+  currentPlanRevision: number | null;
+  currentRequirementRevision: number | null;
+  eventSeq: number;
+};
+type AttemptView = {
+  attemptId: string;
+  runId: string;
+  workId: string;
+  role: string;
+  state: string;
+  attemptNo: number;
+  dispatchOperationId: string;
+  endedAt: string | null;
+};
+type OutboxView = {
+  outboxId: string;
+  operationId: string;
+  destination: string;
+  payload: Record<string, unknown>;
+  status: string;
+  deliveryAttempt: number;
+  leaseOwner: string | null;
+  leaseUntil: string | null;
+};
+interface Results extends ReleaseExportResults, SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceMaintenanceResults, WorkspaceReclamationResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults, AcceptanceAbortResults, AcceptanceAbortRecoveryResults, ReleasePublicationResults, ReleaseAccessResults, ReleaseSessionResults {
+  registerContent: {
+    contentHash: string;
+    storageKey: string;
+  };
+  createProjectWithRun: OperationResult;
+  publishPlan: OperationResult;
+  publishVerifiedRepair: OperationResult;
+  confirmPlan: OperationResult;
+  confirmReviewedPlan: OperationResult;
+  getPlanReview: z.output<typeof planReviewView>;
+  admitWorks: OperationResult;
+  nextScheduledWork: ScheduledCandidate[];
+  deferScheduledWork: {
+    deferred: boolean;
+  };
+  admitScheduledWork: OperationResult;
+  recordVerifiedWork: OperationResult;
+  listScheduledDispatches: ScheduledDispatch[];
+  markScheduledDispatchSent: {
+    send: boolean;
+    state: string;
+  };
+  reconcileScheduledDispatch: {
+    state: string;
+    taskId: string | null;
+  };
+  transitionAttempt: OperationResult;
+  setControlIntent: OperationResult;
+  finishRun: OperationResult;
+  lookupOperation: OperationResult | null;
+  getOperation: OperationResult;
+  getRun: RunView;
+  getAttempt: AttemptView;
+  listEvents: {
+    events: Record<string, unknown>[];
+    nextCursor: number;
+  };
+  claimOutbox: OutboxView[];
+  settleOutbox: OutboxView;
+  inspect: {
+    version: number;
+    storeId: string;
+    layoutVersion: number;
+    sqliteVersion: string;
+    workerThreadId: number;
+    pragmas: Record<string, unknown>;
+    counts: Record<string, number>;
+    backupPath: string | null;
+    foreignKeyErrors: unknown[];
+  };
+}
+type Meta = z.output<typeof meta>;
+type Parsed<M extends Method> = z.output<(typeof requests)[M]>;
+interface ScheduledCandidate {
+  projectId: string;
+  runId: string;
+  principalId: string;
+  runEpoch: number;
+  resourceRevision: number;
+  planRevision: number;
+  workEpoch: number;
+  work: z.output<typeof planDraft>['works'][number];
+}
+interface ScheduledDispatch {
+  attemptId: string;
+  callerId: string;
+  endpoint: EndpointConfig;
+  state: 'PENDING' | 'SENT' | 'RECONCILE';
+  delegation: z.output<typeof workDelegation>;
+}
+//#endregion
+//#region src/json.d.ts
+declare function canonical(value: unknown): string;
+//#endregion
+export { AcceptanceAbortRecord as $, repoDeleteFileArgs as $n, gitDirectoryIdentity as $r, CandidateReviewItem as $t, ReleasePublicationResults as A, WorkspacePreservationInputs as An, A2ATaskRecord as Ar, DatasetPreparationRequest as At, AcceptanceAbortRecoveryBackend as B, CandidateConflictAcknowledgement as Bn, ModelStep as Br, PreviewRuntimeObservation as Bt, releaseAccessTarget as C, QualityOrigin as Cn, UploadIntake as Cr, PreviewWriteGate as Ct, ReleasePublicationInput as D, WorkspaceReclamation as Dn, RuntimeToolView as Dr, previewWriteCloseRequest as Dt, ReleasePublicationBackend as E, qualityMaterialKey as En, RuntimeActivationView as Er, previewAccessPolicy as Et, releaseRouteBinding as F, workspacePreservationManifest as Fn, agentManifest as Fr, PreviewExecutionBackend as Ft, acceptanceAbortSourceGate as G, candidateReportEnvelope as Gn, ReleaseExportContext as Gr, previewBackendPolicy as Gt, AcceptanceAbortRecoveryResults as H, CandidateMaterialDescriptor as Hn, ObjectWrite as Hr, PreviewStopRequest as Ht, releaseServiceClaim as I, CandidateIntegration as In, endpointConfig as Ir, PreviewExecutionObservation as It, acceptanceDatasetAbortReceipt as J, CandidateSubject as Jn, ReleaseExportSnapshot as Jr, previewStartRequest as Jt, acceptanceAbortSourceRecovery as K, CandidateBasis as Kn, ReleaseExportJob as Kr, previewEffectReceipt as Kt, AcceptanceAbortCompletion as L, CandidateIntegrationMethod as Ln, ContentInfo as Lr, PreviewExecutionResult as Lt, releasePublicationGate as M, WorkspacePreservationMaterial as Mn, EndpointConfig as Mr, PreviewBackendPolicy as Mt, releasePublicationObservation as N, workspaceMaterialEntry as Nn, EndpointView as Nr, PreviewEffect as Nt, ReleasePublicationObservation as O, WorkspaceMaintenanceAuthority as On, RuntimeWorkspaceRecovery as Or, DatasetPreparationBackend as Ot, releasePublicationProof as P, workspaceMaterialSnapshot as Pn, RegistrySnapshot as Pr, PreviewEffectReceipt as Pt, AcceptanceAbortInput as Q, RepoFileOperation as Qn, WorkspaceAllocation as Qr, CandidateReviewInput as Qt, AcceptanceAbortCompletionEvidence as R, CandidateIntegrationStep as Rn, ContentReference as Rr, PreviewLifecycle as Rt, releaseAccessRequestHash as S, QualityMethod as Sn, AttachmentView as Sr, PreviewAccessTarget as St, ReleasePublication as T, QualityVerification as Tn, ExecutionHostView as Tr, previewAccessObservation as Tt, acceptanceAbortCompletionEvidence as U, candidateMaterialKey as Un, SessionInfo as Ur, PreviewView as Ut, AcceptanceAbortRecoveryInput as V, CandidateMaterial as Vn, ObjectTarget as Vr, PreviewStartRequest as Vt, acceptanceAbortFenceSuccessor as W, candidateMergeReport as Wn, SessionMessage as Wr, datasetPreparationRequest as Wt, acceptanceDatasetFences as X, createPlanDomain as Xn, ManagedRepository as Xr, CandidateHumanResult as Xt, acceptanceDatasetAbortRequest as Y, CandidateWorkFact as Yn, GitDirectoryIdentity as Yr, previewStopRequest as Yt, AcceptanceAbortDecision as Z, SourceArchive as Zn, SourceManifest as Zr, CandidateRejectionResult as Zt, ReleaseAccessRecord as _, WorkVerificationMethod as _n, PreparationContext as _r, PreviewSession as _t, OperationResult as a, ReleaseCandidateSummary as an, repoCommitArgs as ar, acceptancePreparationObservation as at, releaseAccessObservation as b, QualityMaterial as bn, PreparationTask as br, PreviewAccessBinding as bt, Request as c, ReleaseDelivery as cn, PipelineStageView as cr, acceptanceServiceClaim as ct, ScheduledCandidate as d, ReleaseDeliveryMethod as dn, IssueView as dr, AcceptanceMethod as dt, managedSourcePath as ei, CandidateReviewMethod as en, repoFileProof as er, acceptanceAbortDecision as et, ScheduledDispatch as f, OriginalFailure as fn, issueCreateArgs as fr, AcceptancePreparation as ft, ReleaseAccessBinding as g, WorkVerification as gn, PreparationClaim as gr, acceptancePreparationRequest as gt, ReleaseTicket as h, WorkAssessment as hn, PreparationAttempt as hr, acceptanceBackendPolicy as ht, Method as i, releasePromotionRequest as ii, ReleaseCandidateRevision as in, repoBinding as ir, AcceptanceReadiness as it, releasePublicationBasis as j, WorkspacePreservationManifest as jn, AgentManifest as jr, DatasetView as jt, ReleasePublicationProof as k, WorkspacePreservation as kn, RuntimeWorkspaceResult as kr, DatasetPreparationObservation as kt, Results as l, ReleaseDeliveryBasis as ln, PipelineView as lr, previewAcceptanceReleaseClaim as lt, ReleaseSession as m, WorkArtifactRef as mn, issueVerifyArgs as mr, AcceptanceResults as mt, AttemptView as n, AcceptanceCommitInput as ni, CandidateWorkProof as nn, repoWriteFileArgs as nr, AcceptancePreparationObservation as nt, OutboxView as o, ReleaseFreezeInput as on, repoIntegrateArgs as or, acceptancePreparedProof as ot, VerifiedRepair as p, VerifiedFindingView as pn, issueLinkArgs as pr, AcceptancePreparationRequest as pt, acceptanceDatasetAbortProof as q, CandidateSource as qn, ReleaseExportMaterial as qr, previewRuntimeFact as qt, Meta as r, AcceptedRelease as ri, ReleaseCandidateManifest as rn, RepoOperation as rr, AcceptancePreparedProof as rt, Parsed as s, ReleaseFreezeMethod as sn, PipelineDispatch as sr, acceptanceReleaseClaim as st, canonical as t, sourceManifest as ti, CandidateReviewView as tn, repoFileReadArgs as tr, AcceptancePreparationBackend as tt, RunView as u, ReleaseDeliveryMaterial as un, IssueOperation as ur, AcceptanceInput as ut, ReleaseAccessTarget as v, QualityArtifactRef as vn, PreparationHost as vr, PreviewTicket as vt, releaseTargetForPublication as w, QualityStage as wn, WorkspaceView as wr, previewAccessHttpRequest as wt, releaseAccessPolicy as x, QualityMaterialDescriptor as xn, UnderstandingView as xr, PreviewAccessRecord as xt, releaseAccessHttpRequest as y, QualityBasis as yn, PreparationJob as yr, previewOrigin as yt, AcceptanceAbortFinalization as z, CandidateRefUpdate as zn, ContextManifest as zr, PreviewRuntimeFact as zt };
+//# sourceMappingURL=json-COpzezJ6.d.mts.map
