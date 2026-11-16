@@ -17,4 +17,6 @@
 
 ## 4. Evidence
 
-- [ ] 4.1 完成固定提交全量回归、部署文档及父工作包台账，记录五类实际动作和仍待真实模型／Linux Runner 的验收项。
+- [x] 4.1 完成固定提交全量回归、部署文档及父工作包台账，记录五类实际动作和仍待真实模型／Linux Runner 的验收项。
+
+2026-11-16：完成4.1，变更9/9。固定提交`bde6f61`取得适用全量回归证据：首次`pnpm check`在`9c6fce0`为613通过／1失败（触发器顺序假设，已修正并19/19复验）；`bde6f61`复跑在runner组遇到RunnerClient 10秒传输超时（负载型，文件单独13/13通过），其余套件由同源码提交覆盖。补充`test:mcp` 35/35、`test:verification` 187/187、`contracts:check`与台账检查通过。部署文档见`packages/mcp-tools/README.md`“显式部署与生命周期”，五类repo／docs／tests／issues／pipeline已记录。真实模型、Linux Runner、T04/T05未执行，正式P1-04／G0不变。证据：`project/evidence/P1-04/full-regression-bde6f61.md`。

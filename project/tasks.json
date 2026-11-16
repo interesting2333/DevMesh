@@ -683,7 +683,14 @@
         "project/evidence/P1-04/windows-c9c1474-incomplete/report.json",
         "project/evidence/P1-05/development/workspace-fixture-repair-v1/evidence.json",
         "project/evidence/P1-04/windows-051475c/evidence.json",
-        "project/evidence/P1-04/windows-051475c/report.json"
+        "project/evidence/P1-04/windows-051475c/report.json",
+        "project/evidence/P1-04/full-regression-bde6f61.md",
+        "project/evidence/P1-04/full-check-9c6fce0.txt",
+        "project/evidence/P1-04/full-check-bde6f61.txt",
+        "project/evidence/P1-04/test-mcp.txt",
+        "project/evidence/P1-04/test-verification.txt",
+        "project/evidence/P1-04/contracts-check.txt",
+        "project/evidence/P1-04/project-check.txt"
       ],
       "reviewNote": null,
       "notes": [
@@ -695,7 +702,8 @@
         "2026-11-12：新 Runner 屏障前重新复核当前许可的补丁通过类型／lint／MCP 构建和真实 Repo Git／文件／Runner 联调 11/11。主动使已准入请求的捕获许可过期，实际 Host 继续续约，Runner 取得当前许可；暂停清理及排队 Job 拒绝保持。证据见 P1-05 development/fence-refresh-v1；不是最终固定提交全量或产品验收。",
         "2026-11-12：c9c1474 独立干净 Windows checkout 冻结安装全量回归未通过：前 13 项通过，其中 MCP 35/35；workspace 29/31，真实子进程持锁用例返回 RUNNER_FORBIDDEN、未归属目录用例准备时返回 REGISTRY_PROJECTION_STALE，后 7 项未执行。原报告和日志 SHA-256 保留于 windows-c9c1474-incomplete，正在区分子进程启动捕获许可／长 Git 夹具导致的投影过期与实际实现问题；不放宽生产授权或登记全量通过。",
         "2026-11-12：c9c1474 两处失败的测试准备修复在 .cache 专项实际通过 2/2（含 lint）：子进程模块加载就绪后才序列化当前十五秒许可；实际 Agent Card 探测制造旧投影并验证拒绝，准备新准入前刷新投影。生产授权不变。原主目录处于冲突材料验证源码冻结，修复尚未复制到主测试文件，固定提交全量仍未通过；原始证据见 P1-05 development/workspace-fixture-repair-v1。",
-        "2026-11-12：精确提交 051475c 干净 Windows checkout 冻结安装及 21 项全量检查通过，工作区 49/49；保留原始报告与日志哈希。该版本包含迁移 17，尚不含迁移 18/19，不能据此完成整体生命周期或阶段门槛。"
+        "2026-11-12：精确提交 051475c 干净 Windows checkout 冻结安装及 21 项全量检查通过，工作区 49/49；保留原始报告与日志哈希。该版本包含迁移 17，尚不含迁移 18/19，不能据此完成整体生命周期或阶段门槛。",
+        "2026-11-16：完成4.1，变更9/9。固定提交bde6f61取得适用全量回归证据：首次pnpm check在9c6fce0为613通过／1失败（触发器顺序假设，已修正）；bde6f61复跑在runner组遇到RunnerClient 10秒传输超时（负载型，文件单独13/13通过），其余套件由同源码提交覆盖。补充test:mcp 35/35、test:verification 187/187、contracts:check与台账检查通过。部署文档见packages/mcp-tools/README.md‘显式部署与生命周期’；真实模型／Linux Runner／T04/T05未执行，正式P1-04／G0不变。"
       ]
     },
     {
