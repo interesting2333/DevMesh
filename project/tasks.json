@@ -564,12 +564,14 @@
       ],
       "evidence": [
         "project/evidence/P1-02/离线实施进展.md",
-        "project/evidence/P1-02/windows-44d925f/report.json"
+        "project/evidence/P1-02/windows-44d925f/report.json",
+        "project/evidence/P1-02/preparation-migration-bootstrap-verification.md"
       ],
       "reviewNote": null,
       "notes": [
         "按连续目标和不依赖外部环境的用户指令，推进独立准备宿主、来源理解、部分回答与解释重试；正式 P1-01／G0 前置未验收，受控 Provider 只用于平台规则验证。",
-        "固定 44d925f Windows 冻结回归 19/19，准备测试 10/10；含本地官方 A2A、HTTP、SQLite Worker 和两次实际进程终止。"
+        "固定 44d925f Windows 冻结回归 19/19，准备测试 10/10；含本地官方 A2A、HTTP、SQLite Worker 和两次实际进程终止。",
+        "2026-11-16：勾选1.2／2.1，变更累计9/10。0008迁移已包含准备作业／步骤／A2A Task／共享容量及问题／答案／解释表与不可变触发器；只读bootstrap固定可信提交并拒绝HEAD、路径越界和超限。定向执行准备与迁移测试16项通过、0失败，覆盖逐个历史版本升级／回滚、真实FK、跨角色容量与缺Provider等待。3.3真实模型／企业环境验收保持未执行，正式P1-02／G0不变。"
       ]
     },
     {
