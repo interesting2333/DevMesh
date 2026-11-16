@@ -348,6 +348,16 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:archive.projectId,write:true});
     response.status(202).json(await content.storage.request('ackContentArchive',{meta,archiveId}));
   }));
+  router.get('/projects/:projectId/stats',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json(await content.storage.request('getProjectStats',{projectId}));
+  }));
+  router.get('/projects/:projectId/config-export',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json(await content.storage.request('getProjectConfigExport',{projectId}));
+  }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');
     if(!['true','false'].includes(includeAbsence))fail('SCHEMA_INVALID',422,'Invalid absence selection');

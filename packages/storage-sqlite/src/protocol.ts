@@ -177,6 +177,8 @@ export const requests = {
   ackContentArchive: z.strictObject({ meta, archiveId: opaqueKey }),
   getContentArchive: z.strictObject({ archiveId: opaqueKey }),
   listContentArchives: z.strictObject({ projectId: ids.project.optional(), contentHash: sha256.optional(), state: z.enum(['REQUESTED','ACKED','CANCELED']).optional(), limit: z.number().int().min(1).max(200).default(50) }),
+  getProjectStats: z.strictObject({ projectId: ids.project }),
+  getProjectConfigExport: z.strictObject({ projectId: ids.project }),
   recordControlTarget: z.strictObject({ meta, runId: ids.run, targetKind: z.enum(['ATTEMPT','PREPARATION','PREVIEW','JOB','WORKSPACE']), targetId: opaqueKey, state: z.enum(['PENDING','STOPPING','SAVED','RELEASED','UNKNOWN','FAILED']), failureCode: z.string().min(1).max(200).optional(), evidence: z.record(z.string(), z.json()).optional() }),
   finishControl: z.strictObject({ ...conditional, controlRevision: revision, outcome: z.literal('PAUSED') }),
   finishRun: z.strictObject({ ...conditional, outcome: z.enum(['FAILED', 'CANCELLED']), reason: z.string().min(1).max(2000) }),
@@ -202,6 +204,8 @@ export type InvocationView = { invocationId: string; projectId: string; principa
 export type ContentPinView = { pinId: string; contentHash: string; reason: string; createdAt: string; releasedAt: string | null };
 export type PublicTaskView = { taskKey: string; projectId: string; principalId: string; kind: string; state: string; payload: Record<string, unknown>; leaseOwner: string | null; leaseUntil: string | null; attempts: number; createdAt: string; updatedAt: string };
 export type ContentArchiveView = { archiveId: string; contentHash: string; projectId: string; state: string; requestedBy: string; requestedAt: string; ackedBy: string | null; ackedAt: string | null };
+export type ProjectStatsView = { projectId: string; members: number; runs: { total: number; active: number; terminal: number }; messages: number; artifacts: number; releases: number };
+export type ProjectConfigExportView = { projectId: string; name: string; members: { principalId: string; role: string }[]; registry: { generationId: string | null; manifestRevision: string | null; bindings: { role: string; endpointId: string; revision: number }[] } };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
 export interface Results extends ReleaseExportResults, SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceMaintenanceResults, WorkspaceReclamationResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults, AcceptanceAbortResults, AcceptanceAbortRecoveryResults, ReleasePublicationResults, ReleaseAccessResults, ReleaseSessionResults {
@@ -259,6 +263,8 @@ export interface Results extends ReleaseExportResults, SessionResults, RegistryR
   ackContentArchive: OperationResult;
   getContentArchive: ContentArchiveView;
   listContentArchives: ContentArchiveView[];
+  getProjectStats: ProjectStatsView;
+  getProjectConfigExport: ProjectConfigExportView;
   finishRun: OperationResult;
   lookupOperation: OperationResult | null;
   getOperation: OperationResult;

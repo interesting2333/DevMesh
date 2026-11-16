@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "f8638e7e2d2082be8adc96389a7307b75fab14d762325caa037e72b441310a0b"
+      "sha256": "d1966638a2932b3bd00acbef721c77dd57924ba7405449cac60f33f516d14372"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "dff9567d8d18251bfbd3774fd4ffbbcf7a32549dcdc40dc5a5f764441f57d508"
+      "sha256": "6291b13055e32d7841da5f5f000e93af83f2cfd8355793f8e5e55f66953c64b1"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "8efca234d132e1377dd483dcdf179765ef1dc78c095d61297af62b2f3cf59049"
+      "sha256": "6b98f57e22a86b563a7579d73c8885cada1b7e054e46a5658efed4d1d51e8cec"
     }
   ],
   "gates": [
@@ -2161,15 +2161,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-collaboration-stats"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P3-03/collaboration-stats-development-review.md","project/evidence/P3-03/collaboration-stats.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1／1.2／1.3，变更3/3。只读getProjectStats/getProjectConfigExport与受保护API/OpenAPI落地；统计成员/运行/消息/工件/Release，导出不含密钥。stats 3/3通过；导入/时序/UI/T16/T17未实现，正式P3-03／G1不变。"]
     },
     {
       "id": "P3-04",

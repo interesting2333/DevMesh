@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView, ContentArchiveView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView, ContentArchiveView, ProjectStatsView, ProjectConfigExportView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -831,6 +831,31 @@ export function createDomain(db: DatabaseSync) {
     },
     listContentArchives(input: Parsed<'listContentArchives'>) {
       return all('SELECT * FROM content_archive_requests WHERE (? IS NULL OR project_id=?) AND (? IS NULL OR content_hash=?) AND (? IS NULL OR state=?) ORDER BY requested_at,archive_id LIMIT ?', input.projectId ?? null, input.projectId ?? null, input.contentHash ?? null, input.contentHash ?? null, input.state ?? null, input.state ?? null, input.limit).map(contentArchiveView);
+    },
+    getProjectStats(input: Parsed<'getProjectStats'>) {
+      const project = get('SELECT project_id FROM projects WHERE project_id=?', input.projectId);
+      if (!project) throw new StorageError('RESOURCE_NOT_FOUND', 404, 'Project does not exist');
+      const count = (query: string, ...args: string[]) => Number(get(query, ...args)?.n ?? 0);
+      return {
+        projectId: input.projectId,
+        members: count('SELECT count(*) n FROM project_members WHERE project_id=?', input.projectId),
+        runs: {
+          total: count('SELECT count(*) n FROM runs WHERE project_id=?', input.projectId),
+          active: count('SELECT count(*) n FROM runs WHERE project_id=? AND terminal_outcome IS NULL', input.projectId),
+          terminal: count('SELECT count(*) n FROM runs WHERE project_id=? AND terminal_outcome IS NOT NULL', input.projectId)
+        },
+        messages: count('SELECT count(*) n FROM input_messages WHERE project_id=?', input.projectId),
+        artifacts: count('SELECT count(*) n FROM artifacts WHERE project_id=?', input.projectId),
+        releases: count('SELECT count(*) n FROM releases WHERE project_id=?', input.projectId)
+      };
+    },
+    getProjectConfigExport(input: Parsed<'getProjectConfigExport'>) {
+      const project = get('SELECT project_id,name FROM projects WHERE project_id=?', input.projectId);
+      if (!project) throw new StorageError('RESOURCE_NOT_FOUND', 404, 'Project does not exist');
+      const members = all('SELECT principal_id,role FROM project_members WHERE project_id=? ORDER BY principal_id', input.projectId).map(row => ({ principalId: String(row.principal_id), role: String(row.role) }));
+      const control = get('SELECT c.active_generation_id,g.manifest_revision FROM registry_control c JOIN registry_generations g ON g.generation_id=c.active_generation_id WHERE c.singleton_id=1');
+      const bindings = control ? all('SELECT role,endpoint_id,endpoint_revision FROM role_endpoint_bindings WHERE generation_id=? ORDER BY role', String(control.active_generation_id)).map(row => ({ role: String(row.role), endpointId: String(row.endpoint_id), revision: Number(row.endpoint_revision) })) : [];
+      return { projectId: input.projectId, name: String(project.name), members, registry: { generationId: control ? String(control.active_generation_id) : null, manifestRevision: control ? String(control.manifest_revision) : null, bindings } };
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;

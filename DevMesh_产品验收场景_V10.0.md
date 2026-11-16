@@ -591,3 +591,8 @@ REPLACE方案可以先交付和冻结供用户审查，不能在交付阶段要�
 
 2026-11-16：内容归档账本增量完成，变更3/3。归档request／ack／get／list与受保护API／OpenAPI落地；ACK不删除、丢失ACK保持REQUESTED；无删除／GC路径。content-archive测试2/2、迁移7/7。正式P2-07与G1～G4不变。
 
+
+### 2026-11-16 P3-03 协作统计与配置导出离线开发记录
+
+2026-11-16：P3-03提前开发增量完成，变更3/3。新增只读getProjectStats／getProjectConfigExport与受保护API／OpenAPI；统计成员／运行／消息／工件／Release，配置导出仅角色与Registry绑定、不含密钥；导入／时序／UI／T16／T17未实现。stats测试3/3。正式P3-03与G1～G4不变。
+
