@@ -106,6 +106,10 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   const invocationCreate=z.strictObject({endpointId:opaqueKey,endpointRevision:revision,registryGenerationId:opaqueKey,inputManifestHash:sha256,definitionSnapshotHash:sha256});
   const invocationTransition=z.strictObject({expectedState:z.enum(['ACCEPTED','WORKING','INPUT_REQUIRED','COMPLETED','FAILED','CANCELED']),state:z.enum(['WORKING','INPUT_REQUIRED','COMPLETED','FAILED','CANCELED'])});
   const contentPinCreate=z.strictObject({contentHash:sha256,reason:z.string().min(1).max(500)});
+  const publicTaskState=z.enum(['QUEUED','LEASED','COMPLETED','FAILED']);
+  const publicTaskCreate=z.strictObject({kind:z.string().min(1).max(100),payload:z.record(z.string(),z.json()),quota:z.number().int().min(1).max(10000).optional()});
+  const publicTaskClaim=z.strictObject({workerId:opaqueKey,leaseMs:z.number().int().min(1000).max(300000).optional()});
+  const publicTaskComplete=z.strictObject({workerId:opaqueKey,outcome:z.enum(['COMPLETED','FAILED'])});
   router.post('/attachments',route(async(request,response,identity)=>{
     const meta=bodyMeta(request,'uploads',identity);
     if(activeUploads>=maximumUploads)fail('UPLOAD_CAPACITY',429,'Upload capacity is full');
@@ -297,6 +301,31 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const projectId=parseContract(ids.project,request.query.projectId as string);
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
     response.json(await content.storage.request('getStorageDiagnostics',{}));
+  }));
+  router.post('/projects/:projectId/public-tasks',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),meta=bodyMeta(request,projectId,identity),body=parseContract(publicTaskCreate,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:true});
+    response.status(202).json(await content.storage.request('enqueuePublicTask',{meta,projectId,kind:body.kind,payload:body.payload,...(body.quota===undefined?{}:{quota:body.quota})}));
+  }));
+  router.get('/projects/:projectId/public-tasks',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),state=request.query.state===undefined?undefined:parseContract(publicTaskState,request.query.state),limit=positive(request.query.limit??'50',1,200);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json({tasks:await content.storage.request('listPublicTasks',{projectId,limit,...(state===undefined?{}:{state})})});
+  }));
+  router.post('/projects/:projectId/public-tasks\\:claim',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),meta=bodyMeta(request,projectId,identity),body=parseContract(publicTaskClaim,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:true});
+    response.json({task:await content.storage.request('claimPublicTask',{meta,projectId,workerId:body.workerId,...(body.leaseMs===undefined?{}:{leaseMs:body.leaseMs})})});
+  }));
+  router.get('/public-tasks/:taskKey',route(async(request,response,identity)=>{
+    const task=await content.storage.request('getPublicTask',{taskKey:parseContract(opaqueKey,request.params.taskKey)});
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:task.projectId,write:false});
+    response.json(task);
+  }));
+  router.post('/public-tasks/:taskKey\\:complete',route(async(request,response,identity)=>{
+    const taskKey=parseContract(opaqueKey,request.params.taskKey),task=await content.storage.request('getPublicTask',{taskKey}),meta=bodyMeta(request,task.projectId,identity),body=parseContract(publicTaskComplete,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:task.projectId,write:true});
+    response.status(202).json(await content.storage.request('completePublicTask',{meta,taskKey,workerId:body.workerId,outcome:body.outcome}));
   }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');

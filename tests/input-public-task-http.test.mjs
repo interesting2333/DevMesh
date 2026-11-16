@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {inputFixture} from './fixtures/input-data.mjs';
+
+test('public task HTTP enqueues, claims and completes under quota and lease rules',{timeout:120000},async t=>{
+  const f=await inputFixture(t),created=await f.create({}),p=created.body.result,projectId=p.projectId;
+  const key=randomUUID();
+  const enqueue=(body,id=randomUUID())=>f.call(`/projects/${projectId}/public-tasks`,{method:'POST',headers:{'content-type':'application/json','idempotency-key':id},body:JSON.stringify(body)});
+  const first=await enqueue({kind:'review',payload:{id:1},quota:2},key);
+  assert.equal(first.response.status,202,JSON.stringify(first.body));
+  const replay=await enqueue({kind:'review',payload:{id:1},quota:2},key);
+  assert.equal(replay.body.result.taskKey,first.body.result.taskKey);
+  await enqueue({kind:'review',payload:{id:2},quota:2});
+  const third=await enqueue({kind:'review',payload:{id:3},quota:2});
+  assert.equal(third.response.status,429);
+  assert.equal(third.body.error.code,'PUBLIC_QUOTA_EXCEEDED');
+  const claim=await f.call(`/projects/${projectId}/public-tasks:claim`,{method:'POST',headers:{'content-type':'application/json','idempotency-key':randomUUID()},body:JSON.stringify({workerId:'worker.one'})});
+  assert.equal(claim.response.status,200,JSON.stringify(claim.body));
+  const task=claim.body.task;
+  assert.equal(task.state,'LEASED');
+  const wrong=await f.call(`/public-tasks/${task.taskKey}:complete`,{method:'POST',headers:{'content-type':'application/json','idempotency-key':randomUUID()},body:JSON.stringify({workerId:'worker.two',outcome:'COMPLETED'})});
+  assert.equal(wrong.response.status,409);
+  assert.equal(wrong.body.error.code,'PUBLIC_TASK_LEASE_INVALID');
+  const done=await f.call(`/public-tasks/${task.taskKey}:complete`,{method:'POST',headers:{'content-type':'application/json','idempotency-key':randomUUID()},body:JSON.stringify({workerId:'worker.one',outcome:'COMPLETED'})});
+  assert.equal(done.response.status,202,JSON.stringify(done.body));
+  const list=await f.call(`/projects/${projectId}/public-tasks`);
+  assert.equal(list.body.tasks.length,2);
+  assert.equal((await f.call(`/public-tasks/${task.taskKey}`)).body.state,'COMPLETED');
+});

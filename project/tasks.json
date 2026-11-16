@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "7081c69f3fd5c565e81ad1d3c8141932b8f235233cfcba4e52940a9944402c6c"
+      "sha256": "32248dd3da8185db3e3225b49716bb1a7f92c61a74ef6d3906138713c3a789dd"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "9d421b1051c479b20849d694c49879e2c2c56fb769ba1f177a7d85cd798ea82e"
+      "sha256": "a36d584dbc6a745f97b7aaa87e75f3c54a3c7cab7dacede12921ad761f74a12f"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "bc4583be9866931f8cf1f8afdcbf795a3f9134f6de93feb84a2bea9dfa5a71fe"
+      "sha256": "f5106af126576661ecbbebb5eb852d9af0716eb8d1c87445c68909c17aa326fc"
     }
   ],
   "gates": [
@@ -2022,7 +2022,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P2-06/invocation-host-development-review.md","project/evidence/P2-06/invocation-host.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0050新增invocations；create／get／list／transition落地，同键幂等、同键不同请求拒绝、显式状态机与终态保护。invocation-host 2/2通过；受保护API、公共Task/Inbox、配额与文档同步未完成，正式P2-06／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更4/4。Invocation API与OpenAPI接入；公共Task/Inbox、配额与取消核实审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-06仍NOT_STARTED，G0～G4未变。", "2026-11-16：公共任务内核1.1完成，变更1/3。迁移0052新增public_tasks；enqueue／claim／complete／get／list落地，同键幂等、主体配额、租约重领、owner校验与终态保护。public-tasks 2/2通过；受保护API与文档同步未完成，正式P2-06／G1不变。"]
+      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0050新增invocations；create／get／list／transition落地，同键幂等、同键不同请求拒绝、显式状态机与终态保护。invocation-host 2/2通过；受保护API、公共Task/Inbox、配额与文档同步未完成，正式P2-06／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更4/4。Invocation API与OpenAPI接入；公共Task/Inbox、配额与取消核实审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-06仍NOT_STARTED，G0～G4未变。", "2026-11-16：公共任务内核1.1完成，变更1/3。迁移0052新增public_tasks；enqueue／claim／complete／get／list落地，同键幂等、主体配额、租约重领、owner校验与终态保护。public-tasks 2/2通过；受保护API与文档同步未完成，正式P2-06／G1不变。", "2026-11-16：公共任务内核完成1.2／1.3，变更3/3。公共任务API与OpenAPI接入；文档/基线同步，manage/openspec通过。正式P2-06仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P2-07",

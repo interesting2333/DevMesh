@@ -28,3 +28,12 @@ node --test --reporter=spec tests/public-tasks.test.mjs
 - 受保护公共任务 API（1.2）与文档同步（1.3）未完成。
 - 缺信息补齐“只准入一次”、真实取消核实、外部 Agent 调用与 T7/T20/T21 未实现。
 - 正式 P2-06／G1～G4 不变。
+
+## 追加：受保护公共任务 API（1.2）
+
+- `POST /projects/{projectId}/public-tasks`：成员写权限；quota 可选。
+- `GET /projects/{projectId}/public-tasks?state=`：成员读权限。
+- `POST /projects/{projectId}/public-tasks:claim`：成员写权限；按项目领取最老任务或过期租约。
+- `GET /public-tasks/{taskKey}`、`POST /public-tasks/{taskKey}:complete`：按任务所属项目复核权限。
+- OpenAPI 新增四个路径（总数 80）；错误码补充配额／租约／终态。
+- `tests/input-public-task-http.test.mjs` 1/1：入队、幂等、配额 429、claim、错误 worker 409、完成与列表。

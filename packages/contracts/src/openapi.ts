@@ -136,6 +136,10 @@ export function createOpenApiDocument() {
   add('/api/v1/projects/{projectId}/content-pins','get','ReadContentPins',undefined,[parameter('projectId',ids.project),{name:'contentHash',in:'query',schema:jsonSchema(sha256)},{name:'activeOnly',in:'query',schema:{type:'boolean'}}]);
   add('/api/v1/projects/{projectId}/content-pins/{pinId}:release','post','ReleaseContentPin',undefined,[parameter('projectId',ids.project),parameter('pinId',opaqueKey),key],undefined,'202');
   add('/api/v1/storage/diagnostics','get','ReadStorageDiagnostics',undefined,[{name:'projectId',in:'query',required:true,schema:jsonSchema(ids.project)}]);
+  add('/api/v1/projects/{projectId}/public-tasks','get','ReadPublicTasks',undefined,[parameter('projectId',ids.project),{name:'state',in:'query',schema:{type:'string',enum:['QUEUED','LEASED','COMPLETED','FAILED']}},{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:200,default:50}}]);
+  add('/api/v1/projects/{projectId}/public-tasks:claim','post','ClaimPublicTask',undefined,[parameter('projectId',ids.project),key],undefined,'200');
+  add('/api/v1/public-tasks/{taskKey}','get','ReadPublicTask',undefined,[parameter('taskKey',opaqueKey)]);
+  add('/api/v1/public-tasks/{taskKey}:complete','post','CompletePublicTask',undefined,[parameter('taskKey',opaqueKey),key],undefined,'202');
   const acceptancePath='/api/v1/runs/{runId}/candidates/{candidateId}/acceptance',acceptanceParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],conditionalAcceptance=[...acceptanceParameters,key,parameter('If-Match',strongETag,'header')];
   add(acceptancePath,'get','ReadAcceptanceBasis','AcceptanceBasis',acceptanceParameters);
   for(const [suffix,operationId,mime] of [['view','ReadAcceptancePage','text/html'],['client.js','ReadAcceptanceClient','application/javascript']] as const){const path=acceptancePath+'/'+suffix;add(path,'get',operationId,undefined,acceptanceParameters);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'当前成员准确候选接受入口；GET不准备、确认、接受或签发应用访问',content:{[mime]:{schema:{type:'string'}}}};}
