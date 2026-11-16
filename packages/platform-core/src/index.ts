@@ -213,7 +213,8 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
       const { DeepSeekProvider, AgentRuntime, RuntimeConsumer } = runtimeModule;
       const credentials=options.resolveCredential??a2aModule!.environmentCredentials();
       const providers=runtimeConfig.providers.map(p=>new DeepSeekProvider(p,credentials));
-      const runtime=new AgentRuntime(services.local.storage,services.content,providers,[...(options.runtimeTools??[]),...(mcp?.tools??[])],runtimeConfig.tokenLimit,await options.workspaceLifecycle?.(services));
+      const progress=inputApi?.enabled?inputApi.publishModelProgress:undefined;
+      const runtime=new AgentRuntime(services.local.storage,services.content,providers,[...(options.runtimeTools??[]),...(mcp?.tools??[])],runtimeConfig.tokenLimit,await options.workspaceLifecycle?.(services),progress);
       const localEndpoints=config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled);
       consumer=new RuntimeConsumer(services.local.storage,runtime,localEndpoints.map(e=>e.endpointId),'runtime.local');
       await consumer.start();
@@ -230,6 +231,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
           callerId:prep.callerId,workerId:'preparation.local',tokenLimit:runtimeConfig.tokenLimit,maxInputBytes:prep.maxInputBytes,maxOutputTokens:prep.maxOutputTokens,
           providers:{product:providers.find(p=>p.config.providerId===prep.productProviderId)!,architect:providers.find(p=>p.config.providerId===prep.architectProviderId)!},
           available:async provider=>!!await credentials(provider.config.credentialRef),
+           progress,
           ...(prep.bootstrapPaths.length?{bootstrap:{repositoryRoot:config.inputApi!.repositoryRoot,paths:prep.bootstrapPaths}}:{}),
         });
         preparationConsumer=new PreparationConsumer(preparation,localEndpoints.filter(e=>e.supportedSkills.includes('devmesh.prepare.'+e.role)).map(e=>e.endpointId));

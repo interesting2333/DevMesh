@@ -17,7 +17,7 @@ async function providerFixture(t,handle,extra={}){
  t.after(async()=>{server.closeAllConnections();await new Promise(r=>server.close(r));});await new Promise(r=>server.listen(0,'127.0.0.1',r));
  const provider=new DeepSeekProvider({providerId:'test.provider',endpoint:'http://127.0.0.1:'+server.address().port,model:'test.model',credentialRef:'test.model.ref',capabilities,requestTimeoutMs:120000,...extra},async()=>'local-fixture-secret');return {provider,requests};
 }
-async function setup(t,handle,tool,extra={}){
+async function setup(t,handle,tool,extra={},progress){
  let db;t.after(()=>db?.close());
  const f=await registryFixture(t),p=await providerFixture(t,handle,extra),d=await prepareDispatch(f,f.registry,{outputSchemaId:final.schemaVersion,allowedTools:tool?[tool.name]:[],requestTimeoutMs:p.provider.config.requestTimeoutMs});
  const request=f.storage.request.bind(f.storage);f.storage.request=async(method,input)=>{try{return await request(method,input);}catch(e){t.diagnostic(method+': '+e.message);throw e;}};
@@ -26,7 +26,7 @@ async function setup(t,handle,tool,extra={}){
  // host load. Production admission still issues the original bounded lease.
  const grant=db.prepare('SELECT * FROM execution_grants WHERE attempt_id=?').get(d.attemptId),permit=JSON.parse(grant.permit_json);permit.expiresAt=new Date(Date.now()+180000).toISOString();db.prepare('UPDATE execution_grants SET expires_at=?,permit_json=? WHERE grant_id=?').run(permit.expiresAt,canonical(permit),grant.grant_id);
  const accepted=await f.storage.request('acceptA2AWork',d.request),[c]=await f.storage.request('claimAcceptedWork',{endpointId:d.delegation.endpointId,workerId:'runtime.test',limit:1}),claim={endpointId:c.endpointId,taskId:c.taskId,workerId:c.workerId,claimToken:c.claimToken};
- const runtime=new AgentRuntime(f.storage,f.content,[p.provider],tool?[tool]:[]);
+ const runtime=new AgentRuntime(f.storage,f.content,[p.provider],tool?[tool]:[],100000,undefined,progress);
  return {...f,...p,...d,accepted,claim,runtime,db};
 }
 const schema=z.strictObject({path:z.string().min(1)});
@@ -92,4 +92,19 @@ test('A2A HTTP acceptance reaches optional consumer and returns durable candidat
  const accepted=await f.client.sendMessage(d.params);let task;for(let i=0;i<150;i++){task=await f.client.getTask({id:accepted.id});if(task.status?.state===3)break;await delay(20);}
  assert.equal(task.status.state,3);assert.equal(task.artifacts.length,1);assert.equal(p.requests.length,1);assert.notEqual((await f.storage.request('getAttempt',{attemptId:d.attemptId})).state,'SUCCEEDED');
  await consumer.stop();
+});
+
+function streamAnswer(res,value){res.setHeader('content-type','text/event-stream');const choice=value.choices[0],delta={role:'assistant',content:choice.message.content,...(choice.message.tool_calls.length?{tool_calls:choice.message.tool_calls.map((tool,index)=>({...tool,index}))}:{})};res.end('data: '+JSON.stringify({id:value.id,model:value.model,choices:[{index:0,delta,finish_reason:choice.finish_reason}],usage:value.usage})+'\n\ndata: [DONE]\n\n');}
+
+test('actual SSE runtime progress is separate from durable seq and tools follow the saved complete response',async t=>{
+ const frames=[];let executions=0,f;
+ const tool={name:call.name,description:'read',schema,effectClass:'READ',async execute(){executions++;assert.equal(f.db.prepare('SELECT state FROM model_steps WHERE step_no=1').get().state,'RESPONDED');assert.equal(frames.at(-1).state,'persisted');return {state:'SUCCEEDED',value:'read'};},async query(){throw Error('No query expected');}};
+ f=await setup(t,(rs,_req,res)=>streamAnswer(res,rs.length===1?answer('只读临时进展',[call]):answer()),tool,{responseMode:'sse'},frame=>{assert.equal(frame.runId,f.runId);assert.equal(frame.projectId,f.projectId);assert.equal(Object.hasOwn(frame,'seq'),false);frames.push(frame);});
+ const result=await f.runtime.execute(f.claim);assert.equal(result.state,'completed',JSON.stringify(result));assert.equal(executions,1);assert.equal(f.requests.length,2);assert.equal(frames.filter(frame=>frame.state==='started').length,2);assert.equal(frames.filter(frame=>frame.state==='persisted').length,2);assert.equal(frames.filter(frame=>frame.state==='interrupted').length,0);assert.equal(frames.some(frame=>frame.text?.includes('README.md')),false);assert.equal(JSON.parse(f.db.prepare('SELECT config_json FROM runtime_activations').get().config_json).provider.responseMode,'sse');
+});
+
+test('SSE response persistence failure interrupts display and admits no tool',async t=>{
+ const frames=[];let executions=0;const tool={name:call.name,description:'read',schema,effectClass:'READ',async execute(){executions++;return {state:'SUCCEEDED',value:''};},async query(){return {state:'OUTCOME_UNKNOWN'};}};
+ const f=await setup(t,(_rs,_req,res)=>streamAnswer(res,answer('临时但未保存',[call])),tool,{responseMode:'sse'},frame=>frames.push(frame));f.db.exec("CREATE TRIGGER cut_sse_response BEFORE UPDATE OF response_content_hash ON model_steps WHEN NEW.response_content_hash IS NOT NULL BEGIN SELECT RAISE(ABORT,'sse-disk-cut'); END");
+ const result=await f.runtime.execute(f.claim);assert.equal(result.state,'reconcile');assert.equal(executions,0);assert.equal(f.requests.length,1);assert.equal(frames.at(-1).state,'interrupted');assert.equal(frames.some(frame=>frame.state==='persisted'),false);assert.equal(f.db.prepare('SELECT state FROM model_steps').get().state,'SENT');assert.equal(f.db.prepare('SELECT unknown_usage FROM runtime_activations').get().unknown_usage,1);
 });

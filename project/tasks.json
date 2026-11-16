@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "c99ae9186ee907c8a15d6149e4c8d73a69ce3ffd6cb45d7a35089aee3ba11ab1"
+      "sha256": "3aeee1554f790905ae44b459fa863fd64649a12a54b7c29059974c211d030435"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "b68d45e9dd370524ce97b1bde7068fb03e09f843c76042760c7fcdb3643c5082"
+      "sha256": "843df617ccc3572f2df5b845395d9c8526b645fb0461d3e951d87a83b4ae8585"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "4245bbef653d35b38ac08ef2c2a9621f6527e8e9a9047ed859ddfbec33e698f1"
+      "sha256": "b9748d0a0b06b409ed4464b06764f4ebe7c7efa41b6a82afea8d7af4520188e8"
     }
   ],
   "gates": [
@@ -299,7 +299,8 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-agent-runtime-provider"
+        "implement-agent-runtime-provider",
+        "implement-workbench-first-path"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -312,14 +313,16 @@
       ],
       "evidence": [
         "project/evidence/P0-06/离线实施进展.md",
-        "project/evidence/P0-06/cross-platform-summary.json"
+        "project/evidence/P0-06/cross-platform-summary.json",
+        "project/evidence/P1-08/model-stream-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
         "用户明确暂无模型、企业认证和 Docker/gVisor；先完成代码与离线验证，真实三组模型样本保留待联调，不凭本地夹具将工作包验收为 DONE。",
         "Runtime 代码已提交；本地开发回归发现两项测试／宿主时序问题，已修正并继续复验。固定版本与 Linux 验证尚未全部完成，真实模型三组样本仍待资源，见离线实施进展。",
         "Windows 固定生产快照 e4d89ef：首次 CLI 启动超时失败原样保留，复跑 15/15 检查通过；d385c67 测试修正版本地 Runtime 串行 18/18 通过。Linux WSL 启动超时，真实 DeepSeek 样本未执行，不宣称跨平台或模型验收。",
-        "WSL 后续恢复可用：同一 e4d89ef 固定快照 Linux 15/15 检查通过，与 Windows 源指纹／锁文件一致；真实模型三组样本仍未执行，状态不变。"
+        "WSL 后续恢复可用：同一 e4d89ef 固定快照 Linux 15/15 检查通过，与 Windows 源指纹／锁文件一致；真实模型三组样本仍未执行，状态不变。",
+        "2026-11-16：P1-08子项3.2复用本工作包Provider／Runtime／Preparation，显式SSE与只读临时content回调；默认JSON及原冻结配置形状保持，最终响应先持久再执行工具。协议18及Runtime／Preparation28本机验证通过，真实模型样本未执行，P0-06正式状态不变；按用户要求当前项提交后暂停。"
       ]
     },
     {
@@ -1727,7 +1730,13 @@
         "tests/fixtures/workbench-events.mjs",
         "tests/workbench-events.test.mjs",
         "packages/input-api/src/web/workbench-live.ts",
-        "tests/browser/workbench-live.test.mjs"
+        "tests/browser/workbench-live.test.mjs",
+        "packages/agent-runtime/src/progress.ts",
+        "packages/agent-runtime/src/provider-stream.ts",
+        "packages/input-api/src/web/workbench-progress.tsx",
+        "tests/runtime-provider-stream.test.mjs",
+        "tests/browser/workbench-stream.test.mjs",
+        "tests/fixtures/workbench-model.mjs"
       ],
       "evidence": [
         "project/evidence/P1-08/local-input-development-review.md",
@@ -1787,7 +1796,10 @@
         "project/evidence/P1-08/development/events-server/manifest.json",
         "project/evidence/P1-08/events-client-development-review.md",
         "project/evidence/P1-08/development/events-client/evidence.json",
-        "project/evidence/P1-08/development/events-client/manifest.json"
+        "project/evidence/P1-08/development/events-client/manifest.json",
+        "project/evidence/P1-08/model-stream-development-review.md",
+        "project/evidence/P1-08/development/model-stream/evidence.json",
+        "project/evidence/P1-08/development/model-stream/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1806,7 +1818,8 @@
         "2026-11-16：P1-08准确交付导航开发增量完成本机验证，2.4勾选，implement-workbench-first-path累计7/13；正式工作包与G0仍等待前置。准确Run候选有界分页／明确选择／旧依据标识，项目接受版本单独携带来源Run。审查／预览管理／接受／已发布版本／交付包均以受保护GET进入，返回恢复原工作台Run、页签／小屏面板／选择及原生草稿；未保存File或session保存失败阻止离开。最终新HTTP4／浏览器5与完整受影响回归共86项独立通过，零失败／取消／跳过；构建／类型／Lint／契约、644条源码映射关联及740输入产物绑定，18份实际契约／服务端／浏览器产物前后当前一致。OpenAPI补齐65路径及原接受页面入口，两个独立浏览器模块因嵌入契约变化重建。完整页面回归旧文案断言已按实际新提示修正，权限／无输入框／撤权断言未弱化；接受丢ACK检查补充实际HTTP202提交检查点，原SQL／恢复断言保持；补充检查首次误写HTTP200的测试错误及修正记录保留；既有非输入清单差异按准确hash另记，未将其伪装为全清单零漂移。先前6次失败与诊断保留，修复严格scope键、类型入参及缺原文件夹具，未放宽质量停止规则／超时／断言；首次受控质量任务stopRequested及后续接受回归SQL计数失败的原始原因均未确定，不将后续通过当成根因解释。SQL1～45／存储协议／Runner／原生日记／依赖不变。同一Agent开发复核；上游来源准入、模型／人工观察／OCI／物理Runner事实仍为明确夹具，真实模型／OIDC／Linux、WebSocket及完整产品／门槛验收继续。",
         "2026-11-16：实时事件订阅开发中（3.1），复用HTTP鉴权边界，新增ws固定依赖、Worker无payload提交唤醒与准确事件窗口；准备真实宿主连接／补发／撤权／背压／停机检查，暂不勾选。7/13与正式状态／门槛保持；真实模型、OIDC、Linux继续留空。",
         "2026-11-16：P1-08事件服务器开发增量完成3.1，本变更累计8/13，正式P1-08仍等待前置／G0。实际平台HTTP宿主挂接严格同源／可信身份WebSocket；先有界Worker提交唤醒订阅再授权补历史，连续seq、读取后再授权、空闲撤权、背压／缺口resync、容量及停止排空验证。新增ws8.23.0／@types/ws8.18.2锁定依赖、严格WS契约和只读getInputEventWindow，既有事件HTTP形状不变；SQL1～45及Runner未改。最终新连接11、输入26、存储47、基础9、受影响HTTP／契约47、真实Edge页面9，共149通过、1个既有Windows下POSIX信号跳过，零失败／取消；页面日志保留后续工具输出与最终TAP，明确非完整原始stdout。构建／类型／Lint／契约通过，159产物及421源码映射关联核实；构建后仅测试MJS／root脚本元数据差异另列，不冒称全清单零漂移。5次先前失败及准确输入保留；临时DB删历史／cork实际TCP为明确故障注入，不代签归档删除或远程网络。单Agent开发复核；客户端连续合并／重连、事件期间交互、完整产品及真实模型／OIDC／Linux继续。",
-        "2026-11-16：P1-08持久事件客户端开发增量接入连续seq合并、重复／乱序去重、HTTP有界补缺、断线／溢出重快照及重新订阅；异常协议自动重快照每30秒最多5次，耗尽后显式重连。固定进展提示与最近100条记录不替换工作区，不重建草稿／输入身份／依据、页签、焦点或选择；显式查看更新沿用原保存guard。当前可信主体／准确Run、请求代际／AbortSignal及撤权清理继续生效。实际Edge原生WS／IndexedDB和平台HTTP／文件Worker验证新事件6、既有页面9、输入26及受影响HTTP／契约47，共88通过，零失败／跳过／取消；构建、类型、Lint、契约及422条源码映射关联通过。临时模型片段尚未接入，完整3.2保持未勾选，仍8/13；3.3／4.1～4.3和真实模型／OIDC／Linux验收继续。正式P1-08及G0～G4不变，同一Agent开发复核。"
+        "2026-11-16：P1-08持久事件客户端开发增量接入连续seq合并、重复／乱序去重、HTTP有界补缺、断线／溢出重快照及重新订阅；异常协议自动重快照每30秒最多5次，耗尽后显式重连。固定进展提示与最近100条记录不替换工作区，不重建草稿／输入身份／依据、页签、焦点或选择；显式查看更新沿用原保存guard。当前可信主体／准确Run、请求代际／AbortSignal及撤权清理继续生效。实际Edge原生WS／IndexedDB和平台HTTP／文件Worker验证新事件6、既有页面9、输入26及受影响HTTP／契约47，共88通过，零失败／跳过／取消；构建、类型、Lint、契约及422条源码映射关联通过。临时模型片段尚未接入，完整3.2保持未勾选，仍8/13；3.3／4.1～4.3和真实模型／OIDC／Linux验收继续。正式P1-08及G0～G4不变，同一Agent开发复核。",
+        "2026-11-16：完成3.2临时模型输出与中断显示，变更累计9/13。DeepSeek显式responseMode:sse按实际HTTP协议增量解析，默认JSON及旧配置hash保持；只读content片段独立streamId/index，无领域seq或历史重放，最终响应落盘后才显示已保存及执行工具。WS逐帧复核权限并有界排队；浏览器断线／截断显示中断，保留草稿、页签和焦点，刷新只读取已保存结果。最终协议18、Runtime／Preparation28、契约18、WS13、既有实时浏览器6及新实际平台浏览器3，共86通过，零失败／跳过／取消；构建／类型／Lint／OpenAPI通过。初次类型错误和浏览器旧依据草稿预期错误的准确输入／原日志保留，修复后验证通过。实际本地SSE／官方A2A／平台／文件Worker／Edge不代签真实模型、OIDC、Linux或完整产品验收。按用户指令完成本项后统一提交并暂停，不执行3.3或下一项；正式P1-08、P0-06及G0～G4不变。"
       ]
     },
     {

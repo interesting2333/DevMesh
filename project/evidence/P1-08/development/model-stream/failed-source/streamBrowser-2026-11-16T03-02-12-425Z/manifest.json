@@ -1,0 +1,30 @@
+{
+  "record": "streamBrowser-2026-11-16T03-02-12-425Z.json",
+  "base": "c43ea2baca6e839900f2ed77a03234a8db1402ce",
+  "sourceMode": "Exact changed source bytes plus source hashes and unchanged Git base",
+  "saved": {
+    "packages/agent-runtime/src/index.ts": "f06432d04d8b543b8d2d7b272d7b2fbe154ae8e87d0d2c4aa93f322540cfc435",
+    "packages/agent-runtime/src/preparation.ts": "ed400d10302914189e78a085a6d48d95b25824e2c6d8e38e27271a75ed59e5b8",
+    "packages/agent-runtime/src/provider.ts": "0187fd8e29658906d604c1b57e744333f1917c5e78bd05b7146a6893046183b7",
+    "packages/agent-runtime/src/runtime.ts": "6ae6b8e8350d26676c162dba68868882b624e8d8d7099246cb38bef03f938796",
+    "packages/contracts/openapi.json": "ddf0653d0de3ae6b8002589ab38cad8320e872ab93b52770a641497b3e865b95",
+    "packages/contracts/src/index.ts": "704c3681630a99fa0bda175b6a2f59799f1371fc7446676d946658ea1e7858fe",
+    "packages/contracts/src/openapi.ts": "6cabe4fbf4509c146bef53e9452f6fdfa9f26c253ea34d3934bbb54f89af76a3",
+    "packages/contracts/src/workbench-events.ts": "4a69aa6a7f3c871902aacd133c15f8ddd73b60fb167ca8cc882c8bf62275184b",
+    "packages/input-api/src/index.ts": "c102975ab6d3e96b5bc19df046461dbe3bab1eccb76fc0bf955301acc8f07e58",
+    "packages/input-api/src/web/workbench-client.tsx": "5bc56e04a0c74adbc9c552b763593a51ecab3c850e234caa1e17f8165d447b7e",
+    "packages/input-api/src/web/workbench-live.ts": "5d479e8f85556ff5069bcb25876afa154de53268b60a09f714e39565a6ded409",
+    "packages/input-api/src/workbench-events-server.ts": "59a33ae95272cace76c1301d97c3a684393a2ffa0e0e0b208fbcf224320f85d7",
+    "packages/input-api/src/workbench-page.ts": "de07f61ff011a4ea14f533398e582fc54f84bbc35dc12858f390a63d2c9b6fd1",
+    "packages/platform-core/src/index.ts": "51b1fd1e7f25fc634bb4c187dc3cf251463bc0e17d7a4ae3376b3948a5f94a86",
+    "tests/runtime-engine.test.mjs": "e2ae54585ae685486934b168f5eaef20087883d5397514920329c18ba80ee963",
+    "tests/workbench-events.test.mjs": "1eda05ccf6b6d3442f0f5e0bb34c29ec8e0ea63ed2d81ad2689e4e8356be2633",
+    "packages/agent-runtime/src/progress.ts": "d4bcae87620a5540269bccb6da028b0b4a3c5693a43c7cac53b3a9297a74328a",
+    "packages/agent-runtime/src/provider-stream.ts": "b25a74b44236dcae414770d0b620c3cdd499f6df64f3bb16aba7b8a407bd4d73",
+    "packages/input-api/src/web/workbench-progress.tsx": "500e67142a635e992edef3105810f11c4e9eaca2d2481f36f22092b40881fb57",
+    "tests/browser/workbench-stream.test.mjs": "fdf89b8b81d0b67751498d2f6f4a9748a020dd1c605a40fbd60765797b3e6190",
+    "tests/fixtures/workbench-model.mjs": "496bc5e1c057955ffe024f8e6bca0c6c43a3307234bce196f63b6fb2ce31d4be",
+    "tests/runtime-provider-stream.test.mjs": "969248596c7f4d85309b2baef5ac79ac2a1b11594a523e4b003ee8f9f5431863"
+  },
+  "artifactsConsumed": true
+}

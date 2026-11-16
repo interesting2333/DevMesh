@@ -277,3 +277,19 @@ The browser SHALL validate exact project/Run frames, merge persisted events only
 #### Scenario: Idle event authorization is revoked
 - **WHEN** the current event connection loses its trusted identity or project membership
 - **THEN** the browser SHALL stop its observer and clear protected projections without deleting local original journals or posting drafts
+
+### Requirement: Temporary model output has independent bounded lifetime
+
+The system SHALL expose only content deltas from an explicitly enabled provider stream through a trusted internal publisher and an exact authorized project/Run channel. Temporary frames SHALL have independent stream identity and local index, consume bounded queue and text budgets, and SHALL NOT receive durable event sequence numbers or be replayed as persisted history. Tool execution and saved status SHALL require the complete validated response to be persisted first.
+
+#### Scenario: A live stream disconnects or ends without a complete response
+- **WHEN** a stream has a gap, exceeds its budget, loses transport or ends incompletely
+- **THEN** the browser SHALL mark its temporary view interrupted, preserve editing and recover only authoritative saved progress; it SHALL NOT reconstruct missing tokens or issue model or business retries
+
+#### Scenario: A completed response is saved while a user edits
+- **WHEN** the actual model response commits successfully
+- **THEN** the stream MAY show saved status while persistent business progress remains independently read, without changing input basis, original journals, selected tabs, focus or durable event cursor
+
+#### Scenario: Authorization changes while temporary output is queued
+- **WHEN** membership is revoked after queueing and before transmission
+- **THEN** the service SHALL reauthorize before each frame and close unauthorized observation without sending protected content

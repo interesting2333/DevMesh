@@ -9,6 +9,8 @@ import { ModelError,checkModelRequest,estimateTokens } from './provider.js';
 import type { ModelProvider,ModelRequest,ModelResponse,ChatMessage } from './provider.js';
 import { RoleRegistry } from './roles.js';
 import {ExecutionGrantLease} from './lease.js';
+import {beginModelProgress} from './progress.js';
+import type {ModelProgressSink} from './progress.js';
 
 const hash=(v:unknown)=>createHash('sha256').update(canonical(v)).digest('hex');
 function fail(code:string):never{throw new ModelError(code,false,'not-sent');}
@@ -32,7 +34,7 @@ export class AgentRuntime {
  readonly sessions:SessionStore;
  readonly roles:RoleRegistry;
  readonly #tools:Map<string,RuntimeTool>;
-  constructor(readonly storage:SqliteStorage,readonly content:LocalContentStore,providers:ModelProvider[],tools:RuntimeTool[]=[],readonly tokenLimit=100000,readonly workspace?:RuntimeWorkspaceLifecycle){
+  constructor(readonly storage:SqliteStorage,readonly content:LocalContentStore,providers:ModelProvider[],tools:RuntimeTool[]=[],readonly tokenLimit=100000,readonly workspace?:RuntimeWorkspaceLifecycle,readonly progress?:ModelProgressSink){
   if(!Number.isSafeInteger(tokenLimit)||tokenLimit<1)throw new Error('An explicit positive token budget is required');
   this.sessions=new SessionStore(content);this.roles=new RoleRegistry(providers);this.#tools=new Map();
   for(const t of tools){parseContract(opaqueKey,t.name);if(this.#tools.has(t.name))throw new Error('Duplicate tool name');this.#tools.set(t.name,Object.freeze({...t}));}
@@ -81,8 +83,10 @@ export class AgentRuntime {
     const context=await this.sessions.snapshot(meta(),sessionId,configHash),stepNo=session.lastStepNo+1;
     await this.sessions.saveRequest(meta(),{kind:'modelRequest',sessionId,stepNo,contextSnapshotId:String(context.result!.contextSnapshotId),configHash},request);
     await this.storage.request('markRuntimeModelSent',{activationId:host.activationId,stepNo,reservedTokens:reserved});sent=true;responseSaved=false;
-    const response=await provider.complete(request,signal);
-    const saved=await this.sessions.saveResponse(meta(),{kind:'modelResponse',sessionId,stepNo,activationId:host.activationId,state:response.finishReason==='stop'||response.finishReason==='tool_calls'?'RESPONDED':'INTERRUPTED',providerRequestId:response.requestId,usage:response.usage},response);responseSaved=true;sent=false;
+    const progress=provider.config.responseMode==='sse'?await beginModelProgress(this.storage,host.principalId,host.runId,role.role,this.progress):undefined;
+    const response=await provider.complete(request,signal,progress?.delta).catch(error=>{progress?.interrupted();throw error;});
+    const saved=await this.sessions.saveResponse(meta(),{kind:'modelResponse',sessionId,stepNo,activationId:host.activationId,state:response.finishReason==='stop'||response.finishReason==='tool_calls'?'RESPONDED':'INTERRUPTED',providerRequestId:response.requestId,usage:response.usage},response).catch(error=>{progress?.interrupted();throw error;});responseSaved=true;sent=false;
+    if(['stop','tool_calls'].includes(response.finishReason))progress?.persisted();else progress?.interrupted();
     await this.storage.request('accountRuntimeModel',{activationId:host.activationId,stepNo});
     if(!['stop','tool_calls'].includes(response.finishReason))fail('MODEL_RESPONSE_INCOMPLETE');
     if(response.toolCalls.length){

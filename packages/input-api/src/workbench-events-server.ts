@@ -3,8 +3,8 @@ import type {Duplex} from 'node:stream';
 import {z} from 'zod';
 import {WebSocketServer,WebSocket} from 'ws';
 import {StorageError} from '@devmesh/storage-sqlite';
-import {workbenchEventSubscription,workbenchEventFrame,domainEvent} from '@devmesh/contracts';
-import type {WorkbenchEventSubscription,WorkbenchEventFrame} from '@devmesh/contracts';
+import {workbenchEventSubscription,workbenchEventFrame,domainEvent,modelProgressFrame} from '@devmesh/contracts';
+import type {WorkbenchEventSubscription,WorkbenchEventFrame,ModelProgressFrame} from '@devmesh/contracts';
 import type {LocalContentStore} from '@devmesh/blob-store';
 import type {createInputAuthenticator} from './input-auth.js';
 
@@ -25,6 +25,7 @@ const windowSchema=z.strictObject({events:z.array(domainEvent).max(200),nextCurs
 export function createWorkbenchEventServer(content:LocalContentStore,auth:Authenticator,input:WorkbenchEventLimits={}){
  const limits=limitsSchema.parse(input),wss=new WebSocketServer({noServer:true,clientTracking:true,maxPayload:4096,perMessageDeflate:false});
  const pending=new Map<Promise<void>,AbortController>(),clients=new Set<{stop:()=>void;done:Promise<void>}>();
+ const progressListeners=new Set<(frame:ModelProgressFrame)=>void>();
  let server:Server|undefined,accepting=true,stopping:Promise<void>|undefined;
  wss.on('error',()=>{/* A per-socket error closes that connection, never changes domain facts. */});
  function refuse(socket:Duplex,status:number){if(socket.destroyed)return;socket.end('HTTP/1.1 '+status+' Request rejected\r\nConnection: close\r\nContent-Length: 0\r\nCache-Control: no-store\r\n\r\n');}
@@ -35,11 +36,12 @@ export function createWorkbenchEventServer(content:LocalContentStore,auth:Authen
  function connected(socket:WebSocket,request:IncomingMessage,scope:WorkbenchEventSubscription){
   let cursor=scope.afterSeq,wakeups=0,dirty=true,pumping=false,initialized=false,closed=false,caughtUp=false,initialCount=0,awaitingPong=false;
   const controller=new AbortController(),context={schemaVersion:1 as const,projectId:scope.projectId,runId:scope.runId},finished=Promise.withResolvers<void>();
-  let active:Promise<void>|undefined,timer:ReturnType<typeof setInterval>|undefined,unsubscribe=()=>{};
+  let active:Promise<void>|undefined,timer:ReturnType<typeof setInterval>|undefined,unsubscribe=()=>{},unsubscribeProgress=()=>{},progressBytes=0;
+  const progressQueue:ModelProgressFrame[]=[];
   const record={stop:()=>close({kind:'service-stopping',...context},1001),done:finished.promise};clients.add(record);
   let force:ReturnType<typeof setTimeout>|undefined;
   function close(frame:WorkbenchEventFrame,code=1013){
-   if(closed)return;closed=true;unsubscribe();clearInterval(timer);controller.abort(new Error('Event subscription closed'));
+   if(closed)return;closed=true;unsubscribe();unsubscribeProgress();progressQueue.length=0;progressBytes=0;clearInterval(timer);controller.abort(new Error('Event subscription closed'));
    if(socket.readyState===WebSocket.OPEN){const text=JSON.stringify(workbenchEventFrame.parse(frame));if(socket.bufferedAmount+Buffer.byteLength(text)<=limits.maximumOutboundBytes)socket.send(text,()=>{});socket.close(code,frame.kind);}
    else if(socket.readyState!==WebSocket.CLOSED)socket.terminate();
    force=setTimeout(()=>socket.terminate(),limits.closeTimeoutMs);force.unref();
@@ -52,7 +54,7 @@ export function createWorkbenchEventServer(content:LocalContentStore,auth:Authen
   function send(frame:WorkbenchEventFrame):Promise<void>{
    if(closed||socket.readyState!==WebSocket.OPEN)return Promise.reject(new Error('Event socket is not open'));
    const text=JSON.stringify(workbenchEventFrame.parse(frame));
-   if(socket.bufferedAmount+Buffer.byteLength(text)>limits.maximumOutboundBytes){resync('SLOW_CLIENT');return Promise.reject(new Error('Event send budget exceeded'));}
+   if(progressBytes+socket.bufferedAmount+Buffer.byteLength(text)>limits.maximumOutboundBytes){resync('SLOW_CLIENT');return Promise.reject(new Error('Event send budget exceeded'));}
    return new Promise((resolve,reject)=>{
     let settled=false;const complete=(error?:Error)=>{if(settled)return;settled=true;clearTimeout(timeout);controller.signal.removeEventListener('abort',abort);if(error)reject(error);else resolve();};
     const abort=()=>complete(new Error('Event send cancelled'));
@@ -79,6 +81,9 @@ export function createWorkbenchEventServer(content:LocalContentStore,auth:Authen
      if(cursor!==page.nextCursor){resync('RETAINED_GAP');return;}
      if(cursor<page.headSeq){dirty=true;continue;}
      caughtUp=true;await send({...context,kind:'caught-up',throughSeq:cursor});
+     const batch=progressQueue.splice(0,16);
+     for(const frame of batch){progressBytes-=Buffer.byteLength(JSON.stringify(frame));await authorize();if(closed)return;await send(frame);}
+     if(progressQueue.length)dirty=true;
     }while(dirty&&!closed);
    }catch(error){
     if(closed)return;
@@ -93,9 +98,16 @@ export function createWorkbenchEventServer(content:LocalContentStore,auth:Authen
   }
   socket.on('pong',()=>{awaitingPong=false;});socket.on('error',()=>resync('SLOW_CLIENT'));
   socket.on('message',()=>close({...context,kind:'resync-required',afterSeq:cursor,reason:'PROTOCOL_INVALID'},1008));
-  socket.once('close',()=>{closed=true;unsubscribe();clearInterval(timer);if(force)clearTimeout(force);controller.abort(new Error('Event socket disconnected'));void Promise.resolve(active).finally(()=>{clients.delete(record);finished.resolve();});});
+  socket.once('close',()=>{closed=true;unsubscribe();unsubscribeProgress();progressQueue.length=0;progressBytes=0;clearInterval(timer);if(force)clearTimeout(force);controller.abort(new Error('Event socket disconnected'));void Promise.resolve(active).finally(()=>{clients.delete(record);finished.resolve();});});
   // Subscribe first. The buffer holds bounded commit invalidations, not unprotected payloads.
   try{unsubscribe=content.storage.subscribeEventCommits(wake);}catch{resync('STORAGE_UNAVAILABLE');return;}
+  const progress=(frame:ModelProgressFrame)=>{
+   if(closed||frame.projectId!==scope.projectId||frame.runId!==scope.runId)return;
+   const bytes=Buffer.byteLength(JSON.stringify(frame));
+   if(progressQueue.length>=limits.maximumPendingWakeups||progressBytes+socket.bufferedAmount+bytes>limits.maximumOutboundBytes){resync('BUFFER_OVERFLOW');return;}
+   progressQueue.push(frame);progressBytes+=bytes;wake();
+  };
+  progressListeners.add(progress);unsubscribeProgress=()=>progressListeners.delete(progress);
   timer=setInterval(()=>{if(closed)return;if(awaitingPong||socket.readyState!==WebSocket.OPEN){resync('SLOW_CLIENT');return;}awaitingPong=true;try{socket.ping();wake();}catch{resync('SLOW_CLIENT');}},limits.reauthorizeMs);timer.unref();
   active=(async()=>{try{await send({...context,kind:'subscribed',afterSeq:cursor});initialized=true;await pump();}catch{if(!closed)resync('STORAGE_UNAVAILABLE');}})();
  }
@@ -118,6 +130,7 @@ export function createWorkbenchEventServer(content:LocalContentStore,auth:Authen
   pending.set(work,controller);void work.finally(()=>pending.delete(work));
  };
  return {
+  publishModelProgress(value:ModelProgressFrame){if(!accepting)return;const frame=Object.freeze(modelProgressFrame.parse(value));for(const listener of progressListeners){try{listener(frame);}catch{/* One display connection cannot affect another subscriber or the producer. */}}},
   attach(host:Server){if(server||!accepting)throw new Error('Event server can only attach once before stopping');server=host;host.on('upgrade',upgrade);},
   stopAdmission(){accepting=false;},
   stop(){stopping??=(async()=>{accepting=false;server?.off('upgrade',upgrade);for(const controller of pending.values())controller.abort(new Error('Event server stopping'));for(const client of clients)client.stop();await Promise.allSettled([...pending.keys(),...[...clients].map(client=>client.done)]);await new Promise<void>(resolve=>wss.close(()=>resolve()));})();return stopping;},

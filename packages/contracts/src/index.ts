@@ -20,5 +20,5 @@ export * from './candidate-review.js';
 
 export * from './release-acceptance.js';
 
-export {workbenchEventSubscription,workbenchEventFrame} from './workbench-events.js';
-export type {WorkbenchEventSubscription,WorkbenchEventFrame} from './workbench-events.js';
+export {workbenchEventSubscription,workbenchEventFrame,modelProgressFrame} from './workbench-events.js';
+export type {WorkbenchEventSubscription,WorkbenchEventFrame,ModelProgressFrame} from './workbench-events.js';

@@ -21171,6 +21171,4424 @@
         ],
         "additionalProperties": false
       },
+      "WorkbenchEventSubscription": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "number",
+            "const": 1
+          },
+          "principalId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+          },
+          "projectId": {
+            "type": "string",
+            "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "runId": {
+            "type": "string",
+            "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+          },
+          "afterSeq": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "principalId",
+          "projectId",
+          "runId",
+          "afterSeq"
+        ],
+        "additionalProperties": false
+      },
+      "WorkbenchEventFrame": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "subscribed"
+              },
+              "afterSeq": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "kind",
+              "afterSeq"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "domain-event"
+              },
+              "event": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ReleasePublicationChanged"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "releaseId": {
+                            "type": "string",
+                            "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "PENDING",
+                              "SENT",
+                              "UNKNOWN",
+                              "PUBLISHED"
+                            ]
+                          },
+                          "publicationRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          "observationSequence": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "errorCode": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "releaseId",
+                          "state",
+                          "publicationRevision",
+                          "observationSequence",
+                          "errorCode"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "AcceptanceAbortRequested"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "preparationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "abortOperationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "preparationId",
+                          "abortOperationId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "AcceptanceAbortCompleted"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "preparationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "abortOperationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "preparationId",
+                          "abortOperationId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "InputSaved"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "messageId": {
+                            "type": "string",
+                            "pattern": "^message_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "messageId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "UnderstandingUpdated"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "understandingRef": {
+                            "type": "object",
+                            "properties": {
+                              "artifactId": {
+                                "type": "string",
+                                "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              },
+                              "sha256": {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              }
+                            },
+                            "required": [
+                              "artifactId",
+                              "sha256"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "understandingRef"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "QuestionAnswered"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "questionId": {
+                            "type": "string",
+                            "pattern": "^question_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "questionRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "questionId",
+                          "questionRevision"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "PlanPublished"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "planRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          "planRef": {
+                            "type": "object",
+                            "properties": {
+                              "artifactId": {
+                                "type": "string",
+                                "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              },
+                              "sha256": {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              }
+                            },
+                            "required": [
+                              "artifactId",
+                              "sha256"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "planRevision",
+                          "planRef"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "PlanConfirmed"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "planRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          "decisionId": {
+                            "type": "string",
+                            "pattern": "^decision_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "planRevision",
+                          "decisionId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "WorkAdmitted"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "workId": {
+                            "type": "string",
+                            "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "attemptId": {
+                            "type": "string",
+                            "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "activationId": {
+                            "type": "string",
+                            "pattern": "^activation_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "workId",
+                          "attemptId",
+                          "activationId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "AttemptStateChanged"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "attemptId": {
+                            "type": "string",
+                            "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "RESERVED",
+                              "SUBMITTED",
+                              "WORKING",
+                              "INPUT_REQUIRED",
+                              "VERIFYING",
+                              "OUTCOME_UNKNOWN",
+                              "STOPPING",
+                              "SUCCEEDED",
+                              "FAILED",
+                              "INTERRUPTED",
+                              "CANCELLED"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "attemptId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "A2ATaskObserved"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "attemptId": {
+                            "type": "string",
+                            "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "endpointId": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          },
+                          "taskId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "submitted",
+                              "working",
+                              "input-required",
+                              "auth-required",
+                              "completed",
+                              "failed",
+                              "canceled",
+                              "rejected"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "attemptId",
+                          "endpointId",
+                          "taskId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ToolOperationUpdated"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "toolOperationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "ACCEPTED",
+                              "RUNNING",
+                              "WAITING",
+                              "SUCCEEDED",
+                              "FAILED",
+                              "OUTCOME_UNKNOWN"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "toolOperationId",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ArtifactRegistered"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "artifact": {
+                            "type": "object",
+                            "properties": {
+                              "artifactId": {
+                                "type": "string",
+                                "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              },
+                              "sha256": {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              }
+                            },
+                            "required": [
+                              "artifactId",
+                              "sha256"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "artifact"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ChangeApplied"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "changeId": {
+                            "type": "string",
+                            "pattern": "^change_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "requirementRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          "planRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "changeId",
+                          "requirementRevision",
+                          "planRevision"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "DecisionSaved"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "decisionId": {
+                            "type": "string",
+                            "pattern": "^decision_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "decisionId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ControlProgress"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "state": {
+                            "type": "object",
+                            "properties": {
+                              "phase": {
+                                "type": "string",
+                                "enum": [
+                                  "PREPARING",
+                                  "UNDERSTANDING",
+                                  "PLANNING",
+                                  "EXECUTING",
+                                  "VERIFYING",
+                                  "REVIEW"
+                                ]
+                              },
+                              "controlGate": {
+                                "type": "string",
+                                "enum": [
+                                  "OPEN",
+                                  "PAUSING",
+                                  "PAUSED",
+                                  "CANCELLING"
+                                ]
+                              },
+                              "terminalOutcome": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "COMPLETED",
+                                      "FAILED",
+                                      "CANCELLED"
+                                    ]
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "phase",
+                              "controlGate",
+                              "terminalOutcome"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "controlRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          "runEpoch": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "state",
+                          "controlRevision",
+                          "runEpoch"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ConfigurationApplied"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "configurationRef": {
+                            "type": "object",
+                            "properties": {
+                              "artifactId": {
+                                "type": "string",
+                                "pattern": "^artifact_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                              },
+                              "sha256": {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              }
+                            },
+                            "required": [
+                              "artifactId",
+                              "sha256"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "configurationRef"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "CandidateUpdated"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "candidateId": {
+                            "type": "string",
+                            "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "PREPARING",
+                              "READY",
+                              "BLOCKED",
+                              "SUPERSEDED"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "candidateId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ReleaseAccepted"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "candidateId": {
+                            "type": "string",
+                            "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "releaseId": {
+                            "type": "string",
+                            "pattern": "^release_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "candidateId",
+                          "releaseId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "PreviewStateChanged"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "previewId": {
+                            "type": "string",
+                            "pattern": "^preview_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "PREPARING",
+                              "RUNNING",
+                              "STOPPING",
+                              "STOPPED",
+                              "FAILED",
+                              "OUTCOME_UNKNOWN"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "previewId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ExportUpdated"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "exportId": {
+                            "type": "string",
+                            "pattern": "^export_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "ACCEPTED",
+                              "RUNNING",
+                              "WAITING",
+                              "SUCCEEDED",
+                              "FAILED",
+                              "OUTCOME_UNKNOWN"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "exportId",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "IssueChanged"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "issueId": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          },
+                          "issueRevision": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          "toolOperationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "toolName": {
+                            "type": "string",
+                            "enum": [
+                              "issues.create",
+                              "issues.linkFix",
+                              "issues.recordVerification"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "issueId",
+                          "issueRevision",
+                          "toolOperationId",
+                          "toolName"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "PipelineChanged"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "pipelineId": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          },
+                          "toolOperationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "QUEUED",
+                              "RUNNING",
+                              "SUCCEEDED",
+                              "FAILED",
+                              "STOPPING",
+                              "CANCELLED",
+                              "OUTCOME_UNKNOWN"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "pipelineId",
+                          "toolOperationId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "CandidateReviewRecorded"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "candidateId": {
+                            "type": "string",
+                            "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "resultId": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          }
+                        },
+                        "required": [
+                          "candidateId",
+                          "resultId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "CandidateRejected"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "candidateId": {
+                            "type": "string",
+                            "pattern": "^candidate_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "rejectionId": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          },
+                          "resultId": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "OPEN",
+                              "WITHDRAWN"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "candidateId",
+                          "rejectionId",
+                          "resultId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "DatasetStateChanged"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "datasetId": {
+                            "type": "string",
+                            "pattern": "^dataset_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "PREPARING",
+                              "READY",
+                              "WRITE_FROZEN",
+                              "RETIRED",
+                              "MISSING"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "datasetId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "PreviewOperationChanged"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "previewId": {
+                            "type": "string",
+                            "pattern": "^preview_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "STARTING",
+                              "READY",
+                              "STOPPING",
+                              "STOPPED",
+                              "EXPIRED",
+                              "UNKNOWN"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "previewId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "AcceptancePreparationChanged"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "preparationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "PREPARED",
+                              "SENT",
+                              "UNKNOWN",
+                              "FAILED"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "preparationId",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "AcceptanceReadinessObserved"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "preparationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "sequence": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "READY",
+                              "UNKNOWN"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "preparationId",
+                          "sequence",
+                          "state"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "eventId": {
+                        "type": "string",
+                        "pattern": "^evt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "projectId": {
+                        "type": "string",
+                        "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "runId": {
+                        "type": "string",
+                        "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "seq": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "occurredAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "observedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                      },
+                      "timeSource": {
+                        "type": "string",
+                        "enum": [
+                          "producer",
+                          "observed"
+                        ]
+                      },
+                      "resourceRevision": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "requirementRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "planRevision": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "operationId": {
+                        "type": "string",
+                        "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "workId": {
+                        "type": "string",
+                        "pattern": "^work_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "attemptId": {
+                        "type": "string",
+                        "pattern": "^attempt_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "DatasetWriteGateClosed"
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "datasetId": {
+                            "type": "string",
+                            "pattern": "^dataset_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "preparationId": {
+                            "type": "string",
+                            "pattern": "^op_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+                          },
+                          "fence": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "datasetId",
+                          "preparationId",
+                          "fence"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "eventId",
+                      "projectId",
+                      "runId",
+                      "seq",
+                      "occurredAt",
+                      "observedAt",
+                      "timeSource",
+                      "resourceRevision",
+                      "requirementRevision",
+                      "planRevision",
+                      "operationId",
+                      "type",
+                      "payload"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "kind",
+              "event"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "caught-up"
+              },
+              "throughSeq": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "kind",
+              "throughSeq"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "resync-required"
+              },
+              "afterSeq": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "reason": {
+                "type": "string",
+                "enum": [
+                  "RETAINED_GAP",
+                  "CURSOR_AHEAD",
+                  "BUFFER_OVERFLOW",
+                  "SLOW_CLIENT",
+                  "CATCHUP_LIMIT",
+                  "STORAGE_UNAVAILABLE",
+                  "PROTOCOL_INVALID"
+                ]
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "kind",
+              "afterSeq",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "authorization-lost"
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "kind"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "service-stopping"
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "kind"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "streamId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "product",
+                  "architect",
+                  "developer",
+                  "tester"
+                ]
+              },
+              "kind": {
+                "type": "string",
+                "const": "token-delta"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8192
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "streamId",
+              "index",
+              "role",
+              "kind",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "streamId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "product",
+                  "architect",
+                  "developer",
+                  "tester"
+                ]
+              },
+              "kind": {
+                "type": "string",
+                "const": "token-stream"
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "started",
+                  "persisted",
+                  "interrupted"
+                ]
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "streamId",
+              "index",
+              "role",
+              "kind",
+              "state"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "ModelProgressFrame": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "streamId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "product",
+                  "architect",
+                  "developer",
+                  "tester"
+                ]
+              },
+              "kind": {
+                "type": "string",
+                "const": "token-delta"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8192
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "streamId",
+              "index",
+              "role",
+              "kind",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "type": "number",
+                "const": 1
+              },
+              "projectId": {
+                "type": "string",
+                "pattern": "^prj_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "runId": {
+                "type": "string",
+                "pattern": "^run_[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+              },
+              "streamId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "product",
+                  "architect",
+                  "developer",
+                  "tester"
+                ]
+              },
+              "kind": {
+                "type": "string",
+                "const": "token-stream"
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "started",
+                  "persisted",
+                  "interrupted"
+                ]
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "projectId",
+              "runId",
+              "streamId",
+              "index",
+              "role",
+              "kind",
+              "state"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
       "ExecutionPermit": {
         "oneOf": [
           {

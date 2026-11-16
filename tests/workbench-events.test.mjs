@@ -9,6 +9,17 @@ const domain=peer=>peer.frames.filter(f=>f.kind==='domain-event').map(f=>f.event
 const windowArgs=scope=>({principalId:'user_1',projectId:scope.projectId,runId:scope.runId,afterSeq:0,limit:200});
 async function append(f,scope,text){const result=await f.append(scope,text);assert.equal(result.response.status,202,JSON.stringify(result.body));return result.body;}
 
+test('temporary model frames are authorized after an asynchronous read and never become durable events',options,async t=>{
+ const f=await eventFixture(t),scope=await f.create(),snapshot=await f.workspace(scope),gate=f.gateWindow(),peer=f.open(scope,snapshot.eventCursor);await gate.reached;
+ f.platform.inputApi.publishModelProgress({schemaVersion:1,projectId:scope.projectId,runId:scope.runId,streamId:'stream_revoked',index:0,role:'product',kind:'token-stream',state:'started'});
+ f.sql('DELETE FROM project_members WHERE project_id=? AND principal_id=?',scope.projectId,'user_1');gate.release();await peer.frame('authorization-lost');await peer.closed();assert.equal(peer.frames.some(frame=>frame.kind==='token-stream'||frame.kind==='token-delta'),false);assert.equal(f.sql('SELECT count(*) n FROM events WHERE run_id=?',scope.runId)[0].n,snapshot.eventCursor);
+});
+
+test('temporary model output shares bounded transport capacity without writing token history',options,async t=>{
+ const f=await eventFixture(t,{limits:{maximumPendingWakeups:1}}),scope=await f.create(),snapshot=await f.workspace(scope),gate=f.gateWindow(),peer=f.open(scope,snapshot.eventCursor);await gate.reached;
+ const frame={schemaVersion:1,projectId:scope.projectId,runId:scope.runId,streamId:'stream_overflow',role:'product'};f.platform.inputApi.publishModelProgress({...frame,kind:'token-stream',state:'started',index:0});f.platform.inputApi.publishModelProgress({...frame,kind:'token-delta',text:'explicit transient fixture',index:1});await peer.frame('resync-required',value=>value.reason==='BUFFER_OVERFLOW');gate.release();await peer.closed();assert.equal(peer.frames.some(frame=>frame.kind==='token-delta'),false);assert.equal(f.sql('SELECT count(*) n FROM events WHERE run_id=?',scope.runId)[0].n,snapshot.eventCursor);
+});
+
 test('actual host replays the snapshot-subscription gap and streams committed events once in exact sequence',options,async t=>{
  const f=await eventFixture(t),scope=await f.create(),snapshot=await f.workspace(scope);
  await append(f,scope,'快照与连接之间');const second=await f.workspace(scope),peer=f.open(scope,snapshot.eventCursor);

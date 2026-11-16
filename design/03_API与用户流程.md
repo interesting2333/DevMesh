@@ -508,4 +508,12 @@ Worker仅在已结束事务后发无payload提交唤醒；先订阅有界唤醒�
 
 事件只推进独立观察游标、固定高度进展提示及最多100条最近记录；重快照不替换正在阅读的工作区。明确“查看更新”仍先排空原保存guard，输入依据保留至用户明确切换，草稿／原信封／选择／页签／焦点不随事件重建。该观察器只有GET／WS读取，不读取本机命令日记或发送业务POST。
 
-当前DeepSeekProvider仍为stream:false，临时模型片段来源、独立通道和中断显示尚未接入。本增量只验证持久事件；完整3.2保持未勾选。实际浏览器与平台／文件Worker证据见project/evidence/P1-08/events-client-development-review.md，身份、网络故障注入和真实外部验收边界分别记录。
+持久事件客户端的先前开发记录见project/evidence/P1-08/events-client-development-review.md；后续独立临时输出已按下节接入，历史记录保留当时验证范围。
+
+### 工作台独立临时模型输出
+
+Provider可显式配置responseMode:sse；未配置仍用原JSON，冻结配置不注入默认字段。按准确模型／请求ID解析UTF-8与SSE，须有完整结束及DONE；只读content回调不包含reasoning或工具参数。Runtime／Preparation在完整响应提交后才发送已保存状态及继续工具处理；失败／取消／截断／落盘失败发中断，未知请求不自动重试。
+
+原同源WS增加token-stream／token-delta独立帧，以streamId和局部index识别，无领域seq、不入库、不补放。宿主publisher仅供受信内部调用，无外部上报API；发送前逐帧复核身份／成员，队列沿用256条和256KiB总字节预算。浏览器最多保留4个流、每流64KiB文本，React转义显示；缺片段、断线、溢出与补快照标记中断。临时更新不改变持久游标、工作区、草稿、输入依据、页签或焦点；重新加载只恢复原持久结果和准确依据草稿。
+
+2026-11-16：完成3.2临时模型输出与中断显示，变更累计9/13。DeepSeek显式responseMode:sse按实际HTTP协议增量解析，默认JSON及旧配置hash保持；只读content片段独立streamId/index，无领域seq或历史重放，最终响应落盘后才显示已保存及执行工具。WS逐帧复核权限并有界排队；浏览器断线／截断显示中断，保留草稿、页签和焦点，刷新只读取已保存结果。最终协议18、Runtime／Preparation28、契约18、WS13、既有实时浏览器6及新实际平台浏览器3，共86通过，零失败／跳过／取消；构建／类型／Lint／OpenAPI通过。初次类型错误和浏览器旧依据草稿预期错误的准确输入／原日志保留，修复后验证通过。实际本地SSE／官方A2A／平台／文件Worker／Edge不代签真实模型、OIDC、Linux或完整产品验收。按用户指令完成本项后统一提交并暂停，不执行3.3或下一项；正式P1-08、P0-06及G0～G4不变。 证据：project/evidence/P1-08/model-stream-development-review.md。

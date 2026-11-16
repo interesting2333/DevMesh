@@ -12,6 +12,8 @@ import type { PreparationClaim, PreparationJob } from '@devmesh/storage-sqlite';
 import type { LocalContentStore } from '@devmesh/blob-store';
 import { checkModelRequest, estimateTokens, ModelError } from './provider.js';
 import type { ModelProvider, ModelRequest, ModelResponse } from './provider.js';
+import {beginModelProgress} from './progress.js';
+import type {ModelProgressSink} from './progress.js';
 
 const hash=(value:string|Uint8Array)=>createHash('sha256').update(value).digest('hex');
 const git=promisify(execFile);
@@ -25,6 +27,7 @@ export interface PreparationOptions {
   providers:Readonly<Partial<Record<PreparationRole,ModelProvider>>>;
   bootstrap?:{repositoryRoot:string;paths:readonly string[]};
   available?:(provider:ModelProvider)=>Promise<boolean>;
+  progress?:ModelProgressSink|undefined;
 }
 
 export async function readPreparationGitSource(root:string,commit:string,path:string,maximumBytes:number,signal:AbortSignal){
@@ -95,7 +98,7 @@ export class PreparationRuntime {
     catch{return this.storage.request('reconcilePreparationDispatch',key);}
   }
   async execute(claim:PreparationClaim,signal:AbortSignal){
-    let sent=false,responded=false;
+    let sent=false,responded=false,progress:Awaited<ReturnType<typeof beginModelProgress>>|undefined;
     try{
       const host=await this.storage.request('getPreparationHost',claim),profile=parseContract(preparationProfile,host.profile),meta=()=>this.#meta(host.job);
       let response:z.output<typeof safeResponse>;
@@ -112,11 +115,13 @@ export class PreparationRuntime {
         const saved=await this.content.putJson(meta(),{kind:'content'},input.request);
         await this.storage.request('preparePreparationStep',{...claim,requestHash:saved.expectedHash,reservedTokens});
         signal.throwIfAborted();await this.storage.request('markPreparationSent',claim);sent=true;
-        const result:ModelResponse=await provider.complete(input.request,signal);
+        if(provider.config.responseMode==='sse')progress=await beginModelProgress(this.storage,host.principalId,host.job.runId,host.job.role,this.options.progress);
+        const result:ModelResponse=await provider.complete(input.request,signal,progress?.delta);
         response=parseContract(safeResponse,{content:result.content,toolCallCount:result.toolCalls.length,finishReason:result.finishReason,requestId:result.requestId,model:result.model,usage:result.usage});
         if(Buffer.byteLength(canonical(response),'utf8')>2*1024*1024)fail('PREPARATION_RESPONSE_TOO_LARGE');
         const body=await this.content.putJson(meta(),{kind:'content'},response);
         await this.storage.request('savePreparationResponse',{...claim,responseHash:body.expectedHash,providerRequestId:response.requestId,usage:response.usage});responded=true;
+        if(response.finishReason==='stop')progress?.persisted();else progress?.interrupted();
       }
       if(response.finishReason!=='stop'||response.toolCallCount!==0||response.model!==profile.model)fail('PREPARATION_OUTPUT_INVALID');
       const output=host.job.role==='product'?parseContract(understandingOutput,JSON.parse(response.content)):parseContract(architectOutput,JSON.parse(response.content));
@@ -128,7 +133,7 @@ export class PreparationRuntime {
       const knownFailure=sent&&!responded&&error instanceof ModelError&&error.outcome==='known-failed';
       await this.storage.request('failPreparation',{...claim,errorCode:code,unknown:sent&&!responded&&!knownFailure,knownFailure}).catch(()=>{});
       return {errorCode:code};
-    }
+    }finally{progress?.interrupted();}
   }
 }
 

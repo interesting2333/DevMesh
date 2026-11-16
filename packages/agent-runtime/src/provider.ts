@@ -1,19 +1,20 @@
 import { z } from 'zod';
 import { opaqueKey,parseContract } from '@devmesh/contracts';
 import type { CredentialResolver } from '@devmesh/a2a-adapter';
+import {readDeepSeekStream} from './provider-stream.js';
 
 export class ModelError extends Error {
  constructor(readonly code:string,readonly retryable:boolean,readonly outcome:'not-sent'|'known-failed'|'unknown',message=code){super(message);}
 }
 export const capabilitiesSchema=z.strictObject({revision:opaqueKey,contextTokens:z.number().int().min(1024),maxOutputTokens:z.number().int().positive(),toolCalls:z.boolean(),structuredOutput:z.enum(['json-object','text-json']),tokenCounting:z.literal('utf8-conservative-v1'),reasoningMode:z.literal('disabled'),verification:z.enum(['DECLARED','VERIFIED']),evidenceRef:z.string().min(1).optional()}).superRefine((v,c)=>{if(v.maxOutputTokens>=v.contextTokens)c.addIssue({code:'custom',message:'Output capacity must be smaller than context capacity'});if(v.verification==='VERIFIED'&&!v.evidenceRef)c.addIssue({code:'custom',message:'Verified capabilities require evidence'});});
-export const providerConfigSchema=z.strictObject({providerId:opaqueKey,endpoint:z.url().refine(v=>{const u=new URL(v);return ['https:','http:'].includes(u.protocol)&&!u.username&&!u.password&&!u.search&&!u.hash&&(u.protocol==='https:'||['127.0.0.1','[::1]','localhost'].includes(u.hostname));},'TLS endpoint or explicit local test endpoint required'),model:opaqueKey,credentialRef:opaqueKey,capabilities:capabilitiesSchema,connectTimeoutMs:z.number().int().min(10).max(30000).default(10000),requestTimeoutMs:z.number().int().min(10).max(300000).default(120000),maximumResponseBytes:z.number().int().min(1024).max(16*1024*1024).default(4*1024*1024)});
+export const providerConfigSchema=z.strictObject({providerId:opaqueKey,endpoint:z.url().refine(v=>{const u=new URL(v);return ['https:','http:'].includes(u.protocol)&&!u.username&&!u.password&&!u.search&&!u.hash&&(u.protocol==='https:'||['127.0.0.1','[::1]','localhost'].includes(u.hostname));},'TLS endpoint or explicit local test endpoint required'),model:opaqueKey,credentialRef:opaqueKey,responseMode:z.enum(['json','sse']).optional(),capabilities:capabilitiesSchema,connectTimeoutMs:z.number().int().min(10).max(30000).default(10000),requestTimeoutMs:z.number().int().min(10).max(300000).default(120000),maximumResponseBytes:z.number().int().min(1024).max(16*1024*1024).default(4*1024*1024)});
 export type ProviderConfig=z.input<typeof providerConfigSchema>;
 export interface ChatMessage {role:'system'|'user'|'assistant'|'tool';content:string|null;toolCallId?:string;toolCalls?:ToolCall[]}
 export interface ToolCall {id:string;name:string;arguments:string}
 export interface ToolDefinition {name:string;description:string;parameters:Record<string,unknown>}
 export interface ModelRequest {messages:ChatMessage[];tools:ToolDefinition[];maxOutputTokens:number;jsonOutput:boolean}
 export interface ModelResponse {content:string;toolCalls:ToolCall[];finishReason:'stop'|'tool_calls'|'length'|'content_filter'|'insufficient_system_resource';requestId:string;usage:{inputTokens:number;outputTokens:number;source:'provider'|'estimated'};model:string;cost:null}
-export interface ModelProvider {readonly config:z.output<typeof providerConfigSchema>;complete(request:ModelRequest,signal?:AbortSignal):Promise<ModelResponse>}
+export interface ModelProvider {readonly config:z.output<typeof providerConfigSchema>;complete(request:ModelRequest,signal?:AbortSignal,onDelta?:(text:string)=>void):Promise<ModelResponse>}
 
 export function estimateTokens(value:unknown):number{
  const r=value as {messages?:ChatMessage[];tools?:ToolDefinition[]}|null;
@@ -33,20 +34,26 @@ const responseSchema=z.object({id:z.string().min(1).max(512),model:z.string().mi
 export class DeepSeekProvider implements ModelProvider {
  readonly config:z.output<typeof providerConfigSchema>;
  constructor(config:ProviderConfig,readonly credentials:CredentialResolver){const parsed=parseContract(providerConfigSchema,config);Object.freeze(parsed.capabilities);this.config=Object.freeze(parsed);}
- async complete(request:ModelRequest,signal?:AbortSignal):Promise<ModelResponse>{
+ async complete(request:ModelRequest,signal?:AbortSignal,onDelta?:(text:string)=>void):Promise<ModelResponse>{
   checkModelRequest(this.config,request);
   let key:string|undefined;try{key=await this.credentials(this.config.credentialRef);}catch{throw new ModelError('MODEL_AUTH_UNAVAILABLE',false,'not-sent');}if(!key)throw new ModelError('MODEL_NOT_CONFIGURED',false,'not-sent');
   if(signal?.aborted)throw new ModelError('MODEL_ABORTED',false,'not-sent');
-  const c=this.config,body={model:c.model,messages:request.messages.map(m=>({role:m.role,content:m.content,...(m.toolCallId?{tool_call_id:m.toolCallId}:{}),...(m.toolCalls?.length?{tool_calls:m.toolCalls.map(t=>({id:t.id,type:'function',function:{name:t.name,arguments:t.arguments}}))}:{})})),max_tokens:request.maxOutputTokens,stream:false,thinking:{type:'disabled'},...(request.tools.length?{tools:request.tools.map(t=>({type:'function',function:{name:t.name,description:t.description,parameters:t.parameters}}))}:{}),...(request.jsonOutput?{response_format:{type:'json_object'}}:{})};
+  const c=this.config,body={model:c.model,messages:request.messages.map(m=>({role:m.role,content:m.content,...(m.toolCallId?{tool_call_id:m.toolCallId}:{}),...(m.toolCalls?.length?{tool_calls:m.toolCalls.map(t=>({id:t.id,type:'function',function:{name:t.name,arguments:t.arguments}}))}:{})})),max_tokens:request.maxOutputTokens,stream:c.responseMode==='sse',...(c.responseMode==='sse'?{stream_options:{include_usage:true}}:{}),thinking:{type:'disabled'},...(request.tools.length?{tools:request.tools.map(t=>({type:'function',function:{name:t.name,description:t.description,parameters:t.parameters}}))}:{}),...(request.jsonOutput?{response_format:{type:'json_object'}}:{})};
   const controller=new AbortController(),abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});
   let sent=false,timedOut=false;const connectionTimer=setTimeout(()=>{timedOut=true;controller.abort();},c.connectTimeoutMs),timer=setTimeout(()=>{timedOut=true;controller.abort();},c.requestTimeoutMs);connectionTimer.unref();timer.unref();
   try{
    sent=true;const response=await fetch(c.endpoint.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify(body),redirect:'error',signal:controller.signal});clearTimeout(connectionTimer);
    if(!response.ok){await response.body?.cancel();throw new ModelError(response.status===401||response.status===403?'MODEL_AUTH_REQUIRED':response.status===429?'MODEL_RATE_LIMITED':response.status>=500?'MODEL_PROVIDER_UNAVAILABLE':'MODEL_REQUEST_REJECTED',response.status===429||response.status>=500,'known-failed');}
    if(!response.body)throw new ModelError('MODEL_RESPONSE_INVALID',false,'unknown');
-   const chunks:Uint8Array[]=[];let bytes=0;const reader=response.body.getReader();
-   try{for(;;){const r=await reader.read();if(r.done)break;bytes+=r.value.byteLength;if(bytes>c.maximumResponseBytes)throw new ModelError('MODEL_RESPONSE_TOO_LARGE',false,'unknown');chunks.push(r.value);}}finally{await reader.cancel();}
-   let raw:unknown;try{raw=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks)));}catch{throw new ModelError('MODEL_RESPONSE_INVALID',false,'unknown');}
+   let raw:unknown;
+   if(c.responseMode==='sse'){
+    if(!/^text\/event-stream(?:;|$)/i.test(response.headers.get('content-type')??'')){await response.body.cancel();throw new ModelError('MODEL_RESPONSE_INVALID',false,'unknown');}
+    raw=await readDeepSeekStream(response.body,c.maximumResponseBytes,c.model,onDelta,code=>{throw new ModelError(code,false,'unknown');});
+   }else{
+    const chunks:Uint8Array[]=[];let bytes=0;const reader=response.body.getReader();
+    try{for(;;){const r=await reader.read();if(r.done)break;bytes+=r.value.byteLength;if(bytes>c.maximumResponseBytes)throw new ModelError('MODEL_RESPONSE_TOO_LARGE',false,'unknown');chunks.push(r.value);}}finally{await reader.cancel();}
+    try{raw=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks)));}catch{throw new ModelError('MODEL_RESPONSE_INVALID',false,'unknown');}
+   }
    const decoded=responseSchema.safeParse(raw);if(!decoded.success)throw new ModelError('MODEL_RESPONSE_INVALID',false,'unknown');
    const d=decoded.data,choice=d.choices[0]!,toolCalls=(choice.message.tool_calls??[]).map(t=>({id:t.id,name:t.function.name,arguments:t.function.arguments}));
    if(d.model!==c.model)throw new ModelError('MODEL_ID_MISMATCH',false,'unknown');

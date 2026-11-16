@@ -1,12 +1,14 @@
 import {z} from 'zod';
 import {domainEvent,workbenchEventFrame,workbenchEventSubscription,workspaceView} from '@devmesh/contracts';
-import type {DomainEvent,WorkbenchEventSubscription} from '@devmesh/contracts';
+import type {DomainEvent,WorkbenchEventSubscription,ModelProgressFrame} from '@devmesh/contracts';
 import {WorkbenchApiError} from './workbench-api.js';
 
 type Snapshot=z.output<typeof workspaceView>;
 export interface WorkbenchLiveState {
  status:'connecting'|'live'|'syncing'|'offline'|'stopped';cursor:number;unread:number;events:DomainEvent[];
+ streams:WorkbenchLiveStream[];
 }
+export interface WorkbenchLiveStream {streamId:string;role:ModelProgressFrame['role'];index:number;text:string;state:'streaming'|'persisted'|'interrupted'}
 interface Options {
  scope:WorkbenchEventSubscription;
  read:(path:string,signal:AbortSignal)=>Promise<unknown>;
@@ -22,14 +24,32 @@ export function observeWorkbenchEvents(options:Options){
  const scope=workbenchEventSubscription.parse(options.scope),base='/api/v1/projects/'+encodeURIComponent(scope.projectId),encoder=new TextEncoder();
  let cursor=scope.afterSeq,displayed=cursor,status:WorkbenchLiveState['status']='connecting',disposed=false,epoch=0,failures=0,bufferedBytes=0,target=cursor;
  let peer:WebSocket|undefined,reading:AbortController|undefined,retry:ReturnType<typeof setTimeout>|undefined,handshake:ReturnType<typeof setTimeout>|undefined,notification:ReturnType<typeof setTimeout>|undefined,gapRunning=false;
- let recent:DomainEvent[]=[],resnapshotTimes:number[]=[];
+ let recent:DomainEvent[]=[],resnapshotTimes:number[]=[],streams:WorkbenchLiveStream[]=[];
+ const lastProgress=new Map<string,string>();
  const buffer=new Map<number,{event:DomainEvent;bytes:number}>();
- function emit(){if(disposed||notification)return;notification=setTimeout(()=>{notification=undefined;if(!disposed)options.onState({status,cursor,unread:Math.max(0,cursor-displayed),events:[...recent]});},16);}
- function teardown(){epoch++;clearTimeout(retry);clearTimeout(handshake);retry=undefined;handshake=undefined;reading?.abort();reading=undefined;gapRunning=false;const old=peer;peer=undefined;old?.close();buffer.clear();bufferedBytes=0;}
+ function emit(){if(disposed||notification)return;notification=setTimeout(()=>{notification=undefined;if(!disposed)options.onState({status,cursor,unread:Math.max(0,cursor-displayed),events:[...recent],streams:streams.map(stream=>({...stream}))});},16);}
+ function teardown(){epoch++;clearTimeout(retry);clearTimeout(handshake);retry=undefined;handshake=undefined;reading?.abort();reading=undefined;gapRunning=false;const old=peer;peer=undefined;old?.close();buffer.clear();bufferedBytes=0;streams=streams.map(stream=>stream.state==='streaming'?{...stream,state:'interrupted'}:stream);}
  function stop(){if(disposed)return;disposed=true;teardown();clearTimeout(notification);notification=undefined;window.removeEventListener('online',online);}
  function denied(error:unknown){return error instanceof WorkbenchApiError&&[401,403,404].includes(error.status);}
  function loseAuthorization(){stop();options.onAuthorizationLost();}
  function sameContext(event:DomainEvent){if(event.projectId!==scope.projectId||event.runId!==scope.runId)throw Error('Foreign event context');}
+ function acceptProgress(frame:ModelProgressFrame){
+  let current=streams.find(stream=>stream.streamId===frame.streamId);const original=JSON.stringify(frame);
+  if(current&&frame.index===current.index){if(lastProgress.get(frame.streamId)!==original)current.state='interrupted';emit();return;}
+  if(current&&frame.index<current.index)return;
+  if(!current){
+   const started=frame.kind==='token-stream'&&frame.state==='started'&&frame.index===0;
+   current={streamId:frame.streamId,role:frame.role,index:frame.index,text:'',state:started?'streaming':'interrupted'};
+   streams=[...streams,current].slice(-4);for(const key of lastProgress.keys())if(!streams.some(stream=>stream.streamId===key))lastProgress.delete(key);
+   lastProgress.set(frame.streamId,original);emit();return;
+  }
+  if(current.role!==frame.role||current.state!=='streaming'||frame.index!==current.index+1){current.state='interrupted';emit();return;}
+  current.index=frame.index;lastProgress.set(frame.streamId,original);
+  if(frame.kind==='token-delta'){
+   if(encoder.encode(current.text).byteLength+encoder.encode(frame.text).byteLength>65536)current.state='interrupted';else current.text+=frame.text;
+  }else if(frame.state==='started')current.state='interrupted';else current.state=frame.state;
+  emit();
+ }
  function apply(event:DomainEvent){
   sameContext(event);if(event.seq!==cursor+1)throw Error('Nonconsecutive event');
   cursor=event.seq;recent=[...recent,event].slice(-100);emit();
@@ -92,6 +112,7 @@ export function observeWorkbenchEvents(options:Options){
     if(frame.kind==='authorization-lost'){loseAuthorization();return;}
     if(frame.kind==='resync-required'){void resnapshot();return;}
     if(frame.kind==='service-stopping'){reconnect();return;}
+    if(frame.kind==='token-delta'||frame.kind==='token-stream'){acceptProgress(frame);return;}
     if(frame.kind==='domain-event'){accept(frame.event);if(target>cursor)void fillGap();return;}
     target=Math.max(target,frame.throughSeq);if(target>cursor)void fillGap();else{failures=0;status='live';emit();}
    }catch{void resnapshot();}

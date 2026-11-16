@@ -1,0 +1,91 @@
+{
+  "at": "2026-11-16T03:10:14.168Z",
+  "parent": "P1-08",
+  "dependency": "P0-06",
+  "baseCommit": "c43ea2baca6e839900f2ed77a03234a8db1402ce",
+  "reviewer": "Codex（同一实施Agent开发复核，非独立人工验收）",
+  "note": "2026-11-16：完成3.2临时模型输出与中断显示，变更累计9/13。DeepSeek显式responseMode:sse按实际HTTP协议增量解析，默认JSON及旧配置hash保持；只读content片段独立streamId/index，无领域seq或历史重放，最终响应落盘后才显示已保存及执行工具。WS逐帧复核权限并有界排队；浏览器断线／截断显示中断，保留草稿、页签和焦点，刷新只读取已保存结果。最终协议18、Runtime／Preparation28、契约18、WS13、既有实时浏览器6及新实际平台浏览器3，共86通过，零失败／跳过／取消；构建／类型／Lint／OpenAPI通过。初次类型错误和浏览器旧依据草稿预期错误的准确输入／原日志保留，修复后验证通过。实际本地SSE／官方A2A／平台／文件Worker／Edge不代签真实模型、OIDC、Linux或完整产品验收。按用户指令完成本项后统一提交并暂停，不执行3.3或下一项；正式P1-08、P0-06及G0～G4不变。",
+  "results": {
+    "stream": {
+      "record": "stream-2026-11-16T03-02-12-399Z.json",
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "runtime": {
+      "record": "runtime-2026-11-16T03-02-12-399Z.json",
+      "tests": 28,
+      "pass": 28,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "contractsTests": {
+      "record": "contractsTests-2026-11-16T03-02-12-433Z.json",
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "ws": {
+      "record": "ws-2026-11-16T03-02-12-414Z.json",
+      "tests": 13,
+      "pass": 13,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "live": {
+      "record": "live-2026-11-16T03-02-12-417Z.json",
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "streamBrowser": {
+      "record": "streamBrowser-2026-11-16T03-07-11-314Z.json",
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  "total": {
+    "tests": 86,
+    "pass": 86,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "checks": {
+    "build": "build-2026-11-16T03-00-02-520Z.json",
+    "type": "type-2026-11-16T03-00-02-491Z.json",
+    "lint": "lint-2026-11-16T03-07-40-954Z.json"
+  },
+  "sourceMap": {
+    "artifacts": 159,
+    "associations": 425
+  },
+  "limits": {
+    "realModel": false,
+    "enterpriseIdentity": false,
+    "linuxDockerGvisor": false,
+    "productAcceptance": false,
+    "gatesChanged": false
+  },
+  "failures": [
+    {
+      "record": "type-2026-11-16T02-50-30-094Z.json",
+      "cause": "新增进展helper的projectId/runId未经过品牌ID契约边界，类型检查失败；改为先通过modelProgressFrame.parse再调用sink。失败输入按baseCommit与准确覆盖文件保留。"
+    },
+    {
+      "record": "streamBrowser-2026-11-16T03-02-12-425Z.json",
+      "cause": "测试误期待新依据自动采用旧草稿；理解发布使依据推进，产品应保留旧草稿供明确恢复。仅修正测试为当前表单空白、旧草稿原字节保留、实际UI可读已保存理解，不改变产品规则。"
+    }
+  ]
+}

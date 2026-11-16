@@ -15,12 +15,14 @@ import { createTaskInput,uploadMetadata,attachmentView,inputOperation,inputOpera
 import { preparationDelegation,preparationInput,retryUnderstandingInput,understandingOutput,understandingView } from './preparation.js';
 import { planReviewView } from './plans.js';
 import {workbenchDeliveryView} from './workbench-delivery.js';
+import {workbenchEventSubscription,workbenchEventFrame,modelProgressFrame} from './workbench-events.js';
 
 export const schemas = {
   BeginAcceptance:beginAcceptanceInput,ConfirmAcceptanceReplacement:confirmAcceptanceReplacementInput,CloseUnsentAcceptance:closeUnsentAcceptanceInput,AbortAcceptance:abortAcceptanceInput,AcceptanceBasis:acceptanceBasisView,AcceptancePreparation:acceptancePreparationView,AcceptancePreparationList:acceptancePreparationList,AcceptanceReplacementReceipt:acceptanceReplacementReceipt,AcceptanceAbortReceipt:acceptanceAbortReceipt,AcceptanceCommitReceipt:acceptanceCommitReceipt,
   CandidateReviewEntry:candidateReviewEntry,CandidateHumanResult:candidateHumanResult,CandidateRejectionResult:candidateRejectionResult,CandidateReviewHistory:candidateReviewHistory,CandidateRejectionHistory:candidateRejectionHistory,RecordCandidateReview:recordCandidateReviewInput,RecordCandidateRejection:recordCandidateRejectionInput,
   CreateReleaseExport:createReleaseExportInput,RetryReleaseExport:retryReleaseExportInput,ReleaseExport:releaseExportView,ReleaseExportList:releaseExportListView,
   Command: command, DomainEvent: domainEvent, EphemeralTokenDelta: ephemeralTokenDelta,
+  WorkbenchEventSubscription:workbenchEventSubscription,WorkbenchEventFrame:workbenchEventFrame,ModelProgressFrame:modelProgressFrame,
   ExecutionPermit: executionPermit, ExecutionOwner: executionOwner, RoleOutput: roleOutput,
   ProductOutput: productOutput, ArchitectOutput: architectOutput, DeveloperOutput: developerOutput, TesterOutput: testerOutput,
   WorkRevision: workRevision, PlanDraft: planDraft, WorkDelegation: workDelegation, InvocationDelegation: invocationDelegation,

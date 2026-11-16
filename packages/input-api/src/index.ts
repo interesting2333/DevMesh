@@ -220,7 +220,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   });
   app.use('/api/v1',router);
   function stopAdmission(){accepting=false;auth.stop();events.stopAdmission();}
-  return {enabled:true as const,attachEvents:events.attach,stopAdmission,async stop(){
+  return {enabled:true as const,attachEvents:events.attach,publishModelProgress:events.publishModelProgress,stopAdmission,async stop(){
     stopAdmission();
     const timer=setTimeout(()=>{for(const request of pending.values())request.destroy();},10000);timer.unref();
     try{await Promise.all([events.stop(),Promise.allSettled(pending.keys())]);}finally{clearTimeout(timer);}

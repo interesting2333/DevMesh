@@ -1,0 +1,121 @@
+TAP version 13
+# (node:40076) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real SSE delivers UTF-8 content before completion, handles CRLF and terminal usage, then returns one complete response
+ok 1 - real SSE delivers UTF-8 content before completion, handles CRLF and terminal usage, then returns one complete response
+  ---
+  duration_ms: 104.5485
+  type: 'test'
+  ...
+# Subtest: tool argument fragments assemble once and never enter display callbacks
+ok 2 - tool argument fragments assemble once and never enter display callbacks
+  ---
+  duration_ms: 26.7201
+  type: 'test'
+  ...
+# Subtest: incomplete or invalid SSE has an unknown outcome and is never automatically repeated
+    # Subtest: missing DONE
+    ok 1 - missing DONE
+      ---
+      duration_ms: 17.5843
+      type: 'test'
+      ...
+    # Subtest: missing finish
+    ok 2 - missing finish
+      ---
+      duration_ms: 19.9316
+      type: 'test'
+      ...
+    # Subtest: identity changed
+    ok 3 - identity changed
+      ---
+      duration_ms: 10.1475
+      type: 'test'
+      ...
+    # Subtest: wrong model
+    ok 4 - wrong model
+      ---
+      duration_ms: 35.5604
+      type: 'test'
+      ...
+    # Subtest: bad JSON
+    ok 5 - bad JSON
+      ---
+      duration_ms: 38.5805
+      type: 'test'
+      ...
+    # Subtest: invalid UTF8
+    ok 6 - invalid UTF8
+      ---
+      duration_ms: 9.9339
+      type: 'test'
+      ...
+    # Subtest: reasoning rejected
+    ok 7 - reasoning rejected
+      ---
+      duration_ms: 10.0898
+      type: 'test'
+      ...
+    # Subtest: unsupported server tool
+    ok 8 - unsupported server tool
+      ---
+      duration_ms: 27.0332
+      type: 'test'
+      ...
+    # Subtest: data after finish
+    ok 9 - data after finish
+      ---
+      duration_ms: 16.9498
+      type: 'test'
+      ...
+    # Subtest: tool index gap
+    ok 10 - tool index gap
+      ---
+      duration_ms: 20.0623
+      type: 'test'
+      ...
+    # Subtest: duplicate tool id
+    ok 11 - duplicate tool id
+      ---
+      duration_ms: 13.8813
+      type: 'test'
+      ...
+    1..11
+ok 3 - incomplete or invalid SSE has an unknown outcome and is never automatically repeated
+  ---
+  duration_ms: 224.3729
+  type: 'test'
+  ...
+# Subtest: SSE response size and content type are bounded before exposing invalid content
+ok 4 - SSE response size and content type are bounded before exposing invalid content
+  ---
+  duration_ms: 23.2223
+  type: 'test'
+  ...
+# Subtest: timeout and abort after a partial stream preserve unknown outcome without replay
+ok 5 - timeout and abort after a partial stream preserve unknown outcome without replay
+  ---
+  duration_ms: 525.7628
+  type: 'test'
+  ...
+# Subtest: a throwing display observer does not change the complete model outcome
+ok 6 - a throwing display observer does not change the complete model outcome
+  ---
+  duration_ms: 10.0549
+  type: 'test'
+  ...
+# Subtest: absent response mode retains the prior JSON configuration shape and request
+ok 7 - absent response mode retains the prior JSON configuration shape and request
+  ---
+  duration_ms: 6.2647
+  type: 'test'
+  ...
+1..7
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2193.9241

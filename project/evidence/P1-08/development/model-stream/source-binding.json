@@ -1,0 +1,122 @@
+{
+  "at": "2026-11-16T03:10:14.170Z",
+  "bindings": [
+    {
+      "name": "stream",
+      "record": "stream-2026-11-16T03-02-12-399Z.json",
+      "noncompiledInputDifferences": [
+        {
+          "file": "tests/browser/workbench-stream.test.mjs",
+          "recorded": "fdf89b8b81d0b67751498d2f6f4a9748a020dd1c605a40fbd60765797b3e6190",
+          "current": "c7f6b88b718f8fecaaa3c3c7f1c326b2f063f343b52b567c125c97bc2a716bbb"
+        }
+      ],
+      "compiledArtifactsMatch": true
+    },
+    {
+      "name": "runtime",
+      "record": "runtime-2026-11-16T03-02-12-399Z.json",
+      "noncompiledInputDifferences": [
+        {
+          "file": "tests/browser/workbench-stream.test.mjs",
+          "recorded": "fdf89b8b81d0b67751498d2f6f4a9748a020dd1c605a40fbd60765797b3e6190",
+          "current": "c7f6b88b718f8fecaaa3c3c7f1c326b2f063f343b52b567c125c97bc2a716bbb"
+        }
+      ],
+      "compiledArtifactsMatch": true
+    },
+    {
+      "name": "contractsTests",
+      "record": "contractsTests-2026-11-16T03-02-12-433Z.json",
+      "noncompiledInputDifferences": [
+        {
+          "file": "tests/browser/workbench-stream.test.mjs",
+          "recorded": "fdf89b8b81d0b67751498d2f6f4a9748a020dd1c605a40fbd60765797b3e6190",
+          "current": "c7f6b88b718f8fecaaa3c3c7f1c326b2f063f343b52b567c125c97bc2a716bbb"
+        }
+      ],
+      "compiledArtifactsMatch": true
+    },
+    {
+      "name": "ws",
+      "record": "ws-2026-11-16T03-02-12-414Z.json",
+      "noncompiledInputDifferences": [
+        {
+          "file": "tests/browser/workbench-stream.test.mjs",
+          "recorded": "fdf89b8b81d0b67751498d2f6f4a9748a020dd1c605a40fbd60765797b3e6190",
+          "current": "c7f6b88b718f8fecaaa3c3c7f1c326b2f063f343b52b567c125c97bc2a716bbb"
+        }
+      ],
+      "compiledArtifactsMatch": true
+    },
+    {
+      "name": "live",
+      "record": "live-2026-11-16T03-02-12-417Z.json",
+      "noncompiledInputDifferences": [
+        {
+          "file": "tests/browser/workbench-stream.test.mjs",
+          "recorded": "fdf89b8b81d0b67751498d2f6f4a9748a020dd1c605a40fbd60765797b3e6190",
+          "current": "c7f6b88b718f8fecaaa3c3c7f1c326b2f063f343b52b567c125c97bc2a716bbb"
+        }
+      ],
+      "compiledArtifactsMatch": true
+    },
+    {
+      "name": "streamBrowser",
+      "record": "streamBrowser-2026-11-16T03-07-11-314Z.json",
+      "noncompiledInputDifferences": [],
+      "compiledArtifactsMatch": true
+    },
+    {
+      "name": "build",
+      "record": "build-2026-11-16T03-00-02-520Z.json",
+      "noncompiledInputDifferences": [
+        {
+          "file": "packages/contracts/openapi.json",
+          "recorded": "a42df7a12c1a30248ce4d1e577d24dd85136b87677c1298009a53bb28e21e389",
+          "current": "ddf0653d0de3ae6b8002589ab38cad8320e872ab93b52770a641497b3e865b95"
+        },
+        {
+          "file": "tests/browser/workbench-stream.test.mjs",
+          "recorded": "fdf89b8b81d0b67751498d2f6f4a9748a020dd1c605a40fbd60765797b3e6190",
+          "current": "c7f6b88b718f8fecaaa3c3c7f1c326b2f063f343b52b567c125c97bc2a716bbb"
+        },
+        {
+          "file": "tests/runtime-provider-stream.test.mjs",
+          "recorded": "99f71ed0094d44ef35dd514fa61681469cc869b66368828324a9cd65bcf9d118",
+          "current": "969248596c7f4d85309b2baef5ac79ac2a1b11594a523e4b003ee8f9f5431863"
+        }
+      ],
+      "compiledArtifactsMatch": true
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-16T03-00-02-491Z.json",
+      "noncompiledInputDifferences": [
+        {
+          "file": "packages/contracts/openapi.json",
+          "recorded": "a42df7a12c1a30248ce4d1e577d24dd85136b87677c1298009a53bb28e21e389",
+          "current": "ddf0653d0de3ae6b8002589ab38cad8320e872ab93b52770a641497b3e865b95"
+        },
+        {
+          "file": "tests/browser/workbench-stream.test.mjs",
+          "recorded": "fdf89b8b81d0b67751498d2f6f4a9748a020dd1c605a40fbd60765797b3e6190",
+          "current": "c7f6b88b718f8fecaaa3c3c7f1c326b2f063f343b52b567c125c97bc2a716bbb"
+        },
+        {
+          "file": "tests/runtime-provider-stream.test.mjs",
+          "recorded": "99f71ed0094d44ef35dd514fa61681469cc869b66368828324a9cd65bcf9d118",
+          "current": "969248596c7f4d85309b2baef5ac79ac2a1b11594a523e4b003ee8f9f5431863"
+        }
+      ],
+      "compiledArtifactsMatch": false
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-16T03-07-40-954Z.json",
+      "noncompiledInputDifferences": [],
+      "compiledArtifactsMatch": false
+    }
+  ],
+  "explanation": "最终应用源码与编译产物通过全部嵌入源码映射逐字核对。成功检查的完整清单差异仅为生成的OpenAPI JSON、协议测试超时500ms及浏览器旧依据草稿断言修正；均非TS编译输入。运行测试消费的全部当前应用产物与最终构建相同；未宣称所有历史调用完整清单零变化。"
+}

@@ -4,6 +4,12 @@ import {domainEvent} from './events.js';
 
 export const workbenchEventSubscription=z.strictObject({schemaVersion:z.literal(1),principalId:opaqueKey,projectId:ids.project,runId:ids.run,afterSeq:epoch});
 const context={schemaVersion:z.literal(1),projectId:ids.project,runId:ids.run};
+const streamContext={...context,streamId:opaqueKey,index:epoch,role:z.enum(['product','architect','developer','tester'])};
+export const modelProgressFrame=z.discriminatedUnion('kind',[
+ z.strictObject({...streamContext,kind:z.literal('token-delta'),text:z.string().min(1).max(8192).refine(value=>new TextEncoder().encode(value).byteLength<=8192)}),
+ z.strictObject({...streamContext,kind:z.literal('token-stream'),state:z.enum(['started','persisted','interrupted'])}),
+]);
+export type ModelProgressFrame=z.output<typeof modelProgressFrame>;
 export const workbenchEventFrame=z.discriminatedUnion('kind',[
  z.strictObject({...context,kind:z.literal('subscribed'),afterSeq:epoch}),
  z.strictObject({...context,kind:z.literal('domain-event'),event:domainEvent}).superRefine((v,ctx)=>{if(v.projectId!==v.event.projectId||v.runId!==v.event.runId)ctx.addIssue({code:'custom',message:'Event context must match its envelope'});}),
@@ -11,6 +17,7 @@ export const workbenchEventFrame=z.discriminatedUnion('kind',[
  z.strictObject({...context,kind:z.literal('resync-required'),afterSeq:epoch,reason:z.enum(['RETAINED_GAP','CURSOR_AHEAD','BUFFER_OVERFLOW','SLOW_CLIENT','CATCHUP_LIMIT','STORAGE_UNAVAILABLE','PROTOCOL_INVALID'])}),
  z.strictObject({...context,kind:z.literal('authorization-lost')}),
  z.strictObject({...context,kind:z.literal('service-stopping')}),
+ ...modelProgressFrame.options,
 ]);
 export type WorkbenchEventSubscription=z.output<typeof workbenchEventSubscription>;
 export type WorkbenchEventFrame=z.output<typeof workbenchEventFrame>;
