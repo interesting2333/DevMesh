@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "d1966638a2932b3bd00acbef721c77dd57924ba7405449cac60f33f516d14372"
+      "sha256": "b747c9f9b7ac455fabe85131bfef78d3dca55dbef04052e4ee0ce8130ec1639e"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "6291b13055e32d7841da5f5f000e93af83f2cfd8355793f8e5e55f66953c64b1"
+      "sha256": "030a66e444cd58bf6611f800e597dcee88f05a9eb85479eba96a4868f2065486"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "6b98f57e22a86b563a7579d73c8885cada1b7e054e46a5658efed4d1d51e8cec"
+      "sha256": "d6fe9e95d4e42bb841ea182a7c32ad1f4a7ec62e1e65fbc4eac4beb9d15ed8b8"
     }
   ],
   "gates": [
@@ -2249,15 +2249,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-backup-snapshot"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P3-06/backup-snapshot-development-review.md","project/evidence/P3-06/backup-snapshot.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1／1.2／1.3，变更3/3。createBackup使用VACUUM INTO生成一致性快照，quick_check/foreign_key_check校验并返回SHA-256/字节数；拒绝重叠与不存在目录；不提供HTTP备份API。backup 1/1通过；恢复/迁移/加密/演练未实现，正式P3-06／G1不变。"]
     },
     {
       "id": "P4-01",

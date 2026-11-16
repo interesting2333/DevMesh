@@ -1924,6 +1924,11 @@ PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实�
 
 2026-11-16：P3-03提前开发增量完成，变更3/3。新增只读getProjectStats／getProjectConfigExport与受保护API／OpenAPI；统计成员／运行／消息／工件／Release，配置导出仅角色与Registry绑定、不含密钥；导入／时序／UI／T16／T17未实现。stats测试3/3。正式P3-03与G1～G4不变。
 
+
+#### 13.2026-11-16 P3-06 一致性备份快照离线开发记录
+
+2026-11-16：P3-06提前开发增量完成，变更3/3。createBackup使用VACUUM INTO生成一致性快照，quick_check／foreign_key_check校验并返回SHA-256／字节数；拒绝重叠与不存在目录；不提供HTTP备份API；恢复／迁移／加密／演练未实现。backup测试1/1。正式P3-06与G1～G4不变。
+
 ---
 
 ## 14. 数据与事务

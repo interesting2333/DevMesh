@@ -1,7 +1,9 @@
 import {createReleaseExportDomain} from './release-export-domain.js';
 import {releaseExportRequests} from './release-export-protocol.js';
 import type {ReleaseExportMethod} from './release-export-protocol.js';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
+import { existsSync, readFileSync, realpathSync, rmSync, statSync } from 'node:fs';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
@@ -856,6 +858,31 @@ export function createDomain(db: DatabaseSync) {
       const control = get('SELECT c.active_generation_id,g.manifest_revision FROM registry_control c JOIN registry_generations g ON g.generation_id=c.active_generation_id WHERE c.singleton_id=1');
       const bindings = control ? all('SELECT role,endpoint_id,endpoint_revision FROM role_endpoint_bindings WHERE generation_id=? ORDER BY role', String(control.active_generation_id)).map(row => ({ role: String(row.role), endpointId: String(row.endpoint_id), revision: Number(row.endpoint_revision) })) : [];
       return { projectId: input.projectId, name: String(project.name), members, registry: { generationId: control ? String(control.active_generation_id) : null, manifestRevision: control ? String(control.manifest_revision) : null, bindings } };
+    },
+    createBackup(input: Parsed<'createBackup'>) {
+      const destination = input.destinationDirectory;
+      if (!isAbsolute(destination) || !existsSync(destination) || !statSync(destination).isDirectory()) throw new StorageError('BACKUP_DIRECTORY_REQUIRED', 422, 'Backup destination must be an existing absolute directory');
+      const main = all('PRAGMA database_list').find(row => String(row.name) === 'main');
+      const databasePath = main && typeof main.file === 'string' ? main.file : '';
+      if (!databasePath) throw new StorageError('BACKUP_SOURCE_UNKNOWN', 500, 'Database path is unavailable');
+      const databaseDirectory = realpathSync(dirname(databasePath)), target = realpathSync(destination), relation = relative(databaseDirectory, target);
+      if (relation === '' || (!relation.startsWith('..') && !isAbsolute(relation))) throw new StorageError('BACKUP_PATH_OVERLAP', 409, 'Backup directory must not overlap the database directory');
+      const createdAt = new Date().toISOString(), path = resolve(target, `devmesh-${createdAt.replaceAll(':', '').replaceAll('.', '')}-${randomUUID()}.sqlite`);
+      try {
+        db.prepare('VACUUM INTO ?').run(path);
+        const byteSize = statSync(path).size;
+        if (byteSize <= 0) throw new StorageError('BACKUP_EMPTY', 500, 'Backup file is empty');
+        const copy = new DatabaseSync(path);
+        try {
+          const quick = copy.prepare('PRAGMA quick_check').get() as { quick_check?: unknown } | undefined;
+          if (!quick || quick.quick_check !== 'ok') throw new StorageError('BACKUP_INVALID', 500, 'Backup failed quick_check');
+          if (copy.prepare('PRAGMA foreign_key_check').all().length > 0) throw new StorageError('BACKUP_INVALID', 500, 'Backup has foreign key violations');
+        } finally { copy.close(); }
+        return { path, sha256: createHash('sha256').update(readFileSync(path)).digest('hex'), byteSize, createdAt };
+      } catch (error) {
+        try { rmSync(path, { force: true }); } catch { /* best effort cleanup */ }
+        throw error;
+      }
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
