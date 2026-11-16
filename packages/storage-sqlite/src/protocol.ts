@@ -168,6 +168,11 @@ export const requests = {
   listContentPins: z.strictObject({ contentHash: sha256.optional(), activeOnly: z.boolean().default(true), limit: z.number().int().min(1).max(200).default(100) }),
   getContentPin: z.strictObject({ pinId: opaqueKey }),
   getStorageDiagnostics: z.strictObject({}),
+  enqueuePublicTask: z.strictObject({ meta, projectId: ids.project, kind: z.string().min(1).max(100), payload: z.record(z.string(), z.json()), quota: z.number().int().min(1).max(10000).optional() }),
+  claimPublicTask: z.strictObject({ meta, workerId: opaqueKey, leaseMs: z.number().int().min(1000).max(300000).default(30000) }),
+  completePublicTask: z.strictObject({ meta, taskKey: opaqueKey, workerId: opaqueKey, outcome: z.enum(['COMPLETED','FAILED']) }),
+  getPublicTask: z.strictObject({ taskKey: opaqueKey }),
+  listPublicTasks: z.strictObject({ projectId: ids.project.optional(), principalId: opaqueKey.optional(), state: z.enum(['QUEUED','LEASED','COMPLETED','FAILED']).optional(), limit: z.number().int().min(1).max(200).default(50) }),
   recordControlTarget: z.strictObject({ meta, runId: ids.run, targetKind: z.enum(['ATTEMPT','PREPARATION','PREVIEW','JOB','WORKSPACE']), targetId: opaqueKey, state: z.enum(['PENDING','STOPPING','SAVED','RELEASED','UNKNOWN','FAILED']), failureCode: z.string().min(1).max(200).optional(), evidence: z.record(z.string(), z.json()).optional() }),
   finishControl: z.strictObject({ ...conditional, controlRevision: revision, outcome: z.literal('PAUSED') }),
   finishRun: z.strictObject({ ...conditional, outcome: z.enum(['FAILED', 'CANCELLED']), reason: z.string().min(1).max(2000) }),
@@ -191,6 +196,7 @@ export type ChangeView = { changeId: string; projectId: string; runId: string; s
 export type ConfigAdjustmentView = { adjustmentId: string; projectId: string; runId: string; baseGeneration: number; state: string; config: Record<string, unknown>; appliedGeneration: number | null; createdAt: string; updatedAt: string; revision?: number };
 export type InvocationView = { invocationId: string; projectId: string; principalId: string; endpointId: string; endpointRevision: number; registryGenerationId: string; state: string; inputManifestHash: string; definitionSnapshotHash: string; createdAt: string; updatedAt: string };
 export type ContentPinView = { pinId: string; contentHash: string; reason: string; createdAt: string; releasedAt: string | null };
+export type PublicTaskView = { taskKey: string; projectId: string; principalId: string; kind: string; state: string; payload: Record<string, unknown>; leaseOwner: string | null; leaseUntil: string | null; attempts: number; createdAt: string; updatedAt: string };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
 export interface Results extends ReleaseExportResults, SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceMaintenanceResults, WorkspaceReclamationResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults, AcceptanceAbortResults, AcceptanceAbortRecoveryResults, ReleasePublicationResults, ReleaseAccessResults, ReleaseSessionResults {
@@ -239,6 +245,11 @@ export interface Results extends ReleaseExportResults, SessionResults, RegistryR
   listContentPins: ContentPinView[];
   getContentPin: ContentPinView;
   getStorageDiagnostics: { contentObjects: number; activePins: number; releasedPins: number };
+  enqueuePublicTask: OperationResult;
+  claimPublicTask: PublicTaskView | null;
+  completePublicTask: OperationResult;
+  getPublicTask: PublicTaskView;
+  listPublicTasks: PublicTaskView[];
   finishRun: OperationResult;
   lookupOperation: OperationResult | null;
   getOperation: OperationResult;

@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -206,6 +206,7 @@ export function createDomain(db: DatabaseSync) {
   const configGeneration = () => Number(get('SELECT generation FROM config_control WHERE singleton_id=1')?.generation ?? 1);
   const invocationView = (row: Row): InvocationView => ({ invocationId: String(row.invocation_id), projectId: String(row.project_id), principalId: String(row.principal_id), endpointId: String(row.endpoint_id), endpointRevision: Number(row.endpoint_revision), registryGenerationId: String(row.registry_generation_id), state: String(row.state), inputManifestHash: String(row.input_manifest_hash), definitionSnapshotHash: String(row.definition_snapshot_hash), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const contentPinView = (row: Row): ContentPinView => ({ pinId: String(row.pin_id), contentHash: String(row.content_hash), reason: String(row.reason), createdAt: String(row.created_at), releasedAt: row.released_at === null ? null : String(row.released_at) });
+  const publicTaskView = (row: Row): PublicTaskView => ({ taskKey: String(row.task_key), projectId: String(row.project_id), principalId: String(row.principal_id), kind: String(row.kind), state: String(row.state), payload: JSON.parse(String(row.payload_json)) as Record<string, unknown>, leaseOwner: row.lease_owner === null ? null : String(row.lease_owner), leaseUntil: row.lease_until === null ? null : String(row.lease_until), attempts: Number(row.attempts), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
   const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
   function controlStatus(row: Row): ControlStatusView {
@@ -762,6 +763,45 @@ export function createDomain(db: DatabaseSync) {
         activePins: Number(get('SELECT count(*) n FROM content_pins WHERE released_at IS NULL')?.n ?? 0),
         releasedPins: Number(get('SELECT count(*) n FROM content_pins WHERE released_at IS NOT NULL')?.n ?? 0)
       };
+    },
+    enqueuePublicTask(input: Parsed<'enqueuePublicTask'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'EnqueuePublicTask', payload, operationId => {
+        required(get('SELECT project_id FROM projects WHERE project_id=?', input.projectId));
+        const quota = input.quota ?? 100;
+        const active = Number(get("SELECT count(*) n FROM public_tasks WHERE principal_id=? AND state IN ('QUEUED','LEASED')", meta.principalId)?.n ?? 0);
+        if (active >= quota) throw new StorageError('PUBLIC_QUOTA_EXCEEDED', 429, 'Public task quota is exhausted');
+        const taskKey = uid('ptask'), time = now(), serialized = canonical(input.payload);
+        if (serialized.length > 100000) throw new StorageError('PUBLIC_TASK_TOO_LARGE', 422, 'Public task payload is too large');
+        insert('public_tasks', { task_key: taskKey, project_id: input.projectId, principal_id: meta.principalId, kind: input.kind, state: 'QUEUED', payload_json: serialized, lease_owner: null, lease_until: null, attempts: 0, operation_id: operationId, created_at: time, updated_at: time });
+        return publicTaskView(required(get('SELECT * FROM public_tasks WHERE task_key=?', taskKey)));
+      });
+    },
+    claimPublicTask(input: Parsed<'claimPublicTask'>) {
+      return transaction(db, () => {
+        const time = now();
+        const row = get("SELECT * FROM public_tasks WHERE state='QUEUED' OR (state='LEASED' AND lease_until<=?) ORDER BY created_at,task_key LIMIT 1", time);
+        if (!row) return null;
+        const taskKey = String(row.task_key);
+        exec("UPDATE public_tasks SET state='LEASED',lease_owner=?,lease_until=?,attempts=attempts+1,updated_at=? WHERE task_key=?", input.workerId, new Date(Date.now() + input.leaseMs).toISOString(), time, taskKey);
+        return publicTaskView(required(get('SELECT * FROM public_tasks WHERE task_key=?', taskKey)));
+      });
+    },
+    completePublicTask(input: Parsed<'completePublicTask'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'CompletePublicTask', payload, () => {
+        const row = required(get('SELECT * FROM public_tasks WHERE task_key=?', input.taskKey));
+        if (['COMPLETED', 'FAILED'].includes(String(row.state))) throw new StorageError('PUBLIC_TASK_TERMINAL', 409, 'Public task is already terminal');
+        if (row.state !== 'LEASED' || row.lease_owner !== input.workerId) throw new StorageError('PUBLIC_TASK_LEASE_INVALID', 409, 'Public task lease does not belong to this worker');
+        exec('UPDATE public_tasks SET state=?,updated_at=? WHERE task_key=?', input.outcome, now(), input.taskKey);
+        return publicTaskView(required(get('SELECT * FROM public_tasks WHERE task_key=?', input.taskKey)));
+      });
+    },
+    getPublicTask(input: Parsed<'getPublicTask'>) {
+      return publicTaskView(required(get('SELECT * FROM public_tasks WHERE task_key=?', input.taskKey)));
+    },
+    listPublicTasks(input: Parsed<'listPublicTasks'>) {
+      return all('SELECT * FROM public_tasks WHERE (? IS NULL OR project_id=?) AND (? IS NULL OR principal_id=?) AND (? IS NULL OR state=?) ORDER BY created_at,task_key LIMIT ?', input.projectId ?? null, input.projectId ?? null, input.principalId ?? null, input.principalId ?? null, input.state ?? null, input.state ?? null, input.limit).map(publicTaskView);
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
