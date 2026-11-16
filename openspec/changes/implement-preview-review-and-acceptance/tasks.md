@@ -46,7 +46,9 @@
 ## 5. Composition and evidence
 
 - [ ] 5.1 将准确候选、审查、实际本地数据副本和 HTTP 预览／发布组合验证，逐项记录 D01～D08 与 T5 的实际覆盖，受控后端不代替真实构建／健康或产品验收。
-- [ ] 5.2 在固定提交干净 checkout 执行适用回归，保存原日志／SHA／源码指纹、部署与恢复说明，同步 OpenSpec 和父工作包台账，单列企业身份／真实 Linux／容器／迁移验收条件。
+- [x] 5.2 在固定提交干净 checkout 执行适用回归，保存原日志／SHA／源码指纹、部署与恢复说明，同步 OpenSpec 和父工作包台账，单列企业身份／真实 Linux／容器／迁移验收条件。
+
+2026-11-16：完成5.2，变更9/13。固定提交`9ab99fe`干净克隆（tree`f0d011d`、lock`e70b0d3`、Node 24.13.1）完成冻结安装、根构建、模板安装与构建、typecheck、lint 0警告0错误、contracts、`test:acceptance` 321/321、`test:review-browser` 4/4、`test:preview-browser` 6/6；preview前两次失败（模板依赖缺失、冷启动标题超时）原样保留。部署与恢复说明引用RELEASE／EXPORTS／ACCEPTANCE／PREVIEWS／RELEASE-PUBLICATION文档。企业OIDC、真实Linux／容器／迁移未执行；2.3／4.1／4.3／5.1与正式P1-07／G0不变。证据：`project/evidence/P1-07/clean-checkout-9ab99fe.md`。
 
 4.1 本轮服务组合：4.1 接受服务组合：显式 RunnerAcceptancePreparationBackend／ACCEPTANCE Docker Driver、整库只读与原对象恢复，Runner v8 保存稳定完整 proof；实际 SQLite／模板 HTTP→HELD／控制面 READY→T5 本地链路通过。service-02 16/16、regression-01 15/15、migrations-01 选中4项通过（其余测试未选择，TAP skipped=0），构建／类型／Lint和148份源码映射通过。首轮28项25通过3失败源于两处测试错误，另有未使用导入导致Lint失败，三处修正及原日志／源码指纹全部保留；最后三组输入与最终构建一致、运行期间无变化。物理容器／镜像来源／fence 为明确夹具；真实 Linux／quota／networkIsolation／物理 custody、安全撤销、OWNED／发布及正向保留／替换与完整产品验收继续。4.1不勾选，变更8/13及正式P1-07／门槛不变。 证据见 `project/evidence/P1-07/acceptance-composition-development-review.md`。
 
