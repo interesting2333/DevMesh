@@ -61,5 +61,15 @@ process.stdout.write(JSON.stringify({ event: 'preview-ready', url: address + '/a
 const stop = async () => {
   try { await platform.stop(); } finally { process.exit(0); }
 };
+const { createServer } = await import('node:http');
+createServer((request, response) => {
+  if (request.method === 'POST' && request.url === '/shutdown') {
+    response.end('stopping');
+    void stop();
+    return;
+  }
+  response.statusCode = 404;
+  response.end();
+}).listen(3212, '127.0.0.1');
 process.on('SIGINT', () => { void stop(); });
 process.on('SIGTERM', () => { void stop(); });
