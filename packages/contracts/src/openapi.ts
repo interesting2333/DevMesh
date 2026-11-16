@@ -2,7 +2,7 @@ import {beginAcceptanceInput,confirmAcceptanceReplacementInput,closeUnsentAccept
 import { z } from 'zod';
 import {candidateReviewEntry,candidateHumanResult,candidateRejectionResult,candidateReviewHistory,candidateRejectionHistory,recordCandidateReviewInput,recordCandidateRejectionInput} from './candidate-review.js';
 import {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView} from './release-export.js';
-import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle,opaqueKey } from './primitives.js';
+import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle,opaqueKey,sha256 } from './primitives.js';
 import {releaseAccessInput,releaseAccessTicket,releaseEntryView} from './release-access.js';
 import {previewAccessInput,previewAccessTicket,previewEntryView,candidatePreviewWorkspace,previewDatasetManagement,previewManagement,createPreviewDatasetInput,createPreviewIntentInput,stopPreviewIntentInput} from './preview.js';
 import { command, commandBodies, operationReceipt, idempotencyKey } from './commands.js';
@@ -133,6 +133,9 @@ export function createOpenApiDocument() {
   add('/api/v1/projects/{projectId}/invocations','get','ReadInvocations',undefined,[parameter('projectId',ids.project),{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:50}}]);
   add('/api/v1/invocations/{invocationId}','get','ReadInvocation',undefined,[parameter('invocationId',opaqueKey)]);
   add('/api/v1/invocations/{invocationId}:transition','post','TransitionInvocation',undefined,[parameter('invocationId',opaqueKey),key],undefined,'202');
+  add('/api/v1/projects/{projectId}/content-pins','get','ReadContentPins',undefined,[parameter('projectId',ids.project),{name:'contentHash',in:'query',schema:jsonSchema(sha256)},{name:'activeOnly',in:'query',schema:{type:'boolean'}}]);
+  add('/api/v1/projects/{projectId}/content-pins/{pinId}:release','post','ReleaseContentPin',undefined,[parameter('projectId',ids.project),parameter('pinId',opaqueKey),key],undefined,'202');
+  add('/api/v1/storage/diagnostics','get','ReadStorageDiagnostics',undefined,[{name:'projectId',in:'query',required:true,schema:jsonSchema(ids.project)}]);
   const acceptancePath='/api/v1/runs/{runId}/candidates/{candidateId}/acceptance',acceptanceParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],conditionalAcceptance=[...acceptanceParameters,key,parameter('If-Match',strongETag,'header')];
   add(acceptancePath,'get','ReadAcceptanceBasis','AcceptanceBasis',acceptanceParameters);
   for(const [suffix,operationId,mime] of [['view','ReadAcceptancePage','text/html'],['client.js','ReadAcceptanceClient','application/javascript']] as const){const path=acceptancePath+'/'+suffix;add(path,'get',operationId,undefined,acceptanceParameters);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'当前成员准确候选接受入口；GET不准备、确认、接受或签发应用访问',content:{[mime]:{schema:{type:'string'}}}};}

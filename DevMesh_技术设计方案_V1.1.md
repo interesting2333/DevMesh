@@ -1900,6 +1900,11 @@ PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实�
 
 2026-11-16：P2-06提前开发增量完成，变更4/4。新增迁移0050 invocations与create／get／list／transition；受保护Invocation API与OpenAPI；同键幂等、同键不同请求拒绝、显式状态机与终态保护；公共Task/Inbox、主体配额与取消核实审计确认未实现。invocation测试3/3、迁移7/7。正式P2-06与G1～G4不变。
 
+
+#### 13.2026-11-16 P2-07 内容 pin 与 GC 边界离线开发记录
+
+2026-11-16：P2-07提前开发增量完成，变更4/4。新增content_pins与pin／release／list／diagnostics及受保护API／OpenAPI；明确无删除路径，GC／归档／分块日志／容量／T22／T23未实现。content-pins测试3/3、迁移7/7。正式P2-07与G1～G4不变。
+
 ---
 
 ## 14. 数据与事务

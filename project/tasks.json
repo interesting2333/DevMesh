@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "7316320ddb335f08c56495026a845d7233b4b45e21d5d24ffa21e20d2d784f9b"
+      "sha256": "c5b7e6b5f1447c2eb298c94c6263b55a2a6b96b5bb77ff1b19feb15cc8ef9c84"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "a21fc94ae00f13a83064c2b2f20da4f9241f248793074366aaf56c773fe851db"
+      "sha256": "86849d3f9fdce4c7740d4358872ea7b713c0345b197dc2f71539931be06d7a83"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "3897baf5727b36c0c752c4ccbab64f735c2338cacf889e8dbc201e6480dc8d2f"
+      "sha256": "aab8c28bd5e0963e3493c22d753b625c32415ecd7b358b6df62dbb53b776e474"
     }
   ],
   "gates": [
@@ -2051,7 +2051,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P2-07/content-pins-development-review.md","project/evidence/P2-07/content-pins.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0051新增content_pins；pin／release／list／getStorageDiagnostics落地，幂等、同键不同hash拒绝、释放不删内容、计数准确。content-pins 1/1通过；受保护API、GC／归档与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。"]
+      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0051新增content_pins；pin／release／list／getStorageDiagnostics落地，幂等、同键不同hash拒绝、释放不删内容、计数准确。content-pins 1/1通过；受保护API、GC／归档与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更4/4。pin/diagnostics API与OpenAPI接入；GC/归档审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-07仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P2-08",

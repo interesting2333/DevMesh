@@ -28,3 +28,23 @@ node --test --test-reporter=spec tests/content-pins.test.mjs
 - 受保护 pin／诊断 API（1.2）未完成。
 - GC 计划／提交／删除、归档 ACK、分块日志、容量限制（2.x）未实现；本增量明确没有删除路径，不冒充 T22／T23。
 - 正式 P2-07／G1～G4 不变。
+
+## 追加：受保护 pin／诊断 API（1.2）
+
+- `POST /projects/{projectId}/content-pins`：成员写权限；返回 pin 操作。
+- `GET /projects/{projectId}/content-pins?contentHash=`：成员读权限。
+- `POST /projects/{projectId}/content-pins/{pinId}:release`：成员写权限。
+- `GET /storage/diagnostics?projectId=`：成员读权限；只返回已验证计数。
+- OpenAPI 新增三个读取／释放路径（总数 76）。
+- 说明：pin 记录本身没有项目字段，API 以调用方对某项目的成员权限作为授权边界；这属于当前边界，不是完整的多租户 pin 归属。
+
+## 追加：GC／归档审计（2.1）
+
+| 检查项 | 结论 |
+| --- | --- |
+| GC 计划／提交／删除 | 无实现；本轮刻意不写删除路径 |
+| 归档 ACK | 无实现；无法验证“ACK 丢失不删文件” |
+| 分块日志 | 无实现 |
+| 容量限制／磁盘满 | 无实现；诊断不返回容量 |
+| T22／T23 | 未执行 |
+| 结论 | GC／归档保持未实现；pin 为未来删除提供硬前置，但不宣称删除安全已验证 |

@@ -105,6 +105,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   };
   const invocationCreate=z.strictObject({endpointId:opaqueKey,endpointRevision:revision,registryGenerationId:opaqueKey,inputManifestHash:sha256,definitionSnapshotHash:sha256});
   const invocationTransition=z.strictObject({expectedState:z.enum(['ACCEPTED','WORKING','INPUT_REQUIRED','COMPLETED','FAILED','CANCELED']),state:z.enum(['WORKING','INPUT_REQUIRED','COMPLETED','FAILED','CANCELED'])});
+  const contentPinCreate=z.strictObject({contentHash:sha256,reason:z.string().min(1).max(500)});
   router.post('/attachments',route(async(request,response,identity)=>{
     const meta=bodyMeta(request,'uploads',identity);
     if(activeUploads>=maximumUploads)fail('UPLOAD_CAPACITY',429,'Upload capacity is full');
@@ -276,6 +277,26 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const invocationId=parseContract(opaqueKey,request.params.invocationId),invocation=await content.storage.request('getInvocation',{invocationId}),meta=bodyMeta(request,invocation.projectId,identity),body=parseContract(invocationTransition,json(request));
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:invocation.projectId,write:true});
     response.status(202).json(await content.storage.request('transitionInvocation',{meta,invocationId,expectedState:body.expectedState,state:body.state}));
+  }));
+  router.post('/projects/:projectId/content-pins',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),meta=bodyMeta(request,projectId,identity),body=parseContract(contentPinCreate,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:true});
+    response.status(202).json(await content.storage.request('pinContent',{meta,contentHash:body.contentHash,reason:body.reason}));
+  }));
+  router.get('/projects/:projectId/content-pins',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),hash=request.query.contentHash===undefined?undefined:parseContract(sha256,request.query.contentHash);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json({pins:await content.storage.request('listContentPins',{...(hash===undefined?{}:{contentHash:hash}),activeOnly:request.query.activeOnly!=='false'})});
+  }));
+  router.post('/projects/:projectId/content-pins/:pinId\\:release',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),pinId=parseContract(opaqueKey,request.params.pinId),meta=bodyMeta(request,projectId,identity);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:true});
+    response.status(202).json(await content.storage.request('releaseContentPin',{meta,pinId}));
+  }));
+  router.get('/storage/diagnostics',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.query.projectId as string);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json(await content.storage.request('getStorageDiagnostics',{}));
   }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');
