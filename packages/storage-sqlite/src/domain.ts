@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -200,6 +200,8 @@ export function createDomain(db: DatabaseSync) {
   const runView = (row: Row): RunView => ({ runId: String(row.run_id), projectId: String(row.project_id), taskId: String(row.task_id), resourceRevision: Number(row.resource_revision), runEpoch: Number(row.run_epoch), controlRevision: Number(row.control_revision), phase: String(row.phase), controlGate: String(row.control_gate), terminalOutcome: row.terminal_outcome as string | null, currentPlanRevision: row.current_plan_revision as number | null, currentRequirementRevision: row.current_requirement_revision as number | null, eventSeq: Number(row.event_seq) });
   const attemptView = (row: Row): AttemptView => ({ attemptId: String(row.attempt_id), runId: String(row.run_id), workId: String(row.work_id), role: String(row.role), state: String(row.state), attemptNo: Number(row.attempt_no), dispatchOperationId: String(row.dispatch_operation_id), endedAt: row.ended_at as string | null });
   const controlTargetView = (row: Row): ControlTargetView => ({ runId: String(row.run_id), targetKind: String(row.target_kind), targetId: String(row.target_id), state: String(row.state), attempts: Number(row.attempts), failureCode: row.failure_code as string | null, evidence: row.evidence_json === null ? null : JSON.parse(String(row.evidence_json)) as Record<string, unknown>, lastCheckedAt: String(row.last_checked_at), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
+  const changeView = (row: Row): ChangeView => ({ changeId: String(row.change_id), projectId: String(row.project_id), runId: String(row.run_id), sourceMessageId: String(row.source_message_id), proposedText: String(row.proposed_text), state: String(row.state), basisHash: String(row.basis_hash), decisionOperationId: row.decision_operation_id as string | null, createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
+  const changeBasis = (row: Row) => digest(canonical({ runId: String(row.run_id), planRevision: row.current_plan_revision ?? null, requirementRevision: row.current_requirement_revision ?? null, resourceRevision: Number(row.resource_revision) }));
   const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
   const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
   function controlStatus(row: Row): ControlStatusView {
@@ -609,6 +611,37 @@ export function createDomain(db: DatabaseSync) {
         reconcileOutbox: Number(get("SELECT count(*) n FROM outbox WHERE status='RECONCILE'")?.n ?? 0),
         openPreparations: Number(get('SELECT count(*) n FROM preparation_attempts WHERE ended_at IS NULL')?.n ?? 0)
       };
+    },
+    proposeChange(input: Parsed<'proposeChange'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'ProposeChange', payload, () => {
+        const current = writable(input);
+        const existing = get('SELECT * FROM change_proposals WHERE run_id=? AND source_message_id=?', input.runId, input.sourceMessageId);
+        if (existing) return changeView(existing);
+        const time = now(), changeId = uid('change'), basisHash = changeBasis(current);
+        exec('INSERT INTO change_proposals(change_id,project_id,run_id,source_message_id,proposed_text,state,basis_hash,decision_operation_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)', changeId, String(current.project_id), input.runId, input.sourceMessageId, input.proposedText, 'PROPOSED', basisHash, null, time, time);
+        return changeView(required(get('SELECT * FROM change_proposals WHERE change_id=?', changeId)));
+      });
+    },
+    decideChange(input: Parsed<'decideChange'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'DecideChange', payload, operationId => {
+        const row = required(get('SELECT * FROM change_proposals WHERE change_id=?', input.changeId));
+        if (row.state !== 'PROPOSED') throw new StorageError('CHANGE_NOT_PROPOSED', 409, 'Change proposal is already decided');
+        const current = run(String(row.run_id));
+        if (input.basisHash !== String(row.basis_hash) || input.basisHash !== changeBasis(current)) throw new StorageError('CHANGE_BASIS_SUPERSEDED', 409, 'Change basis changed');
+        const state = input.action === 'confirm' ? 'CONFIRMED' : 'REJECTED', time = now();
+        exec('UPDATE change_proposals SET state=?,decision_operation_id=?,updated_at=? WHERE change_id=?', state, operationId, time, input.changeId);
+        bump(String(row.run_id));
+        return changeView(required(get('SELECT * FROM change_proposals WHERE change_id=?', input.changeId)));
+      });
+    },
+    getChange(input: Parsed<'getChange'>) {
+      return changeView(required(get('SELECT * FROM change_proposals WHERE change_id=?', input.changeId)));
+    },
+    listChanges(input: Parsed<'listChanges'>) {
+      run(input.runId);
+      return all('SELECT * FROM change_proposals WHERE run_id=? ORDER BY created_at,change_id LIMIT ?', input.runId, input.limit).map(changeView);
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;

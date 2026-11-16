@@ -1926,15 +1926,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-partial-change-control"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P2-03/change-proposals-development-review.md","project/evidence/P2-03/change-proposals.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1／1.2，变更2/4。迁移0047新增change_proposals（来源消息唯一、依据hash）；proposeChange／decideChange／getChange／listChanges落地，旧依据拒绝、终态保护与重复来源幂等。change-proposals 2/2通过；影响图／局部冻结／应用复验、HTTP API与文档同步未完成，正式P2-03／G1不变。"]
     },
     {
       "id": "P2-04",
