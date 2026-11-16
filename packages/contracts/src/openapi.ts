@@ -145,6 +145,7 @@ export function createOpenApiDocument() {
   add('/api/v1/content-archives/{archiveId}:ack','post','AckContentArchive',undefined,[parameter('archiveId',opaqueKey),key],undefined,'202');
   add('/api/v1/projects/{projectId}/stats','get','ReadProjectStats',undefined,[parameter('projectId',ids.project)]);
   add('/api/v1/projects/{projectId}/config-export','get','ExportProjectConfig',undefined,[parameter('projectId',ids.project)]);
+  add('/api/v1/projects/{projectId}/history-export','get','ExportProjectHistory',undefined,[parameter('projectId',ids.project),{name:'cutoffAt',in:'query',schema:{type:'string',format:'date-time'}}]);
   const acceptancePath='/api/v1/runs/{runId}/candidates/{candidateId}/acceptance',acceptanceParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],conditionalAcceptance=[...acceptanceParameters,key,parameter('If-Match',strongETag,'header')];
   add(acceptancePath,'get','ReadAcceptanceBasis','AcceptanceBasis',acceptanceParameters);
   for(const [suffix,operationId,mime] of [['view','ReadAcceptancePage','text/html'],['client.js','ReadAcceptanceClient','application/javascript']] as const){const path=acceptancePath+'/'+suffix;add(path,'get',operationId,undefined,acceptanceParameters);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'当前成员准确候选接受入口；GET不准备、确认、接受或签发应用访问',content:{[mime]:{schema:{type:'string'}}}};}

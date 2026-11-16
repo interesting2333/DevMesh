@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "b747c9f9b7ac455fabe85131bfef78d3dca55dbef04052e4ee0ce8130ec1639e"
+      "sha256": "0ced0772c59f58172239396ca4127aecf461fd6274d045358504a013d026a231"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "030a66e444cd58bf6611f800e597dcee88f05a9eb85479eba96a4868f2065486"
+      "sha256": "9add5225099d22d00c9cb062b3ddb9442b8674456e1c2ffbf526a641de82f2fd"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "d6fe9e95d4e42bb841ea182a7c32ad1f4a7ec62e1e65fbc4eac4beb9d15ed8b8"
+      "sha256": "ccd24f3f17b32822faab2889667985e72ef26a3f60aa963a54c54196559c99d5"
     }
   ],
   "gates": [
@@ -2132,15 +2132,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-history-export"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P3-02/history-export-development-review.md","project/evidence/P3-02/history-export.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1／1.2／1.3，变更3/3。只读exportProjectHistory与受保护API/OpenAPI落地；按cutoff过滤并标记NO_RUNS_BEFORE_CUTOFF/ACTIVE_RUNS_AT_CUTOFF，不补造。history 2/2通过；导入/回放UI/Git打包未实现，正式P3-02／G1不变。"]
     },
     {
       "id": "P3-03",

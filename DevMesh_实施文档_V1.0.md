@@ -773,3 +773,8 @@ P1-08的2.3接入task页面：下一目标切换、类型／标题／正文及�
 
 2026-11-16：P3-06提前开发增量完成，变更3/3。createBackup使用VACUUM INTO生成一致性快照，quick_check／foreign_key_check校验并返回SHA-256／字节数；拒绝重叠与不存在目录；不提供HTTP备份API；恢复／迁移／加密／演练未实现。backup测试1/1。正式P3-06与G1～G4不变。
 
+
+### 2026-11-16 P3-02 截止快照历史导出离线开发记录
+
+2026-11-16：P3-02提前开发增量完成，变更3/3。新增只读exportProjectHistory与受保护API／OpenAPI；按cutoff过滤runs／messages／artifacts／releases，未终态或空历史标记complete=false与missing，不补造；导入／回放UI／Git打包未实现。history测试2/2。正式P3-02与G1～G4不变。
+

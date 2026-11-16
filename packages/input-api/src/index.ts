@@ -358,6 +358,11 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
     response.json(await content.storage.request('getProjectConfigExport',{projectId}));
   }));
+  router.get('/projects/:projectId/history-export',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),cutoffAt=request.query.cutoffAt===undefined?undefined:parseContract(z.string().datetime(),request.query.cutoffAt);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json(await content.storage.request('exportProjectHistory',{projectId,...(cutoffAt===undefined?{}:{cutoffAt})}));
+  }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');
     if(!['true','false'].includes(includeAbsence))fail('SCHEMA_INVALID',422,'Invalid absence selection');

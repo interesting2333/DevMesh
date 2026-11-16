@@ -7,7 +7,7 @@ import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView, ContentArchiveView, ProjectStatsView, ProjectConfigExportView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView, ContentArchiveView, ProjectStatsView, ProjectConfigExportView, HistoryExportView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -859,8 +859,7 @@ export function createDomain(db: DatabaseSync) {
       const bindings = control ? all('SELECT role,endpoint_id,endpoint_revision FROM role_endpoint_bindings WHERE generation_id=? ORDER BY role', String(control.active_generation_id)).map(row => ({ role: String(row.role), endpointId: String(row.endpoint_id), revision: Number(row.endpoint_revision) })) : [];
       return { projectId: input.projectId, name: String(project.name), members, registry: { generationId: control ? String(control.active_generation_id) : null, manifestRevision: control ? String(control.manifest_revision) : null, bindings } };
     },
-    createBackup(input: Parsed<'createBackup'>) {
-      const destination = input.destinationDirectory;
+    createBackup(input: Parsed<'createBackup'>) {      const destination = input.destinationDirectory;
       if (!isAbsolute(destination) || !existsSync(destination) || !statSync(destination).isDirectory()) throw new StorageError('BACKUP_DIRECTORY_REQUIRED', 422, 'Backup destination must be an existing absolute directory');
       const main = all('PRAGMA database_list').find(row => String(row.name) === 'main');
       const databasePath = main && typeof main.file === 'string' ? main.file : '';
@@ -883,6 +882,26 @@ export function createDomain(db: DatabaseSync) {
         try { rmSync(path, { force: true }); } catch { /* best effort cleanup */ }
         throw error;
       }
+    },
+    exportProjectHistory(input: Parsed<'exportProjectHistory'>): HistoryExportView {
+      const project = get('SELECT project_id FROM projects WHERE project_id=?', input.projectId);
+      if (!project) throw new StorageError('RESOURCE_NOT_FOUND', 404, 'Project does not exist');
+      const cutoffAt = input.cutoffAt ?? now();
+      const runs = all('SELECT run_id,phase,terminal_outcome,created_at,ended_at FROM runs WHERE project_id=? AND created_at<=? ORDER BY created_at,run_id', input.projectId, cutoffAt).map(row => ({ runId: String(row.run_id), phase: String(row.phase), outcome: row.terminal_outcome === null ? null : String(row.terminal_outcome), createdAt: String(row.created_at), endedAt: row.ended_at === null ? null : String(row.ended_at) }));
+      const missing: string[] = runs.length === 0 ? ['NO_RUNS_BEFORE_CUTOFF'] : runs.some(run => run.outcome === null) ? ['ACTIVE_RUNS_AT_CUTOFF'] : [];
+      const count = (query: string) => Number(get(query, input.projectId, cutoffAt)?.n ?? 0);
+      return {
+        projectId: input.projectId,
+        cutoffAt,
+        complete: missing.length === 0,
+        missing,
+        runs,
+        counts: {
+          messages: count('SELECT count(*) n FROM input_messages WHERE project_id=? AND created_at<=?'),
+          artifacts: count('SELECT count(*) n FROM artifacts WHERE project_id=? AND created_at<=?'),
+          releases: count('SELECT count(*) n FROM releases WHERE project_id=? AND accepted_at<=?')
+        }
+      };
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
