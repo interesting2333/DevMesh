@@ -526,3 +526,12 @@ Provider可显式配置responseMode:sse；未配置仍用原JSON，冻结配置�
 
 2026-11-16：P2-08提前开发增量完成，变更3/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观、断线重连保持权威状态；取消因缺impactReviewHash不提供；配置调整面板、变更队列、控制多页竞争与完整E2E／T08／路径五审计确认未实现。workbench-live暂停恢复测试1/1。正式P2-08与G1～G4不变。
 
+
+### 2026-11-16 工作台模型接入设置（P0-06 开发增量）
+
+- 入口：侧边栏底部“更多”→“设置”打开弹窗，字段为 Provider、Endpoint、模型 ID、API Key。
+- API：`GET /api/v1/settings/model` 返回 `{configured,providerId,endpoint,model,hasApiKey,updatedAt}`；`PUT /api/v1/settings/model` 保存；`POST /api/v1/settings/model:test` 测试连接。
+- 安全：API Key 只写本机 0600 文件，不写数据库、不回显、不写日志；非法 Endpoint 返回 `MODEL_ENDPOINT_INVALID`，未配置测试返回 `MODEL_KEY_REQUIRED`。
+- 生效：保存后需重启；预览启动器读取设置并尝试接入 Runtime，失败回退无模型并记录。
+- UI 状态：保存成功显示“已保存。重启服务后生效。”；测试连接显示状态码分类，不显示密钥。
+

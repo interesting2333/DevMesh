@@ -489,6 +489,15 @@ interface RoleSnapshot {
 
 首个 Provider 适配团队可用的 DeepSeek API。具体模型 ID 是部署必填项；无可用模型仍能保存需求，但不显示已经开始模型理解。供应商差异隔离在 ModelProvider，角色配置不能携带密钥。
 
+#### 11.2.0.1 模型接入设置与密钥边界
+
+工作台侧边栏底部“更多 → 设置”提供本机模型接入配置：Provider、Endpoint、模型 ID 与 API Key。保存写入 `<dataRoot>/settings/model.json`（非秘密）与 `model-secret.json`（文件权限 0600），密钥不进入数据库、不回显、不写日志；读取接口只返回“是否已保存密钥”。
+
+- **校验**：Endpoint 必须为 https；仅 loopback 主机允许 http；拒绝 URL 内凭据、query 与 fragment。Provider 与模型 ID 限安全字符。
+- **测试连接**：服务端使用已保存密钥请求 `GET {endpoint}/models`，6 秒超时；只返回状态分类，不返回密钥或响应正文。
+- **生效**：保存后需重启服务。预览启动器读取设置，构造 ModelProvider 与内置 Agent manifest，凭据解析只把 Key 交给 Provider；接入失败回退为无模型并记录，不伪造“已可用”。
+- **边界**：这是单机本地操作者设置，不是企业密钥托管；多用户管理员隔离、轮换与审计留待后续。运行中的 Run 不热切换模型，仍按配置调整流程暂停、审查后应用。
+
 #### 11.2.1 按角色选择模型与冻结配置
 
 | 角色 | 配置别名 | 必须实际检查的能力 |
@@ -1547,6 +1556,15 @@ Provider可显式配置responseMode:sse；未配置仍用原JSON，冻结配置�
 #### 12.2026-11-16 P2-08 工作台控制交互离线开发记录
 
 2026-11-16：P2-08提前开发增量完成，变更3/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观、断线重连保持权威状态；取消因缺impactReviewHash不提供；配置调整面板、变更队列、控制多页竞争与完整E2E／T08／路径五审计确认未实现。workbench-live暂停恢复测试1/1。正式P2-08与G1～G4不变。
+
+
+#### 12.2026-11-16 工作台模型接入设置（P0-06 开发增量）
+
+- 入口：侧边栏底部“更多”→“设置”打开弹窗，字段为 Provider、Endpoint、模型 ID、API Key。
+- API：`GET /api/v1/settings/model` 返回 `{configured,providerId,endpoint,model,hasApiKey,updatedAt}`；`PUT /api/v1/settings/model` 保存；`POST /api/v1/settings/model:test` 测试连接。
+- 安全：API Key 只写本机 0600 文件，不写数据库、不回显、不写日志；非法 Endpoint 返回 `MODEL_ENDPOINT_INVALID`，未配置测试返回 `MODEL_KEY_REQUIRED`。
+- 生效：保存后需重启；预览启动器读取设置并尝试接入 Runtime，失败回退无模型并记录。
+- UI 状态：保存成功显示“已保存。重启服务后生效。”；测试连接显示状态码分类，不显示密钥。
 
 ---
 

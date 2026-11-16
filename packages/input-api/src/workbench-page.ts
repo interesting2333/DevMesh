@@ -99,6 +99,22 @@ label{display:block;font-size:13px;color:var(--text-soft);margin:10px 0 4px}
 .dag-scroll{overflow:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);padding:8px}
 ol,ul{padding-left:20px}
 li{margin:4px 0}
+.sidebar{display:flex;flex-direction:column}
+.sidebar-footer{margin-top:auto;position:relative;padding-top:12px;border-top:1px solid var(--border)}
+.sidebar-footer > button{width:100%}
+.more-menu{position:absolute;left:0;right:0;bottom:calc(100% + 6px);z-index:30;display:flex;flex-direction:column;padding:6px;border:1px solid var(--border);border-radius:10px;background:var(--surface);box-shadow:0 12px 32px rgba(0,0,0,.12)}
+.more-menu button{border:0;background:transparent;text-align:left;min-height:32px;padding:6px 10px;border-radius:6px}
+.more-menu button:hover{background:var(--accent-soft)}
+.modal-backdrop{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.35);backdrop-filter:blur(3px)}
+.modal{width:min(520px,100%);max-height:90vh;overflow:auto;border:1px solid var(--border);border-radius:16px;background:var(--surface);padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.modal-head h2{margin:0;font-size:18px}
+.modal h3{margin:14px 0 8px;font-size:14px;color:var(--text-soft)}
+.modal label{margin:12px 0 4px;font-size:12px;color:var(--text-soft)}
+.modal input{margin-top:5px}
+.modal .actions{margin-top:18px}
+.modal .actions .primary{margin-left:auto}
+.settings-message{font-size:13px;color:var(--text);background:var(--accent-soft);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
 @media (max-width:1180px){
   .layout{grid-template-columns:236px minmax(0,1fr) 300px}
   .conversation{padding:28px 26px 100px}

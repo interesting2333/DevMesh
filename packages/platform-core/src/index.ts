@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { join } from 'node:path';
 import type { AddressInfo, Socket } from 'node:net';
 import express from 'express';
 import { Context } from '@deepseek-ai/cordis';
@@ -135,7 +136,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   let previewDatasets:PreviewDatasetConsumer|undefined;
   try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
   catch(error){await storageFiber?.dispose();throw error;}
-  try{if(inputModule&&inputBaseline&&services){const acceptor=acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,events:{...options.workbenchEvents,closeTimeoutMs:Math.min(options.workbenchEvents?.closeTimeoutMs??250,config.shutdownTimeoutMs)},previewGateway:options.previewGateway,previewPolicies,...(acceptor?{acceptance:{policies:acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
+  try{if(inputModule&&inputBaseline&&services){const acceptor=acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,events:{...options.workbenchEvents,closeTimeoutMs:Math.min(options.workbenchEvents?.closeTimeoutMs??250,config.shutdownTimeoutMs)},previewGateway:options.previewGateway,previewPolicies,settingsRoot:join(services.local.dataRoot,'settings'),...(acceptor?{acceptance:{policies:acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
   catch(error){await agents?.stop();await storageFiber?.dispose();throw error;}
   app.use((_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
   const server = createServer({ headersTimeout: 5000, requestTimeout: config.inputApi?35000:10000 }, app);

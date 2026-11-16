@@ -26,6 +26,8 @@ import type {Identity,IdentityResolver} from './input-auth.js';
 export type {Identity,IdentityResolver} from './input-auth.js';
 import {createWorkbenchEventServer} from './workbench-events-server.js';
 import type {WorkbenchEventLimits} from './workbench-events-server.js';
+import {createModelSettingsStore} from './model-settings.js';
+export {createModelSettingsStore} from './model-settings.js';
 export type {WorkbenchEventLimits} from './workbench-events-server.js';
 export type {PreviewAccessGateway} from './preview.js';
 
@@ -37,6 +39,7 @@ export type InputApiOptions={enabled?:false}|{
   releaseGateway?:ReleaseAccessGateway|undefined;
   acceptance?:AcceptanceAccess|undefined;
   events?:WorkbenchEventLimits|undefined;
+  settingsRoot?:string|undefined;
   maximumUploads?:number;diagnostic?:(detail:{requestId:string;error:unknown})=>void;
 };
 const runFile=promisify(execFile);
@@ -87,6 +90,13 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   router.use(express.json({limit:256*1024,strict:true,type:'application/json'}));
   const bodyMeta=(request:Request,scope:string,identity:Identity)=>scopeMeta(identity.principalId,scope,request);
   const json=(request:Request)=>{if(!request.is('application/json'))fail('CONTENT_TYPE_INVALID',415,'Expected application/json');return request.body as unknown;};
+  const modelSettings=options.settingsRoot?createModelSettingsStore(options.settingsRoot):undefined;
+  const modelSettingsInput=z.strictObject({providerId:z.string().min(1).max(64),endpoint:z.string().min(1).max(500),model:z.string().min(1).max(128),apiKey:z.string().min(1).max(500).optional()});
+  if(modelSettings){
+    router.get('/settings/model',route(async(_request,response)=>{response.json(await modelSettings.getView());}));
+    router.put('/settings/model',route(async(request,response)=>{const body=parseContract(modelSettingsInput,json(request));response.json(await modelSettings.save(body));}));
+    router.post('/settings/model\\:test',route(async(_request,response)=>{response.json(await modelSettings.test());}));
+  }
   const putBody=async(principalId:string,scopeId:string,key:string,text:string)=>{
     // A separate deterministic operation namespace protects content publication.
     const bytes=Buffer.from(text,'utf8'),hash=createHash('sha256').update(bytes).digest('hex');

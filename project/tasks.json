@@ -15,7 +15,7 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "f40b1da2cc925246ee016290ef1ac91789397dec929adf71ec9ac9519252dc83"
+      "sha256": "8b771418eeffdae1af7da5ddbb3097b0d71c4bfc68d41e0e90d52696fc903dc6"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
@@ -23,7 +23,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "e9fdbcf86a36d439c8b96077617da2005ee90db3de00741d8eaa6580de58daea"
+      "sha256": "e752715ee9343f0789e7c69e700c6ffd402d34dd3fd25491f731a82527355ce2"
     }
   ],
   "gates": [
@@ -300,7 +300,8 @@
       ],
       "changes": [
         "implement-agent-runtime-provider",
-        "implement-workbench-first-path"
+        "implement-workbench-first-path",
+        "implement-model-settings"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -314,7 +315,10 @@
       "evidence": [
         "project/evidence/P0-06/离线实施进展.md",
         "project/evidence/P0-06/cross-platform-summary.json",
-        "project/evidence/P1-08/model-stream-development-review.md"
+        "project/evidence/P1-08/model-stream-development-review.md",
+        "project/evidence/P0-06/model-settings-development-review.md",
+        "project/evidence/P0-06/model-settings-http.txt",
+        "project/evidence/P0-06/model-settings-browser.txt"
       ],
       "reviewNote": null,
       "notes": [
@@ -322,7 +326,8 @@
         "Runtime 代码已提交；本地开发回归发现两项测试／宿主时序问题，已修正并继续复验。固定版本与 Linux 验证尚未全部完成，真实模型三组样本仍待资源，见离线实施进展。",
         "Windows 固定生产快照 e4d89ef：首次 CLI 启动超时失败原样保留，复跑 15/15 检查通过；d385c67 测试修正版本地 Runtime 串行 18/18 通过。Linux WSL 启动超时，真实 DeepSeek 样本未执行，不宣称跨平台或模型验收。",
         "WSL 后续恢复可用：同一 e4d89ef 固定快照 Linux 15/15 检查通过，与 Windows 源指纹／锁文件一致；真实模型三组样本仍未执行，状态不变。",
-        "2026-11-16：P1-08子项3.2复用本工作包Provider／Runtime／Preparation，显式SSE与只读临时content回调；默认JSON及原冻结配置形状保持，最终响应先持久再执行工具。协议18及Runtime／Preparation28本机验证通过，真实模型样本未执行，P0-06正式状态不变；按用户要求当前项提交后暂停。"
+        "2026-11-16：P1-08子项3.2复用本工作包Provider／Runtime／Preparation，显式SSE与只读临时content回调；默认JSON及原冻结配置形状保持，最终响应先持久再执行工具。协议18及Runtime／Preparation28本机验证通过，真实模型样本未执行，P0-06正式状态不变；按用户要求当前项提交后暂停。",
+        "2026-11-16：新增工作台“更多→设置”模型接入配置；本机0600密钥文件与GET/PUT/test API，HTTP 2/2、浏览器1/1通过；未用真实Key调用，正式P0-06仍IN_PROGRESS，G0～G4不变。"
       ]
     },
     {

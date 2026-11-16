@@ -45,6 +45,15 @@ interface RoleSnapshot {
 
 首个 Provider 适配团队可用的 DeepSeek API。具体模型 ID 是部署必填项；无可用模型仍能保存需求，但不显示已经开始模型理解。供应商差异隔离在 ModelProvider，角色配置不能携带密钥。
 
+### 2.0.1 模型接入设置与密钥边界
+
+工作台侧边栏底部“更多 → 设置”提供本机模型接入配置：Provider、Endpoint、模型 ID 与 API Key。保存写入 `<dataRoot>/settings/model.json`（非秘密）与 `model-secret.json`（文件权限 0600），密钥不进入数据库、不回显、不写日志；读取接口只返回“是否已保存密钥”。
+
+- **校验**：Endpoint 必须为 https；仅 loopback 主机允许 http；拒绝 URL 内凭据、query 与 fragment。Provider 与模型 ID 限安全字符。
+- **测试连接**：服务端使用已保存密钥请求 `GET {endpoint}/models`，6 秒超时；只返回状态分类，不返回密钥或响应正文。
+- **生效**：保存后需重启服务。预览启动器读取设置，构造 ModelProvider 与内置 Agent manifest，凭据解析只把 Key 交给 Provider；接入失败回退为无模型并记录，不伪造“已可用”。
+- **边界**：这是单机本地操作者设置，不是企业密钥托管；多用户管理员隔离、轮换与审计留待后续。运行中的 Run 不热切换模型，仍按配置调整流程暂停、审查后应用。
+
 ### 2.1 按角色选择模型与冻结配置
 
 | 角色 | 配置别名 | 必须实际检查的能力 |

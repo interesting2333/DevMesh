@@ -788,3 +788,8 @@ P1-08的2.3接入task页面：下一目标切换、类型／标题／正文及�
 
 2026-11-16：P4-04提前准备完成，变更2/2。新增project/release-manifest.mjs，输出git HEAD、包版本、schema版本、迁移／OpenAPI摘要、门槛与工作包状态、变更进度；不含可发布／已验收声明；--write生成证据清单。release-manifest测试2/2。正式P4-04与G1～G4不变。
 
+
+### 2026-11-16 P0-06 本机模型接入设置（离线开发增量）
+
+2026-11-16：工作台侧边栏“更多→设置”增加模型接入配置；新增 `GET/PUT /api/v1/settings/model` 与 `POST /api/v1/settings/model:test`。Provider、Endpoint、模型 ID 与 API Key 保存到本机 `<dataRoot>/settings`；Key 仅写 0600 文件，响应与错误不回显。Endpoint 必须 https（loopback 可 http），拒绝 URL 凭据/query/hash。保存后需重启；预览启动器尝试接入 Runtime，失败回退无模型。HTTP 测试 2/2、浏览器设置弹窗测试 1/1。未使用真实 DeepSeek Key 调用；正式 P0-06 仍 IN_PROGRESS，G0～G4 不变。
+

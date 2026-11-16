@@ -78,6 +78,19 @@ test('workbench collaboration tab shows change and config summaries',settings,as
   await expect(summary).toContainText('配置代际');
 });
 
+test('workbench more menu opens model settings and saves configuration',settings,async t=>{
+  const h=await harness(t),{f,page}=h,scope=await f.create();await h.open(scope);
+  await page.getByRole('button',{name:'更多'}).click();
+  await page.getByRole('menuitem',{name:'设置'}).click();
+  const dialog=page.getByRole('dialog',{name:'设置'});
+  await expect(dialog).toBeVisible();
+  await dialog.getByLabel('模型 ID').fill('deepseek-chat');
+  await dialog.getByLabel('API Key').fill('sk-test-browser');
+  await dialog.getByRole('button',{name:'保存设置'}).click();
+  await expect(dialog.getByRole('status')).toContainText('已保存');
+  await expect(dialog).toContainText('已配置 deepseek-chat');
+});
+
 test('workbench pause and resume controls call the real API and keep the state across reconnect',settings,async t=>{
   const h=await harness(t),{f,page}=h,scope=await f.create();await h.open(scope);
   const controlStatus=page.getByRole('status',{name:'执行控制状态'});
