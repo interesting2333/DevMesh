@@ -30,3 +30,11 @@ node --test --test-reporter=spec tests/change-proposals.test.mjs
 - HTTP API 与 OpenAPI 接入（2.1）未完成。
 - 真实模型未接入；提案正文只来自用户输入。
 - 正式 P2-03／G1～G4 不变。
+
+## 追加：受保护变更 API（2.1）与验证（3.1）
+
+- `POST /runs/{runId}/changes`：要求当前资源版本 If-Match、成员写权限；返回 202 receipt。
+- `POST /changes/{changeId}:decide`：先按 change 读取所属 Run 再复核写权限；契约的 `analysisId` 改为可选（影响图未实现）。
+- `GET /runs/{runId}/changes`、`GET /changes/{changeId}`：只读成员检查。
+- 契约新增 `CHANGE_NOT_PROPOSED`、`CHANGE_BASIS_SUPERSEDED`；OpenAPI 增加变更读取路径（路径总数 67）。
+- 验证：change 存储测试 2/2、HTTP 测试 1/1；日志见 [change-http-and-storage.txt](./change-http-and-storage.txt)。

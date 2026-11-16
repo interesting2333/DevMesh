@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "bbb464e6525bb69b8bd503e3aef162a7f2c4feee6f12518a8436774eec71ad41"
+      "sha256": "b55f3a1877b77589db1fbf97918f73f8412bcdea33aa8cc5de7d43950e1d570e"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "5df60f2fd3d46829d81be18a2dd60c0b1a3ae37dc3988823aece24467f650ff7"
+      "sha256": "8c0573b0da78a2205d67242425a40e746b0c236ff2db1aba7901407a5836f4ca"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "2eed0fb7a73454af4e8d40b3379e9fdb8ba50d36ab0424707a254de6fd5a1ce8"
+      "sha256": "5b3c3de409ba6633d540abaf59392f4cafb84fc74f37a8cd2bb1512a192c06a5"
     }
   ],
   "gates": [
@@ -1934,7 +1934,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P2-03/change-proposals-development-review.md","project/evidence/P2-03/change-proposals.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2，变更2/4。迁移0047新增change_proposals（来源消息唯一、依据hash）；proposeChange／decideChange／getChange／listChanges落地，旧依据拒绝、终态保护与重复来源幂等。change-proposals 2/2通过；影响图／局部冻结／应用复验、HTTP API与文档同步未完成，正式P2-03／G1不变。"]
+      "notes": ["2026-11-16：完成1.1／1.2，变更2/4。迁移0047新增change_proposals（来源消息唯一、依据hash）；proposeChange／decideChange／getChange／listChanges落地，旧依据拒绝、终态保护与重复来源幂等。change-proposals 2/2通过；影响图／局部冻结／应用复验、HTTP API与文档同步未完成，正式P2-03／G1不变。", "2026-11-16：完成2.1／3.1／3.2，变更4/4。受保护变更API、CHANGE_*错误码与OpenAPI更新；change测试3/3、迁移7/7；设计04、验收、实施文档追加记录，基线更新，OpenSpec与台账同步。正式P2-03仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P2-04",

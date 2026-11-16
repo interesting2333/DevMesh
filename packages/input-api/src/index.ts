@@ -195,6 +195,28 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:false});
     response.json(await content.storage.request('getControlStatus',{runId}));
   }));
+  router.post('/runs/:runId/changes',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(commandBodies.ProposeChange,json(request)),ifMatch=request.headers['if-match'];
+    if(ifMatch===undefined)fail('PRECONDITION_REQUIRED',428,'If-Match resource revision is required');
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:true});
+    response.status(202).json(receipt(await content.storage.request('proposeChange',{meta,runId,sourceMessageId:body.sourceMessageId,proposedText:body.proposedText,ifMatch:scalar(ifMatch,'If-Match')})));
+  }));
+  router.post('/changes/:changeId\\:decide',route(async(request,response,identity)=>{
+    const changeId=parseContract(ids.change,request.params.changeId),meta=bodyMeta(request,changeId,identity),body=parseContract(commandBodies.DecideChange,json(request));
+    const change=await content.storage.request('getChange',{changeId});
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId:change.runId,write:true});
+    response.status(202).json(receipt(await content.storage.request('decideChange',{meta,changeId,action:body.action,basisHash:body.basisHash})));
+  }));
+  router.get('/runs/:runId/changes',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),limit=positive(request.query.limit??'50',1,100);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:false});
+    response.json({changes:await content.storage.request('listChanges',{runId,limit})});
+  }));
+  router.get('/changes/:changeId',route(async(request,response,identity)=>{
+    const changeId=parseContract(ids.change,request.params.changeId),change=await content.storage.request('getChange',{changeId});
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId:change.runId,write:false});
+    response.json(change);
+  }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');
     if(!['true','false'].includes(includeAbsence))fail('SCHEMA_INVALID',422,'Invalid absence selection');

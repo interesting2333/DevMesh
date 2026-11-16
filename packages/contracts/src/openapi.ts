@@ -124,6 +124,8 @@ export function createOpenApiDocument() {
   add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
   add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
   add('/api/v1/runs/{runId}/control','get','ReadRunControlStatus','RunControlStatus',[parameter('runId',ids.run)]);
+  add('/api/v1/runs/{runId}/changes','get','ReadChangeProposals',undefined,[parameter('runId',ids.run),{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:50}}]);
+  add('/api/v1/changes/{changeId}','get','ReadChangeProposal',undefined,[parameter('changeId',ids.change)]);
   const acceptancePath='/api/v1/runs/{runId}/candidates/{candidateId}/acceptance',acceptanceParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],conditionalAcceptance=[...acceptanceParameters,key,parameter('If-Match',strongETag,'header')];
   add(acceptancePath,'get','ReadAcceptanceBasis','AcceptanceBasis',acceptanceParameters);
   for(const [suffix,operationId,mime] of [['view','ReadAcceptancePage','text/html'],['client.js','ReadAcceptanceClient','application/javascript']] as const){const path=acceptancePath+'/'+suffix;add(path,'get',operationId,undefined,acceptanceParameters);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'当前成员准确候选接受入口；GET不准备、确认、接受或签发应用访问',content:{[mime]:{schema:{type:'string'}}}};}

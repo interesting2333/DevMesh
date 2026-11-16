@@ -619,8 +619,8 @@ export function createDomain(db: DatabaseSync) {
         const existing = get('SELECT * FROM change_proposals WHERE run_id=? AND source_message_id=?', input.runId, input.sourceMessageId);
         if (existing) return changeView(existing);
         const time = now(), changeId = uid('change'), basisHash = changeBasis(current);
-        exec('INSERT INTO change_proposals(change_id,project_id,run_id,source_message_id,proposed_text,state,basis_hash,decision_operation_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)', changeId, String(current.project_id), input.runId, input.sourceMessageId, input.proposedText, 'PROPOSED', basisHash, null, time, time);
-        return changeView(required(get('SELECT * FROM change_proposals WHERE change_id=?', changeId)));
+        insert('change_proposals', { change_id: changeId, project_id: String(current.project_id), run_id: input.runId, source_message_id: input.sourceMessageId, proposed_text: input.proposedText, state: 'PROPOSED', basis_hash: basisHash, decision_operation_id: null, created_at: time, updated_at: time });
+        return { ...changeView(required(get('SELECT * FROM change_proposals WHERE change_id=?', changeId))), revision: Number(current.resource_revision) };
       });
     },
     decideChange(input: Parsed<'decideChange'>) {
@@ -633,7 +633,7 @@ export function createDomain(db: DatabaseSync) {
         const state = input.action === 'confirm' ? 'CONFIRMED' : 'REJECTED', time = now();
         exec('UPDATE change_proposals SET state=?,decision_operation_id=?,updated_at=? WHERE change_id=?', state, operationId, time, input.changeId);
         bump(String(row.run_id));
-        return changeView(required(get('SELECT * FROM change_proposals WHERE change_id=?', input.changeId)));
+        return { ...changeView(required(get('SELECT * FROM change_proposals WHERE change_id=?', input.changeId))), revision: Number(run(String(row.run_id)).resource_revision) };
       });
     },
     getChange(input: Parsed<'getChange'>) {

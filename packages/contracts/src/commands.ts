@@ -12,7 +12,7 @@ export const commandBodies = {
   ConfirmPlan: z.strictObject({ requirementRevision: revision, reviewHash: sha256,carryForwardHash:sha256.optional() }),
   PlanFeedback: z.strictObject({ text: inputText, workIds: z.array(ids.work).optional() }),
   ProposeChange: z.strictObject({ proposedText: inputText, sourceMessageId: ids.message }),
-  DecideChange: z.strictObject({ action: z.enum(['confirm', 'reject']), analysisId: ids.analysis, basisHash: sha256 }),
+  DecideChange: z.strictObject({ action: z.enum(['confirm', 'reject']), analysisId: ids.analysis.optional(), basisHash: sha256 }),
   PauseRun: z.strictObject({ reason: nonemptyText.optional() }),
   ResumeRun: z.strictObject({ controlRevision: revision, recoveryReviewHash: sha256 }),
   CancelRun: z.strictObject({ impactReviewHash: sha256 }),

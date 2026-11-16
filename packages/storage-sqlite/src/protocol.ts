@@ -172,7 +172,7 @@ export type RunView = { runId: string; projectId: string; taskId: string; resour
 export type ControlTargetView = { runId: string; targetKind: string; targetId: string; state: string; attempts: number; failureCode: string | null; evidence: Record<string, unknown> | null; lastCheckedAt: string; createdAt: string; updatedAt: string };
 export type ControlStatusView = { runId: string; controlGate: string; controlRevision: number; runEpoch: number; unresolved: ControlTargetView[]; lastCheckedAt: string | null; verificationOverdue: boolean; recoveryReviewHash: string | null };
 export type RecoveryStateView = { controlRuns: ControlStatusView[]; activeAttempts: number; unknownAttempts: number; pendingOutbox: number; leasedOutbox: number; reconcileOutbox: number; openPreparations: number };
-export type ChangeView = { changeId: string; projectId: string; runId: string; sourceMessageId: string; proposedText: string; state: string; basisHash: string; decisionOperationId: string | null; createdAt: string; updatedAt: string };
+export type ChangeView = { changeId: string; projectId: string; runId: string; sourceMessageId: string; proposedText: string; state: string; basisHash: string; decisionOperationId: string | null; createdAt: string; updatedAt: string; revision?: number };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
 export interface Results extends ReleaseExportResults, SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceMaintenanceResults, WorkspaceReclamationResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults, AcceptanceAbortResults, AcceptanceAbortRecoveryResults, ReleasePublicationResults, ReleaseAccessResults, ReleaseSessionResults {
@@ -202,8 +202,8 @@ export interface Results extends ReleaseExportResults, SessionResults, RegistryR
   getControlStatus: ControlStatusView;
   listControlRuns: ControlStatusView[];
   getRecoveryState: RecoveryStateView;
-  proposeChange: ChangeView;
-  decideChange: ChangeView;
+  proposeChange: OperationResult;
+  decideChange: OperationResult;
   getChange: ChangeView;
   listChanges: ChangeView[];
   finishRun: OperationResult;
