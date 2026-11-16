@@ -16,6 +16,7 @@ import { preparationDelegation,preparationInput,retryUnderstandingInput,understa
 import { planReviewView } from './plans.js';
 import {workbenchDeliveryView} from './workbench-delivery.js';
 import {workbenchEventSubscription,workbenchEventFrame,modelProgressFrame} from './workbench-events.js';
+import {runControlStatus} from './control.js';
 
 export const schemas = {
   BeginAcceptance:beginAcceptanceInput,ConfirmAcceptanceReplacement:confirmAcceptanceReplacementInput,CloseUnsentAcceptance:closeUnsentAcceptanceInput,AbortAcceptance:abortAcceptanceInput,AcceptanceBasis:acceptanceBasisView,AcceptancePreparation:acceptancePreparationView,AcceptancePreparationList:acceptancePreparationList,AcceptanceReplacementReceipt:acceptanceReplacementReceipt,AcceptanceAbortReceipt:acceptanceAbortReceipt,AcceptanceCommitReceipt:acceptanceCommitReceipt,
@@ -34,6 +35,7 @@ export const schemas = {
   Understanding:understandingView,UnderstandingOutput:understandingOutput,RetryUnderstanding:retryUnderstandingInput,
   PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
   PlanReview:planReviewView,
+  RunControlStatus:runControlStatus,
   WorkbenchSource:workbenchSourceView,
   WorkbenchDelivery:workbenchDeliveryView,
   ReleaseAccessInput:releaseAccessInput,ReleaseAccessTicket:releaseAccessTicket,ReleaseEntryView:releaseEntryView,
@@ -121,6 +123,7 @@ export function createOpenApiDocument() {
   add('/api/v1/runs/{runId}/understanding','get','ReadUnderstanding','Understanding',[parameter('runId',ids.run),parameter('requirementRevision',revision,'query',false)]);
   add('/api/v1/runs/{runId}/understanding:retry','post','RetryUnderstanding','OperationReceipt',[parameter('runId',ids.run),key,parameter('If-Match',strongETag,'header')],'RetryUnderstanding','202');
   add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
+  add('/api/v1/runs/{runId}/control','get','ReadRunControlStatus','RunControlStatus',[parameter('runId',ids.run)]);
   const acceptancePath='/api/v1/runs/{runId}/candidates/{candidateId}/acceptance',acceptanceParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],conditionalAcceptance=[...acceptanceParameters,key,parameter('If-Match',strongETag,'header')];
   add(acceptancePath,'get','ReadAcceptanceBasis','AcceptanceBasis',acceptanceParameters);
   for(const [suffix,operationId,mime] of [['view','ReadAcceptancePage','text/html'],['client.js','ReadAcceptanceClient','application/javascript']] as const){const path=acceptancePath+'/'+suffix;add(path,'get',operationId,undefined,acceptanceParameters);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'当前成员准确候选接受入口；GET不准备、确认、接受或签发应用访问',content:{[mime]:{schema:{type:'string'}}}};}

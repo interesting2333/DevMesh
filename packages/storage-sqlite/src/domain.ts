@@ -207,7 +207,7 @@ export function createDomain(db: DatabaseSync) {
     const lastCheckedAt = targets.length ? targets.map(target => target.lastCheckedAt).sort().at(-1)! : null;
     const gate = String(row.control_gate);
     const verificationOverdue = lastCheckedAt !== null && ['PAUSING', 'CANCELLING'].includes(gate) && Date.now() - Date.parse(lastCheckedAt) >= 30000;
-    return { runId, controlGate: gate, controlRevision: Number(row.control_revision), runEpoch: Number(row.run_epoch), unresolved, lastCheckedAt, verificationOverdue };
+    return { runId, controlGate: gate, controlRevision: Number(row.control_revision), runEpoch: Number(row.run_epoch), unresolved, lastCheckedAt, verificationOverdue, recoveryReviewHash: row.recovery_review_hash === null || row.recovery_review_hash === undefined ? null : String(row.recovery_review_hash) };
   }
   function registerControlTargets(runId: string) {
     const time = now();
@@ -513,7 +513,7 @@ export function createDomain(db: DatabaseSync) {
         const updated = run(input.runId);
         event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
         outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: 'pause' });
-        return { ...runView(updated), targets: controlTargets(input.runId) };
+        return { ...runView(updated), revision: Number(updated.resource_revision), targets: controlTargets(input.runId) };
       });
     },
     cancelRun(input: Parsed<'cancelRun'>) {
@@ -529,7 +529,7 @@ export function createDomain(db: DatabaseSync) {
         const updated = run(input.runId);
         event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
         outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: 'cancel' });
-        return { ...runView(updated), targets: controlTargets(input.runId) };
+        return { ...runView(updated), revision: Number(updated.resource_revision), targets: controlTargets(input.runId) };
       });
     },
     resumeRun(input: Parsed<'resumeRun'>) {
@@ -546,7 +546,7 @@ export function createDomain(db: DatabaseSync) {
         exec("UPDATE runs SET control_gate='OPEN',run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1,recovery_review_hash=NULL WHERE run_id=?", input.runId);
         const updated = run(input.runId);
         event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
-        return { ...runView(updated) };
+        return { ...runView(updated), revision: Number(updated.resource_revision) };
       });
     },
     recordControlTarget(input: Parsed<'recordControlTarget'>) {
@@ -581,7 +581,7 @@ export function createDomain(db: DatabaseSync) {
         exec("UPDATE runs SET control_gate='PAUSED',control_revision=control_revision+1,resource_revision=resource_revision+1,recovery_review_hash=? WHERE run_id=?", recoveryReviewHash, input.runId);
         const updated = run(input.runId);
         event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
-        return { ...runView(updated), targets, recoveryReviewHash };
+        return { ...runView(updated), revision: Number(updated.resource_revision), targets, recoveryReviewHash };
       });
     },
     listControlTargets(input: Parsed<'listControlTargets'>) {

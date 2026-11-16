@@ -56,3 +56,12 @@ corepack pnpm@11.28.5 typecheck                                                 
 - 材料保存失败只重试保存（可配 `saveRetries`），并复用同一幂等键；停止动作不重发。
 - 30 秒提示由 `getControlStatus` 的未解决目标、`lastCheckedAt`、`verificationOverdue` 提供；事件／UI 投影留给 3.2。
 - 测试：`tests/run-control-coordinator.test.mjs` 5/5（释放、未知只查、未配置、保存重试、取消等待 finishRun）。
+
+## 追加：受保护控制 API（3.1）
+
+- 路由：`POST /api/v1/runs/{runId}:pause`、`:cancel`、`:resume`，`GET /api/v1/runs/{runId}/control`。
+- pause／cancel 要求 `If-Match: "r<controlRevision>"`（缺失 428、过期 409）；resume 使用正文 `controlRevision` 与 `recoveryReviewHash`。
+- 所有写操作先 `checkInputAccess(write:true)`，状态查询用 `write:false`；沿用 idempotency-key 与原键回执。
+- 存储控制结果补充 `revision`，使既有 receipt 形状可用；`getControlStatus` 暴露 `recoveryReviewHash` 供恢复审查。
+- 契约错误码新增控制类代码并重新生成 OpenAPI；新增 `ReadRunControlStatus` 路径，路径总数 65→66。
+- 验证：`tests/contracts.test.mjs` 18/18、`tests/input-control-http.test.mjs` 1/1；`contracts:check` 通过。

@@ -12,7 +12,7 @@
 
 ## 3. API, events and UI projection
 
-- [ ] 3.1 接入受保护 pause／resume／cancel API 与控制状态查询，If-Match／原键／权限边界与 OpenAPI 更新。
+- [x] 3.1 接入受保护 pause／resume／cancel API 与控制状态查询，If-Match／原键／权限边界与 OpenAPI 更新。
 - [ ] 3.2 投影 ControlProgress 事件与未解决目标；验证工作台断线重连后仍能读取真实控制状态，不用夹具冒充完成。
 
 ## 4. Verification and records
@@ -29,3 +29,5 @@
 2026-11-16：补充控制状态查询，变更仍2/8。`getControlStatus`返回未解决目标、最近检查时间与30秒`verificationOverdue`；`listControlRuns`提供PAUSING／CANCELLING扫描入口。测试覆盖31秒前后overdue翻转，且不自动成功。control-stop协调器、保存失败重试、API与事件投影仍未实现；正式P2-01／G1不变。
 
 2026-11-16：完成2.1／2.2，变更4/8。新增`RunControlCoordinator`：显式`ControlStopBackend`，PENDING／STOPPING只`stop`一次、UNKNOWN只`inspect`（无inspect保留未知不重发）、全部目标释放后`finishControl`转PAUSED；CANCELLING只释放目标，由`finishRun`明确完成。材料保存失败只重试保存并复用同一幂等键；30秒提示由`getControlStatus`的unresolved／lastCheckedAt／verificationOverdue提供，事件与UI投影留3.2。coordinator测试5/5、run-control 2/2。正式P2-01／G1不变。证据：`project/evidence/P2-01/run-control-storage-development-review.md`。
+
+2026-11-16：完成3.1，变更5/8。新增受保护`POST /runs/{runId}:pause`、`:cancel`、`:resume`与`GET /runs/{runId}/control`；pause／cancel要求`If-Match: "r<controlRevision>"`，resume用正文controlRevision与recoveryReviewHash；均先做成员写／读权限检查，操作经既有幂等键与原键回执。契约新增控制错误码并重新生成OpenAPI，新增ReadRunControlStatus路径（总66路径）；contracts 18/18、control HTTP 1/1通过。事件／UI投影仍属3.2；正式P2-01／G1不变。

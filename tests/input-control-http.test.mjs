@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {inputFixture} from './fixtures/input-data.mjs';
+import {RunControlCoordinator} from '../packages/platform-core/dist/index.mjs';
+
+test('run control HTTP requires the current control revision and exposes pause, status and resume',{timeout:120000},async t=>{
+  const f=await inputFixture(t),created=await f.create({}),runId=created.body.result.runId;
+  let status=await f.call(`/runs/${runId}/control`);
+  assert.equal(status.response.status,200);
+  assert.equal(status.body.controlGate,'OPEN');
+  const revision=status.body.controlRevision;
+  const headers=extra=>({'content-type':'application/json','idempotency-key':randomUUID(),...extra});
+  const missing=await f.call(`/runs/${runId}:pause`,{method:'POST',headers:headers({}),body:'{}'});
+  assert.equal(missing.response.status,428);
+  const stale=await f.call(`/runs/${runId}:pause`,{method:'POST',headers:headers({'if-match':`"r${revision+1}"`}),body:'{}'});
+  assert.equal(stale.response.status,409,JSON.stringify(stale.body));
+  const paused=await f.call(`/runs/${runId}:pause`,{method:'POST',headers:headers({'if-match':`"r${revision}"`}),body:JSON.stringify({reason:'operator pause'})});
+  assert.equal(paused.response.status,202);
+  status=await f.call(`/runs/${runId}/control`);
+  assert.equal(status.body.controlGate,'PAUSING');
+  assert.deepEqual(status.body.unresolved,[]);
+  const coordinator=new RunControlCoordinator(f.storage,{configured:true,async stop(){throw new Error('no targets expected');}},{principalId:'coordinator.local'});
+  await coordinator.tick();
+  status=await f.call(`/runs/${runId}/control`);
+  assert.equal(status.body.controlGate,'PAUSED');
+  assert.match(status.body.recoveryReviewHash,/^[0-9a-f]{64}$/);
+  const resumed=await f.call(`/runs/${runId}:resume`,{method:'POST',headers:headers({}),body:JSON.stringify({controlRevision:status.body.controlRevision,recoveryReviewHash:status.body.recoveryReviewHash})});
+  assert.equal(resumed.response.status,202);
+  status=await f.call(`/runs/${runId}/control`);
+  assert.equal(status.body.controlGate,'OPEN');
+  assert.equal(status.body.recoveryReviewHash,null);
+});

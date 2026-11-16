@@ -95,6 +95,13 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const result=operation.result;if(!result||typeof result.projectId!=='string'||typeof result.runId!=='string'||typeof result.revision!=='number')fail('SERVICE_UNAVAILABLE',503,'Original operation receipt is unavailable');
     return {...operation,resource:{projectId:result.projectId,runId:result.runId,revision:result.revision},links:{operation:`/api/v1/operations/${operation.operationId}`}};
   };
+  const controlRevisionOf=(request:Request)=>{
+    const ifMatch=request.headers['if-match'];
+    if(ifMatch===undefined)fail('PRECONDITION_REQUIRED',428,'If-Match control revision is required');
+    const match=/^"r([1-9]\d*)"$/.exec(scalar(ifMatch,'If-Match'));
+    if(!match)fail('PRECONDITION_INVALID',428,'If-Match must be the current control revision');
+    return Number(match[1]);
+  };
   router.post('/attachments',route(async(request,response,identity)=>{
     const meta=bodyMeta(request,'uploads',identity);
     if(activeUploads>=maximumUploads)fail('UPLOAD_CAPACITY',429,'Upload capacity is full');
@@ -167,6 +174,26 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(commandBodies.ConfirmPlan,json(request));
     const planRevision=positive(request.params.planRevision,1,Number.MAX_SAFE_INTEGER),ifMatch=request.headers['if-match'];
     response.status(202).json(receipt(await content.storage.request('confirmReviewedPlan',{meta,runId,planRevision,...body,...(ifMatch===undefined?{}:{ifMatch:scalar(ifMatch,'If-Match')})})));
+  }));
+  router.post('/runs/:runId\\:pause',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(commandBodies.PauseRun,json(request)),controlRevision=controlRevisionOf(request);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:true});
+    response.status(202).json(receipt(await content.storage.request('pauseRun',{meta,runId,controlRevision,...(body.reason===undefined?{}:{reason:body.reason})})));
+  }));
+  router.post('/runs/:runId\\:cancel',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(commandBodies.CancelRun,json(request)),controlRevision=controlRevisionOf(request);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:true});
+    response.status(202).json(receipt(await content.storage.request('cancelRun',{meta,runId,controlRevision,impactReviewHash:body.impactReviewHash})));
+  }));
+  router.post('/runs/:runId\\:resume',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(commandBodies.ResumeRun,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:true});
+    response.status(202).json(receipt(await content.storage.request('resumeRun',{meta,runId,controlRevision:body.controlRevision,recoveryReviewHash:body.recoveryReviewHash})));
+  }));
+  router.get('/runs/:runId/control',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:false});
+    response.json(await content.storage.request('getControlStatus',{runId}));
   }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');
