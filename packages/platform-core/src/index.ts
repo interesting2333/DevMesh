@@ -37,6 +37,8 @@ export {AcceptanceAbortConsumer} from './abort-consumer.js';
 export type {AcceptanceAbortConsumerOptions,AcceptanceAbortBinding} from './abort-consumer.js';
 export {ReleasePublicationConsumer} from './publication-consumer.js';
 export type {ReleasePublicationConsumerOptions,ReleasePublicationBinding} from './publication-consumer.js';
+export {RunControlCoordinator} from './run-control-coordinator.js';
+export type {RunControlCoordinatorOptions,ControlStopBackend,ControlStopTarget,ControlStopObservation} from './run-control-coordinator.js';
 export {ReleaseExportScheduler} from './release-exports.js';
 export type {ReleaseExportSchedulerOptions} from './release-exports.js';
 export {PreviewLifecycleManager} from './preview-lifecycle.js';

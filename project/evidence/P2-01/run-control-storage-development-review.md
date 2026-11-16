@@ -47,3 +47,12 @@ corepack pnpm@11.28.5 typecheck                                                 
 - 新增 `listControlRuns`：按 limit 返回 PAUSING／CANCELLING 的 Run，作为后续收尾协调器的扫描入口。
 - 测试在 pause 后断言未解决目标 1 项、overdue 为 false；把目标 `last_checked_at` 改为 31 秒前后 overdue 为 true，仍不自动成功。
 - 仍未实现：control-stop 协调器、材料保存失败重试、API／事件投影。
+
+## 追加：control-stop 收尾协调器（2.1／2.2）
+
+- 新增 `RunControlCoordinator`（`packages/platform-core/src/run-control-coordinator.ts`），显式 `ControlStopBackend`：`configured`、`stop`、可选 `inspect`。
+- PENDING／STOPPING 只调用一次 `stop`；UNKNOWN 只 `inspect`，没有 `inspect` 时保留 UNKNOWN、不重发停止；全部目标 RELEASED 后才调用 `finishControl` 转 PAUSED。
+- CANCELLING 只驱动目标释放，不代替 `finishRun` 的取消决定；活动 attempt 结束后由 `finishRun` 明确转 CANCELLED。
+- 材料保存失败只重试保存（可配 `saveRetries`），并复用同一幂等键；停止动作不重发。
+- 30 秒提示由 `getControlStatus` 的未解决目标、`lastCheckedAt`、`verificationOverdue` 提供；事件／UI 投影留给 3.2。
+- 测试：`tests/run-control-coordinator.test.mjs` 5/5（释放、未知只查、未配置、保存重试、取消等待 finishRun）。

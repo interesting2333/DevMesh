@@ -7,8 +7,8 @@
 
 ## 2. Cleanup and verification
 
-- [ ] 2.1 实现 control-stop 逐目标收尾协调器与显式后端接口；未知只查询、不重发，全部目标释放后才完成 PAUSED／CANCELLED。
-- [ ] 2.2 实现材料保存失败只重试对应保存，以及 30 秒核实提示（未解决目标、最近检查时间），不自动成功。
+- [x] 2.1 实现 control-stop 逐目标收尾协调器与显式后端接口；未知只查询、不重发，全部目标释放后才完成 PAUSED／CANCELLED。
+- [x] 2.2 实现材料保存失败只重试对应保存，以及 30 秒核实提示（未解决目标、最近检查时间），不自动成功。
 
 ## 3. API, events and UI projection
 
@@ -27,3 +27,5 @@
 2026-11-16：完成1.1／1.2，变更2/8。迁移0046新增`run_control_targets`与`runs.recovery_review_hash`；pauseRun／cancelRun／resumeRun／recordControlTarget／finishControl／listControlTargets落地，finishRun取消前检查目标已解决。定向测试run-control 2/2、storage 17/17、迁移与再确认7/7，storage构建与全量typecheck通过。2.x协调器／保存重试／30秒提示、3.x API与4.x文档同步未完成；正式P2-01仍NOT_STARTED，不伪造G1。证据：`project/evidence/P2-01/run-control-storage-development-review.md`。
 
 2026-11-16：补充控制状态查询，变更仍2/8。`getControlStatus`返回未解决目标、最近检查时间与30秒`verificationOverdue`；`listControlRuns`提供PAUSING／CANCELLING扫描入口。测试覆盖31秒前后overdue翻转，且不自动成功。control-stop协调器、保存失败重试、API与事件投影仍未实现；正式P2-01／G1不变。
+
+2026-11-16：完成2.1／2.2，变更4/8。新增`RunControlCoordinator`：显式`ControlStopBackend`，PENDING／STOPPING只`stop`一次、UNKNOWN只`inspect`（无inspect保留未知不重发）、全部目标释放后`finishControl`转PAUSED；CANCELLING只释放目标，由`finishRun`明确完成。材料保存失败只重试保存并复用同一幂等键；30秒提示由`getControlStatus`的unresolved／lastCheckedAt／verificationOverdue提供，事件与UI投影留3.2。coordinator测试5/5、run-control 2/2。正式P2-01／G1不变。证据：`project/evidence/P2-01/run-control-storage-development-review.md`。
