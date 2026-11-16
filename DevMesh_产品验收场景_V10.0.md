@@ -541,3 +541,8 @@ REPLACE方案可以先交付和冻结供用户审查，不能在交付阶段要�
 ### 2026-11-16 T08键盘窄屏与集成回归记录
 
 2026-11-16：P1-08完成3.3键盘／窄屏／事件期间交互验证与4.1集成回归，变更累计11/13。实际Edge157（headless）页面1通过：Enter换行、IME composition与repeat期间Ctrl/Cmd+Enter零POST、页签ArrowRight／End／Home、390×844无横向溢出且切面板不丢正文、截图及单次提交；实时事件6通过：快照缺口、真实TCP断线重连、乱序／重复帧、缓冲溢出、空闲撤权均保持草稿／页签／焦点／选区且零额外POST；交付导航1通过。仓库全量check执行到acceptance组，终止前顶层TAP 224通过、0失败，覆盖构建／类型／Lint及smoke／contracts／storage／content／a2a／runtime／runner／mcp／workspaces／input／events／preparation／scheduler／verification与部分acceptance；单个验收场景在宿主100%负载下耗时5～6分钟，故主动终止，未宣称全量全绿；构建与contracts:check另跑通过。完整验收组、完整13文件浏览器矩阵和真实OIDC／模型／Linux保持未执行，留待5.2与门槛复核；正式P1-08／G0不变，身份／模型／Runner为明确夹具。证据：project/evidence/P1-08/event-continuity-development-review.md、integration-regression-development-review.md。
+
+### 2026-11-16 P2-01 控制生命周期离线开发记录
+
+2026-11-16：P2-01提前开发增量完成，变更8/8。新增迁移0046（run_control_targets、recovery_review_hash）、pauseRun／cancelRun／resumeRun／recordControlTarget／finishControl／getControlStatus／listControlRuns、RunControlCoordinator（显式ControlStopBackend、未知／STOPPING只inspect、保存失败只重试保存、30秒overdue）、受保护HTTP控制API与工作台控制状态（真实Edge断线重连验证）。受控后端测试覆盖pause／resume／cancel、崩溃重启、未知目标、保存重试与30秒提示；真实Runner／容器停止、真实模型／OIDC／Linux未执行，正式P2-01与G1～G4不变。
+

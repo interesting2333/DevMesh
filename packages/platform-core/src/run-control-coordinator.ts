@@ -42,7 +42,13 @@ export class RunControlCoordinator {
       await this.#cleanup(run);
       if(run.controlGate==='PAUSING'){
         const status=await this.storage.request('getControlStatus',{runId:run.runId});
-        if(status.controlGate==='PAUSING'&&status.unresolved.length===0)await this.storage.request('finishControl',{meta:this.#meta(run.runId),runId:run.runId,controlRevision:status.controlRevision,outcome:'PAUSED'});
+        if(status.controlGate==='PAUSING'&&status.unresolved.length===0)try{
+          await this.storage.request('finishControl',{meta:this.#meta(run.runId),runId:run.runId,controlRevision:status.controlRevision,outcome:'PAUSED'});
+        }catch(error){
+          // A lost ACK may have committed the pause already; a competing tick may
+          // also have won. Re-reading the gate on the next pass is authoritative.
+          if(!(error instanceof StorageError&&['CONTROL_NOT_PAUSING','CONTROL_REVISION_CONFLICT'].includes(error.code)))throw error;
+        }
       }
     }
   }
@@ -50,7 +56,9 @@ export class RunControlCoordinator {
     for(const target of run.unresolved){
       if(this.#stop.signal.aborted)return;
       if(target.state==='UNKNOWN'&&!this.backend.inspect)continue;
-      const observation=target.state==='UNKNOWN'?await this.backend.inspect!(target):await this.backend.stop(target);
+      if(target.state==='STOPPING'&&!this.backend.inspect)continue;
+      const queryOnly=target.state==='UNKNOWN'||target.state==='STOPPING';
+      const observation=queryOnly?await this.backend.inspect!(target):await this.backend.stop(target);
       await this.#record(run.runId,target,observation);
     }
   }

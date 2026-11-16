@@ -78,3 +78,17 @@ corepack pnpm@11.28.5 typecheck                                                 
 - 工作台新增“执行控制状态”区域：导航完成后读取 `GET /runs/{id}/control`；ControlProgress 事件更新未解决目标数与最近检查时间；WS 重快照（onSnapshot）后重新读取权威状态。
 - 展示：正在暂停／已暂停／正在取消／已恢复；未解决目标 N 项；超过 30 秒显示仍在核实。
 - 真实 Edge 测试：pause 后状态区显示“正在暂停，等待收尾”；销毁实际 WS 触发重快照与重连后，仍显示同一真实状态；`tests/browser/workbench-live.test.mjs` 7/7 通过。
+
+## 追加：崩溃重启与未知目标专项（4.1）
+
+| 场景 | 实际验证 |
+| --- | --- |
+| pause／resume／cancel | 存储控制测试、真实 HTTP 控制 API 测试 |
+| 未知目标 | stop 返回 UNKNOWN 后只 inspect；无 inspect 时保留 UNKNOWN 不重发 |
+| 崩溃在停止与保存之间 | 保存失败只重试保存（同一幂等键），停止不重发 |
+| 崩溃后 STOPPING 重启 | 新协调器只 inspect persisted STOPPING，不再次 stop |
+| 崩溃后已全部释放 | 新协调器重新读取状态并完成 PAUSED |
+| finishControl 丢 ACK | 已提交的 PAUSED 被重新读取，不把 409 当失败 |
+| 30 秒提示 | lastCheckedAt 31 秒前时 verificationOverdue=true，不自动完成 |
+
+测试：`tests/run-control-coordinator.test.mjs` 8/8、`tests/run-control.test.mjs` 2/2、`tests/input-control-http.test.mjs` 1/1。真实 Runner／容器停止与物理退出仍未执行。

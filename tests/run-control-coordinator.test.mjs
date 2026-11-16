@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fixture, planned, admission, meta } from './fixtures/storage-data.mjs';
 import { RunControlCoordinator } from '../packages/platform-core/dist/index.mjs';
+import { StorageError } from '../packages/storage-sqlite/dist/index.mjs';
 
 async function paused(t) {
   const f = await fixture(t), context = await planned(f.storage, f.root);
@@ -89,4 +90,41 @@ test('cancelling run releases targets but waits for the explicit finishRun decis
   const current = await f.storage.request('getRun', { runId: context.runId });
   const done = await f.storage.request('finishRun', { meta: meta(context.runId), runId: context.runId, ifMatch: '"r' + current.resourceRevision + '"', outcome: 'CANCELLED', reason: 'operator cancelled' });
   assert.equal(done.result.terminalOutcome, 'CANCELLED');
+});
+
+test('a restart inspects a persisted STOPPING target and never resends stop', async t => {
+  const f = await paused(t), calls = [];
+  await f.storage.request('recordControlTarget', { meta: meta(f.context.runId), runId: f.context.runId, targetKind: 'ATTEMPT', targetId: f.attemptId, state: 'STOPPING' });
+  const backend = { configured: true, async stop() { calls.push('stop'); return { state: 'RELEASED' }; }, async inspect() { calls.push('inspect'); return { state: 'RELEASED' }; } };
+  const coordinator = new RunControlCoordinator(f.storage, backend, { principalId: 'coordinator.local' });
+  await coordinator.tick();
+  assert.deepEqual(calls, ['inspect']);
+  assert.equal((await f.storage.request('getControlStatus', { runId: f.context.runId })).controlGate, 'PAUSED');
+});
+
+test('a restart finishes a pausing run whose targets were already released', async t => {
+  const f = await paused(t);
+  await f.storage.request('recordControlTarget', { meta: meta(f.context.runId), runId: f.context.runId, targetKind: 'ATTEMPT', targetId: f.attemptId, state: 'RELEASED' });
+  const coordinator = new RunControlCoordinator(f.storage, { configured: true, async stop() { throw Error('must not stop'); } }, { principalId: 'coordinator.local' });
+  await coordinator.tick();
+  assert.equal((await f.storage.request('getControlStatus', { runId: f.context.runId })).controlGate, 'PAUSED');
+});
+
+test('a lost finish ACK is tolerated because the committed gate is authoritative', async t => {
+  const f = await paused(t);
+  await f.storage.request('recordControlTarget', { meta: meta(f.context.runId), runId: f.context.runId, targetKind: 'ATTEMPT', targetId: f.attemptId, state: 'RELEASED' });
+  let first = true;
+  const lostAck = {
+    async request(method, input) {
+      if (method === 'finishControl' && first) {
+        first = false;
+        await f.storage.request(method, input);
+        throw new StorageError('CONTROL_NOT_PAUSING', 409, 'lost ACK');
+      }
+      return f.storage.request(method, input);
+    }
+  };
+  const coordinator = new RunControlCoordinator(lostAck, { configured: true, async stop() { throw Error('no stops'); } }, { principalId: 'coordinator.local' });
+  await coordinator.tick();
+  assert.equal((await f.storage.request('getControlStatus', { runId: f.context.runId })).controlGate, 'PAUSED');
 });

@@ -1871,6 +1871,10 @@ PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实�
 
 入口与实际归档通过本地 Worker／CAS／Git／HTTP／React／Edge 联合开发验证；上游 T5／镜像准入和物理事实为显式夹具，企业身份、完整工作台及真实 Linux、后继保留／替换流程继续独立验收。
 
+#### 13.2026-11-16 P2-01 控制生命周期离线开发记录
+
+2026-11-16：P2-01提前开发增量完成，变更8/8。新增迁移0046（run_control_targets、recovery_review_hash）、pauseRun／cancelRun／resumeRun／recordControlTarget／finishControl／getControlStatus／listControlRuns、RunControlCoordinator（显式ControlStopBackend、未知／STOPPING只inspect、保存失败只重试保存、30秒overdue）、受保护HTTP控制API与工作台控制状态（真实Edge断线重连验证）。受控后端测试覆盖pause／resume／cancel、崩溃重启、未知目标、保存重试与30秒提示；真实Runner／容器停止、真实模型／OIDC／Linux未执行，正式P2-01与G1～G4不变。
+
 ---
 
 ## 14. 数据与事务
