@@ -2014,15 +2014,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-invocation-host"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P2-06/invocation-host-development-review.md","project/evidence/P2-06/invocation-host.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0050新增invocations；create／get／list／transition落地，同键幂等、同键不同请求拒绝、显式状态机与终态保护。invocation-host 2/2通过；受保护API、公共Task/Inbox、配额与文档同步未完成，正式P2-06／G1不变。"]
     },
     {
       "id": "P2-07",

@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -204,6 +204,7 @@ export function createDomain(db: DatabaseSync) {
   const changeBasis = (row: Row) => digest(canonical({ runId: String(row.run_id), planRevision: row.current_plan_revision ?? null, requirementRevision: row.current_requirement_revision ?? null, resourceRevision: Number(row.resource_revision) }));
   const configView = (row: Row): ConfigAdjustmentView => ({ adjustmentId: String(row.adjustment_id), projectId: String(row.project_id), runId: String(row.run_id), baseGeneration: Number(row.base_generation), state: String(row.state), config: JSON.parse(String(row.config_json)) as Record<string, unknown>, appliedGeneration: row.applied_generation === null ? null : Number(row.applied_generation), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const configGeneration = () => Number(get('SELECT generation FROM config_control WHERE singleton_id=1')?.generation ?? 1);
+  const invocationView = (row: Row): InvocationView => ({ invocationId: String(row.invocation_id), projectId: String(row.project_id), principalId: String(row.principal_id), endpointId: String(row.endpoint_id), endpointRevision: Number(row.endpoint_revision), registryGenerationId: String(row.registry_generation_id), state: String(row.state), inputManifestHash: String(row.input_manifest_hash), definitionSnapshotHash: String(row.definition_snapshot_hash), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
   const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
   function controlStatus(row: Row): ControlStatusView {
@@ -698,6 +699,35 @@ export function createDomain(db: DatabaseSync) {
     },
     getConfigGeneration() {
       return { generation: configGeneration() };
+    },
+    createInvocation(input: Parsed<'createInvocation'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'CreateInvocation', payload, operationId => {
+        required(get('SELECT project_id FROM projects WHERE project_id=?', input.projectId));
+        const invocationId = uid('invocation'), time = now();
+        insert('invocations', { invocation_id: invocationId, project_id: input.projectId, principal_id: meta.principalId, endpoint_id: input.endpointId, endpoint_revision: input.endpointRevision, registry_generation_id: input.registryGenerationId, state: 'ACCEPTED', input_manifest_hash: input.inputManifestHash, definition_snapshot_hash: input.definitionSnapshotHash, operation_id: operationId, created_at: time, updated_at: time });
+        return { ...invocationView(required(get('SELECT * FROM invocations WHERE invocation_id=?', invocationId))), revision: 1 };
+      });
+    },
+    getInvocation(input: Parsed<'getInvocation'>) {
+      return invocationView(required(get('SELECT * FROM invocations WHERE invocation_id=?', input.invocationId)));
+    },
+    listInvocations(input: Parsed<'listInvocations'>) {
+      required(get('SELECT project_id FROM projects WHERE project_id=?', input.projectId));
+      return all('SELECT * FROM invocations WHERE project_id=? ORDER BY created_at,invocation_id LIMIT ?', input.projectId, input.limit).map(invocationView);
+    },
+    transitionInvocation(input: Parsed<'transitionInvocation'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'TransitionInvocation', payload, () => {
+        const row = required(get('SELECT * FROM invocations WHERE invocation_id=?', input.invocationId));
+        if (row.state !== input.expectedState) throw new StorageError('INVOCATION_STATE_CONFLICT', 409, 'Invocation state changed');
+        const terminal = ['COMPLETED', 'FAILED', 'CANCELED'].includes(String(row.state));
+        if (terminal) throw new StorageError('INVOCATION_TERMINAL', 409, 'Terminal invocation cannot change');
+        const transitions: Record<string, string[]> = { ACCEPTED: ['WORKING', 'INPUT_REQUIRED', 'CANCELED'], WORKING: ['INPUT_REQUIRED', 'COMPLETED', 'FAILED', 'CANCELED'], INPUT_REQUIRED: ['WORKING', 'CANCELED'] };
+        if (!transitions[String(row.state)]?.includes(input.state)) throw new StorageError('INVOCATION_TRANSITION_INVALID', 409, 'Illegal invocation transition');
+        exec('UPDATE invocations SET state=?,updated_at=? WHERE invocation_id=?', input.state, now(), input.invocationId);
+        return invocationView(required(get('SELECT * FROM invocations WHERE invocation_id=?', input.invocationId)));
+      });
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
