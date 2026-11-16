@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "0ced0772c59f58172239396ca4127aecf461fd6274d045358504a013d026a231"
+      "sha256": "f1ddb8b7a84c8d76234187d6ea2450f778eb1997871cc819d96c91c44f594a87"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "9add5225099d22d00c9cb062b3ddb9442b8674456e1c2ffbf526a641de82f2fd"
+      "sha256": "4600a48eb0af312c137fc309349748db93850c528891993b72042f6e2c31332d"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "ccd24f3f17b32822faab2889667985e72ef26a3f60aa963a54c54196559c99d5"
+      "sha256": "13c11592b4e13107d545032ce375f4e77940b24070cb6cecdd73b91fff91632b"
     }
   ],
   "gates": [
@@ -2198,7 +2198,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P3-04/agent-exposure-development-review.md","project/evidence/P3-04/agent-exposure.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/3。迁移0054新增agent_exposures；draft/validate/publish/drain/retire/catalog落地，状态机、Card校验、目录过滤与唯一agentKey生效。agent-exposure 1/1通过；受保护API与文档同步未完成，正式P3-04／G1不变。"]
+      "notes": ["2026-11-16：完成1.1，变更1/3。迁移0054新增agent_exposures；draft/validate/publish/drain/retire/catalog落地，状态机、Card校验、目录过滤与唯一agentKey生效。agent-exposure 1/1通过；受保护API与文档同步未完成，正式P3-04／G1不变。", "2026-11-16：完成1.2／1.3，变更3/3。Exposure API与OpenAPI接入；文档/基线同步，manage/openspec通过。正式P3-04仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P3-05",

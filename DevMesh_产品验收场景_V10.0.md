@@ -606,3 +606,8 @@ REPLACE方案可以先交付和冻结供用户审查，不能在交付阶段要�
 
 2026-11-16：P3-02提前开发增量完成，变更3/3。新增只读exportProjectHistory与受保护API／OpenAPI；按cutoff过滤runs／messages／artifacts／releases，未终态或空历史标记complete=false与missing，不补造；导入／回放UI／Git打包未实现。history测试2/2。正式P3-02与G1～G4不变。
 
+
+### 2026-11-16 P3-04 对外 Agent Exposure 离线开发记录
+
+2026-11-16：P3-04提前开发增量完成，变更3/3。agent_exposures与draft／validate／publish／drain／retire／catalog及受保护API／OpenAPI落地；Card校验、状态机、目录过滤生效；默认Card／服务grant／真实外部Agent／T18／T20未实现。exposure测试2/2。正式P3-04与G1～G4不变。
+

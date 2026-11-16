@@ -111,6 +111,8 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   const publicTaskClaim=z.strictObject({workerId:opaqueKey,leaseMs:z.number().int().min(1000).max(300000).optional()});
   const publicTaskComplete=z.strictObject({workerId:opaqueKey,outcome:z.enum(['COMPLETED','FAILED'])});
   const contentArchiveRequest=z.strictObject({contentHash:sha256});
+  const exposureCard=z.strictObject({name:z.string().min(1).max(200),description:z.string().min(1).max(2000),version:z.string().min(1).max(50),skills:z.array(opaqueKey).min(1).max(64)});
+  const exposureCreate=z.strictObject({agentKey:opaqueKey,card:exposureCard});
   router.post('/attachments',route(async(request,response,identity)=>{
     const meta=bodyMeta(request,'uploads',identity);
     if(activeUploads>=maximumUploads)fail('UPLOAD_CAPACITY',429,'Upload capacity is full');
@@ -362,6 +364,32 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const projectId=parseContract(ids.project,request.params.projectId),cutoffAt=request.query.cutoffAt===undefined?undefined:parseContract(z.string().datetime(),request.query.cutoffAt);
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
     response.json(await content.storage.request('exportProjectHistory',{projectId,...(cutoffAt===undefined?{}:{cutoffAt})}));
+  }));
+  router.post('/projects/:projectId/exposures',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),meta=bodyMeta(request,projectId,identity),body=parseContract(exposureCreate,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:true});
+    response.status(202).json(await content.storage.request('createExposureDraft',{meta,projectId,agentKey:body.agentKey,card:body.card}));
+  }));
+  router.get('/projects/:projectId/exposures',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),state=request.query.state===undefined?undefined:parseContract(z.enum(['DRAFT','VALIDATED','PUBLISHED','DRAINING','RETIRED']),request.query.state);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json({exposures:await content.storage.request('listExposures',{projectId,limit:positive(request.query.limit??'50',1,200),...(state===undefined?{}:{state})})});
+  }));
+  router.get('/projects/:projectId/agent-catalog',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json({exposures:await content.storage.request('getExposureCatalog',{projectId})});
+  }));
+  router.get('/exposures/:exposureId',route(async(request,response,identity)=>{
+    const exposure=await content.storage.request('getExposure',{exposureId:parseContract(opaqueKey,request.params.exposureId)});
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:exposure.projectId,write:false});
+    response.json(exposure);
+  }));
+  for(const action of ['validate','publish','drain','retire'] as const)router.post(`/exposures/:exposureId\\:${action}`,route(async(request,response,identity)=>{
+    const exposureId=parseContract(opaqueKey,request.params.exposureId),exposure=await content.storage.request('getExposure',{exposureId}),meta=bodyMeta(request,exposure.projectId,identity);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:exposure.projectId,write:true});
+    const method=({validate:'validateExposure',publish:'publishExposure',drain:'drainExposure',retire:'retireExposure'} as const)[action];
+    response.status(202).json(await content.storage.request(method,{meta,exposureId}));
   }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');

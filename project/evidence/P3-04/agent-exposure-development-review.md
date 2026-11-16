@@ -30,3 +30,10 @@ node --test --test-reporter=spec tests/agent-exposure.test.mjs
 - 受保护 API（1.2）、默认 Card 自动生成、服务 grant、真实外部 Agent 握手与 T18／T20 未实现。
 - 不写 Registry 清单或 A2A 路由；目录可见不等于可调用。
 - 正式 P3-04／G1～G4 不变。
+
+## 追加：受保护 Exposure API（1.2）
+
+- `POST /projects/{projectId}/exposures`、`GET .../exposures?state=`、`GET .../agent-catalog`。
+- `GET /exposures/{exposureId}`、`POST /exposures/{exposureId}:validate|:publish|:drain|:retire`。
+- 项目成员读写权限；非法转换 409；OpenAPI 新增七个路径（总数 93）。
+- `tests/input-exposure-http.test.mjs` 1/1：草稿→校验→发布→目录→排空→退役全链路与提前发布拒绝。
