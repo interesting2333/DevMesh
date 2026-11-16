@@ -2043,7 +2043,7 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-content-maintenance"],
+      "changes": ["implement-content-maintenance","implement-content-archive-ledger"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -2051,7 +2051,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P2-07/content-pins-development-review.md","project/evidence/P2-07/content-pins.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0051新增content_pins；pin／release／list／getStorageDiagnostics落地，幂等、同键不同hash拒绝、释放不删内容、计数准确。content-pins 1/1通过；受保护API、GC／归档与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更4/4。pin/diagnostics API与OpenAPI接入；GC/归档审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-07仍NOT_STARTED，G0～G4未变。"]
+      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0051新增content_pins；pin／release／list／getStorageDiagnostics落地，幂等、同键不同hash拒绝、释放不删内容、计数准确。content-pins 1/1通过；受保护API、GC／归档与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更4/4。pin/diagnostics API与OpenAPI接入；GC/归档审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-07仍NOT_STARTED，G0～G4未变。", "2026-11-16：内容归档账本1.1完成，变更1/3。迁移0053新增content_archive_requests；request／ack／get／list落地，同键幂等、ACK不删除、丢失ACK保持REQUESTED。content-archive 1/1通过；受保护API与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。"]
     },
     {
       "id": "P2-08",

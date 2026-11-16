@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView, ContentArchiveView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -207,6 +207,7 @@ export function createDomain(db: DatabaseSync) {
   const invocationView = (row: Row): InvocationView => ({ invocationId: String(row.invocation_id), projectId: String(row.project_id), principalId: String(row.principal_id), endpointId: String(row.endpoint_id), endpointRevision: Number(row.endpoint_revision), registryGenerationId: String(row.registry_generation_id), state: String(row.state), inputManifestHash: String(row.input_manifest_hash), definitionSnapshotHash: String(row.definition_snapshot_hash), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const contentPinView = (row: Row): ContentPinView => ({ pinId: String(row.pin_id), contentHash: String(row.content_hash), reason: String(row.reason), createdAt: String(row.created_at), releasedAt: row.released_at === null ? null : String(row.released_at) });
   const publicTaskView = (row: Row): PublicTaskView => ({ taskKey: String(row.task_key), projectId: String(row.project_id), principalId: String(row.principal_id), kind: String(row.kind), state: String(row.state), payload: JSON.parse(String(row.payload_json)) as Record<string, unknown>, leaseOwner: row.lease_owner === null ? null : String(row.lease_owner), leaseUntil: row.lease_until === null ? null : String(row.lease_until), attempts: Number(row.attempts), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
+  const contentArchiveView = (row: Row): ContentArchiveView => ({ archiveId: String(row.archive_id), contentHash: String(row.content_hash), projectId: String(row.project_id), state: String(row.state), requestedBy: String(row.requested_by), requestedAt: String(row.requested_at), ackedBy: row.acked_by === null ? null : String(row.acked_by), ackedAt: row.acked_at === null ? null : String(row.acked_at) });
   const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
   const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
   function controlStatus(row: Row): ControlStatusView {
@@ -804,6 +805,32 @@ export function createDomain(db: DatabaseSync) {
     },
     listPublicTasks(input: Parsed<'listPublicTasks'>) {
       return all('SELECT * FROM public_tasks WHERE (? IS NULL OR project_id=?) AND (? IS NULL OR principal_id=?) AND (? IS NULL OR state=?) ORDER BY created_at,task_key LIMIT ?', input.projectId ?? null, input.projectId ?? null, input.principalId ?? null, input.principalId ?? null, input.state ?? null, input.state ?? null, input.limit).map(publicTaskView);
+    },
+    requestContentArchive(input: Parsed<'requestContentArchive'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'RequestContentArchive', payload, operationId => {
+        required(get('SELECT project_id FROM projects WHERE project_id=?', input.projectId));
+        required(get('SELECT content_hash FROM content_objects WHERE content_hash=?', input.contentHash));
+        const archiveId = uid('archive'), time = now();
+        insert('content_archive_requests', { archive_id: archiveId, content_hash: input.contentHash, project_id: input.projectId, state: 'REQUESTED', requested_by: meta.principalId, operation_id: operationId, requested_at: time, acked_by: null, acked_at: null });
+        return contentArchiveView(required(get('SELECT * FROM content_archive_requests WHERE archive_id=?', archiveId)));
+      });
+    },
+    ackContentArchive(input: Parsed<'ackContentArchive'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'AckContentArchive', payload, () => {
+        const row = required(get('SELECT * FROM content_archive_requests WHERE archive_id=?', input.archiveId));
+        if (row.state === 'ACKED') return contentArchiveView(row);
+        if (row.state !== 'REQUESTED') throw new StorageError('ARCHIVE_NOT_REQUESTED', 409, 'Archive request is not open');
+        exec("UPDATE content_archive_requests SET state='ACKED',acked_by=?,acked_at=? WHERE archive_id=?", meta.principalId, now(), input.archiveId);
+        return contentArchiveView(required(get('SELECT * FROM content_archive_requests WHERE archive_id=?', input.archiveId)));
+      });
+    },
+    getContentArchive(input: Parsed<'getContentArchive'>) {
+      return contentArchiveView(required(get('SELECT * FROM content_archive_requests WHERE archive_id=?', input.archiveId)));
+    },
+    listContentArchives(input: Parsed<'listContentArchives'>) {
+      return all('SELECT * FROM content_archive_requests WHERE (? IS NULL OR project_id=?) AND (? IS NULL OR content_hash=?) AND (? IS NULL OR state=?) ORDER BY requested_at,archive_id LIMIT ?', input.projectId ?? null, input.projectId ?? null, input.contentHash ?? null, input.contentHash ?? null, input.state ?? null, input.state ?? null, input.limit).map(contentArchiveView);
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
