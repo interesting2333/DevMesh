@@ -355,12 +355,15 @@
       ],
       "evidence": [
         "project/evidence/P0-07/离线实施进展.md",
-        "project/evidence/P0-07/cross-platform-summary.json"
+        "project/evidence/P0-07/cross-platform-summary.json",
+        "project/evidence/P0-07/wsl-2026-11-16/fingerprint.txt",
+        "project/evidence/P0-07/wsl-2026-11-16/runner-linux.txt"
       ],
       "reviewNote": null,
       "notes": [
         "按用户持续实施及资源暂缺的指令，提前实现接口／登记与离线验证；正式状态保持 NOT_STARTED，不把 P0-06、真实 runsc 专项或 G0 视为已通过。",
-        "独立 Runner 代码提前实施：固定快照 Windows/Linux 均 16/16 检查通过，Runner 13/13；实际 authority 组合、硬配额、镜像和 runsc 隔离未验收。P0-06 尚未完成，正式状态保持 NOT_STARTED。"
+        "独立 Runner 代码提前实施：固定快照 Windows/Linux 均 16/16 检查通过，Runner 13/13；实际 authority 组合、硬配额、镜像和 runsc 隔离未验收。P0-06 尚未完成，正式状态保持 NOT_STARTED。",
+        "2026-11-16：勾选3.1，变更7/8。WSL2 Linux kernel 6.18、Node 24.22.3（偏离冻结24.13.1但仍在engines范围）执行tests/runner.test.mjs 12/12通过、0失败，覆盖参数边界、未配置拒绝、原标签校验与停止后容器事实映射；Provider／启动入口／Dockerfile均在且不填虚构digest。真实Docker/runsc、硬配额、网络／密钥隔离仍属3.2保持未执行；正式P0-07／G0不变。"
       ]
     },
     {

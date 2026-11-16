@@ -11,6 +11,8 @@
 
 ## 3. Provider and delivery
 
-- [ ] 3.1 实现 Linux Docker/runsc Provider、启动入口和固定镜像构建描述；验证参数、未配置拒绝和容器事实映射，不填虚构 digest。
+- [x] 3.1 实现 Linux Docker/runsc Provider、启动入口和固定镜像构建描述；验证参数、未配置拒绝和容器事实映射，不填虚构 digest。
 - [ ] 3.2 在目标环境验证真实容器／后代退出、资源／网络／密钥隔离和丢响应恢复；当前用户明确暂无资源，保持未执行。
 - [x] 3.3 运行适用离线回归，保存源版本、实际日志与技术复核，更新文档／台账；真实专项具备后方可完成整个工作包与归档。
+
+2026-11-16：勾选3.1。Linux Docker/runsc Provider、启动入口与固定镜像构建描述均在（`packages/runner/src/docker.ts`、`main.ts`、`packages/runner/image/Dockerfile`），不填虚构 digest。在WSL2 Linux（kernel 6.18.40.1，Node 24.22.3，偏离冻结24.13.1但仍在engines范围）执行`tests/runner.test.mjs`：12/12通过、0失败，覆盖参数边界、未配置拒绝、原标签校验及停止后的容器事实映射。真实Docker/runsc、硬配额、网络／密钥隔离与目标环境仍属3.2，保持未执行；正式P0-07／G0不变。证据：`project/evidence/P0-07/wsl-2026-11-16/`。
