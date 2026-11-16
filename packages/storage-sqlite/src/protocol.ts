@@ -146,6 +146,8 @@ export const requests = {
   cancelRun: z.strictObject({ ...conditional, controlRevision: revision, impactReviewHash: sha256 }),
   resumeRun: z.strictObject({ ...conditional, controlRevision: revision, recoveryReviewHash: sha256 }),
   listControlTargets: z.strictObject({ runId: ids.run }),
+  getControlStatus: z.strictObject({ runId: ids.run }),
+  listControlRuns: z.strictObject({ limit: z.number().int().min(1).max(50).default(10) }),
   recordControlTarget: z.strictObject({ meta, runId: ids.run, targetKind: z.enum(['ATTEMPT','PREPARATION','PREVIEW','JOB','WORKSPACE']), targetId: opaqueKey, state: z.enum(['PENDING','STOPPING','SAVED','RELEASED','UNKNOWN','FAILED']), failureCode: z.string().min(1).max(200).optional(), evidence: z.record(z.string(), z.json()).optional() }),
   finishControl: z.strictObject({ ...conditional, controlRevision: revision, outcome: z.literal('PAUSED') }),
   finishRun: z.strictObject({ ...conditional, outcome: z.enum(['FAILED', 'CANCELLED']), reason: z.string().min(1).max(2000) }),
@@ -163,6 +165,7 @@ export type Request<M extends Method> = z.input<(typeof requests)[M]>;
 export type OperationResult = { operationId: string; status: string; result: Record<string, unknown> | null };
 export type RunView = { runId: string; projectId: string; taskId: string; resourceRevision: number; runEpoch: number; controlRevision: number; phase: string; controlGate: string; terminalOutcome: string | null; currentPlanRevision: number | null; currentRequirementRevision: number | null; eventSeq: number };
 export type ControlTargetView = { runId: string; targetKind: string; targetId: string; state: string; attempts: number; failureCode: string | null; evidence: Record<string, unknown> | null; lastCheckedAt: string; createdAt: string; updatedAt: string };
+export type ControlStatusView = { runId: string; controlGate: string; controlRevision: number; runEpoch: number; unresolved: ControlTargetView[]; lastCheckedAt: string | null; verificationOverdue: boolean };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
 export interface Results extends ReleaseExportResults, SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceMaintenanceResults, WorkspaceReclamationResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults, AcceptanceAbortResults, AcceptanceAbortRecoveryResults, ReleasePublicationResults, ReleaseAccessResults, ReleaseSessionResults {
@@ -189,6 +192,8 @@ export interface Results extends ReleaseExportResults, SessionResults, RegistryR
   recordControlTarget: ControlTargetView;
   finishControl: OperationResult;
   listControlTargets: ControlTargetView[];
+  getControlStatus: ControlStatusView;
+  listControlRuns: ControlStatusView[];
   finishRun: OperationResult;
   lookupOperation: OperationResult | null;
   getOperation: OperationResult;

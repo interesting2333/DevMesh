@@ -40,3 +40,10 @@ corepack pnpm@11.28.5 typecheck                                                 
 - 3.x：受保护 API、OpenAPI 与 UI 事件投影尚未接入。
 - 4.x：崩溃重启／未知目标／真实日志与文档同步待后续轮次。
 - 未执行真实 Runner／容器停止；正式 P2-01 与 G1～G4 不变。
+
+## 追加：控制状态查询与 30 秒核实依据
+
+- 新增 `getControlStatus`：返回 control gate、control revision、run epoch、未解决目标、最近检查时间，以及 `verificationOverdue`（PAUSING／CANCELLING 且最近检查已超过 30 秒）。
+- 新增 `listControlRuns`：按 limit 返回 PAUSING／CANCELLING 的 Run，作为后续收尾协调器的扫描入口。
+- 测试在 pause 后断言未解决目标 1 项、overdue 为 false；把目标 `last_checked_at` 改为 31 秒前后 overdue 为 true，仍不自动成功。
+- 仍未实现：control-stop 协调器、材料保存失败重试、API／事件投影。

@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { DatabaseSync } from 'node:sqlite';
 import { fixture, planned, admission, meta } from './fixtures/storage-data.mjs';
 const rejects = (promise, code) => assert.rejects(promise, error => error.code === code);
 
 test('pause records per-target cleanup, finish derives recovery review and resume reopens only with the exact hash', async t => {
-  const { storage, root } = await fixture(t), context = await planned(storage, root);
+  const { storage, root, options } = await fixture(t), context = await planned(storage, root);
   const admitted = await storage.request('admitWorks', await admission(storage, context));
   const attemptId = admitted.result.attemptIds[0];
   let current = await storage.request('getRun', { runId: context.runId });
@@ -14,6 +15,14 @@ test('pause records per-target cleanup, finish derives recovery review and resum
   assert.equal(paused.result.runEpoch, current.runEpoch + 1);
   const targets = await storage.request('listControlTargets', { runId: context.runId });
   assert.deepEqual(targets.map(target => [target.targetKind, target.targetId, target.state]), [['ATTEMPT', attemptId, 'PENDING']]);
+  const status = await storage.request('getControlStatus', { runId: context.runId });
+  assert.equal(status.unresolved.length, 1);
+  assert.ok(status.lastCheckedAt);
+  assert.equal(status.verificationOverdue, false);
+  const inspection = new DatabaseSync(options.databasePath);
+  inspection.prepare('UPDATE run_control_targets SET last_checked_at=? WHERE run_id=?').run(new Date(Date.now() - 31000).toISOString(), context.runId);
+  inspection.close();
+  assert.equal((await storage.request('getControlStatus', { runId: context.runId })).verificationOverdue, true);
   await storage.request('transitionAttempt', { meta: meta(context.runId), runId: context.runId, attemptId, expectedState: 'RESERVED', state: 'STOPPING' });
   await rejects(storage.request('finishControl', { meta: meta(context.runId), runId: context.runId, controlRevision: paused.result.controlRevision, outcome: 'PAUSED' }), 'CONTROL_TARGETS_UNRESOLVED');
   await storage.request('recordControlTarget', { meta: meta(context.runId), runId: context.runId, targetKind: 'ATTEMPT', targetId: attemptId, state: 'SAVED', evidence: { materialKey: 'attempt-output' } });

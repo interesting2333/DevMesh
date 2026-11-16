@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -202,6 +202,13 @@ export function createDomain(db: DatabaseSync) {
   const controlTargetView = (row: Row): ControlTargetView => ({ runId: String(row.run_id), targetKind: String(row.target_kind), targetId: String(row.target_id), state: String(row.state), attempts: Number(row.attempts), failureCode: row.failure_code as string | null, evidence: row.evidence_json === null ? null : JSON.parse(String(row.evidence_json)) as Record<string, unknown>, lastCheckedAt: String(row.last_checked_at), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
   const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
+  function controlStatus(row: Row): ControlStatusView {
+    const runId = String(row.run_id), targets = controlTargets(runId), unresolved = targets.filter(target => !['SAVED', 'RELEASED'].includes(target.state));
+    const lastCheckedAt = targets.length ? targets.map(target => target.lastCheckedAt).sort().at(-1)! : null;
+    const gate = String(row.control_gate);
+    const verificationOverdue = lastCheckedAt !== null && ['PAUSING', 'CANCELLING'].includes(gate) && Date.now() - Date.parse(lastCheckedAt) >= 30000;
+    return { runId, controlGate: gate, controlRevision: Number(row.control_revision), runEpoch: Number(row.run_epoch), unresolved, lastCheckedAt, verificationOverdue };
+  }
   function registerControlTargets(runId: string) {
     const time = now();
     for (const row of all('SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL ORDER BY attempt_id', runId))
@@ -580,6 +587,12 @@ export function createDomain(db: DatabaseSync) {
     listControlTargets(input: Parsed<'listControlTargets'>) {
       run(input.runId);
       return controlTargets(input.runId);
+    },
+    getControlStatus(input: Parsed<'getControlStatus'>) {
+      return controlStatus(run(input.runId));
+    },
+    listControlRuns(input: Parsed<'listControlRuns'>) {
+      return all("SELECT * FROM runs WHERE control_gate IN ('PAUSING','CANCELLING') ORDER BY run_id LIMIT ?", input.limit).map(controlStatus);
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;

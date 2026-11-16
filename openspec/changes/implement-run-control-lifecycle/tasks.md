@@ -25,3 +25,5 @@
 本变更按用户明确授权作为 G1 之前的提前开发增量；正式工作包状态与阶段门槛独立评审。
 
 2026-11-16：完成1.1／1.2，变更2/8。迁移0046新增`run_control_targets`与`runs.recovery_review_hash`；pauseRun／cancelRun／resumeRun／recordControlTarget／finishControl／listControlTargets落地，finishRun取消前检查目标已解决。定向测试run-control 2/2、storage 17/17、迁移与再确认7/7，storage构建与全量typecheck通过。2.x协调器／保存重试／30秒提示、3.x API与4.x文档同步未完成；正式P2-01仍NOT_STARTED，不伪造G1。证据：`project/evidence/P2-01/run-control-storage-development-review.md`。
+
+2026-11-16：补充控制状态查询，变更仍2/8。`getControlStatus`返回未解决目标、最近检查时间与30秒`verificationOverdue`；`listControlRuns`提供PAUSING／CANCELLING扫描入口。测试覆盖31秒前后overdue翻转，且不自动成功。control-stop协调器、保存失败重试、API与事件投影仍未实现；正式P2-01／G1不变。
