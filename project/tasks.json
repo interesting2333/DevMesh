@@ -2284,9 +2284,9 @@
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P4-01/offline-evidence.md","project/evidence/P4-01/acceptance.tap","project/evidence/P4-01/verification.tap"],
+      "evidence": ["project/evidence/P4-01/offline-evidence.md","project/evidence/P4-01/acceptance.tap","project/evidence/P4-01/verification.tap","project/evidence/P4-01/mcp.tap","project/evidence/P4-01/input.tap","project/evidence/P4-01/events.tap","project/evidence/P4-01/runner.tap"],
       "reviewNote": null,
-      "notes": ["2026-11-16：离线回归 acceptance 321/321、verification 187/187 通过并保存 TAP；这不是产品验收，未执行真实模型/OIDC/Linux/gVisor/人工签署，P4-01仍NOT_STARTED。"]
+      "notes": ["2026-11-16：离线回归 acceptance 321/321、verification 187/187 通过并保存 TAP；这不是产品验收，未执行真实模型/OIDC/Linux/gVisor/人工签署，P4-01仍NOT_STARTED。", "2026-11-16：追加 test:mcp 35/35、test:input 37/37、test:events 13/13 通过；test:runner 在 Windows 主机超过35分钟未汇总已终止，部分TAP不计通过。P4-01仍NOT_STARTED。"]
     },
     {
       "id": "P4-02",

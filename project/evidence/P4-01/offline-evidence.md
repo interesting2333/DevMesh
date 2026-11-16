@@ -10,6 +10,13 @@
 | --- | --- | --- | --- |
 | 验收相关自动化 | `corepack pnpm@11.28.5 test:acceptance` | **321/321 通过**（约 17.9 分钟） | [acceptance.tap](./acceptance.tap) |
 | 验证／质量相关自动化 | `corepack pnpm@11.28.5 test:verification` | **187/187 通过**（约 5.1 分钟） | [verification.tap](./verification.tap) |
+| MCP | `corepack pnpm@11.28.5 test:mcp` | **35/35 通过**（约 1.9 分钟） | [mcp.tap](./mcp.tap) |
+| 输入 API | `corepack pnpm@11.28.5 test:input` | **37/37 通过**（约 1.5 分钟） | [input.tap](./input.tap) |
+| 工作台事件 | `corepack pnpm@11.28.5 test:events` | **13/13 通过**（约 37 秒） | [events.tap](./events.tap) |
+
+## 未完成的尝试
+
+`corepack pnpm@11.28.5 test:runner` 在本 Windows 主机启动后超过 35 分钟未产出汇总，已终止；[runner.tap](./runner.tap) 只是部分日志，**不计为通过**。此前 P0-07 的 WSL2 Linux 定向 runner 证据仍以对应记录为准，不能替代本套件。
 
 之前的汇总回归见 [2026-11-16-offline-consolidation.md](../2026-11-16-offline-consolidation.md)：后端 63/63、workbench-live 8/8、OpenSpec 32/32。
 
