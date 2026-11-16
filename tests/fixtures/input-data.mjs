@@ -14,7 +14,7 @@ export async function inputFixture(t,options={}){
     const principalId=tokens[(request.headers.authorization??'').replace(/^Bearer /,'')];return principalId?{principalId}:null;
   },diagnostic:detail=>diagnostics.push(detail),...options});
   app.use((_req,res)=>res.status(404).json({error:'NOT_FOUND'}));
-  const server=createServer({requestTimeout:35000},app);server.listen(0,'127.0.0.1');await once(server,'listening');
+  const server=createServer({requestTimeout:35000},app);if(api.enabled)api.attachEvents(server);server.listen(0,'127.0.0.1');await once(server,'listening');
   const origin=`http://127.0.0.1:${server.address().port}`;
   t.after(async()=>{await api.stop();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));});
   const call=async(path,init={})=>{const response=await fetch(origin+'/api/v1'+path,{...init,headers:{authorization:'Bearer test_owner',...init.headers},signal:AbortSignal.timeout(120000)});const body=await response.json();return {response,body};};

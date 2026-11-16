@@ -15,7 +15,7 @@ async function harness(t,options={}){
  context.on('page',p=>{p.on('pageerror',e=>errors.push(e.message));p.on('console',m=>{if(m.type()==='error'&&m.text().includes('Content Security Policy'))csp.push(m.text());});});
  t.after(async()=>{await browser.close();assert.deepEqual(errors,[]);assert.deepEqual(csp,[]);});
  async function open(selection='',page){page??=await context.newPage();await page.goto(api.origin+'/api/v1/workbench/view'+selection);await expect(page.getByRole('heading',{name:'开始一个新项目',exact:true}).or(page.getByRole('main').getByRole('heading',{level:1}))).toBeVisible();return page;}
- t.diagnostic(JSON.stringify({browser:browser.version(),scope:'Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance.'}));
+ t.diagnostic(JSON.stringify({browser:browser.version(),scope:'Actual protected React entry, CSP, Edge native IndexedDB/WebSocket and file Worker/Input API on the fixture HTTP host. Explicit mutable test IdentityResolver; no OIDC, model, Runner or product acceptance.'}));
  return {api,context,open,principal:value=>{principal=value;}};
 }
 const input=p=>p.getByLabel('输入正文',{exact:true}),projectInput=p=>p.getByLabel('描述你想完成的事',{exact:true});

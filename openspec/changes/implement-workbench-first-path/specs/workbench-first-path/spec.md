@@ -261,3 +261,19 @@ The workbench SHALL list authoritative frozen candidates for its exact authorize
 #### Scenario: Saved candidate selection cannot be read
 - **WHEN** a stored selection is unavailable or inconsistent with the exact Run
 - **THEN** the page SHALL allow an explicit reset of reading selection only, preserve command and draft journals, and never silently choose a different candidate
+
+
+### Requirement: Read-only event observation preserves editing
+The browser SHALL validate exact project/Run frames, merge persisted events only in consecutive sequence order and bound future buffering and authorized HTTP gap reads. Transport loss, invalid frames or resync SHALL cancel the obsolete channel and reauthorize a fresh snapshot before reconnecting. Both failed network retries and repeated successful resnapshots followed by invalid protocol SHALL have bounded automatic budgets and an explicit retry path. Observation SHALL NOT issue business commands or replace drafts, immutable originals, input basis, selected tabs, focus or reading context.
+
+#### Scenario: Real transport loses or reorders persisted events
+- **WHEN** committed frames arrive duplicated or out of order, or the actual connection closes after a workspace snapshot
+- **THEN** the browser SHALL deduplicate and fill an authorized bounded gap or resnapshot before reconnecting, retain user editing and submit no business command
+
+#### Scenario: Successful resnapshot is repeatedly followed by invalid frames
+- **WHEN** the automatic resnapshot budget is exhausted despite successful HTTP reads
+- **THEN** the browser SHALL close obsolete transports and stop automatic attempts, expose explicit reconnection and retain user input without POST
+
+#### Scenario: Idle event authorization is revoked
+- **WHEN** the current event connection loses its trusted identity or project membership
+- **THEN** the browser SHALL stop its observer and clear protected projections without deleting local original journals or posting drafts

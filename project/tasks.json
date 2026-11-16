@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "0db07981988ac55cf663ca7d8843f5a20bb71b50cb0578229d340958b61188f7"
+      "sha256": "c99ae9186ee907c8a15d6149e4c8d73a69ce3ffd6cb45d7a35089aee3ba11ab1"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "926f55ce63f6704b6f654d73254755e0622a3de1705fddd192679cbb325e569f"
+      "sha256": "b68d45e9dd370524ce97b1bde7068fb03e09f843c76042760c7fcdb3643c5082"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "f05d9904c49482df447c4553faf0d2dd84e37e9bd26ced096d902f84aa668646"
+      "sha256": "4245bbef653d35b38ac08ef2c2a9621f6527e8e9a9047ed859ddfbec33e698f1"
     }
   ],
   "gates": [
@@ -1725,7 +1725,9 @@
         "packages/input-api/src/workbench-events-server.ts",
         "packages/storage-sqlite/src/worker.ts",
         "tests/fixtures/workbench-events.mjs",
-        "tests/workbench-events.test.mjs"
+        "tests/workbench-events.test.mjs",
+        "packages/input-api/src/web/workbench-live.ts",
+        "tests/browser/workbench-live.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-08/local-input-development-review.md",
@@ -1782,7 +1784,10 @@
         "project/evidence/P1-08/development/delivery-navigation/manifest.json",
         "project/evidence/P1-08/events-server-development-review.md",
         "project/evidence/P1-08/development/events-server/evidence.json",
-        "project/evidence/P1-08/development/events-server/manifest.json"
+        "project/evidence/P1-08/development/events-server/manifest.json",
+        "project/evidence/P1-08/events-client-development-review.md",
+        "project/evidence/P1-08/development/events-client/evidence.json",
+        "project/evidence/P1-08/development/events-client/manifest.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1800,7 +1805,8 @@
         "2026-11-16：P1-08新任务目标保护页面开发增量完成本机验证，implement-workbench-first-path的2.3据实际已验证附件／回答／新任务子链勾选，累计6/13；正式工作包仍等待前置／G0。下一目标与当前Run输入明确切换；guard排空正文／任务字段保存，未保存File阻止切换；活动执行和null发布只保存草稿，当前项目非viewer才挂任务入口。类型初始不选，标题可编辑或明确按目标本地生成，不修改项目名；项目／发布依据变化须明确切换并复制旧目标，不复制原身份或旧附件。新提交先受保护重读准确项目及准入，不适用时零主命令／零POST；冻结后竞争仍由T1及原信封处理。新Run使创建入口隐藏后仍显示项目原请求核实，刷新不POST；实际丢ACK恢复唯一任务。项目过期关闭返回当前项目并可读完整旧目标历史；T1移除附件后明确关闭／空白保留原记录。最终新保护页面6＋既有完整page9／attachmentUI6＋HTTP15＝36项独立通过，零失败／取消／跳过；最终应用构建／类型／契约绑定未变的应用字节，Lint和全部运行时绑定最终输入，592源码映射／733输入产物绑定，8份JS／map前后当前一致。未改的原生日记／独立构建输入与父提交一致并核对源码映射，未重复计父测试。实际1440／390px截图已打开复核，图片与本轮UI运行绑定且不增业务通过数。保留先前2次失败调用、准确输入和修正说明，不计最终通过。本次仅修正独立.test.mjs遗漏的旧历史Run到当前项目导航，并增加当前项目再次刷新断言；应用／TS及8份实际产物未改。原构建／类型／契约清单保留该非输入文件的准确差异，最终Lint／全部运行时使用修正后的完整输入。完整HTTP首轮13通过／2失败均发生在来源夹具建立阶段：ENDPOINT_UNAVAILABLE与首次/projects请求ECONNRESET，来源读取／边界断言未执行。未修改应用、夹具、健康规则、超时或断言；完整同字节复跑取得最终HTTP结果，不据其通过推断首次故障根因。接受／终态Run为明确元数据夹具；真实创建／HTTP／文件Worker和浏览器检查不代签真实接受、物理停止或模型／OIDC／Linux。SQL1～45／Runner／依赖／公共契约不变。同一Agent开发复核，交付导航／WS、完整首次产品路径和正式验收继续。",
         "2026-11-16：P1-08准确交付导航开发增量完成本机验证，2.4勾选，implement-workbench-first-path累计7/13；正式工作包与G0仍等待前置。准确Run候选有界分页／明确选择／旧依据标识，项目接受版本单独携带来源Run。审查／预览管理／接受／已发布版本／交付包均以受保护GET进入，返回恢复原工作台Run、页签／小屏面板／选择及原生草稿；未保存File或session保存失败阻止离开。最终新HTTP4／浏览器5与完整受影响回归共86项独立通过，零失败／取消／跳过；构建／类型／Lint／契约、644条源码映射关联及740输入产物绑定，18份实际契约／服务端／浏览器产物前后当前一致。OpenAPI补齐65路径及原接受页面入口，两个独立浏览器模块因嵌入契约变化重建。完整页面回归旧文案断言已按实际新提示修正，权限／无输入框／撤权断言未弱化；接受丢ACK检查补充实际HTTP202提交检查点，原SQL／恢复断言保持；补充检查首次误写HTTP200的测试错误及修正记录保留；既有非输入清单差异按准确hash另记，未将其伪装为全清单零漂移。先前6次失败与诊断保留，修复严格scope键、类型入参及缺原文件夹具，未放宽质量停止规则／超时／断言；首次受控质量任务stopRequested及后续接受回归SQL计数失败的原始原因均未确定，不将后续通过当成根因解释。SQL1～45／存储协议／Runner／原生日记／依赖不变。同一Agent开发复核；上游来源准入、模型／人工观察／OCI／物理Runner事实仍为明确夹具，真实模型／OIDC／Linux、WebSocket及完整产品／门槛验收继续。",
         "2026-11-16：实时事件订阅开发中（3.1），复用HTTP鉴权边界，新增ws固定依赖、Worker无payload提交唤醒与准确事件窗口；准备真实宿主连接／补发／撤权／背压／停机检查，暂不勾选。7/13与正式状态／门槛保持；真实模型、OIDC、Linux继续留空。",
-        "2026-11-16：P1-08事件服务器开发增量完成3.1，本变更累计8/13，正式P1-08仍等待前置／G0。实际平台HTTP宿主挂接严格同源／可信身份WebSocket；先有界Worker提交唤醒订阅再授权补历史，连续seq、读取后再授权、空闲撤权、背压／缺口resync、容量及停止排空验证。新增ws8.23.0／@types/ws8.18.2锁定依赖、严格WS契约和只读getInputEventWindow，既有事件HTTP形状不变；SQL1～45及Runner未改。最终新连接11、输入26、存储47、基础9、受影响HTTP／契约47、真实Edge页面9，共149通过、1个既有Windows下POSIX信号跳过，零失败／取消；页面日志保留后续工具输出与最终TAP，明确非完整原始stdout。构建／类型／Lint／契约通过，159产物及421源码映射关联核实；构建后仅测试MJS／root脚本元数据差异另列，不冒称全清单零漂移。5次先前失败及准确输入保留；临时DB删历史／cork实际TCP为明确故障注入，不代签归档删除或远程网络。单Agent开发复核；客户端连续合并／重连、事件期间交互、完整产品及真实模型／OIDC／Linux继续。"
+        "2026-11-16：P1-08事件服务器开发增量完成3.1，本变更累计8/13，正式P1-08仍等待前置／G0。实际平台HTTP宿主挂接严格同源／可信身份WebSocket；先有界Worker提交唤醒订阅再授权补历史，连续seq、读取后再授权、空闲撤权、背压／缺口resync、容量及停止排空验证。新增ws8.23.0／@types/ws8.18.2锁定依赖、严格WS契约和只读getInputEventWindow，既有事件HTTP形状不变；SQL1～45及Runner未改。最终新连接11、输入26、存储47、基础9、受影响HTTP／契约47、真实Edge页面9，共149通过、1个既有Windows下POSIX信号跳过，零失败／取消；页面日志保留后续工具输出与最终TAP，明确非完整原始stdout。构建／类型／Lint／契约通过，159产物及421源码映射关联核实；构建后仅测试MJS／root脚本元数据差异另列，不冒称全清单零漂移。5次先前失败及准确输入保留；临时DB删历史／cork实际TCP为明确故障注入，不代签归档删除或远程网络。单Agent开发复核；客户端连续合并／重连、事件期间交互、完整产品及真实模型／OIDC／Linux继续。",
+        "2026-11-16：P1-08持久事件客户端开发增量接入连续seq合并、重复／乱序去重、HTTP有界补缺、断线／溢出重快照及重新订阅；异常协议自动重快照每30秒最多5次，耗尽后显式重连。固定进展提示与最近100条记录不替换工作区，不重建草稿／输入身份／依据、页签、焦点或选择；显式查看更新沿用原保存guard。当前可信主体／准确Run、请求代际／AbortSignal及撤权清理继续生效。实际Edge原生WS／IndexedDB和平台HTTP／文件Worker验证新事件6、既有页面9、输入26及受影响HTTP／契约47，共88通过，零失败／跳过／取消；构建、类型、Lint、契约及422条源码映射关联通过。临时模型片段尚未接入，完整3.2保持未勾选，仍8/13；3.3／4.1～4.3和真实模型／OIDC／Linux验收继续。正式P1-08及G0～G4不变，同一Agent开发复核。"
       ]
     },
     {

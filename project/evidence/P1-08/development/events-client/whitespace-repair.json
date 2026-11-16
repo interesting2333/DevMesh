@@ -1,0 +1,8 @@
+{
+  "source": "packages/input-api/src/web/workbench-client.tsx",
+  "before": "d007dbb626231b435aca5e202ac1717329524cf262096b42fa39a5be9ce86888",
+  "after": "2d561e76db67bb0d56539eded4d22c6c1f263c609d1ce588fb012a7ee501f9bc",
+  "reason": "git diff --check found spaces on an otherwise blank JSX line; whitespace-only repair, no token changes.",
+  "failedCheck": "management-diff-before-whitespace.json",
+  "preservedSource": "failed-source/diff-whitespace/workbench-client.tsx"
+}

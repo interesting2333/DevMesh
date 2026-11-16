@@ -1,0 +1,78 @@
+TAP version 13
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native browser receives the snapshot-subscribe gap; progress and explicit refresh retain draft identity and selection
+ok 1 - native browser receives the snapshot-subscribe gap; progress and explicit refresh retain draft identity and selection
+  ---
+  duration_ms: 5410.1179
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Real platform HTTP host, file SQLite Worker, native Edge WebSocket/IndexedDB/CSP. Explicit trusted identity and transport/history fault injection; no real OIDC, model, Linux or product acceptance."}
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual TCP disconnect triggers protected resnapshot and reconnect without resetting tab, draft or posting a command
+ok 2 - actual TCP disconnect triggers protected resnapshot and reconnect without resetting tab, draft or posting a command
+  ---
+  duration_ms: 5623.6782
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Real platform HTTP host, file SQLite Worker, native Edge WebSocket/IndexedDB/CSP. Explicit trusted identity and transport/history fault injection; no real OIDC, model, Linux or product acceptance."}
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: reordered and duplicated real server frames fill the HTTP gap and apply each persisted event once
+ok 3 - reordered and duplicated real server frames fill the HTTP gap and apply each persisted event once
+  ---
+  duration_ms: 5536.898
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Real platform HTTP host, file SQLite Worker, native Edge WebSocket/IndexedDB/CSP. Explicit trusted identity and transport/history fault injection; no real OIDC, model, Linux or product acceptance."}
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual server buffer overflow resynchronizes from a fresh snapshot while preserving editing
+ok 4 - actual server buffer overflow resynchronizes from a fresh snapshot while preserving editing
+  ---
+  duration_ms: 7045.0875
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Real platform HTTP host, file SQLite Worker, native Edge WebSocket/IndexedDB/CSP. Explicit trusted identity and transport/history fault injection; no real OIDC, model, Linux or product acceptance."}
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: idle server-side revocation clears protected UI without refresh and never submits local drafts
+ok 5 - idle server-side revocation clears protected UI without refresh and never submits local drafts
+  ---
+  duration_ms: 4582.4979
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Real platform HTTP host, file SQLite Worker, native Edge WebSocket/IndexedDB/CSP. Explicit trusted identity and transport/history fault injection; no real OIDC, model, Linux or product acceptance."}
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:13180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: repeated successful resnapshots with corrupt frames stop after a bounded budget and explicit retry recovers
+ok 6 - repeated successful resnapshots with corrupt frames stop after a bounded budget and explicit retry recovers
+  ---
+  duration_ms: 4514.855
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Real platform HTTP host, file SQLite Worker, native Edge WebSocket/IndexedDB/CSP. Explicit trusted identity and transport/history fault injection; no real OIDC, model, Linux or product acceptance."}
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 34570.6714

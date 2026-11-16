@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-11-16T02:35:45.490Z",
+  "base": "2f66823fcadacd02a9d3b83fcfb224af9a0a5034",
+  "checks": [
+    {
+      "name": "live",
+      "record": "live-2026-11-16T02-31-49-343Z.json",
+      "pass": 6,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "name": "page",
+      "record": "page-2026-11-16T02-31-49-400Z.json",
+      "pass": 9,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "name": "input",
+      "record": "input-2026-11-16T02-32-42-860Z.json",
+      "pass": 26,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-16T02-32-42-843Z.json",
+      "pass": 47,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "name": "build",
+      "record": "build-2026-11-16T02-36-44-693Z.json"
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-16T02-37-49-032Z.json"
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-16T02-37-49-029Z.json"
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-16T02-31-49-373Z.json"
+    }
+  ],
+  "totals": {
+    "pass": 88,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "priorInvocations": [
+    {
+      "file": "build-2026-11-16T02-23-19-595Z.json",
+      "name": "build",
+      "code": 0
+    },
+    {
+      "file": "build-2026-11-16T02-30-35-993Z.json",
+      "name": "build",
+      "code": 0
+    },
+    {
+      "file": "lint-2026-11-16T02-20-00-401Z.json",
+      "name": "lint",
+      "code": 0
+    },
+    {
+      "file": "lint-2026-11-16T02-23-19-568Z.json",
+      "name": "lint",
+      "code": 0
+    },
+    {
+      "file": "lint-2026-11-16T02-30-35-987Z.json",
+      "name": "lint",
+      "code": 0
+    },
+    {
+      "file": "lint-2026-11-16T02-35-58-038Z.json",
+      "name": "lint",
+      "code": 0
+    },
+    {
+      "file": "live-2026-11-16T02-25-19-501Z.json",
+      "name": "live",
+      "code": 0
+    },
+    {
+      "file": "page-2026-11-16T02-25-19-491Z.json",
+      "name": "page",
+      "code": 0
+    },
+    {
+      "file": "type-2026-11-16T02-20-00-401Z.json",
+      "name": "type",
+      "code": 0
+    },
+    {
+      "file": "type-2026-11-16T02-30-35-976Z.json",
+      "name": "type",
+      "code": 0
+    }
+  ],
+  "scope": "Same-agent local development only. Actual Edge/native WS/IndexedDB/platform HTTP/file SQLite Worker; explicit trusted identity, frame and transport faults. No model stream, OIDC, Linux, full T08/product or gate acceptance.",
+  "taskProgress": {
+    "complete": 8,
+    "total": 13,
+    "task32": "partial-persisted-events-only"
+  },
+  "managementFailure": {
+    "record": "management-diff-before-whitespace.json",
+    "reason": "Whitespace on one blank JSX line",
+    "repair": "whitespace-repair.json"
+  },
+  "finalBinding": "final-binding.json"
+}
