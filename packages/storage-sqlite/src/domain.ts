@@ -753,6 +753,9 @@ export function createDomain(db: DatabaseSync) {
         : all('SELECT * FROM content_pins WHERE content_hash=? AND (?=0 OR released_at IS NULL) ORDER BY created_at,pin_id LIMIT ?', input.contentHash, input.activeOnly ? 1 : 0, input.limit);
       return rows.map(contentPinView);
     },
+    getContentPin(input: Parsed<'getContentPin'>) {
+      return contentPinView(required(get('SELECT * FROM content_pins WHERE pin_id=?', input.pinId)));
+    },
     getStorageDiagnostics() {
       return {
         contentObjects: Number(get('SELECT count(*) n FROM content_objects')?.n ?? 0),

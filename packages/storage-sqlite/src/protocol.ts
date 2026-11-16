@@ -166,6 +166,7 @@ export const requests = {
   pinContent: z.strictObject({ meta, contentHash: sha256, reason: z.string().min(1).max(500) }),
   releaseContentPin: z.strictObject({ meta, pinId: opaqueKey }),
   listContentPins: z.strictObject({ contentHash: sha256.optional(), activeOnly: z.boolean().default(true), limit: z.number().int().min(1).max(200).default(100) }),
+  getContentPin: z.strictObject({ pinId: opaqueKey }),
   getStorageDiagnostics: z.strictObject({}),
   recordControlTarget: z.strictObject({ meta, runId: ids.run, targetKind: z.enum(['ATTEMPT','PREPARATION','PREVIEW','JOB','WORKSPACE']), targetId: opaqueKey, state: z.enum(['PENDING','STOPPING','SAVED','RELEASED','UNKNOWN','FAILED']), failureCode: z.string().min(1).max(200).optional(), evidence: z.record(z.string(), z.json()).optional() }),
   finishControl: z.strictObject({ ...conditional, controlRevision: revision, outcome: z.literal('PAUSED') }),
@@ -236,6 +237,7 @@ export interface Results extends ReleaseExportResults, SessionResults, RegistryR
   pinContent: OperationResult;
   releaseContentPin: OperationResult;
   listContentPins: ContentPinView[];
+  getContentPin: ContentPinView;
   getStorageDiagnostics: { contentObjects: number; activePins: number; releasedPins: number };
   finishRun: OperationResult;
   lookupOperation: OperationResult | null;
