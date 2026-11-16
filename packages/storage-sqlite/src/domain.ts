@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -205,6 +205,7 @@ export function createDomain(db: DatabaseSync) {
   const configView = (row: Row): ConfigAdjustmentView => ({ adjustmentId: String(row.adjustment_id), projectId: String(row.project_id), runId: String(row.run_id), baseGeneration: Number(row.base_generation), state: String(row.state), config: JSON.parse(String(row.config_json)) as Record<string, unknown>, appliedGeneration: row.applied_generation === null ? null : Number(row.applied_generation), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const configGeneration = () => Number(get('SELECT generation FROM config_control WHERE singleton_id=1')?.generation ?? 1);
   const invocationView = (row: Row): InvocationView => ({ invocationId: String(row.invocation_id), projectId: String(row.project_id), principalId: String(row.principal_id), endpointId: String(row.endpoint_id), endpointRevision: Number(row.endpoint_revision), registryGenerationId: String(row.registry_generation_id), state: String(row.state), inputManifestHash: String(row.input_manifest_hash), definitionSnapshotHash: String(row.definition_snapshot_hash), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
+  const contentPinView = (row: Row): ContentPinView => ({ pinId: String(row.pin_id), contentHash: String(row.content_hash), reason: String(row.reason), createdAt: String(row.created_at), releasedAt: row.released_at === null ? null : String(row.released_at) });
   const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
   const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
   function controlStatus(row: Row): ControlStatusView {
@@ -728,6 +729,36 @@ export function createDomain(db: DatabaseSync) {
         exec('UPDATE invocations SET state=?,updated_at=? WHERE invocation_id=?', input.state, now(), input.invocationId);
         return invocationView(required(get('SELECT * FROM invocations WHERE invocation_id=?', input.invocationId)));
       });
+    },
+    pinContent(input: Parsed<'pinContent'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'PinContent', payload, operationId => {
+        required(get('SELECT content_hash FROM content_objects WHERE content_hash=?', input.contentHash));
+        const pinId = uid('pin'), time = now();
+        insert('content_pins', { pin_id: pinId, content_hash: input.contentHash, reason: input.reason, operation_id: operationId, created_at: time, released_at: null });
+        return contentPinView(required(get('SELECT * FROM content_pins WHERE pin_id=?', pinId)));
+      });
+    },
+    releaseContentPin(input: Parsed<'releaseContentPin'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'ReleaseContentPin', payload, () => {
+        const row = required(get('SELECT * FROM content_pins WHERE pin_id=?', input.pinId));
+        if (row.released_at === null) exec('UPDATE content_pins SET released_at=? WHERE pin_id=?', now(), input.pinId);
+        return contentPinView(required(get('SELECT * FROM content_pins WHERE pin_id=?', input.pinId)));
+      });
+    },
+    listContentPins(input: Parsed<'listContentPins'>) {
+      const rows = input.contentHash === undefined
+        ? all('SELECT * FROM content_pins WHERE (?=0 OR released_at IS NULL) ORDER BY created_at,pin_id LIMIT ?', input.activeOnly ? 1 : 0, input.limit)
+        : all('SELECT * FROM content_pins WHERE content_hash=? AND (?=0 OR released_at IS NULL) ORDER BY created_at,pin_id LIMIT ?', input.contentHash, input.activeOnly ? 1 : 0, input.limit);
+      return rows.map(contentPinView);
+    },
+    getStorageDiagnostics() {
+      return {
+        contentObjects: Number(get('SELECT count(*) n FROM content_objects')?.n ?? 0),
+        activePins: Number(get('SELECT count(*) n FROM content_pins WHERE released_at IS NULL')?.n ?? 0),
+        releasedPins: Number(get('SELECT count(*) n FROM content_pins WHERE released_at IS NOT NULL')?.n ?? 0)
+      };
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;

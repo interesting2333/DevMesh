@@ -163,6 +163,10 @@ export const requests = {
   getInvocation: z.strictObject({ invocationId: opaqueKey }),
   listInvocations: z.strictObject({ projectId: ids.project, limit: z.number().int().min(1).max(100).default(50) }),
   transitionInvocation: z.strictObject({ meta, invocationId: opaqueKey, expectedState: z.enum(['ACCEPTED','WORKING','INPUT_REQUIRED','COMPLETED','FAILED','CANCELED']), state: z.enum(['WORKING','INPUT_REQUIRED','COMPLETED','FAILED','CANCELED']) }),
+  pinContent: z.strictObject({ meta, contentHash: sha256, reason: z.string().min(1).max(500) }),
+  releaseContentPin: z.strictObject({ meta, pinId: opaqueKey }),
+  listContentPins: z.strictObject({ contentHash: sha256.optional(), activeOnly: z.boolean().default(true), limit: z.number().int().min(1).max(200).default(100) }),
+  getStorageDiagnostics: z.strictObject({}),
   recordControlTarget: z.strictObject({ meta, runId: ids.run, targetKind: z.enum(['ATTEMPT','PREPARATION','PREVIEW','JOB','WORKSPACE']), targetId: opaqueKey, state: z.enum(['PENDING','STOPPING','SAVED','RELEASED','UNKNOWN','FAILED']), failureCode: z.string().min(1).max(200).optional(), evidence: z.record(z.string(), z.json()).optional() }),
   finishControl: z.strictObject({ ...conditional, controlRevision: revision, outcome: z.literal('PAUSED') }),
   finishRun: z.strictObject({ ...conditional, outcome: z.enum(['FAILED', 'CANCELLED']), reason: z.string().min(1).max(2000) }),
@@ -185,6 +189,7 @@ export type RecoveryStateView = { controlRuns: ControlStatusView[]; activeAttemp
 export type ChangeView = { changeId: string; projectId: string; runId: string; sourceMessageId: string; proposedText: string; state: string; basisHash: string; decisionOperationId: string | null; createdAt: string; updatedAt: string; revision?: number };
 export type ConfigAdjustmentView = { adjustmentId: string; projectId: string; runId: string; baseGeneration: number; state: string; config: Record<string, unknown>; appliedGeneration: number | null; createdAt: string; updatedAt: string; revision?: number };
 export type InvocationView = { invocationId: string; projectId: string; principalId: string; endpointId: string; endpointRevision: number; registryGenerationId: string; state: string; inputManifestHash: string; definitionSnapshotHash: string; createdAt: string; updatedAt: string };
+export type ContentPinView = { pinId: string; contentHash: string; reason: string; createdAt: string; releasedAt: string | null };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
 export interface Results extends ReleaseExportResults, SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceMaintenanceResults, WorkspaceReclamationResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults, AcceptanceAbortResults, AcceptanceAbortRecoveryResults, ReleasePublicationResults, ReleaseAccessResults, ReleaseSessionResults {
@@ -228,6 +233,10 @@ export interface Results extends ReleaseExportResults, SessionResults, RegistryR
   getInvocation: InvocationView;
   listInvocations: InvocationView[];
   transitionInvocation: OperationResult;
+  pinContent: OperationResult;
+  releaseContentPin: OperationResult;
+  listContentPins: ContentPinView[];
+  getStorageDiagnostics: { contentObjects: number; activePins: number; releasedPins: number };
   finishRun: OperationResult;
   lookupOperation: OperationResult | null;
   getOperation: OperationResult;

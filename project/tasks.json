@@ -2043,15 +2043,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-content-maintenance"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P2-07/content-pins-development-review.md","project/evidence/P2-07/content-pins.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0051新增content_pins；pin／release／list／getStorageDiagnostics落地，幂等、同键不同hash拒绝、释放不删内容、计数准确。content-pins 1/1通过；受保护API、GC／归档与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。"]
     },
     {
       "id": "P2-08",
