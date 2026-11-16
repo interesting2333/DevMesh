@@ -2190,15 +2190,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-agent-exposure"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P3-04/agent-exposure-development-review.md","project/evidence/P3-04/agent-exposure.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1，变更1/3。迁移0054新增agent_exposures；draft/validate/publish/drain/retire/catalog落地，状态机、Card校验、目录过滤与唯一agentKey生效。agent-exposure 1/1通过；受保护API与文档同步未完成，正式P3-04／G1不变。"]
     },
     {
       "id": "P3-05",

@@ -7,7 +7,7 @@ import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView, ContentArchiveView, ProjectStatsView, ProjectConfigExportView, HistoryExportView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView, InvocationView, ContentPinView, PublicTaskView, ContentArchiveView, ProjectStatsView, ProjectConfigExportView, HistoryExportView, ExposureView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -210,6 +210,7 @@ export function createDomain(db: DatabaseSync) {
   const contentPinView = (row: Row): ContentPinView => ({ pinId: String(row.pin_id), contentHash: String(row.content_hash), reason: String(row.reason), createdAt: String(row.created_at), releasedAt: row.released_at === null ? null : String(row.released_at) });
   const publicTaskView = (row: Row): PublicTaskView => ({ taskKey: String(row.task_key), projectId: String(row.project_id), principalId: String(row.principal_id), kind: String(row.kind), state: String(row.state), payload: JSON.parse(String(row.payload_json)) as Record<string, unknown>, leaseOwner: row.lease_owner === null ? null : String(row.lease_owner), leaseUntil: row.lease_until === null ? null : String(row.lease_until), attempts: Number(row.attempts), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const contentArchiveView = (row: Row): ContentArchiveView => ({ archiveId: String(row.archive_id), contentHash: String(row.content_hash), projectId: String(row.project_id), state: String(row.state), requestedBy: String(row.requested_by), requestedAt: String(row.requested_at), ackedBy: row.acked_by === null ? null : String(row.acked_by), ackedAt: row.acked_at === null ? null : String(row.acked_at) });
+  const exposureView = (row: Row): ExposureView => ({ exposureId: String(row.exposure_id), projectId: String(row.project_id), agentKey: String(row.agent_key), revision: Number(row.revision), state: String(row.state), card: JSON.parse(String(row.card_json)) as ExposureView['card'], cardHash: String(row.card_hash), createdAt: String(row.created_at), updatedAt: String(row.updated_at), publishedAt: row.published_at === null ? null : String(row.published_at) });
   const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
   const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
   function controlStatus(row: Row): ControlStatusView {
@@ -902,6 +903,64 @@ export function createDomain(db: DatabaseSync) {
           releases: count('SELECT count(*) n FROM releases WHERE project_id=? AND accepted_at<=?')
         }
       };
+    },
+    createExposureDraft(input: Parsed<'createExposureDraft'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'CreateExposureDraft', payload, operationId => {
+        required(get('SELECT project_id FROM projects WHERE project_id=?', input.projectId));
+        if (new Set(input.card.skills).size !== input.card.skills.length) throw new StorageError('EXPOSURE_CARD_CHANGED', 422, 'Card skills must be unique');
+        if (get('SELECT exposure_id FROM agent_exposures WHERE project_id=? AND agent_key=?', input.projectId, input.agentKey)) throw new StorageError('EXPOSURE_DUPLICATE', 409, 'Agent key is already exposed');
+        const exposureId = uid('exposure'), time = now(), cardHash = digest(canonical(input.card));
+        insert('agent_exposures', { exposure_id: exposureId, project_id: input.projectId, agent_key: input.agentKey, revision: 1, state: 'DRAFT', card_json: canonical(input.card), card_hash: cardHash, operation_id: operationId, created_at: time, updated_at: time, published_at: null });
+        return exposureView(required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', exposureId)));
+      });
+    },
+    validateExposure(input: Parsed<'validateExposure'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'ValidateExposure', payload, () => {
+        const row = required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId));
+        if (row.state !== 'DRAFT') throw new StorageError('EXPOSURE_STATE_INVALID', 409, 'Only a DRAFT exposure can be validated');
+        if (digest(canonical(JSON.parse(String(row.card_json)))) !== row.card_hash) throw new StorageError('EXPOSURE_CARD_CHANGED', 409, 'Card hash does not match the stored card');
+        exec("UPDATE agent_exposures SET state='VALIDATED',updated_at=? WHERE exposure_id=?", now(), input.exposureId);
+        return exposureView(required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId)));
+      });
+    },
+    publishExposure(input: Parsed<'publishExposure'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'PublishExposure', payload, () => {
+        const row = required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId));
+        if (row.state !== 'VALIDATED') throw new StorageError('EXPOSURE_STATE_INVALID', 409, 'Only a VALIDATED exposure can be published');
+        const time = now();
+        exec("UPDATE agent_exposures SET state='PUBLISHED',published_at=?,updated_at=?,revision=revision+1 WHERE exposure_id=?", time, time, input.exposureId);
+        return exposureView(required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId)));
+      });
+    },
+    drainExposure(input: Parsed<'drainExposure'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'DrainExposure', payload, () => {
+        const row = required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId));
+        if (row.state !== 'PUBLISHED') throw new StorageError('EXPOSURE_STATE_INVALID', 409, 'Only a PUBLISHED exposure can be drained');
+        exec("UPDATE agent_exposures SET state='DRAINING',updated_at=? WHERE exposure_id=?", now(), input.exposureId);
+        return exposureView(required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId)));
+      });
+    },
+    retireExposure(input: Parsed<'retireExposure'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'RetireExposure', payload, () => {
+        const row = required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId));
+        if (row.state !== 'DRAINING') throw new StorageError('EXPOSURE_STATE_INVALID', 409, 'Only a DRAINING exposure can be retired');
+        exec("UPDATE agent_exposures SET state='RETIRED',updated_at=? WHERE exposure_id=?", now(), input.exposureId);
+        return exposureView(required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId)));
+      });
+    },
+    getExposure(input: Parsed<'getExposure'>) {
+      return exposureView(required(get('SELECT * FROM agent_exposures WHERE exposure_id=?', input.exposureId)));
+    },
+    listExposures(input: Parsed<'listExposures'>) {
+      return all('SELECT * FROM agent_exposures WHERE (? IS NULL OR project_id=?) AND (? IS NULL OR state=?) ORDER BY created_at,exposure_id LIMIT ?', input.projectId ?? null, input.projectId ?? null, input.state ?? null, input.state ?? null, input.limit).map(exposureView);
+    },
+    getExposureCatalog(input: Parsed<'getExposureCatalog'>) {
+      return all("SELECT * FROM agent_exposures WHERE state IN ('PUBLISHED','DRAINING') AND (? IS NULL OR project_id=?) ORDER BY updated_at,exposure_id", input.projectId ?? null, input.projectId ?? null).map(exposureView);
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
