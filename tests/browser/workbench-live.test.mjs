@@ -66,6 +66,18 @@ test('workbench shows real control state after an actual disconnect and resnapsh
   await expect(controlStatus).toContainText('正在暂停，等待收尾');
 });
 
+test('workbench collaboration tab shows change and config summaries',settings,async t=>{
+  const h=await harness(t),{f,page}=h,scope=await f.create();
+  const run=await f.storage.request('getRun',{runId:scope.runId});
+  await f.storage.request('proposeChange',{meta:{principalId:'user_1',scopeId:scope.runId,idempotencyKey:randomUUID()},runId:scope.runId,ifMatch:'"r'+run.resourceRevision+'"',sourceMessageId:'message_collab',proposedText:'扩展协作范围'});
+  await h.open(scope);
+  await page.getByRole('tab',{name:'协作'}).click();
+  const summary=page.getByLabel('变更与配置');
+  await expect(summary).toContainText('变更提案 1 条');
+  await expect(summary).toContainText('扩展协作范围');
+  await expect(summary).toContainText('配置代际');
+});
+
 test('workbench pause and resume controls call the real API and keep the state across reconnect',settings,async t=>{
   const h=await harness(t),{f,page}=h,scope=await f.create();await h.open(scope);
   const controlStatus=page.getByRole('status',{name:'执行控制状态'});

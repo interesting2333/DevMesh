@@ -41,3 +41,10 @@ node --test --test-reporter=spec --test-name-pattern="pause and resume controls"
 | 结论 | 取消、配置面板、变更队列、控制多页竞争与完整 E2E 保持未实现；本轮只完成审计与记录 |
 
 因此 1.2 以“审计完成、缺口明确”记录，不宣称完整控制交互完成。
+
+## 追加：协作页只读配置／变更面板（1.3）
+
+- 协作 tab 显示：配置代际、变更提案数、配置调整数，以及最多 5 条最近变更正文／状态与配置调整状态。
+- 数据来自 `GET /runs/{id}/changes`、`GET /runs/{id}/config-adjustments`、`GET /config/generation?runId=`；读取失败时清空面板，不影响主流程。
+- 只读，没有取消、编辑或决定操作。
+- `workbench-live` 新增用例 1 条，全量 **9/9 通过**；日志见 [collaboration-panel.txt](./collaboration-panel.txt)。
