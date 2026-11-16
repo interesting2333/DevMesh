@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "3d94e35bb8b447d851e36a1fee75ff94ff908f9f0e659df2ad68782303f49224"
+      "sha256": "822b49a40c4011a3ce3907546f4707a729754239e0caf40b3c5258c7f5c012ac"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "1a25e4af1a3b1323fa8d146f83159c9fc575a964987320ba277e1a40e491e483"
+      "sha256": "240a001fd870760d614b1ab78f5652e8eb439e833e4cdf7a8bac4e6824e9fbba"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "48bd711fa45cd5aab7c76e4fc94a38cb7c4243a64c4b278f3b622bfeb8e1048d"
+      "sha256": "ca478e37dc0d453c147732dcd6e7e8d163b356ee86aa88b02e0d4f5634ec0938"
     }
   ],
   "gates": [
@@ -1985,15 +1985,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-config-adjustment"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P2-05/config-adjustment-development-review.md","project/evidence/P2-05/config-adjustment.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1／1.2／2.1／2.2，变更3/3。迁移0049新增config_control与config_adjustments；配置调整要求PAUSED、代际CAS、应用后仍暂停、重启保持；受保护API/OpenAPI；Registry同步沿用既有测试不重写。配置调整2/2通过；正式P2-05仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P2-06",

@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView, ChangeView, ConfigAdjustmentView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -202,6 +202,8 @@ export function createDomain(db: DatabaseSync) {
   const controlTargetView = (row: Row): ControlTargetView => ({ runId: String(row.run_id), targetKind: String(row.target_kind), targetId: String(row.target_id), state: String(row.state), attempts: Number(row.attempts), failureCode: row.failure_code as string | null, evidence: row.evidence_json === null ? null : JSON.parse(String(row.evidence_json)) as Record<string, unknown>, lastCheckedAt: String(row.last_checked_at), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const changeView = (row: Row): ChangeView => ({ changeId: String(row.change_id), projectId: String(row.project_id), runId: String(row.run_id), sourceMessageId: String(row.source_message_id), proposedText: String(row.proposed_text), state: String(row.state), basisHash: String(row.basis_hash), decisionOperationId: row.decision_operation_id as string | null, createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
   const changeBasis = (row: Row) => digest(canonical({ runId: String(row.run_id), planRevision: row.current_plan_revision ?? null, requirementRevision: row.current_requirement_revision ?? null, resourceRevision: Number(row.resource_revision) }));
+  const configView = (row: Row): ConfigAdjustmentView => ({ adjustmentId: String(row.adjustment_id), projectId: String(row.project_id), runId: String(row.run_id), baseGeneration: Number(row.base_generation), state: String(row.state), config: JSON.parse(String(row.config_json)) as Record<string, unknown>, appliedGeneration: row.applied_generation === null ? null : Number(row.applied_generation), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
+  const configGeneration = () => Number(get('SELECT generation FROM config_control WHERE singleton_id=1')?.generation ?? 1);
   const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
   const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
   function controlStatus(row: Row): ControlStatusView {
@@ -657,6 +659,45 @@ export function createDomain(db: DatabaseSync) {
         insert('run_redos', { redo_id: redoId, operation_id: operationId, project_id: projectId, source_run_id: input.runId, new_run_id: newRunId, review_hash: input.redoReviewHash, created_at: time });
         return { projectId, runId: newRunId, revision: 1, sourceRunId: input.runId, newRunId, redoId };
       });
+    },
+    proposeConfigAdjustment(input: Parsed<'proposeConfigAdjustment'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'ProposeConfigAdjustment', payload, operationId => {
+        const current = run(input.runId);
+        if (current.terminal_outcome !== null || current.control_gate !== 'PAUSED') throw new StorageError('CONFIG_REQUIRES_PAUSED', 409, 'Config adjustments require a paused Run');
+        assertResourceVersion(input.ifMatch, Number(current.resource_revision));
+        const serialized = canonical(input.config);
+        if (serialized.length > 20000) throw new StorageError('CONFIG_TOO_LARGE', 422, 'Config snapshot is too large');
+        const generation = configGeneration(), adjustmentId = uid('config_adj'), time = now();
+        insert('config_adjustments', { adjustment_id: adjustmentId, project_id: String(current.project_id), run_id: input.runId, operation_id: operationId, base_generation: generation, state: 'PROPOSED', config_json: serialized, applied_generation: null, created_at: time, updated_at: time });
+        return { ...configView(required(get('SELECT * FROM config_adjustments WHERE adjustment_id=?', adjustmentId))), revision: Number(current.resource_revision) };
+      });
+    },
+    confirmConfigAdjustment(input: Parsed<'confirmConfigAdjustment'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'ConfirmConfigAdjustment', payload, () => {
+        const row = required(get('SELECT * FROM config_adjustments WHERE adjustment_id=?', input.adjustmentId));
+        if (row.state !== 'PROPOSED') throw new StorageError('CONFIG_NOT_PROPOSED', 409, 'Config adjustment is already decided');
+        const current = run(String(row.run_id));
+        if (current.terminal_outcome !== null || current.control_gate !== 'PAUSED') throw new StorageError('CONFIG_REQUIRES_PAUSED', 409, 'Config adjustments require a paused Run');
+        const generation = configGeneration();
+        if (Number(row.base_generation) !== generation) throw new StorageError('CONFIG_BASIS_SUPERSEDED', 409, 'Config generation changed');
+        const time = now();
+        exec("UPDATE config_adjustments SET state='CONFIRMED',applied_generation=?,updated_at=? WHERE adjustment_id=?", generation, time, input.adjustmentId);
+        exec('UPDATE config_control SET generation=generation+1,updated_at=? WHERE singleton_id=1', time);
+        bump(String(row.run_id));
+        return { ...configView(required(get('SELECT * FROM config_adjustments WHERE adjustment_id=?', input.adjustmentId))), revision: Number(run(String(row.run_id)).resource_revision) };
+      });
+    },
+    getConfigAdjustment(input: Parsed<'getConfigAdjustment'>) {
+      return configView(required(get('SELECT * FROM config_adjustments WHERE adjustment_id=?', input.adjustmentId)));
+    },
+    listConfigAdjustments(input: Parsed<'listConfigAdjustments'>) {
+      run(input.runId);
+      return all('SELECT * FROM config_adjustments WHERE run_id=? ORDER BY created_at,adjustment_id LIMIT ?', input.runId, input.limit).map(configView);
+    },
+    getConfigGeneration() {
+      return { generation: configGeneration() };
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;

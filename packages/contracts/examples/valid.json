@@ -89,6 +89,14 @@
     }
   },
   {
+    "schema": "ProposeConfigAdjustment",
+    "input": {
+      "config": {
+        "model": "next"
+      }
+    }
+  },
+  {
     "schema": "AcceptCandidate",
     "input": {
       "candidateRevision": 1,

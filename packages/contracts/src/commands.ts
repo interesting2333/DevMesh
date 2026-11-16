@@ -18,6 +18,7 @@ export const commandBodies = {
   CancelRun: z.strictObject({ impactReviewHash: sha256 }),
   RetryWork: z.strictObject({ runId: ids.run, failedAttemptId: ids.attempt, retryReviewHash: sha256 }),
   RedoRun: z.strictObject({ redoReviewHash: sha256 }),
+  ProposeConfigAdjustment: z.strictObject({ config: z.record(z.string(), z.json()) }),
   AcceptCandidate: acceptCandidateInput,
 } as const;
 const targets = {
@@ -38,7 +39,7 @@ export const command = z.discriminatedUnion('type', [
   envelope('CreateProject', 'creation'), envelope('SaveMessage', 'run'), envelope('AnswerQuestions', 'run'),
   envelope('ConfirmPlan', 'plan'), envelope('PlanFeedback', 'plan'), envelope('ProposeChange', 'run'),
   envelope('DecideChange', 'change'), envelope('PauseRun', 'run'), envelope('ResumeRun', 'run'),
-  envelope('CancelRun', 'run'), envelope('RetryWork', 'work'), envelope('RedoRun', 'run'), envelope('AcceptCandidate', 'candidate'),
+  envelope('CancelRun', 'run'), envelope('RetryWork', 'work'), envelope('RedoRun', 'run'), envelope('ProposeConfigAdjustment', 'run'), envelope('AcceptCandidate', 'candidate'),
 ]);
 export type Command = z.infer<typeof command>;
 export const operationReceipt = z.strictObject({

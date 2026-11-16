@@ -223,6 +223,32 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:true});
     response.status(202).json(receipt(await content.storage.request('redoRun',{meta,runId,redoReviewHash:body.redoReviewHash,ifMatch:scalar(ifMatch,'If-Match')})));
   }));
+  router.post('/runs/:runId/config-adjustments',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(commandBodies.ProposeConfigAdjustment,json(request)),ifMatch=request.headers['if-match'];
+    if(ifMatch===undefined)fail('PRECONDITION_REQUIRED',428,'If-Match resource revision is required');
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:true});
+    response.status(202).json(receipt(await content.storage.request('proposeConfigAdjustment',{meta,runId,config:body.config,ifMatch:scalar(ifMatch,'If-Match')})));
+  }));
+  router.post('/config-adjustments/:adjustmentId\\:confirm',route(async(request,response,identity)=>{
+    const adjustmentId=parseContract(opaqueKey,request.params.adjustmentId),meta=bodyMeta(request,adjustmentId,identity),adjustment=await content.storage.request('getConfigAdjustment',{adjustmentId});
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId:adjustment.runId,write:true});
+    response.status(202).json(receipt(await content.storage.request('confirmConfigAdjustment',{meta,adjustmentId})));
+  }));
+  router.get('/runs/:runId/config-adjustments',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),limit=positive(request.query.limit??'50',1,100);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:false});
+    response.json({adjustments:await content.storage.request('listConfigAdjustments',{runId,limit})});
+  }));
+  router.get('/config-adjustments/:adjustmentId',route(async(request,response,identity)=>{
+    const adjustmentId=parseContract(opaqueKey,request.params.adjustmentId),adjustment=await content.storage.request('getConfigAdjustment',{adjustmentId});
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId:adjustment.runId,write:false});
+    response.json(adjustment);
+  }));
+  router.get('/config/generation',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.query.runId as string);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:false});
+    response.json(await content.storage.request('getConfigGeneration',{}));
+  }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');
     if(!['true','false'].includes(includeAbsence))fail('SCHEMA_INVALID',422,'Invalid absence selection');
