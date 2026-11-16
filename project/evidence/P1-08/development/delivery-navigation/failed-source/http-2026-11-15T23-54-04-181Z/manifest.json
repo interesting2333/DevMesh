@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "base": "66d684fbd3711365eed880ad8c49b3b3bc81493c",
+  "record": "http-2026-11-15T23-54-04-181Z.json",
+  "at": "2026-11-16T00:01:03.130Z",
+  "preserved": [
+    {
+      "file": "packages/contracts/openapi.json",
+      "sha256": "d753a83a03bf9be339d912e1d955f62eae4a670788ece95e21a69f1fac75b3a4",
+      "baseHash": "d4b0157f1e42342f6a8873b986ab24a94171bd740021c584bd8dc17edf1fdeb1"
+    },
+    {
+      "file": "packages/contracts/src/index.ts",
+      "sha256": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2",
+      "baseHash": "2dcbdd3a0cd8d9be043d47e2c599228ef6490c998314f41df4a73dccecbd37ea"
+    },
+    {
+      "file": "packages/contracts/src/openapi.ts",
+      "sha256": "bfa366a5e13c9026c91ee8f6feef0664a2b5f3f2a691d66cbdb07fd1bd5430eb",
+      "baseHash": "f3965fa7d265705b7b190f05db26023c3e45a725df2f7361cc201320c086b21a"
+    },
+    {
+      "file": "packages/contracts/src/workbench-delivery.ts",
+      "sha256": "c580b698e85ee94afd05aaedb68a5b3ed7e939c02138b5f6ac4a4307cfb38b09",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/acceptance-page.ts",
+      "sha256": "7dfdd2bf7eef4559fb31a5c0b4034c6d43c9e4136988de4efb2b26ac8fc6cad4",
+      "baseHash": "da03289fcb56261c47d02266494b85ae96945f217b23bc4a81c2db15bc8a5298"
+    },
+    {
+      "file": "packages/input-api/src/acceptance.ts",
+      "sha256": "c2aeb57041f97f430415a381f835d3bda9ed8fc5e5d4409bf70b5ae2e0534b4d",
+      "baseHash": "419ddfd4a45886bd3482931d4fd7334922921a2ea75e7187dca8f589bca23b24"
+    },
+    {
+      "file": "packages/input-api/src/export-page.ts",
+      "sha256": "a9956f3ab02acfe6236cd723584015c63f80d4cf9063f08825c6dd22bed5e029",
+      "baseHash": "e95ad4af251962dde6afdb66bff59875947f6d2896307180ea644e6167cb2d64"
+    },
+    {
+      "file": "packages/input-api/src/preview-management-page.ts",
+      "sha256": "9b89a4e42be5c16b5296b7d9daff9fe23dbb6fd5a02865f82de0f9dd35f7ab78",
+      "baseHash": "0ac06c6a1acf78d02e2ad5fb797b1730a3fbb21fd9dbc6d2bfa9e8952d53823a"
+    },
+    {
+      "file": "packages/input-api/src/preview-management.ts",
+      "sha256": "721ed807c1d78c0c415503a8fc753cb5d3bf6935f43e1c60c69de382cf782ff4",
+      "baseHash": "9d06ba1935a48304a8460b794d2d4cb32cb9d3e5b010882cc8232e4bd2c46645"
+    },
+    {
+      "file": "packages/input-api/src/release.ts",
+      "sha256": "51089324b9b7ee8470b4618fdb3f26867adc3dcf4938bfe3d74020a43391d35b",
+      "baseHash": "0f21af0414c7f5653678b3872c85233a50b5af6c083f8f2becefbb0dafdd82ca"
+    },
+    {
+      "file": "packages/input-api/src/review.ts",
+      "sha256": "eb3003253119072b30e442ea0053575778deb9f65f1583555b3ba6f10d40bfb6",
+      "baseHash": "d4c74e70961cd184a4c464993960d9c81df3eba02c25ed68d152e5df8fe6f080"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "18f251b0e5517c934b3967eeb67885aa446c423a18bdae1d6e8d737c2f48f23f",
+      "baseHash": "c0c0dab9503f21c634e8762eca8d9c0a406d961e06399ba7e8915eba8919540f"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-delivery.tsx",
+      "sha256": "c68d9ee3225e55e23b7ad0bee7b9ffa778ef23be162aef27560bdf016d613fc4",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-reading.ts",
+      "sha256": "f2f6ef92646ead607227510067c63869eb1ee3caf7ba91adddbb74e69e6a25ae",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-return-client.tsx",
+      "sha256": "c1830ebc7cac0683dae493b0ba77b4bdcabbd64b54fb7aed7fb037a45f9733db",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-task-entry.tsx",
+      "sha256": "dc0873e69fbec4a4a007f1db5661470b7f4f672e34017280958efd0941b4f029",
+      "baseHash": "44cd5cfb0e53a12e2df3ecb2993be4bc0e90782adeeb57b1a5100f67d03de2e3"
+    },
+    {
+      "file": "packages/input-api/src/workbench-delivery.ts",
+      "sha256": "020b98003649ca90ba5022f970d1ff1715320c04a35d9af919afafc3836aff6f",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/workbench-return.ts",
+      "sha256": "f3ed4355d9739d991b2e3f8f0052b323204f7fdd97789835e5979df2d47b49d1",
+      "baseHash": null
+    },
+    {
+      "file": "packages/input-api/src/workbench.ts",
+      "sha256": "619af96b244bf9f3d1d24edbd9900e7aa0d8757ab2d7f12c12a16cc924e95197",
+      "baseHash": "59c6605213b37644d0f68bfb20d0aeb03896551f8e7dc5df16dbee6542d6d510"
+    },
+    {
+      "file": "packages/input-api/tsdown.web.config.ts",
+      "sha256": "d603412fe786366334451e4846c5ea68a4ab1ec2a5e0b2db4094034a3ba05850",
+      "baseHash": "8ec36b1efbb0e8e5abc758d7886c3aea451609dfbeed0bf506683ca6fb725937"
+    },
+    {
+      "file": "tests/browser/workbench-delivery.test.mjs",
+      "sha256": "ccda9f9398bd215b7f935f25e8f4b065f252f5fdfe7b53eaed765d68a220130e",
+      "baseHash": null
+    },
+    {
+      "file": "tests/fixtures/workbench-delivery.mjs",
+      "sha256": "995ded3af62ab03f594909b7280e0314e49057e2d887a55ad7349062caf4b246",
+      "baseHash": null
+    },
+    {
+      "file": "tests/workbench-delivery.test.mjs",
+      "sha256": "1af9e069898faee69b45b197a541da3d3ab64450ac2a9f91ebe2c015f114c419",
+      "baseHash": null
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "packages/contracts/dist/index.d.ts",
+      "sha256": "52845dec666e7636a330fc5db4fda1b4bad9756a7cb216977520b29e56ab61c3"
+    },
+    {
+      "file": "packages/contracts/dist/index.js",
+      "sha256": "6f7fd749451d690eafd3cae6d887261ccce7fe190fc4ac3bd55f455a85ef2733"
+    },
+    {
+      "file": "packages/contracts/dist/index.js.map",
+      "sha256": "e85d7af09368c5562f009bb3f8dfba645c162bf842c7b6a34081dedb9b6c6e10"
+    },
+    {
+      "file": "packages/input-api/dist/index.d.mts",
+      "sha256": "f8b2ac024578131dd578c82923552e32f36dc67f7db84ed190501f401ec40f41"
+    },
+    {
+      "file": "packages/input-api/dist/index.mjs",
+      "sha256": "a913eec706fd6b1c10fd19c56d4a019792d11f10009bb8f3c58824d5b748029a"
+    },
+    {
+      "file": "packages/input-api/dist/index.mjs.map",
+      "sha256": "ae0897cb17daf6dfaaa9542a7d34b7ca8beee5cbbfed54f79750f231799ad01f"
+    },
+    {
+      "file": "packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "sha256": "1fe4fcc7890b9ebbd1743727c29f801acb2224865890b193ab6eba2a7e056410"
+    },
+    {
+      "file": "packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "sha256": "b258e3277f1eb584dd10347465832454e5476135d51384d64aa0aa452c5c39b8"
+    },
+    {
+      "file": "packages/input-api/dist/web/export/export-client.js",
+      "sha256": "77411e1f51f9ea731c1b9f27c9ad5fe8fb910999c67755f9ecacecddcd06330e"
+    },
+    {
+      "file": "packages/input-api/dist/web/export/export-client.js.map",
+      "sha256": "b95b7ee5a2c95141b6bcbe6c199a7fab86a8015bba47b10a2c6cfac2d5cbd4e1"
+    },
+    {
+      "file": "packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "sha256": "8fbc8fdb0a40978e61c8695ad6cb20cd0a8ef88a2b1aba26ccdcfcb05696ae42"
+    },
+    {
+      "file": "packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "sha256": "37a282607ae86e451164b50e6065ba12416cd2abec4a766ce85d5eab9b7caf9c"
+    },
+    {
+      "file": "packages/input-api/dist/web/review/review-client.js",
+      "sha256": "630594f2f840f6526f0e10f302ffbb51f5822945617f8fd64a0da9effb243bdd"
+    },
+    {
+      "file": "packages/input-api/dist/web/review/review-client.js.map",
+      "sha256": "c00d3085b8ad2501446c45ac107f3f5dfe33af9f15726581df1b98f7249d4601"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench/workbench-client.js",
+      "sha256": "c3e65763a46f9e2fad7d52e1a10b7d3ca5f91f16ef825ceecac537858720489f"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "sha256": "6a3388b88aea04ba05658608da460a9b6bf1a58266d1b399b058e53276a21f75"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "sha256": "4ad64c6ab5683b15fb49228dd9fde862e8c4d0b483480ce18cc1beee8f733d8c"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "sha256": "4cabc349db93d97c77ec7cd018a895442f81ce69615a64f16afd58c3b9c486bd"
+    }
+  ],
+  "inputReconstruction": "Unchanged inputs are exactly the Git base blobs; every differing or new input in the invocation inventory is retained here. Original full inventory and logs are in the invocation record."
+}

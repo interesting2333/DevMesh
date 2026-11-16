@@ -14,6 +14,7 @@ import { strongETag, contentBasis } from './versions.js';
 import { createTaskInput,uploadMetadata,attachmentView,inputOperation,inputOperationLookup,workspaceView,workbenchSourceView } from './input.js';
 import { preparationDelegation,preparationInput,retryUnderstandingInput,understandingOutput,understandingView } from './preparation.js';
 import { planReviewView } from './plans.js';
+import {workbenchDeliveryView} from './workbench-delivery.js';
 
 export const schemas = {
   BeginAcceptance:beginAcceptanceInput,ConfirmAcceptanceReplacement:confirmAcceptanceReplacementInput,CloseUnsentAcceptance:closeUnsentAcceptanceInput,AbortAcceptance:abortAcceptanceInput,AcceptanceBasis:acceptanceBasisView,AcceptancePreparation:acceptancePreparationView,AcceptancePreparationList:acceptancePreparationList,AcceptanceReplacementReceipt:acceptanceReplacementReceipt,AcceptanceAbortReceipt:acceptanceAbortReceipt,AcceptanceCommitReceipt:acceptanceCommitReceipt,
@@ -32,6 +33,7 @@ export const schemas = {
   PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
   PlanReview:planReviewView,
   WorkbenchSource:workbenchSourceView,
+  WorkbenchDelivery:workbenchDeliveryView,
   ReleaseAccessInput:releaseAccessInput,ReleaseAccessTicket:releaseAccessTicket,ReleaseEntryView:releaseEntryView,
   PreviewAccessInput:previewAccessInput,PreviewAccessTicket:previewAccessTicket,PreviewEntryView:previewEntryView,
   CandidatePreviewWorkspace:candidatePreviewWorkspace,PreviewDatasetManagement:previewDatasetManagement,PreviewManagement:previewManagement,CreatePreviewDataset:createPreviewDatasetInput,CreatePreviewIntent:createPreviewIntentInput,StopPreviewIntent:stopPreviewIntentInput,
@@ -96,13 +98,14 @@ export function createOpenApiDocument() {
   const parameter=(name:string,schema:z.ZodType,location='path',required=true)=>({name,in:location,required,schema:jsonSchema(schema)});
   const key=parameter('Idempotency-Key',idempotencyKey,'header');
   const page=[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:200,default:50}}];
-  for(const [suffix,operationId,mime] of [['view','ReadWorkbenchPage','text/html'],['client.js','ReadWorkbenchClient','application/javascript']] as const){
+  for(const [suffix,operationId,mime] of [['view','ReadWorkbenchPage','text/html'],['client.js','ReadWorkbenchClient','application/javascript'],['return-client.js','ReadWorkbenchReturnClient','application/javascript']] as const){
     const path='/api/v1/workbench/'+suffix;add(path,'get',operationId,undefined,suffix==='view'?[parameter('projectId',ids.project,'query',false),parameter('runId',ids.run,'query',false)]:[]);
     (paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'受保护工作台；runId须同时指定projectId，选中上下文按当前成员检查；GET无写入副作用',content:{[mime]:{schema:{type:'string'}}}};
   }
   add('/api/v1/projects','get','ListProjects',undefined,[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:20}},{name:'cursor',in:'query',schema:{type:'string',maxLength:1024}}]);
   add('/api/v1/projects/{projectId}/tasks','post','CreateTask','OperationReceipt',[parameter('projectId',ids.project),key,parameter('If-Match',strongETag,'header')],'CreateTask');
   add('/api/v1/projects/{projectId}/workspace','get','ReadWorkspace','Workspace',[parameter('projectId',ids.project),parameter('runId',ids.run,'query',false),{name:'afterMessageId',in:'query',schema:{type:'string',maxLength:256}},...page]);
+  add('/api/v1/projects/{projectId}/runs/{runId}/delivery','get','ReadWorkbenchDelivery','WorkbenchDelivery',[parameter('projectId',ids.project),parameter('runId',ids.run),{name:'afterRevision',in:'query',schema:{type:'integer',minimum:0,maximum:Number.MAX_SAFE_INTEGER,default:0}},parameter('selectedCandidateId',ids.candidate,'query',false),{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:20,default:20}}]);
   add('/api/v1/runs/{runId}/sources','get','ReadWorkbenchSource','WorkbenchSource',[parameter('runId',ids.run),{name:'ref',in:'query',required:true,description:'严格sourceRef的JSON；消息属于准确Run，材料为已保存依据中的同ID/hash引用，需求按准确版本。最多2 MiB纯文本，无下载或写入副作用。',schema:{type:'string',minLength:1,maxLength:4096}}]);
   add('/api/v1/projects/{projectId}/runs/{runId}/events','get','ReadEvents',undefined,[parameter('projectId',ids.project),parameter('runId',ids.run),{name:'afterSeq',in:'query',schema:{type:'integer',minimum:0,default:0}},...page]);
   add('/api/v1/operations/lookup','get','LookupInputOperation','InputOperation',[{name:'scope',in:'query',required:true,schema:{type:'string',maxLength:128}},parameter('key',idempotencyKey,'query'),{name:'includeAbsence',in:'query',required:false,schema:{type:'boolean',default:false},description:'true时返回准确主体／scope／key和operation（明确不存在为null）；权限失败仍为错误，404不构成不存在证明。'}]);
@@ -118,6 +121,7 @@ export function createOpenApiDocument() {
   add('/api/v1/runs/{runId}/plans','get','ReadPlan','PlanReview',[parameter('runId',ids.run),parameter('revision',revision,'query',false)]);
   const acceptancePath='/api/v1/runs/{runId}/candidates/{candidateId}/acceptance',acceptanceParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],conditionalAcceptance=[...acceptanceParameters,key,parameter('If-Match',strongETag,'header')];
   add(acceptancePath,'get','ReadAcceptanceBasis','AcceptanceBasis',acceptanceParameters);
+  for(const [suffix,operationId,mime] of [['view','ReadAcceptancePage','text/html'],['client.js','ReadAcceptanceClient','application/javascript']] as const){const path=acceptancePath+'/'+suffix;add(path,'get',operationId,undefined,acceptanceParameters);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'当前成员准确候选接受入口；GET不准备、确认、接受或签发应用访问',content:{[mime]:{schema:{type:'string'}}}};}
   add(acceptancePath+'/preparations','get','ListCandidateAcceptancePreparations','AcceptancePreparationList',[...acceptanceParameters,{name:'afterSequence',in:'query',schema:{type:'integer',minimum:0,default:0}},{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:20}}]);
   add(acceptancePath+'/preparations','post','BeginAcceptance','AcceptancePreparation',conditionalAcceptance,'BeginAcceptance','202');
   add(acceptancePath+'/replacement-confirmations','post','ConfirmAcceptanceReplacement','AcceptanceReplacementReceipt',conditionalAcceptance,'ConfirmAcceptanceReplacement');

@@ -8,9 +8,11 @@ import type {LocalContentStore} from '@devmesh/blob-store';
 import type {Identity} from './index.js';
 import {workbenchBoot} from './web/workbench-context.js';
 import {workbenchPage} from './workbench-page.js';
+import {mountWorkbenchDeliveryRoutes} from './workbench-delivery.js';
 type Route=(handler:(request:Request,response:Response,identity:Identity)=>Promise<void>)=>RequestHandler;
 const query=z.strictObject({projectId:ids.project.optional(),runId:ids.run.optional()}).refine(v=>!v.runId||!!v.projectId,'Run requires project');
 export function mountWorkbenchRoutes(router:Router,content:LocalContentStore,route:Route){
+ mountWorkbenchDeliveryRoutes(router,content,route);
  router.get('/runs/:runId/sources',route(async(request,response,identity)=>{
   const runId=parseContract(ids.run,request.params.runId),q=parseContract(z.strictObject({ref:z.string().min(1).max(4096)}),request.query);
   let decoded:unknown;try{decoded=JSON.parse(q.ref);}catch{throw new StorageError('SCHEMA_INVALID',422,'Source reference must be JSON');}
@@ -37,6 +39,11 @@ export function mountWorkbenchRoutes(router:Router,content:LocalContentStore,rou
  router.get('/workbench/client.js',route(async(request,response)=>{
   z.strictObject({}).parse(request.query);
   const bytes=await readFile(new URL('./web/workbench/workbench-client.js',import.meta.url));
+  response.type('application/javascript; charset=utf-8').send(bytes);
+ }));
+ router.get('/workbench/return-client.js',route(async(request,response)=>{
+  z.strictObject({}).parse(request.query);
+  const bytes=await readFile(new URL('./web/workbench-return/workbench-return-client.js',import.meta.url));
   response.type('application/javascript; charset=utf-8').send(bytes);
  }));
 }

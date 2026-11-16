@@ -1,0 +1,61 @@
+TAP version 13
+# (node:35244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery reads actual exact freezes, bounded pages and explicitly selected old candidates without business writes
+not ok 1 - delivery reads actual exact freezes, bounded pages and explicitly selected old candidates without business writes
+  ---
+  duration_ms: 73138.7038
+  type: 'test'
+  location: 'D:\\yms\\AI\\DevMesh\\tests\\workbench-delivery.test.mjs:7:1'
+  failureType: 'testCodeFailure'
+  error: 'Scripted quality job did not finish cleanly: {"state":"EXITED","exitCode":0,"errorCode":null,"stopRequested":true}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.runJob (file:///D:/yms/AI/DevMesh/tests/fixtures/quality-runner.mjs:38:118)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async releaseFreezeFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/release-freeze.mjs:24:637)
+    async acceptanceFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/acceptance.mjs:11:11)
+    async workbenchDeliveryFixture (file:///D:/yms/AI/DevMesh/tests/fixtures/workbench-delivery.mjs:15:56)
+    async TestContext.<anonymous> (file:///D:/yms/AI/DevMesh/tests/workbench-delivery.test.mjs:8:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# (node:35244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: empty delivery belongs to the protected project and Run, with no inferred or foreign candidate
+ok 2 - empty delivery belongs to the protected project and Run, with no inferred or foreign candidate
+  ---
+  duration_ms: 15833.406
+  type: 'test'
+  ...
+# (node:35244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivery rejects a changed final basis and revocation after asynchronous candidate reads
+ok 3 - delivery rejects a changed final basis and revocation after asynchronous candidate reads
+  ---
+  duration_ms: 95355.4461
+  type: 'test'
+  ...
+# (node:35244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:35244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: viewer and historical reads preserve exact candidate and a separate accepted release from its original Run
+ok 4 - viewer and historical reads preserve exact candidate and a separate accepted release from its original Run
+  ---
+  duration_ms: 80993.9622
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 3
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 296869.8628

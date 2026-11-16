@@ -217,3 +217,27 @@ The protected workbench SHALL isolate the next target from current Run input, pe
 #### Scenario: Task history and authority
 - **WHEN** a task original closes from a verified stale-project or removed-attachment proof
 - **THEN** its complete target and original history SHALL remain readable through explicit task references; history and viewer pages SHALL mount no task command client
+
+
+### Requirement: Exact delivery navigation preserves the launching workspace
+The workbench SHALL list authoritative frozen candidates for its exact authorized Run with bounded ordered revision pagination and explicit selection. The project's accepted release SHALL retain its own Run and candidate identity independently of the displayed Run. Opening existing review, preview management, acceptance, release and export pages SHALL use GET without creating business effects.
+
+#### Scenario: A member selects a frozen candidate
+- **WHEN** the member explicitly opens a selected candidate from the workbench
+- **THEN** its exact Run/candidate SHALL be preserved, stale qualification SHALL remain visible, and concurrent basis or membership changes SHALL prevent mixed or unauthorized facts
+
+#### Scenario: Return follows a release from another Run
+- **WHEN** the current workspace opens a previously accepted release owned by an earlier Run
+- **THEN** the target SHALL remain bound to that release's actual Run while a valid principal/project/target-scoped launch record MAY restore the original workspace Run and its reading selection after protected reauthorization
+
+#### Scenario: Saving the return position fails
+- **WHEN** input guards, an unsaved File or session reading-state persistence prevents safe navigation
+- **THEN** the workbench SHALL retain the current page and input, allow explicit retry or discard as appropriate, and SHALL NOT navigate or create a business command
+
+#### Scenario: A return record is absent, damaged, foreign or expired
+- **WHEN** a dedicated protected page cannot validate the bounded session launch record
+- **THEN** it SHALL retain the server-derived canonical target-Run return link, accept no arbitrary return URL and grant no access from browser state
+
+#### Scenario: Saved candidate selection cannot be read
+- **WHEN** a stored selection is unavailable or inconsistent with the exact Run
+- **THEN** the page SHALL allow an explicit reset of reading selection only, preserve command and draft journals, and never silently choose a different candidate

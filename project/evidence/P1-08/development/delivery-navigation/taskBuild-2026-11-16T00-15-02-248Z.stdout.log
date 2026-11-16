@@ -1,0 +1,14 @@
+ℹ entry: tests/fixtures/workbench-task-entry.ts
+ℹ target: es2022
+ℹ tsconfig: tsconfig.json
+ℹ Build start
+ℹ Cleaning 3 files
+ℹ Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- zod
+- react
+ℹ .cache\workbench-task-build\task.js      338.83 kB │ gzip:  70.89 kB
+ℹ .cache\workbench-task-build\task.js.map  791.34 kB │ gzip: 164.22 kB
+ℹ 2 files, total: 1.13 MB
+✔ Build complete in 9464ms

@@ -134,7 +134,7 @@ test('plan data has a scale limit and cannot embed a JavaScript completion check
 test('OpenAPI body references and route parameters resolve to shared schemas', () => {
   const document = createOpenApiDocument();
   assert.equal(document.openapi, '3.1.0');
-  assert.equal(Object.keys(document.paths).length, 58);
+  assert.equal(Object.keys(document.paths).length, 65);
   const visit = value => {
     if (!value || typeof value !== 'object') return;
     if (value.$ref) {
@@ -145,8 +145,15 @@ test('OpenAPI body references and route parameters resolve to shared schemas', (
     for (const child of Object.values(value)) visit(child);
   };
   visit(document);
+  const delivery=document.paths['/api/v1/projects/{projectId}/runs/{runId}/delivery'];
+  assert.deepEqual(Object.keys(delivery),['get']);
+  assert.equal(delivery.get.responses['200'].content['application/json'].schema.$ref,'#/components/schemas/WorkbenchDelivery');
+  assert.deepEqual(delivery.get.parameters.filter(p=>p.in==='query').map(p=>p.name),['afterRevision','selectedCandidateId','limit']);
+  assert.equal(delivery.get.parameters.find(p=>p.name==='limit').schema.maximum,20);
+  for(const suffix of ['view','client.js'])assert.deepEqual(Object.keys(document.paths['/api/v1/runs/{runId}/candidates/{candidateId}/acceptance/'+suffix]),['get']);
+  assert.deepEqual(Object.keys(document.paths['/api/v1/workbench/return-client.js']),['get']);
   for (const [path, methods] of Object.entries(document.paths)) for(const [method,operation] of Object.entries(methods)) {
-    const implemented=['ReadCandidatePreviewManagementPage','ReadCandidatePreviewManagementClient','ReadCandidatePreviewWorkspace','CreatePreviewDataset','ReadCandidatePreviewDataset','CreatePreviewIntent','ReadCandidateManagedPreview','StopPreviewIntent','ReadAcceptanceBasis','ListCandidateAcceptancePreparations','BeginAcceptance','ConfirmAcceptanceReplacement','ReadAcceptancePreparation','CloseUnsentAcceptance','AbortAcceptance','AcceptCandidate','CreateProject','SaveMessage','CreateTask','ListProjects','ReadWorkspace','ReadEvents','LookupInputOperation','ReadInputOperation','UploadAttachment','ReadAttachment','RemoveAttachment','ReadAttachmentContent','ReadUnderstanding','AnswerQuestions','RetryUnderstanding','ReadPlan','ConfirmPlan','ReadPreviewEntry','IssuePreviewAccess','ReadPreviewPage','ReadReleaseEntry','IssueReleaseAccess','ReadReleasePage','DownloadFrozenMaterial','CreateReleaseExport','ListReleaseExports','ReadReleaseExport','ReadReleaseExportPage','ReadReleaseExportClient','ReadCandidateReview','RecordCandidateReview','RecordCandidateRejection','ReadCandidateReviewHistory','ReadCandidateRejectionHistory','ReadCandidateReviewPage','ReadCandidateReviewClient','RetryReleaseExport','DownloadReleaseExport'].includes(operation.operationId);
+    const implemented=['ReadWorkbenchPage','ReadWorkbenchClient','ReadWorkbenchReturnClient','ReadWorkbenchSource','ReadWorkbenchDelivery','ReadAcceptancePage','ReadAcceptanceClient','ReadCandidatePreviewManagementPage','ReadCandidatePreviewManagementClient','ReadCandidatePreviewWorkspace','CreatePreviewDataset','ReadCandidatePreviewDataset','CreatePreviewIntent','ReadCandidateManagedPreview','StopPreviewIntent','ReadAcceptanceBasis','ListCandidateAcceptancePreparations','BeginAcceptance','ConfirmAcceptanceReplacement','ReadAcceptancePreparation','CloseUnsentAcceptance','AbortAcceptance','AcceptCandidate','CreateProject','SaveMessage','CreateTask','ListProjects','ReadWorkspace','ReadEvents','LookupInputOperation','ReadInputOperation','UploadAttachment','ReadAttachment','RemoveAttachment','ReadAttachmentContent','ReadUnderstanding','AnswerQuestions','RetryUnderstanding','ReadPlan','ConfirmPlan','ReadPreviewEntry','IssuePreviewAccess','ReadPreviewPage','ReadReleaseEntry','IssueReleaseAccess','ReadReleasePage','DownloadFrozenMaterial','CreateReleaseExport','ListReleaseExports','ReadReleaseExport','ReadReleaseExportPage','ReadReleaseExportClient','ReadCandidateReview','RecordCandidateReview','RecordCandidateRejection','ReadCandidateReviewHistory','ReadCandidateRejectionHistory','ReadCandidateReviewPage','ReadCandidateReviewClient','RetryReleaseExport','DownloadReleaseExport'].includes(operation.operationId);
     assert.equal(operation['x-implementation-status'], implemented?'implemented-offline':'planned');
     assert.deepEqual(new Set([...path.matchAll(/\{([^}]+)\}/g)].map(m => m[1])), new Set(operation.parameters.filter(p => p.in === 'path').map(p => p.name)));
     if(['CreatePreviewDataset','CreatePreviewIntent'].includes(operation.operationId))assert.ok(operation.parameters.find(p=>p.name==='If-Match'&&p.required));

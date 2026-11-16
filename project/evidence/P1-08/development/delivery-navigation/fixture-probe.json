@@ -1,0 +1,90 @@
+{
+  "at": "2026-11-16T00:03:05.135Z",
+  "before": {
+    "status": 503,
+    "body": {
+      "error": {
+        "code": "SERVICE_UNAVAILABLE",
+        "message": "Service is unavailable; query the original operation before retrying",
+        "requestId": "req_de9b46998c734645af3551ec27d176f1",
+        "retryable": true,
+        "details": {}
+      }
+    }
+  },
+  "directRead": {
+    "code": "CONTENT_UNAVAILABLE",
+    "message": "Content is missing or unavailable"
+  },
+  "written": {
+    "writeId": "write_c783dbe3a1ac4c2fa1a7f177d49748fa",
+    "operationId": "op_3c1e1932036e4b81b685dbbaaae1e121",
+    "ownerId": "user_1",
+    "expectedHash": "9f8be6dbfc105705fc7c3e4b486cb3d3a0283b755748796f29313a1b7b484f7c",
+    "expectedSize": 18,
+    "mimeType": "text/plain; charset=utf-8",
+    "target": {
+      "kind": "content"
+    },
+    "stagingKey": "objects/write_c783dbe3a1ac4c2fa1a7f177d49748fa.part",
+    "state": "REGISTERED",
+    "result": {
+      "contentHash": "9f8be6dbfc105705fc7c3e4b486cb3d3a0283b755748796f29313a1b7b484f7c",
+      "writeId": "write_c783dbe3a1ac4c2fa1a7f177d49748fa"
+    }
+  },
+  "after": {
+    "status": 200,
+    "body": {
+      "project": {
+        "projectId": "prj_a2330640008c4360857fe752ed3fc062",
+        "name": "测试项目",
+        "revision": 1,
+        "acceptedReleaseId": null
+      },
+      "run": {
+        "runId": "run_c355b63bd1f64be5b4da90e20dcc05ca",
+        "projectId": "prj_a2330640008c4360857fe752ed3fc062",
+        "taskId": "task_d550e485e47e4cabb9477292d1880ec6",
+        "resourceRevision": 20,
+        "runEpoch": 1,
+        "controlRevision": 1,
+        "phase": "REVIEW",
+        "controlGate": "OPEN",
+        "terminalOutcome": null,
+        "currentPlanRevision": 1,
+        "currentRequirementRevision": 1,
+        "eventSeq": 20
+      },
+      "mode": "current",
+      "membership": "owner",
+      "allowedActions": [
+        "saveMessage"
+      ],
+      "preparation": {
+        "understandingAvailable": false,
+        "requiredOpenQuestions": 0,
+        "pending": false
+      },
+      "eventCursor": 20,
+      "messages": [
+        {
+          "messageId": "message_ada66616599c4b069b81171c74da556d",
+          "author": "user_1",
+          "bodyArtifactId": "artifact_a894f4214415493ea9c3bbaab92f6768",
+          "clientMessageId": "dded3a83-e786-4dbd-8c51-38f58cb3f0a7",
+          "createdAt": "2026-11-16T00:02:07.587Z",
+          "attachmentIds": [],
+          "intentHint": null,
+          "text": "用户需求原文"
+        }
+      ],
+      "nextMessageCursor": null,
+      "templateBaseline": {
+        "version": "workbench.delivery.fixture",
+        "baseCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    }
+  },
+  "scope": "Diagnostic reproduction only; not counted as a delivery product scenario."
+}

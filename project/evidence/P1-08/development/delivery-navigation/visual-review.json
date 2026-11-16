@@ -1,0 +1,25 @@
+{
+  "reviewedBy": "Codex / same-agent development visual review",
+  "reviewedAt": "2026-11-16T01:06:31.967Z",
+  "businessPassCountAdded": 0,
+  "screenshots": [
+    {
+      "file": "delivery-desktop.png",
+      "sha256": "7973c7b459f806cdb43b14d5c5d74a41f7f9e459311308a383a8248884abb48f"
+    },
+    {
+      "file": "delivery-mobile.png",
+      "sha256": "8d7730675829aeb9b14da38eefc44ab6f2c17c34719cc002f592d0413f9e0e9d"
+    }
+  ],
+  "observations": [
+    "Opened both images with view_image after the complete five-case UI run.",
+    "1440px desktop: project list, original message, independent target draft, input draft and Results candidate panel are visible in three separate columns. Exact selected candidate and three dedicated GET actions are readable.",
+    "390px viewport full-page capture: mobile navigation and five tabs fit within the page width; Preview selection, candidate facts, return-related navigation and accepted-release empty state are readable in one column. The UI test separately asserts no horizontal overflow and restored mobile detail panel and Preview tab.",
+    "Desktop input shows the same unsent supplementary text after dedicated-page round trips; screenshot observations add zero test passes. Full-page screenshots were taken from the top."
+  ],
+  "limits": [
+    "Screenshots and review are bound to the final UI invocation, not independent human acceptance.",
+    "No completed WebSocket/event-time focus, real model/OIDC/Linux, production approval or product/gate acceptance is claimed."
+  ]
+}

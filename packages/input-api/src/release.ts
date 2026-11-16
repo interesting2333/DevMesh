@@ -6,6 +6,8 @@ import {ids,parseContract,releaseEntryView,releaseAccessTicket} from '@devmesh/c
 import {canonical,StorageError} from '@devmesh/storage-sqlite';
 import type {LocalContentStore} from '@devmesh/blob-store';
 import type {Identity} from './index.js';
+import {getWorkbenchReturnContext,workbenchReturnNav,workbenchReturnStyle} from './workbench-return.js';
+import type {WorkbenchReturnContext} from './workbench-return.js';
 
 type Subject={principalId:string;runId:string;releaseId:string};
 export interface ReleaseAccessGateway {
@@ -66,17 +68,17 @@ export function mountReleaseRoutes(router:Router,content:LocalContentStore,gatew
     response.json(parseContract(releaseAccessTicket,await current.issueForMember(subject(request,identity))));
   }));
   router.get(base+'/view',guarded(async(request,response,identity)=>{
-    const view=await snapshot(request,identity),nonce=randomBytes(18).toString('base64url'),origin=view.access.releaseOrigin;
+    const view=await snapshot(request,identity),returnContext=await getWorkbenchReturnContext(content,identity.principalId,view.release.runId),nonce=randomBytes(18).toString('base64url'),origin=view.access.releaseOrigin;
     response.setHeader('Referrer-Policy','no-referrer');
-    response.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'nonce-${nonce}'; connect-src 'self'${origin?' '+origin:''}; frame-src ${origin??"'none'"}; frame-ancestors 'self'; base-uri 'none'; object-src 'none'; worker-src 'none'; form-action 'none'`);
-    response.type('text/html; charset=utf-8').send(releasePage(view,nonce));
+    response.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'nonce-${nonce}'; style-src 'nonce-${nonce}'; connect-src 'self'${origin?' '+origin:''}; frame-src ${origin??"'none'"}; frame-ancestors 'self'; base-uri 'none'; object-src 'none'; worker-src 'none'; form-action 'none'`);
+    response.type('text/html; charset=utf-8').send(releasePage(view,nonce,returnContext));
   }));
 }
 
-function releasePage(view:{release:{runId:string;releaseId:string};access:{state:string;canWrite:boolean;releaseOrigin:string|null}},nonce:string){
+function releasePage(view:{release:{runId:string;releaseId:string};access:{state:string;canWrite:boolean;releaseOrigin:string|null}},nonce:string,returnContext:WorkbenchReturnContext){
   const labels:Record<string,string>={AVAILABLE:view.access.canWrite?'已发布应用可用':'已发布应用可用（只读）',NOT_CONFIGURED:'已发布应用访问尚未配置',RECOVERING:'发布服务恢复中，请稍后重试',NOT_CURRENT:'此版本已不再是当前接受版本'};
   const settings=JSON.stringify({origin:view.access.releaseOrigin,accessPath:`/api/v1/runs/${encodeURIComponent(view.release.runId)}/releases/${encodeURIComponent(view.release.releaseId)}/access`}).replaceAll('<','\\u003c');
-  return `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>已发布应用</title><body><main><h1>已发布应用</h1><p id="status" role="status">${labels[view.access.state]??'应用暂不可用'}</p><button id="open"${view.access.state==='AVAILABLE'?'':' disabled'}>打开应用</button><p>当前入口绑定已接受版本。</p><p><a href="/api/v1/releases/${encodeURIComponent(view.release.releaseId)}/exports/view">查看交付包</a></p><iframe id="release" title="生成已发布应用" sandbox="allow-scripts allow-forms allow-same-origin" referrerpolicy="no-referrer" hidden width="100%" height="640"></iframe></main><script nonce="${nonce}">
+  return `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>已发布应用</title><style nonce="${nonce}">${workbenchReturnStyle}</style><body>${workbenchReturnNav(returnContext,nonce)}<main><h1>已发布应用</h1><p id="status" role="status">${labels[view.access.state]??'应用暂不可用'}</p><button id="open"${view.access.state==='AVAILABLE'?'':' disabled'}>打开应用</button><p>当前入口绑定已接受版本。</p><p><a href="/api/v1/releases/${encodeURIComponent(view.release.releaseId)}/exports/view">查看交付包</a></p><iframe id="release" title="生成已发布应用" sandbox="allow-scripts allow-forms allow-same-origin" referrerpolicy="no-referrer" hidden width="100%" height="640"></iframe></main><script nonce="${nonce}">
 const settings=${settings},button=document.getElementById('open'),status=document.getElementById('status'),frame=document.getElementById('release');
 button.addEventListener('click',async()=>{
   button.disabled=true;status.textContent='正在连接应用…';

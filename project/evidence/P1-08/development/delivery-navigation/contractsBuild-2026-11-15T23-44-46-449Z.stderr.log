@@ -1,0 +1,6 @@
+$ tsdown src/index.ts --format esm --platform neutral --target es2024 --dts --sourcemap --clean
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - rolldown-plugin-dts:generate (60%)
+  - rolldown-plugin-dts:fake-js (33%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+

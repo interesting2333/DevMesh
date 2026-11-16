@@ -1,0 +1,1845 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "file": "acceptance-checkpoint-edit.json",
+      "byteSize": 2391,
+      "sha256": "c76dceae3d6d9b443b95ad9fbe7a11da44dccb234157c22ae5ff3c0431450254"
+    },
+    {
+      "file": "acceptance-failure-observation-3.json",
+      "byteSize": 2522,
+      "sha256": "11210f7047d2ddf32ead3f347158143c6d3a963c23a5a2b3a3f00b01ac2103bc"
+    },
+    {
+      "file": "acceptance-failure-observation.json",
+      "byteSize": 3090,
+      "sha256": "f3d27bcc403b4aaf445f19f9f2b9f44ec4348b8f65b1f10a8b4262f127692e61"
+    },
+    {
+      "file": "binding-driver.mjs",
+      "byteSize": 6368,
+      "sha256": "047c0362309fc3586558d6066a927161cb7dc7d568a64db6002435cfd314ba63"
+    },
+    {
+      "file": "browser-2026-11-16T01-07-47-087Z.json",
+      "byteSize": 144959,
+      "sha256": "0d4a3f4ae806f8138655ce4e93e00d8717c698cbe75dcfae3d3ad1128e4d85e6"
+    },
+    {
+      "file": "browser-2026-11-16T01-07-47-087Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "browser-2026-11-16T01-07-47-087Z.stdout.log",
+      "byteSize": 24904,
+      "sha256": "f53a5e574fb4576ca4aa4417144ca21079aae51dbd30c6308c87c39dc5e70cbd"
+    },
+    {
+      "file": "browser-2026-11-16T01-24-17-103Z.json",
+      "byteSize": 144959,
+      "sha256": "bdb6b04292367d9047ba9b8cb6f0be6af7b17a50ab271a6d1bcce76f79b0a5a9"
+    },
+    {
+      "file": "browser-2026-11-16T01-24-17-103Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "browser-2026-11-16T01-24-17-103Z.stdout.log",
+      "byteSize": 23788,
+      "sha256": "807364ac5d30c2a9efc8096d464a11c35e1324f12c58fb046eefa4dc2a05a2da"
+    },
+    {
+      "file": "browser-2026-11-16T01-33-56-518Z.json",
+      "byteSize": 144959,
+      "sha256": "a8bfa54aa44e50b5b7edda47086298edcff43bd9ec1521cebf819cdc0276f77e"
+    },
+    {
+      "file": "browser-2026-11-16T01-33-56-518Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "browser-2026-11-16T01-33-56-518Z.stdout.log",
+      "byteSize": 23748,
+      "sha256": "1053b59896cb1535ae6883bc94a5113cf20708ef7fd7062fae0e5d2ff3186bf9"
+    },
+    {
+      "file": "browser-2026-11-16T01-38-32-274Z.json",
+      "byteSize": 144959,
+      "sha256": "15df1c592f8da8207b481925c8cbe41e954816d28089981bf0d7f2316e08678e"
+    },
+    {
+      "file": "browser-2026-11-16T01-38-32-274Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "browser-2026-11-16T01-38-32-274Z.stdout.log",
+      "byteSize": 24893,
+      "sha256": "1851412236f5d1fba48f85efb35dd916f5e35f2b85dbf07b3bbac4ae58895e96"
+    },
+    {
+      "file": "build-2026-11-15T23-47-35-380Z.json",
+      "byteSize": 143680,
+      "sha256": "4e4227d63884402eab6030cacab6951d26206bf81aca0c5b2ae4cbc0fae55cd9"
+    },
+    {
+      "file": "build-2026-11-15T23-47-35-380Z.stderr.log",
+      "byteSize": 374,
+      "sha256": "60d70611c86e211ff28e42b3e51fcb25b4d4f97405b5f96b917a13900ce63b67"
+    },
+    {
+      "file": "build-2026-11-15T23-47-35-380Z.stdout.log",
+      "byteSize": 4143,
+      "sha256": "fa37fdb69de219a39abb193a1f5087b6b8453d47e138970ce86e0a05155b096c"
+    },
+    {
+      "file": "build-2026-11-15T23-51-50-927Z.json",
+      "byteSize": 144660,
+      "sha256": "3dc4969d15ca09014d33d9af224fd58a54faad9bf57816c9bb8ce3588cd537ad"
+    },
+    {
+      "file": "build-2026-11-15T23-51-50-927Z.stderr.log",
+      "byteSize": 546,
+      "sha256": "3fbb121ce7784b3e32bf0582bfd8f8062d356ba1672881af0b2cfa1903348a39"
+    },
+    {
+      "file": "build-2026-11-15T23-51-50-927Z.stdout.log",
+      "byteSize": 4143,
+      "sha256": "74861549c0ded0aa45fb0f184ae17acf481731185f268936dc1449cb6c5f4188"
+    },
+    {
+      "file": "build-2026-11-16T00-08-02-740Z.json",
+      "byteSize": 144660,
+      "sha256": "81d18c011f4796ed9c9ad36864a17592a71394d0bdc872db4815aaae62dcbd2e"
+    },
+    {
+      "file": "build-2026-11-16T00-08-02-740Z.stderr.log",
+      "byteSize": 374,
+      "sha256": "1d0b52f8cc7cbab33c4cf6a913f2e085fc5b0dcdccd788e8081a27382212af25"
+    },
+    {
+      "file": "build-2026-11-16T00-08-02-740Z.stdout.log",
+      "byteSize": 4144,
+      "sha256": "6604039b3e3a9a15ea1978f95a5af79dec44eecb65d07714b203a41065b94e6b"
+    },
+    {
+      "file": "build-2026-11-16T00-15-01-860Z.json",
+      "byteSize": 144660,
+      "sha256": "2c1076508ab7516753f311d888d9442e6c4b469e3c0325baf6dcef21e7d1949f"
+    },
+    {
+      "file": "build-2026-11-16T00-15-01-860Z.stderr.log",
+      "byteSize": 374,
+      "sha256": "2063258b29515781d1f5294e480d77131132617da2eb233760d0e6a3b2cc9732"
+    },
+    {
+      "file": "build-2026-11-16T00-15-01-860Z.stdout.log",
+      "byteSize": 4144,
+      "sha256": "410385071260f63bb8ed870616eefe59164021783d2c5250be4c20dae7efae10"
+    },
+    {
+      "file": "contracts-2026-11-15T23-52-09-548Z.json",
+      "byteSize": 144649,
+      "sha256": "8a0e453e620238404e335bedb38ab970eb6beb0da79a24da4034c55bd99d604d"
+    },
+    {
+      "file": "contracts-2026-11-15T23-52-09-548Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "contracts-2026-11-15T23-52-09-548Z.stdout.log",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "contracts-2026-11-16T00-08-52-912Z.json",
+      "byteSize": 140595,
+      "sha256": "d1fb29824f50d520204502697fcdb370103ca20c9f08a9cf791b7ec3ed4521bf"
+    },
+    {
+      "file": "contracts-2026-11-16T00-08-52-912Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "contracts-2026-11-16T00-08-52-912Z.stdout.log",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "contracts-2026-11-16T00-15-03-778Z.json",
+      "byteSize": 144649,
+      "sha256": "4703bdd43cf36e8ec5361f9a5d45f57450d580de4b53cb87fc06d3b653761418"
+    },
+    {
+      "file": "contracts-2026-11-16T00-15-03-778Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "contracts-2026-11-16T00-15-03-778Z.stdout.log",
+      "byteSize": 41,
+      "sha256": "c893809d6f859d0e994d8bc789e916f93149a1ea19d1bd89f2554fc1cd93d93a"
+    },
+    {
+      "file": "contractsBuild-2026-11-15T23-44-46-449Z.json",
+      "byteSize": 143387,
+      "sha256": "770fcc54482ff89ec09848d4e663fb59b2a2a826a40fae52e71d4419a7bbf860"
+    },
+    {
+      "file": "contractsBuild-2026-11-15T23-44-46-449Z.stderr.log",
+      "byteSize": 353,
+      "sha256": "f2075e161343fe0f50e404a0b665272615679c533a292ed8d2cdfb193d241200"
+    },
+    {
+      "file": "contractsBuild-2026-11-15T23-44-46-449Z.stdout.log",
+      "byteSize": 444,
+      "sha256": "4c9554146f50cf02524a23ece40775dc3524ceb8a5979b952529f02cca077129"
+    },
+    {
+      "file": "contractsBuild-2026-11-16T00-12-34-870Z.json",
+      "byteSize": 144669,
+      "sha256": "dd64846eb3532bdf51553203bb4d5c010fcd05677687d3504dd4ce24748e4fc4"
+    },
+    {
+      "file": "contractsBuild-2026-11-16T00-12-34-870Z.stderr.log",
+      "byteSize": 353,
+      "sha256": "acb72e2ce3796ac6636085be7a20f70e6ecb5ac32357edef0f3dfd4c4bcafc23"
+    },
+    {
+      "file": "contractsBuild-2026-11-16T00-12-34-870Z.stdout.log",
+      "byteSize": 444,
+      "sha256": "854ab00c2d018ad76bcfd1666f8418b3f32bcd92acaa9f6ef7e643a3756afb75"
+    },
+    {
+      "file": "diagnostic-driver.mjs",
+      "byteSize": 1305,
+      "sha256": "873e6d38d38a1e4343bed6060cf24f216f4c68dc8891b19f961795aa6e53668f"
+    },
+    {
+      "file": "evidence.json",
+      "byteSize": 27372,
+      "sha256": "18ec373512ad1a65c7a15ac055653dbc12386cfb1f8307772472dd02b8d75369"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/contracts/dist/index.d.ts",
+      "byteSize": 318351,
+      "sha256": "b52751a0026f433a629a23a0efd96f269ae5cf29377e2ee07dabe5f07b779d22"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/contracts/dist/index.js",
+      "byteSize": 101551,
+      "sha256": "7acaa18f7591379e900225c75e4b270024d5ef209b5b0c6490720821ea8349e6"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/contracts/dist/index.js.map",
+      "byteSize": 165464,
+      "sha256": "6fa23c4828b456be3889384ba7185a83abf115c3034d9f5c679f4c242e2e40ff"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/index.d.mts",
+      "byteSize": 2976,
+      "sha256": "f8b2ac024578131dd578c82923552e32f36dc67f7db84ed190501f401ec40f41"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/index.mjs",
+      "byteSize": 103097,
+      "sha256": "a913eec706fd6b1c10fd19c56d4a019792d11f10009bb8f3c58824d5b748029a"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/index.mjs.map",
+      "byteSize": 161464,
+      "sha256": "ae0897cb17daf6dfaaa9542a7d34b7ca8beee5cbbfed54f79750f231799ad01f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "byteSize": 274235,
+      "sha256": "1fe4fcc7890b9ebbd1743727c29f801acb2224865890b193ab6eba2a7e056410"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "byteSize": 885010,
+      "sha256": "e3d085fc7b6bdca18fc80262d2c9197af87674f5d14812624ade45035bf17948"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/export/export-client.js",
+      "byteSize": 265081,
+      "sha256": "77411e1f51f9ea731c1b9f27c9ad5fe8fb910999c67755f9ecacecddcd06330e"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/export/export-client.js.map",
+      "byteSize": 866514,
+      "sha256": "e1949e972178766ceaffba8048febc8a02610e2e8a885dda89908444066b1dfa"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "byteSize": 271159,
+      "sha256": "8fbc8fdb0a40978e61c8695ad6cb20cd0a8ef88a2b1aba26ccdcfcb05696ae42"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "byteSize": 879115,
+      "sha256": "1b1283c8dca5c15a59895869764a60130dd87912355efcc0cd12dfbf12ca9f4a"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/review/review-client.js",
+      "byteSize": 271915,
+      "sha256": "630594f2f840f6526f0e10f302ffbb51f5822945617f8fd64a0da9effb243bdd"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/review/review-client.js.map",
+      "byteSize": 880665,
+      "sha256": "457a1ff1a9dd0dfab8f566afac024f76e2cde5513fa7f37b6d9737f98f3673cb"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "byteSize": 115753,
+      "sha256": "4ad64c6ab5683b15fb49228dd9fde862e8c4d0b483480ce18cc1beee8f733d8c"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "byteSize": 527064,
+      "sha256": "2d05d55a4225121857e99a75639323cc5f875ba774543d9ef9ee60805c6a45bb"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js",
+      "byteSize": 368138,
+      "sha256": "4d90805b6670996b8a3337a2ee746dcd5ceb74f2cfd5dac58d086d708ae45e95"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "byteSize": 1115785,
+      "sha256": "82daa8e172422d9ba394cade3af57f25889ddb1ccabb34d5053e0ec97e6e11c1"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/contracts/openapi.json",
+      "byteSize": 965383,
+      "sha256": "a42df7a12c1a30248ce4d1e577d24dd85136b87677c1298009a53bb28e21e389"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/contracts/src/index.ts",
+      "byteSize": 763,
+      "sha256": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/contracts/src/openapi.ts",
+      "byteSize": 28089,
+      "sha256": "0b5c33000f1ba99ee4ae73d3634ac32944d9d1f02519674475d9e9fc227dadba"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/contracts/src/workbench-delivery.ts",
+      "byteSize": 1460,
+      "sha256": "c580b698e85ee94afd05aaedb68a5b3ed7e939c02138b5f6ac4a4307cfb38b09"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/acceptance-page.ts",
+      "byteSize": 3518,
+      "sha256": "7dfdd2bf7eef4559fb31a5c0b4034c6d43c9e4136988de4efb2b26ac8fc6cad4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/acceptance.ts",
+      "byteSize": 11018,
+      "sha256": "c2aeb57041f97f430415a381f835d3bda9ed8fc5e5d4409bf70b5ae2e0534b4d"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/export-page.ts",
+      "byteSize": 6022,
+      "sha256": "a9956f3ab02acfe6236cd723584015c63f80d4cf9063f08825c6dd22bed5e029"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/preview-management-page.ts",
+      "byteSize": 3662,
+      "sha256": "9b89a4e42be5c16b5296b7d9daff9fe23dbb6fd5a02865f82de0f9dd35f7ab78"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/preview-management.ts",
+      "byteSize": 7528,
+      "sha256": "721ed807c1d78c0c415503a8fc753cb5d3bf6935f43e1c60c69de382cf782ff4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/release.ts",
+      "byteSize": 8801,
+      "sha256": "51089324b9b7ee8470b4618fdb3f26867adc3dcf4938bfe3d74020a43391d35b"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/review.ts",
+      "byteSize": 8307,
+      "sha256": "eb3003253119072b30e442ea0053575778deb9f65f1583555b3ba6f10d40bfb6"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/web/workbench-client.tsx",
+      "byteSize": 42539,
+      "sha256": "18f251b0e5517c934b3967eeb67885aa446c423a18bdae1d6e8d737c2f48f23f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/web/workbench-delivery.tsx",
+      "byteSize": 7417,
+      "sha256": "c68d9ee3225e55e23b7ad0bee7b9ffa778ef23be162aef27560bdf016d613fc4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/web/workbench-reading.ts",
+      "byteSize": 3364,
+      "sha256": "b6c88ef9f0e6e4f6dff8eee5ad4595bbbaa15f60061af79b467eeb564d75732d"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/web/workbench-return-client.tsx",
+      "byteSize": 481,
+      "sha256": "c1830ebc7cac0683dae493b0ba77b4bdcabbd64b54fb7aed7fb037a45f9733db"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/web/workbench-task-entry.tsx",
+      "byteSize": 4410,
+      "sha256": "dc0873e69fbec4a4a007f1db5661470b7f4f672e34017280958efd0941b4f029"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/workbench-delivery.ts",
+      "byteSize": 4092,
+      "sha256": "020b98003649ca90ba5022f970d1ff1715320c04a35d9af919afafc3836aff6f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/workbench-return.ts",
+      "byteSize": 1811,
+      "sha256": "f3ed4355d9739d991b2e3f8f0052b323204f7fdd97789835e5979df2d47b49d1"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/src/workbench.ts",
+      "byteSize": 3683,
+      "sha256": "619af96b244bf9f3d1d24edbd9900e7aa0d8757ab2d7f12c12a16cc924e95197"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/packages/input-api/tsdown.web.config.ts",
+      "byteSize": 1148,
+      "sha256": "d603412fe786366334451e4846c5ea68a4ab1ec2a5e0b2db4094034a3ba05850"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/tests/browser/workbench-delivery.test.mjs",
+      "byteSize": 11541,
+      "sha256": "ccda9f9398bd215b7f935f25e8f4b065f252f5fdfe7b53eaed765d68a220130e"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/tests/contracts.test.mjs",
+      "byteSize": 14842,
+      "sha256": "e256f3b0f59bf4216dcc576cf9ddff2957d91f867438dc38b81ce685c2fa904c"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/tests/fixtures/workbench-delivery.mjs",
+      "byteSize": 4250,
+      "sha256": "9ff4a295ff96a255a350cec8ba3fbaab5844eb11733c3977f6d31dfeef304917"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/inputs/tests/workbench-delivery.test.mjs",
+      "byteSize": 5095,
+      "sha256": "1af9e069898faee69b45b197a541da3d3ab64450ac2a9f91ebe2c015f114c419"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-07-47-087Z/manifest.json",
+      "byteSize": 8632,
+      "sha256": "8854bc8b452ecfc770e1e19750fa215ee5665fd65e7dc9bf7e98c35fe6426a5c"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/contracts/dist/index.d.ts",
+      "byteSize": 318351,
+      "sha256": "b52751a0026f433a629a23a0efd96f269ae5cf29377e2ee07dabe5f07b779d22"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/contracts/dist/index.js",
+      "byteSize": 101551,
+      "sha256": "7acaa18f7591379e900225c75e4b270024d5ef209b5b0c6490720821ea8349e6"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/contracts/dist/index.js.map",
+      "byteSize": 165464,
+      "sha256": "6fa23c4828b456be3889384ba7185a83abf115c3034d9f5c679f4c242e2e40ff"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/index.d.mts",
+      "byteSize": 2976,
+      "sha256": "f8b2ac024578131dd578c82923552e32f36dc67f7db84ed190501f401ec40f41"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/index.mjs",
+      "byteSize": 103097,
+      "sha256": "a913eec706fd6b1c10fd19c56d4a019792d11f10009bb8f3c58824d5b748029a"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/index.mjs.map",
+      "byteSize": 161464,
+      "sha256": "ae0897cb17daf6dfaaa9542a7d34b7ca8beee5cbbfed54f79750f231799ad01f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "byteSize": 274235,
+      "sha256": "1fe4fcc7890b9ebbd1743727c29f801acb2224865890b193ab6eba2a7e056410"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "byteSize": 885010,
+      "sha256": "e3d085fc7b6bdca18fc80262d2c9197af87674f5d14812624ade45035bf17948"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/export/export-client.js",
+      "byteSize": 265081,
+      "sha256": "77411e1f51f9ea731c1b9f27c9ad5fe8fb910999c67755f9ecacecddcd06330e"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/export/export-client.js.map",
+      "byteSize": 866514,
+      "sha256": "e1949e972178766ceaffba8048febc8a02610e2e8a885dda89908444066b1dfa"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "byteSize": 271159,
+      "sha256": "8fbc8fdb0a40978e61c8695ad6cb20cd0a8ef88a2b1aba26ccdcfcb05696ae42"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "byteSize": 879115,
+      "sha256": "1b1283c8dca5c15a59895869764a60130dd87912355efcc0cd12dfbf12ca9f4a"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/review/review-client.js",
+      "byteSize": 271915,
+      "sha256": "630594f2f840f6526f0e10f302ffbb51f5822945617f8fd64a0da9effb243bdd"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/review/review-client.js.map",
+      "byteSize": 880665,
+      "sha256": "457a1ff1a9dd0dfab8f566afac024f76e2cde5513fa7f37b6d9737f98f3673cb"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "byteSize": 115753,
+      "sha256": "4ad64c6ab5683b15fb49228dd9fde862e8c4d0b483480ce18cc1beee8f733d8c"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "byteSize": 527064,
+      "sha256": "2d05d55a4225121857e99a75639323cc5f875ba774543d9ef9ee60805c6a45bb"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js",
+      "byteSize": 368138,
+      "sha256": "4d90805b6670996b8a3337a2ee746dcd5ceb74f2cfd5dac58d086d708ae45e95"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "byteSize": 1115785,
+      "sha256": "82daa8e172422d9ba394cade3af57f25889ddb1ccabb34d5053e0ec97e6e11c1"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/contracts/openapi.json",
+      "byteSize": 965383,
+      "sha256": "a42df7a12c1a30248ce4d1e577d24dd85136b87677c1298009a53bb28e21e389"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/contracts/src/index.ts",
+      "byteSize": 763,
+      "sha256": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/contracts/src/openapi.ts",
+      "byteSize": 28089,
+      "sha256": "0b5c33000f1ba99ee4ae73d3634ac32944d9d1f02519674475d9e9fc227dadba"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/contracts/src/workbench-delivery.ts",
+      "byteSize": 1460,
+      "sha256": "c580b698e85ee94afd05aaedb68a5b3ed7e939c02138b5f6ac4a4307cfb38b09"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/acceptance-page.ts",
+      "byteSize": 3518,
+      "sha256": "7dfdd2bf7eef4559fb31a5c0b4034c6d43c9e4136988de4efb2b26ac8fc6cad4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/acceptance.ts",
+      "byteSize": 11018,
+      "sha256": "c2aeb57041f97f430415a381f835d3bda9ed8fc5e5d4409bf70b5ae2e0534b4d"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/export-page.ts",
+      "byteSize": 6022,
+      "sha256": "a9956f3ab02acfe6236cd723584015c63f80d4cf9063f08825c6dd22bed5e029"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/preview-management-page.ts",
+      "byteSize": 3662,
+      "sha256": "9b89a4e42be5c16b5296b7d9daff9fe23dbb6fd5a02865f82de0f9dd35f7ab78"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/preview-management.ts",
+      "byteSize": 7528,
+      "sha256": "721ed807c1d78c0c415503a8fc753cb5d3bf6935f43e1c60c69de382cf782ff4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/release.ts",
+      "byteSize": 8801,
+      "sha256": "51089324b9b7ee8470b4618fdb3f26867adc3dcf4938bfe3d74020a43391d35b"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/review.ts",
+      "byteSize": 8307,
+      "sha256": "eb3003253119072b30e442ea0053575778deb9f65f1583555b3ba6f10d40bfb6"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/web/workbench-client.tsx",
+      "byteSize": 42539,
+      "sha256": "18f251b0e5517c934b3967eeb67885aa446c423a18bdae1d6e8d737c2f48f23f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/web/workbench-delivery.tsx",
+      "byteSize": 7417,
+      "sha256": "c68d9ee3225e55e23b7ad0bee7b9ffa778ef23be162aef27560bdf016d613fc4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/web/workbench-reading.ts",
+      "byteSize": 3364,
+      "sha256": "b6c88ef9f0e6e4f6dff8eee5ad4595bbbaa15f60061af79b467eeb564d75732d"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/web/workbench-return-client.tsx",
+      "byteSize": 481,
+      "sha256": "c1830ebc7cac0683dae493b0ba77b4bdcabbd64b54fb7aed7fb037a45f9733db"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/web/workbench-task-entry.tsx",
+      "byteSize": 4410,
+      "sha256": "dc0873e69fbec4a4a007f1db5661470b7f4f672e34017280958efd0941b4f029"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/workbench-delivery.ts",
+      "byteSize": 4092,
+      "sha256": "020b98003649ca90ba5022f970d1ff1715320c04a35d9af919afafc3836aff6f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/workbench-return.ts",
+      "byteSize": 1811,
+      "sha256": "f3ed4355d9739d991b2e3f8f0052b323204f7fdd97789835e5979df2d47b49d1"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/src/workbench.ts",
+      "byteSize": 3683,
+      "sha256": "619af96b244bf9f3d1d24edbd9900e7aa0d8757ab2d7f12c12a16cc924e95197"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/packages/input-api/tsdown.web.config.ts",
+      "byteSize": 1148,
+      "sha256": "d603412fe786366334451e4846c5ea68a4ab1ec2a5e0b2db4094034a3ba05850"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/tests/browser/workbench-delivery.test.mjs",
+      "byteSize": 11541,
+      "sha256": "ccda9f9398bd215b7f935f25e8f4b065f252f5fdfe7b53eaed765d68a220130e"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/tests/browser/workbench-page.test.mjs",
+      "byteSize": 20579,
+      "sha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/tests/contracts.test.mjs",
+      "byteSize": 14842,
+      "sha256": "e256f3b0f59bf4216dcc576cf9ddff2957d91f867438dc38b81ce685c2fa904c"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/tests/fixtures/workbench-delivery.mjs",
+      "byteSize": 4250,
+      "sha256": "9ff4a295ff96a255a350cec8ba3fbaab5844eb11733c3977f6d31dfeef304917"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/inputs/tests/workbench-delivery.test.mjs",
+      "byteSize": 5095,
+      "sha256": "1af9e069898faee69b45b197a541da3d3ab64450ac2a9f91ebe2c015f114c419"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-24-17-103Z/manifest.json",
+      "byteSize": 8869,
+      "sha256": "0449029d3320d662679fdc13cfd2a062da93057c6a4915c5b0ddd578e0b34db0"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/contracts/dist/index.d.ts",
+      "byteSize": 318351,
+      "sha256": "b52751a0026f433a629a23a0efd96f269ae5cf29377e2ee07dabe5f07b779d22"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/contracts/dist/index.js",
+      "byteSize": 101551,
+      "sha256": "7acaa18f7591379e900225c75e4b270024d5ef209b5b0c6490720821ea8349e6"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/contracts/dist/index.js.map",
+      "byteSize": 165464,
+      "sha256": "6fa23c4828b456be3889384ba7185a83abf115c3034d9f5c679f4c242e2e40ff"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/index.d.mts",
+      "byteSize": 2976,
+      "sha256": "f8b2ac024578131dd578c82923552e32f36dc67f7db84ed190501f401ec40f41"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/index.mjs",
+      "byteSize": 103097,
+      "sha256": "a913eec706fd6b1c10fd19c56d4a019792d11f10009bb8f3c58824d5b748029a"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/index.mjs.map",
+      "byteSize": 161464,
+      "sha256": "ae0897cb17daf6dfaaa9542a7d34b7ca8beee5cbbfed54f79750f231799ad01f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "byteSize": 274235,
+      "sha256": "1fe4fcc7890b9ebbd1743727c29f801acb2224865890b193ab6eba2a7e056410"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "byteSize": 885010,
+      "sha256": "e3d085fc7b6bdca18fc80262d2c9197af87674f5d14812624ade45035bf17948"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/export/export-client.js",
+      "byteSize": 265081,
+      "sha256": "77411e1f51f9ea731c1b9f27c9ad5fe8fb910999c67755f9ecacecddcd06330e"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/export/export-client.js.map",
+      "byteSize": 866514,
+      "sha256": "e1949e972178766ceaffba8048febc8a02610e2e8a885dda89908444066b1dfa"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "byteSize": 271159,
+      "sha256": "8fbc8fdb0a40978e61c8695ad6cb20cd0a8ef88a2b1aba26ccdcfcb05696ae42"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "byteSize": 879115,
+      "sha256": "1b1283c8dca5c15a59895869764a60130dd87912355efcc0cd12dfbf12ca9f4a"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/review/review-client.js",
+      "byteSize": 271915,
+      "sha256": "630594f2f840f6526f0e10f302ffbb51f5822945617f8fd64a0da9effb243bdd"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/review/review-client.js.map",
+      "byteSize": 880665,
+      "sha256": "457a1ff1a9dd0dfab8f566afac024f76e2cde5513fa7f37b6d9737f98f3673cb"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "byteSize": 115753,
+      "sha256": "4ad64c6ab5683b15fb49228dd9fde862e8c4d0b483480ce18cc1beee8f733d8c"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "byteSize": 527064,
+      "sha256": "2d05d55a4225121857e99a75639323cc5f875ba774543d9ef9ee60805c6a45bb"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js",
+      "byteSize": 368138,
+      "sha256": "4d90805b6670996b8a3337a2ee746dcd5ceb74f2cfd5dac58d086d708ae45e95"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "byteSize": 1115785,
+      "sha256": "82daa8e172422d9ba394cade3af57f25889ddb1ccabb34d5053e0ec97e6e11c1"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/contracts/openapi.json",
+      "byteSize": 965383,
+      "sha256": "a42df7a12c1a30248ce4d1e577d24dd85136b87677c1298009a53bb28e21e389"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/contracts/src/index.ts",
+      "byteSize": 763,
+      "sha256": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/contracts/src/openapi.ts",
+      "byteSize": 28089,
+      "sha256": "0b5c33000f1ba99ee4ae73d3634ac32944d9d1f02519674475d9e9fc227dadba"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/contracts/src/workbench-delivery.ts",
+      "byteSize": 1460,
+      "sha256": "c580b698e85ee94afd05aaedb68a5b3ed7e939c02138b5f6ac4a4307cfb38b09"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/acceptance-page.ts",
+      "byteSize": 3518,
+      "sha256": "7dfdd2bf7eef4559fb31a5c0b4034c6d43c9e4136988de4efb2b26ac8fc6cad4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/acceptance.ts",
+      "byteSize": 11018,
+      "sha256": "c2aeb57041f97f430415a381f835d3bda9ed8fc5e5d4409bf70b5ae2e0534b4d"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/export-page.ts",
+      "byteSize": 6022,
+      "sha256": "a9956f3ab02acfe6236cd723584015c63f80d4cf9063f08825c6dd22bed5e029"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/preview-management-page.ts",
+      "byteSize": 3662,
+      "sha256": "9b89a4e42be5c16b5296b7d9daff9fe23dbb6fd5a02865f82de0f9dd35f7ab78"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/preview-management.ts",
+      "byteSize": 7528,
+      "sha256": "721ed807c1d78c0c415503a8fc753cb5d3bf6935f43e1c60c69de382cf782ff4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/release.ts",
+      "byteSize": 8801,
+      "sha256": "51089324b9b7ee8470b4618fdb3f26867adc3dcf4938bfe3d74020a43391d35b"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/review.ts",
+      "byteSize": 8307,
+      "sha256": "eb3003253119072b30e442ea0053575778deb9f65f1583555b3ba6f10d40bfb6"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/web/workbench-client.tsx",
+      "byteSize": 42539,
+      "sha256": "18f251b0e5517c934b3967eeb67885aa446c423a18bdae1d6e8d737c2f48f23f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/web/workbench-delivery.tsx",
+      "byteSize": 7417,
+      "sha256": "c68d9ee3225e55e23b7ad0bee7b9ffa778ef23be162aef27560bdf016d613fc4"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/web/workbench-reading.ts",
+      "byteSize": 3364,
+      "sha256": "b6c88ef9f0e6e4f6dff8eee5ad4595bbbaa15f60061af79b467eeb564d75732d"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/web/workbench-return-client.tsx",
+      "byteSize": 481,
+      "sha256": "c1830ebc7cac0683dae493b0ba77b4bdcabbd64b54fb7aed7fb037a45f9733db"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/web/workbench-task-entry.tsx",
+      "byteSize": 4410,
+      "sha256": "dc0873e69fbec4a4a007f1db5661470b7f4f672e34017280958efd0941b4f029"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/workbench-delivery.ts",
+      "byteSize": 4092,
+      "sha256": "020b98003649ca90ba5022f970d1ff1715320c04a35d9af919afafc3836aff6f"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/workbench-return.ts",
+      "byteSize": 1811,
+      "sha256": "f3ed4355d9739d991b2e3f8f0052b323204f7fdd97789835e5979df2d47b49d1"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/src/workbench.ts",
+      "byteSize": 3683,
+      "sha256": "619af96b244bf9f3d1d24edbd9900e7aa0d8757ab2d7f12c12a16cc924e95197"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/packages/input-api/tsdown.web.config.ts",
+      "byteSize": 1148,
+      "sha256": "d603412fe786366334451e4846c5ea68a4ab1ec2a5e0b2db4094034a3ba05850"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/tests/browser/acceptance-page.test.mjs",
+      "byteSize": 16023,
+      "sha256": "9c230b28b50cef5c3b40078a3a00c64b062a44820013ff7871ef5a25432dc956"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/tests/browser/workbench-delivery.test.mjs",
+      "byteSize": 11541,
+      "sha256": "ccda9f9398bd215b7f935f25e8f4b065f252f5fdfe7b53eaed765d68a220130e"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/tests/browser/workbench-page.test.mjs",
+      "byteSize": 20579,
+      "sha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/tests/contracts.test.mjs",
+      "byteSize": 14842,
+      "sha256": "e256f3b0f59bf4216dcc576cf9ddff2957d91f867438dc38b81ce685c2fa904c"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/tests/fixtures/workbench-delivery.mjs",
+      "byteSize": 4250,
+      "sha256": "9ff4a295ff96a255a350cec8ba3fbaab5844eb11733c3977f6d31dfeef304917"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/inputs/tests/workbench-delivery.test.mjs",
+      "byteSize": 5095,
+      "sha256": "1af9e069898faee69b45b197a541da3d3ab64450ac2a9f91ebe2c015f114c419"
+    },
+    {
+      "file": "failed-source/browser-2026-11-16T01-33-56-518Z/manifest.json",
+      "byteSize": 9107,
+      "sha256": "6554c78bfec655b28163d51038ae25802bbc553f3789d6573a0b05dab3638d81"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/contracts/dist/index.d.ts",
+      "byteSize": 318351,
+      "sha256": "52845dec666e7636a330fc5db4fda1b4bad9756a7cb216977520b29e56ab61c3"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/contracts/dist/index.js",
+      "byteSize": 101016,
+      "sha256": "6f7fd749451d690eafd3cae6d887261ccce7fe190fc4ac3bd55f455a85ef2733"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/contracts/dist/index.js.map",
+      "byteSize": 164710,
+      "sha256": "e85d7af09368c5562f009bb3f8dfba645c162bf842c7b6a34081dedb9b6c6e10"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/index.d.mts",
+      "byteSize": 2976,
+      "sha256": "f8b2ac024578131dd578c82923552e32f36dc67f7db84ed190501f401ec40f41"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/index.mjs",
+      "byteSize": 103097,
+      "sha256": "a913eec706fd6b1c10fd19c56d4a019792d11f10009bb8f3c58824d5b748029a"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/index.mjs.map",
+      "byteSize": 161464,
+      "sha256": "ae0897cb17daf6dfaaa9542a7d34b7ca8beee5cbbfed54f79750f231799ad01f"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "byteSize": 274235,
+      "sha256": "1fe4fcc7890b9ebbd1743727c29f801acb2224865890b193ab6eba2a7e056410"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "byteSize": 884531,
+      "sha256": "b258e3277f1eb584dd10347465832454e5476135d51384d64aa0aa452c5c39b8"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/export/export-client.js",
+      "byteSize": 265081,
+      "sha256": "77411e1f51f9ea731c1b9f27c9ad5fe8fb910999c67755f9ecacecddcd06330e"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/export/export-client.js.map",
+      "byteSize": 866035,
+      "sha256": "b95b7ee5a2c95141b6bcbe6c199a7fab86a8015bba47b10a2c6cfac2d5cbd4e1"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "byteSize": 271159,
+      "sha256": "8fbc8fdb0a40978e61c8695ad6cb20cd0a8ef88a2b1aba26ccdcfcb05696ae42"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "byteSize": 878636,
+      "sha256": "37a282607ae86e451164b50e6065ba12416cd2abec4a766ce85d5eab9b7caf9c"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/review/review-client.js",
+      "byteSize": 271915,
+      "sha256": "630594f2f840f6526f0e10f302ffbb51f5822945617f8fd64a0da9effb243bdd"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/review/review-client.js.map",
+      "byteSize": 880186,
+      "sha256": "c00d3085b8ad2501446c45ac107f3f5dfe33af9f15726581df1b98f7249d4601"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "byteSize": 115753,
+      "sha256": "4ad64c6ab5683b15fb49228dd9fde862e8c4d0b483480ce18cc1beee8f733d8c"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "byteSize": 526499,
+      "sha256": "4cabc349db93d97c77ec7cd018a895442f81ce69615a64f16afd58c3b9c486bd"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js",
+      "byteSize": 368076,
+      "sha256": "c3e65763a46f9e2fad7d52e1a10b7d3ca5f91f16ef825ceecac537858720489f"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "byteSize": 1115170,
+      "sha256": "6a3388b88aea04ba05658608da460a9b6bf1a58266d1b399b058e53276a21f75"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/contracts/openapi.json",
+      "byteSize": 951185,
+      "sha256": "d753a83a03bf9be339d912e1d955f62eae4a670788ece95e21a69f1fac75b3a4"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/contracts/src/index.ts",
+      "byteSize": 763,
+      "sha256": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/contracts/src/openapi.ts",
+      "byteSize": 27611,
+      "sha256": "bfa366a5e13c9026c91ee8f6feef0664a2b5f3f2a691d66cbdb07fd1bd5430eb"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/contracts/src/workbench-delivery.ts",
+      "byteSize": 1460,
+      "sha256": "c580b698e85ee94afd05aaedb68a5b3ed7e939c02138b5f6ac4a4307cfb38b09"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/acceptance-page.ts",
+      "byteSize": 3518,
+      "sha256": "7dfdd2bf7eef4559fb31a5c0b4034c6d43c9e4136988de4efb2b26ac8fc6cad4"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/acceptance.ts",
+      "byteSize": 11018,
+      "sha256": "c2aeb57041f97f430415a381f835d3bda9ed8fc5e5d4409bf70b5ae2e0534b4d"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/export-page.ts",
+      "byteSize": 6022,
+      "sha256": "a9956f3ab02acfe6236cd723584015c63f80d4cf9063f08825c6dd22bed5e029"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/preview-management-page.ts",
+      "byteSize": 3662,
+      "sha256": "9b89a4e42be5c16b5296b7d9daff9fe23dbb6fd5a02865f82de0f9dd35f7ab78"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/preview-management.ts",
+      "byteSize": 7528,
+      "sha256": "721ed807c1d78c0c415503a8fc753cb5d3bf6935f43e1c60c69de382cf782ff4"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/release.ts",
+      "byteSize": 8801,
+      "sha256": "51089324b9b7ee8470b4618fdb3f26867adc3dcf4938bfe3d74020a43391d35b"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/review.ts",
+      "byteSize": 8307,
+      "sha256": "eb3003253119072b30e442ea0053575778deb9f65f1583555b3ba6f10d40bfb6"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/web/workbench-client.tsx",
+      "byteSize": 42539,
+      "sha256": "18f251b0e5517c934b3967eeb67885aa446c423a18bdae1d6e8d737c2f48f23f"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/web/workbench-delivery.tsx",
+      "byteSize": 7417,
+      "sha256": "c68d9ee3225e55e23b7ad0bee7b9ffa778ef23be162aef27560bdf016d613fc4"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/web/workbench-reading.ts",
+      "byteSize": 3278,
+      "sha256": "f2f6ef92646ead607227510067c63869eb1ee3caf7ba91adddbb74e69e6a25ae"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/web/workbench-return-client.tsx",
+      "byteSize": 481,
+      "sha256": "c1830ebc7cac0683dae493b0ba77b4bdcabbd64b54fb7aed7fb037a45f9733db"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/web/workbench-task-entry.tsx",
+      "byteSize": 4410,
+      "sha256": "dc0873e69fbec4a4a007f1db5661470b7f4f672e34017280958efd0941b4f029"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/workbench-delivery.ts",
+      "byteSize": 4092,
+      "sha256": "020b98003649ca90ba5022f970d1ff1715320c04a35d9af919afafc3836aff6f"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/workbench-return.ts",
+      "byteSize": 1811,
+      "sha256": "f3ed4355d9739d991b2e3f8f0052b323204f7fdd97789835e5979df2d47b49d1"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/src/workbench.ts",
+      "byteSize": 3683,
+      "sha256": "619af96b244bf9f3d1d24edbd9900e7aa0d8757ab2d7f12c12a16cc924e95197"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/packages/input-api/tsdown.web.config.ts",
+      "byteSize": 1148,
+      "sha256": "d603412fe786366334451e4846c5ea68a4ab1ec2a5e0b2db4094034a3ba05850"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/tests/browser/workbench-delivery.test.mjs",
+      "byteSize": 11541,
+      "sha256": "ccda9f9398bd215b7f935f25e8f4b065f252f5fdfe7b53eaed765d68a220130e"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/tests/fixtures/workbench-delivery.mjs",
+      "byteSize": 3917,
+      "sha256": "995ded3af62ab03f594909b7280e0314e49057e2d887a55ad7349062caf4b246"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/inputs/tests/workbench-delivery.test.mjs",
+      "byteSize": 5095,
+      "sha256": "1af9e069898faee69b45b197a541da3d3ab64450ac2a9f91ebe2c015f114c419"
+    },
+    {
+      "file": "failed-source/http-2026-11-15T23-54-04-181Z/manifest.json",
+      "byteSize": 8405,
+      "sha256": "9faaf491c3836222014436731f5ccb02bb2c85f5afc79eb86452c5dea412a67d"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/contracts/dist/index.d.ts",
+      "byteSize": 318351,
+      "sha256": "52845dec666e7636a330fc5db4fda1b4bad9756a7cb216977520b29e56ab61c3"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/contracts/dist/index.js",
+      "byteSize": 101016,
+      "sha256": "6f7fd749451d690eafd3cae6d887261ccce7fe190fc4ac3bd55f455a85ef2733"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/contracts/dist/index.js.map",
+      "byteSize": 164710,
+      "sha256": "e85d7af09368c5562f009bb3f8dfba645c162bf842c7b6a34081dedb9b6c6e10"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/index.d.mts",
+      "byteSize": 2976,
+      "sha256": "f8b2ac024578131dd578c82923552e32f36dc67f7db84ed190501f401ec40f41"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/index.mjs",
+      "byteSize": 103097,
+      "sha256": "a913eec706fd6b1c10fd19c56d4a019792d11f10009bb8f3c58824d5b748029a"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/index.mjs.map",
+      "byteSize": 161464,
+      "sha256": "ae0897cb17daf6dfaaa9542a7d34b7ca8beee5cbbfed54f79750f231799ad01f"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "byteSize": 274235,
+      "sha256": "1fe4fcc7890b9ebbd1743727c29f801acb2224865890b193ab6eba2a7e056410"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "byteSize": 884531,
+      "sha256": "b258e3277f1eb584dd10347465832454e5476135d51384d64aa0aa452c5c39b8"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/export/export-client.js",
+      "byteSize": 265081,
+      "sha256": "77411e1f51f9ea731c1b9f27c9ad5fe8fb910999c67755f9ecacecddcd06330e"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/export/export-client.js.map",
+      "byteSize": 866035,
+      "sha256": "b95b7ee5a2c95141b6bcbe6c199a7fab86a8015bba47b10a2c6cfac2d5cbd4e1"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "byteSize": 271159,
+      "sha256": "8fbc8fdb0a40978e61c8695ad6cb20cd0a8ef88a2b1aba26ccdcfcb05696ae42"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "byteSize": 878636,
+      "sha256": "37a282607ae86e451164b50e6065ba12416cd2abec4a766ce85d5eab9b7caf9c"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/review/review-client.js",
+      "byteSize": 271915,
+      "sha256": "630594f2f840f6526f0e10f302ffbb51f5822945617f8fd64a0da9effb243bdd"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/review/review-client.js.map",
+      "byteSize": 880186,
+      "sha256": "c00d3085b8ad2501446c45ac107f3f5dfe33af9f15726581df1b98f7249d4601"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "byteSize": 115753,
+      "sha256": "4ad64c6ab5683b15fb49228dd9fde862e8c4d0b483480ce18cc1beee8f733d8c"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "byteSize": 526499,
+      "sha256": "4cabc349db93d97c77ec7cd018a895442f81ce69615a64f16afd58c3b9c486bd"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js",
+      "byteSize": 368076,
+      "sha256": "c3e65763a46f9e2fad7d52e1a10b7d3ca5f91f16ef825ceecac537858720489f"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "byteSize": 1115170,
+      "sha256": "6a3388b88aea04ba05658608da460a9b6bf1a58266d1b399b058e53276a21f75"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/contracts/openapi.json",
+      "byteSize": 951185,
+      "sha256": "d753a83a03bf9be339d912e1d955f62eae4a670788ece95e21a69f1fac75b3a4"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/contracts/src/index.ts",
+      "byteSize": 763,
+      "sha256": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/contracts/src/openapi.ts",
+      "byteSize": 27611,
+      "sha256": "bfa366a5e13c9026c91ee8f6feef0664a2b5f3f2a691d66cbdb07fd1bd5430eb"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/contracts/src/workbench-delivery.ts",
+      "byteSize": 1460,
+      "sha256": "c580b698e85ee94afd05aaedb68a5b3ed7e939c02138b5f6ac4a4307cfb38b09"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/acceptance-page.ts",
+      "byteSize": 3518,
+      "sha256": "7dfdd2bf7eef4559fb31a5c0b4034c6d43c9e4136988de4efb2b26ac8fc6cad4"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/acceptance.ts",
+      "byteSize": 11018,
+      "sha256": "c2aeb57041f97f430415a381f835d3bda9ed8fc5e5d4409bf70b5ae2e0534b4d"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/export-page.ts",
+      "byteSize": 6022,
+      "sha256": "a9956f3ab02acfe6236cd723584015c63f80d4cf9063f08825c6dd22bed5e029"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/preview-management-page.ts",
+      "byteSize": 3662,
+      "sha256": "9b89a4e42be5c16b5296b7d9daff9fe23dbb6fd5a02865f82de0f9dd35f7ab78"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/preview-management.ts",
+      "byteSize": 7528,
+      "sha256": "721ed807c1d78c0c415503a8fc753cb5d3bf6935f43e1c60c69de382cf782ff4"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/release.ts",
+      "byteSize": 8801,
+      "sha256": "51089324b9b7ee8470b4618fdb3f26867adc3dcf4938bfe3d74020a43391d35b"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/review.ts",
+      "byteSize": 8307,
+      "sha256": "eb3003253119072b30e442ea0053575778deb9f65f1583555b3ba6f10d40bfb6"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/web/workbench-client.tsx",
+      "byteSize": 42539,
+      "sha256": "18f251b0e5517c934b3967eeb67885aa446c423a18bdae1d6e8d737c2f48f23f"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/web/workbench-delivery.tsx",
+      "byteSize": 7417,
+      "sha256": "c68d9ee3225e55e23b7ad0bee7b9ffa778ef23be162aef27560bdf016d613fc4"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/web/workbench-reading.ts",
+      "byteSize": 3278,
+      "sha256": "f2f6ef92646ead607227510067c63869eb1ee3caf7ba91adddbb74e69e6a25ae"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/web/workbench-return-client.tsx",
+      "byteSize": 481,
+      "sha256": "c1830ebc7cac0683dae493b0ba77b4bdcabbd64b54fb7aed7fb037a45f9733db"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/web/workbench-task-entry.tsx",
+      "byteSize": 4410,
+      "sha256": "dc0873e69fbec4a4a007f1db5661470b7f4f672e34017280958efd0941b4f029"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/workbench-delivery.ts",
+      "byteSize": 4092,
+      "sha256": "020b98003649ca90ba5022f970d1ff1715320c04a35d9af919afafc3836aff6f"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/workbench-return.ts",
+      "byteSize": 1811,
+      "sha256": "f3ed4355d9739d991b2e3f8f0052b323204f7fdd97789835e5979df2d47b49d1"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/src/workbench.ts",
+      "byteSize": 3683,
+      "sha256": "619af96b244bf9f3d1d24edbd9900e7aa0d8757ab2d7f12c12a16cc924e95197"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/packages/input-api/tsdown.web.config.ts",
+      "byteSize": 1148,
+      "sha256": "d603412fe786366334451e4846c5ea68a4ab1ec2a5e0b2db4094034a3ba05850"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/tests/browser/workbench-delivery.test.mjs",
+      "byteSize": 11541,
+      "sha256": "ccda9f9398bd215b7f935f25e8f4b065f252f5fdfe7b53eaed765d68a220130e"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/tests/fixtures/workbench-delivery.mjs",
+      "byteSize": 3917,
+      "sha256": "995ded3af62ab03f594909b7280e0314e49057e2d887a55ad7349062caf4b246"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/inputs/tests/workbench-delivery.test.mjs",
+      "byteSize": 5095,
+      "sha256": "1af9e069898faee69b45b197a541da3d3ab64450ac2a9f91ebe2c015f114c419"
+    },
+    {
+      "file": "failed-source/type-2026-11-15T23-52-09-474Z/manifest.json",
+      "byteSize": 8405,
+      "sha256": "ab5cc2b4cf17790ab2ab5ef6fa478db9fe696149a2720a77e0965ed58ff0045b"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/contracts/dist/index.d.ts",
+      "byteSize": 318351,
+      "sha256": "52845dec666e7636a330fc5db4fda1b4bad9756a7cb216977520b29e56ab61c3"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/contracts/dist/index.js",
+      "byteSize": 101016,
+      "sha256": "6f7fd749451d690eafd3cae6d887261ccce7fe190fc4ac3bd55f455a85ef2733"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/contracts/dist/index.js.map",
+      "byteSize": 164710,
+      "sha256": "e85d7af09368c5562f009bb3f8dfba645c162bf842c7b6a34081dedb9b6c6e10"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/index.d.mts",
+      "byteSize": 2976,
+      "sha256": "f8b2ac024578131dd578c82923552e32f36dc67f7db84ed190501f401ec40f41"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/index.mjs",
+      "byteSize": 103097,
+      "sha256": "a913eec706fd6b1c10fd19c56d4a019792d11f10009bb8f3c58824d5b748029a"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/index.mjs.map",
+      "byteSize": 161464,
+      "sha256": "ae0897cb17daf6dfaaa9542a7d34b7ca8beee5cbbfed54f79750f231799ad01f"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js",
+      "byteSize": 274235,
+      "sha256": "1fe4fcc7890b9ebbd1743727c29f801acb2224865890b193ab6eba2a7e056410"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/acceptance/acceptance-client.js.map",
+      "byteSize": 884531,
+      "sha256": "b258e3277f1eb584dd10347465832454e5476135d51384d64aa0aa452c5c39b8"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/export/export-client.js",
+      "byteSize": 265081,
+      "sha256": "77411e1f51f9ea731c1b9f27c9ad5fe8fb910999c67755f9ecacecddcd06330e"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/export/export-client.js.map",
+      "byteSize": 866035,
+      "sha256": "b95b7ee5a2c95141b6bcbe6c199a7fab86a8015bba47b10a2c6cfac2d5cbd4e1"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js",
+      "byteSize": 271159,
+      "sha256": "8fbc8fdb0a40978e61c8695ad6cb20cd0a8ef88a2b1aba26ccdcfcb05696ae42"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/preview-management/preview-management-client.js.map",
+      "byteSize": 878636,
+      "sha256": "37a282607ae86e451164b50e6065ba12416cd2abec4a766ce85d5eab9b7caf9c"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/review/review-client.js",
+      "byteSize": 271915,
+      "sha256": "630594f2f840f6526f0e10f302ffbb51f5822945617f8fd64a0da9effb243bdd"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/review/review-client.js.map",
+      "byteSize": 880186,
+      "sha256": "c00d3085b8ad2501446c45ac107f3f5dfe33af9f15726581df1b98f7249d4601"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js",
+      "byteSize": 115753,
+      "sha256": "4ad64c6ab5683b15fb49228dd9fde862e8c4d0b483480ce18cc1beee8f733d8c"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/workbench-return/workbench-return-client.js.map",
+      "byteSize": 526499,
+      "sha256": "4cabc349db93d97c77ec7cd018a895442f81ce69615a64f16afd58c3b9c486bd"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js",
+      "byteSize": 368076,
+      "sha256": "c3e65763a46f9e2fad7d52e1a10b7d3ca5f91f16ef825ceecac537858720489f"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/artifacts/packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "byteSize": 1115170,
+      "sha256": "6a3388b88aea04ba05658608da460a9b6bf1a58266d1b399b058e53276a21f75"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/contracts/openapi.json",
+      "byteSize": 951185,
+      "sha256": "d753a83a03bf9be339d912e1d955f62eae4a670788ece95e21a69f1fac75b3a4"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/contracts/src/index.ts",
+      "byteSize": 763,
+      "sha256": "370a52079c8622569733e970c738e5f3c66be94238f3bd285a590265e08e20a2"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/contracts/src/openapi.ts",
+      "byteSize": 27611,
+      "sha256": "bfa366a5e13c9026c91ee8f6feef0664a2b5f3f2a691d66cbdb07fd1bd5430eb"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/contracts/src/workbench-delivery.ts",
+      "byteSize": 1460,
+      "sha256": "c580b698e85ee94afd05aaedb68a5b3ed7e939c02138b5f6ac4a4307cfb38b09"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/acceptance-page.ts",
+      "byteSize": 3518,
+      "sha256": "7dfdd2bf7eef4559fb31a5c0b4034c6d43c9e4136988de4efb2b26ac8fc6cad4"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/acceptance.ts",
+      "byteSize": 11018,
+      "sha256": "c2aeb57041f97f430415a381f835d3bda9ed8fc5e5d4409bf70b5ae2e0534b4d"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/export-page.ts",
+      "byteSize": 6022,
+      "sha256": "a9956f3ab02acfe6236cd723584015c63f80d4cf9063f08825c6dd22bed5e029"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/preview-management-page.ts",
+      "byteSize": 3662,
+      "sha256": "9b89a4e42be5c16b5296b7d9daff9fe23dbb6fd5a02865f82de0f9dd35f7ab78"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/preview-management.ts",
+      "byteSize": 7528,
+      "sha256": "721ed807c1d78c0c415503a8fc753cb5d3bf6935f43e1c60c69de382cf782ff4"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/release.ts",
+      "byteSize": 8801,
+      "sha256": "51089324b9b7ee8470b4618fdb3f26867adc3dcf4938bfe3d74020a43391d35b"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/review.ts",
+      "byteSize": 8307,
+      "sha256": "eb3003253119072b30e442ea0053575778deb9f65f1583555b3ba6f10d40bfb6"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/web/workbench-client.tsx",
+      "byteSize": 42539,
+      "sha256": "18f251b0e5517c934b3967eeb67885aa446c423a18bdae1d6e8d737c2f48f23f"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/web/workbench-delivery.tsx",
+      "byteSize": 7417,
+      "sha256": "c68d9ee3225e55e23b7ad0bee7b9ffa778ef23be162aef27560bdf016d613fc4"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/web/workbench-reading.ts",
+      "byteSize": 3278,
+      "sha256": "f2f6ef92646ead607227510067c63869eb1ee3caf7ba91adddbb74e69e6a25ae"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/web/workbench-return-client.tsx",
+      "byteSize": 481,
+      "sha256": "c1830ebc7cac0683dae493b0ba77b4bdcabbd64b54fb7aed7fb037a45f9733db"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/web/workbench-task-entry.tsx",
+      "byteSize": 4410,
+      "sha256": "dc0873e69fbec4a4a007f1db5661470b7f4f672e34017280958efd0941b4f029"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/workbench-delivery.ts",
+      "byteSize": 4092,
+      "sha256": "020b98003649ca90ba5022f970d1ff1715320c04a35d9af919afafc3836aff6f"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/workbench-return.ts",
+      "byteSize": 1811,
+      "sha256": "f3ed4355d9739d991b2e3f8f0052b323204f7fdd97789835e5979df2d47b49d1"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/src/workbench.ts",
+      "byteSize": 3683,
+      "sha256": "619af96b244bf9f3d1d24edbd9900e7aa0d8757ab2d7f12c12a16cc924e95197"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/packages/input-api/tsdown.web.config.ts",
+      "byteSize": 1148,
+      "sha256": "d603412fe786366334451e4846c5ea68a4ab1ec2a5e0b2db4094034a3ba05850"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/tests/browser/workbench-delivery.test.mjs",
+      "byteSize": 11541,
+      "sha256": "ccda9f9398bd215b7f935f25e8f4b065f252f5fdfe7b53eaed765d68a220130e"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/tests/fixtures/workbench-delivery.mjs",
+      "byteSize": 3917,
+      "sha256": "995ded3af62ab03f594909b7280e0314e49057e2d887a55ad7349062caf4b246"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/inputs/tests/workbench-delivery.test.mjs",
+      "byteSize": 5095,
+      "sha256": "1af9e069898faee69b45b197a541da3d3ab64450ac2a9f91ebe2c015f114c419"
+    },
+    {
+      "file": "failed-source/ui-2026-11-15T23-54-04-231Z/manifest.json",
+      "byteSize": 8403,
+      "sha256": "4588bd2452892a6da211d22f3109909b6d9e00deab74207a7542d3e4b13453d3"
+    },
+    {
+      "file": "failure-notes.json",
+      "byteSize": 4630,
+      "sha256": "22b05eb8633d1a5dc2f42ae9639148923d181051d44e45eab731341150de6775"
+    },
+    {
+      "file": "failure-preservation-driver.mjs",
+      "byteSize": 2389,
+      "sha256": "b0b3a5a19aa3beeb203244e77ef6303f3539dfd16343ecb798c5181c3493c541"
+    },
+    {
+      "file": "final-binding.json",
+      "byteSize": 426424,
+      "sha256": "4434d81a005045775a1773dbc5d5542ab9253ec80a98e3faa67b498c7b21e96b"
+    },
+    {
+      "file": "fixture-probe.json",
+      "byteSize": 2794,
+      "sha256": "3b29de31cbc6bc04acc39c9561d8e32f687b94c8c040912edbdf497235b158e1"
+    },
+    {
+      "file": "http-2026-11-15T23-54-04-181Z.json",
+      "byteSize": 144710,
+      "sha256": "2bb69d8d721757d2e8d77a49d5fc6185c100080b32c4385b289fda35bb0302ad"
+    },
+    {
+      "file": "http-2026-11-15T23-54-04-181Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "http-2026-11-15T23-54-04-181Z.stdout.log",
+      "byteSize": 3406,
+      "sha256": "7e7822f563b2523cdec41f3654066ee92bc5439af0b50ae550c414d55942ba3a"
+    },
+    {
+      "file": "http-2026-11-16T00-20-02-064Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "http-2026-11-16T00-20-02-064Z.stdout.log",
+      "byteSize": 361,
+      "sha256": "ea50272e675c9666dd427b5f2a4a0981299cf032f92b48fb07b49e82b2f7af4a"
+    },
+    {
+      "file": "http-2026-11-16T01-02-00-273Z.json",
+      "byteSize": 144710,
+      "sha256": "57dd3e74eac1a75d250b5f79429ef56cd99124712eb757a2793966ca5b47cf7b"
+    },
+    {
+      "file": "http-2026-11-16T01-02-00-273Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "http-2026-11-16T01-02-00-273Z.stdout.log",
+      "byteSize": 2589,
+      "sha256": "ba31c65924547f7cc2160c4f44aae6af15155468a5cacd9ad825cb958e208d39"
+    },
+    {
+      "file": "incomplete-http-observation.json",
+      "byteSize": 658,
+      "sha256": "b493246949ee418ad563c4fa65b416534c138c6326239a91e06bf274c0dbf62f"
+    },
+    {
+      "file": "lint-2026-11-15T23-52-09-383Z.json",
+      "byteSize": 142589,
+      "sha256": "113d8e16d22dad6f433e60038154858c9e3aeebf66846879d2a9ee4de6a75c31"
+    },
+    {
+      "file": "lint-2026-11-15T23-52-09-383Z.stderr.log",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "lint-2026-11-15T23-52-09-383Z.stdout.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "lint-2026-11-16T00-08-52-312Z.json",
+      "byteSize": 142589,
+      "sha256": "00d97b835b0f7da15227183942b67568c180e9750476464c3df7be6bfc53fa5c"
+    },
+    {
+      "file": "lint-2026-11-16T00-08-52-312Z.stderr.log",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "lint-2026-11-16T00-08-52-312Z.stdout.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "lint-2026-11-16T00-15-02-504Z.json",
+      "byteSize": 144616,
+      "sha256": "195a4353d0574f45fa8865210e985e750d367638c2065a9793de23e876d5afb8"
+    },
+    {
+      "file": "lint-2026-11-16T00-15-02-504Z.stderr.log",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "lint-2026-11-16T00-15-02-504Z.stdout.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "lint-2026-11-16T01-24-06-920Z.json",
+      "byteSize": 144616,
+      "sha256": "7ae091e11f4e72c2cc505b1f70cdfe821d305da6bdb21474850e76b4816884ac"
+    },
+    {
+      "file": "lint-2026-11-16T01-24-06-920Z.stderr.log",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "lint-2026-11-16T01-24-06-920Z.stdout.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "lint-2026-11-16T01-33-56-500Z.json",
+      "byteSize": 144616,
+      "sha256": "4da343443f8a3d8c56e790c4413dc851c2dd5f67306f1a19ffabaf6d43cec2df"
+    },
+    {
+      "file": "lint-2026-11-16T01-33-56-500Z.stderr.log",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "lint-2026-11-16T01-33-56-500Z.stdout.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "lint-2026-11-16T01-38-32-254Z.json",
+      "byteSize": 144616,
+      "sha256": "f58f4614269643ef685d683999b3562ba2aa12d07e571f54ec3377d18ff3fdc8"
+    },
+    {
+      "file": "lint-2026-11-16T01-38-32-254Z.stderr.log",
+      "byteSize": 174,
+      "sha256": "3f994f2b597b276e8c46c640a1220555e4e9cff07d5159a422721bcc7fb16661"
+    },
+    {
+      "file": "lint-2026-11-16T01-38-32-254Z.stdout.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "localBuild-2026-11-16T00-15-02-455Z.json",
+      "byteSize": 144653,
+      "sha256": "7d8402a63482be9be405d1942e5e1c4f5b18ac977b78c8c34291f238a369122d"
+    },
+    {
+      "file": "localBuild-2026-11-16T00-15-02-455Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "localBuild-2026-11-16T00-15-02-455Z.stdout.log",
+      "byteSize": 608,
+      "sha256": "c2cf67f801feb206ecb815e9c7322775cdd90c2fd26bd5962ac4784199a39f72"
+    },
+    {
+      "file": "management-checks.json",
+      "byteSize": 2229,
+      "sha256": "99b619882f0492573c42b357c467633fc35c2fd8d74a05eab842c94f9bef5a4d"
+    },
+    {
+      "file": "management-driver.mjs",
+      "byteSize": 2294,
+      "sha256": "750a515dc790debefdbffa8785254d15f17ab2ace07fc6fd2d3516da7395e7ff"
+    },
+    {
+      "file": "non-input-test-diff.json",
+      "byteSize": 2247,
+      "sha256": "22fb6eae8f9c49d820d4593b24392fc929da2c4ddd9bbd57d808d0cce7d79b79"
+    },
+    {
+      "file": "observations/browser-state-1794792530684.json",
+      "byteSize": 2709,
+      "sha256": "08bb8451279596fe0b0fb325e2c64f56eaf38ae45337ba002da099de971fa49f"
+    },
+    {
+      "file": "observations/browser-state-1794792879306.json",
+      "byteSize": 2153,
+      "sha256": "445eb9faf5277ced64c6403a5df4713097e8a9a9d65e594e53fc27a2d11a0a97"
+    },
+    {
+      "file": "record-driver.mjs",
+      "byteSize": 9408,
+      "sha256": "762ecd677a290c3bc98256c5cc99b95c72f44e09466bb461789f5de03b403c41"
+    },
+    {
+      "file": "regression-2026-11-16T01-06-01-664Z.json",
+      "byteSize": 144977,
+      "sha256": "30d25178ebb799ab985d0e6f30c939b5ad8ab0375382a1d43bd44b812be61117"
+    },
+    {
+      "file": "regression-2026-11-16T01-06-01-664Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "regression-2026-11-16T01-06-01-664Z.stdout.log",
+      "byteSize": 24082,
+      "sha256": "a291565259b1d3ed16f4c7219e31368f1d70bf61ccb6c84bb2b23a45ab3b9af1"
+    },
+    {
+      "file": "screenshots/delivery-desktop.png",
+      "byteSize": 106698,
+      "sha256": "7973c7b459f806cdb43b14d5c5d74a41f7f9e459311308a383a8248884abb48f"
+    },
+    {
+      "file": "screenshots/delivery-mobile.png",
+      "byteSize": 48507,
+      "sha256": "8d7730675829aeb9b14da38eefc44ab6f2c17c34719cc002f592d0413f9e0e9d"
+    },
+    {
+      "file": "taskBuild-2026-11-16T00-15-02-248Z.json",
+      "byteSize": 144651,
+      "sha256": "d704671ca7be4d1ac370bd06576bba1587beb1353efeea1c7e0dbe578d69f0bd"
+    },
+    {
+      "file": "taskBuild-2026-11-16T00-15-02-248Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "taskBuild-2026-11-16T00-15-02-248Z.stdout.log",
+      "byteSize": 603,
+      "sha256": "7f00fd93705690720e6f27d52d030ef422b1366b668500040cd9899897b081eb"
+    },
+    {
+      "file": "type-2026-11-15T23-52-09-474Z.json",
+      "byteSize": 144621,
+      "sha256": "529ba9ed22d6b0b672ace61f36d88e106832ea07b7b778b2e6b9829117ba0816"
+    },
+    {
+      "file": "type-2026-11-15T23-52-09-474Z.stderr.log",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "file": "type-2026-11-15T23-52-09-474Z.stdout.log",
+      "byteSize": 1088,
+      "sha256": "2830a653190c4aabd6501446d1e259a230b0c5cc6ce2b93061551318b46cf8fd"
+    },
+    {
+      "file": "type-2026-11-16T00-08-52-385Z.json",
+      "byteSize": 142333,
+      "sha256": "f905ec9034a812bae6ec0c226552d1f31edbb229046ae5087988c9332597e7ea"
+    },
+    {
+      "file": "type-2026-11-16T00-08-52-385Z.stderr.log",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "file": "type-2026-11-16T00-08-52-385Z.stdout.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "type-2026-11-16T00-15-02-371Z.json",
+      "byteSize": 144621,
+      "sha256": "1bca549082e5c8b2c7fb6787121ad961facc67d2f2753a9199d97a6f85702e9c"
+    },
+    {
+      "file": "type-2026-11-16T00-15-02-371Z.stderr.log",
+      "byteSize": 32,
+      "sha256": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+    },
+    {
+      "file": "type-2026-11-16T00-15-02-371Z.stdout.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ui-2026-11-15T23-54-04-231Z.json",
+      "byteSize": 144716,
+      "sha256": "1da0f84356838314a34ecf573bad07a197a79ba1293366f50bc9bfb2f39473bd"
+    },
+    {
+      "file": "ui-2026-11-15T23-54-04-231Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ui-2026-11-15T23-54-04-231Z.stdout.log",
+      "byteSize": 10987,
+      "sha256": "d8299056fe794c7414b368140ba2a5f845b476cdfbfe9f8e868422a1ed9d6f29"
+    },
+    {
+      "file": "ui-2026-11-16T01-05-00-681Z.json",
+      "byteSize": 144716,
+      "sha256": "632e9f2db12959a7fceba7b3b83fcb3594615f7f47034744ff4bedd650048209"
+    },
+    {
+      "file": "ui-2026-11-16T01-05-00-681Z.stderr.log",
+      "byteSize": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "ui-2026-11-16T01-05-00-681Z.stdout.log",
+      "byteSize": 5036,
+      "sha256": "11ab53b41f0c8b592fa3a174fdf22edf8e6ea779206aa968ea6fced3b77d0bbf"
+    },
+    {
+      "file": "validation-driver.mjs",
+      "byteSize": 3694,
+      "sha256": "ba68fe26ed14cbdab45cab891bafd9077c947cfa1e0571fe6ec8cf1e08656aaa"
+    },
+    {
+      "file": "visual-review.json",
+      "byteSize": 1532,
+      "sha256": "958df2735698cf2c6ddeb07886f943ed5655a2d89c0181abb33ef823f528169e"
+    }
+  ]
+}

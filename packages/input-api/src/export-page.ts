@@ -5,6 +5,7 @@ import {z} from 'zod';
 import {opaqueKey,parseContract,releaseExportEntryView,releaseExportListView} from '@devmesh/contracts';
 import type {LocalContentStore} from '@devmesh/blob-store';
 import type {Identity} from './index.js';
+import {getWorkbenchReturnContext,workbenchReturnNav,workbenchReturnStyle} from './workbench-return.js';
 
 type Route=(handler:(request:Request,response:Response,identity:Identity)=>Promise<void>)=>RequestHandler;
 const empty=z.strictObject({});
@@ -19,11 +20,11 @@ export function mountExportPages(router:Router,content:LocalContentStore,route:R
     return parseContract(releaseExportEntryView,await content.storage.request('getReleaseExportEntry',{principalId:identity.principalId,releaseId}));
   };
   router.get('/releases/:releaseId/exports/view',route(async(request,response,identity)=>{
-    const release=await entry(request,identity),list=parseContract(releaseExportListView,await content.storage.request('listReleaseExports',{principalId:identity.principalId,releaseId:release.releaseId,limit:20})),nonce=randomBytes(18).toString('base64url');
+    const release=await entry(request,identity),list=parseContract(releaseExportListView,await content.storage.request('listReleaseExports',{principalId:identity.principalId,releaseId:release.releaseId,limit:20})),returnContext=await getWorkbenchReturnContext(content,identity.principalId,release.runId),nonce=randomBytes(18).toString('base64url');
     const json=JSON.stringify({entry:release,list}).replaceAll('<','\\u003c').replaceAll('>','\\u003e').replaceAll('&','\\u0026').replaceAll('\u2028','\\u2028').replaceAll('\u2029','\\u2029');
     response.setHeader('Referrer-Policy','no-referrer');
     response.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'nonce-${nonce}'; style-src 'nonce-${nonce}'; connect-src 'self'; frame-src 'none'; frame-ancestors 'self'; base-uri 'none'; object-src 'none'; worker-src 'none'; form-action 'none'`);
-    response.type('text/html; charset=utf-8').send(`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>交付包 · DevMesh</title><style nonce="${nonce}">${styles}</style></head><body><div id="root"><main><h1>交付包</h1><p role="status">正在加载交付记录…</p><noscript>请启用 JavaScript 查看和创建交付包。</noscript></main></div><script id="export-data" type="application/json" nonce="${nonce}">${json}</script><script defer nonce="${nonce}" src="/api/v1/releases/${encodeURIComponent(release.releaseId)}/exports/client.js"></script></body></html>`);
+    response.type('text/html; charset=utf-8').send(`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>交付包 · DevMesh</title><style nonce="${nonce}">${styles}${workbenchReturnStyle}</style></head><body>${workbenchReturnNav(returnContext,nonce)}<div id="root"><main><h1>交付包</h1><p role="status">正在加载交付记录…</p><noscript>请启用 JavaScript 查看和创建交付包。</noscript></main></div><script id="export-data" type="application/json" nonce="${nonce}">${json}</script><script defer nonce="${nonce}" src="/api/v1/releases/${encodeURIComponent(release.releaseId)}/exports/client.js"></script></body></html>`);
   }));
   router.get('/releases/:releaseId/exports/client.js',route(async(request,response,identity)=>{
     await entry(request,identity);

@@ -1,0 +1,22 @@
+{
+  "file": "tests/browser/acceptance-page.test.mjs",
+  "edits": [
+    [
+      "const f=await fixture(t,{human:true,humanWork:true}),prepareKeys=[],commitKeys=[];let losePrepare=true,loseCommit=true;",
+      "const f=await fixture(t,{human:true,humanWork:true}),prepareKeys=[],commitKeys=[],commitOutcome=Promise.withResolvers();let losePrepare=true,loseCommit=true;"
+    ],
+    [
+      "await f.page.route('**/candidates/*:accept',async route=>{commitKeys.push(route.request().headers()['idempotency-key']);const response=await route.fetch();if(loseCommit){loseCommit=false;return route.abort('failed');}return route.fulfill({response});});",
+      "await f.page.route('**/candidates/*:accept',async route=>{commitKeys.push(route.request().headers()['idempotency-key']);try{const response=await route.fetch(),observation={status:response.status(),body:await response.json()};commitOutcome.resolve(observation);if(loseCommit&&response.status()===202){loseCommit=false;return route.abort('failed');}return route.fulfill({response});}catch(error){commitOutcome.resolve({transportError:String(error)});return route.abort('failed');}});"
+    ],
+    [
+      "waitFor();assert.equal(f.get('SELECT count(*) n FROM releases').n,1);assert.equal(f.get('SELECT count(*) n FROM release_promotion_outbox').n,1);",
+      "waitFor();const committed=await commitOutcome.promise;t.diagnostic(JSON.stringify({finalAcceptanceResponse:committed}));assert.equal(committed.status,202,JSON.stringify(committed));assert.equal(f.get('SELECT count(*) n FROM releases').n,1);assert.equal(f.get('SELECT count(*) n FROM release_promotion_outbox').n,1);"
+    ],
+    [
+      "await f.page.getByText('暂时无法核实结果；请保留原请求，刷新状态或核实原提交。',{exact:true}).waitFor();const committed=await commitOutcome.promise;t.diagnostic(JSON.stringify({finalAcceptanceResponse:committed}));assert.equal(committed.status,202,JSON.stringify(committed));",
+      "const committed=await commitOutcome.promise;t.diagnostic(JSON.stringify({finalAcceptanceResponse:committed}));assert.equal(committed.status,202,JSON.stringify(committed));await f.page.getByText('暂时无法核实结果；请保留原请求，刷新状态或核实原提交。',{exact:true}).waitFor();"
+    ]
+  ],
+  "scope": "Strengthened original acceptance browser test only. No application, helper, fixture or artifact change."
+}

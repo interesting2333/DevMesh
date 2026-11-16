@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "file": "tests/browser/workbench-page.test.mjs",
+      "beforeSha256": "0be6c15150838e923a03cb76f4149ca1808b4ca20a0f97f8408d185b462e4f86",
+      "afterSha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb",
+      "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/workbench-page.test.mjs",
+      "actualDiff": "One exact text selector only: current-Run supplementary-input notice replaces the old generic wording. All original no-composer, IDB absence and revocation assertions remain byte-identical.",
+      "nonInputsFor": [
+        "build",
+        "type",
+        "contracts",
+        "http",
+        "ui",
+        "regression"
+      ],
+      "reason": "This standalone browser .test.mjs is not an application build/type/contract-check input and is neither invoked nor imported by those other three runtime groups. Application, fixture, shared helper and all 18 tested artifact bytes are unchanged. Final Lint and complete affected browser regression use current bytes."
+    },
+    {
+      "file": "tests/browser/acceptance-page.test.mjs",
+      "beforeSha256": "9eefbf3e0511de45dafcec2b497ada8e43a894ae97ed82b3f67d2e04552a9baf",
+      "afterSha256": "31e92af2ce9b6dc4d095492bc38e993641c41c91dee88cb23cfb9f30b69c11d4",
+      "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/acceptance-page.test.mjs",
+      "actualDiff": "Await and record the actual intercepted final HTTP response; require the existing contract status202 before deliberate committed ACK loss; preserve every prior SQL/outbox/uniqueness/reopen/recovery assertion. Record non202/transport failures and fail instead of treating any unknown page message as proof of commit.",
+      "nonInputsFor": [
+        "build",
+        "type",
+        "contracts",
+        "http",
+        "ui",
+        "regression"
+      ],
+      "reason": "Standalone acceptance-page browser .test.mjs is not a build/type/contract-check input and is not imported/invoked by the HTTP, new UI or HTTP-regression groups. Application/fixture/helper and actual runtime artifacts are unchanged; final complete browser and Lint use the corrected current tests."
+    }
+  ]
+}

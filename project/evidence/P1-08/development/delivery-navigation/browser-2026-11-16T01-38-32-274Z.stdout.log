@@ -1,0 +1,328 @@
+TAP version 13
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements
+ok 1 - actual React keeps prepare and final acceptance separate and recovers lost original HTTP acknowledgements
+  ---
+  duration_ms: 28343.2964
+  type: 'test'
+  ...
+# {"finalAcceptanceResponse":{"status":202,"body":{"operationId":"op_1c7d9496da9b497da5b952d5ecf60997","status":"SUCCEEDED","result":{"releaseId":"release_59b674f2529c494fb11dfccaea62aea4","projectId":"prj_1daa8f2b727143f29f59837b2803633a","runId":"run_ee338ae8f0174a8ea7246ecd4764ff4e","candidateId":"candidate_2a6fc92b9ff74f99b190773f47625164","candidateRevision":1,"manifestHash":"6054b5493a9803650f52bcc6dbf8a1920257e242d34095d1cfbe652cd5c2426e","reviewHash":"094635be04df22dee70a51678efbcff5566da9ae73197f92696a8c709e1cd486","preparationOperationId":"op_e65e4fb5acb5493587d705bc8a52f808","acceptanceOperationId":"op_1c7d9496da9b497da5b952d5ecf60997","requestHash":"408710d48e5ab9f59576adb58f62379eea788c679b97c4e8742a864161b72cfc","proofHash":"66c8f7535cdb267cb2bf2a78cc70b0bd58c22db9216ec88a5d0e69b7d5dfa071","datasetId":"dataset_60a431e1e1094874900c5903ea4b111b","previousReleaseId":null,"acceptedBy":"user_1","acceptedAt":"2026-11-16T01:39:01.001Z","acceptanceState":"ACCEPTED","publicationState":"PENDING"},"links":{"preparation":"/api/v1/runs/run_ee338ae8f0174a8ea7246ecd4764ff4e/candidates/candidate_2a6fc92b9ff74f99b190773f47625164/acceptance/preparations/op_e65e4fb5acb5493587d705bc8a52f808"}}}}
+# {"browser":"157.0.4341.42","prepareRequests":2,"acceptRequests":2,"releaseCount":1,"scope":"Actual React/Edge/HTTP/file-backed Worker/CAS/T5. Source/admission/Runner/OCI/fences/health/manual review and browser identity are explicit fixtures; not physical or product acceptance."}
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React closes only unsent originals and records a sent abort without claiming cleanup
+ok 2 - actual React closes only unsent originals and records a sent abort without claiming cleanup
+  ---
+  duration_ms: 34156.7428
+  type: 'test'
+  ...
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React blocks damaged pending records, pages originals and clears protected data after revocation
+ok 3 - actual React blocks damaged pending records, pages originals and clears protected data after revocation
+  ---
+  duration_ms: 20892.1499
+  type: 'test'
+  ...
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:28608) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: explicit display fixtures show replacement and migration plans while unconfigured real entry stays closed
+ok 4 - explicit display fixtures show replacement and migration plans while unconfigured real entry stays closed
+  ---
+  duration_ms: 6178.0021
+  type: 'test'
+  ...
+# REPLACE/PRESERVE_MIGRATE in this case are explicit intercepted UI display/command fixtures, not a formal successor candidate or physical migration/replacement chain.
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React persists all three original intents before POST and recovers lost ACK without duplicate datasets/previews or data loss
+ok 5 - actual React persists all three original intents before POST and recovers lost ACK without duplicate datasets/previews or data loss
+  ---
+  duration_ms: 17607.226
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","requests":{"dataset":2,"start":2,"stop":2},"scope":"Actual React/Edge/HTTP/control Worker/local application SQLite, original ACK recovery and independent controlled preview start/stop. Source/OCI/container/browser identity are explicit fixtures; no physical Linux or product acceptance."}
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React blocks invalid pending and stale submissions, resets consent and removes protected data after membership removal
+ok 6 - actual React blocks invalid pending and stale submissions, resets consent and removes protected data after membership removal
+  ---
+  duration_ms: 4297.8113
+  type: 'test'
+  ...
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React independently pages dataset and preview originals and keeps selected records while paging
+ok 7 - actual React independently pages dataset and preview originals and keeps selected records while paging
+  ---
+  duration_ms: 8301.696
+  type: 'test'
+  ...
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:14116) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: unconfigured actual entry displays history without offering new dataset or start
+ok 8 - unconfigured actual entry displays history without offering new dataset or start
+  ---
+  duration_ms: 3810.8265
+  type: 'test'
+  ...
+# (node:39724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React recovers a committed creation with lost HTTP response after reload, then downloads the original ZIP
+ok 9 - actual React recovers a committed creation with lost HTTP response after reload, then downloads the original ZIP
+  ---
+  duration_ms: 10392.9889
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","actualReact":true,"creationRequests":2,"durableJobs":1,"downloadHash":"80001e3660593b56a55709c1957c8257f0f2d9e3413b9b993da91637934ba017","scope":"Actual local control Worker/CAS/Git/HTTP/React/Edge; upstream acceptance and physical facts are explicit fixtures; no OIDC, Linux or product acceptance"}
+# (node:39724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React retries only the failed original and renders unsafe metadata as inert data
+ok 10 - actual React retries only the failed original and renders unsafe metadata as inert data
+  ---
+  duration_ms: 11142.6286
+  type: 'test'
+  ...
+# (node:39724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:39724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React traverses the stable cursor and closes protected content after membership revocation
+ok 11 - actual React traverses the stable cursor and closes protected content after membership revocation
+  ---
+  duration_ms: 8486.0516
+  type: 'test'
+  ...
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+ok 12 - actual React recovers an explicit manual review whose committed HTTP acknowledgement was lost after reload
+  ---
+  duration_ms: 6047.5791
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","originalRequests":2,"durableResults":1,"scope":"Actual local HTTP/Worker/React/Edge; upstream source/admission/Runner/image and browser identity are explicit fixtures; no real model/OIDC/Linux/product acceptance"}
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React classifies, corrects and explicitly withdraws a rejection while unsafe text stays inert
+ok 13 - actual React classifies, corrects and explicitly withdraws a rejection while unsafe text stays inert
+  ---
+  duration_ms: 5203.6719
+  type: 'test'
+  ...
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual React pages original item history and clears protected observations on membership revocation
+ok 14 - actual React pages original item history and clears protected observations on membership revocation
+  ---
+  duration_ms: 12225.6441
+  type: 'test'
+  ...
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:36028) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an unreadable pending request blocks new submissions until the user explicitly clears it after checking
+ok 15 - an unreadable pending request blocks new submissions until the user explicitly clears it after checking
+  ---
+  duration_ms: 4056.2415
+  type: 'test'
+  ...
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project
+ok 16 - actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project
+  ---
+  duration_ms: 2653.9759
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: lookup miss retains original; only explicit retry uses exact message key, body and condition
+ok 17 - lookup miss retains original; only explicit retry uses exact message key, body and condition
+  ---
+  duration_ms: 2899.9145
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change
+ok 18 - project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change
+  ---
+  duration_ms: 2710.4391
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers
+ok 19 - failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers
+  ---
+  duration_ms: 2819.3534
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: changing trusted account rejects old page original before effects; reentry isolates subject drafts
+ok 20 - changing trusted account rejects old page original before effects; reentry isolates subject drafts
+  ---
+  duration_ms: 2947.3934
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: viewer and revoked contexts expose no composer; stale membership refresh clears protected messages
+ok 21 - viewer and revoked contexts expose no composer; stale membership refresh clears protected messages
+  ---
+  duration_ms: 2713.6278
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: rapid project switch aborts an old workspace response and never applies its context
+ok 22 - rapid project switch aborts an old workspace response and never applies its context
+  ---
+  duration_ms: 2395.7045
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical Run is read only and explicitly returns to the current Run
+ok 23 - historical Run is read only and explicitly returns to the current Run
+  ---
+  duration_ms: 2262.4176
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:9724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs
+ok 24 - IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs
+  ---
+  duration_ms: 2645.2601
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React entry, CSP, Edge native IndexedDB and file Worker/Input API. Explicit mutable test IdentityResolver; no OIDC, model, Runner, real WebSocket or product acceptance."}
+# (node:26348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:26348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: active first Run saves a separate null-release next target; real accepted basis requires explicit review and copying
+ok 25 - active first Run saves a separate null-release next target; real accepted basis requires explicit review and copying
+  ---
+  duration_ms: 3472.4745
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:26348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: protected task chooser freezes exact material; ACK loss reload recovers one task after fresh admission disappears
+ok 26 - protected task chooser freezes exact material; ACK loss reload recovers one task after fresh admission disappears
+  ---
+  duration_ms: 3541.6981
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:26348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: obsolete task original closes with project proof and keeps complete old target readable at the current project
+ok 27 - obsolete task original closes with project proof and keeps complete old target readable at the current project
+  ---
+  duration_ms: 2937.7818
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:26348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: removed task material retains immutable history through explicit blank and mobile; viewer and history mount no task client
+ok 28 - removed task material retains immutable history through explicit blank and mobile; viewer and history mount no task client
+  ---
+  duration_ms: 4258.798
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:26348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fresh task preflight refuses a newer actual project before any native command or task POST
+ok 29 - fresh task preflight refuses a newer actual project before any native command or task POST
+  ---
+  duration_ms: 2850.7547
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+# (node:26348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native task draft abort retains edited goal and task fields, blocks switching and retries before any POST
+ok 30 - native task draft abort retains edited goal and task fields, blocks switching and retries before any POST
+  ---
+  duration_ms: 2968.3411
+  type: 'test'
+  ...
+# {"browser":"157.0.4341.42","scope":"Actual protected React/CSP, File chooser, native IndexedDB, HTTP/SQLite/file Worker. Accepted release and ended Run use explicit metadata fixtures after real publishPlan; no real acceptance/physical-stop, model/OIDC/Linux, WS or complete product approval."}
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 232881.3001

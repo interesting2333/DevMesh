@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "prefix": "http-2026-11-16T00-20-02-064Z",
+  "checkedAt": "2026-11-16T01:01:11.308Z",
+  "observation": "Exec handle 23111 is missing. A fresh Win32 process query found neither the p154 HTTP validation driver nor its workbench-delivery test child. Only partial TAP startup logs exist; no test result, process exit code, after-inventory or validation JSON exists. The stopped invocation cannot be counted as a pass or a complete failure. Original partial logs are retained; a fresh full invocation is necessary.",
+  "businessPassCountAdded": 0,
+  "cause": "Unknown; absence of the handle/process does not establish why it stopped."
+}

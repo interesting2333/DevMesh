@@ -1,0 +1,6 @@
+packages/input-api/src/web/workbench-client.tsx(236,64): error TS2345: Argument of type '{ updatedAt: string; candidateId: string | null; candidateAfterRevision: number; tab: "任务" | "协作" | "成果" | "预览" | "记录"; panel: "sidebar" | "conversation" | "detail"; schemaVersion: 1; principalId: string; projectId: string & z.core.$brand<...>; runId: string & z.core.$brand<...>; }' is not assignable to parameter of type '{ principalId: string; projectId: string & $brand<"prj">; runId: string & $brand<"run">; schemaVersion: 1; tab: "任务" | "协作" | "成果" | "预览" | "记录"; panel: "sidebar" | "conversation" | "detail"; candidateId: (string & $brand<...>) | null; candidateAfterRevision: number; updatedAt: string; }'.
+  Types of property 'candidateId' are incompatible.
+    Type 'string | null' is not assignable to type '(string & $brand<"candidate">) | null'.
+      Type 'string' is not assignable to type 'string & $brand<"candidate">'.
+        Type 'string' is not assignable to type '$brand<"candidate">'.
+[ELIFECYCLE] Command failed with exit code 2.

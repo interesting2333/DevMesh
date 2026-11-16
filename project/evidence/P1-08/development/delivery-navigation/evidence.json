@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "parentTask": "P1-08",
+  "change": "implement-workbench-first-path",
+  "date": "2026-11-16",
+  "base": "66d684fbd3711365eed880ad8c49b3b3bc81493c",
+  "reviewer": "Codex / same-agent development review",
+  "groups": [
+    {
+      "name": "http",
+      "record": "http-2026-11-16T01-02-00-273Z.json",
+      "tests": 4,
+      "pass": 4,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/acceptance-page.test.mjs",
+        "tests/browser/workbench-page.test.mjs"
+      ],
+      "unrelatedTestInputDifferences": [
+        {
+          "file": "tests/browser/acceptance-page.test.mjs",
+          "beforeSha256": "9eefbf3e0511de45dafcec2b497ada8e43a894ae97ed82b3f67d2e04552a9baf",
+          "afterSha256": "31e92af2ce9b6dc4d095492bc38e993641c41c91dee88cb23cfb9f30b69c11d4",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/acceptance-page.test.mjs",
+          "actualDiff": "Await and record the actual intercepted final HTTP response; require the existing contract status202 before deliberate committed ACK loss; preserve every prior SQL/outbox/uniqueness/reopen/recovery assertion. Record non202/transport failures and fail instead of treating any unknown page message as proof of commit.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "Standalone acceptance-page browser .test.mjs is not a build/type/contract-check input and is not imported/invoked by the HTTP, new UI or HTTP-regression groups. Application/fixture/helper and actual runtime artifacts are unchanged; final complete browser and Lint use the corrected current tests."
+        },
+        {
+          "file": "tests/browser/workbench-page.test.mjs",
+          "beforeSha256": "0be6c15150838e923a03cb76f4149ca1808b4ca20a0f97f8408d185b462e4f86",
+          "afterSha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/workbench-page.test.mjs",
+          "actualDiff": "One exact text selector only: current-Run supplementary-input notice replaces the old generic wording. All original no-composer, IDB absence and revocation assertions remain byte-identical.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "This standalone browser .test.mjs is not an application build/type/contract-check input and is neither invoked nor imported by those other three runtime groups. Application, fixture, shared helper and all 18 tested artifact bytes are unchanged. Final Lint and complete affected browser regression use current bytes."
+        }
+      ]
+    },
+    {
+      "name": "ui",
+      "record": "ui-2026-11-16T01-05-00-681Z.json",
+      "tests": 5,
+      "pass": 5,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/acceptance-page.test.mjs",
+        "tests/browser/workbench-page.test.mjs"
+      ],
+      "unrelatedTestInputDifferences": [
+        {
+          "file": "tests/browser/acceptance-page.test.mjs",
+          "beforeSha256": "9eefbf3e0511de45dafcec2b497ada8e43a894ae97ed82b3f67d2e04552a9baf",
+          "afterSha256": "31e92af2ce9b6dc4d095492bc38e993641c41c91dee88cb23cfb9f30b69c11d4",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/acceptance-page.test.mjs",
+          "actualDiff": "Await and record the actual intercepted final HTTP response; require the existing contract status202 before deliberate committed ACK loss; preserve every prior SQL/outbox/uniqueness/reopen/recovery assertion. Record non202/transport failures and fail instead of treating any unknown page message as proof of commit.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "Standalone acceptance-page browser .test.mjs is not a build/type/contract-check input and is not imported/invoked by the HTTP, new UI or HTTP-regression groups. Application/fixture/helper and actual runtime artifacts are unchanged; final complete browser and Lint use the corrected current tests."
+        },
+        {
+          "file": "tests/browser/workbench-page.test.mjs",
+          "beforeSha256": "0be6c15150838e923a03cb76f4149ca1808b4ca20a0f97f8408d185b462e4f86",
+          "afterSha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/workbench-page.test.mjs",
+          "actualDiff": "One exact text selector only: current-Run supplementary-input notice replaces the old generic wording. All original no-composer, IDB absence and revocation assertions remain byte-identical.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "This standalone browser .test.mjs is not an application build/type/contract-check input and is neither invoked nor imported by those other three runtime groups. Application, fixture, shared helper and all 18 tested artifact bytes are unchanged. Final Lint and complete affected browser regression use current bytes."
+        }
+      ]
+    },
+    {
+      "name": "regression",
+      "record": "regression-2026-11-16T01-06-01-664Z.json",
+      "tests": 47,
+      "pass": 47,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/acceptance-page.test.mjs",
+        "tests/browser/workbench-page.test.mjs"
+      ],
+      "unrelatedTestInputDifferences": [
+        {
+          "file": "tests/browser/acceptance-page.test.mjs",
+          "beforeSha256": "9eefbf3e0511de45dafcec2b497ada8e43a894ae97ed82b3f67d2e04552a9baf",
+          "afterSha256": "31e92af2ce9b6dc4d095492bc38e993641c41c91dee88cb23cfb9f30b69c11d4",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/acceptance-page.test.mjs",
+          "actualDiff": "Await and record the actual intercepted final HTTP response; require the existing contract status202 before deliberate committed ACK loss; preserve every prior SQL/outbox/uniqueness/reopen/recovery assertion. Record non202/transport failures and fail instead of treating any unknown page message as proof of commit.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "Standalone acceptance-page browser .test.mjs is not a build/type/contract-check input and is not imported/invoked by the HTTP, new UI or HTTP-regression groups. Application/fixture/helper and actual runtime artifacts are unchanged; final complete browser and Lint use the corrected current tests."
+        },
+        {
+          "file": "tests/browser/workbench-page.test.mjs",
+          "beforeSha256": "0be6c15150838e923a03cb76f4149ca1808b4ca20a0f97f8408d185b462e4f86",
+          "afterSha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/workbench-page.test.mjs",
+          "actualDiff": "One exact text selector only: current-Run supplementary-input notice replaces the old generic wording. All original no-composer, IDB absence and revocation assertions remain byte-identical.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "This standalone browser .test.mjs is not an application build/type/contract-check input and is neither invoked nor imported by those other three runtime groups. Application, fixture, shared helper and all 18 tested artifact bytes are unchanged. Final Lint and complete affected browser regression use current bytes."
+        }
+      ]
+    },
+    {
+      "name": "browser",
+      "record": "browser-2026-11-16T01-38-32-274Z.json",
+      "tests": 30,
+      "pass": 30,
+      "skipped": 0,
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "unrelatedTestInputDifferences": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "record": "build-2026-11-16T00-15-01-860Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/acceptance-page.test.mjs",
+        "tests/browser/workbench-page.test.mjs"
+      ],
+      "unrelatedTestInputDifferences": [
+        {
+          "file": "tests/browser/acceptance-page.test.mjs",
+          "beforeSha256": "9eefbf3e0511de45dafcec2b497ada8e43a894ae97ed82b3f67d2e04552a9baf",
+          "afterSha256": "31e92af2ce9b6dc4d095492bc38e993641c41c91dee88cb23cfb9f30b69c11d4",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/acceptance-page.test.mjs",
+          "actualDiff": "Await and record the actual intercepted final HTTP response; require the existing contract status202 before deliberate committed ACK loss; preserve every prior SQL/outbox/uniqueness/reopen/recovery assertion. Record non202/transport failures and fail instead of treating any unknown page message as proof of commit.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "Standalone acceptance-page browser .test.mjs is not a build/type/contract-check input and is not imported/invoked by the HTTP, new UI or HTTP-regression groups. Application/fixture/helper and actual runtime artifacts are unchanged; final complete browser and Lint use the corrected current tests."
+        },
+        {
+          "file": "tests/browser/workbench-page.test.mjs",
+          "beforeSha256": "0be6c15150838e923a03cb76f4149ca1808b4ca20a0f97f8408d185b462e4f86",
+          "afterSha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/workbench-page.test.mjs",
+          "actualDiff": "One exact text selector only: current-Run supplementary-input notice replaces the old generic wording. All original no-composer, IDB absence and revocation assertions remain byte-identical.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "This standalone browser .test.mjs is not an application build/type/contract-check input and is neither invoked nor imported by those other three runtime groups. Application, fixture, shared helper and all 18 tested artifact bytes are unchanged. Final Lint and complete affected browser regression use current bytes."
+        }
+      ]
+    },
+    {
+      "name": "type",
+      "record": "type-2026-11-16T00-15-02-371Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/acceptance-page.test.mjs",
+        "tests/browser/workbench-page.test.mjs"
+      ],
+      "unrelatedTestInputDifferences": [
+        {
+          "file": "tests/browser/acceptance-page.test.mjs",
+          "beforeSha256": "9eefbf3e0511de45dafcec2b497ada8e43a894ae97ed82b3f67d2e04552a9baf",
+          "afterSha256": "31e92af2ce9b6dc4d095492bc38e993641c41c91dee88cb23cfb9f30b69c11d4",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/acceptance-page.test.mjs",
+          "actualDiff": "Await and record the actual intercepted final HTTP response; require the existing contract status202 before deliberate committed ACK loss; preserve every prior SQL/outbox/uniqueness/reopen/recovery assertion. Record non202/transport failures and fail instead of treating any unknown page message as proof of commit.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "Standalone acceptance-page browser .test.mjs is not a build/type/contract-check input and is not imported/invoked by the HTTP, new UI or HTTP-regression groups. Application/fixture/helper and actual runtime artifacts are unchanged; final complete browser and Lint use the corrected current tests."
+        },
+        {
+          "file": "tests/browser/workbench-page.test.mjs",
+          "beforeSha256": "0be6c15150838e923a03cb76f4149ca1808b4ca20a0f97f8408d185b462e4f86",
+          "afterSha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/workbench-page.test.mjs",
+          "actualDiff": "One exact text selector only: current-Run supplementary-input notice replaces the old generic wording. All original no-composer, IDB absence and revocation assertions remain byte-identical.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "This standalone browser .test.mjs is not an application build/type/contract-check input and is neither invoked nor imported by those other three runtime groups. Application, fixture, shared helper and all 18 tested artifact bytes are unchanged. Final Lint and complete affected browser regression use current bytes."
+        }
+      ]
+    },
+    {
+      "name": "lint",
+      "record": "lint-2026-11-16T01-38-32-254Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [],
+      "unrelatedTestInputDifferences": []
+    },
+    {
+      "name": "contracts",
+      "record": "contracts-2026-11-16T00-15-03-778Z.json",
+      "changedDuringRun": [],
+      "changedSinceRun": [
+        "tests/browser/acceptance-page.test.mjs",
+        "tests/browser/workbench-page.test.mjs"
+      ],
+      "unrelatedTestInputDifferences": [
+        {
+          "file": "tests/browser/acceptance-page.test.mjs",
+          "beforeSha256": "9eefbf3e0511de45dafcec2b497ada8e43a894ae97ed82b3f67d2e04552a9baf",
+          "afterSha256": "31e92af2ce9b6dc4d095492bc38e993641c41c91dee88cb23cfb9f30b69c11d4",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/acceptance-page.test.mjs",
+          "actualDiff": "Await and record the actual intercepted final HTTP response; require the existing contract status202 before deliberate committed ACK loss; preserve every prior SQL/outbox/uniqueness/reopen/recovery assertion. Record non202/transport failures and fail instead of treating any unknown page message as proof of commit.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "Standalone acceptance-page browser .test.mjs is not a build/type/contract-check input and is not imported/invoked by the HTTP, new UI or HTTP-regression groups. Application/fixture/helper and actual runtime artifacts are unchanged; final complete browser and Lint use the corrected current tests."
+        },
+        {
+          "file": "tests/browser/workbench-page.test.mjs",
+          "beforeSha256": "0be6c15150838e923a03cb76f4149ca1808b4ca20a0f97f8408d185b462e4f86",
+          "afterSha256": "5105563b1395d96b57514863d05ff665532e584310259a78944b69b0b77892cb",
+          "retainedBefore": "Git blob 66d684fbd3711365eed880ad8c49b3b3bc81493c:tests/browser/workbench-page.test.mjs",
+          "actualDiff": "One exact text selector only: current-Run supplementary-input notice replaces the old generic wording. All original no-composer, IDB absence and revocation assertions remain byte-identical.",
+          "nonInputsFor": [
+            "build",
+            "type",
+            "contracts",
+            "http",
+            "ui",
+            "regression"
+          ],
+          "reason": "This standalone browser .test.mjs is not an application build/type/contract-check input and is neither invoked nor imported by those other three runtime groups. Application, fixture, shared helper and all 18 tested artifact bytes are unchanged. Final Lint and complete affected browser regression use current bytes."
+        }
+      ]
+    }
+  ],
+  "totalPassed": 86,
+  "totalSkipped": 0,
+  "failures": [
+    {
+      "record": "browser-2026-11-16T01-07-47-087Z.json",
+      "code": 1,
+      "changedDuringRun": []
+    },
+    {
+      "record": "browser-2026-11-16T01-24-17-103Z.json",
+      "code": 1,
+      "changedDuringRun": []
+    },
+    {
+      "record": "browser-2026-11-16T01-33-56-518Z.json",
+      "code": 1,
+      "changedDuringRun": []
+    },
+    {
+      "record": "http-2026-11-15T23-54-04-181Z.json",
+      "code": 1,
+      "changedDuringRun": []
+    },
+    {
+      "record": "type-2026-11-15T23-52-09-474Z.json",
+      "code": 2,
+      "changedDuringRun": []
+    },
+    {
+      "record": "ui-2026-11-15T23-54-04-231Z.json",
+      "code": 1,
+      "changedDuringRun": []
+    }
+  ],
+  "failureNotes": {
+    "type-2026-11-15T23-52-09-474Z.json": "Initial typecheck exited 2: saveWorkbenchReading accepted the branded output type while the UI held an unparsed candidateId string. Its input now uses z.input<typeof workbenchReading>; the complete strict runtime parse still returns validated scoped IDs. No cast or relaxed schema was added.",
+    "http-2026-11-15T23-54-04-181Z.json": "Initial complete HTTP4: 3 passed, 1 failed. First case failed inside unchanged upstream releaseFreezeFixture/quality-runner before any delivery assertion: scripted quality job EXITED/exitCode0/errorCode null but stopRequested true. No root cause was established. No quality fixture, product stop rule, timeout or delivery assertion was relaxed. Original invocation and exact differing/new inputs plus artifacts are preserved. Later fixture-byte materialization is separately disclosed and does not explain this stop observation.",
+    "ui-2026-11-15T23-54-04-231Z.json": "Initial complete UI5: 0 passed, 5 failed. Cases 1/2/3/5 could not find the input composer because the new fixture inherited registered original input metadata without the original bytes. fixture-probe.json reproduces workspace HTTP503/CONTENT_UNAVAILABLE and HTTP200 after writing the exact known original bytes. The fixture now publishes those same bytes before mounting the API. Case4 reached the actual current Run draft and accepted-release entry but could not navigate. Source inspection found the real reading-key bug: strict scope.parse received a full reading record with extra preference fields, so save always threw and correctly retained the page. key now constructs and validates only its three scope fields, while full reading/launch schemas remain strict. Complete original source/artifacts are retained. Tests and assertions were not weakened; additional request tables were added to the no-business-write snapshot. Final runtime results must be recorded separately; this invocation adds no final pass count.",
+    "browser-2026-11-16T01-07-47-087Z.json": "The first complete affected browser invocation failed the exact-text check in workbench-page.test.mjs: the product notice was intentionally clarified to current-Run supplementary input in P154, but this old assertion still expected the prior generic input wording. The selector is now updated to the exact displayed current notice. The original no-composer and permission-revocation assertions, navigation/identity boundaries, test timeouts and fixture rules are unchanged. Exact old inputs and actual artifacts are retained. Final results are recorded separately; this failed invocation is not included in final pass totals.",
+    "browser-2026-11-16T01-24-17-103Z.json": "Second complete affected-browser invocation: 29 passed / 1 failed. The acceptance lost-ACK case observed the page unknown-result message, then SQL release count 0 at line24 (expected1). Retained page-state observation has the original final-accept request and no page errors, but no original intercepted response status or completion checkpoint, so root cause remains unknown. Unknown transport is not proof that T5 committed. The test now awaits and records the actual intercepted final response, requires the actual contract HTTP202 before injecting its deliberate committed ACK loss, and retains every original SQL uniqueness/outbox/reopen/recovery/identity assertion. Non202 is returned to the page and fails the new explicit status assertion; transport failures are recorded and fail. No production code, readiness freshness, request timeout, fixture or business assertion was relaxed. Complete failed source/artifacts and page observation are retained; subsequent green does not establish the prior cause.",
+    "browser-2026-11-16T01-33-56-518Z.json": "Third complete affected-browser invocation used an incorrectly added HTTP200 success checkpoint in the acceptance test. Actual unchanged acceptance.ts returns HTTP202 for the T5 committed receipt and asynchronous publication. Thus the deliberate drop-ACK branch did not run, the actual page displayed the successfully committed receipt (retained observation), and the old expected unknown-result wait timed out. This was a test implementation mistake, not a product failure or a reason to change the endpoint. Corrected the exact checkpoint/drop condition to HTTP202 and moved the actual-response assertion before the expected unknown-page wait so non202 outcomes fail with their real response. All original SQL, uniqueness, outbox, reopen and original-key recovery checks remain; production/fixture/timeouts/freshness unchanged. Earlier SQL-count failure cause remains unknown."
+  },
+  "visual": {
+    "reviewedBy": "Codex / same-agent development visual review",
+    "reviewedAt": "2026-11-16T01:06:31.967Z",
+    "businessPassCountAdded": 0,
+    "screenshots": [
+      {
+        "file": "delivery-desktop.png",
+        "sha256": "7973c7b459f806cdb43b14d5c5d74a41f7f9e459311308a383a8248884abb48f"
+      },
+      {
+        "file": "delivery-mobile.png",
+        "sha256": "8d7730675829aeb9b14da38eefc44ab6f2c17c34719cc002f592d0413f9e0e9d"
+      }
+    ],
+    "observations": [
+      "Opened both images with view_image after the complete five-case UI run.",
+      "1440px desktop: project list, original message, independent target draft, input draft and Results candidate panel are visible in three separate columns. Exact selected candidate and three dedicated GET actions are readable.",
+      "390px viewport full-page capture: mobile navigation and five tabs fit within the page width; Preview selection, candidate facts, return-related navigation and accepted-release empty state are readable in one column. The UI test separately asserts no horizontal overflow and restored mobile detail panel and Preview tab.",
+      "Desktop input shows the same unsent supplementary text after dedicated-page round trips; screenshot observations add zero test passes. Full-page screenshots were taken from the top."
+    ],
+    "limits": [
+      "Screenshots and review are bound to the final UI invocation, not independent human acceptance.",
+      "No completed WebSocket/event-time focus, real model/OIDC/Linux, production approval or product/gate acceptance is claimed."
+    ]
+  },
+  "actualChecks": [
+    "实际文件Worker冻结候选、revision分页、准确旧候选选择；只读摘要不暴露内部材料，非法参数／错项目／错Run／未认证拒绝。",
+    "最终异步重读识别Run依据推进和成员撤销；viewer与历史读取保持准确身份，当前项目接受版本明确保留原来源Run。",
+    "真实React／Edge在审查、预览管理和接受页面GET往返，原生IndexedDB草稿与选择保持；1440／390px面板和页签恢复，无GET业务命令。",
+    "session保存失败与真实文件保存事务abort均保留当前页面／草稿；明确重试成功后离开，原文件和命令身份未改。",
+    "新执行查看旧已接受版本及交付包后回到原新执行；损坏／异主体／异项目／异目标／过期启动记录使用服务端默认Run链接，不授予权限。",
+    "损坏候选选择明确恢复只读列表，原生日记不变；完整受影响HTTP／浏览器和公共契约回归按原始TAP记录。"
+  ],
+  "scope": "Exact frozen candidates, bounded revision page, explicit stale selection, final authorization/basis recheck; separate project accepted release and source Run; protected GET navigation and canonical return, guarded native input/File and session reading position. Actual file Worker/HTTP/React/Edge; upstream source admission, model/manual observations/OCI bytes/physical Runner facts remain explicit fixtures. No real model/OIDC/Linux or product/gate acceptance.",
+  "inputAssessment": "All application/fixture/helper inputs and artifacts in final validation match current bytes. Final Lint and the complete final affected-browser invocation use the corrected standalone browser test. Earlier build/type/contract and three other runtime inventories truthfully retain two unrelated standalone browser-test differences (notice selector and strengthened committed-response checkpoint), assessed with exact before/after hashes and full old source. Actual protected HTTP/browser tests bind unchanged contracts/API artifacts before, after and current. Source maps include every actual application and the two rebuilt standalone native-browser modules. Prior failures and diagnostic runs are retained separately and add no final passes. No storage SQL/domain/protocol, Runner, dependency, native journal, upload or original-proof changes.",
+  "limits": [
+    "正式P1-08仍NOT_STARTED，G0～G4未通过；7/13是当前OpenSpec开发步骤，不等于整个工作包或产品验收。",
+    "上游来源准入、模型响应、人工观察、OCI字节和物理容器事实为显式夹具；本机正式冻结及T5事务验证不代签真实模型／OIDC／Linux或人工产品验收。",
+    "既有首轮类型检查在补充页面契约时被替代，原记录明确两文件changedDuringRun，不列为最终检查；最终Lint／完整浏览器无输入漂移；其余已通过检查仅保留不作为其输入的两份浏览器.test.mjs文案断言／接受回执检查差异，原完整清单／旧源码／前后hash及作用域核对独立保存，应用／夹具／共享模块和18产物未改。",
+    "旧契约测试58路径／实现列表早于基线61路径，按现有工作台和本轮实际入口补为65；保留共享schema引用、参数一致性和GET边界断言。",
+    "截图由同一Agent实际打开复核，不增加业务通过数；事件连续性／WebSocket、事件期间焦点和完整D01／T08仍未完成。",
+    "初次受控质量任务stopRequested原因未知，不归因于主机负载或租约；没有修改质量夹具、健康／停止规则或超时。"
+  ],
+  "managementChecks": "management-checks.json"
+}

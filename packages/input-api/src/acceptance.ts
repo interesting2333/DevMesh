@@ -7,6 +7,7 @@ import type {LocalContentStore} from '@devmesh/blob-store';
 import type {Identity} from './index.js';
 import {readFile} from 'node:fs/promises';
 import {acceptancePage} from './acceptance-page.js';
+import {getWorkbenchReturnContext} from './workbench-return.js';
 
 /** Only trusted composition may install this. Policies must already be registered;
  * commit must perform the ReleaseAcceptor's actual frozen-content preflight. */
@@ -44,7 +45,7 @@ export function mountAcceptanceRoutes(router:Router,content:LocalContentStore,ac
     const match=request.headers['if-match'];return {meta:{principalId:who.principalId,scopeId:who.runId,idempotencyKey:parseContract(idempotencyKey,request.headers['idempotency-key'])},runId:who.runId,...(match===undefined?{}:{ifMatch:parseContract(z.string().max(128),match)})};
   }
   router.get(base,guarded(async(request,response,identity)=>{empty.parse(request.query);const b=await basis(subject(request,identity));response.setHeader('ETag','"r'+b.resourceRevision+'"');response.json(b);}));
-  router.get(base+'/view',guarded(async(request,response,identity)=>{empty.parse(request.query);const value=await basis(subject(request,identity)),page=acceptancePage(value);response.setHeader('Referrer-Policy','no-referrer');response.setHeader('Content-Security-Policy',page.policy);response.type('text/html; charset=utf-8').send(page.html);}));
+  router.get(base+'/view',guarded(async(request,response,identity)=>{empty.parse(request.query);const value=await basis(subject(request,identity)),page=acceptancePage(value,await getWorkbenchReturnContext(content,identity.principalId,value.runId));response.setHeader('Referrer-Policy','no-referrer');response.setHeader('Content-Security-Policy',page.policy);response.type('text/html; charset=utf-8').send(page.html);}));
   router.get(base+'/client.js',guarded(async(request,response,identity)=>{empty.parse(request.query);const who=subject(request,identity);await basis(who);const bytes=await readFile(new URL('./web/acceptance/acceptance-client.js',import.meta.url));await basis(who);response.type('application/javascript; charset=utf-8').send(bytes);}));
   router.get(base+'/preparations',guarded(async(request,response,identity)=>{
     const who=subject(request,identity),query=parseContract(page,request.query),candidate=await storage.request('getReleaseCandidate',who),policyHash=policies.get(candidate.projectId);
