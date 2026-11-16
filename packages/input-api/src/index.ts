@@ -6,9 +6,10 @@ import type {AcceptanceAccess} from './acceptance.js';
 export type {AcceptanceAccess} from './acceptance.js';
 import type { Express, Request, Response, NextFunction } from 'express';
 import { randomUUID, createHash } from 'node:crypto';
+import { z } from 'zod';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { createProjectInput,createTaskInput,saveMessageInput,answerQuestionsInput,retryUnderstandingInput,commandBodies,idempotencyKey,ids,opaqueKey,parseContract,gitCommit,ContractError,errorCode } from '@devmesh/contracts';
+import { createProjectInput,createTaskInput,saveMessageInput,answerQuestionsInput,retryUnderstandingInput,commandBodies,idempotencyKey,ids,opaqueKey,parseContract,gitCommit,ContractError,errorCode,revision,sha256 } from '@devmesh/contracts';
 import { canonical, StorageError } from '@devmesh/storage-sqlite';
 import type { OperationResult } from '@devmesh/storage-sqlite';
 import type { LocalContentStore } from '@devmesh/blob-store';
@@ -102,6 +103,8 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     if(!match)fail('PRECONDITION_INVALID',428,'If-Match must be the current control revision');
     return Number(match[1]);
   };
+  const invocationCreate=z.strictObject({endpointId:opaqueKey,endpointRevision:revision,registryGenerationId:opaqueKey,inputManifestHash:sha256,definitionSnapshotHash:sha256});
+  const invocationTransition=z.strictObject({expectedState:z.enum(['ACCEPTED','WORKING','INPUT_REQUIRED','COMPLETED','FAILED','CANCELED']),state:z.enum(['WORKING','INPUT_REQUIRED','COMPLETED','FAILED','CANCELED'])});
   router.post('/attachments',route(async(request,response,identity)=>{
     const meta=bodyMeta(request,'uploads',identity);
     if(activeUploads>=maximumUploads)fail('UPLOAD_CAPACITY',429,'Upload capacity is full');
@@ -248,6 +251,31 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const runId=parseContract(ids.run,request.query.runId as string);
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:false});
     response.json(await content.storage.request('getConfigGeneration',{}));
+  }));
+  router.post('/projects/:projectId/invocations',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),meta=bodyMeta(request,projectId,identity),body=parseContract(invocationCreate,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:true});
+    const snapshot=await content.storage.request('getRegistrySnapshot',{});
+    if(snapshot.generationId!==null){
+      const endpoint=snapshot.endpoints.find(candidate=>candidate.config.endpointId===body.endpointId&&candidate.config.revision===body.endpointRevision);
+      if(!endpoint||snapshot.generationId!==body.registryGenerationId)fail('ENDPOINT_UNAVAILABLE',503,'Endpoint is not in the active registry generation');
+    }
+    response.status(202).json(await content.storage.request('createInvocation',{meta,projectId,...body}));
+  }));
+  router.get('/projects/:projectId/invocations',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),limit=positive(request.query.limit??'50',1,100);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json({invocations:await content.storage.request('listInvocations',{projectId,limit})});
+  }));
+  router.get('/invocations/:invocationId',route(async(request,response,identity)=>{
+    const invocation=await content.storage.request('getInvocation',{invocationId:parseContract(opaqueKey,request.params.invocationId)});
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:invocation.projectId,write:false});
+    response.json(invocation);
+  }));
+  router.post('/invocations/:invocationId\\:transition',route(async(request,response,identity)=>{
+    const invocationId=parseContract(opaqueKey,request.params.invocationId),invocation=await content.storage.request('getInvocation',{invocationId}),meta=bodyMeta(request,invocation.projectId,identity),body=parseContract(invocationTransition,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:invocation.projectId,write:true});
+    response.status(202).json(await content.storage.request('transitionInvocation',{meta,invocationId,expectedState:body.expectedState,state:body.state}));
   }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');

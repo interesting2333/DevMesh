@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "822b49a40c4011a3ce3907546f4707a729754239e0caf40b3c5258c7f5c012ac"
+      "sha256": "7316320ddb335f08c56495026a845d7233b4b45e21d5d24ffa21e20d2d784f9b"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "240a001fd870760d614b1ab78f5652e8eb439e833e4cdf7a8bac4e6824e9fbba"
+      "sha256": "a21fc94ae00f13a83064c2b2f20da4f9241f248793074366aaf56c773fe851db"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "ca478e37dc0d453c147732dcd6e7e8d163b356ee86aa88b02e0d4f5634ec0938"
+      "sha256": "3897baf5727b36c0c752c4ccbab64f735c2338cacf889e8dbc201e6480dc8d2f"
     }
   ],
   "gates": [
@@ -2022,7 +2022,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P2-06/invocation-host-development-review.md","project/evidence/P2-06/invocation-host.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0050新增invocations；create／get／list／transition落地，同键幂等、同键不同请求拒绝、显式状态机与终态保护。invocation-host 2/2通过；受保护API、公共Task/Inbox、配额与文档同步未完成，正式P2-06／G1不变。"]
+      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0050新增invocations；create／get／list／transition落地，同键幂等、同键不同请求拒绝、显式状态机与终态保护。invocation-host 2/2通过；受保护API、公共Task/Inbox、配额与文档同步未完成，正式P2-06／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更4/4。Invocation API与OpenAPI接入；公共Task/Inbox、配额与取消核实审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-06仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P2-07",

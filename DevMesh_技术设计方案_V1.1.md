@@ -1895,6 +1895,11 @@ PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实�
 
 2026-11-16：P2-05提前开发增量完成，变更3/3。新增config_control generation与config_adjustments；propose／confirm配置调整要求PAUSED、代际CAS、应用后仍暂停、重启保持；受保护API与OpenAPI；Registry同步沿用既有manifest／projection测试不重写。配置与端点逐字段映射／T16／T17未执行。正式P2-05与G1～G4不变。
 
+
+#### 13.2026-11-16 P2-06 独立 Invocation 离线开发记录
+
+2026-11-16：P2-06提前开发增量完成，变更4/4。新增迁移0050 invocations与create／get／list／transition；受保护Invocation API与OpenAPI；同键幂等、同键不同请求拒绝、显式状态机与终态保护；公共Task/Inbox、主体配额与取消核实审计确认未实现。invocation测试3/3、迁移7/7。正式P2-06与G1～G4不变。
+
 ---
 
 ## 14. 数据与事务
