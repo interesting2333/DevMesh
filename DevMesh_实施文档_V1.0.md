@@ -718,3 +718,8 @@ P1-08的2.3接入task页面：下一目标切换、类型／标题／正文及�
 
 2026-11-16：P2-01提前开发增量完成，变更8/8。新增迁移0046（run_control_targets、recovery_review_hash）、pauseRun／cancelRun／resumeRun／recordControlTarget／finishControl／getControlStatus／listControlRuns、RunControlCoordinator（显式ControlStopBackend、未知／STOPPING只inspect、保存失败只重试保存、30秒overdue）、受保护HTTP控制API与工作台控制状态（真实Edge断线重连验证）。受控后端测试覆盖pause／resume／cancel、崩溃重启、未知目标、保存重试与30秒提示；真实Runner／容器停止、真实模型／OIDC／Linux未执行，正式P2-01与G1～G4不变。
 
+
+### 2026-11-16 P2-02 崩溃恢复扫描离线开发记录
+
+2026-11-16：P2-02提前开发增量完成，变更5/5。新增只读getRecoveryState与平台RecoveryScan：报告控制中的Run、活动／未知attempt、Outbox PENDING／LEASED／RECONCILE、未结束准备；不自动OPEN、不终结UNKNOWN、不重放外部动作，过期租约转RECONCILE待原键核实。崩溃矩阵覆盖暂停跨重启、未知attempt、租约过期与原键回报；recovery-scan 5/5。真实Runner／容器／工具／接受物理恢复未执行，正式P2-02与G1～G4不变。
+

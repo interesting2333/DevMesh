@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "c23ba5c803a49b3265f726521f662bbd5a3d777344fcdb13f8701f7d046b0506"
+      "sha256": "bbb464e6525bb69b8bd503e3aef162a7f2c4feee6f12518a8436774eec71ad41"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "038b160b671175fcf2220fb35b749ea4cc33c1eb77a7be43a4350108fa21884e"
+      "sha256": "5df60f2fd3d46829d81be18a2dd60c0b1a3ae37dc3988823aece24467f650ff7"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "0d0fbf3c73213669a91b49f54d3ef7f64201882170f429b65e0a8d0d2769f187"
+      "sha256": "2eed0fb7a73454af4e8d40b3379e9fdb8ba50d36ab0424707a254de6fd5a1ce8"
     }
   ],
   "gates": [
@@ -1906,7 +1906,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P2-02/recovery-scan-development-review.md","project/evidence/P2-02/recovery-scan.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2／2.1／2.2，变更4/5。getRecoveryState只读扫描与RecoveryScan冻结包装落地；矩阵覆盖暂停跨重启保持、未知attempt保留、Outbox过期租约转RECONCILE、原键查原事实。recovery-scan 5/5通过；3.1文档同步待完成，正式P2-02／G1不变。"]
+      "notes": ["2026-11-16：完成1.1／1.2／2.1／2.2，变更4/5。getRecoveryState只读扫描与RecoveryScan冻结包装落地；矩阵覆盖暂停跨重启保持、未知attempt保留、Outbox过期租约转RECONCILE、原键查原事实。recovery-scan 5/5通过；3.1文档同步待完成，正式P2-02／G1不变。", "2026-11-16：完成3.1，变更5/5。设计04、验收、实施文档追加P2-02记录；技术设计重建、三份基线更新，OpenSpec与台账同步，manage check/validate通过。正式P2-02仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P2-03",

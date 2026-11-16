@@ -12,6 +12,8 @@
 
 ## 3. Records
 
-- [ ] 3.1 同步设计／验收／实施文档、基线、OpenSpec 与 P2-02 台账；正式 P2-02 仍保持 NOT_STARTED。
+- [x] 3.1 同步设计／验收／实施文档、基线、OpenSpec 与 P2-02 台账；正式 P2-02 仍保持 NOT_STARTED。
 
 2026-11-16：完成1.1／1.2／2.1／2.2，变更4/5。`getRecoveryState`只读扫描与`RecoveryScan`冻结包装落地；矩阵覆盖手动暂停跨重启保持、未知attempt保留、Outbox过期租约转RECONCILE、原键查原事实。recovery-scan测试5/5通过。3.1文档／基线同步待完成；正式P2-02／G1不变。证据：`project/evidence/P2-02/recovery-scan-development-review.md`。
+
+2026-11-16：完成3.1，变更5/5。设计04、产品验收场景、实施文档追加P2-02离线记录；技术设计主文重建且`--check`一致；三份基线SHA-256更新；台账与OpenSpec同步，`manage check`与`openspec validate --all --strict`通过。正式P2-02仍`NOT_STARTED`，G0～G4未变。
