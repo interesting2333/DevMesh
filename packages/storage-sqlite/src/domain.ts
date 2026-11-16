@@ -780,7 +780,9 @@ export function createDomain(db: DatabaseSync) {
     claimPublicTask(input: Parsed<'claimPublicTask'>) {
       return transaction(db, () => {
         const time = now();
-        const row = get("SELECT * FROM public_tasks WHERE state='QUEUED' OR (state='LEASED' AND lease_until<=?) ORDER BY created_at,task_key LIMIT 1", time);
+        const row = input.projectId === undefined
+          ? get("SELECT * FROM public_tasks WHERE state='QUEUED' OR (state='LEASED' AND lease_until<=?) ORDER BY created_at,task_key LIMIT 1", time)
+          : get("SELECT * FROM public_tasks WHERE project_id=? AND (state='QUEUED' OR (state='LEASED' AND lease_until<=?)) ORDER BY created_at,task_key LIMIT 1", input.projectId, time);
         if (!row) return null;
         const taskKey = String(row.task_key);
         exec("UPDATE public_tasks SET state='LEASED',lease_owner=?,lease_until=?,attempts=attempts+1,updated_at=? WHERE task_key=?", input.workerId, new Date(Date.now() + input.leaseMs).toISOString(), time, taskKey);

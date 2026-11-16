@@ -169,7 +169,7 @@ export const requests = {
   getContentPin: z.strictObject({ pinId: opaqueKey }),
   getStorageDiagnostics: z.strictObject({}),
   enqueuePublicTask: z.strictObject({ meta, projectId: ids.project, kind: z.string().min(1).max(100), payload: z.record(z.string(), z.json()), quota: z.number().int().min(1).max(10000).optional() }),
-  claimPublicTask: z.strictObject({ meta, workerId: opaqueKey, leaseMs: z.number().int().min(1000).max(300000).default(30000) }),
+  claimPublicTask: z.strictObject({ meta, projectId: ids.project.optional(), workerId: opaqueKey, leaseMs: z.number().int().min(1000).max(300000).default(30000) }),
   completePublicTask: z.strictObject({ meta, taskKey: opaqueKey, workerId: opaqueKey, outcome: z.enum(['COMPLETED','FAILED']) }),
   getPublicTask: z.strictObject({ taskKey: opaqueKey }),
   listPublicTasks: z.strictObject({ projectId: ids.project.optional(), principalId: opaqueKey.optional(), state: z.enum(['QUEUED','LEASED','COMPLETED','FAILED']).optional(), limit: z.number().int().min(1).max(200).default(50) }),
