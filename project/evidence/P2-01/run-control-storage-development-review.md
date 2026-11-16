@@ -72,3 +72,9 @@ corepack pnpm@11.28.5 typecheck                                                 
 - pause／cancel／resume／finishControl／recordControlTarget 都发出携带未解决目标数与最近检查时间的 ControlProgress；事件仍持久化、可按 seq 续读。
 - 断点续读验证：记录 pause 前的事件 cursor，pause 后按该 cursor 读取，能取得 `controlGate=PAUSING`、`unresolvedTargets=0` 的真实持久事件。
 - 未完成：工作台 UI 的控制状态展示与真实浏览器断线重连验证；事件本身已可被现有 WS 客户端消费，但 3.2 不据此勾选。
+
+## 追加：工作台控制状态与重连验证（3.2）
+
+- 工作台新增“执行控制状态”区域：导航完成后读取 `GET /runs/{id}/control`；ControlProgress 事件更新未解决目标数与最近检查时间；WS 重快照（onSnapshot）后重新读取权威状态。
+- 展示：正在暂停／已暂停／正在取消／已恢复；未解决目标 N 项；超过 30 秒显示仍在核实。
+- 真实 Edge 测试：pause 后状态区显示“正在暂停，等待收尾”；销毁实际 WS 触发重快照与重连后，仍显示同一真实状态；`tests/browser/workbench-live.test.mjs` 7/7 通过。

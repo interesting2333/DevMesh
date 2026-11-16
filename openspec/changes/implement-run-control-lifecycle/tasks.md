@@ -13,7 +13,7 @@
 ## 3. API, events and UI projection
 
 - [x] 3.1 接入受保护 pause／resume／cancel API 与控制状态查询，If-Match／原键／权限边界与 OpenAPI 更新。
-- [ ] 3.2 投影 ControlProgress 事件与未解决目标；验证工作台断线重连后仍能读取真实控制状态，不用夹具冒充完成。
+- [x] 3.2 投影 ControlProgress 事件与未解决目标；验证工作台断线重连后仍能读取真实控制状态，不用夹具冒充完成。
 
 ## 4. Verification and records
 
@@ -33,3 +33,5 @@
 2026-11-16：完成3.1，变更5/8。新增受保护`POST /runs/{runId}:pause`、`:cancel`、`:resume`与`GET /runs/{runId}/control`；pause／cancel要求`If-Match: "r<controlRevision>"`，resume用正文controlRevision与recoveryReviewHash；均先做成员写／读权限检查，操作经既有幂等键与原键回执。契约新增控制错误码并重新生成OpenAPI，新增ReadRunControlStatus路径（总66路径）；contracts 18/18、control HTTP 1/1通过。事件／UI投影仍属3.2；正式P2-01／G1不变。
 
 2026-11-16：3.2部分完成，变更仍5/8。`ControlProgress`事件新增可选`unresolvedTargets`与`lastCheckedAt`，pause／cancel／resume／finishControl／recordControlTarget均投影；按pause前cursor断点续读可取得真实PAUSING事件。工作台UI展示与真实浏览器断线重连验证未完成，3.2不勾选；正式P2-01／G1不变。
+
+2026-11-16：完成3.2，变更6/8。工作台新增“执行控制状态”区域：导航时读取`/runs/{id}/control`，ControlProgress事件更新未解决目标数与检查时间，WS重快照后重新读取权威状态；超过30秒显示核实提示。真实Edge断线重连测试通过：pause后显示“正在暂停，等待收尾”，销毁实际WS并重连后仍显示同一真实状态。workbench-live 7/7通过。正式P2-01／G1不变。

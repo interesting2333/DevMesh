@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {eventFixture} from '../fixtures/workbench-events.mjs';
 const {chromium,expect:baseExpect}=createRequire(new URL('../../templates/web-crud-v1/package.json',import.meta.url))('@playwright/test'),expect=baseExpect.configure({timeout:35000}),settings={timeout:120000};
@@ -51,4 +52,15 @@ test('repeated successful resnapshots with corrupt frames stop after a bounded b
  await page.routeWebSocket(url=>url.pathname==='/events',route=>{connections++;const upstream=route.connectToServer();upstream.onMessage(raw=>{route.send(raw);if(corrupt&&JSON.parse(raw.toString()).kind==='caught-up')route.send(JSON.stringify({kind:'invalid-frame',projectId:scope.projectId,runId:scope.runId}));});});
  await h.open(scope);await expect(connection(page)).toContainText('重新连接进展');assert.equal(snapshots,5);assert.equal(connections,6);assert.equal(h.posts.length,0);assert.equal((await journal(page)).commands.length,0);
  corrupt=false;await page.getByRole('button',{name:'重新连接进展',exact:true}).click();await expect(connection(page)).toContainText('进展已连接');assert.equal(snapshots,6);assert.equal(connections,7);await append(f,scope,'恢复后仍接收真实进展');await expect(connection(page)).toContainText('收到 1 条新进展');assert.equal(h.posts.length,0);
+});
+
+test('workbench shows real control state after an actual disconnect and resnapshot',settings,async t=>{
+  const h=await harness(t),{f,page}=h,scope=await f.create();await h.open(scope);await expect(connection(page)).toContainText('进展已连接');
+  const run=await f.storage.request('getRun',{runId:scope.runId});
+  await f.storage.request('pauseRun',{meta:{principalId:'user_1',scopeId:scope.runId,idempotencyKey:randomUUID()},runId:scope.runId,controlRevision:run.controlRevision});
+  const controlStatus=page.getByRole('status',{name:'执行控制状态'});
+  await expect(controlStatus).toContainText('正在暂停，等待收尾');
+  f.state.upgradeSockets.at(-1).destroy();
+  await expect(connection(page)).toContainText(/进展已连接|收到 \d+ 条新进展/);
+  await expect(controlStatus).toContainText('正在暂停，等待收尾');
 });
