@@ -2073,15 +2073,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-control-interaction"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P2-08/control-interaction-development-review.md","project/evidence/P2-08/control-interaction.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1，变更1/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观，断线重连保持PAUSED并可恢复；取消需impactReviewHash故不提供；配置调整、变更队列、多页面与完整E2E未实现。正式P2-08／G1不变。"]
     },
     {
       "id": "P3-01",

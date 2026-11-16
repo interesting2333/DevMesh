@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {eventFixture} from '../fixtures/workbench-events.mjs';
+import {RunControlCoordinator} from '../../packages/platform-core/dist/index.mjs';
 const {chromium,expect:baseExpect}=createRequire(new URL('../../templates/web-crud-v1/package.json',import.meta.url))('@playwright/test'),expect=baseExpect.configure({timeout:35000}),settings={timeout:120000};
 const input=page=>page.getByLabel('输入正文',{exact:true}),connection=page=>page.getByRole('status',{name:'执行进展连接',exact:true}),saved=page=>expect(page.getByRole('status').filter({hasText:'草稿已保存在本机'})).toBeVisible();
 async function harness(t,limits={}){
@@ -63,4 +64,19 @@ test('workbench shows real control state after an actual disconnect and resnapsh
   f.state.upgradeSockets.at(-1).destroy();
   await expect(connection(page)).toContainText(/进展已连接|收到 \d+ 条新进展/);
   await expect(controlStatus).toContainText('正在暂停，等待收尾');
+});
+
+test('workbench pause and resume controls call the real API and keep the state across reconnect',settings,async t=>{
+  const h=await harness(t),{f,page}=h,scope=await f.create();await h.open(scope);
+  const controlStatus=page.getByRole('status',{name:'执行控制状态'});
+  await expect(controlStatus).toContainText('执行已恢复');
+  await controlStatus.getByRole('button',{name:'暂停执行',exact:true}).click();
+  await expect(controlStatus).toContainText('正在暂停，等待收尾');
+  const coordinator=new RunControlCoordinator(f.storage,{configured:true,async stop(){throw Error('no targets expected');}},{principalId:'coordinator.local'});
+  await coordinator.tick();
+  await expect(controlStatus).toContainText('已暂停');
+  f.state.upgradeSockets.at(-1).destroy();
+  await expect(controlStatus).toContainText('已暂停');
+  await controlStatus.getByRole('button',{name:'恢复执行',exact:true}).click();
+  await expect(controlStatus).toContainText('执行已恢复');
 });

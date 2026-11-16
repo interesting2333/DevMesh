@@ -20,7 +20,7 @@ import {AttachmentControls,sendUploadOriginal,lookupUploadOriginal,verifySelecte
 import type {LocalUpload} from './workbench-upload.js';
 import {observeWorkbenchEvents} from './workbench-live.js';
 import type {WorkbenchLiveState} from './workbench-live.js';
-type ControlStatus={controlGate:string;unresolved:number;lastCheckedAt:string|null;overdue:boolean};
+type ControlStatus={controlGate:string;unresolved:number;lastCheckedAt:string|null;overdue:boolean;controlRevision:number;recoveryReviewHash:string|null};
 import {WorkbenchModelProgress} from './workbench-progress.js';
 
 type Workspace=z.output<typeof workspaceView>;
@@ -215,10 +215,23 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
  }
   async function loadControl(runId:string,token=generation.current){
     try{
-      const value=await request('/api/v1/runs/'+encodeURIComponent(runId)+'/control',{},token) as {controlGate?:unknown;unresolved?:unknown;lastCheckedAt?:unknown;verificationOverdue?:unknown};
+      const value=await request('/api/v1/runs/'+encodeURIComponent(runId)+'/control',{},token) as {controlGate?:unknown;unresolved?:unknown;lastCheckedAt?:unknown;verificationOverdue?:unknown;controlRevision?:unknown;recoveryReviewHash?:unknown};
       if(token!==generation.current||disposed.current)return;
-      setControl({controlGate:String(value.controlGate),unresolved:Array.isArray(value.unresolved)?value.unresolved.length:0,lastCheckedAt:typeof value.lastCheckedAt==='string'?value.lastCheckedAt:null,overdue:value.verificationOverdue===true});
+      setControl({controlGate:String(value.controlGate),unresolved:Array.isArray(value.unresolved)?value.unresolved.length:0,lastCheckedAt:typeof value.lastCheckedAt==='string'?value.lastCheckedAt:null,overdue:value.verificationOverdue===true,controlRevision:typeof value.controlRevision==='number'?value.controlRevision:1,recoveryReviewHash:typeof value.recoveryReviewHash==='string'?value.recoveryReviewHash:null});
     }catch{/* Control status is auxiliary; the workspace read stays authoritative. */}
+  }
+  async function controlCommand(path:string,init:RequestInit){
+    try{await request(path,init,generation.current);const current=view.current;if(current)await loadControl(current.run.runId);return true;}
+    catch{setNotice('控制请求未确认，请刷新控制状态后重试。');return false;}
+  }
+  async function pauseExecution(){
+    const current=view.current;if(!current||!control)return;
+    await controlCommand('/api/v1/runs/'+encodeURIComponent(current.run.runId)+':pause',{method:'POST',headers:{'content-type':'application/json','idempotency-key':crypto.randomUUID(),'if-match':'"r'+control.controlRevision+'"'},body:JSON.stringify({reason:'workbench pause'})});
+  }
+  async function resumeExecution(){
+    const current=view.current;if(!current||!control)return;
+    if(!control.recoveryReviewHash){setNotice('恢复审查依据尚未就绪，请刷新后重试。');return;}
+    await controlCommand('/api/v1/runs/'+encodeURIComponent(current.run.runId)+':resume',{method:'POST',headers:{'content-type':'application/json','idempotency-key':crypto.randomUUID()},body:JSON.stringify({controlRevision:control.controlRevision,recoveryReviewHash:control.recoveryReviewHash})});
   }
   async function listProjects(cursor?:string){if(projectLoading.current||disposed.current)return;projectLoading.current=true;const token=generation.current;try{const p=projectsPage.parse(await request('/api/v1/projects?limit=20'+(cursor?'&cursor='+encodeURIComponent(cursor):''),{},token));if(token===generation.current&&!disposed.current){setProjects(old=>cursor?[...old,...p.projects.filter(p=>!old.some(x=>x.projectId===p.projectId))]:p.projects);setProjectCursor(p.nextCursor);}}catch{if(token===generation.current&&!disposed.current)setNotice('项目列表暂时无法加载，请刷新重试。');}finally{projectLoading.current=false;}}
  async function navigate(next:WorkbenchSelection|null){
@@ -239,7 +252,7 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
    const current=view.current;if(!current||disposed.current||denied)return;const token=generation.current,runId=current.run.runId;
    const active=observeWorkbenchEvents({scope:{schemaVersion:1,principalId:boot.principalId,projectId:current.project.projectId,runId:current.run.runId,afterSeq:current.eventCursor},
     read:(path,signal)=>request(path,{signal},token),
-    onState:state=>{if(!disposed.current&&token===generation.current){setLive({...state,runId});const latest=[...state.events].reverse().find(event=>event.type==='ControlProgress');if(latest){const payload=latest.payload as {state?:{controlGate?:unknown}|undefined;unresolvedTargets?:unknown;lastCheckedAt?:unknown};if(payload.state&&typeof payload.state.controlGate==='string')setControl({controlGate:payload.state.controlGate,unresolved:typeof payload.unresolvedTargets==='number'?payload.unresolvedTargets:0,lastCheckedAt:typeof payload.lastCheckedAt==='string'?payload.lastCheckedAt:null,overdue:false});}}},
+    onState:state=>{if(!disposed.current&&token===generation.current){setLive({...state,runId});const latest=[...state.events].reverse().find(event=>event.type==='ControlProgress');if(latest)void loadControl(runId,token);}},
     // Reconnection establishes a new authoritative cursor. Reading and drafts
     // stay as the user left them until an explicit protected refresh.
     onSnapshot:()=>{const current=view.current;if(current)void loadControl(current.run.runId,token);},
@@ -267,7 +280,7 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
  const normalInputs=<>{canCompose&&workspace&&inputBasis!==workspace.run.resourceRevision&&<p className="notice">当前执行依据已变化，原草稿和提交条件仍保留。<button disabled={loading} onClick={()=>void(async()=>{if(await guarded())setInputBasis(workspace.run.resourceRevision);else setNotice('请先保存当前草稿，再切换依据。');})()}>切换到当前依据，保留旧草稿</button></p>}
     {canCompose&&<Composer key={draftKey(context)} context={context} api={api} guard={guard} onConfirmed={confirmed}/>}
     {!canCompose&&!denied&&workspace?.mode==='current'&&workspace.membership!=='viewer'&&<WorkbenchRecovery key={JSON.stringify([boot.principalId,workspace.run.runId,workspace.run.resourceRevision,'message'])} principalId={boot.principalId} workspace={workspace} form="message" read={path=>api(path)} write={(path,init)=>api(path,init)} guard={guard} onChanged={changed}/>}</>;
- return <><header className="bar"><span className="brand">DEV MESH</span><span className="muted">{workspace?workspace.project.name+' · '+(workspace.mode==='history'?'历史只读':'当前执行'):'从需求开始，逐步交付。'}</span><div className="actions"><button disabled={loading||denied} onClick={()=>void refresh()}>刷新当前执行</button>{denied&&<a href="/api/v1/workbench/view">重新进入工作台</a>}</div><nav className="mobile-nav" aria-label="工作台区域">{([['sidebar','项目'],['conversation','输入'],['detail','详情']] as const).map(([key,label])=><button key={key} aria-pressed={panel===key} onClick={()=>setPanel(key!)}>{label}</button>)}</nav>{resultNotice&&!denied&&<p className="notice result-notice" role="status">{resultNotice}</p>}{workspace&&!denied&&<p className="event-notice" role="status" aria-label="执行进展连接"><span>{progress?.status==='live'?(progress.unread?'收到 '+progress.unread+' 条新进展。':'进展已连接。'):progress?.status==='offline'?'进展连接已中断。':progress?.status==='syncing'?'正在同步已保存进展…':'正在连接执行进展…'}</span><button disabled={loading||!progress?.unread&&progress?.status!=='offline'} onClick={()=>progress?.status==='offline'?observer.current?.retry():void refresh()}>{progress?.status==='offline'?'重新连接进展':'查看更新'}</button></p>}{workspace&&!denied&&control&&<p className="event-notice" role="status" aria-label="执行控制状态"><span>{control.controlGate==='PAUSING'?'正在暂停，等待收尾…':control.controlGate==='PAUSED'?'已暂停。':control.controlGate==='CANCELLING'?'正在取消，等待收尾…':'执行已恢复。'}{control.unresolved?' 未解决目标 '+control.unresolved+' 项。':''}{control.overdue?' 已超过 30 秒，仍在核实。':''}</span></p>}</header>
+ return <><header className="bar"><span className="brand">DEV MESH</span><span className="muted">{workspace?workspace.project.name+' · '+(workspace.mode==='history'?'历史只读':'当前执行'):'从需求开始，逐步交付。'}</span><div className="actions"><button disabled={loading||denied} onClick={()=>void refresh()}>刷新当前执行</button>{denied&&<a href="/api/v1/workbench/view">重新进入工作台</a>}</div><nav className="mobile-nav" aria-label="工作台区域">{([['sidebar','项目'],['conversation','输入'],['detail','详情']] as const).map(([key,label])=><button key={key} aria-pressed={panel===key} onClick={()=>setPanel(key!)}>{label}</button>)}</nav>{resultNotice&&!denied&&<p className="notice result-notice" role="status">{resultNotice}</p>}{workspace&&!denied&&<p className="event-notice" role="status" aria-label="执行进展连接"><span>{progress?.status==='live'?(progress.unread?'收到 '+progress.unread+' 条新进展。':'进展已连接。'):progress?.status==='offline'?'进展连接已中断。':progress?.status==='syncing'?'正在同步已保存进展…':'正在连接执行进展…'}</span><button disabled={loading||!progress?.unread&&progress?.status!=='offline'} onClick={()=>progress?.status==='offline'?observer.current?.retry():void refresh()}>{progress?.status==='offline'?'重新连接进展':'查看更新'}</button></p>}{workspace&&!denied&&control&&<p className="event-notice" role="status" aria-label="执行控制状态"><span>{control.controlGate==='PAUSING'?'正在暂停，等待收尾…':control.controlGate==='PAUSED'?'已暂停。':control.controlGate==='CANCELLING'?'正在取消，等待收尾…':'执行已恢复。'}{control.unresolved?' 未解决目标 '+control.unresolved+' 项。':''}{control.overdue?' 已超过 30 秒，仍在核实。':''}</span>{control.controlGate==='OPEN'&&<button disabled={loading} onClick={()=>void pauseExecution()}>暂停执行</button>}{control.controlGate==='PAUSED'&&<button disabled={loading||!control.recoveryReviewHash} onClick={()=>void resumeExecution()}>恢复执行</button>}</p>}</header>
 
    <div className="layout"><aside data-panel="sidebar" className={'sidebar '+(panel==='sidebar'?'visible':'')} aria-label="项目导航"><h2>我的项目</h2><button className="primary" disabled={denied} onClick={()=>void navigate(null)}>新建项目</button><div className="project-list">{projects.map(p=><button key={p.projectId} className={selection?.projectId===p.projectId?'selected':''} disabled={denied} onClick={()=>void navigate({projectId:p.projectId})}>{p.name}</button>)}</div>{!projects.length&&!denied&&<p className="muted">尚未加载到可见项目。</p>}{projectCursor&&<button disabled={denied} onClick={()=>void listProjects(projectCursor)}>更多项目</button>}</aside>
    <main data-panel="conversation" className={'conversation '+(panel==='conversation'?'visible':'')}><h1>{workspace?.project.name??'开始一个新项目'}</h1>{notice&&<p className="notice" role="status">{notice}</p>}{loading&&<p role="status">正在读取当前执行…</p>}
