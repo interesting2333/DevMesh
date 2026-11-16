@@ -1898,15 +1898,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-crash-recovery-scan"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P2-02/recovery-scan-development-review.md","project/evidence/P2-02/recovery-scan.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1／1.2／2.1／2.2，变更4/5。getRecoveryState只读扫描与RecoveryScan冻结包装落地；矩阵覆盖暂停跨重启保持、未知attempt保留、Outbox过期租约转RECONCILE、原键查原事实。recovery-scan 5/5通过；3.1文档同步待完成，正式P2-02／G1不变。"]
     },
     {
       "id": "P2-03",

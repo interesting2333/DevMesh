@@ -39,6 +39,7 @@ export {ReleasePublicationConsumer} from './publication-consumer.js';
 export type {ReleasePublicationConsumerOptions,ReleasePublicationBinding} from './publication-consumer.js';
 export {RunControlCoordinator} from './run-control-coordinator.js';
 export type {RunControlCoordinatorOptions,ControlStopBackend,ControlStopTarget,ControlStopObservation} from './run-control-coordinator.js';
+export {RecoveryScan} from './recovery-scan.js';
 export {ReleaseExportScheduler} from './release-exports.js';
 export type {ReleaseExportSchedulerOptions} from './release-exports.js';
 export {PreviewLifecycleManager} from './preview-lifecycle.js';

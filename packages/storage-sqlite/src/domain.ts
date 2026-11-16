@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView, ControlStatusView, RecoveryStateView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -598,6 +598,17 @@ export function createDomain(db: DatabaseSync) {
     },
     listControlRuns(input: Parsed<'listControlRuns'>) {
       return all("SELECT * FROM runs WHERE control_gate IN ('PAUSING','CANCELLING') ORDER BY run_id LIMIT ?", input.limit).map(controlStatus);
+    },
+    getRecoveryState() {
+      return {
+        controlRuns: all("SELECT * FROM runs WHERE control_gate IN ('PAUSING','PAUSED','CANCELLING') ORDER BY run_id LIMIT 100").map(controlStatus),
+        activeAttempts: Number(get('SELECT count(*) n FROM attempts WHERE ended_at IS NULL')?.n ?? 0),
+        unknownAttempts: Number(get("SELECT count(*) n FROM attempts WHERE state='OUTCOME_UNKNOWN'")?.n ?? 0),
+        pendingOutbox: Number(get("SELECT count(*) n FROM outbox WHERE status='PENDING'")?.n ?? 0),
+        leasedOutbox: Number(get("SELECT count(*) n FROM outbox WHERE status='LEASED'")?.n ?? 0),
+        reconcileOutbox: Number(get("SELECT count(*) n FROM outbox WHERE status='RECONCILE'")?.n ?? 0),
+        openPreparations: Number(get('SELECT count(*) n FROM preparation_attempts WHERE ended_at IS NULL')?.n ?? 0)
+      };
     },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
