@@ -464,7 +464,7 @@ REPLACE方案可以先交付和冻结供用户审查，不能在交付阶段要�
 
 双项目切换前先保存当前草稿；存储失败时保留内存输入、阻止切换且零POST，重试成功后恢复。快速切换的旧响应及撤权前的迟到列表不得覆盖新上下文或重新显示保护内容。历史及只读成员不显示可写输入；历史可明确回到当前Run。新依据出现时保留旧草稿／提交条件，经明确切换可引用旧正文，不自动重写未知提交。
 
-手动刷新保留输入焦点与选择、页签／窄屏面板；Enter换行，中文组合输入及重复快捷键不提交，Ctrl／Cmd+Enter明确提交。五页签支持键盘方向键，390px不横向溢出。真实事件订阅期间的交互、完整首次路径和T08另行执行；实际Edge／HTTP／SQLite开发证据不代替真实模型、企业身份、Linux或完整交付验收。
+手动刷新保留输入焦点与选择、页签／窄屏面板；Enter换行，中文组合输入及重复快捷键不提交，Ctrl／Cmd+Enter明确提交。五页签支持键盘方向键，390px不横向溢出。真实事件订阅期间的焦点／选择保持已由实际Edge记录验证；完整首次路径和T08另行执行；实际Edge／HTTP／SQLite开发证据不代替真实模型、企业身份、Linux或完整交付验收。
 
 ### 工作台计划与来源验收细化
 
@@ -537,3 +537,7 @@ REPLACE方案可以先交付和冻结供用户审查，不能在交付阶段要�
 ### 2026-11-16 T08临时模型输出本机开发记录
 
 2026-11-16：完成3.2临时模型输出与中断显示，变更累计9/13。DeepSeek显式responseMode:sse按实际HTTP协议增量解析，默认JSON及旧配置hash保持；只读content片段独立streamId/index，无领域seq或历史重放，最终响应落盘后才显示已保存及执行工具。WS逐帧复核权限并有界排队；浏览器断线／截断显示中断，保留草稿、页签和焦点，刷新只读取已保存结果。最终协议18、Runtime／Preparation28、契约18、WS13、既有实时浏览器6及新实际平台浏览器3，共86通过，零失败／跳过／取消；构建／类型／Lint／OpenAPI通过。初次类型错误和浏览器旧依据草稿预期错误的准确输入／原日志保留，修复后验证通过。实际本地SSE／官方A2A／平台／文件Worker／Edge不代签真实模型、OIDC、Linux或完整产品验收。按用户指令完成本项后统一提交并暂停，不执行3.3或下一项；正式P1-08、P0-06及G0～G4不变。 证据：project/evidence/P1-08/model-stream-development-review.md；真实产品验收仍未执行。
+
+### 2026-11-16 T08键盘窄屏与集成回归记录
+
+2026-11-16：P1-08完成3.3键盘／窄屏／事件期间交互验证与4.1集成回归，变更累计11/13。实际Edge157（headless）页面1通过：Enter换行、IME composition与repeat期间Ctrl/Cmd+Enter零POST、页签ArrowRight／End／Home、390×844无横向溢出且切面板不丢正文、截图及单次提交；实时事件6通过：快照缺口、真实TCP断线重连、乱序／重复帧、缓冲溢出、空闲撤权均保持草稿／页签／焦点／选区且零额外POST；交付导航1通过。仓库全量check执行到acceptance组，终止前顶层TAP 224通过、0失败，覆盖构建／类型／Lint及smoke／contracts／storage／content／a2a／runtime／runner／mcp／workspaces／input／events／preparation／scheduler／verification与部分acceptance；单个验收场景在宿主100%负载下耗时5～6分钟，故主动终止，未宣称全量全绿；构建与contracts:check另跑通过。完整验收组、完整13文件浏览器矩阵和真实OIDC／模型／Linux保持未执行，留待5.2与门槛复核；正式P1-08／G0不变，身份／模型／Runner为明确夹具。证据：project/evidence/P1-08/event-continuity-development-review.md、integration-regression-development-review.md。

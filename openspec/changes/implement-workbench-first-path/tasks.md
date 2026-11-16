@@ -22,7 +22,7 @@
 ## 4. Integration and review
 
 - [x] 4.1 在实际文件Worker／HTTP／浏览器贯通可独立于外部资源的空项目输入及已有交付页面链，执行适用回归／构建／类型／Lint／契约，保存真实日志与夹具边界。
-- [ ] 4.2 同步设计专题、验收、实施文档、基线、OpenSpec和P1-08台账，完成同一Agent开发复核；核对生成文档、严格变更校验和证据。
+- [x] 4.2 同步设计专题、验收、实施文档、基线、OpenSpec和P1-08台账，完成同一Agent开发复核；核对生成文档、严格变更校验和证据。
 - [ ] 4.3 具备真实模型／企业身份／Linux后执行完整产品路径一及T08，按前置和门槛记录正式P1-08复核；缺资源保持未执行，不用本地夹具代签。
 
 2026-11-14：P1-08开发增量1.1／1.2，新增implement-workbench-first-path变更，正式工作包等待前置／G0。原生IndexedDB草稿按主体／项目／Run／表单／依据隔离，本地revision事务CAS；严格原UUID／正文／条件先持久，稀疏唯一pendingForm跨basis阻止绕过未知提交。双页入队只有一条原命令；成功输入回执、清空准确草稿／生成新clientDraftId和释放锁同事务，原信封／历史保留；404／非成功观察不解锁。既有POST包装与lookup核心回执分别严格校验，包装resource／links一致才转核心观察，错operation／上下文／损坏草稿或命令路径关闭准入。真实Edge157／IndexedDB、实际Input API／文件Worker创建项目／消息与原键重放，丢ACK重开、真实事务abort、多页冲突、未来schema升级被外部连接阻塞时旧连接关闭／原数据保留／旧代码拒绝新schema，最终5项通过、0跳过。完整根构建、独立浏览器模块构建、类型／Lint／契约通过；487份源码映射与703输入／产物绑定，最终浏览器JS／map前后SHA一致。初次记录3通过／2失败的回执形状问题、原源码和日志保留；修正严格解析及对齐核心／外层断言，未放宽原身份或事务规则。控制SQL1～45、Runner实现／格式、依赖和旧API保持。模块只提供本地存储，不自行HTTP；当前测试是明确浏览器夹具页面，React工作台入口、三栏／页签、导航／IME、WS及完整T08／首次产品路径继续，浏览器身份为夹具，真实模型／OIDC／Linux仍未配置。 证据：`project/evidence/P1-08/local-input-development-review.md`。
@@ -72,3 +72,5 @@
 2026-11-16：按用户“全部完成实现”授权继续，完成3.3键盘、窄屏与事件期间焦点／选择验证，变更累计10/13；本轮无生产代码改动，仅执行并记录既有实现的实际浏览器验证。实际Edge157（headless）：页面测试1通过，覆盖Enter换行、IME composition与repeat期间Ctrl/Cmd+Enter零POST、页签ArrowRight／End／Home焦点移动、390×844无横向溢出且切换详情／输入不丢正文、截图保存及Ctrl+Enter单次提交；实时事件测试6通过，覆盖快照订阅缺口、真实TCP断线重连、乱序／重复帧、服务端缓冲溢出与空闲撤权，均保留草稿／页签／焦点／选区（focus:true,start:1,end:4）且零额外POST。构建／类型／Lint／契约及4.1全量回归尚未执行，4.2文档／台账同步与4.3真实资源验收继续；正式P1-08、P0-06及G0～G4不变，身份／模型／Runner仍为明确夹具，不代签真实OIDC／模型／Linux或产品验收。 证据：`project/evidence/P1-08/event-continuity-development-review.md`。
 
 2026-11-16：完成4.1集成回归，变更累计11/13。仓库全量`check`执行到acceptance组，终止前顶层TAP 224通过、0失败，覆盖toolchain／vendor／build／typecheck／lint及smoke／contracts／storage／content／a2a／runtime／runner／mcp／workspaces／input／events／preparation／scheduler／verification与部分acceptance；单个验收场景在宿主100%负载下耗时5～6分钟，故主动终止，未宣称完整check全绿。另独立执行构建与`contracts:check`均通过；浏览器补跑空项目输入1、实时事件6、交付导航1，共8通过。完整13文件浏览器矩阵尝试后终止，不计通过；既有回答／附件／上传／移除／任务页记录由各增量review承载。完整验收组、完整浏览器矩阵留待5.2与门槛复核；4.2文档／基线／台账同步与4.3真实资源验收继续，正式P1-08／G0不变。 证据：`project/evidence/P1-08/integration-regression-development-review.md`。
+
+2026-11-16：完成4.2文档／基线／台账同步，变更累计12/13。设计专题`design/03`、产品验收场景、实施文档均追加3.3／4.1记录；技术设计主文由`node design/生成完整方案.mjs`重生成，`--check`确认六份专题一致；`project/tasks.json`更新三份基线SHA-256、P1-08证据引用与备注；`node project/manage.mjs check`与`openspec validate --all --strict`通过，同一Agent开发复核完成。4.3真实模型／OIDC／Linux完整路径与T08保持未执行，正式P1-08／G0不变。证据：`project/evidence/P1-08/integration-regression-development-review.md`、`project/evidence/P1-08/event-continuity-development-review.md`。
