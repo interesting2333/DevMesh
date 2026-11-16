@@ -643,6 +643,21 @@ export function createDomain(db: DatabaseSync) {
       run(input.runId);
       return all('SELECT * FROM change_proposals WHERE run_id=? ORDER BY created_at,change_id LIMIT ?', input.runId, input.limit).map(changeView);
     },
+    redoRun(input: Parsed<'redoRun'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'RedoRun', payload, operationId => {
+        const source = run(input.runId);
+        if (!['FAILED', 'CANCELLED'].includes(String(source.terminal_outcome))) throw new StorageError('REDO_REQUIRES_TERMINAL', 409, 'Only a failed or cancelled Run can be redone');
+        assertResourceVersion(input.ifMatch, Number(source.resource_revision));
+        const projectId = String(source.project_id);
+        if (get('SELECT run_id FROM runs WHERE project_id=? AND terminal_outcome IS NULL', projectId)) throw new StorageError('ACTIVE_RUN_EXISTS', 409, 'One active Run already exists');
+        const newRunId = uid('run'), time = now();
+        exec("INSERT INTO runs(run_id,project_id,task_id,origin_run_id,phase,control_gate,terminal_outcome,run_epoch,control_revision,resource_revision,current_requirement_revision,current_plan_revision,event_seq,created_at,ended_at) VALUES(?,?,?,?, 'PREPARING','OPEN',NULL,1,1,1,NULL,NULL,0,?,NULL)", newRunId, projectId, String(source.task_id), input.runId, time);
+        const redoId = uid('redo');
+        insert('run_redos', { redo_id: redoId, operation_id: operationId, project_id: projectId, source_run_id: input.runId, new_run_id: newRunId, review_hash: input.redoReviewHash, created_at: time });
+        return { projectId, runId: newRunId, revision: 1, sourceRunId: input.runId, newRunId, redoId };
+      });
+    },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
       return operation(meta, 'FinishRun', payload, operationId => {

@@ -1956,15 +1956,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-safe-retry-redo"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P2-04/redo-run-development-review.md","project/evidence/P2-04/redo-run.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1，变更1/3。迁移0048新增run_redos；redoRun仅接受FAILED／CANCELLED、固定baseCommit、新Run为空、活动Run拒绝、同键幂等。redo-run 1/1通过；RetryWork、受保护API、材料复用与文档同步未完成，正式P2-04／G1不变。"]
     },
     {
       "id": "P2-05",

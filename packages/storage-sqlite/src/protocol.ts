@@ -153,6 +153,7 @@ export const requests = {
   decideChange: z.strictObject({ meta, changeId: ids.change, action: z.enum(['confirm', 'reject']), basisHash: sha256, ifMatch: z.string().optional() }),
   getChange: z.strictObject({ changeId: ids.change }),
   listChanges: z.strictObject({ runId: ids.run, limit: z.number().int().min(1).max(100).default(50) }),
+  redoRun: z.strictObject({ ...conditional, redoReviewHash: sha256 }),
   recordControlTarget: z.strictObject({ meta, runId: ids.run, targetKind: z.enum(['ATTEMPT','PREPARATION','PREVIEW','JOB','WORKSPACE']), targetId: opaqueKey, state: z.enum(['PENDING','STOPPING','SAVED','RELEASED','UNKNOWN','FAILED']), failureCode: z.string().min(1).max(200).optional(), evidence: z.record(z.string(), z.json()).optional() }),
   finishControl: z.strictObject({ ...conditional, controlRevision: revision, outcome: z.literal('PAUSED') }),
   finishRun: z.strictObject({ ...conditional, outcome: z.enum(['FAILED', 'CANCELLED']), reason: z.string().min(1).max(2000) }),
@@ -206,6 +207,7 @@ export interface Results extends ReleaseExportResults, SessionResults, RegistryR
   decideChange: OperationResult;
   getChange: ChangeView;
   listChanges: ChangeView[];
+  redoRun: OperationResult;
   finishRun: OperationResult;
   lookupOperation: OperationResult | null;
   getOperation: OperationResult;
