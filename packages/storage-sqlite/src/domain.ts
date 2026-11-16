@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { assertResourceVersion, domainEvent, executionPermit, parseContract, planDraft } from '@devmesh/contracts';
 import { requests } from './protocol.js';
-import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView } from './protocol.js';
+import type { Meta, Method, Parsed, RunView, AttemptView, OutboxView, ControlTargetView } from './protocol.js';
 import { StorageError } from './errors.js';
 import { digest, transaction } from './migrations.js';
 import { canonical } from './json.js';
@@ -199,6 +199,16 @@ export function createDomain(db: DatabaseSync) {
   const run = (id: string) => required(get('SELECT * FROM runs WHERE run_id=?', id));
   const runView = (row: Row): RunView => ({ runId: String(row.run_id), projectId: String(row.project_id), taskId: String(row.task_id), resourceRevision: Number(row.resource_revision), runEpoch: Number(row.run_epoch), controlRevision: Number(row.control_revision), phase: String(row.phase), controlGate: String(row.control_gate), terminalOutcome: row.terminal_outcome as string | null, currentPlanRevision: row.current_plan_revision as number | null, currentRequirementRevision: row.current_requirement_revision as number | null, eventSeq: Number(row.event_seq) });
   const attemptView = (row: Row): AttemptView => ({ attemptId: String(row.attempt_id), runId: String(row.run_id), workId: String(row.work_id), role: String(row.role), state: String(row.state), attemptNo: Number(row.attempt_no), dispatchOperationId: String(row.dispatch_operation_id), endedAt: row.ended_at as string | null });
+  const controlTargetView = (row: Row): ControlTargetView => ({ runId: String(row.run_id), targetKind: String(row.target_kind), targetId: String(row.target_id), state: String(row.state), attempts: Number(row.attempts), failureCode: row.failure_code as string | null, evidence: row.evidence_json === null ? null : JSON.parse(String(row.evidence_json)) as Record<string, unknown>, lastCheckedAt: String(row.last_checked_at), createdAt: String(row.created_at), updatedAt: String(row.updated_at) });
+  const controlTargets = (runId: string) => all('SELECT * FROM run_control_targets WHERE run_id=? ORDER BY target_kind,target_id', runId).map(controlTargetView);
+  const unresolvedTargets = (runId: string) => controlTargets(runId).filter(target => !['SAVED', 'RELEASED'].includes(target.state));
+  function registerControlTargets(runId: string) {
+    const time = now();
+    for (const row of all('SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL ORDER BY attempt_id', runId))
+      exec("INSERT OR IGNORE INTO run_control_targets(run_id,target_kind,target_id,state,attempts,last_checked_at,created_at,updated_at) VALUES(?, 'ATTEMPT', ?, 'PENDING', 0, ?, ?, ?)", runId, String(row.attempt_id), time, time, time);
+    for (const row of all('SELECT preparation_attempt_id FROM preparation_attempts WHERE run_id=? AND ended_at IS NULL ORDER BY preparation_attempt_id', runId))
+      exec("INSERT OR IGNORE INTO run_control_targets(run_id,target_kind,target_id,state,attempts,last_checked_at,created_at,updated_at) VALUES(?, 'PREPARATION', ?, 'PENDING', 0, ?, ?, ?)", runId, String(row.preparation_attempt_id), time, time, time);
+  }
   const outboxView = (row: Row): OutboxView => ({ outboxId: String(row.outbox_id), operationId: String(row.operation_id), destination: String(row.destination), payload: JSON.parse(String(row.payload_json)), status: String(row.status), deliveryAttempt: Number(row.delivery_attempts), leaseOwner: row.lease_owner as string | null, leaseUntil: row.lease_until as string | null });
   const operationView = (row: Row) => ({ operationId: String(row.operation_id), status: String(row.status), result: row.result_json === null ? null : JSON.parse(String(row.result_json)) as Record<string, unknown> });
   const lookup = (meta: Meta) => get('SELECT * FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?', meta.principalId, meta.scopeId, meta.idempotencyKey);
@@ -482,6 +492,95 @@ export function createDomain(db: DatabaseSync) {
         return { ...runView(updated) };
       });
     },
+    pauseRun(input: Parsed<'pauseRun'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'PauseRun', payload, operationId => {
+        const current = run(input.runId);
+        if (current.terminal_outcome !== null) throw new StorageError('RUN_TERMINAL', 409, 'Terminal Run cannot change');
+        if (Number(current.control_revision) !== input.controlRevision) throw new StorageError('CONTROL_REVISION_CONFLICT', 409, 'Control revision changed');
+        if (current.control_gate === 'CANCELLING') throw new StorageError('CANCEL_INTENT_SAVED', 409, 'Pause cannot overwrite cancellation');
+        if (current.control_gate === 'PAUSED' || current.control_gate === 'PAUSING') throw new StorageError('RUN_ALREADY_PAUSING', 409, 'Run is already pausing or paused');
+        registerControlTargets(input.runId);
+        exec("UPDATE runs SET control_gate='PAUSING',run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1 WHERE run_id=?", input.runId);
+        exec("UPDATE execution_grants SET status='REVOKED' WHERE run_id=? AND status='ACTIVE'", input.runId);
+        const updated = run(input.runId);
+        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: 'pause' });
+        return { ...runView(updated), targets: controlTargets(input.runId) };
+      });
+    },
+    cancelRun(input: Parsed<'cancelRun'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'CancelRun', payload, operationId => {
+        const current = run(input.runId);
+        if (current.terminal_outcome !== null) throw new StorageError('RUN_TERMINAL', 409, 'Terminal Run cannot change');
+        if (Number(current.control_revision) !== input.controlRevision) throw new StorageError('CONTROL_REVISION_CONFLICT', 409, 'Control revision changed');
+        if (current.control_gate === 'CANCELLING') throw new StorageError('CANCEL_INTENT_SAVED', 409, 'Cancellation intent is already saved');
+        registerControlTargets(input.runId);
+        exec("UPDATE runs SET control_gate='CANCELLING',run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1 WHERE run_id=?", input.runId);
+        exec("UPDATE execution_grants SET status='REVOKED' WHERE run_id=? AND status='ACTIVE'", input.runId);
+        const updated = run(input.runId);
+        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: 'cancel' });
+        return { ...runView(updated), targets: controlTargets(input.runId) };
+      });
+    },
+    resumeRun(input: Parsed<'resumeRun'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'ResumeRun', payload, operationId => {
+        const current = run(input.runId);
+        if (current.terminal_outcome !== null) throw new StorageError('RUN_TERMINAL', 409, 'Terminal Run cannot resume');
+        if (Number(current.control_revision) !== input.controlRevision) throw new StorageError('CONTROL_REVISION_CONFLICT', 409, 'Control revision changed');
+        if (current.control_gate !== 'PAUSED') throw new StorageError('CONTROL_NOT_PAUSED', 409, 'Only a paused Run can resume');
+        if (current.recovery_review_hash === null) throw new StorageError('CONTROL_RECOVERY_REVIEW_REQUIRED', 409, 'Paused Run has no recovery review');
+        if (String(current.recovery_review_hash) !== input.recoveryReviewHash) throw new StorageError('CONTROL_RECOVERY_REVIEW_CHANGED', 409, 'Recovery review basis changed');
+        if (get('SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL', input.runId)) throw new StorageError('ACTIVE_ATTEMPT_EXISTS', 409, 'All attempts must be ended before resume');
+        if (unresolvedTargets(input.runId).length) throw new StorageError('CONTROL_TARGETS_UNRESOLVED', 409, 'Control targets are still unresolved');
+        exec("UPDATE runs SET control_gate='OPEN',run_epoch=run_epoch+1,control_revision=control_revision+1,resource_revision=resource_revision+1,recovery_review_hash=NULL WHERE run_id=?", input.runId);
+        const updated = run(input.runId);
+        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        return { ...runView(updated) };
+      });
+    },
+    recordControlTarget(input: Parsed<'recordControlTarget'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'RecordControlTarget', payload, () => {
+        const current = required(get('SELECT * FROM run_control_targets WHERE run_id=? AND target_kind=? AND target_id=?', input.runId, input.targetKind, input.targetId));
+        const transitions: Record<string, string[]> = {
+          PENDING: ['STOPPING', 'SAVED', 'RELEASED', 'UNKNOWN', 'FAILED'],
+          STOPPING: ['SAVED', 'RELEASED', 'UNKNOWN', 'FAILED'],
+          UNKNOWN: ['STOPPING', 'SAVED', 'RELEASED', 'FAILED'],
+          FAILED: ['STOPPING', 'UNKNOWN'],
+          SAVED: ['RELEASED'],
+          RELEASED: []
+        };
+        if (!transitions[String(current.state)]?.includes(input.state)) throw new StorageError('CONTROL_TARGET_STATE_INVALID', 409, 'Illegal control target transition');
+        const time = now();
+        exec('UPDATE run_control_targets SET state=?,attempts=attempts+?,failure_code=?,evidence_json=?,last_checked_at=?,updated_at=? WHERE run_id=? AND target_kind=? AND target_id=?', input.state, input.state === 'STOPPING' ? 1 : 0, input.failureCode ?? null, input.evidence ? canonical(input.evidence) : null, time, time, input.runId, input.targetKind, input.targetId);
+        return controlTargetView(required(get('SELECT * FROM run_control_targets WHERE run_id=? AND target_kind=? AND target_id=?', input.runId, input.targetKind, input.targetId)));
+      });
+    },
+    finishControl(input: Parsed<'finishControl'>) {
+      const { meta, ...payload } = input;
+      return operation(meta, 'FinishControl', payload, operationId => {
+        const current = run(input.runId);
+        if (current.terminal_outcome !== null) throw new StorageError('RUN_TERMINAL', 409, 'Terminal Run cannot change');
+        if (Number(current.control_revision) !== input.controlRevision) throw new StorageError('CONTROL_REVISION_CONFLICT', 409, 'Control revision changed');
+        if (current.control_gate !== 'PAUSING') throw new StorageError('CONTROL_NOT_PAUSING', 409, 'Only a pausing Run can finish pause cleanup');
+        const targets = controlTargets(input.runId);
+        const unresolved = targets.filter(target => !['SAVED', 'RELEASED'].includes(target.state));
+        if (unresolved.length) throw new StorageError('CONTROL_TARGETS_UNRESOLVED', 409, 'Control targets are still unresolved: ' + unresolved.map(target => target.targetKind + '/' + target.targetId + '=' + target.state).join(', '));
+        const recoveryReviewHash = digest(canonical({ runId: input.runId, controlRevision: Number(current.control_revision), targets: targets.map(target => ({ targetKind: target.targetKind, targetId: target.targetId, state: target.state, evidence: target.evidence })) }));
+        exec("UPDATE runs SET control_gate='PAUSED',control_revision=control_revision+1,resource_revision=resource_revision+1,recovery_review_hash=? WHERE run_id=?", recoveryReviewHash, input.runId);
+        const updated = run(input.runId);
+        event(input.runId, operationId, 'ControlProgress', { state: { phase: updated.phase, controlGate: updated.control_gate, terminalOutcome: updated.terminal_outcome }, controlRevision: updated.control_revision, runEpoch: updated.run_epoch });
+        return { ...runView(updated), targets, recoveryReviewHash };
+      });
+    },
+    listControlTargets(input: Parsed<'listControlTargets'>) {
+      run(input.runId);
+      return controlTargets(input.runId);
+    },
     finishRun(input: Parsed<'finishRun'>) {
       const { meta, ...payload } = input;
       return operation(meta, 'FinishRun', payload, operationId => {
@@ -489,6 +588,7 @@ export function createDomain(db: DatabaseSync) {
         if (get('SELECT attempt_id FROM attempts WHERE run_id=? AND ended_at IS NULL', input.runId)) throw new StorageError('ACTIVE_ATTEMPT_EXISTS', 409, 'All attempts must be known and ended');
         if(get('SELECT preparation_attempt_id FROM preparation_attempts WHERE run_id=? AND ended_at IS NULL',input.runId))throw new StorageError('ACTIVE_PREPARATION_EXISTS',409,'Preparation effects must be known and ended');
         if (input.outcome === 'CANCELLED' && current.control_gate !== 'CANCELLING') throw new StorageError('CANCEL_INTENT_REQUIRED', 409, 'Cancellation must have a saved control intent');
+        if (input.outcome === 'CANCELLED' && unresolvedTargets(input.runId).length) throw new StorageError('CONTROL_TARGETS_UNRESOLVED', 409, 'Cancellation targets are still unresolved');
         exec('UPDATE runs SET terminal_outcome=?,ended_at=?,resource_revision=resource_revision+1 WHERE run_id=?', input.outcome, now(), input.runId);
         const updated = run(input.runId);
         event(input.runId, operationId, 'ControlProgress', { state: { phase: current.phase, controlGate: current.control_gate, terminalOutcome: input.outcome }, controlRevision: current.control_revision, runEpoch: current.run_epoch });
