@@ -521,3 +521,8 @@ Provider可显式配置responseMode:sse；未配置仍用原JSON，冻结配置�
 ### 键盘窄屏与事件期间交互验证（2026-11-16）
 
 2026-11-16：P1-08完成3.3键盘／窄屏／事件期间交互验证与4.1集成回归，变更累计11/13。实际Edge157（headless）页面1通过：Enter换行、IME composition与repeat期间Ctrl/Cmd+Enter零POST、页签ArrowRight／End／Home、390×844无横向溢出且切面板不丢正文、截图及单次提交；实时事件6通过：快照缺口、真实TCP断线重连、乱序／重复帧、缓冲溢出、空闲撤权均保持草稿／页签／焦点／选区且零额外POST；交付导航1通过。仓库全量check执行到acceptance组，终止前顶层TAP 224通过、0失败，覆盖构建／类型／Lint及smoke／contracts／storage／content／a2a／runtime／runner／mcp／workspaces／input／events／preparation／scheduler／verification与部分acceptance；单个验收场景在宿主100%负载下耗时5～6分钟，故主动终止，未宣称全量全绿；构建与contracts:check另跑通过。完整验收组、完整13文件浏览器矩阵和真实OIDC／模型／Linux保持未执行，留待5.2与门槛复核；正式P1-08／G0不变，身份／模型／Runner为明确夹具。证据：project/evidence/P1-08/event-continuity-development-review.md、integration-regression-development-review.md。
+
+### 2026-11-16 P2-08 工作台控制交互离线开发记录
+
+2026-11-16：P2-08提前开发增量完成，变更3/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观、断线重连保持权威状态；取消因缺impactReviewHash不提供；配置调整面板、变更队列、控制多页竞争与完整E2E／T08／路径五审计确认未实现。workbench-live暂停恢复测试1/1。正式P2-08与G1～G4不变。
+

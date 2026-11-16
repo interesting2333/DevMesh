@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "c5b7e6b5f1447c2eb298c94c6263b55a2a6b96b5bb77ff1b19feb15cc8ef9c84"
+      "sha256": "7081c69f3fd5c565e81ad1d3c8141932b8f235233cfcba4e52940a9944402c6c"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "86849d3f9fdce4c7740d4358872ea7b713c0345b197dc2f71539931be06d7a83"
+      "sha256": "9d421b1051c479b20849d694c49879e2c2c56fb769ba1f177a7d85cd798ea82e"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "aab8c28bd5e0963e3493c22d753b625c32415ecd7b358b6df62dbb53b776e474"
+      "sha256": "bc4583be9866931f8cf1f8afdcbf795a3f9134f6de93feb84a2bea9dfa5a71fe"
     }
   ],
   "gates": [
@@ -2081,7 +2081,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P2-08/control-interaction-development-review.md","project/evidence/P2-08/control-interaction.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观，断线重连保持PAUSED并可恢复；取消需impactReviewHash故不提供；配置调整、变更队列、多页面与完整E2E未实现。正式P2-08／G1不变。"]
+      "notes": ["2026-11-16：完成1.1，变更1/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观，断线重连保持PAUSED并可恢复；取消需impactReviewHash故不提供；配置调整、变更队列、多页面与完整E2E未实现。正式P2-08／G1不变。", "2026-11-16：完成1.2／2.1，变更3/3。取消/配置/变更队列/多页面审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-08仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P3-01",
