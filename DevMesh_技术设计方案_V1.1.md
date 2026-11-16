@@ -1914,6 +1914,11 @@ PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实�
 
 2026-11-16：P2-06公共任务内核增量完成，变更3/3。新增public_tasks、enqueue／claim／complete与主体配额、租约、终态；受保护API与OpenAPI；缺信息补齐／取消核实／T7／T20／T21未实现。public-tasks测试3/3、迁移7/7。正式P2-06与G1～G4不变。
 
+
+#### 13.2026-11-16 P2-07 内容归档账本离线开发记录
+
+2026-11-16：内容归档账本增量完成，变更3/3。归档request／ack／get／list与受保护API／OpenAPI落地；ACK不删除、丢失ACK保持REQUESTED；无删除／GC路径。content-archive测试2/2、迁移7/7。正式P2-07与G1～G4不变。
+
 ---
 
 ## 14. 数据与事务

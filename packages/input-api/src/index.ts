@@ -110,6 +110,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   const publicTaskCreate=z.strictObject({kind:z.string().min(1).max(100),payload:z.record(z.string(),z.json()),quota:z.number().int().min(1).max(10000).optional()});
   const publicTaskClaim=z.strictObject({workerId:opaqueKey,leaseMs:z.number().int().min(1000).max(300000).optional()});
   const publicTaskComplete=z.strictObject({workerId:opaqueKey,outcome:z.enum(['COMPLETED','FAILED'])});
+  const contentArchiveRequest=z.strictObject({contentHash:sha256});
   router.post('/attachments',route(async(request,response,identity)=>{
     const meta=bodyMeta(request,'uploads',identity);
     if(activeUploads>=maximumUploads)fail('UPLOAD_CAPACITY',429,'Upload capacity is full');
@@ -326,6 +327,26 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const taskKey=parseContract(opaqueKey,request.params.taskKey),task=await content.storage.request('getPublicTask',{taskKey}),meta=bodyMeta(request,task.projectId,identity),body=parseContract(publicTaskComplete,json(request));
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:task.projectId,write:true});
     response.status(202).json(await content.storage.request('completePublicTask',{meta,taskKey,workerId:body.workerId,outcome:body.outcome}));
+  }));
+  router.post('/projects/:projectId/content-archive',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),meta=bodyMeta(request,projectId,identity),body=parseContract(contentArchiveRequest,json(request));
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:true});
+    response.status(202).json(await content.storage.request('requestContentArchive',{meta,projectId,contentHash:body.contentHash}));
+  }));
+  router.get('/projects/:projectId/content-archive',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),hash=request.query.contentHash===undefined?undefined:parseContract(sha256,request.query.contentHash),state=request.query.state===undefined?undefined:parseContract(z.enum(['REQUESTED','ACKED','CANCELED']),request.query.state);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId,write:false});
+    response.json({archives:await content.storage.request('listContentArchives',{projectId,limit:positive(request.query.limit??'50',1,200),...(hash===undefined?{}:{contentHash:hash}),...(state===undefined?{}:{state})})});
+  }));
+  router.get('/content-archives/:archiveId',route(async(request,response,identity)=>{
+    const archive=await content.storage.request('getContentArchive',{archiveId:parseContract(opaqueKey,request.params.archiveId)});
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:archive.projectId,write:false});
+    response.json(archive);
+  }));
+  router.post('/content-archives/:archiveId\\:ack',route(async(request,response,identity)=>{
+    const archiveId=parseContract(opaqueKey,request.params.archiveId),archive=await content.storage.request('getContentArchive',{archiveId}),meta=bodyMeta(request,archive.projectId,identity);
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,projectId:archive.projectId,write:true});
+    response.status(202).json(await content.storage.request('ackContentArchive',{meta,archiveId}));
   }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');

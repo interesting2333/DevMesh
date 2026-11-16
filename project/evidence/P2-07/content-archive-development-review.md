@@ -30,3 +30,11 @@ node --test --test-reporter=spec tests/content-archive.test.mjs
 - 受保护归档 API（1.2）与文档同步（1.3）未完成。
 - 本增量没有删除路径，不宣称 GC 安全或 T22／T23。
 - 正式 P2-07／G1～G4 不变。
+
+## 追加：受保护归档 API（1.2）
+
+- `POST /projects/{projectId}/content-archive`：成员写权限，登记归档请求。
+- `GET /projects/{projectId}/content-archive?contentHash=&state=`：成员读权限。
+- `GET /content-archives/{archiveId}`、`POST /content-archives/{archiveId}:ack`：按所属项目复核权限；ACK 不删除内容。
+- OpenAPI 新增三个路径（总数 83）。
+- `tests/input-content-archive-http.test.mjs` 1/1：请求、列表、ACK、内容计数不变。

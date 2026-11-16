@@ -140,6 +140,9 @@ export function createOpenApiDocument() {
   add('/api/v1/projects/{projectId}/public-tasks:claim','post','ClaimPublicTask',undefined,[parameter('projectId',ids.project),key],undefined,'200');
   add('/api/v1/public-tasks/{taskKey}','get','ReadPublicTask',undefined,[parameter('taskKey',opaqueKey)]);
   add('/api/v1/public-tasks/{taskKey}:complete','post','CompletePublicTask',undefined,[parameter('taskKey',opaqueKey),key],undefined,'202');
+  add('/api/v1/projects/{projectId}/content-archive','get','ReadContentArchives',undefined,[parameter('projectId',ids.project),{name:'contentHash',in:'query',schema:jsonSchema(sha256)},{name:'state',in:'query',schema:{type:'string',enum:['REQUESTED','ACKED','CANCELED']}},{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:200,default:50}}]);
+  add('/api/v1/content-archives/{archiveId}','get','ReadContentArchive',undefined,[parameter('archiveId',opaqueKey)]);
+  add('/api/v1/content-archives/{archiveId}:ack','post','AckContentArchive',undefined,[parameter('archiveId',opaqueKey),key],undefined,'202');
   const acceptancePath='/api/v1/runs/{runId}/candidates/{candidateId}/acceptance',acceptanceParameters=[parameter('runId',ids.run),parameter('candidateId',ids.candidate)],conditionalAcceptance=[...acceptanceParameters,key,parameter('If-Match',strongETag,'header')];
   add(acceptancePath,'get','ReadAcceptanceBasis','AcceptanceBasis',acceptanceParameters);
   for(const [suffix,operationId,mime] of [['view','ReadAcceptancePage','text/html'],['client.js','ReadAcceptanceClient','application/javascript']] as const){const path=acceptancePath+'/'+suffix;add(path,'get',operationId,undefined,acceptanceParameters);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'当前成员准确候选接受入口；GET不准备、确认、接受或签发应用访问',content:{[mime]:{schema:{type:'string'}}}};}
