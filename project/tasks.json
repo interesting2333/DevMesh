@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "b55f3a1877b77589db1fbf97918f73f8412bcdea33aa8cc5de7d43950e1d570e"
+      "sha256": "3d94e35bb8b447d851e36a1fee75ff94ff908f9f0e659df2ad68782303f49224"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "8c0573b0da78a2205d67242425a40e746b0c236ff2db1aba7901407a5836f4ca"
+      "sha256": "1a25e4af1a3b1323fa8d146f83159c9fc575a964987320ba277e1a40e491e483"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "5b3c3de409ba6633d540abaf59392f4cafb84fc74f37a8cd2bb1512a192c06a5"
+      "sha256": "48bd711fa45cd5aab7c76e4fc94a38cb7c4243a64c4b278f3b622bfeb8e1048d"
     }
   ],
   "gates": [
@@ -1964,7 +1964,7 @@
       "codeReferences": [],
       "evidence": ["project/evidence/P2-04/redo-run-development-review.md","project/evidence/P2-04/redo-run.txt"],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/3。迁移0048新增run_redos；redoRun仅接受FAILED／CANCELLED、固定baseCommit、新Run为空、活动Run拒绝、同键幂等。redo-run 1/1通过；RetryWork、受保护API、材料复用与文档同步未完成，正式P2-04／G1不变。"]
+      "notes": ["2026-11-16：完成1.1，变更1/3。迁移0048新增run_redos；redoRun仅接受FAILED／CANCELLED、固定baseCommit、新Run为空、活动Run拒绝、同键幂等。redo-run 1/1通过；RetryWork、受保护API、材料复用与文档同步未完成，正式P2-04／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更3/3。:redo API与REDO_REQUIRES_TERMINAL接入；RetryWork审计确认仅契约、attempt级重建与预算桶未实现；文档/基线同步，manage/openspec通过。正式P2-04仍NOT_STARTED，G0～G4未变。"]
     },
     {
       "id": "P2-05",

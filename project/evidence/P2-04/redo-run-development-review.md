@@ -27,3 +27,21 @@ node --test --test-reporter=spec tests/redo-run.test.mjs
 - `RetryWork` 的 attempt 重建与预算桶未实现。
 - 受保护 `:redo` API、材料复用矩阵、T4／T10 未完成。
 - 真实模型／Runner／OIDC 未执行；正式 P2-04／G1～G4 不变。
+
+## 追加：受保护 redo API（1.2）
+
+- `POST /runs/{runId}:redo`：要求 If-Match 资源版本、成员写权限；返回 202 receipt，资源指向新 Run。
+- 新增 `REDO_REQUIRES_TERMINAL` 错误码；OpenAPI 重新生成。
+- `tests/input-redo-http.test.mjs` 1/1：缺 If-Match 428、活动 Run 409、终态后 202 且新 Run 为 PREPARING。
+
+## 追加：RetryWork 审计（2.1）
+
+| 检查项 | 结论 |
+| --- | --- |
+| `RetryWork` 契约 | 存在（workId、failedAttemptId、retryReviewHash） |
+| 存储／HTTP 实现 | **未实现**；没有 attempt 级重试命令 |
+| 现有相近能力 | `verified-repairs` 产生修复 Work；candidate rejection 生成修复审查；Runner 发布 continuation；均不是同一 failed attempt 的新 attempt |
+| 独立预算桶 | 调度有 maximumAttempts，但没有面向 retry 的独立预算桶 |
+| 结论 | attempt 级 `RetryWork` 与材料复用矩阵、T4／T10 保持未实现；本轮只完成审计与记录，不勾选为已实现 |
+
+因此 2.1 以“审计完成、缺口明确”记录；正式 P2-04 不因此完成。

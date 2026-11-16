@@ -1885,6 +1885,11 @@ PROFILE_PREPARE 把配额 prepare 纳入唯一阶段；prepare 前最后核实�
 
 2026-11-16：P2-03提前开发增量完成，变更4/4。新增迁移0047与change_proposals；proposeChange／decideChange／getChange／listChanges及受保护HTTP API落地，依据hash派生、旧依据拒绝、来源唯一、终态保护；影响图／局部冻结／应用复验与T3未实现。change测试3/3、迁移7/7。正式P2-03与G1～G4不变。
 
+
+#### 13.2026-11-16 P2-04 安全重做离线开发记录
+
+2026-11-16：P2-04提前开发增量完成，变更3/3。新增迁移0048 run_redos与redoRun，仅从FAILED／CANCELLED创建固定baseCommit的新PREPARING Run，不复制旧计划／候选／diff，活动Run拒绝、同键幂等；受保护:redo API与REDO_REQUIRES_TERMINAL错误码。RetryWork审计确认仅契约、attempt级重建与预算桶未实现；材料复用矩阵／T4／T10未实现。redo测试2/2、迁移7/7。正式P2-04与G1～G4不变。
+
 ---
 
 ## 14. 数据与事务

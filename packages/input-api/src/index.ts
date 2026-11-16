@@ -217,6 +217,12 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId:change.runId,write:false});
     response.json(change);
   }));
+  router.post('/runs/:runId\\:redo',route(async(request,response,identity)=>{
+    const runId=parseContract(ids.run,request.params.runId),meta=bodyMeta(request,runId,identity),body=parseContract(commandBodies.RedoRun,json(request)),ifMatch=request.headers['if-match'];
+    if(ifMatch===undefined)fail('PRECONDITION_REQUIRED',428,'If-Match resource revision is required');
+    await content.storage.request('checkInputAccess',{principalId:identity.principalId,runId,write:true});
+    response.status(202).json(receipt(await content.storage.request('redoRun',{meta,runId,redoReviewHash:body.redoReviewHash,ifMatch:scalar(ifMatch,'If-Match')})));
+  }));
   router.get('/operations/lookup',route(async(request,response,identity)=>{
     const includeAbsence=request.query.includeAbsence===undefined?'false':scalar(request.query.includeAbsence,'includeAbsence');
     if(!['true','false'].includes(includeAbsence))fail('SCHEMA_INVALID',422,'Invalid absence selection');
