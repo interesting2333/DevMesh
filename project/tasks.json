@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "f1ddb8b7a84c8d76234187d6ea2450f778eb1997871cc819d96c91c44f594a87"
+      "sha256": "f40b1da2cc925246ee016290ef1ac91789397dec929adf71ec9ac9519252dc83"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "4600a48eb0af312c137fc309349748db93850c528891993b72042f6e2c31332d"
+      "sha256": "26fe5ad6ff3c403ac1af3579ee229d784053280ef6ff4ddf9c0f59088fd4be5e"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "13c11592b4e13107d545032ce375f4e77940b24070cb6cecdd73b91fff91632b"
+      "sha256": "e9fdbcf86a36d439c8b96077617da2005ee90db3de00741d8eaa6580de58daea"
     }
   ],
   "gates": [
@@ -2366,15 +2366,15 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": ["implement-release-manifest"],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": [],
+      "evidence": ["project/evidence/P4-04/release-manifest-development-review.md","project/evidence/P4-04/release-manifest.json","project/evidence/P4-04/release-manifest-test.txt"],
       "reviewNote": null,
-      "notes": []
+      "notes": ["2026-11-16：完成1.1／1.2，变更2/2。release-manifest生成git HEAD、包版本、schema版本、迁移/OpenAPI摘要、门槛与工作包状态、变更进度；不含可发布/已验收声明；--write生成证据。release-manifest 2/2通过；发布包/签名/开放范围结论/人工评审未实现，正式P4-04／G1不变。"]
     }
   ]
 }

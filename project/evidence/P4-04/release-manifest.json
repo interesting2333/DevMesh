@@ -1,0 +1,249 @@
+{
+  "format": "devmesh.release-manifest.v1",
+  "generatedAt": "2026-11-16T09:35:08.679Z",
+  "gitHead": "adadd5dc90ca2245bd7f02b89a682f7109be4548",
+  "rootPackage": {
+    "name": "@devmesh/root",
+    "version": "0.0.0"
+  },
+  "packages": [
+    {
+      "directory": "a2a-adapter",
+      "name": "@devmesh/a2a-adapter",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "agent-runtime",
+      "name": "@devmesh/agent-runtime",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "blob-store",
+      "name": "@devmesh/blob-store",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "code-workspaces",
+      "name": "@devmesh/code-workspaces",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "contracts",
+      "name": "@devmesh/contracts",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "input-api",
+      "name": "@devmesh/input-api",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "mcp-tools",
+      "name": "@devmesh/mcp-tools",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "platform-core",
+      "name": "@devmesh/platform-core",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "preview-gateway",
+      "name": "@devmesh/preview-gateway",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "result-verifier",
+      "name": "@devmesh/result-verifier",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "runner",
+      "name": "@devmesh/runner",
+      "version": "0.0.0"
+    },
+    {
+      "directory": "storage-sqlite",
+      "name": "@devmesh/storage-sqlite",
+      "version": "0.0.0"
+    }
+  ],
+  "databaseSchemaVersion": 54,
+  "migrations": {
+    "count": 54,
+    "digest": "8e9fa4fc75112918caa49503466984f0d1a9ba07f02334528cdb6d31fcb8ec36"
+  },
+  "openapi": {
+    "digest": "2b7e2820416f30da18fe34378760d84f6d756b3abdaaad94206661db84e71fc2",
+    "pathCount": 93
+  },
+  "gates": [
+    {
+      "id": "G0",
+      "name": null,
+      "status": "PENDING"
+    },
+    {
+      "id": "G1",
+      "name": null,
+      "status": "PENDING"
+    },
+    {
+      "id": "G2",
+      "name": null,
+      "status": "PENDING"
+    },
+    {
+      "id": "G3",
+      "name": null,
+      "status": "PENDING"
+    },
+    {
+      "id": "G4",
+      "name": null,
+      "status": "PENDING"
+    }
+  ],
+  "workPackages": {
+    "DONE": 6,
+    "IN_PROGRESS": 1,
+    "NOT_STARTED": 29
+  },
+  "changes": [
+    {
+      "name": "implement-agent-exposure",
+      "done": 3,
+      "total": 3
+    },
+    {
+      "name": "implement-agent-runtime-provider",
+      "done": 7,
+      "total": 9
+    },
+    {
+      "name": "implement-backup-snapshot",
+      "done": 3,
+      "total": 3
+    },
+    {
+      "name": "implement-collaboration-stats",
+      "done": 3,
+      "total": 3
+    },
+    {
+      "name": "implement-config-adjustment",
+      "done": 4,
+      "total": 4
+    },
+    {
+      "name": "implement-content-archive-ledger",
+      "done": 3,
+      "total": 3
+    },
+    {
+      "name": "implement-content-maintenance",
+      "done": 4,
+      "total": 4
+    },
+    {
+      "name": "implement-control-interaction",
+      "done": 3,
+      "total": 3
+    },
+    {
+      "name": "implement-crash-recovery-scan",
+      "done": 5,
+      "total": 5
+    },
+    {
+      "name": "implement-durable-linux-runner",
+      "done": 7,
+      "total": 8
+    },
+    {
+      "name": "implement-five-mcp-services",
+      "done": 9,
+      "total": 9
+    },
+    {
+      "name": "implement-history-export",
+      "done": 3,
+      "total": 3
+    },
+    {
+      "name": "implement-invocation-host",
+      "done": 4,
+      "total": 4
+    },
+    {
+      "name": "implement-managed-code-workspaces",
+      "done": 12,
+      "total": 12
+    },
+    {
+      "name": "implement-official-mcp-tools",
+      "done": 6,
+      "total": 7
+    },
+    {
+      "name": "implement-partial-change-control",
+      "done": 5,
+      "total": 5
+    },
+    {
+      "name": "implement-plan-scheduler",
+      "done": 5,
+      "total": 5
+    },
+    {
+      "name": "implement-preview-review-and-acceptance",
+      "done": 10,
+      "total": 13
+    },
+    {
+      "name": "implement-project-input-api",
+      "done": 7,
+      "total": 8
+    },
+    {
+      "name": "implement-public-task-kernel",
+      "done": 3,
+      "total": 3
+    },
+    {
+      "name": "implement-release-manifest",
+      "done": 0,
+      "total": 2
+    },
+    {
+      "name": "implement-result-verification-and-candidate-freeze",
+      "done": 12,
+      "total": 12
+    },
+    {
+      "name": "implement-run-control-lifecycle",
+      "done": 8,
+      "total": 8
+    },
+    {
+      "name": "implement-safe-retry-redo",
+      "done": 4,
+      "total": 4
+    },
+    {
+      "name": "implement-understanding-and-readonly-planning",
+      "done": 9,
+      "total": 10
+    },
+    {
+      "name": "implement-web-crud-template",
+      "done": 6,
+      "total": 7
+    },
+    {
+      "name": "implement-workbench-first-path",
+      "done": 12,
+      "total": 13
+    }
+  ]
+}

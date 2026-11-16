@@ -611,3 +611,8 @@ REPLACE方案可以先交付和冻结供用户审查，不能在交付阶段要�
 
 2026-11-16：P3-04提前开发增量完成，变更3/3。agent_exposures与draft／validate／publish／drain／retire／catalog及受保护API／OpenAPI落地；Card校验、状态机、目录过滤生效；默认Card／服务grant／真实外部Agent／T18／T20未实现。exposure测试2/2。正式P3-04与G1～G4不变。
 
+
+### 2026-11-16 P4-04 发布事实清单离线准备
+
+2026-11-16：P4-04提前准备完成，变更2/2。新增project/release-manifest.mjs，输出git HEAD、包版本、schema版本、迁移／OpenAPI摘要、门槛与工作包状态、变更进度；不含可发布／已验收声明；--write生成证据清单。release-manifest测试2/2。正式P4-04与G1～G4不变。
+
