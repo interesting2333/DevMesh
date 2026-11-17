@@ -37,7 +37,7 @@
     "runner:start": "node packages/runner/dist/main.mjs",
     "test:mcp": "node --test --test-concurrency=1 --test-reporter=tap tests/mcp*.test.mjs",
     "template:verify": "node scripts/verify-template.mjs",
-    "test:input": "node --test --test-concurrency=1 --test-reporter=tap tests/input*.test.mjs",
+    "test:input": "node --test --test-concurrency=1 --test-reporter=tap tests/input*.test.mjs tests/model-settings-http.test.mjs",
     "test:events": "node --test --test-concurrency=1 --test-reporter=tap tests/workbench-events.test.mjs",
     "test:preparation": "node --test --test-concurrency=1 --test-reporter=tap tests/preparation*.test.mjs",
     "test:scheduler": "node --test --test-concurrency=1 --test-reporter=tap tests/scheduler*.test.mjs",

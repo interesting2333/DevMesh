@@ -791,6 +791,8 @@ P1-08的2.3接入task页面：下一目标切换、类型／标题／正文及�
 
 ### 2026-11-16 P0-06 本机模型接入设置（离线开发增量）
 
+2026-11-17 增量：模型设置支持从接入服务读取模型列表、下拉选择、刷新及手动输入；新增受保护 `POST /api/v1/settings/model:models`，接受未保存的 Provider／Endpoint／Key，不先保存或自动应用。已保存密钥仅复用于原 Provider 和规范化 Endpoint；请求6秒超时、响应1 MiB上限、最多1000个去重有效ID、禁止重定向及上游错误透传。模型命名沿用 Runtime 校验。接入变化／弹窗关闭后丢弃迟到列表。验证与截图见 `project/evidence/P0-06/model-selection-development-review.md`；正式 P0-06 和 G0～G4 状态不变。
+
 2026-11-16：工作台侧边栏“更多→设置”增加模型接入配置；新增 `GET/PUT /api/v1/settings/model` 与 `POST /api/v1/settings/model:test`。Provider、Endpoint、模型 ID 与 API Key 保存到本机 `<dataRoot>/settings`；Key 仅写 0600 文件，响应与错误不回显。Endpoint 必须 https（loopback 可 http），拒绝 URL 凭据/query/hash。保存后需重启；预览启动器尝试接入 Runtime，失败回退无模型。HTTP 测试 2/2、浏览器设置弹窗测试 1/1。未使用真实 DeepSeek Key 调用；正式 P0-06 仍 IN_PROGRESS，G0～G4 不变。
 
 

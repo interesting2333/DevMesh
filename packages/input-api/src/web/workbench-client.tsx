@@ -22,8 +22,8 @@ import type {LocalUpload} from './workbench-upload.js';
 import {observeWorkbenchEvents} from './workbench-live.js';
 import type {WorkbenchLiveState} from './workbench-live.js';
 type ControlStatus={controlGate:string;unresolved:number;lastCheckedAt:string|null;overdue:boolean;controlRevision:number;recoveryReviewHash:string|null};
-type ModelSettings={configured:boolean;providerId:string|null;endpoint:string|null;model:string|null;hasApiKey:boolean;updatedAt:string|null};
 import {WorkbenchModelProgress} from './workbench-progress.js';
+import {WorkbenchSettings} from './workbench-settings.js';
 
 type Workspace=z.output<typeof workspaceView>;
 type Store=Awaited<ReturnType<typeof openWorkbenchLocal>>;
@@ -200,7 +200,7 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
  const [projects,setProjects]=useState<z.output<typeof projectsPage>['projects']>([]),[projectCursor,setProjectCursor]=useState<string|null>(null),[selection,setSelection]=useState<WorkbenchSelection|null>(boot.selection),[workspace,setWorkspace]=useState<Workspace|null>(null),[inputBasis,setInputBasis]=useState<number|null>(null),[loading,setLoading]=useState(true),[notice,setNotice]=useState(''),[resultNotice,setResultNotice]=useState(''),[denied,setDenied]=useState(false),[tab,setTab]=useState<(typeof tabs)[number]>('任务'),[panel,setPanel]=useState<WorkbenchReading['panel']>('conversation'),[deliveryReading,setDeliveryReading]=useState<DeliveryReading>({candidateId:null,candidateAfterRevision:0});
    const controllers=useRef(new Set<AbortController>()),generation=useRef(0),disposed=useRef(false),navigation=useRef(false),projectLoading=useRef(false),guard=useRef<()=>Promise<boolean>>(async()=>true),planGuard=useRef<()=>Promise<boolean>>(async()=>true),ui=useRef(new Map<string,{tab:(typeof tabs)[number];panel:WorkbenchReading['panel']}&DeliveryReading>()),selected=useRef(selection),view=useRef(workspace);
   const observer=useRef<ReturnType<typeof observeWorkbenchEvents>|null>(null),[live,setLive]=useState<(WorkbenchLiveState&{runId:string})|null>(null),[control,setControl]=useState<ControlStatus|null>(null),[collaboration,setCollaboration]=useState<{changes:{changeId:string;state:string;proposedText:string}[];configs:{adjustmentId:string;state:string}[];generation:number}|null>(null);
-  const [moreOpen,setMoreOpen]=useState(false),[settingsOpen,setSettingsOpen]=useState(false),[modelSettings,setModelSettings]=useState<ModelSettings|null>(null),[settingsForm,setSettingsForm]=useState({providerId:'deepseek',endpoint:'https://api.deepseek.com',model:'deepseek-chat',apiKey:''}),[settingsBusy,setSettingsBusy]=useState(false),[settingsMessage,setSettingsMessage]=useState('');
+  const [moreOpen,setMoreOpen]=useState(false),[settingsOpen,setSettingsOpen]=useState(false);
   const guarded=async()=>await guard.current()&&await planGuard.current();
  const readingPosition=useRef({tab,panel,...deliveryReading});readingPosition.current={tab,panel,...deliveryReading};
  selected.current=selection;view.current=workspace;
@@ -234,36 +234,7 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
       setCollaboration({changes:changes.changes??[],configs:configs.adjustments??[],generation:generationInfo.generation??0});
     }catch{setCollaboration(null);}
   }
-  async function openSettings(){
-    setMoreOpen(false);setSettingsOpen(true);setSettingsMessage('');setSettingsBusy(true);
-    try{const value=await request('/api/v1/settings/model',{},generation.current) as ModelSettings;setModelSettings(value);setSettingsForm({providerId:value.providerId??'deepseek',endpoint:value.endpoint??'https://api.deepseek.com',model:value.model??'deepseek-chat',apiKey:''});}
-    catch{setSettingsMessage('设置暂时无法加载，请稍后重试。');}
-    finally{setSettingsBusy(false);}
-  }
-  async function saveModelSettings(){
-    setSettingsBusy(true);setSettingsMessage('');
-    try{
-      const endpoint=settingsForm.endpoint.trim(),normalized=/^https?:\/\//i.test(endpoint)?endpoint:`https://${endpoint}`;
-      const body={providerId:settingsForm.providerId,endpoint:normalized,model:settingsForm.model,...(settingsForm.apiKey.trim()?{apiKey:settingsForm.apiKey.trim()}:{})};
-      const value=await request('/api/v1/settings/model',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(body)},generation.current) as ModelSettings;
-      setModelSettings(value);setSettingsForm(form=>({...form,apiKey:''}));setSettingsMessage('已保存。重启服务后生效。');
-    }catch(error){
-      const detail=error instanceof ApiError?({MODEL_ENDPOINT_INVALID:'Endpoint 需要是完整地址，例如 https://api.deepseek.com（本机可用 http://127.0.0.1）',MODEL_KEY_REQUIRED:'请填写 API Key',MODEL_KEY_INVALID:'API Key 含换行或长度不合法',MODEL_SETTINGS_INVALID:'Provider 或模型 ID 含非法字符'}[error.code]??`保存失败（${error.code}）`):'保存失败，请检查网络后重试。';
-      setSettingsMessage(detail);
-    }
-    finally{setSettingsBusy(false);}
-  }
-  async function testModelSettings(){
-    setSettingsBusy(true);setSettingsMessage('正在测试连接…');
-    try{
-      const result=await request('/api/v1/settings/model:test',{method:'POST'},generation.current) as {ok:boolean;status:number|null;message:string};
-      setSettingsMessage((result.ok?'连接成功':'连接未通过')+(result.status?`（HTTP ${result.status}）`:'')+'。'+(result.ok?'':'请检查 Endpoint、模型或密钥。'));
-    }catch(error){
-      const detail=error instanceof ApiError?({MODEL_KEY_REQUIRED:'请先填写并保存 API Key，再测试连接',MODEL_ENDPOINT_INVALID:'Endpoint 格式不合法'}[error.code]??`测试失败（${error.code}）`):'测试失败：请先保存密钥，或检查网络。';
-      setSettingsMessage(detail);
-    }
-    finally{setSettingsBusy(false);}
-  }
+  function openSettings(){setMoreOpen(false);setSettingsOpen(true);}
   async function controlCommand(path:string,init:RequestInit){    try{await request(path,init,generation.current);const current=view.current;if(current)await loadControl(current.run.runId);return true;}
     catch{setNotice('控制请求未确认，请刷新控制状态后重试。');return false;}
   }
@@ -333,7 +304,7 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
    <aside data-panel="detail" className={'detail '+(panel==='detail'?'visible':'')} aria-label="执行详情"><div className="detail-heading"><Icon name="task"/><h2>执行工作区</h2></div><div role="tablist" aria-label="执行信息" className="tabs">{tabs.map((name,index)=><button key={name} id={'tab-'+index} role="tab" aria-selected={tab===name} aria-controls="detail-panel" tabIndex={tab===name?0:-1} onClick={()=>void selectTab(name)} onKeyDown={e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(index+(e.key==='ArrowLeft'?-1:1)+tabs.length)%tabs.length;void selectTab(tabs[next]!).then(changed=>{if(changed)document.getElementById('tab-'+next)?.focus();});}}}><Icon name={(['task','team','artifact','preview','record'] as const)[index]!}/>{name}</button>)}</div><section id="detail-panel" role="tabpanel" aria-labelledby={'tab-'+tabs.indexOf(tab)}>
     {!workspace?(denied?<p className="muted">请重新确认访问权限。</p>:<section aria-label="项目开始指南"><h2>让想法有序落地</h2><p className="muted">从需求开始，每一步都有清晰的依据。</p><ol className="workflow-guide"><li><h3>描述你的需求</h3><p>写下目标和使用场景，也可以添加需求材料。</p></li><li><h3>梳理理解与计划</h3><p>创建项目后，在任务页签查看理解、回答问题并审阅计划。</p></li><li><h3>跟进协作与成果</h3><p>查看执行进展、审查成果，体验并确认交付。</p></li></ol><p className="guide-note">创建项目只保存需求；实施须在计划明确确认后开始。</p></section>):tab==='任务'?<WorkbenchPlanning key={boot.principalId+':'+workspace.run.runId} principalId={boot.principalId} workspace={workspace} read={path=>api(path)} write={workspace.mode==='current'&&workspace.membership!=='viewer'?(path,init)=>api(path,init):null} guard={planGuard} before={()=>guard.current()} onChanged={changed}/>:tab==='协作'?<><h2>项目协作</h2><p>当前角色：{workspace.membership==='owner'?'项目负责人':workspace.membership==='operator'?'项目操作者':'只读成员'}</p><p className="muted">项目成员权限决定可查看与可提交的内容。</p>{collaboration&&<section aria-label="变更与配置"><p>配置代际 {collaboration.generation}；变更提案 {collaboration.changes.length} 条；配置调整 {collaboration.configs.length} 条。</p>{collaboration.changes.slice(0,5).map(change=><p key={change.changeId}>{change.proposedText} · {change.state}</p>)}{collaboration.configs.slice(0,5).map(config=><p key={config.adjustmentId}>配置调整 · {config.state}</p>)}</section>}</>:tab==='成果'||tab==='预览'?<WorkbenchDelivery key={boot.principalId+':'+workspace.run.runId+':'+tab} workspace={workspace} read={path=>api(path)} reading={deliveryReading} onReading={setDeliveryReading} before={guarded} onOpen={leave} focus={tab}/>:<><h2>已保存记录</h2><p>当前已读取 {workspace.messages.length} 条输入。</p><p className="muted">刷新可查看最新保存的输入。</p>{!!progress?.events.length&&<section aria-label="最近执行进展"><p className="muted">最近接收的已保存进展；完整输入按服务端内容读取。</p><ol>{progress.events.map(event=><li key={event.eventId}>{clock(event.observedAt)} · {event.type==='InputSaved'?'输入已保存':event.type==='PlanPublished'?'计划已保存':event.type==='ReleaseAccepted'?'交付已接受':'执行记录已更新'}</li>)}</ol></section>}<WorkbenchModelProgress streams={progress?.streams??[]}/></>}
    </section></aside>
-  </div>{settingsOpen&&<div className="modal-backdrop" onClick={()=>setSettingsOpen(false)}><section className="modal" role="dialog" aria-modal="true" aria-label="设置" onClick={event=>event.stopPropagation()}><div className="modal-head"><h2>设置</h2><button onClick={()=>setSettingsOpen(false)} aria-label="关闭设置">关闭</button></div><h3>模型接入</h3><p className="muted">密钥只保存在本机文件，不会回显，也不会写入数据库。保存后需重启服务生效。</p><label>Provider<input value={settingsForm.providerId} onChange={event=>setSettingsForm(form=>({...form,providerId:event.target.value}))} autoComplete="off"/></label><label>Endpoint<input value={settingsForm.endpoint} onChange={event=>setSettingsForm(form=>({...form,endpoint:event.target.value}))} autoComplete="off" inputMode="url"/></label><label>模型 ID<input value={settingsForm.model} onChange={event=>setSettingsForm(form=>({...form,model:event.target.value}))} autoComplete="off"/></label><label>API Key<input type="password" value={settingsForm.apiKey} placeholder={modelSettings?.hasApiKey?'已保存，留空保持不变':'输入 API Key'} onChange={event=>setSettingsForm(form=>({...form,apiKey:event.target.value}))} autoComplete="new-password"/></label><div className="actions"><button disabled={settingsBusy} onClick={()=>void testModelSettings()}>测试连接</button><button className="primary" disabled={settingsBusy} onClick={()=>void saveModelSettings()}>保存设置</button></div>{settingsMessage&&<p role="status" className="settings-message">{settingsMessage}</p>}<p className="muted">当前：{modelSettings?.configured?`已配置 ${modelSettings.model}`:'未配置'}{modelSettings?.hasApiKey?' · 密钥已保存':''}</p></section></div>}</>;
+  </div>{settingsOpen&&<WorkbenchSettings api={(path,init)=>request(path,init,generation.current)} onClose={()=>setSettingsOpen(false)}/>}</>;
 }
 const root=document.getElementById('root')!;
 try{createRoot(root).render(<Workbench boot={workbenchBoot.parse(JSON.parse(document.getElementById('workbench-data')?.textContent??''))}/>);}catch{root.textContent='工作台无法加载，请重新进入。';}

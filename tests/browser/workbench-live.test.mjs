@@ -84,11 +84,12 @@ test('workbench more menu opens model settings and saves configuration',settings
   await page.getByRole('menuitem',{name:'设置'}).click();
   const dialog=page.getByRole('dialog',{name:'设置'});
   await expect(dialog).toBeVisible();
-  await dialog.getByLabel('模型 ID').fill('deepseek-chat');
+  await dialog.getByRole('combobox',{name:'模型',exact:true}).selectOption('$custom');
+  await dialog.getByLabel('自定义模型 ID').fill('deepseek-chat');
   await dialog.getByLabel('API Key').fill('sk-test-browser');
   await dialog.getByRole('button',{name:'保存设置'}).click();
-  await expect(dialog.getByRole('status')).toContainText('已保存');
-  await expect(dialog).toContainText('已配置 deepseek-chat');
+  await expect(dialog.getByRole('status',{name:'设置操作状态'})).toContainText('已保存');
+  await expect(dialog).toContainText('deepseek-chat · 密钥已保存');
 });
 
 test('workbench pause and resume controls call the real API and keep the state across reconnect',settings,async t=>{

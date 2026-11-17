@@ -531,9 +531,11 @@ Provider可显式配置responseMode:sse；未配置仍用原JSON，冻结配置�
 
 - 入口：侧边栏底部“更多”→“设置”打开弹窗，字段为 Provider、Endpoint、模型 ID、API Key。
 - API：`GET /api/v1/settings/model` 返回 `{configured,providerId,endpoint,model,hasApiKey,updatedAt}`；`PUT /api/v1/settings/model` 保存；`POST /api/v1/settings/model:test` 测试连接。
+- 模型列表：`POST /api/v1/settings/model:models` 接收 `{providerId,endpoint,apiKey?}`，返回 `{ok,status,message,models}`，不要求先填写模型、不保存接入信息。服务端请求 `{endpoint}/models`，复用 Runtime 的模型 ID 校验，去重后最多返回 1000 项。未提交新 Key 时，仅同 Provider 和规范化 Endpoint 可使用已有 Key；不透传上游错误，6 秒超时、响应最多 1 MiB、禁止重定向。
 - 安全：API Key 只写本机 0600 文件，不写数据库、不回显、不写日志；非法 Endpoint 返回 `MODEL_ENDPOINT_INVALID`，未配置测试返回 `MODEL_KEY_REQUIRED`。
 - 生效：保存后需重启；预览启动器读取设置并尝试接入 Runtime，失败回退无模型并记录。
 - UI 状态：保存成功显示“已保存。重启服务后生效。”；测试连接显示状态码分类，不显示密钥。
+- 模型交互：打开已配置接入时自动读取只读模型元数据，也可点击“获取模型列表”／“刷新列表”；下拉框保留当前配置，提供“手动输入模型 ID”。失败或空列表保留现有模型并开放手动输入，不预置服务商可用列表。修改 Provider／Endpoint／Key 或关闭弹窗会中止请求并使旧结果失效，迟到结果不得替换新列表；保存后清空页面密钥输入。
 
 
 ### 工作台视觉规范落地（2026-11-17）

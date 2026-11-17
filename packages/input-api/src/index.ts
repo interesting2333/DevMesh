@@ -96,6 +96,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     router.get('/settings/model',route(async(_request,response)=>{response.json(await modelSettings.getView());}));
     router.put('/settings/model',route(async(request,response)=>{const body=parseContract(modelSettingsInput,json(request));response.json(await modelSettings.save(body));}));
     router.post('/settings/model\\:test',route(async(_request,response)=>{response.json(await modelSettings.test());}));
+    router.post('/settings/model\\:models',route(async(request,response)=>{const body=parseContract(modelSettingsInput.omit({model:true}),json(request));response.json(await modelSettings.listModels(body));}));
   }
   const putBody=async(principalId:string,scopeId:string,key:string,text:string)=>{
     // A separate deterministic operation namespace protects content publication.

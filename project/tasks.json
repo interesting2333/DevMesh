@@ -15,7 +15,7 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "468e25de09294e04f455aa6bd8cf5397cff76c0cb0063d49f64c1a8ecb5da144"
+      "sha256": "a30bc923cc7c3d3bc4e5b5867392f3aff4aa979b1c29ece0ec1229ca0d44732b"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
@@ -23,7 +23,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "38dc0218e7bc1b51c0ec6406e9e945cca73afe084dbe4e7a3cff91131dc6731b"
+      "sha256": "650cad74fa034dfbbc32307508f73dc4516e40b2bbd128656cefc4b1efeb670c"
     }
   ],
   "gates": [
@@ -322,7 +322,8 @@
         "project/evidence/P0-06/model-settings-browser.txt",
         "project/evidence/P0-06/model-real-call.md",
         "project/evidence/P0-06/model-real-call.txt",
-        "project/evidence/P0-06/runtime-attach.txt"
+        "project/evidence/P0-06/runtime-attach.txt",
+        "project/evidence/P0-06/model-selection-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -333,7 +334,8 @@
         "2026-11-16：P1-08子项3.2复用本工作包Provider／Runtime／Preparation，显式SSE与只读临时content回调；默认JSON及原冻结配置形状保持，最终响应先持久再执行工具。协议18及Runtime／Preparation28本机验证通过，真实模型样本未执行，P0-06正式状态不变；按用户要求当前项提交后暂停。",
         "2026-11-16：新增工作台“更多→设置”模型接入配置；本机0600密钥文件与GET/PUT/test API，HTTP 2/2、浏览器1/1通过；未用真实Key调用，正式P0-06仍IN_PROGRESS，G0～G4不变。",
         "2026-11-17：用户保存真实Endpoint/Key后，Runtime以MiniMax-M2.7接入（model-runtime-attached），同一Provider代码路径真实调用成功（content「2+2等于4。」，usage 40/63，requestId已记录）；发现代理禁止deepseek-chat、版本化模型名触发MODEL_ID_MISMATCH。产品UNDERSTANDING仍因缺preparation Agent未触发模型；三组样本未执行，正式P0-06仍IN_PROGRESS。",
-        "2026-11-17：Preparation 接线复用本包 Provider／Runtime；connectTimeout 上限从 30s 放宽到 120s 以适配企业代理缓冲。真实 understanding/plan 已生成，三组模型样本仍未执行，正式 P0-06 仍 IN_PROGRESS。"
+        "2026-11-17：Preparation 接线复用本包 Provider／Runtime；connectTimeout 上限从 30s 放宽到 120s 以适配企业代理缓冲。真实 understanding/plan 已生成，三组模型样本仍未执行，正式 P0-06 仍 IN_PROGRESS。",
+        "2026-11-17：按用户要求在模型设置中增加实际服务商模型发现、下拉选择、刷新和手动输入；发现支持未保存接入，已保存Key限原Provider/Endpoint复用，限制超时/大小/重定向，选择后仍需保存并重启。复用Runtime模型ID校验，不扩大模型能力；验证记录见model-selection-development-review.md。正式P0-06与G0～G4状态不变。"
       ]
     },
     {

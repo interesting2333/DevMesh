@@ -143,10 +143,10 @@ node scripts/dev-preview-proxy.mjs
 2. 左下角 **更多 → 设置**，填写模型接入：
    - Provider：如 `deepseek`
    - Endpoint：模型服务地址（必须 https，或本机回环 http）
-   - 模型 ID：按服务商允许的模型填写
    - API Key：只保存在本机 `<dataRoot>/settings/model-secret.json`（0600）
-3. 点“保存设置”，再点“测试连接”。
-4. 保存后需重启服务（见第 8 节），启动日志出现 `model-runtime-attached` 后模型才会参与理解与计划。
+3. 点“获取模型列表”，在“模型”下拉框选择；列表不可用时可选择“手动输入模型 ID”。已有配置打开设置时自动获取，支持刷新。
+4. 点“保存设置”，再点“测试连接”（测试已保存配置）。
+5. 保存后需重启服务（见第 8 节），启动日志出现 `model-runtime-attached` 后模型才会参与理解与计划。
 
 模型 Key 不会写入仓库或数据库，也不会回显。每台机器分别填写。
 

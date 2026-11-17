@@ -135,9 +135,10 @@ node scripts/dev-preview.mjs --config config/preview.local
 ## 配置模型（需要模型参与时）
 
 1. 打开左下角 **更多 → 设置**。
-2. 填写 Provider、Endpoint、模型 ID 和 API Key。Endpoint 使用 HTTPS，或本机回环 HTTP。
-3. 保存设置，点击“测试连接”。
-4. 按下一节停止并重新启动服务；看到 `model-runtime-attached` 日志后，模型运行时已接入。
+2. 填写 Provider、Endpoint 和 API Key。Endpoint 使用 HTTPS，或本机回环 HTTP。
+3. 点击“获取模型列表”，从“模型”下拉框选择；也可选择“手动输入模型 ID”。已有接入打开设置时会自动获取列表，支持刷新；获取失败仍可手动填写。
+4. 保存设置，点击“测试连接”（测试已保存的接入信息）。
+5. 按下一节停止并重新启动服务；看到 `model-runtime-attached` 日志后，模型运行时已接入。
 
 API Key 保存在本机 `.devmesh-data/control/settings/model-secret.json`，不会写入 Git 或回显到页面。模型服务需要单独准备；没有 Key 也可以先完成安装和工作台启动。
 

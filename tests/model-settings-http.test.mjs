@@ -58,3 +58,77 @@ test('model settings API refuses a connection test before configuration', { time
   assert.equal(tested.response.status, 422);
   assert.equal(tested.body.error.code, 'MODEL_KEY_REQUIRED');
 });
+
+test('model discovery supports unsaved credentials, filters IDs, and scopes reuse to the saved connection', { timeout: 120000 }, async t => {
+  const directory = mkdtempSync(join(tmpdir(), 'devmesh-model-discovery-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const requests = [];
+  const provider = createServer((request, response) => {
+    requests.push({ url: request.url, authorization: request.headers.authorization });
+    response.setHeader('content-type', 'application/json');
+    response.end(JSON.stringify({ data: [{ id: 'vendor-chat-pro' }, { id: 'reasoner-v2' }, { id: 'vendor-chat-pro' }, { id: 'sk-test-secret' }, { id: '<script>' }, { id: 'x'.repeat(129) }, { id: 'vendor/unsupported' }, { id: 5 }, null] }));
+  });
+  provider.listen(0, '127.0.0.1');
+  await once(provider, 'listening');
+  t.after(() => new Promise(resolve => provider.close(resolve)));
+  const endpoint = `http://127.0.0.1:${provider.address().port}/v1`;
+  const f = await inputFixture(t, { settingsRoot: directory });
+  const discover = body => f.call('/settings/model:models', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const draft = await discover({ providerId: 'proxy', endpoint, apiKey: 'sk-test-secret' });
+  assert.equal(draft.response.status, 200, JSON.stringify(draft.body));
+  assert.equal(draft.body.ok, true);
+  assert.deepEqual(draft.body.models, ['vendor-chat-pro', 'reasoner-v2']);
+  assert.equal(JSON.stringify(draft.body).includes('sk-test-secret'), false);
+  assert.deepEqual(requests, [{ url: '/v1/models', authorization: 'Bearer sk-test-secret' }]);
+  assert.equal(existsSync(join(directory, 'model.json')), false);
+  assert.equal(existsSync(join(directory, 'model-secret.json')), false);
+  const saved = await f.call('/settings/model', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ providerId: 'proxy', endpoint, model: 'vendor-chat-pro', apiKey: 'sk-test-secret' }) });
+  assert.equal(saved.response.status, 200);
+  const before = readFileSync(join(directory, 'model.json'), 'utf8');
+  assert.equal((await discover({ providerId: 'proxy', endpoint: endpoint + '/' })).body.ok, true);
+  const count = requests.length;
+  for (const body of [{ providerId: 'other', endpoint }, { providerId: 'proxy', endpoint: endpoint + '/other' }]) {
+    const rejected = await discover(body);
+    assert.equal(rejected.response.status, 422);
+    assert.equal(rejected.body.error.code, 'MODEL_KEY_REQUIRED');
+  }
+  const invalid = await discover({ providerId: 'proxy', endpoint: 'http://example.com', apiKey: 'sk-test-secret' });
+  assert.equal(invalid.body.error.code, 'MODEL_ENDPOINT_INVALID');
+  assert.equal(requests.length, count);
+  assert.equal(readFileSync(join(directory, 'model.json'), 'utf8'), before);
+});
+
+test('model discovery handles failures, malformed or oversized lists and redirects without echoing provider bodies', { timeout: 120000 }, async t => {
+  const directory = mkdtempSync(join(tmpdir(), 'devmesh-model-errors-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  let mode = 'denied', redirected = 0;
+  const target = createServer((_request, response) => { redirected++; response.end('{}'); });
+  target.listen(0, '127.0.0.1');
+  await once(target, 'listening');
+  t.after(() => new Promise(resolve => target.close(resolve)));
+  const provider = createServer((_request, response) => {
+    response.setHeader('content-type', 'application/json');
+    if (mode === 'redirect') { response.writeHead(302, { location: `http://127.0.0.1:${target.address().port}/models` }); response.end(); }
+    else if (mode === 'denied') { response.writeHead(401); response.end('sk-sensitive-provider-body'); }
+    else if (mode === 'malformed') response.end('sk-sensitive-provider-body');
+    else if (mode === 'invalid') response.end(JSON.stringify({ error: 'sk-sensitive-provider-body' }));
+    else if (mode === 'large') response.end(' '.repeat(1024 * 1024 + 1));
+    else if (mode !== 'timeout') response.end(JSON.stringify({ data: [] }));
+  });
+  provider.listen(0, '127.0.0.1');
+  await once(provider, 'listening');
+  t.after(() => new Promise(resolve => provider.close(resolve)));
+  const f = await inputFixture(t, { settingsRoot: directory });
+  for (const value of ['denied', 'malformed', 'invalid', 'large', 'redirect', 'empty', 'timeout']) {
+    mode = value;
+    const started = Date.now();
+    const result = await f.call('/settings/model:models', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ providerId: 'proxy', endpoint: `http://127.0.0.1:${provider.address().port}`, apiKey: 'sk-sensitive' }) });
+    assert.equal(result.response.status, 200, value);
+    assert.equal(result.body.ok, value === 'empty', value);
+    assert.deepEqual(result.body.models, [], value);
+    assert.equal(JSON.stringify(result.body).includes('sk-sensitive'), false, value);
+    if (value === 'timeout') assert(Date.now() - started < 10000);
+  }
+  assert.equal(redirected, 0);
+  assert.equal(existsSync(join(directory, 'model.json')), false);
+});

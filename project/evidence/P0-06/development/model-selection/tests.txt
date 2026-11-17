@@ -1,0 +1,33 @@
+(node:23880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ settings discovers unsaved provider models, persists only explicit choice, and reloads the list with the saved key (5841.5236ms)
+(node:23880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ unavailable model discovery retains the model and permits manual selection and saving (5579.8885ms)
+(node:23880) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ changing a connection or closing the dialog discards delayed discovery results (6381.4445ms)
+(node:28764) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28764) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ model settings API stores keys write-only, validates endpoints and tests the provider (1918.1828ms)
+(node:28764) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ model settings API refuses a connection test before configuration (1875.5026ms)
+(node:28764) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ model discovery supports unsaved credentials, filters IDs, and scopes reuse to the saved connection (2627.046ms)
+(node:28764) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ model discovery handles failures, malformed or oversized lists and redirects without echoing provider bodies (7924.2027ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19857.6388

@@ -158,6 +158,8 @@ ol,ul{padding-left:20px}li{margin:5px 0;overflow-wrap:anywhere}
 .modal{width:min(520px,100%);max-height:90dvh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:0 25px 80px #0003}
 .modal-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--border)}
 .modal-head h2{margin:0;font-size:19px}.modal .actions{margin:20px 0}.modal .actions .primary{margin-left:auto}
+.settings-model-choice{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.settings-model-choice select{margin:0;min-width:0}.settings-model-choice button{white-space:nowrap}
+.settings-key-hint{margin:-2px 0 18px}.settings-model-hint{min-height:20px;margin:8px 0 0;overflow-wrap:anywhere}.settings-current{display:flex;align-items:center;gap:8px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--text-soft);overflow-wrap:anywhere}.settings-connected{color:var(--success)}
 .settings-message{margin:14px 0;padding:12px;border:1px solid var(--border);background:var(--accent-soft);border-radius:8px}
 .footer{border-top:1px solid var(--border);margin-top:20px;padding-top:12px;color:var(--text-faint);font-size:11px}
 @media(min-width:1600px){.layout{grid-template-columns:238px minmax(0,1fr) minmax(420px,.9fr);gap:24px}.conversation{padding:6px 18px 40px}}

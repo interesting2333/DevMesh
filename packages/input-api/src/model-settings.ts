@@ -2,6 +2,7 @@ import { chmodSync, existsSync, mkdirSync, readFileSync, renameSync, statSync, u
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { StorageError } from '@devmesh/storage-sqlite';
+import { opaqueKey } from '@devmesh/contracts';
 
 export type ModelSettingsInput = { providerId: string; endpoint: string; model: string; apiKey?: string | undefined };
 export type ModelSettingsView = {
@@ -13,10 +14,24 @@ export type ModelSettingsView = {
   updatedAt: string | null;
 };
 export type ModelTestResult = { ok: boolean; status: number | null; message: string };
+export type ModelConnectionInput = Omit<ModelSettingsInput, 'model'>;
+export type ModelListResult = ModelTestResult & { models: string[] };
 type StoredSettings = { providerId: string; endpoint: string; model: string; updatedAt: string };
 
 const fileMode = 0o600;
 const directoryMode = 0o700;
+
+function validateProvider(providerId: string): string {
+  const value = providerId.trim();
+  if (!/^[A-Za-z0-9._-]{1,64}$/.test(value)) throw new StorageError('MODEL_SETTINGS_INVALID', 422, 'Provider id is not acceptable');
+  return value;
+}
+
+function validateKey(value: string | undefined): string | undefined {
+  const key = value?.trim();
+  if (key && (key.length > 500 || /[\r\n]/.test(key))) throw new StorageError('MODEL_KEY_INVALID', 422, 'API key is not acceptable');
+  return key || undefined;
+}
 
 function normalizeEndpoint(raw: string): string {
   let url: URL;
@@ -68,19 +83,58 @@ export function createModelSettingsStore(root: string) {
       return view(readSettings(), readSecret() !== null);
     },
     async save(input: ModelSettingsInput): Promise<ModelSettingsView> {
-      const providerId = input.providerId.trim(), model = input.model.trim();
-      if (!/^[A-Za-z0-9._-]{1,64}$/.test(providerId)) throw new StorageError('MODEL_SETTINGS_INVALID', 422, 'Provider id is not acceptable');
-      if (!/^[A-Za-z0-9._:-]{1,128}$/.test(model)) throw new StorageError('MODEL_SETTINGS_INVALID', 422, 'Model id is not acceptable');
+      const providerId = validateProvider(input.providerId), model = input.model.trim();
+      if (!opaqueKey.safeParse(model).success) throw new StorageError('MODEL_SETTINGS_INVALID', 422, 'Model id is not acceptable');
       const endpoint = normalizeEndpoint(input.endpoint);
-      const apiKey = input.apiKey?.trim();
+      const apiKey = validateKey(input.apiKey);
       const existingKey = readSecret();
       if (!apiKey && !existingKey) throw new StorageError('MODEL_KEY_REQUIRED', 422, 'An API key is required for the first save');
-      if (apiKey && (apiKey.length > 500 || /[\r\n]/.test(apiKey))) throw new StorageError('MODEL_KEY_INVALID', 422, 'API key is not acceptable');
       const settings: StoredSettings = { providerId, endpoint, model, updatedAt: new Date().toISOString() };
       writeAtomic(settingsPath, settings);
       if (apiKey) writeAtomic(secretPath, { apiKey });
       else if (existsSync(secretPath)) chmodSync(secretPath, fileMode);
       return view(settings, readSecret() !== null);
+    },
+    async listModels(input: ModelConnectionInput): Promise<ModelListResult> {
+      const providerId = validateProvider(input.providerId), endpoint = normalizeEndpoint(input.endpoint);
+      const settings = readSettings();
+      const apiKey = validateKey(input.apiKey) ?? (settings?.providerId === providerId && normalizeEndpoint(settings.endpoint) === endpoint ? readSecret() : null);
+      if (!apiKey) throw new StorageError('MODEL_KEY_REQUIRED', 422, 'Provide an API key for this connection before listing models');
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 6000);
+      try {
+        const response = await fetch(endpoint + '/models', { headers: { authorization: `Bearer ${apiKey}` }, signal: controller.signal, redirect: 'error' });
+        if (!response.ok) {
+          await response.body?.cancel();
+          return { ok: false, status: response.status, models: [], message: `获取模型失败（HTTP ${response.status}），可手动输入模型 ID。` };
+        }
+        const chunks: Uint8Array[] = [];
+        let size = 0;
+        const reader = response.body?.getReader();
+        if (reader) {
+          try {
+            while (true) {
+              const chunk = await reader.read();
+              if (chunk.done) break;
+              size += chunk.value.byteLength;
+              if (size > 1024 * 1024) {
+                await reader.cancel();
+                return { ok: false, status: response.status, models: [], message: '模型列表过大，请手动输入模型 ID。' };
+              }
+              chunks.push(chunk.value);
+            }
+          } finally { reader.releaseLock(); }
+        }
+        const payload = JSON.parse(Buffer.concat(chunks).toString('utf8')) as { data?: unknown } | null;
+        if (!payload || !Array.isArray(payload.data)) return { ok: false, status: response.status, models: [], message: '服务商未返回有效模型列表，请手动输入模型 ID。' };
+        const models = [...new Set(payload.data.flatMap(item => {
+          const id: unknown = item && typeof item === 'object' ? (item as { id?: unknown }).id : undefined;
+          return typeof id === 'string' && opaqueKey.safeParse(id).success && !id.includes(apiKey) ? [id] : [];
+        }))].slice(0, 1000);
+        return { ok: true, status: response.status, models, message: models.length ? `已获取 ${models.length} 个模型。` : '服务商未返回可选模型，可手动输入模型 ID。' };
+      } catch {
+        return { ok: false, status: null, models: [], message: '无法获取模型列表或请求超时，可重试或手动输入模型 ID。' };
+      } finally { clearTimeout(timer); }
     },
     async test(): Promise<ModelTestResult> {
       const settings = readSettings(), apiKey = readSecret();
