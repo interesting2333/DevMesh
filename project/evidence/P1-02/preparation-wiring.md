@@ -54,3 +54,10 @@
 - [preparation-runtime.log](./preparation-runtime.log)：Runtime 接入与 readiness
 - [preparation-plan-ui.png](./preparation-plan-ui.png)：工作台计划页截图
 - [understanding.json](./understanding.json)、[plan.json](./plan.json)：真实模型产出
+## 2026-11-17 计划可确认性调优
+
+- 加固 architect Prompt：每个 work 必须有 requirementIds；必须包含一个 \commit-resolved\ 的 developer 集成工作；必须包含 tester 工作（\equired-tests-pass\、空 writeScope、依赖集成工作、覆盖全部 requirement）；writeScope 只允许相对文件路径。
+- 增加确定性计划补全 \completeArchitectDraft\：过滤非法 writeScope、补齐空 requirementIds、缺失时补集成工作与 tester 工作；不生成测试结果，只补齐计划结构。
+- 最终运行：\prj_19a73b135d734a2281cdd2b9b8f115b7\ / \un_c1b3f071b4054cb499eecee8f7c195b8\；计划 3 个工作（developer、integration commit-resolved、tester required-tests-pass）；\issues=[]\、\canConfirm=true\。
+- 计划确认 \POST /runs/{runId}/plans/1:confirm\ 返回 202 SUCCEEDED，operation \op_bd4a672834a649319d7812f8b1f52172\。
+- 仍未执行接受后的实现／验证／交付；三组模型样本与 G0～G4 未执行。

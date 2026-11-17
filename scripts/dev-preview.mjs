@@ -32,7 +32,7 @@ if (saved) {
         connectTimeoutMs: 120000,
         requestTimeoutMs: 300000,
         capabilities: {
-          revision: 'operator-declared.v1', contextTokens: 32768, maxOutputTokens: 2048, toolCalls: true,
+          revision: 'operator-declared.v1', contextTokens: 32768, maxOutputTokens: 4096, toolCalls: true,
           structuredOutput: 'json-object', tokenCounting: 'utf8-conservative-v1', reasoningMode: 'disabled', verification: 'DECLARED'
         }
       }],
@@ -42,7 +42,7 @@ if (saved) {
         productProviderId: saved.settings.providerId,
         architectProviderId: saved.settings.providerId,
         maxInputBytes: 200000,
-        maxOutputTokens: 2048,
+        maxOutputTokens: 4096,
         bootstrapPaths: []
       }
     };

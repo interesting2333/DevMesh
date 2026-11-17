@@ -1032,6 +1032,9 @@ Runtime 抽取 `ExecutionHost` 接口：提供读取输入、检查许可、保�
 
 完成协议由原配置backendPrincipalId持有，私有getAcceptanceAbortRecovery／completeAcceptanceAbort按原不可变准备、策略及决定校验，不以当前候选资格作为清理前提。owner可请求撤销，但不能提交清理成功标志。Runner组合器读取原控制决定、Runner SQLite清理、数据文件Worker回执及独立源服务查询；A2A／MCP／浏览器均不增加自行宣告完成的入口。物理恢复和源服务适配器须显式配置，缺配置不推断成功。
 
+- 计划结构补全：architect 输出在落库前经 \completeArchitectDraft\ 确定性补全（过滤非法 writeScope、补齐空 requirementIds、缺失时补集成 commit-resolved 工作与覆盖全部需求的 tester 工作）；只补计划结构，不生成测试结果。
+- 计划可确认条件仍由既有校验与问题回答共同决定；Prompt 调优后 \issues=[]\ 且确认返回 202。
+
 ---
 
 ## 12. API与用户流程

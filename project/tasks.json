@@ -15,7 +15,7 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "9c4efe95397e5deb68d3a9eb0ffe834961c5a7a2d2b04f3c16b248e395e56db4"
+      "sha256": "e3ab32b8f45bb7df3ecb05b7e98710fa727616258f51db8bd04b51b49bf8c33e"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
@@ -23,7 +23,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "4ed9b6b5b39df9154f0a62f43eb8bff1cb111b6ee7dfccb1b1ae67450ae10e7d"
+      "sha256": "64e1c1f20d2a8d6e932acf545de6d576dae7878ee1c7caad0974cc7b8b1cb466"
     }
   ],
   "gates": [
@@ -585,14 +585,17 @@
         "project/evidence/P1-02/preparation-runtime.log",
         "project/evidence/P1-02/preparation-plan-ui.png",
         "project/evidence/P1-02/understanding.json",
-        "project/evidence/P1-02/plan.json"
+        "project/evidence/P1-02/plan.json",
+        "project/evidence/P1-02/plan-confirmed.json",
+        "project/evidence/P1-02/preparation-plan-tuning.log"
       ],
       "reviewNote": null,
       "notes": [
         "按连续目标和不依赖外部环境的用户指令，推进独立准备宿主、来源理解、部分回答与解释重试；正式 P1-01／G0 前置未验收，受控 Provider 只用于平台规则验证。",
         "固定 44d925f Windows 冻结回归 19/19，准备测试 10/10；含本地官方 A2A、HTTP、SQLite Worker 和两次实际进程终止。",
         "2026-11-16：勾选1.2／2.1，变更累计9/10。0008迁移已包含准备作业／步骤／A2A Task／共享容量及问题／答案／解释表与不可变触发器；只读bootstrap固定可信提交并拒绝HEAD、路径越界和超限。定向执行准备与迁移测试16项通过、0失败，覆盖逐个历史版本升级／回滚、真实FK、跨角色容量与缺Provider等待。3.3真实模型／企业环境验收保持未执行，正式P1-02／G0不变。",
-        "2026-11-17：Preparation 接线完成。product／architect 增加 devmesh.prepare.*（endpoint rev2、manifest builtin.v2、cardHash 重算）；Runtime preparation 接入后，真实输入经 deepseek-v4-pro 生成 requirement revision 1（3 条需求）与 plan revision 1，t=15s／33s。计划确认仍被 REQUIRED_TEST_MISSING／INTEGRATION_OUTPUT_MISSING 阻止，未放宽校验。正式 P1-02 仍 NOT_STARTED。"
+        "2026-11-17：Preparation 接线完成。product／architect 增加 devmesh.prepare.*（endpoint rev2、manifest builtin.v2、cardHash 重算）；Runtime preparation 接入后，真实输入经 deepseek-v4-pro 生成 requirement revision 1（3 条需求）与 plan revision 1，t=15s／33s。计划确认仍被 REQUIRED_TEST_MISSING／INTEGRATION_OUTPUT_MISSING 阻止，未放宽校验。正式 P1-02 仍 NOT_STARTED。",
+        "2026-11-17：计划可确认性调优完成。architect Prompt 增加 requirementIds、commit-resolved 集成工作、tester 覆盖全部需求等硬规则；新增 completeArchitectDraft 过滤非法 writeScope、补齐空 requirementIds、缺失时补集成与 tester 工作。真实运行 issues=[]、canConfirm=true，计划确认返回 202。未执行接受后的实现/验证/交付，正式 P1-02 仍 NOT_STARTED。"
       ]
     },
     {
