@@ -242,10 +242,14 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
   async function saveModelSettings(){
     setSettingsBusy(true);setSettingsMessage('');
     try{
-      const body={providerId:settingsForm.providerId,endpoint:settingsForm.endpoint,model:settingsForm.model,...(settingsForm.apiKey.trim()?{apiKey:settingsForm.apiKey.trim()}:{})};
+      const endpoint=settingsForm.endpoint.trim(),normalized=/^https?:\/\//i.test(endpoint)?endpoint:`https://${endpoint}`;
+      const body={providerId:settingsForm.providerId,endpoint:normalized,model:settingsForm.model,...(settingsForm.apiKey.trim()?{apiKey:settingsForm.apiKey.trim()}:{})};
       const value=await request('/api/v1/settings/model',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(body)},generation.current) as ModelSettings;
       setModelSettings(value);setSettingsForm(form=>({...form,apiKey:''}));setSettingsMessage('已保存。重启服务后生效。');
-    }catch{setSettingsMessage('保存失败：请检查 Endpoint、模型 ID 与密钥。');}
+    }catch(error){
+      const detail=error instanceof ApiError?({MODEL_ENDPOINT_INVALID:'Endpoint 需要是完整地址，例如 https://api.deepseek.com（本机可用 http://127.0.0.1）',MODEL_KEY_REQUIRED:'请填写 API Key',MODEL_KEY_INVALID:'API Key 含换行或长度不合法',MODEL_SETTINGS_INVALID:'Provider 或模型 ID 含非法字符'}[error.code]??`保存失败（${error.code}）`):'保存失败，请检查网络后重试。';
+      setSettingsMessage(detail);
+    }
     finally{setSettingsBusy(false);}
   }
   async function testModelSettings(){
@@ -253,7 +257,10 @@ function Workbench({boot}:{boot:WorkbenchBoot}){
     try{
       const result=await request('/api/v1/settings/model:test',{method:'POST'},generation.current) as {ok:boolean;status:number|null;message:string};
       setSettingsMessage((result.ok?'连接成功':'连接未通过')+(result.status?`（HTTP ${result.status}）`:'')+'。'+(result.ok?'':'请检查 Endpoint、模型或密钥。'));
-    }catch{setSettingsMessage('测试失败：请先保存密钥，或检查网络。');}
+    }catch(error){
+      const detail=error instanceof ApiError?({MODEL_KEY_REQUIRED:'请先填写并保存 API Key，再测试连接',MODEL_ENDPOINT_INVALID:'Endpoint 格式不合法'}[error.code]??`测试失败（${error.code}）`):'测试失败：请先保存密钥，或检查网络。';
+      setSettingsMessage(detail);
+    }
     finally{setSettingsBusy(false);}
   }
   async function controlCommand(path:string,init:RequestInit){    try{await request(path,init,generation.current);const current=view.current;if(current)await loadControl(current.run.runId);return true;}
