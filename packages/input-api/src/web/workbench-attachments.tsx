@@ -69,12 +69,12 @@ export function AttachmentControls(p:Props){
  }
  return <section className="attachments" aria-label="输入附件">
   <h3>附件（{p.selected.length}/3）</h3>
-  <p className="muted">支持 UTF-8 文本 .txt、.md、.markdown，每个不超过 2 MiB。选择后先保存在本机，由你明确上传；刷新不会自动上传。</p>
+  <p className="muted">UTF-8 文本 · .txt / .md / .markdown · 每个不超过 2 MiB。选择后保存在本机，需手动上传。</p>
   <label htmlFor="input-file">添加一个附件</label><input id="input-file" type="file" accept=".txt,.md,.markdown" disabled={!p.editable||p.busy||p.memory!==null||p.selected.length>=3} onChange={e=>{const file=e.target.files?.[0];if(file){p.onChoose(file);e.target.value='';}}}/>
   {p.memory&&<section className="notice" aria-label="尚未保存的文件"><p>尚未保存的文件：{p.memory.name} · {p.memory.size.toLocaleString('zh-CN')} 字节。文件仍在本页；保存成功或明确放弃前，不能切换或提交。</p><div className="actions"><button type="button" disabled={p.busy} onClick={p.onRetryMemory}>重试保存此文件</button><label><input type="checkbox" disabled={p.busy} checked={discard} onChange={e=>setDiscard(e.target.checked)}/>我确认放弃此未保存文件</label><button type="button" disabled={p.busy||!discard} onClick={()=>{setDiscard(false);p.onDiscardMemory();}}>放弃此未保存文件</button></div></section>}
   {p.status&&<p role="status">{p.status}</p>}{p.problem&&<p className="notice" role="alert">{p.problem}</p>}
   {p.selected.map(v=>record(v,true))}
-  <p className="muted">从本次输入移除只取消本机选择。已上传文件和原上传记录仍保留；不会删除服务端文件。</p>
+  <p className="muted">移除只取消本次选择，已上传文件和原记录仍保留。刷新不会自动上传。</p>
   <button type="button" disabled={p.busy} onClick={p.onLibrary}>{p.library?'重新读取本机上传记录':'查看本机上传记录'}</button>
   {p.library&&<section aria-label="本机上传记录"><h4>本机上传记录</h4><p className="muted">仅当前身份可见。最多保存 32 份文件字节和 256 条原记录；已知结果的原文件可明确释放。再次使用文件会建立独立上传，原记录仍保留。</p>{p.library.filter(v=>!p.selected.some(s=>s.key===v.key)).map(v=>record(v,false))}{!p.library.length&&<p>尚无本机上传记录。</p>}</section>}
  </section>;

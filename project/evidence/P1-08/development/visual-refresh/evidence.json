@@ -1,0 +1,128 @@
+{
+  "at": "2026-11-17T09:08:06.215Z",
+  "baseCommit": "9ced2934ec57450348b299bd1b0871a5bea82466",
+  "note": "2026-11-17：按用户请求完成工作台视觉排版优化5.1。依据PRD三栏／五页签与灰白／深蓝规范，紧凑顶部状态，左224px导航／弹性对话／至少380px详情，统一图标、输入、附件、主按钮、草稿反馈和新建引导；下一目标降为紧凑次级入口。实际Edge157宽屏1440、1024、390px与暗色8张截图无页面横向溢出；相关独立用例36项通过（页面9、详情／附件11、实时／流式13、HTTP3），最终键盘／390px另复验1项，不重复计数。构建、类型、本次input-api范围Lint通过；全仓Lint被既有其他文件5处未使用声明阻断，原日志及HEAD同字节证明保留。首次恢复状态文案误改引发1项失败，已还原原文案，不改测试，实时整组复跑通过；最后仅调整详情导航间距／侧栏脚注，最终截图、HTTP、键盘及实时复验分别留证。业务API、本机日记、权限和执行规则未改；本次不代签完整T08或真实模型／OIDC／Linux验收，不推进工作包或阶段状态。",
+  "results": {
+    "page": {
+      "tests": 9,
+      "pass": 9,
+      "record": "page-2026-11-17T09-00-12-526Z.json"
+    },
+    "detail": {
+      "tests": 11,
+      "pass": 11,
+      "record": "detail-2026-11-17T09-00-12-555Z.json"
+    },
+    "live": {
+      "tests": 13,
+      "pass": 13,
+      "record": "live-2026-11-17T09-05-33-845Z.json"
+    },
+    "http": {
+      "tests": 3,
+      "pass": 3,
+      "record": "http-2026-11-17T09-05-33-848Z.json"
+    }
+  },
+  "uniquePassingTests": 36,
+  "checks": {
+    "build": "build-2026-11-17T09-05-02-639Z.json",
+    "type": "type-2026-11-17T08-59-29-771Z.json",
+    "scopedLint": "scopedLint-2026-11-17T09-05-33-883Z.json",
+    "page": "page-2026-11-17T09-00-12-526Z.json",
+    "detail": "detail-2026-11-17T09-00-12-555Z.json",
+    "live": "live-2026-11-17T09-05-33-845Z.json",
+    "http": "http-2026-11-17T09-05-33-848Z.json",
+    "keyboard": "keyboard-2026-11-17T09-05-33-890Z.json"
+  },
+  "baselineLintWarnings": [
+    {
+      "file": "packages/storage-sqlite/src/domain.ts",
+      "unchangedFromHead": true
+    },
+    {
+      "file": "tests/release-manifest.test.mjs",
+      "unchangedFromHead": true
+    },
+    {
+      "file": "tests/run-control-coordinator.test.mjs",
+      "unchangedFromHead": true
+    }
+  ],
+  "sourceBinding": {
+    "build": {
+      "record": "build-2026-11-17T09-05-02-639Z.json",
+      "appSourceDifferences": []
+    },
+    "type": {
+      "record": "type-2026-11-17T08-59-29-771Z.json",
+      "appSourceDifferences": [
+        "packages/input-api/src/workbench-styles.ts",
+        "packages/input-api/src/web/workbench-client.tsx"
+      ]
+    },
+    "scopedLint": {
+      "record": "scopedLint-2026-11-17T09-05-33-883Z.json",
+      "appSourceDifferences": []
+    },
+    "page": {
+      "record": "page-2026-11-17T09-00-12-526Z.json",
+      "appSourceDifferences": [
+        "packages/input-api/src/workbench-styles.ts",
+        "packages/input-api/src/web/workbench-client.tsx"
+      ]
+    },
+    "detail": {
+      "record": "detail-2026-11-17T09-00-12-555Z.json",
+      "appSourceDifferences": [
+        "packages/input-api/src/workbench-styles.ts",
+        "packages/input-api/src/web/workbench-client.tsx"
+      ]
+    },
+    "live": {
+      "record": "live-2026-11-17T09-05-33-845Z.json",
+      "appSourceDifferences": []
+    },
+    "http": {
+      "record": "http-2026-11-17T09-05-33-848Z.json",
+      "appSourceDifferences": []
+    },
+    "keyboard": {
+      "record": "keyboard-2026-11-17T09-05-33-890Z.json",
+      "appSourceDifferences": []
+    }
+  },
+  "sourceMapAssociations": [
+    {
+      "map": "packages/input-api/dist/index.mjs.map",
+      "source": "packages/input-api/src/workbench-styles.ts",
+      "sha256": "36945b34f414524722285c04f8ec3fa0ae391c502609aba84cc7c92205000211"
+    },
+    {
+      "map": "packages/input-api/dist/index.mjs.map",
+      "source": "packages/input-api/src/workbench-page.ts",
+      "sha256": "a18dee1d2ee4b4add4b9282087bd86c075f38c656226d25cf2e9aacb3699e9b6"
+    },
+    {
+      "map": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "source": "packages/input-api/src/web/workbench-icons.tsx",
+      "sha256": "38fe5576b3e1d35430fcdc9a001d71807c95d5f707e088932893c0fd8b57acaa"
+    },
+    {
+      "map": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "source": "packages/input-api/src/web/workbench-task-entry.tsx",
+      "sha256": "5e09761ad48a9eb0dc59ed2102b715ccfe3a773da0c6b2031b4c50b2bcbb3f06"
+    },
+    {
+      "map": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "source": "packages/input-api/src/web/workbench-attachments.tsx",
+      "sha256": "787a64c2689a94977c11628cfb0e3c356e8839d4fbcc08d11da4ed7a7aa1653b"
+    },
+    {
+      "map": "packages/input-api/dist/web/workbench/workbench-client.js.map",
+      "source": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "805191cfbc39df7975f547cb6619bea5be23cee6c183c5a0975237c86cd05308"
+    }
+  ],
+  "scope": "同一Codex实施Agent开发复核；模型内容、可信身份和输入数据均为明确本地夹具。页面及组件测试分轮执行，最后源码差异明确列出，不宣称全部检查同一指纹重跑。"
+}

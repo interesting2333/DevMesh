@@ -1,0 +1,38 @@
+{
+  "name": "type",
+  "command": [
+    "pnpm.cmd",
+    "typecheck"
+  ],
+  "start": "2026-11-17T08:59:29.918Z",
+  "end": "2026-11-17T08:59:59.694Z",
+  "code": 0,
+  "signal": null,
+  "before": {
+    "openspec/changes/implement-workbench-first-path/design.md": "7a233b1475d99e8bbbebe050b4f3b54bef7ff7eddbe27cb906f2a126f30e649f",
+    "openspec/changes/implement-workbench-first-path/proposal.md": "201416bb45a12dbdff211274874e069d5a7608793c4a7aa59df8bc9c93de7e7e",
+    "openspec/changes/implement-workbench-first-path/specs/workbench-first-path/spec.md": "ea3e2022528c6e029deae8a0a137ce193b2a0e7c106f3d35ac30357be263f72c",
+    "openspec/changes/implement-workbench-first-path/tasks.md": "f19bf5122340e7c30e63f02d8d80ae8b9e97d1f6d720ca381e4b3ef52fb8674e",
+    "packages/input-api/src/web/workbench-attachments.tsx": "787a64c2689a94977c11628cfb0e3c356e8839d4fbcc08d11da4ed7a7aa1653b",
+    "packages/input-api/src/web/workbench-client.tsx": "1ec8826484f428e5b5a27a9102719f51092a71af064ae57daa33840a5a5fa8b6",
+    "packages/input-api/src/web/workbench-task-entry.tsx": "5e09761ad48a9eb0dc59ed2102b715ccfe3a773da0c6b2031b4c50b2bcbb3f06",
+    "packages/input-api/src/workbench-page.ts": "a18dee1d2ee4b4add4b9282087bd86c075f38c656226d25cf2e9aacb3699e9b6",
+    "packages/input-api/src/workbench-styles.ts": "819595415130f2490981b1059eb2871e4a95960751d1d3ade7730b1924f10817",
+    "packages/input-api/src/web/workbench-icons.tsx": "38fe5576b3e1d35430fcdc9a001d71807c95d5f707e088932893c0fd8b57acaa"
+  },
+  "after": {
+    "openspec/changes/implement-workbench-first-path/design.md": "7a233b1475d99e8bbbebe050b4f3b54bef7ff7eddbe27cb906f2a126f30e649f",
+    "openspec/changes/implement-workbench-first-path/proposal.md": "201416bb45a12dbdff211274874e069d5a7608793c4a7aa59df8bc9c93de7e7e",
+    "openspec/changes/implement-workbench-first-path/specs/workbench-first-path/spec.md": "ea3e2022528c6e029deae8a0a137ce193b2a0e7c106f3d35ac30357be263f72c",
+    "openspec/changes/implement-workbench-first-path/tasks.md": "f19bf5122340e7c30e63f02d8d80ae8b9e97d1f6d720ca381e4b3ef52fb8674e",
+    "packages/input-api/src/web/workbench-attachments.tsx": "787a64c2689a94977c11628cfb0e3c356e8839d4fbcc08d11da4ed7a7aa1653b",
+    "packages/input-api/src/web/workbench-client.tsx": "1ec8826484f428e5b5a27a9102719f51092a71af064ae57daa33840a5a5fa8b6",
+    "packages/input-api/src/web/workbench-task-entry.tsx": "5e09761ad48a9eb0dc59ed2102b715ccfe3a773da0c6b2031b4c50b2bcbb3f06",
+    "packages/input-api/src/workbench-page.ts": "a18dee1d2ee4b4add4b9282087bd86c075f38c656226d25cf2e9aacb3699e9b6",
+    "packages/input-api/src/workbench-styles.ts": "819595415130f2490981b1059eb2871e4a95960751d1d3ade7730b1924f10817",
+    "packages/input-api/src/web/workbench-icons.tsx": "38fe5576b3e1d35430fcdc9a001d71807c95d5f707e088932893c0fd8b57acaa"
+  },
+  "changedDuringRun": [],
+  "stdoutHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrHash": "70685b4df7789c854b9e1ceab7d78a6d0f9a0831c11eb0010b7b5fdbe0e50c39"
+}

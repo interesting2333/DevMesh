@@ -74,3 +74,9 @@
 2026-11-16：完成4.1集成回归，变更累计11/13。仓库全量`check`执行到acceptance组，终止前顶层TAP 224通过、0失败，覆盖toolchain／vendor／build／typecheck／lint及smoke／contracts／storage／content／a2a／runtime／runner／mcp／workspaces／input／events／preparation／scheduler／verification与部分acceptance；单个验收场景在宿主100%负载下耗时5～6分钟，故主动终止，未宣称完整check全绿。另独立执行构建与`contracts:check`均通过；浏览器补跑空项目输入1、实时事件6、交付导航1，共8通过。完整13文件浏览器矩阵尝试后终止，不计通过；既有回答／附件／上传／移除／任务页记录由各增量review承载。完整验收组、完整浏览器矩阵留待5.2与门槛复核；4.2文档／基线／台账同步与4.3真实资源验收继续，正式P1-08／G0不变。 证据：`project/evidence/P1-08/integration-regression-development-review.md`。
 
 2026-11-16：完成4.2文档／基线／台账同步，变更累计12/13。设计专题`design/03`、产品验收场景、实施文档均追加3.3／4.1记录；技术设计主文由`node design/生成完整方案.mjs`重生成，`--check`确认六份专题一致；`project/tasks.json`更新三份基线SHA-256、P1-08证据引用与备注；`node project/manage.mjs check`与`openspec validate --all --strict`通过，同一Agent开发复核完成。4.3真实模型／OIDC／Linux完整路径与T08保持未执行，正式P1-08／G0不变。证据：`project/evidence/P1-08/integration-regression-development-review.md`、`project/evidence/P1-08/event-continuity-development-review.md`。
+
+## 5. User requested visual refinement
+
+- [x] 5.1 按PRD／D3优化工作台三栏、顶部状态、项目导航、输入／附件与五页签层级；实际Edge复核宽屏／390px／暗色截图及既有页面／事件回归，记录设计、台账与本次证据。
+
+2026-11-17：按用户请求完成工作台视觉排版优化5.1。依据PRD三栏／五页签与灰白／深蓝规范，紧凑顶部状态，左224px导航／弹性对话／至少380px详情，统一图标、输入、附件、主按钮、草稿反馈和新建引导；下一目标降为紧凑次级入口。实际Edge157宽屏1440、1024、390px与暗色8张截图无页面横向溢出；相关独立用例36项通过（页面9、详情／附件11、实时／流式13、HTTP3），最终键盘／390px另复验1项，不重复计数。构建、类型、本次input-api范围Lint通过；全仓Lint被既有其他文件5处未使用声明阻断，原日志及HEAD同字节证明保留。首次恢复状态文案误改引发1项失败，已还原原文案，不改测试，实时整组复跑通过；最后仅调整详情导航间距／侧栏脚注，最终截图、HTTP、键盘及实时复验分别留证。业务API、本机日记、权限和执行规则未改；本次不代签完整T08或真实模型／OIDC／Linux验收，不推进工作包或阶段状态。 证据：`project/evidence/P1-08/visual-refresh-development-review.md`。

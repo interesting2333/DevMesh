@@ -293,3 +293,10 @@ The system SHALL expose only content deltas from an explicitly enabled provider 
 #### Scenario: Authorization changes while temporary output is queued
 - **WHEN** membership is revoked after queueing and before transmission
 - **THEN** the service SHALL reauthorize before each frame and close unauthorized observation without sending protected content
+
+### Requirement: Workbench visual hierarchy remains readable across viewports
+The workbench SHALL distinguish project navigation, saved conversation and the fixed five-tab detail workspace with consistent surfaces, spacing and deep-blue primary actions. Inputs, saved-draft feedback, attachments and original recovery actions SHALL remain readable and reachable at a 390px viewport, without horizontal page overflow or changing business state through navigation.
+
+#### Scenario: A user edits while viewing a narrow workspace
+- **WHEN** the workbench switches between desktop and a 390px viewport or the user opens a detail tab
+- **THEN** all region navigation and existing form controls SHALL remain reachable, and the current draft, exact execution context and original command identity SHALL be retained

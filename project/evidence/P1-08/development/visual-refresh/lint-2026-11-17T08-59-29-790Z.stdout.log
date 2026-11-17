@@ -1,0 +1,6 @@
+tests/run-control-coordinator.test.mjs:32:16: warning eslint(no-unused-vars): Parameter 'target' is declared but never used. Unused parameters should start with a '_'. help: Consider removing this parameter.
+tests/release-manifest.test.mjs:4:24: warning eslint(no-unused-vars): Identifier 'readdirSync' is imported but never used. help: Consider removing this import.
+packages/storage-sqlite/src/domain.ts:10:109: warning eslint(no-unused-vars): Type 'RecoveryStateView' is imported but never used. help: Consider removing this import.
+packages/storage-sqlite/src/domain.ts:10:230: warning eslint(no-unused-vars): Type 'ProjectStatsView' is imported but never used. help: Consider removing this import.
+packages/storage-sqlite/src/domain.ts:10:248: warning eslint(no-unused-vars): Type 'ProjectConfigExportView' is imported but never used. help: Consider removing this import.
+[ELIFECYCLE] Command failed with exit code 1.
