@@ -24,6 +24,7 @@ DevMesh 是一个以 A2A 协作、MCP 工具调用和独立 Runner 为基础的�
 | 已验收源码/配置/协作材料的独立导出与恢复 | [交付包说明](./packages/result-verifier/EXPORTS.md) |
 | 全部文档与原型 | [交付说明](./交付说明.md) |
 | 运行、构建、配置、测试与 CI | [工程说明](./docs/engineering.md) |
+| 在另一台机器本机部署 | [部署指南](./deploy/README.md) |
 
 ## 本机使用
 
@@ -38,15 +39,14 @@ node project/openspec.mjs list
 
 当前状态、提交和证据统一查任务台账。后续可以向协作 Agent 指定工作包及已有 OpenSpec 变更，认领时填写真实负责人；完成后记录提交版本、验证环境和证据，再进入复核。
 
-应用使用固定 Node 24.13.1。首次安装与启动：
+应用使用固定 Node 24.13.1。首次安装：
 
 ```powershell
 corepack pnpm@11.28.5 install --frozen-lockfile
 corepack pnpm@11.28.5 build
-corepack pnpm@11.28.5 start
 ```
 
-服务默认监听 `127.0.0.1:3210`。默认只启用基础 HTTP；可按内容存储说明先显式初始化，再用 `config/server.storage.example.json` 启用持久存储，readiness 会等待内容与 DB 完整性检查。配置、关闭和双平台验证见工程说明。
+`pnpm start` 只启动基础 HTTP 宿主，没有身份解析器，工作台不可用。要在本机使用完整工作台，按 [部署指南](./deploy/README.md) 生成配置、初始化存储，再用 `node scripts/dev-preview.mjs --config config/preview.local.json` 启动。
 
 ## 提交前检查
 
