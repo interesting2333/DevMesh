@@ -1,5 +1,6 @@
 import { loadConfig } from '../packages/platform-core/dist/config.mjs';
 import { join, dirname } from 'node:path';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -28,17 +29,27 @@ if (saved) {
         endpoint: saved.settings.endpoint,
         model: saved.settings.model,
         credentialRef: 'models.local',
-        connectTimeoutMs: 10000,
-        requestTimeoutMs: 120000,
+        connectTimeoutMs: 120000,
+        requestTimeoutMs: 300000,
         capabilities: {
-          revision: 'operator-declared.v1', contextTokens: 8192, maxOutputTokens: 2048, toolCalls: true,
+          revision: 'operator-declared.v1', contextTokens: 32768, maxOutputTokens: 2048, toolCalls: true,
           structuredOutput: 'json-object', tokenCounting: 'utf8-conservative-v1', reasoningMode: 'disabled', verification: 'DECLARED'
         }
       }],
-      tokenLimit: 100000
+      tokenLimit: 100000,
+      preparation: {
+        callerId: 'orchestrator',
+        productProviderId: saved.settings.providerId,
+        architectProviderId: saved.settings.providerId,
+        maxInputBytes: 200000,
+        maxOutputTokens: 2048,
+        bootstrapPaths: []
+      }
     };
+    const previewManifest = join(repositoryRoot, '.devmesh-data', 'preview', 'agents.json');
+    const manifestPath = existsSync(previewManifest) ? previewManifest : join(repositoryRoot, 'config', 'agents.example.json');
     const a2a = config.a2a ?? loadInternalA2AConfig({
-      manifestPath: join(repositoryRoot, 'config', 'agents.example.json'),
+      manifestPath,
       identities: [{ principalId: 'orchestrator', credentialRef: 'internal.service' }]
     }, join(repositoryRoot, '.devmesh-data', 'preview', 'server.json'));
     platform = await startPlatform({ ...config, runtime, a2a }, {

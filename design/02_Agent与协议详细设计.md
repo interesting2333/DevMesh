@@ -54,6 +54,13 @@ interface RoleSnapshot {
 - **生效**：保存后需重启服务。预览启动器读取设置，构造 ModelProvider 与内置 Agent manifest，凭据解析只把 Key 交给 Provider；接入失败回退为无模型并记录，不伪造“已可用”。
 - **边界**：这是单机本地操作者设置，不是企业密钥托管；多用户管理员隔离、轮换与审计留待后续。运行中的 Run 不热切换模型，仍按配置调整流程暂停、审查后应用。
 
+### 2.0.2 Preparation 接线
+
+- product／architect 角色端点必须声明 `devmesh.prepare.<role>`；修改技能需提升 endpoint revision 与 manifest revision，并重算 cardHash。
+- `runtime.preparation` 指定 callerId 与 product／architect Provider；PreparationConsumer 从输入 outbox 建立 job，经 A2A 委托角色端点，模型结果写 requirement／plan revision。
+- 企业代理会缓冲完整响应时，Provider connectTimeout 上限放宽到 120s；requestTimeout 保持 300s 上限。
+- 计划确认仍执行既有校验：缺少 tester／集成输出等必要项时不可确认，不用放宽校验换取“可继续”。
+
 ### 2.1 按角色选择模型与冻结配置
 
 | 角色 | 配置别名 | 必须实际检查的能力 |

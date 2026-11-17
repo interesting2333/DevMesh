@@ -793,3 +793,8 @@ P1-08的2.3接入task页面：下一目标切换、类型／标题／正文及�
 
 2026-11-16：工作台侧边栏“更多→设置”增加模型接入配置；新增 `GET/PUT /api/v1/settings/model` 与 `POST /api/v1/settings/model:test`。Provider、Endpoint、模型 ID 与 API Key 保存到本机 `<dataRoot>/settings`；Key 仅写 0600 文件，响应与错误不回显。Endpoint 必须 https（loopback 可 http），拒绝 URL 凭据/query/hash。保存后需重启；预览启动器尝试接入 Runtime，失败回退无模型。HTTP 测试 2/2、浏览器设置弹窗测试 1/1。未使用真实 DeepSeek Key 调用；正式 P0-06 仍 IN_PROGRESS，G0～G4 不变。
 
+
+### 2026-11-17 P1-02 Preparation 接线（真实模型）
+
+2026-11-17：为预览 manifest 的 product／architect 增加 `devmesh.prepare.*`，提升 endpoint revision 与 manifest revision 并重算 cardHash；Runtime 增加 `preparation`（caller orchestrator），Provider connectTimeout 上限放宽到 120s。真实输入经 deepseek-v4-pro 生成 requirement revision 1（3 条需求）与 plan revision 1（reviewHash b37d82e9…），t=15s 出需求、t=33s 出计划。计划确认仍被 REQUIRED_TEST_MISSING／INTEGRATION_OUTPUT_MISSING 阻止，未放宽校验。证据：`project/evidence/P1-02/preparation-wiring.md`。正式 P1-02 仍 NOT_STARTED，P0-06 仍 IN_PROGRESS。
+

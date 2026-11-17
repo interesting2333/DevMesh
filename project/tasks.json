@@ -15,7 +15,7 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "8b771418eeffdae1af7da5ddbb3097b0d71c4bfc68d41e0e90d52696fc903dc6"
+      "sha256": "9c4efe95397e5deb68d3a9eb0ffe834961c5a7a2d2b04f3c16b248e395e56db4"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
@@ -23,7 +23,7 @@
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "e752715ee9343f0789e7c69e700c6ffd402d34dd3fd25491f731a82527355ce2"
+      "sha256": "4ed9b6b5b39df9154f0a62f43eb8bff1cb111b6ee7dfccb1b1ae67450ae10e7d"
     }
   ],
   "gates": [
@@ -301,7 +301,8 @@
       "changes": [
         "implement-agent-runtime-provider",
         "implement-workbench-first-path",
-        "implement-model-settings"
+        "implement-model-settings",
+        "implement-preparation-wiring"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -331,7 +332,8 @@
         "WSL 后续恢复可用：同一 e4d89ef 固定快照 Linux 15/15 检查通过，与 Windows 源指纹／锁文件一致；真实模型三组样本仍未执行，状态不变。",
         "2026-11-16：P1-08子项3.2复用本工作包Provider／Runtime／Preparation，显式SSE与只读临时content回调；默认JSON及原冻结配置形状保持，最终响应先持久再执行工具。协议18及Runtime／Preparation28本机验证通过，真实模型样本未执行，P0-06正式状态不变；按用户要求当前项提交后暂停。",
         "2026-11-16：新增工作台“更多→设置”模型接入配置；本机0600密钥文件与GET/PUT/test API，HTTP 2/2、浏览器1/1通过；未用真实Key调用，正式P0-06仍IN_PROGRESS，G0～G4不变。",
-        "2026-11-17：用户保存真实Endpoint/Key后，Runtime以MiniMax-M2.7接入（model-runtime-attached），同一Provider代码路径真实调用成功（content「2+2等于4。」，usage 40/63，requestId已记录）；发现代理禁止deepseek-chat、版本化模型名触发MODEL_ID_MISMATCH。产品UNDERSTANDING仍因缺preparation Agent未触发模型；三组样本未执行，正式P0-06仍IN_PROGRESS。"
+        "2026-11-17：用户保存真实Endpoint/Key后，Runtime以MiniMax-M2.7接入（model-runtime-attached），同一Provider代码路径真实调用成功（content「2+2等于4。」，usage 40/63，requestId已记录）；发现代理禁止deepseek-chat、版本化模型名触发MODEL_ID_MISMATCH。产品UNDERSTANDING仍因缺preparation Agent未触发模型；三组样本未执行，正式P0-06仍IN_PROGRESS。",
+        "2026-11-17：Preparation 接线复用本包 Provider／Runtime；connectTimeout 上限从 30s 放宽到 120s 以适配企业代理缓冲。真实 understanding/plan 已生成，三组模型样本仍未执行，正式 P0-06 仍 IN_PROGRESS。"
       ]
     },
     {
@@ -562,7 +564,8 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-understanding-and-readonly-planning"
+        "implement-understanding-and-readonly-planning",
+        "implement-preparation-wiring"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -577,13 +580,19 @@
       "evidence": [
         "project/evidence/P1-02/离线实施进展.md",
         "project/evidence/P1-02/windows-44d925f/report.json",
-        "project/evidence/P1-02/preparation-migration-bootstrap-verification.md"
+        "project/evidence/P1-02/preparation-migration-bootstrap-verification.md",
+        "project/evidence/P1-02/preparation-wiring.md",
+        "project/evidence/P1-02/preparation-runtime.log",
+        "project/evidence/P1-02/preparation-plan-ui.png",
+        "project/evidence/P1-02/understanding.json",
+        "project/evidence/P1-02/plan.json"
       ],
       "reviewNote": null,
       "notes": [
         "按连续目标和不依赖外部环境的用户指令，推进独立准备宿主、来源理解、部分回答与解释重试；正式 P1-01／G0 前置未验收，受控 Provider 只用于平台规则验证。",
         "固定 44d925f Windows 冻结回归 19/19，准备测试 10/10；含本地官方 A2A、HTTP、SQLite Worker 和两次实际进程终止。",
-        "2026-11-16：勾选1.2／2.1，变更累计9/10。0008迁移已包含准备作业／步骤／A2A Task／共享容量及问题／答案／解释表与不可变触发器；只读bootstrap固定可信提交并拒绝HEAD、路径越界和超限。定向执行准备与迁移测试16项通过、0失败，覆盖逐个历史版本升级／回滚、真实FK、跨角色容量与缺Provider等待。3.3真实模型／企业环境验收保持未执行，正式P1-02／G0不变。"
+        "2026-11-16：勾选1.2／2.1，变更累计9/10。0008迁移已包含准备作业／步骤／A2A Task／共享容量及问题／答案／解释表与不可变触发器；只读bootstrap固定可信提交并拒绝HEAD、路径越界和超限。定向执行准备与迁移测试16项通过、0失败，覆盖逐个历史版本升级／回滚、真实FK、跨角色容量与缺Provider等待。3.3真实模型／企业环境验收保持未执行，正式P1-02／G0不变。",
+        "2026-11-17：Preparation 接线完成。product／architect 增加 devmesh.prepare.*（endpoint rev2、manifest builtin.v2、cardHash 重算）；Runtime preparation 接入后，真实输入经 deepseek-v4-pro 生成 requirement revision 1（3 条需求）与 plan revision 1，t=15s／33s。计划确认仍被 REQUIRED_TEST_MISSING／INTEGRATION_OUTPUT_MISSING 阻止，未放宽校验。正式 P1-02 仍 NOT_STARTED。"
       ]
     },
     {
@@ -1879,15 +1888,27 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-run-control-lifecycle"],
+      "changes": [
+        "implement-run-control-lifecycle"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P2-01/run-control-storage-development-review.md"],
+      "evidence": [
+        "project/evidence/P2-01/run-control-storage-development-review.md"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2，变更2/8。迁移0046新增run_control_targets与recovery_review_hash；pauseRun／cancelRun／resumeRun／recordControlTarget／finishControl／listControlTargets落地，finishRun取消前检查目标。定向测试run-control 2/2、storage 17/17、迁移与再确认7/7，storage构建与全量typecheck通过。2.x协调器／保存重试／30秒提示、3.x API与4.x文档同步未完成；正式P2-01仍NOT_STARTED，不伪造G1。", "2026-11-16：补充getControlStatus／listControlRuns与30秒verificationOverdue；run-control测试覆盖31秒前后翻转。control-stop协调器、保存重试、API与事件投影仍未实现，变更2/8；正式P2-01／G1不变。", "2026-11-16：完成2.1／2.2，变更4/8。RunControlCoordinator接显式ControlStopBackend：PENDING／STOPPING只stop一次、UNKNOWN只inspect、全部释放后finishControl转PAUSED；CANCELLING释放目标后由finishRun完成；保存失败只重试保存并复用幂等键。30秒提示由getControlStatus提供，事件／UI投影留3.2。coordinator测试5/5、run-control 2/2；正式P2-01／G1不变。", "2026-11-16：完成3.1，变更5/8。新增受保护pause／cancel／resume与控制状态查询路由，If-Match控制revision、成员权限、幂等键；契约控制错误码与OpenAPI重新生成（66路径），contracts 18/18、control HTTP 1/1通过。事件／UI投影留3.2；正式P2-01／G1不变。", "2026-11-16：3.2部分完成，变更仍5/8。ControlProgress新增unresolvedTargets／lastCheckedAt并在全部控制命令与目标记录中投影；按pause前cursor断点续读取得真实PAUSING事件。工作台UI与浏览器重连验证未完成，3.2不勾选；正式P2-01／G1不变。", "2026-11-16：完成3.2，变更6/8。工作台新增执行控制状态区域，导航读取/control、ControlProgress事件更新未解决目标、WS重快照后重读权威状态；真实Edge断线重连测试通过，pause后重连仍显示正在暂停。workbench-live 7/7通过；正式P2-01／G1不变。", "2026-11-16：完成4.1／4.2，变更8/8。受控后端覆盖pause／resume／cancel、崩溃重启、未知目标、保存重试、30秒提示与丢finish ACK；断线重连工作台测试通过。设计04、验收、实施文档追加记录，技术设计重建、三份基线更新，OpenSpec与台账同步。正式P2-01仍NOT_STARTED，G0～G4未变。"]
+      "notes": [
+        "2026-11-16：完成1.1／1.2，变更2/8。迁移0046新增run_control_targets与recovery_review_hash；pauseRun／cancelRun／resumeRun／recordControlTarget／finishControl／listControlTargets落地，finishRun取消前检查目标。定向测试run-control 2/2、storage 17/17、迁移与再确认7/7，storage构建与全量typecheck通过。2.x协调器／保存重试／30秒提示、3.x API与4.x文档同步未完成；正式P2-01仍NOT_STARTED，不伪造G1。",
+        "2026-11-16：补充getControlStatus／listControlRuns与30秒verificationOverdue；run-control测试覆盖31秒前后翻转。control-stop协调器、保存重试、API与事件投影仍未实现，变更2/8；正式P2-01／G1不变。",
+        "2026-11-16：完成2.1／2.2，变更4/8。RunControlCoordinator接显式ControlStopBackend：PENDING／STOPPING只stop一次、UNKNOWN只inspect、全部释放后finishControl转PAUSED；CANCELLING释放目标后由finishRun完成；保存失败只重试保存并复用幂等键。30秒提示由getControlStatus提供，事件／UI投影留3.2。coordinator测试5/5、run-control 2/2；正式P2-01／G1不变。",
+        "2026-11-16：完成3.1，变更5/8。新增受保护pause／cancel／resume与控制状态查询路由，If-Match控制revision、成员权限、幂等键；契约控制错误码与OpenAPI重新生成（66路径），contracts 18/18、control HTTP 1/1通过。事件／UI投影留3.2；正式P2-01／G1不变。",
+        "2026-11-16：3.2部分完成，变更仍5/8。ControlProgress新增unresolvedTargets／lastCheckedAt并在全部控制命令与目标记录中投影；按pause前cursor断点续读取得真实PAUSING事件。工作台UI与浏览器重连验证未完成，3.2不勾选；正式P2-01／G1不变。",
+        "2026-11-16：完成3.2，变更6/8。工作台新增执行控制状态区域，导航读取/control、ControlProgress事件更新未解决目标、WS重快照后重读权威状态；真实Edge断线重连测试通过，pause后重连仍显示正在暂停。workbench-live 7/7通过；正式P2-01／G1不变。",
+        "2026-11-16：完成4.1／4.2，变更8/8。受控后端覆盖pause／resume／cancel、崩溃重启、未知目标、保存重试、30秒提示与丢finish ACK；断线重连工作台测试通过。设计04、验收、实施文档追加记录，技术设计重建、三份基线更新，OpenSpec与台账同步。正式P2-01仍NOT_STARTED，G0～G4未变。"
+      ]
     },
     {
       "id": "P2-02",
@@ -1907,15 +1928,23 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-crash-recovery-scan"],
+      "changes": [
+        "implement-crash-recovery-scan"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P2-02/recovery-scan-development-review.md","project/evidence/P2-02/recovery-scan.txt"],
+      "evidence": [
+        "project/evidence/P2-02/recovery-scan-development-review.md",
+        "project/evidence/P2-02/recovery-scan.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2／2.1／2.2，变更4/5。getRecoveryState只读扫描与RecoveryScan冻结包装落地；矩阵覆盖暂停跨重启保持、未知attempt保留、Outbox过期租约转RECONCILE、原键查原事实。recovery-scan 5/5通过；3.1文档同步待完成，正式P2-02／G1不变。", "2026-11-16：完成3.1，变更5/5。设计04、验收、实施文档追加P2-02记录；技术设计重建、三份基线更新，OpenSpec与台账同步，manage check/validate通过。正式P2-02仍NOT_STARTED，G0～G4未变。"]
+      "notes": [
+        "2026-11-16：完成1.1／1.2／2.1／2.2，变更4/5。getRecoveryState只读扫描与RecoveryScan冻结包装落地；矩阵覆盖暂停跨重启保持、未知attempt保留、Outbox过期租约转RECONCILE、原键查原事实。recovery-scan 5/5通过；3.1文档同步待完成，正式P2-02／G1不变。",
+        "2026-11-16：完成3.1，变更5/5。设计04、验收、实施文档追加P2-02记录；技术设计重建、三份基线更新，OpenSpec与台账同步，manage check/validate通过。正式P2-02仍NOT_STARTED，G0～G4未变。"
+      ]
     },
     {
       "id": "P2-03",
@@ -1935,15 +1964,23 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-partial-change-control"],
+      "changes": [
+        "implement-partial-change-control"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P2-03/change-proposals-development-review.md","project/evidence/P2-03/change-proposals.txt"],
+      "evidence": [
+        "project/evidence/P2-03/change-proposals-development-review.md",
+        "project/evidence/P2-03/change-proposals.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2，变更2/4。迁移0047新增change_proposals（来源消息唯一、依据hash）；proposeChange／decideChange／getChange／listChanges落地，旧依据拒绝、终态保护与重复来源幂等。change-proposals 2/2通过；影响图／局部冻结／应用复验、HTTP API与文档同步未完成，正式P2-03／G1不变。", "2026-11-16：完成2.1／3.1／3.2，变更4/4。受保护变更API、CHANGE_*错误码与OpenAPI更新；change测试3/3、迁移7/7；设计04、验收、实施文档追加记录，基线更新，OpenSpec与台账同步。正式P2-03仍NOT_STARTED，G0～G4未变。"]
+      "notes": [
+        "2026-11-16：完成1.1／1.2，变更2/4。迁移0047新增change_proposals（来源消息唯一、依据hash）；proposeChange／decideChange／getChange／listChanges落地，旧依据拒绝、终态保护与重复来源幂等。change-proposals 2/2通过；影响图／局部冻结／应用复验、HTTP API与文档同步未完成，正式P2-03／G1不变。",
+        "2026-11-16：完成2.1／3.1／3.2，变更4/4。受保护变更API、CHANGE_*错误码与OpenAPI更新；change测试3/3、迁移7/7；设计04、验收、实施文档追加记录，基线更新，OpenSpec与台账同步。正式P2-03仍NOT_STARTED，G0～G4未变。"
+      ]
     },
     {
       "id": "P2-04",
@@ -1965,15 +2002,23 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-safe-retry-redo"],
+      "changes": [
+        "implement-safe-retry-redo"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P2-04/redo-run-development-review.md","project/evidence/P2-04/redo-run.txt"],
+      "evidence": [
+        "project/evidence/P2-04/redo-run-development-review.md",
+        "project/evidence/P2-04/redo-run.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/3。迁移0048新增run_redos；redoRun仅接受FAILED／CANCELLED、固定baseCommit、新Run为空、活动Run拒绝、同键幂等。redo-run 1/1通过；RetryWork、受保护API、材料复用与文档同步未完成，正式P2-04／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更3/3。:redo API与REDO_REQUIRES_TERMINAL接入；RetryWork审计确认仅契约、attempt级重建与预算桶未实现；文档/基线同步，manage/openspec通过。正式P2-04仍NOT_STARTED，G0～G4未变。"]
+      "notes": [
+        "2026-11-16：完成1.1，变更1/3。迁移0048新增run_redos；redoRun仅接受FAILED／CANCELLED、固定baseCommit、新Run为空、活动Run拒绝、同键幂等。redo-run 1/1通过；RetryWork、受保护API、材料复用与文档同步未完成，正式P2-04／G1不变。",
+        "2026-11-16：完成1.2／2.1／2.2，变更3/3。:redo API与REDO_REQUIRES_TERMINAL接入；RetryWork审计确认仅契约、attempt级重建与预算桶未实现；文档/基线同步，manage/openspec通过。正式P2-04仍NOT_STARTED，G0～G4未变。"
+      ]
     },
     {
       "id": "P2-05",
@@ -1994,15 +2039,22 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-config-adjustment"],
+      "changes": [
+        "implement-config-adjustment"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P2-05/config-adjustment-development-review.md","project/evidence/P2-05/config-adjustment.txt"],
+      "evidence": [
+        "project/evidence/P2-05/config-adjustment-development-review.md",
+        "project/evidence/P2-05/config-adjustment.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2／2.1／2.2，变更3/3。迁移0049新增config_control与config_adjustments；配置调整要求PAUSED、代际CAS、应用后仍暂停、重启保持；受保护API/OpenAPI；Registry同步沿用既有测试不重写。配置调整2/2通过；正式P2-05仍NOT_STARTED，G0～G4未变。"]
+      "notes": [
+        "2026-11-16：完成1.1／1.2／2.1／2.2，变更3/3。迁移0049新增config_control与config_adjustments；配置调整要求PAUSED、代际CAS、应用后仍暂停、重启保持；受保护API/OpenAPI；Registry同步沿用既有测试不重写。配置调整2/2通过；正式P2-05仍NOT_STARTED，G0～G4未变。"
+      ]
     },
     {
       "id": "P2-06",
@@ -2023,15 +2075,26 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-invocation-host","implement-public-task-kernel"],
+      "changes": [
+        "implement-invocation-host",
+        "implement-public-task-kernel"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P2-06/invocation-host-development-review.md","project/evidence/P2-06/invocation-host.txt"],
+      "evidence": [
+        "project/evidence/P2-06/invocation-host-development-review.md",
+        "project/evidence/P2-06/invocation-host.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0050新增invocations；create／get／list／transition落地，同键幂等、同键不同请求拒绝、显式状态机与终态保护。invocation-host 2/2通过；受保护API、公共Task/Inbox、配额与文档同步未完成，正式P2-06／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更4/4。Invocation API与OpenAPI接入；公共Task/Inbox、配额与取消核实审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-06仍NOT_STARTED，G0～G4未变。", "2026-11-16：公共任务内核1.1完成，变更1/3。迁移0052新增public_tasks；enqueue／claim／complete／get／list落地，同键幂等、主体配额、租约重领、owner校验与终态保护。public-tasks 2/2通过；受保护API与文档同步未完成，正式P2-06／G1不变。", "2026-11-16：公共任务内核完成1.2／1.3，变更3/3。公共任务API与OpenAPI接入；文档/基线同步，manage/openspec通过。正式P2-06仍NOT_STARTED，G0～G4未变。"]
+      "notes": [
+        "2026-11-16：完成1.1，变更1/4。迁移0050新增invocations；create／get／list／transition落地，同键幂等、同键不同请求拒绝、显式状态机与终态保护。invocation-host 2/2通过；受保护API、公共Task/Inbox、配额与文档同步未完成，正式P2-06／G1不变。",
+        "2026-11-16：完成1.2／2.1／2.2，变更4/4。Invocation API与OpenAPI接入；公共Task/Inbox、配额与取消核实审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-06仍NOT_STARTED，G0～G4未变。",
+        "2026-11-16：公共任务内核1.1完成，变更1/3。迁移0052新增public_tasks；enqueue／claim／complete／get／list落地，同键幂等、主体配额、租约重领、owner校验与终态保护。public-tasks 2/2通过；受保护API与文档同步未完成，正式P2-06／G1不变。",
+        "2026-11-16：公共任务内核完成1.2／1.3，变更3/3。公共任务API与OpenAPI接入；文档/基线同步，manage/openspec通过。正式P2-06仍NOT_STARTED，G0～G4未变。"
+      ]
     },
     {
       "id": "P2-07",
@@ -2052,15 +2115,26 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-content-maintenance","implement-content-archive-ledger"],
+      "changes": [
+        "implement-content-maintenance",
+        "implement-content-archive-ledger"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P2-07/content-pins-development-review.md","project/evidence/P2-07/content-pins.txt"],
+      "evidence": [
+        "project/evidence/P2-07/content-pins-development-review.md",
+        "project/evidence/P2-07/content-pins.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/4。迁移0051新增content_pins；pin／release／list／getStorageDiagnostics落地，幂等、同键不同hash拒绝、释放不删内容、计数准确。content-pins 1/1通过；受保护API、GC／归档与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。", "2026-11-16：完成1.2／2.1／2.2，变更4/4。pin/diagnostics API与OpenAPI接入；GC/归档审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-07仍NOT_STARTED，G0～G4未变。", "2026-11-16：内容归档账本1.1完成，变更1/3。迁移0053新增content_archive_requests；request／ack／get／list落地，同键幂等、ACK不删除、丢失ACK保持REQUESTED。content-archive 1/1通过；受保护API与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。", "2026-11-16：内容归档账本完成1.2／1.3，变更3/3。归档API与OpenAPI接入；文档/基线同步，manage/openspec通过。正式P2-07仍NOT_STARTED，G0～G4未变。"]
+      "notes": [
+        "2026-11-16：完成1.1，变更1/4。迁移0051新增content_pins；pin／release／list／getStorageDiagnostics落地，幂等、同键不同hash拒绝、释放不删内容、计数准确。content-pins 1/1通过；受保护API、GC／归档与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。",
+        "2026-11-16：完成1.2／2.1／2.2，变更4/4。pin/diagnostics API与OpenAPI接入；GC/归档审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-07仍NOT_STARTED，G0～G4未变。",
+        "2026-11-16：内容归档账本1.1完成，变更1/3。迁移0053新增content_archive_requests；request／ack／get／list落地，同键幂等、ACK不删除、丢失ACK保持REQUESTED。content-archive 1/1通过；受保护API与文档同步未完成，本增量无删除路径，正式P2-07／G1不变。",
+        "2026-11-16：内容归档账本完成1.2／1.3，变更3/3。归档API与OpenAPI接入；文档/基线同步，manage/openspec通过。正式P2-07仍NOT_STARTED，G0～G4未变。"
+      ]
     },
     {
       "id": "P2-08",
@@ -2082,15 +2156,24 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-control-interaction"],
+      "changes": [
+        "implement-control-interaction"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P2-08/control-interaction-development-review.md","project/evidence/P2-08/control-interaction.txt"],
+      "evidence": [
+        "project/evidence/P2-08/control-interaction-development-review.md",
+        "project/evidence/P2-08/control-interaction.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观，断线重连保持PAUSED并可恢复；取消需impactReviewHash故不提供；配置调整、变更队列、多页面与完整E2E未实现。正式P2-08／G1不变。", "2026-11-16：完成1.2／2.1，变更3/3。取消/配置/变更队列/多页面审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-08仍NOT_STARTED，G0～G4未变。", "2026-11-16：追加1.3，协作页只读展示配置代际/变更提案/配置调整，读取失败清空面板；workbench-live 9/9通过。取消/编辑/决定仍不提供，正式P2-08与门槛不变。"]
+      "notes": [
+        "2026-11-16：完成1.1，变更1/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观，断线重连保持PAUSED并可恢复；取消需impactReviewHash故不提供；配置调整、变更队列、多页面与完整E2E未实现。正式P2-08／G1不变。",
+        "2026-11-16：完成1.2／2.1，变更3/3。取消/配置/变更队列/多页面审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-08仍NOT_STARTED，G0～G4未变。",
+        "2026-11-16：追加1.3，协作页只读展示配置代际/变更提案/配置调整，读取失败清空面板；workbench-live 9/9通过。取消/编辑/决定仍不提供，正式P2-08与门槛不变。"
+      ]
     },
     {
       "id": "P3-01",
@@ -2141,15 +2224,22 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-history-export"],
+      "changes": [
+        "implement-history-export"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P3-02/history-export-development-review.md","project/evidence/P3-02/history-export.txt"],
+      "evidence": [
+        "project/evidence/P3-02/history-export-development-review.md",
+        "project/evidence/P3-02/history-export.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2／1.3，变更3/3。只读exportProjectHistory与受保护API/OpenAPI落地；按cutoff过滤并标记NO_RUNS_BEFORE_CUTOFF/ACTIVE_RUNS_AT_CUTOFF，不补造。history 2/2通过；导入/回放UI/Git打包未实现，正式P3-02／G1不变。"]
+      "notes": [
+        "2026-11-16：完成1.1／1.2／1.3，变更3/3。只读exportProjectHistory与受保护API/OpenAPI落地；按cutoff过滤并标记NO_RUNS_BEFORE_CUTOFF/ACTIVE_RUNS_AT_CUTOFF，不补造。history 2/2通过；导入/回放UI/Git打包未实现，正式P3-02／G1不变。"
+      ]
     },
     {
       "id": "P3-03",
@@ -2170,15 +2260,22 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-collaboration-stats"],
+      "changes": [
+        "implement-collaboration-stats"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P3-03/collaboration-stats-development-review.md","project/evidence/P3-03/collaboration-stats.txt"],
+      "evidence": [
+        "project/evidence/P3-03/collaboration-stats-development-review.md",
+        "project/evidence/P3-03/collaboration-stats.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2／1.3，变更3/3。只读getProjectStats/getProjectConfigExport与受保护API/OpenAPI落地；统计成员/运行/消息/工件/Release，导出不含密钥。stats 3/3通过；导入/时序/UI/T16/T17未实现，正式P3-03／G1不变。"]
+      "notes": [
+        "2026-11-16：完成1.1／1.2／1.3，变更3/3。只读getProjectStats/getProjectConfigExport与受保护API/OpenAPI落地；统计成员/运行/消息/工件/Release，导出不含密钥。stats 3/3通过；导入/时序/UI/T16/T17未实现，正式P3-03／G1不变。"
+      ]
     },
     {
       "id": "P3-04",
@@ -2199,15 +2296,23 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-agent-exposure"],
+      "changes": [
+        "implement-agent-exposure"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P3-04/agent-exposure-development-review.md","project/evidence/P3-04/agent-exposure.txt"],
+      "evidence": [
+        "project/evidence/P3-04/agent-exposure-development-review.md",
+        "project/evidence/P3-04/agent-exposure.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1，变更1/3。迁移0054新增agent_exposures；draft/validate/publish/drain/retire/catalog落地，状态机、Card校验、目录过滤与唯一agentKey生效。agent-exposure 1/1通过；受保护API与文档同步未完成，正式P3-04／G1不变。", "2026-11-16：完成1.2／1.3，变更3/3。Exposure API与OpenAPI接入；文档/基线同步，manage/openspec通过。正式P3-04仍NOT_STARTED，G0～G4未变。"]
+      "notes": [
+        "2026-11-16：完成1.1，变更1/3。迁移0054新增agent_exposures；draft/validate/publish/drain/retire/catalog落地，状态机、Card校验、目录过滤与唯一agentKey生效。agent-exposure 1/1通过；受保护API与文档同步未完成，正式P3-04／G1不变。",
+        "2026-11-16：完成1.2／1.3，变更3/3。Exposure API与OpenAPI接入；文档/基线同步，manage/openspec通过。正式P3-04仍NOT_STARTED，G0～G4未变。"
+      ]
     },
     {
       "id": "P3-05",
@@ -2258,15 +2363,22 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-backup-snapshot"],
+      "changes": [
+        "implement-backup-snapshot"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P3-06/backup-snapshot-development-review.md","project/evidence/P3-06/backup-snapshot.txt"],
+      "evidence": [
+        "project/evidence/P3-06/backup-snapshot-development-review.md",
+        "project/evidence/P3-06/backup-snapshot.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2／1.3，变更3/3。createBackup使用VACUUM INTO生成一致性快照，quick_check/foreign_key_check校验并返回SHA-256/字节数；拒绝重叠与不存在目录；不提供HTTP备份API。backup 1/1通过；恢复/迁移/加密/演练未实现，正式P3-06／G1不变。"]
+      "notes": [
+        "2026-11-16：完成1.1／1.2／1.3，变更3/3。createBackup使用VACUUM INTO生成一致性快照，quick_check/foreign_key_check校验并返回SHA-256/字节数；拒绝重叠与不存在目录；不提供HTTP备份API。backup 1/1通过；恢复/迁移/加密/演练未实现，正式P3-06／G1不变。"
+      ]
     },
     {
       "id": "P4-01",
@@ -2293,9 +2405,20 @@
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P4-01/offline-evidence.md","project/evidence/P4-01/acceptance.tap","project/evidence/P4-01/verification.tap","project/evidence/P4-01/mcp.tap","project/evidence/P4-01/input.tap","project/evidence/P4-01/events.tap","project/evidence/P4-01/runner.tap"],
+      "evidence": [
+        "project/evidence/P4-01/offline-evidence.md",
+        "project/evidence/P4-01/acceptance.tap",
+        "project/evidence/P4-01/verification.tap",
+        "project/evidence/P4-01/mcp.tap",
+        "project/evidence/P4-01/input.tap",
+        "project/evidence/P4-01/events.tap",
+        "project/evidence/P4-01/runner.tap"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：离线回归 acceptance 321/321、verification 187/187 通过并保存 TAP；这不是产品验收，未执行真实模型/OIDC/Linux/gVisor/人工签署，P4-01仍NOT_STARTED。", "2026-11-16：追加 test:mcp 35/35、test:input 37/37、test:events 13/13 通过；test:runner 在 Windows 主机超过35分钟未汇总已终止，部分TAP不计通过。P4-01仍NOT_STARTED。"]
+      "notes": [
+        "2026-11-16：离线回归 acceptance 321/321、verification 187/187 通过并保存 TAP；这不是产品验收，未执行真实模型/OIDC/Linux/gVisor/人工签署，P4-01仍NOT_STARTED。",
+        "2026-11-16：追加 test:mcp 35/35、test:input 37/37、test:events 13/13 通过；test:runner 在 Windows 主机超过35分钟未汇总已终止，部分TAP不计通过。P4-01仍NOT_STARTED。"
+      ]
     },
     {
       "id": "P4-02",
@@ -2375,15 +2498,23 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": ["implement-release-manifest"],
+      "changes": [
+        "implement-release-manifest"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
       "completedAt": null,
       "codeReferences": [],
-      "evidence": ["project/evidence/P4-04/release-manifest-development-review.md","project/evidence/P4-04/release-manifest.json","project/evidence/P4-04/release-manifest-test.txt"],
+      "evidence": [
+        "project/evidence/P4-04/release-manifest-development-review.md",
+        "project/evidence/P4-04/release-manifest.json",
+        "project/evidence/P4-04/release-manifest-test.txt"
+      ],
       "reviewNote": null,
-      "notes": ["2026-11-16：完成1.1／1.2，变更2/2。release-manifest生成git HEAD、包版本、schema版本、迁移/OpenAPI摘要、门槛与工作包状态、变更进度；不含可发布/已验收声明；--write生成证据。release-manifest 2/2通过；发布包/签名/开放范围结论/人工评审未实现，正式P4-04／G1不变。"]
+      "notes": [
+        "2026-11-16：完成1.1／1.2，变更2/2。release-manifest生成git HEAD、包版本、schema版本、迁移/OpenAPI摘要、门槛与工作包状态、变更进度；不含可发布/已验收声明；--write生成证据。release-manifest 2/2通过；发布包/签名/开放范围结论/人工评审未实现，正式P4-04／G1不变。"
+      ]
     }
   ]
 }
