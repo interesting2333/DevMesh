@@ -1,0 +1,46 @@
+{
+  "ledger": {
+    "command": [
+      "node",
+      "project/manage.mjs",
+      "check"
+    ],
+    "start": "2026-11-17T09:32:47.656Z",
+    "end": "2026-11-17T09:32:47.743Z",
+    "code": 0,
+    "stdout": "台账检查通过：36 个工作包、5 个阶段门槛；依赖无环、来源一致、基线匹配。\n此检查只验证记录结构与引用，不执行产品验收。\n"
+  },
+  "design": {
+    "command": [
+      "node",
+      "design/生成完整方案.mjs",
+      "--check"
+    ],
+    "start": "2026-11-17T09:32:47.743Z",
+    "end": "2026-11-17T09:32:47.817Z",
+    "code": 0,
+    "stdout": "完整主文与六份专题正文一致。\n"
+  },
+  "spec": {
+    "command": [
+      "node",
+      "project/openspec.mjs",
+      "validate",
+      "implement-workbench-first-path",
+      "--strict",
+      "--no-interactive"
+    ],
+    "start": "2026-11-17T09:32:47.817Z",
+    "end": "2026-11-17T09:32:49.181Z",
+    "code": 0,
+    "stdout": "Change 'implement-workbench-first-path' is valid\n"
+  },
+  "diff": {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "code": 0
+  }
+}

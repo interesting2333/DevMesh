@@ -1,0 +1,32 @@
+{
+  "name": "build",
+  "command": [
+    "pnpm.cmd",
+    "--filter",
+    "@devmesh/input-api",
+    "build"
+  ],
+  "start": "2026-11-17T09:29:50.359Z",
+  "end": "2026-11-17T09:29:58.338Z",
+  "code": 0,
+  "signal": null,
+  "before": {
+    "openspec/changes/implement-workbench-first-path/design.md": "b24e0a4e8bb4eabfb8749764f9287c142d7b90405b4752824db28fbe0e56c3dc",
+    "openspec/changes/implement-workbench-first-path/proposal.md": "a3b1e1f1114b053d7e19553e0755574ade3ccae5d2096fb5c3c36441062952d5",
+    "openspec/changes/implement-workbench-first-path/specs/workbench-first-path/spec.md": "00704723a8110df47ea59928609fa714a6d968832d0f5c69f03e5b69b11f02e5",
+    "openspec/changes/implement-workbench-first-path/tasks.md": "c717604131d99a9e001a778320eefaaf94d79b22c9e4d0f2b4a327565ca087c1",
+    "packages/input-api/src/workbench-styles.ts": "82e68f9880184d5afb5e743b53d8ba35bc82b9417eaf1407a677d618c841e791",
+    "packages/input-api/src/web/workbench-icons.tsx": "38fe5576b3e1d35430fcdc9a001d71807c95d5f707e088932893c0fd8b57acaa"
+  },
+  "after": {
+    "openspec/changes/implement-workbench-first-path/design.md": "b24e0a4e8bb4eabfb8749764f9287c142d7b90405b4752824db28fbe0e56c3dc",
+    "openspec/changes/implement-workbench-first-path/proposal.md": "a3b1e1f1114b053d7e19553e0755574ade3ccae5d2096fb5c3c36441062952d5",
+    "openspec/changes/implement-workbench-first-path/specs/workbench-first-path/spec.md": "00704723a8110df47ea59928609fa714a6d968832d0f5c69f03e5b69b11f02e5",
+    "openspec/changes/implement-workbench-first-path/tasks.md": "c717604131d99a9e001a778320eefaaf94d79b22c9e4d0f2b4a327565ca087c1",
+    "packages/input-api/src/workbench-styles.ts": "82e68f9880184d5afb5e743b53d8ba35bc82b9417eaf1407a677d618c841e791",
+    "packages/input-api/src/web/workbench-icons.tsx": "38fe5576b3e1d35430fcdc9a001d71807c95d5f707e088932893c0fd8b57acaa"
+  },
+  "changedDuringRun": [],
+  "stdoutHash": "5a619c483ab3d6be47af5c805c6f5a110dcfc28b46f998f20d3b33dc96f8f2a3",
+  "stderrHash": "2063258b29515781d1f5294e480d77131132617da2eb233760d0e6a3b2cc9732"
+}

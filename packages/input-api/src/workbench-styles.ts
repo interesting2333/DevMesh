@@ -162,6 +162,28 @@ ol,ul{padding-left:20px}li{margin:5px 0;overflow-wrap:anywhere}
 .footer{border-top:1px solid var(--border);margin-top:20px;padding-top:12px;color:var(--text-faint);font-size:11px}
 @media(min-width:1600px){.layout{grid-template-columns:238px minmax(0,1fr) minmax(420px,.9fr);gap:24px}.conversation{padding:6px 18px 40px}}
 @media(max-width:1180px) and (min-width:981px){.layout{grid-template-columns:190px minmax(0,1fr) 350px;gap:12px;padding:16px}.conversation{padding:0}.composer,.message{padding:15px}.detail{padding:0 14px 20px}.tabs button .ui-icon{display:none}.header-context{padding-left:16px}.header-main{gap:16px;padding-inline:20px}}
+@media(min-width:981px){
+ #root{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+ .bar{flex:none}
+ .layout{flex:1;min-height:0;width:100%;grid-template-rows:minmax(0,1fr);align-items:stretch;padding-bottom:22px}
+ .sidebar,.detail,.conversation{position:relative;top:auto;height:100%;min-height:0;max-height:none;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow)}
+ .sidebar{overflow:hidden}
+ .sidebar-heading,.sidebar>.primary,.nav-caption,.sidebar-note,.sidebar-footer{flex:none}
+ .project-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+ .project-list button{flex:none}
+ .detail{overflow-y:auto;overscroll-behavior:contain}
+ .conversation{display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;padding:24px}
+ .conversation>*{flex-shrink:0}
+ .conversation>.composer{border:0;padding:0;margin-bottom:0;box-shadow:none}
+ .conversation>.composer:focus-within{border-color:transparent}
+ .conversation:has(.welcome) .composer>h2{display:none}
+ .conversation:has(.welcome) .composer form>label:first-of-type{margin-top:0}
+ .welcome{padding:0 0 20px;margin:0 0 20px;border-bottom:1px solid var(--border)}
+ .welcome-badge{display:none}
+ .welcome>.eyebrow{display:none}
+ .welcome h1{font-size:25px;margin:0 0 10px}
+ .welcome p{max-width:none;margin:0}
+}
 @media(max-width:980px){
  .header-main{padding:14px 16px;gap:12px;min-height:70px;flex-wrap:wrap}.brand{font-size:19px}.brand-mark{width:30px;height:30px}
  .header-context{flex:1;padding-left:12px;gap:7px}.header-context>span:first-child{font-size:12px}.context-badge{font-size:10px}

@@ -15,15 +15,15 @@
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "a1d589c52faec5b5d8d6a0f56a44d985ce525ac85f2a3188352fbc1cd314ef1d"
+      "sha256": "468e25de09294e04f455aa6bd8cf5397cff76c0cb0063d49f64c1a8ecb5da144"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "38fb53ce12c79caa9380f0eae7721811ac3b422a4ef76ba1f4af118d02730791"
+      "sha256": "0fb09d785681f5859e2e3f69c5d9ac3430c992f16181f99fdb87f2b31b340ca4"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "ad0e4bd8b2058819f0ded9bf420e0204ccefc65c8c67d28313d0bf6dd69122b8"
+      "sha256": "38dc0218e7bc1b51c0ec6406e9e945cca73afe084dbe4e7a3cff91131dc6731b"
     }
   ],
   "gates": [
@@ -1852,7 +1852,10 @@
         "project/evidence/P1-08/development/event-continuity/07-browser-core.txt",
         "project/evidence/P1-08/visual-refresh-development-review.md",
         "project/evidence/P1-08/development/visual-refresh/evidence.json",
-        "project/evidence/P1-08/development/visual-refresh/visual-review.json"
+        "project/evidence/P1-08/development/visual-refresh/visual-review.json",
+        "project/evidence/P1-08/panel-alignment-development-review.md",
+        "project/evidence/P1-08/development/panel-alignment/evidence.json",
+        "project/evidence/P1-08/development/panel-alignment/layout-measurements.json"
       ],
       "reviewNote": null,
       "notes": [
@@ -1875,7 +1878,8 @@
         "2026-11-16：完成3.2临时模型输出与中断显示，变更累计9/13。DeepSeek显式responseMode:sse按实际HTTP协议增量解析，默认JSON及旧配置hash保持；只读content片段独立streamId/index，无领域seq或历史重放，最终响应落盘后才显示已保存及执行工具。WS逐帧复核权限并有界排队；浏览器断线／截断显示中断，保留草稿、页签和焦点，刷新只读取已保存结果。最终协议18、Runtime／Preparation28、契约18、WS13、既有实时浏览器6及新实际平台浏览器3，共86通过，零失败／跳过／取消；构建／类型／Lint／OpenAPI通过。初次类型错误和浏览器旧依据草稿预期错误的准确输入／原日志保留，修复后验证通过。实际本地SSE／官方A2A／平台／文件Worker／Edge不代签真实模型、OIDC、Linux或完整产品验收。按用户指令完成本项后统一提交并暂停，不执行3.3或下一项；正式P1-08、P0-06及G0～G4不变。",
         "2026-11-16：完成3.3键盘／窄屏／事件期间交互验证，变更累计10/13。实际Edge157页面1通过：Enter换行、IME及repeat期间Ctrl/Cmd+Enter零POST、页签ArrowRight／End／Home、390×844无横向溢出、截图及单次提交；实时事件6通过：快照缺口、真实TCP断线重连、乱序／重复帧、缓冲溢出、空闲撤权均保持草稿／页签／焦点／选区且零额外POST。无生产代码改动。4.1～4.3与真实资源验收继续，正式P1-08／G0不变。",
         "2026-11-16：完成4.1集成回归与4.2文档／基线／台账同步，变更累计12/13。全量check执行到acceptance组，终止前顶层TAP 224通过、0失败，覆盖构建／类型／Lint及input／events等适用套件；构建与contracts:check另跑通过；浏览器补跑空项目输入1、实时事件6、交付导航1。单个验收场景在宿主100%负载下耗时5～6分钟，故终止，未宣称全量全绿；完整验收组与完整13文件浏览器矩阵留待5.2。设计03、验收、实施文档、生成的技术设计、OpenSpec、基线与P1-08台账已同步；同一Agent开发复核完成。4.3真实模型／OIDC／Linux及正式P1-08／G0不变。",
-        "2026-11-17：按用户请求完成工作台视觉排版优化5.1。依据PRD三栏／五页签与灰白／深蓝规范，紧凑顶部状态，左224px导航／弹性对话／至少380px详情，统一图标、输入、附件、主按钮、草稿反馈和新建引导；下一目标降为紧凑次级入口。实际Edge157宽屏1440、1024、390px与暗色8张截图无页面横向溢出；相关独立用例36项通过（页面9、详情／附件11、实时／流式13、HTTP3），最终键盘／390px另复验1项，不重复计数。构建、类型、本次input-api范围Lint通过；全仓Lint被既有其他文件5处未使用声明阻断，原日志及HEAD同字节证明保留。首次恢复状态文案误改引发1项失败，已还原原文案，不改测试，实时整组复跑通过；最后仅调整详情导航间距／侧栏脚注，最终截图、HTTP、键盘及实时复验分别留证。业务API、本机日记、权限和执行规则未改；本次不代签完整T08或真实模型／OIDC／Linux验收，不推进工作包或阶段状态。"
+        "2026-11-17：按用户请求完成工作台视觉排版优化5.1。依据PRD三栏／五页签与灰白／深蓝规范，紧凑顶部状态，左224px导航／弹性对话／至少380px详情，统一图标、输入、附件、主按钮、草稿反馈和新建引导；下一目标降为紧凑次级入口。实际Edge157宽屏1440、1024、390px与暗色8张截图无页面横向溢出；相关独立用例36项通过（页面9、详情／附件11、实时／流式13、HTTP3），最终键盘／390px另复验1项，不重复计数。构建、类型、本次input-api范围Lint通过；全仓Lint被既有其他文件5处未使用声明阻断，原日志及HEAD同字节证明保留。首次恢复状态文案误改引发1项失败，已还原原文案，不改测试，实时整组复跑通过；最后仅调整详情导航间距／侧栏脚注，最终截图、HTTP、键盘及实时复验分别留证。业务API、本机日记、权限和执行规则未改；本次不代签完整T08或真实模型／OIDC／Linux验收，不推进工作包或阶段状态。",
+        "2026-11-17：按用户截图修复5.2三栏底边不齐。桌面#root纵向flex按顶部真实高度分配剩余视口，三栏使用同一grid行和stretch，取消独立min-height／sticky估算；中栏合并为完整面板并去掉输入嵌套外框，导航列表与中／右栏内容独立滚动。实际Edge157复核1843×960、1440×900、1843×640、1024×768及390×844，共7张截图；所有桌面三栏顶底偏差小于1px且无文档纵／横向溢出，16项目列表可滚动且新建／更多可见，表单提交可滚动到达，切窄屏保留草稿。既有页面9/9通过，范围Lint与含类型声明的Input API构建通过；只有CSS变化，未重复全仓类型／Lint或外部验收。"
       ]
     },
     {

@@ -300,3 +300,7 @@ The workbench SHALL distinguish project navigation, saved conversation and the f
 #### Scenario: A user edits while viewing a narrow workspace
 - **WHEN** the workbench switches between desktop and a 390px viewport or the user opens a detail tab
 - **THEN** all region navigation and existing form controls SHALL remain reachable, and the current draft, exact execution context and original command identity SHALL be retained
+
+#### Scenario: Desktop content exceeds the available panel height
+- **WHEN** a desktop workspace has a long project list, draft or detail content, or its shared header changes height
+- **THEN** all three panels SHALL share the same top and bottom bounds within the remaining viewport, and overflowing content SHALL remain reachable through its own region without pushing a panel below the common baseline
