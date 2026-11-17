@@ -318,7 +318,10 @@
         "project/evidence/P1-08/model-stream-development-review.md",
         "project/evidence/P0-06/model-settings-development-review.md",
         "project/evidence/P0-06/model-settings-http.txt",
-        "project/evidence/P0-06/model-settings-browser.txt"
+        "project/evidence/P0-06/model-settings-browser.txt",
+        "project/evidence/P0-06/model-real-call.md",
+        "project/evidence/P0-06/model-real-call.txt",
+        "project/evidence/P0-06/runtime-attach.txt"
       ],
       "reviewNote": null,
       "notes": [
@@ -327,7 +330,8 @@
         "Windows 固定生产快照 e4d89ef：首次 CLI 启动超时失败原样保留，复跑 15/15 检查通过；d385c67 测试修正版本地 Runtime 串行 18/18 通过。Linux WSL 启动超时，真实 DeepSeek 样本未执行，不宣称跨平台或模型验收。",
         "WSL 后续恢复可用：同一 e4d89ef 固定快照 Linux 15/15 检查通过，与 Windows 源指纹／锁文件一致；真实模型三组样本仍未执行，状态不变。",
         "2026-11-16：P1-08子项3.2复用本工作包Provider／Runtime／Preparation，显式SSE与只读临时content回调；默认JSON及原冻结配置形状保持，最终响应先持久再执行工具。协议18及Runtime／Preparation28本机验证通过，真实模型样本未执行，P0-06正式状态不变；按用户要求当前项提交后暂停。",
-        "2026-11-16：新增工作台“更多→设置”模型接入配置；本机0600密钥文件与GET/PUT/test API，HTTP 2/2、浏览器1/1通过；未用真实Key调用，正式P0-06仍IN_PROGRESS，G0～G4不变。"
+        "2026-11-16：新增工作台“更多→设置”模型接入配置；本机0600密钥文件与GET/PUT/test API，HTTP 2/2、浏览器1/1通过；未用真实Key调用，正式P0-06仍IN_PROGRESS，G0～G4不变。",
+        "2026-11-17：用户保存真实Endpoint/Key后，Runtime以MiniMax-M2.7接入（model-runtime-attached），同一Provider代码路径真实调用成功（content「2+2等于4。」，usage 40/63，requestId已记录）；发现代理禁止deepseek-chat、版本化模型名触发MODEL_ID_MISMATCH。产品UNDERSTANDING仍因缺preparation Agent未触发模型；三组样本未执行，正式P0-06仍IN_PROGRESS。"
       ]
     },
     {
