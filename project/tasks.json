@@ -2481,7 +2481,9 @@
         "DevMesh_实施文档_V1.0.md",
         "DevMesh_技术设计方案_V1.1.md"
       ],
-      "changes": [],
+      "changes": [
+        "improve-local-quickstart"
+      ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": null,
@@ -2489,7 +2491,9 @@
       "codeReferences": [],
       "evidence": [],
       "reviewNote": null,
-      "notes": []
+      "notes": [
+        "2026-11-17 Codex 按用户要求整理 README 本机快速开始，并同步部署指南；仅为运维文档准备增量，P4-03 目标环境运维演练仍未开始。验证记录见 openspec/changes/improve-local-quickstart/verification.md。"
+      ]
     },
     {
       "id": "P4-04",

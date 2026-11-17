@@ -60,7 +60,7 @@ corepack pnpm@11.28.5 build
 
 ## 4. 生成本机配置
 
-在仓库根目录创建 `config/preview.local.json`（`*.local` 已被 Git 忽略）：
+也可以直接按 [首页快速开始](../README.md#3-生成本机配置初始化存储仅首次) 自动生成本机配置。手工配置时，在仓库根目录创建 `config/preview.local`（内容为 JSON，`*.local` 已被 Git 忽略）：
 
 ```json
 {
@@ -104,7 +104,7 @@ Linux/macOS 把 `D:/...` 换成绝对路径，例如：
 首次启动前初始化一次（只需要一次）：
 
 ```powershell
-node scripts/storage.mjs init --config config/preview.local.json
+node scripts/storage.mjs init --config config/preview.local
 ```
 
 看到 `"status": "PASSED"` 即可。不要重复执行；重复初始化会因已有数据而失败。
@@ -112,7 +112,7 @@ node scripts/storage.mjs init --config config/preview.local.json
 ## 6. 启动
 
 ```powershell
-node scripts/dev-preview.mjs --config config/preview.local.json
+node scripts/dev-preview.mjs --config config/preview.local
 ```
 
 启动日志出现：
@@ -176,7 +176,7 @@ corepack pnpm@11.28.5 build
 
 4. 重新启动。数据库迁移会在启动时自动执行并先做备份。
 
-如果上游修改了模板或提交，更新 `config/preview.local.json` 里的 `commit`。
+如果上游修改了模板或提交，更新 `config/preview.local` 里的 `commit`。
 
 ## 10. 数据与备份
 
