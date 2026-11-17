@@ -14,6 +14,7 @@ if (index >= 0 && (!configPath || args.length !== 2)) {
 const config = loadConfig(process.env, configPath);
 const { startPlatform } = await import('../packages/platform-core/dist/index.mjs');
 const { createModelSettingsStore } = await import('../packages/input-api/dist/index.mjs');
+const { loadInternalA2AConfig } = await import('../packages/a2a-adapter/dist/config.mjs');
 const modelSettings = createModelSettingsStore(join(config.storage?.dataRoot ?? '.devmesh-data/control', 'settings'));
 const saved = await modelSettings.readForRuntime();
 
@@ -36,10 +37,10 @@ if (saved) {
       }],
       tokenLimit: 100000
     };
-    const a2a = config.a2a ?? {
+    const a2a = config.a2a ?? loadInternalA2AConfig({
       manifestPath: join(repositoryRoot, 'config', 'agents.example.json'),
       identities: [{ principalId: 'orchestrator', credentialRef: 'internal.service' }]
-    };
+    }, join(repositoryRoot, '.devmesh-data', 'preview', 'server.json'));
     platform = await startPlatform({ ...config, runtime, a2a }, {
       identityResolver,
       resolveCredential: async reference => {
