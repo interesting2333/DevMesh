@@ -1,3 +1,4 @@
+import {testOpenSsl} from './openssl.mjs';
 // Actual control/Runner Workers, template HTTP/CRUD and TLS. Physical fencing,
 // OCI, routes and identity remain explicit fixtures, never production acceptance.
 import {createServer as createHttpsServer,request as httpsRequest} from 'node:https';
@@ -19,7 +20,7 @@ export async function releaseHttpFixture(t,{gatewayOptions={},storageWrap,transp
  }}),p=f.publication,observation=await f.backend.publish(p,async()=>true);
  if(observation.state!=='PUBLISHED')throw Error('Fixture publication failed '+JSON.stringify(observation));
  const publication=await f.control.call('recordReleasePublicationObservation',{principalId:f.options.principalId,releaseId:p.releaseId,requestHash:p.requestHash,expectedRevision:p.revision,expectedSequence:p.sequence,observation});
- const key=join(f.data.root,'release-tls.key'),cert=join(f.data.root,'release-tls.crt'),openssl=process.platform==='win32'?'D:\\Git\\usr\\bin\\openssl.exe':'openssl',generated=spawnSync(openssl,['req','-x509','-newkey','rsa:2048','-nodes','-days','1','-subj','/CN=*.apps.devmesh-app.test','-addext','subjectAltName=DNS:*.apps.devmesh-app.test','-keyout',key,'-out',cert],{encoding:'utf8',windowsHide:true});
+ const key=join(f.data.root,'release-tls.key'),cert=join(f.data.root,'release-tls.crt'),openssl=testOpenSsl(),generated=spawnSync(openssl,['req','-x509','-newkey','rsa:2048','-nodes','-days','1','-subj','/CN=*.apps.devmesh-app.test','-addext','subjectAltName=DNS:*.apps.devmesh-app.test','-keyout',key,'-out',cert],{encoding:'utf8',windowsHide:true});
  if(generated.status!==0)throw Error('TLS fixture generation failed '+(generated.error?.message??generated.stderr));
  const credentials={key:await readFile(key),cert:await readFile(cert)};let gateway;
  const server=createHttpsServer(credentials,(req,res)=>void gateway.handle(req,res));server.requestTimeout=20000;server.headersTimeout=10000;server.keepAliveTimeout=100;server.on('upgrade',(_req,s)=>s.destroy());server.on('connect',(_req,s)=>s.destroy());await listen(server);

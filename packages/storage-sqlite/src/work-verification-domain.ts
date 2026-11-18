@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import {randomUUID} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {roleOutput,workRevision,parseContract} from '@devmesh/contracts';
@@ -24,7 +25,7 @@ export function createWorkVerificationDomain(db:DatabaseSync,quality?:Pick<Retur
   const r=authorized(principalId,runId,true),a=get('SELECT * FROM attempts WHERE attempt_id=? AND run_id=?',attemptId,runId)??fail('WORK_VERIFICATION_ATTEMPT_MISSING');
   if(r.control_gate!=='OPEN'||r.terminal_outcome!==null||a.ended_at!==null&&!terminal||!(terminal?['VERIFYING','SUCCEEDED','FAILED']:['VERIFYING']).includes(String(a.state)))fail('WORK_VERIFICATION_ADMISSION_CLOSED');
   const scheduled=get('SELECT * FROM scheduled_work WHERE attempt_id=?',attemptId),w=get('SELECT * FROM works WHERE run_id=? AND work_id=?',runId,a.work_id!),planned=get('SELECT * FROM plan_works WHERE run_id=? AND plan_revision=? AND work_id=?',runId,r.current_plan_revision!,a.work_id!);
-  if(!scheduled||!w||!planned||w.blocked_reason!==null||r.run_epoch!==a.admitted_run_epoch||w.work_epoch!==a.admitted_work_epoch||planned.work_revision!==a.work_revision||scheduled.plan_revision!==r.current_plan_revision||!get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?',runId,r.current_plan_revision!,r.current_requirement_revision!))fail('WORK_VERIFICATION_BASIS_STALE');
+  if(!scheduled||!w||!planned||w.blocked_reason!==null||r.run_epoch!==a.admitted_run_epoch||w.work_epoch!==a.admitted_work_epoch||planned.work_revision!==a.work_revision||scheduled.plan_revision!==r.current_plan_revision||!get(`SELECT 1 FROM ${planAdmissionTable(db)} WHERE run_id=? AND plan_revision=? AND requirement_revision=?`,runId,r.current_plan_revision!,r.current_requirement_revision!))fail('WORK_VERIFICATION_BASIS_STALE');
    const result=get(`SELECT rr.*,ra.config_json,ra.state runtime_state,ra.grant_id,a.content_hash,a.input_fingerprint candidate_fingerprint,a.state artifact_state,c.state content_state
    FROM runtime_results rr JOIN runtime_activations ra ON ra.activation_id=rr.activation_id JOIN artifacts a ON a.artifact_id=rr.artifact_id
    JOIN content_objects c ON c.content_hash=a.content_hash WHERE ra.attempt_id=? AND a.attempt_id=? AND a.run_id=?`,attemptId,attemptId,runId);

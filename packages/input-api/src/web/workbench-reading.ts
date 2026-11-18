@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {ids,opaqueKey,epoch,timestamp} from '@devmesh/contracts';
 
 const scope=z.strictObject({principalId:opaqueKey,projectId:ids.project,runId:ids.run});
-export const workbenchReading=scope.extend({schemaVersion:z.literal(1),tab:z.enum(['任务','协作','成果','预览','记录']),panel:z.enum(['sidebar','conversation','detail']),candidateId:ids.candidate.nullable(),candidateAfterRevision:epoch,updatedAt:timestamp});
+export const workbenchReading=scope.extend({schemaVersion:z.literal(1),tab:z.enum(['任务','协作','成果','预览','记录']),panel:z.enum(['sidebar','conversation','detail']),detailOpen:z.boolean().default(false),candidateId:ids.candidate.nullable(),candidateAfterRevision:epoch,updatedAt:timestamp});
 export type WorkbenchReading=z.output<typeof workbenchReading>;
 type Scope=z.input<typeof scope>;
 const prefix='devmesh.workbench.reading.v1:';

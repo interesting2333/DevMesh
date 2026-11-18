@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ids, opaqueKey, sha256, gitCommit, epoch, projectName, createTaskInput, saveMessageInput, attachmentIds, attachmentName,sourceRef,requirement } from '@devmesh/contracts';
+import { ids, opaqueKey, sha256, gitCommit, epoch, projectName, createTaskInput, renameProjectInput, saveMessageInput, attachmentIds, attachmentName,sourceRef,requirement } from '@devmesh/contracts';
 import type { OperationResult, RunView } from './protocol.js';
 const principal = { principalId: opaqueKey };
 const meta = z.strictObject({ ...principal, scopeId: opaqueKey, idempotencyKey: z.uuid() });
@@ -7,8 +7,9 @@ const page = { limit:z.number().int().min(1).max(200).default(50) };
 const claim = { ...principal, intakeId: opaqueKey, claimToken: z.uuid() };
 export const inputRequests = {
   checkInputAccess:z.strictObject({...principal,projectId:ids.project.optional(),runId:ids.run.optional(),write:z.boolean().default(false)}).refine(v=>(v.projectId!==undefined)!==(v.runId!==undefined),'Exactly one target is required'),
-  createInputProject: z.strictObject({ meta, name:projectName, baseCommit:gitCommit, bodyHash:sha256, attachmentIds, clientDraftId:z.uuid() }),
-  createInputTask: z.strictObject({ meta, projectId:ids.project, ifMatch:z.string().optional(), bodyHash:sha256, body:createTaskInput }),
+  createInputProject: z.strictObject({ meta, name:projectName, baseCommit:gitCommit, bodyHash:sha256, attachmentIds, clientDraftId:z.uuid(),sourceConversation:z.strictObject({conversationId:opaqueKey,inputRevision:epoch}).optional() }),
+  renameInputProject:z.strictObject({meta,projectId:ids.project,body:renameProjectInput}),
+  createInputTask: z.strictObject({ meta, projectId:ids.project, ifMatch:z.string().optional(), bodyHash:sha256, body:createTaskInput,sourceConversation:z.strictObject({conversationId:opaqueKey,inputRevision:epoch}).optional() }),
   appendInputMessage: z.strictObject({ meta, runId:ids.run, ifMatch:z.string().optional(), bodyHash:sha256, body:saveMessageInput }),
   getInputOperation: z.strictObject({ ...principal, operationId:ids.operation }),
   lookupInputOperation: z.strictObject({ ...principal, scopeId:opaqueKey, idempotencyKey:z.uuid() }),
@@ -41,6 +42,7 @@ export interface InputResults {
   getWorkbenchSource:{projectId:string;runId:string;artifactId:string;contentHash:string;label:string;requirement:null}|{projectId:string;runId:string;artifactId:null;contentHash:null;label:string;requirement:z.output<typeof requirement>};
   checkInputAccess:{projectId:string;membership:string};
   createInputProject:OperationResult; createInputTask:OperationResult; appendInputMessage:OperationResult;
+  renameInputProject:OperationResult;
   getInputOperation:OperationResult; lookupInputOperation:OperationResult|null;
   getInputWorkspace:WorkspaceView;
   listInputProjects:{projects:{projectId:string;name:string;updatedAt:string;membership:string}[];nextCursor:{updatedAt:string;projectId:string}|null};

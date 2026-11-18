@@ -12,6 +12,7 @@ export const planReviewView = z.strictObject({
   requirementRevision: revision, reviewHash: sha256, baseCommit: gitCommit,
   plan: planDraft, mode: z.enum(['current','history']), canConfirm: z.boolean(),
   confirmation: z.strictObject({actor:opaqueKey,operationId:ids.operation,confirmedAt:timestamp}).nullable(),
+  executionAuthorization:z.strictObject({authorizationId:opaqueKey,authorizedAt:timestamp}).nullable().optional(),
   issues: z.array(planIssue),
   topology: z.array(z.strictObject({workId:ids.work,layer:z.number().int().min(0).max(29)})).max(30),
   carryForward:z.strictObject({sha256,round:z.number().int().min(1).max(2),sourcePlanRevision:revision,results:z.array(z.strictObject({

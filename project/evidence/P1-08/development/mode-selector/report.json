@@ -1,0 +1,63 @@
+{
+  "checkedAt": "2026-11-18T07:16:02.841Z",
+  "commit": "ef82d100bb9a3d4354a4939cc8e6b9013fe5264c",
+  "uncommittedWorkspace": true,
+  "scope": "右下角模式选择器样式、说明和交互；同一Codex开发复核，正式P1-08及门槛保持。",
+  "environment": {
+    "node": "v24.22.3",
+    "platform": "win32",
+    "browser": "Edge 157.0.4341.60"
+  },
+  "browser": {
+    "tests": 17,
+    "pass": 17,
+    "fail": 0,
+    "newModeTests": 3,
+    "existingConversationTests": 14,
+    "desktopWidths": [
+      1600,
+      1440,
+      1280,
+      1024
+    ]
+  },
+  "checks": {
+    "inputApiBuild": "PASS",
+    "typecheck": "PASS",
+    "changedScopeLint": "PASS",
+    "openSpecStrict": "PASS"
+  },
+  "semantics": {
+    "modeValuesUnchanged": true,
+    "selectionAffectsNextSend": true,
+    "selectionDoesNotControlActiveTask": true,
+    "preservesDraft": true,
+    "unavailableExecutionExplained": true
+  },
+  "limitations": [
+    "运行时与数据库未修改；未新增真实模型请求或研发执行环境。",
+    "全仓Lint已有5项警告，详见前一轮desktop-refinement/report.json。"
+  ],
+  "sourceSha256": {
+    "packages/input-api/src/web/conversation-mode.tsx": "bef102307e8c0cf02bbd58a41a622449e4e8c95b0f15ced20a3587d4ad06fb7f",
+    "packages/input-api/src/web/conversation-workbench.tsx": "fc02f63b9468cb5f50d4aea72d868cedeb33589c1e33d26619dbb5d345ab9c2f",
+    "packages/input-api/src/workbench-styles.ts": "8bd3d48daf2b23fa63543b933857722cd18af34b56c227ab2bc9652bb3708377",
+    "packages/input-api/src/web/workbench-icons.tsx": "15117fb72c2d1f768d92bbf9bdd73ed1bd4f13ce011f5cad61f06ad024454d56",
+    "tests/browser/conversation-mode.test.mjs": "6c4906c007f42e0239d726fdae3b121bda5f4ecd8782143b27e9193ebf609fa4",
+    "tests/browser/conversation-desktop.test.mjs": "b9a6012ab3877679704c1dd6745fe36fb1e1383e4de3f18cd60e671d9c0e2505"
+  },
+  "live": {
+    "checkedAt": "2026-11-18T07:17:35.707Z",
+    "status": 200,
+    "browser": "157.0.4341.60",
+    "errors": [],
+    "posts": [],
+    "modeUnchanged": true,
+    "popup": {
+      "x": 834,
+      "y": 658,
+      "width": 320,
+      "height": 246.171875
+    }
+  }
+}

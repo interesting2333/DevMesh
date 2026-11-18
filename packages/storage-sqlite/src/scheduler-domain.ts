@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import { ids, inputManifest, parseContract, planDraft, productOutput } from '@devmesh/contracts';
 import type { Draft } from '@devmesh/contracts';
@@ -60,7 +61,7 @@ export function createSchedulerDomain(db:DatabaseSync,plans:ReturnType<typeof cr
       FROM runs r JOIN projects p ON p.project_id=r.project_id
       JOIN project_members m ON m.project_id=p.project_id AND m.principal_id=p.owner_id AND m.role='owner'
       JOIN plan_revisions pr ON pr.run_id=r.run_id AND pr.revision=r.current_plan_revision AND pr.requirement_revision=r.current_requirement_revision
-      JOIN plan_confirmations c ON c.run_id=r.run_id AND c.plan_revision=pr.revision AND c.requirement_revision=pr.requirement_revision
+      JOIN ${planAdmissionTable(db)} c ON c.run_id=r.run_id AND c.plan_revision=pr.revision AND c.requirement_revision=pr.requirement_revision
       LEFT JOIN scheduler_project_turns q ON q.project_id=r.project_id
       LEFT JOIN scheduler_run_budget b ON b.run_id=r.run_id
       WHERE r.control_gate='OPEN' AND r.terminal_outcome IS NULL

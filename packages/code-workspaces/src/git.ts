@@ -75,10 +75,11 @@ export class ControlledGit {
     if(!body.startsWith('tree ')||!tree)deny('GIT_COMMIT_INVALID');return {commit,tree:sha(tree!),parents:headers.filter(v=>v.startsWith('parent ')).map(v=>sha(v.slice(7))),body};
   }
   async readBlob(objectId:string,signal?:AbortSignal){sha(objectId);await this.validate(signal);return (await this.call(['cat-file','blob',objectId],signal,undefined,2*1024*1024)).out;}
-  async treeEntries(commit:string,signal?:AbortSignal){
+  async treeEntries(commit:string,signal?:AbortSignal,contextOnly=false){
     const info=await this.commit(commit,signal),rows=decode((await this.call(['ls-tree','-r','-t','-z',info.tree],signal)).out).split('\0').filter(Boolean);
     if(rows.length>8000)deny('GIT_SOURCE_TOO_LARGE');
-    const entries=rows.map(row=>{const m=/^(100644|100755|040000) (blob|tree) ([a-f0-9]{40})\t(.+)$/.exec(row);if(!m||!safePath(m[4]!)||(m[1]==='040000')!==(m[2]==='tree'))deny('GIT_SOURCE_PATH_DENIED');return m[1]==='040000'?{path:m[4]!,kind:'DIRECTORY' as const,mode:'040000' as const,objectId:m[3]!}:{path:m[4]!,kind:'FILE' as const,mode:m[1] as '100644'|'100755',objectId:m[3]!};});
+    // Read-only context may omit disallowed names; execution manifests remain strict.
+    const entries=rows.filter(row=>{const m=/^(100644|100755|040000) (blob|tree) ([a-f0-9]{40})\t(.+)$/.exec(row),valid=m&&safePath(m[4]!)&&(m[1]==='040000')===(m[2]==='tree');if(!valid&&!contextOnly)deny('GIT_SOURCE_PATH_DENIED');return valid;}).map(row=>{const m=/^(100644|100755|040000) (blob|tree) ([a-f0-9]{40})\t(.+)$/.exec(row)!;return m[1]==='040000'?{path:m[4]!,kind:'DIRECTORY' as const,mode:'040000' as const,objectId:m[3]!}:{path:m[4]!,kind:'FILE' as const,mode:m[1] as '100644'|'100755',objectId:m[3]!};});
     if(new Set(entries.map(entry=>entry.path.toLowerCase())).size!==entries.length)deny('GIT_SOURCE_PATH_COLLISION');return entries;
   }
 
@@ -206,6 +207,7 @@ export class ControlledGit {
   }
   async readRef(name:string,signal?:AbortSignal){ref(name);await this.validate(signal);const r=await this.call(['rev-parse','--verify',name],signal,undefined,undefined,true);return r.code===0?sha(decode(r.out).trim()):null;}
   async head(signal?:AbortSignal){await this.validate(signal);const r=await this.call(['rev-parse','--verify','HEAD'],signal,undefined,undefined,true);return r.code===0?sha(decode(r.out).trim()):null;}
+  async branch(signal?:AbortSignal){await this.validate(signal);const r=await this.call(['symbolic-ref','--quiet','--short','HEAD'],signal,undefined,undefined,true);return r.code===0?decode(r.out).trim():'分离 HEAD';}
   async updateRefs(updates:readonly GitRefUpdate[],signal?:AbortSignal){
     if(!updates.length||updates.length>8||new Set(updates.map(u=>u.ref)).size!==updates.length)deny('GIT_REF_DENIED');await this.validate(signal);
     const input='start\n'+updates.map(u=>'update '+ref(u.ref)+' '+sha(u.commit)+' '+(u.expected===null?'0'.repeat(40):sha(u.expected))+'\n').join('')+'prepare\ncommit\n';

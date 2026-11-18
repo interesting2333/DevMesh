@@ -1,0 +1,185 @@
+{
+  "checkedAt": "2026-11-18T06:44:10.838Z",
+  "commit": "ef82d100bb9a3d4354a4939cc8e6b9013fe5264c",
+  "uncommittedWorkspace": true,
+  "scope": "用户批准的桌面UE/UI两阶段增量；同一Codex开发实施及复核，移动端专项暂缓，正式P1-08／依赖／阶段门槛与完整产品验收分别维护。",
+  "environment": {
+    "node": "v24.22.3",
+    "platform": "win32",
+    "browser": "157.0.4341.60",
+    "sqliteSchema": 56
+  },
+  "results": {
+    "core": {
+      "tests": 45,
+      "pass": 45,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 67783.0428
+    },
+    "conversationBrowser": {
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 67205.8297
+    },
+    "newAndLegacyBrowser": {
+      "tests": 28,
+      "pass": 28,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 124111.5121
+    },
+    "legacyDomain": {
+      "tests": 35,
+      "pass": 35,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 58598.4125
+    },
+    "finalPresentation": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 7302.2028
+    }
+  },
+  "uniqueCoveredTests": 108,
+  "duplicateRuns": "conversationBrowser 14 包含在 newAndLegacyBrowser 28；finalPresentation 1为方案呈现子集，不重复累计。最终中文检查说明调整后复验1/1；之前最终全量构建45/45与14/14保持，兼容35/35与页面28/28在相应变更后有通过证据。",
+  "checks": {
+    "fullBuild": "PASS",
+    "finalInputApiBuild": "PASS",
+    "typecheck": "PASS",
+    "changedScopeLint": "PASS",
+    "fullRepositoryLint": {
+      "status": "FAILED_PREEXISTING",
+      "warnings": 5,
+      "items": [
+        "domain.ts: RecoveryStateView / ProjectStatsView / ProjectConfigExportView",
+        "tests/run-control-coordinator.test.mjs: target",
+        "tests/release-manifest.test.mjs: readdirSync"
+      ],
+      "headVerified": true,
+      "previousEvidence": "project/evidence/P1-08/development/conversation-workflow/report.json"
+    },
+    "openapiDrift": "PASS",
+    "openSpecStrict": {
+      "passed": 37,
+      "failed": 0
+    },
+    "taskLedger": "PASS",
+    "technicalDocumentSync": "PASS"
+  },
+  "failureHistory": [
+    {
+      "stage": "initial domain",
+      "result": {
+        "tests": 44,
+        "pass": 43,
+        "fail": 1,
+        "skipped": 0,
+        "durationMs": 56120.8713
+      },
+      "reason": "迁移内容相同，Node SQLite返回null原型对象，解构结果为普通对象；断言统一原型后通过。"
+    },
+    {
+      "stage": "initial browser",
+      "result": {
+        "tests": 14,
+        "pass": 0,
+        "fail": 14,
+        "skipped": 0,
+        "durationMs": 109089.5104
+      },
+      "reason": "首页空上下文的可选比较返回true后访问null，已增加非空判断。"
+    },
+    {
+      "stage": "second browser",
+      "result": {
+        "tests": 14,
+        "pass": 11,
+        "fail": 3,
+        "skipped": 0,
+        "durationMs": 77482.7639
+      },
+      "reason": "聚焦提示改变布局，造成附件发送和新回复按钮在点击中移动；改为固定占位并在布局后跟随底部。"
+    },
+    {
+      "stage": "after focus fix",
+      "result": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "skipped": 0,
+        "durationMs": 64989.4697
+      },
+      "reason": "14/14通过；后续补充调整草稿保留、计划模式和暂停新输入确认边界检查。"
+    }
+  ],
+  "live": {
+    "checkedAt": "2026-11-18T06:41:23.394Z",
+    "url": "http://127.0.0.1:3210/api/v1/workbench/view",
+    "capabilities": {
+      "model": true,
+      "preparation": true,
+      "execution": false,
+      "reason": null
+    },
+    "before": {
+      "schema": 56,
+      "integrity": "ok",
+      "foreignKeyFailures": 0,
+      "conversations": 2
+    },
+    "after": {
+      "schema": 56,
+      "integrity": "ok",
+      "foreignKeyFailures": 0,
+      "conversations": 2
+    },
+    "status": 200,
+    "browser": "157.0.4341.60",
+    "errors": [],
+    "layout": {
+      "sidebar": 240,
+      "composer": 141,
+      "overflow": false
+    }
+  },
+  "upgradeBackup": {
+    "file": ".devmesh-backups\\devmesh-1794984079966-03796cfc-ecd2-4eb2-96a4-8dca8f4d01f1.sqlite",
+    "sha256": "6b94db8f12115073084008a67a1500de6456a0b102d17828d26e100c6b4aa018",
+    "schema": 55,
+    "integrity": "ok",
+    "foreignKeyFailures": 0
+  },
+  "limitations": [
+    "本次未新增真实模型调用；已保留原配置，模型与准备能力可用，研发执行资源未接入。",
+    "未执行Linux Runner、真实物理隔离、企业身份和完整T08产品验收。",
+    "截图来自隔离夹具，不代表真实交付或用户任务执行结果。"
+  ],
+  "sourceSha256": {
+    "packages/contracts/src/conversation.ts": "a7fcc697dba68367689af2869e4c938b739d0480352dada2afc8eb59471f7ad3",
+    "packages/contracts/src/openapi.ts": "2132267f89c2258122daa394a9ebca3416eb58725a3d8cd4487d25ebeb4548de",
+    "packages/contracts/openapi.json": "34fb2ad7da7532b45aa9561aedeee45504884f5863c5e466a1f1712e851a0233",
+    "packages/storage-sqlite/src/conversation-domain.ts": "1620212cd56a74fa804daa97190a1c55a3aa7b66f34b98d74ee1479b70cbe4bf",
+    "packages/storage-sqlite/src/conversation-protocol.ts": "d020144bdf898b4d02b6adc6efb27f9e628347c945669881a9eb3ecc569fb6ea",
+    "packages/storage-sqlite/src/domain.ts": "72d45e04c42cbe0c3ee1c69affcdfc4afd8aa2eef9c91827351cbf759d6d903b",
+    "packages/storage-sqlite/migrations/0056-conversationtitles.sql": "8acb0703148aefbc815d7e77a4914469126fea5a07295ab34b72881bb2bf6bde",
+    "packages/storage-sqlite/migrations/manifest.json": "137b50de1374394c414cfb1f2b4722f41a5ba897bfe563208d6011efc4b1fd72",
+    "packages/input-api/src/conversations.ts": "9be0f2beeba6cfbd5207c971bb8d01db9bcc72e0088b0bc91a44be341e8ca79d",
+    "packages/input-api/src/web/conversation-workbench.tsx": "f1709a45ddc81ee8c98243b64a0d2e7dcbd682663c381a33817778660d04f7f7",
+    "packages/input-api/src/web/conversation-work-context.tsx": "54aaab21c9b0b084245c3022e0cfbf90e4ffc89b7ad51229c496048d53e02b27",
+    "packages/input-api/src/web/conversation-message.tsx": "e9357de1377697df99a004b114455042cc25d945c5589ce0c0c2821713719b69",
+    "packages/input-api/src/web/conversation-rename.tsx": "2bff2fb4272e06a6955331af3890ba19cf015efaacf98cfa08eafb169f35d78c",
+    "packages/input-api/src/web/conversation-text.tsx": "ce61b3ac101a9481b44b92d5da1a8f1e2d6207bcebc51a359591fadfd958d49b",
+    "packages/input-api/src/web/conversation-local.ts": "0cca9adac11d34ed8a37348a7d869cb04a16a4ce220f7ca2a49dd9a8d9f28c02",
+    "packages/input-api/src/workbench-styles.ts": "50b72c9660f0f0f73d0b57df3747598586b07e286088a6694b8d2195b002a1df",
+    "packages/agent-runtime/src/conversation-runtime.ts": "6bc6750f6021981c5d9d1f1d73190ed3ab565b662caa2f2eac895895ce972288",
+    "tests/conversation-desktop.test.mjs": "9b9487f82d81c420b272810843b4e1d787eac1eb32c28f3799cfb0a5459c4ebf",
+    "tests/browser/conversation-desktop.test.mjs": "5a534ec9045b63717c36106087b205a4c330555bb0abba5903db0f18e1369c16",
+    "tests/fixtures/conversation-desktop.mjs": "94b2a803c2da9b2b6c9dd8ca5759132b6a90c07c956a42f10d8e554d35d29290"
+  }
+}

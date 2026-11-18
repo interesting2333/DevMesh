@@ -1,0 +1,247 @@
+{
+  "scope": "P1-08 composer simplification and project display-name metadata; explicit local test identity/model; not external-resource/product acceptance",
+  "reviewer": "Codex, same implementation agent",
+  "platform": "win32",
+  "node": "v24.22.1",
+  "browser": "Edge 157.0.4341.60",
+  "gitHead": "ef82d100bb9a3d4354a4939cc8e6b9013fe5264c",
+  "tests": {
+    "distinct": 52,
+    "passed": 52,
+    "outcomes": {
+      "real chooser persists exact bytes before upload; lost ACK lookup creates attachment-only project and explicit library copy creates a distinct bound upload": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "lookup miss never rekeys upload; explicit retry sends identical bytes and unlink keeps original journal and server material": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "invalid File and actual native abort retain memory, block navigation and HTTP, then explicit save retry commits the exact file": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "selected metadata must be exact protected200 before main enqueue; wrong identity, non200 and actual removal cannot omit the file": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "two actual page file admissions compare the same draft revision; the loser retains unsaved File until explicit reread and retry": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "unknown bytes cannot be released or copied; known-result release preserves journal, narrow panels preserve selection, account change refuses upload": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "default composer is uncluttered while attachment help, management and durable silent drafts remain available": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-mobile-final.log"
+      },
+      "automatic project name can be renamed after launch; lost acknowledgement retries the same title operation and retains the task draft": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-mobile-final.log"
+      },
+      "invalid attachments and local save failures remain visible instead of silently discarding input": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-mobile-final.log"
+      },
+      "actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "lookup miss retains original; only explicit retry uses exact message key, body and condition": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "changing trusted account rejects old page original before effects; reentry isolates subject drafts": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "viewer and revoked contexts expose no composer; stale membership refresh clears protected messages": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "rapid project switch aborts an old workspace response and never applies its context": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "historical Run is read only and explicitly returns to the current Run": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "actual platform SSE remains transient until response commit and never changes durable seq or editing": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "disconnect marks unsaved fragments interrupted; final persisted understanding survives reload without replaying tokens": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "truncated actual SSE interrupts display and retains unknown preparation without automatic model retry": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "task entry keeps input dock visible; details expand, collapse and use a narrow overlay without losing a draft": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "one explicit launch accepts text, attachment alone and combined input; selecting or refreshing never uploads": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "lost upload acknowledgement keeps original bytes; explicit retry looks up the same upload and creates one task": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "long task output scrolls independently; planning stays in main and detail preferences survive refresh": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "dragging files only saves local selection; three compact attachments and dark mobile layout remain usable": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "active first Run saves a separate null-release next target; real accepted basis requires explicit review and copying": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "protected task chooser freezes exact material; ACK loss reload recovers one task after fresh admission disappears": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "obsolete task original closes with project proof and keeps complete old target readable at the current project": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "removed task material retains immutable history through explicit blank and mobile; viewer and history mount no task client": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "fresh task preflight refuses a newer actual project before any native command or task POST": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "native task draft abort retains edited goal and task fields, blocks switching and retries before any POST": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-tests.log"
+      },
+      "checked-in positive and negative examples are executable contracts": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "ID namespaces, safe revisions and version literals cannot be coerced": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "schema errors retain field paths in a safe standard envelope": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "input and display names count Unicode code points at exact boundaries": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "conditional requests require a current single strong safe ETag": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "a current resource ETag cannot validate old business content or another review": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "both execution owners work only within the authority scope": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "host IDs, epochs, attempts, activation and grant are all current facts": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "validity is half-open and cannot be widened by caller JSON": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "forged scope and read-to-write escalation are denied": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "command target and payload are discriminated independently of client intent": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "event time fallback, persisted versions and host fields cannot contradict payload": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "token deltas do not become durable business events": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "A2A completed, findings and business success have different representations": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "reports must bind one exact commit, including optional preview": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "plan data has a scale limit and cannot embed a JavaScript completion checker": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "OpenAPI body references and route parameters resolve to shared schemas": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "OpenAPI drift check returns a real process success for the generated artifact": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "project rename is durable and idempotent without changing Run or task basis; receipt rechecks membership": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      },
+      "concurrent names compare the previous name, roll back rejected edits and deny viewer or foreign writes": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/clean-composer/clean-composer-verified.log"
+      }
+    }
+  },
+  "files": {
+    "packages/input-api/src/web/workbench-client.tsx": "85282b4411ecd8a3b08a77a82e11a297aae9619b7abbae0c8b363a9a08c9899a",
+    "packages/input-api/src/web/workbench-attachments.tsx": "4e8333121ac78872b12c919bc9c212c67fbc56a0382af7efbb72cce2c585dc50",
+    "packages/input-api/src/web/workbench-project-name.tsx": "5c1446e41068679a6bb6fd256d8976a27e21f25955cbfbbd54fe3af455cc1bc2",
+    "packages/input-api/src/workbench-styles.ts": "28f5fa2438aa3d30981982ed3a18c8f2b62916c139e80eafddb2a0961e503e7f",
+    "packages/input-api/src/index.ts": "5f76d4c641eb44a6435cf21487751b38b43c4c9886abb213a93726fd802871c7",
+    "packages/storage-sqlite/src/input-domain.ts": "6c0fbb47cf5a44c6928d0bb48b11e051d01a742fa9eafa1a5db4d18b5dc7eef8",
+    "packages/storage-sqlite/src/input-protocol.ts": "0693c916375875e144ed81f11a14d7cf876b3d4a8c9d29235c0134d2d153498c",
+    "packages/contracts/src/input.ts": "636cf9743db44c726dbf33daae79f65f653190ea6a78c30135c44cfdee445439",
+    "packages/contracts/src/errors.ts": "46ccfeb9b60d8ce6e6059898954b0a1d63e8497da99669666dc57102f754f6b7",
+    "packages/contracts/src/openapi.ts": "3c4aa6ae34b45437a79f4bb6c17982716ff2f7b3958bb2d9dc0af95807a6d76d",
+    "packages/contracts/openapi.json": "f5e004682b2c98885b0940d38b8e471fb662e8be6b610cc4118eeb7ccac72212",
+    "packages/input-api/dist/index.mjs": "4a5905a48698dae3cdfbaebb8bf973cd7bd162ede547541c9fa6c5dc5e547546",
+    "packages/input-api/dist/web/workbench/workbench-client.js": "63051f93101f94dacef6f6ec126103bcccc9f1d63971e7c2741c1990cb38a630",
+    "packages/input-api/dist/web/workbench/workbench-client.js.map": "2e237892cb9af764a284692a0aaf0193fde75e59fc44148d4c7a434aa3cc78b2",
+    "packages/storage-sqlite/dist/worker.mjs": "02eed7b0b1ecdf1b71ef8ec981998901b4dc5d155e47a2400785732ee0698662",
+    "tests/browser/workbench-composer-clean.test.mjs": "965a1474549dbc8efd393dd66622b48859ebbf511acb89d8941a0ab4967a7781",
+    "tests/input-project-name.test.mjs": "4cebb50b8a2001840562acc001a5312d365c2317c896c0595cf2639e80c3d4ad",
+    "tests/browser/workbench-draft-assertions.mjs": "3d3186b5aefb6d5ac4000af33bc97b08d5c8867f0ab6956e9c400b8b211550a4"
+  },
+  "screenshots": [
+    "homepage-1440.png",
+    "homepage-390.png",
+    "renamed-project-1440.png"
+  ]
+}

@@ -78,6 +78,7 @@ export function createInputDomain(db:DatabaseSync,h:Helpers){
       const headSeq=Number(r.event_seq),first=get('SELECT min(seq) AS seq FROM events WHERE run_id=?',input.runId);
       return {events,nextCursor:events.at(-1)?.seq??input.afterSeq,headSeq,retainedFromSeq:first?.seq===null?Math.min(Number.MAX_SAFE_INTEGER,headSeq+1):Number(first?.seq??headSeq+1)};
     });}
+  function bindSpaceSource(source:{conversationId:string;inputRevision:number}|undefined,principalId:string,runId:string){if(!source)return;const c=required(get('SELECT * FROM conversations WHERE conversation_id=? AND owner_id=? AND deleted_at IS NULL',source.conversationId,principalId));if(c.input_revision!==source.inputRevision||['PAUSED','PAUSING','CANCELLING','CANCELLED'].includes(String(c.state)))fail('BASIS_SUPERSEDED',409,'Conversation source changed');exec('INSERT INTO workbench_run_sources VALUES(?,?,?)',runId,source.conversationId,String(c.directory_binding_json));}
   const handlers={
     checkInputAccess(input:InputParsed<'checkInputAccess'>){const projectId=input.projectId??String(authorizedRun(input.principalId,input.runId!,input.write).project_id);return {projectId,membership:authorize(input.principalId,projectId,input.write)};},
     getWorkbenchSource(input:InputParsed<'getWorkbenchSource'>){return readTransaction(()=>{
@@ -109,7 +110,7 @@ export function createInputDomain(db:DatabaseSync,h:Helpers){
       return h.operation(meta,'CreateInputProject',payload,operationId=>{
         ownedAttachments(meta.principalId,input.attachmentIds);
         const facts=h.createInputFacts({principalId:meta.principalId,name:input.name,baseCommit,contentHash:input.bodyHash,kind:'NEW',clientMessageId:input.clientDraftId},operationId,false);
-        bind(facts.messageId,input.attachmentIds);resource(operationId,facts.projectId,facts.runId);
+        bindSpaceSource(input.sourceConversation,meta.principalId,facts.runId);bind(facts.messageId,input.attachmentIds);resource(operationId,facts.projectId,facts.runId);
         const understandingOperationId=processing(meta.principalId,facts.projectId,facts.runId,facts.messageId,'unsure');
         return {...facts,understandingOperationId};
       },()=>{
@@ -117,6 +118,18 @@ export function createInputDomain(db:DatabaseSync,h:Helpers){
         const old=get('SELECT r.project_id FROM operations o JOIN input_operation_resources r ON r.operation_id=o.operation_id WHERE o.principal_id=? AND o.scope_id=? AND o.idempotency_key=?',meta.principalId,meta.scopeId,meta.idempotencyKey);
         if(old)authorize(meta.principalId,String(old.project_id),true);
       });
+    },
+    renameInputProject(input:InputParsed<'renameInputProject'>){
+      const {meta,...payload}=input;
+      if(meta.scopeId!==input.projectId)fail('OPERATION_SCOPE_INVALID',422,'Invalid project scope');
+      return h.operation(meta,'RenameInputProject',payload,operationId=>{
+        const project=required(get('SELECT name FROM projects WHERE project_id=?',input.projectId));
+        if(project.name!==input.body.previousName)fail('PROJECT_NAME_CHANGED',409,'Project name has changed');
+        exec('UPDATE projects SET name=?,updated_at=? WHERE project_id=?',input.body.name,now(),input.projectId);
+        const run=required(get('SELECT run_id FROM runs WHERE project_id=? ORDER BY created_at DESC,run_id DESC LIMIT 1',input.projectId));
+        resource(operationId,input.projectId,String(run.run_id));
+        return {projectId:input.projectId,name:input.body.name};
+      },()=>{authorize(meta.principalId,input.projectId,true);});
     },
     createInputTask(input:InputParsed<'createInputTask'>){
       const {meta,ifMatch,...payload}=input;
@@ -130,7 +143,7 @@ export function createInputDomain(db:DatabaseSync,h:Helpers){
         const facts=h.createInputFacts({principalId:meta.principalId,projectId:input.projectId,name:String(project.name),baseCommit:String(release.code_commit),contentHash:input.bodyHash,kind:input.body.kind,clientMessageId:input.body.clientDraftId},operationId,false);
         exec('UPDATE user_tasks SET title=? WHERE task_id=?',input.body.title,facts.taskId);
         exec('UPDATE projects SET revision=revision+1 WHERE project_id=?',input.projectId);
-        bind(facts.messageId,input.body.goal.attachmentIds);resource(operationId,input.projectId,facts.runId);
+        bindSpaceSource(input.sourceConversation,meta.principalId,facts.runId);bind(facts.messageId,input.body.goal.attachmentIds);resource(operationId,input.projectId,facts.runId);
         return {...facts,understandingOperationId:processing(meta.principalId,input.projectId,facts.runId,facts.messageId,'unsure'),projectRevision:Number(project.revision)+1};
       },()=>{authorize(meta.principalId,input.projectId,true);});
     },

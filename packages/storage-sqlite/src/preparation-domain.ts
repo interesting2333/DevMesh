@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {parseContract,preparationDelegation,preparationProfile,architectOutput,inspectPlan} from '@devmesh/contracts';
 import {canonical} from './json.js';
@@ -80,7 +81,7 @@ export function createPreparationDomain(db:DatabaseSync,h:PreparationHelpers){
   const handlers={
     ...understanding.handlers,
     listPreparationJobs(input:PreparationParsed<'listPreparationJobs'>){
-      const pending=all("SELECT x.operation_id,m.run_id,o.principal_id FROM input_processing x JOIN operations o ON o.operation_id=x.operation_id JOIN input_messages m ON m.message_id=x.message_id JOIN runs r ON r.run_id=m.run_id JOIN project_members p ON p.project_id=r.project_id AND p.principal_id=o.principal_id AND p.role<>'viewer' WHERE o.status='WAITING' AND r.phase IN ('PREPARING','UNDERSTANDING','PLANNING') AND r.control_gate='OPEN' AND r.terminal_outcome IS NULL AND NOT EXISTS(SELECT 1 FROM plan_confirmations c WHERE c.run_id=r.run_id AND c.plan_revision=r.current_plan_revision) AND NOT EXISTS(SELECT 1 FROM preparation_jobs j WHERE j.operation_id=o.operation_id) ORDER BY m.rowid LIMIT ?",input.limit);
+      const pending=all(`SELECT x.operation_id,m.run_id,o.principal_id FROM input_processing x JOIN operations o ON o.operation_id=x.operation_id JOIN input_messages m ON m.message_id=x.message_id JOIN runs r ON r.run_id=m.run_id JOIN project_members p ON p.project_id=r.project_id AND p.principal_id=o.principal_id AND p.role<>'viewer' WHERE o.status='WAITING' AND r.phase IN ('PREPARING','UNDERSTANDING','PLANNING') AND r.control_gate='OPEN' AND r.terminal_outcome IS NULL AND NOT EXISTS(SELECT 1 FROM ${planAdmissionTable(db)} c WHERE c.run_id=r.run_id AND c.plan_revision=r.current_plan_revision) AND NOT EXISTS(SELECT 1 FROM preparation_jobs j WHERE j.operation_id=o.operation_id) ORDER BY m.rowid LIMIT ?`,input.limit);
       for(const p of pending)understanding.handlers.ensurePreparationJob(parseContract(preparationRequests.ensurePreparationJob,{principalId:p.principal_id,runId:p.run_id,processingOperationId:p.operation_id}));
       return transaction(db,()=>{
         for(const a of all("SELECT * FROM preparation_attempts WHERE state='RESERVED' AND dispatch_sent_at IS NULL AND grant_expires_at<=?",now()))releaseUnsent(a);
@@ -234,7 +235,7 @@ export function createPreparationDomain(db:DatabaseSync,h:PreparationHelpers){
         const requirements=new Set((context.requirements?.requirements as {id:string}[]|undefined)?.map(r=>r.id));
         const {issues}=inspectPlan(draft,{requirementIds:requirements,hasArtifact:ref=>artifacts.has(canonical({artifactId:ref.artifactId,sha256:ref.sha256}))});
         if(issues.length)throw new StorageError('PLAN_INVALID',422,'Draft references are invalid',{issues:issues.slice(0,100)});
-        return h.publishPlanFacts(run,draft.requirementRevision,Number(run.current_plan_revision??0)+1,draft,input.planContentHash!,String(job.operation_id));
+        return h.publishPlanFacts(run,draft.requirementRevision,Number(get('SELECT coalesce(max(revision),0) n FROM plan_revisions WHERE run_id=?',run.run_id!)?.n??0)+1,draft,input.planContentHash!,String(job.operation_id));
       })();
       exec('UPDATE preparation_jobs SET result_artifact_id=? WHERE job_id=?',result.artifactId,a.job_id!);settle(a,t,'SUCCEEDED');
       exec('UPDATE operations SET result_json=? WHERE operation_id=?',canonical(result),job.operation_id!);return result;

@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-11-18T07:32:51.520Z",
+  "commit": "ef82d100bb9a3d4354a4939cc8e6b9013fe5264c",
+  "uncommittedWorkspace": true,
+  "scope": "恢复任务／协作／成果／预览／记录五页签及真实功能；同一Codex开发复核，正式P1-08及门槛保持。",
+  "environment": {
+    "node": "v24.22.3",
+    "platform": "win32",
+    "browser": "Edge 157.0.4341.60"
+  },
+  "browser": {
+    "tests": 21,
+    "pass": 21,
+    "fail": 0
+  },
+  "permission": {
+    "tests": 1,
+    "pass": 1,
+    "fail": 0
+  },
+  "uniqueTests": 22,
+  "checks": {
+    "inputApiBuild": "PASS",
+    "typecheck": "PASS",
+    "changedScopeLint": "PASS",
+    "openSpecStrict": "PASS"
+  },
+  "coverage": [
+    "无Run时五页签与明确空态",
+    "实际成员角色／分工／变更配置／执行事件",
+    "准确候选选择在成果和预览之间保留",
+    "实际专用预览页打开且原对话草稿保留",
+    "查看完整方案选中任务",
+    "四桌面宽度／页签键盘导航",
+    "迟到读取隔离／撤权清理／零命令POST",
+    "原有正文／附件／原消息及控制恢复"
+  ],
+  "limitations": [
+    "未修改数据库、运行时或模型授权，未新增真实模型调用和执行资源。",
+    "全仓Lint已有5项警告，详见desktop-refinement/report.json。"
+  ],
+  "sourceSha256": {
+    "packages/input-api/src/web/conversation-details.tsx": "8f070ec01568907361bf855d2d6dceb7535e55ff7efc5e97e763708c775315ef",
+    "packages/input-api/src/web/conversation-workbench.tsx": "110b1a0ae55cb52aaaf8ce53fdfade8e829a8cae33a7f9d73d8f25a43a481d6b",
+    "packages/input-api/src/workbench-styles.ts": "8e4cfea803091c080e1780b466d26aa259845c84ba3df37270af30f7eda2ce65",
+    "packages/input-api/src/web/workbench-delivery.tsx": "c68d9ee3225e55e23b7ad0bee7b9ffa778ef23be162aef27560bdf016d613fc4",
+    "tests/browser/conversation-details.test.mjs": "79de849caa82ee3ab24d82177ea84f6c73ddd24fe87a6a6d7be591788687a138",
+    "tests/fixtures/workbench-delivery.mjs": "724ad13018d7ac84b92a48ddc28e91fdde51dfe5eec97accf6b892c04afc2c25"
+  },
+  "live": {
+    "checkedAt": "2026-11-18T07:33:50.646Z",
+    "status": 200,
+    "browser": "157.0.4341.60",
+    "tabs": [
+      "任务",
+      "协作",
+      "成果",
+      "预览",
+      "记录"
+    ],
+    "errors": [],
+    "posts": [],
+    "overflow": false
+  }
+}

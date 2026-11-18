@@ -1,11 +1,17 @@
 ﻿import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, existsSync, statSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, existsSync, statSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 import { inputFixture } from './fixtures/input-data.mjs';
+
+test('full completion addresses and legacy stored values use one API base without rewriting credentials',async t=>{
+ const directory=mkdtempSync(join(tmpdir(),'devmesh-model-endpoint-')),paths=[],provider=createServer((req,res)=>{paths.push(req.url);assert.equal(req.headers.authorization,'Bearer fixture-secret');res.setHeader('content-type','application/json');res.end(JSON.stringify({data:[{id:'fixture-model'}]}));});provider.listen(0,'127.0.0.1');await once(provider,'listening');t.after(async()=>{provider.closeAllConnections();await new Promise(resolve=>provider.close(resolve));rmSync(directory,{recursive:true,force:true});});
+ const f=await inputFixture(t,{settingsRoot:directory}),base='http://127.0.0.1:'+provider.address().port+'/v1',full=base+'/chat/completions/';const saved=await f.call('/settings/model',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({providerId:'fixture',endpoint:full,model:'fixture-model',apiKey:'fixture-secret'})});assert.equal(saved.response.status,200);assert.equal(saved.body.endpoint,base);
+ const legacy={...JSON.parse(readFileSync(join(directory,'model.json'),'utf8')),endpoint:full};writeFileSync(join(directory,'model.json'),JSON.stringify(legacy));const secret=readFileSync(join(directory,'model-secret.json'),'utf8');assert.equal((await f.call('/settings/model')).body.endpoint,base);assert.equal((await f.call('/settings/model:test',{method:'POST'})).body.ok,true);const listed=await f.call('/settings/model:models',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({providerId:'fixture',endpoint:full})});assert.equal(listed.body.ok,true);assert.deepEqual(paths,['/v1/models','/v1/models']);assert.deepEqual(JSON.parse(readFileSync(join(directory,'model.json'),'utf8')),legacy);assert.equal(readFileSync(join(directory,'model-secret.json'),'utf8'),secret);
+});
 
 test('model settings API stores keys write-only, validates endpoints and tests the provider', { timeout: 120000 }, async t => {
   const directory = mkdtempSync(join(tmpdir(), 'devmesh-model-settings-'));

@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import {randomUUID} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {ids,artifactRef,planDraft,parseContract} from '@devmesh/contracts';
@@ -27,7 +28,7 @@ export function createVerifiedRepairDomain(db:DatabaseSync){
   if(i.changeImpact!=='implementation-only')fail('REPAIR_EXPLICIT_CHANGE_REVIEW_REQUIRED',422);
   if(run.control_gate!=='OPEN'||run.terminal_outcome!==null)fail('REPAIR_ADMISSION_CLOSED');
   const planRow=get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?',i.runId,run.current_plan_revision!),requirement=get('SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?',i.runId,run.current_requirement_revision!);
-  if(!planRow||!requirement||i.planRevision!==run.current_plan_revision||i.requirementRevision!==run.current_requirement_revision||i.reviewHash!==planRow.content_hash||!get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?',i.runId,i.planRevision,i.requirementRevision))fail('REPAIR_BASIS_CHANGED');
+  if(!planRow||!requirement||i.planRevision!==run.current_plan_revision||i.requirementRevision!==run.current_requirement_revision||i.reviewHash!==planRow.content_hash||!get(`SELECT 1 FROM ${planAdmissionTable(db)} WHERE run_id=? AND plan_revision=? AND requirement_revision=?`,i.runId,i.planRevision,i.requirementRevision))fail('REPAIR_BASIS_CHANGED');
   if(plans.pendingQuestions(i.runId)||plans.pendingInterpretation(i.runId,i.requirementRevision)||plans.pendingSource(i.runId,i.requirementRevision))fail('REPAIR_EXPLICIT_CHANGE_REVIEW_REQUIRED');
   if(!completedRunEffects(db,i.runId)||get('SELECT 1 FROM preparation_slots WHERE run_id=?',i.runId))fail('REPAIR_EFFECT_UNKNOWN');
   const draft=planDraft.parse(json(planRow.content_json)),source=all("SELECT a.work_id,a.work_revision,wv.operation_id,wv.basis_json,wv.quality_operation_id FROM attempts a JOIN work_verifications wv ON wv.attempt_id=a.attempt_id AND wv.state='APPLIED' JOIN verified_work_results v ON v.attempt_id=a.attempt_id AND v.evidence_artifact_id=wv.artifact_id WHERE a.attempt_id=? AND a.run_id=? AND a.role='tester' AND a.state='FAILED' AND v.outcome='completed-with-findings'",i.sourceAttemptId,i.runId)[0],sourceWork=source?draft.works.find(w=>w.workId===source.work_id):undefined;

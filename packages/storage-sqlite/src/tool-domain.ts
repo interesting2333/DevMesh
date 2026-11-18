@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import {randomUUID} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {parseContract} from '@devmesh/contracts';
@@ -60,7 +61,7 @@ export function createToolDomain(db:DatabaseSync,changed:(runId:string,operation
       if(get('SELECT 1 FROM verified_findings WHERE issue_id=?',a.issueId))fail('ISSUE_TRUSTED_COMMAND_REQUIRED');
       if(r.state==='VERIFIED')fail('ISSUE_ALREADY_VERIFIED');
       if(!get(`SELECT 1 FROM works w JOIN runs r ON r.run_id=w.run_id JOIN plan_works p ON p.run_id=w.run_id AND p.work_id=w.work_id AND p.plan_revision=r.current_plan_revision
-        JOIN plan_confirmations c ON c.run_id=r.run_id AND c.plan_revision=p.plan_revision AND c.requirement_revision=r.current_requirement_revision
+        JOIN ${planAdmissionTable(db)} c ON c.run_id=r.run_id AND c.plan_revision=p.plan_revision AND c.requirement_revision=r.current_requirement_revision
         JOIN work_revisions v ON v.run_id=p.run_id AND v.work_id=p.work_id AND v.revision=p.work_revision WHERE w.run_id=? AND w.work_id=? AND v.role='developer'`,h.runId,a.fixWorkId))fail('ISSUE_FIX_WORK_INVALID',422);
       exec("UPDATE issues SET revision=revision+1,state='FIX_LINKED',fix_work_id=?,updated_at=? WHERE issue_id=?",a.fixWorkId,new Date().toISOString(),a.issueId);
       return get('SELECT * FROM issues WHERE issue_id=?',a.issueId)!;

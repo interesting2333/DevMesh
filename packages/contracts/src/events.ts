@@ -2,10 +2,12 @@ import { z } from 'zod';
 import { ids, revision, epoch, timestamp, attemptState, a2aTaskState, operationStatus, runState, artifactRef, opaqueKey, protocolTaskId } from './primitives.js';
 
 export const eventPayloads = {
+  GoalUpdated:z.strictObject({changeId:ids.change,messageId:ids.message}),
   InputSaved: z.strictObject({ messageId: ids.message }),
   UnderstandingUpdated: z.strictObject({ understandingRef: artifactRef }),
   QuestionAnswered: z.strictObject({ questionId: ids.question, questionRevision: revision }),
   PlanPublished: z.strictObject({ planRevision: revision, planRef: artifactRef }),
+  PlanAuthorized: z.strictObject({planRevision:revision,authorizationId:opaqueKey}),
   PlanConfirmed: z.strictObject({ planRevision: revision, decisionId: ids.decision }),
   WorkAdmitted: z.strictObject({ workId: ids.work, attemptId: ids.attempt, activationId: ids.activation }),
   AttemptStateChanged: z.strictObject({ attemptId: ids.attempt, state: attemptState }),
@@ -44,8 +46,8 @@ export const domainEvent = z.discriminatedUnion('type', [
   eventOf('ReleasePublicationChanged'),
   eventOf('AcceptanceAbortRequested'),
   eventOf('AcceptanceAbortCompleted'),
-  eventOf('InputSaved'), eventOf('UnderstandingUpdated'), eventOf('QuestionAnswered'), eventOf('PlanPublished'),
-  eventOf('PlanConfirmed'), eventOf('WorkAdmitted'), eventOf('AttemptStateChanged'), eventOf('A2ATaskObserved'),
+  eventOf('GoalUpdated'), eventOf('InputSaved'), eventOf('UnderstandingUpdated'), eventOf('QuestionAnswered'), eventOf('PlanPublished'),
+  eventOf('PlanAuthorized'), eventOf('PlanConfirmed'), eventOf('WorkAdmitted'), eventOf('AttemptStateChanged'), eventOf('A2ATaskObserved'),
   eventOf('ToolOperationUpdated'), eventOf('ArtifactRegistered'), eventOf('ChangeApplied'), eventOf('DecisionSaved'),
   eventOf('ControlProgress'), eventOf('ConfigurationApplied'), eventOf('CandidateUpdated'), eventOf('ReleaseAccepted'),
   eventOf('PreviewStateChanged'), eventOf('ExportUpdated'),eventOf('IssueChanged'),eventOf('PipelineChanged'),eventOf('CandidateReviewRecorded'),eventOf('CandidateRejected'),eventOf('DatasetStateChanged'),eventOf('PreviewOperationChanged'),eventOf('AcceptancePreparationChanged'),eventOf('AcceptanceReadinessObserved'),eventOf('DatasetWriteGateClosed'),

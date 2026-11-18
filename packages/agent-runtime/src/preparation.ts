@@ -26,6 +26,7 @@ export interface PreparationOptions {
   callerId:string;workerId:string;tokenLimit:number;maxInputBytes:number;maxOutputTokens:number;
   providers:Readonly<Partial<Record<PreparationRole,ModelProvider>>>;
   bootstrap?:{repositoryRoot:string;paths:readonly string[]};
+  workspaceBootstrap?:(principalId:string,runId:string,commit:string)=>Promise<{repositoryRoot:string;paths:readonly string[]}|null>;
   available?:(provider:ModelProvider)=>Promise<boolean>;
   progress?:ModelProgressSink|undefined;
 }
@@ -90,9 +91,10 @@ export class PreparationRuntime {
     const contextKey={principalId:job.principalId,jobId:job.jobId};
     let context=await this.storage.request('getPreparationContext',contextKey);
     let remaining=this.options.maxInputBytes;
-    if(this.options.bootstrap&&job.state==='WAITING'){
-      for(const path of this.options.bootstrap.paths){
-        const bytes=await readPreparationGitSource(this.options.bootstrap.repositoryRoot,context.baseCommit,path,remaining,signal);
+    const workspaceBootstrap=job.state==='WAITING'?await this.options.workspaceBootstrap?.(job.principalId,job.runId,context.baseCommit):null,bootstrap=workspaceBootstrap??this.options.bootstrap;
+    if(bootstrap&&job.state==='WAITING'){
+      for(const path of bootstrap.paths){
+        const bytes=await readPreparationGitSource(bootstrap.repositoryRoot,context.baseCommit,path,remaining,signal);
         remaining-=bytes.byteLength;
         const saved=await this.content.putBytes(this.#meta(job),{kind:'content'},bytes,'text/plain; charset=utf-8');
         await this.storage.request('registerPreparationBootstrap',{...contextKey,path,contentHash:saved.expectedHash});
@@ -120,7 +122,8 @@ export class PreparationRuntime {
         +'(3) Add exactly one final integration developer work whose outputSpec contains {"slot":"implementation.commit","schemaId":"devmesh.development-result.v1"}, whose completionChecks contain {"kind":"commit-resolved","outputSlot":"implementation.commit"}, and which depends on all implementation developer works with requiredOutcome "success". '
         +'(4) Add exactly one tester work with empty writeScope, outputSpec [{"slot":"verification.report","schemaId":"devmesh.test-result.v1"}], completionChecks [{"kind":"required-tests-pass","checkId":"check_required"}], and dependencies [{"workId":"<integrationWorkId>","requiredOutcome":"success"}]. '
         +'(5) The tester work requirementIds MUST list every requirement id supplied in the requirements; do not omit any. '
-        +'(6) Do not add tester works without required-tests-pass, and do not add a commit-resolved check to non-developer roles.';
+        +'(6) On replanning, use new work IDs for changed work or strictly increase its workRevision; preserve previous saved implementation facts included in materials as explicit artifact inputs, never silently discard them. '
+        +'(7) Do not add tester works without required-tests-pass, and do not add a commit-resolved check to non-developer roles.';
     const system=prompt+' Output schema: '+JSON.stringify(z.toJSONSchema(schema,{io:'input'}));
     const user=canonical({manifest,materials,requirements:context.requirements,answers:context.answers});
     const request:ModelRequest={messages:[{role:'system',content:system},{role:'user',content:user}],tools:[],maxOutputTokens:Math.min(this.options.maxOutputTokens,provider.config.capabilities.maxOutputTokens),jsonOutput:provider.config.capabilities.structuredOutput==='json-object'};

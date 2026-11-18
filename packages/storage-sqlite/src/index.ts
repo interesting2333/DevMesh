@@ -174,3 +174,5 @@ export {previewOrigin as releaseOrigin} from './preview-session-protocol.js';
 
 export type {ReleaseExportJob,ReleaseExportSnapshot,ReleaseExportContext,ReleaseExportMaterial} from './release-export-protocol.js';
 export {redactExportRecord} from './export-redaction.js';
+
+export type {ConversationTurn} from './conversation-protocol.js';

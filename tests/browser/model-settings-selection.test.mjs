@@ -20,7 +20,7 @@ async function harness(t,respond){
   page.on('pageerror',error=>errors.push(error.message));
   t.after(async()=>{await browser.close();assert.deepEqual(errors,[]);});
   await page.goto(f.origin+'/api/v1/workbench/view');
-  const open=async()=>{await page.getByRole('button',{name:'更多',exact:true}).click();await page.getByRole('menuitem',{name:'设置',exact:true}).click();const dialog=page.getByRole('dialog',{name:'设置',exact:true});await expect(dialog.getByLabel('Provider',{exact:true})).toBeEnabled();return dialog;};
+  const open=async()=>{await page.getByRole('button',{name:'设置',exact:true}).click();const dialog=page.getByRole('dialog',{name:'设置',exact:true});await expect(dialog.getByLabel('Provider',{exact:true})).toBeEnabled();return dialog;};
   return {f,page,open,directory,requests,endpoint:`http://127.0.0.1:${provider.address().port}/v1`};
 }
 const model=dialog=>dialog.getByRole('combobox',{name:'模型',exact:true});

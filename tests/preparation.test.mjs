@@ -72,6 +72,10 @@ test('strict understanding and answers require distinct sources and unique quest
   assert.equal(answerQuestionsInput.safeParse({answers:[{...a,value:'🧪'.repeat(35000)}]}).success,false);
 });
 
+test('workspace bootstrap selection overrides global paths and registers committed material in actual preparation',timeout,async t=>{
+ let blockBootstrap=false;const f=await fixture(t),requested=[],runtime=new PreparationRuntime(f.content,f.registry,credential,{...f.options,bootstrap:{repositoryRoot:repo,paths:['does-not-exist.md']},workspaceBootstrap:async(principalId,runId,commit)=>{if(blockBootstrap)throw Error('External directory is unavailable after dispatch');requested.push({principalId,runId,commit});return {repositoryRoot:repo,paths:[sourcePath]};}}),job=(await f.storage.request('listPreparationJobs',{})).find(j=>j.runId===f.runId&&j.purpose==='UNDERSTAND');await f.registry.checkHealth(f.manifest,credential);await runtime.dispatch(job,f.signal);const context=await f.storage.request('getPreparationContext',{principalId:'user_1',jobId:job.jobId});assert.deepEqual(requested,[{principalId:'user_1',runId:f.runId,commit:baseCommit}]);assert(context.sources.some(s=>s.label==='git:'+sourcePath));assert.equal(context.sources.some(s=>s.label.includes('does-not-exist')),false);blockBootstrap=true;await runtime.dispatch({...job,state:'DISPATCHED'},f.signal);assert.equal(requested.length,1);
+});
+
 test('official A2A prepares sourced understanding and a draft with no automatic execution',timeout,async t=>{
   const f=await fixture(t),initial=await f.understand();
   assert.equal(initial.status,200);assert.equal(initial.body.pendingInputCount,1);assert.equal(initial.body.understanding,null);

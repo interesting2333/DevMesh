@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {ids,inputManifest} from '@devmesh/contracts';
 import {canonical} from './json.js';
@@ -20,7 +21,7 @@ export function createPlanResults(db:DatabaseSync){
  function snapshot(row:Row):CarriedResult|null{
   if(row.ended_at===null||row.blocked_reason!==null||row.admitted_work_epoch!==row.current_work_epoch||!(row.state==='SUCCEEDED'&&row.outcome==='success'||row.state==='FAILED'&&row.outcome==='completed-with-findings'&&row.role==='tester'))return null;
   const plan=get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?',row.run_id!,row.source_plan_revision!),definition=get('SELECT definition_hash FROM work_revisions WHERE run_id=? AND work_id=? AND revision=?',row.run_id!,row.work_id!,row.work_revision!),decision=get("SELECT decision_id FROM decisions WHERE run_id=? AND subject_kind='PLAN' AND subject_id=?",row.run_id!,String(row.source_plan_revision)),evidence=get("SELECT a.content_hash FROM artifacts a JOIN content_objects c ON c.content_hash=a.content_hash WHERE a.artifact_id=? AND a.run_id=? AND a.state='READY' AND c.state='READY'",row.evidence_artifact_id!,row.run_id!);
-  if(!plan||!definition||!decision||!evidence||!get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?',row.run_id!,row.source_plan_revision!,plan.requirement_revision!))return null;
+  if(!plan||!definition||!decision||!evidence||!get(`SELECT 1 FROM ${planAdmissionTable(db)} WHERE run_id=? AND plan_revision=? AND requirement_revision=?`,row.run_id!,row.source_plan_revision!,plan.requirement_revision!))return null;
   const requirement=get('SELECT content_json FROM requirement_revisions WHERE run_id=? AND revision=?',row.run_id!,plan.requirement_revision!),manifest=inputManifest.parse(JSON.parse(String(row.input_manifest_json)));
   if(!requirement||!manifest.decisionIds.includes(ids.decision.parse(decision.decision_id))||manifest.interfaces.length)return null;
   const outputs=JSON.parse(String(row.outputs_json)) as {slot:string;ref:{artifactId:string;sha256:string}}[];
@@ -34,7 +35,7 @@ export function createPlanResults(db:DatabaseSync){
   if(row.ended_at===null||row.blocked_reason!==null||row.admitted_work_epoch!==row.current_work_epoch)return null;
   if(row.source_plan_revision===planRevision)return {row,carry:null};
   const carry=get('SELECT * FROM plan_carried_results WHERE run_id=? AND plan_revision=? AND work_id=?',runId,planRevision,workId),run=get('SELECT run_epoch,current_requirement_revision FROM runs WHERE run_id=?',runId),fact=snapshot(row);
-  if(!carry||!run||!fact||carry.attempt_id!==row.attempt_id||carry.snapshot_json!==canonical(fact)||carry.snapshot_sha256!==digest(canonical(fact))||fact.requirementRevision!==run.current_requirement_revision||requireConfirmation&&!get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?',runId,planRevision,fact.requirementRevision))return null;
+  if(!carry||!run||!fact||carry.attempt_id!==row.attempt_id||carry.snapshot_json!==canonical(fact)||carry.snapshot_sha256!==digest(canonical(fact))||fact.requirementRevision!==run.current_requirement_revision||requireConfirmation&&!get(`SELECT 1 FROM ${planAdmissionTable(db)} WHERE run_id=? AND plan_revision=? AND requirement_revision=?`,runId,planRevision,fact.requirementRevision))return null;
   return {row,carry:fact};
  }
  return {latest,snapshot,resolve};

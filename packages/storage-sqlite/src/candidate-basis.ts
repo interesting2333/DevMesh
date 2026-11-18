@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {ids,inputManifest,parseContract,planDraft,productOutput} from '@devmesh/contracts';
 import type {Draft} from '@devmesh/contracts';
@@ -41,7 +42,7 @@ export function createCandidateBasis(db:DatabaseSync,plans:ReturnType<typeof cre
   const carriedDecisions=new Map<string,string>();
   const run=plans.authorized(input.principalId,input.runId,true);
   if(run.control_gate!=='OPEN'||run.terminal_outcome!==null||run.current_plan_revision===null||run.current_requirement_revision===null)fail('CANDIDATE_ADMISSION_CLOSED');
-  const planRow=get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?',input.runId,run.current_plan_revision!),confirmation=get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?',input.runId,run.current_plan_revision!,run.current_requirement_revision!);
+  const planRow=get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?',input.runId,run.current_plan_revision!),confirmation=get(`SELECT 1 FROM ${planAdmissionTable(db)} WHERE run_id=? AND plan_revision=? AND requirement_revision=?`,input.runId,run.current_plan_revision!,run.current_requirement_revision!);
   if(!planRow||!confirmation||planRow.requirement_revision!==run.current_requirement_revision)fail('CANDIDATE_PLAN_CHANGED');
   const draft=parseContract(planDraft,JSON.parse(String(planRow.content_json))),graph=plans.inspect(run,draft);
   if(graph.issues.length||plans.pendingQuestions(input.runId)||plans.pendingInterpretation(input.runId,draft.requirementRevision)||plans.pendingSource(input.runId,draft.requirementRevision))fail('CANDIDATE_PLAN_UNRESOLVED');

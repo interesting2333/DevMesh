@@ -1,5 +1,7 @@
+import {workbenchSpaceCreate,workbenchSpaceUpdate,workbenchSpaceDelete,workbenchSpaceView,workbenchSpaceList,workbenchSpaceMove,workbenchDirectoryPage,workbenchDirectoryBinding} from './workbench-spaces.js';
 import {beginAcceptanceInput,confirmAcceptanceReplacementInput,closeUnsentAcceptanceInput,abortAcceptanceInput,acceptanceBasisView,acceptancePreparationView,acceptancePreparationList,acceptanceReplacementReceipt,acceptanceAbortReceipt,acceptanceCommitReceipt} from './release-acceptance.js';
 import { z } from 'zod';
+import {conversationCreate,conversationInput,conversationControl,conversationView,conversationSummary,conversationCapabilities,conversationRename,conversationConfirm,conversationDelete,conversationDeletionState,conversationWorkContext} from './conversation.js';
 import {candidateReviewEntry,candidateHumanResult,candidateRejectionResult,candidateReviewHistory,candidateRejectionHistory,recordCandidateReviewInput,recordCandidateRejectionInput} from './candidate-review.js';
 import {createReleaseExportInput,retryReleaseExportInput,releaseExportView,releaseExportListView} from './release-export.js';
 import { ids, revision, runState, attemptState, invocationState, jobState, operationStatus, a2aTaskState, inputText, projectName, taskTitle,opaqueKey,sha256 } from './primitives.js';
@@ -11,7 +13,7 @@ import { executionPermit, executionOwner } from './permits.js';
 import { roleOutput, productOutput, architectOutput, developerOutput, testerOutput, workRevision, planDraft, workDelegation, invocationDelegation, inputManifest } from './outputs.js';
 import { errorEnvelope } from './errors.js';
 import { strongETag, contentBasis } from './versions.js';
-import { createTaskInput,uploadMetadata,attachmentView,inputOperation,inputOperationLookup,workspaceView,workbenchSourceView } from './input.js';
+import { createTaskInput,renameProjectInput,uploadMetadata,attachmentView,inputOperation,inputOperationLookup,workspaceView,workbenchSourceView } from './input.js';
 import { preparationDelegation,preparationInput,retryUnderstandingInput,understandingOutput,understandingView } from './preparation.js';
 import { planReviewView } from './plans.js';
 import {workbenchDeliveryView} from './workbench-delivery.js';
@@ -19,6 +21,10 @@ import {workbenchEventSubscription,workbenchEventFrame,modelProgressFrame} from 
 import {runControlStatus} from './control.js';
 
 export const schemas = {
+  ConversationDelete:conversationDelete,ConversationDeletionState:conversationDeletionState,
+  ConversationRename:conversationRename,ConversationConfirm:conversationConfirm,ConversationWorkContext:conversationWorkContext,
+  WorkbenchSpaceCreate:workbenchSpaceCreate,WorkbenchSpaceUpdate:workbenchSpaceUpdate,WorkbenchSpaceDelete:workbenchSpaceDelete,WorkbenchSpace:workbenchSpaceView,WorkbenchSpaceList:workbenchSpaceList,WorkbenchSpaceMove:workbenchSpaceMove,WorkbenchDirectoryPage:workbenchDirectoryPage,WorkbenchDirectoryBinding:workbenchDirectoryBinding,
+  ConversationCreate:conversationCreate,ConversationInput:conversationInput,ConversationControl:conversationControl,Conversation:conversationView,ConversationCapabilities:conversationCapabilities,ConversationList:z.strictObject({conversations:z.array(conversationSummary).max(100),nextCursor:z.string().nullable()}),
   BeginAcceptance:beginAcceptanceInput,ConfirmAcceptanceReplacement:confirmAcceptanceReplacementInput,CloseUnsentAcceptance:closeUnsentAcceptanceInput,AbortAcceptance:abortAcceptanceInput,AcceptanceBasis:acceptanceBasisView,AcceptancePreparation:acceptancePreparationView,AcceptancePreparationList:acceptancePreparationList,AcceptanceReplacementReceipt:acceptanceReplacementReceipt,AcceptanceAbortReceipt:acceptanceAbortReceipt,AcceptanceCommitReceipt:acceptanceCommitReceipt,
   CandidateReviewEntry:candidateReviewEntry,CandidateHumanResult:candidateHumanResult,CandidateRejectionResult:candidateRejectionResult,CandidateReviewHistory:candidateReviewHistory,CandidateRejectionHistory:candidateRejectionHistory,RecordCandidateReview:recordCandidateReviewInput,RecordCandidateRejection:recordCandidateRejectionInput,
   CreateReleaseExport:createReleaseExportInput,RetryReleaseExport:retryReleaseExportInput,ReleaseExport:releaseExportView,ReleaseExportList:releaseExportListView,
@@ -31,7 +37,7 @@ export const schemas = {
   JobState: jobState, OperationStatus: operationStatus, A2ATaskState: a2aTaskState,
   OperationReceipt: operationReceipt, ErrorEnvelope: errorEnvelope, StrongETag: strongETag, ContentBasis: contentBasis,
   InputText: inputText, ProjectName: projectName, TaskTitle: taskTitle,
-  CreateTask:createTaskInput,UploadMetadata:uploadMetadata,Attachment:attachmentView,InputOperation:inputOperation,InputOperationLookup:inputOperationLookup,Workspace:workspaceView,
+  CreateTask:createTaskInput,RenameProject:renameProjectInput,UploadMetadata:uploadMetadata,Attachment:attachmentView,InputOperation:inputOperation,InputOperationLookup:inputOperationLookup,Workspace:workspaceView,
   Understanding:understandingView,UnderstandingOutput:understandingOutput,RetryUnderstanding:retryUnderstandingInput,
   PreparationDelegation:preparationDelegation,PreparationInput:preparationInput,
   PlanReview:planReviewView,
@@ -102,13 +108,35 @@ export function createOpenApiDocument() {
   };
   const parameter=(name:string,schema:z.ZodType,location='path',required=true)=>({name,in:location,required,schema:jsonSchema(schema)});
   const key=parameter('Idempotency-Key',idempotencyKey,'header');
+  add('/api/v1/conversation-capabilities','get','ConversationCapabilities','ConversationCapabilities',[]);
+  add('/api/v1/workbench-spaces','get','ListWorkbenchSpaces','WorkbenchSpaceList',[]);
+  add('/api/v1/workbench-spaces','post','CreateWorkbenchSpace','InputOperation',[key],'WorkbenchSpaceCreate','202');
+  add('/api/v1/workbench-spaces/{spaceId}','get','ReadWorkbenchSpace','WorkbenchSpace',[parameter('spaceId',opaqueKey)]);
+  add('/api/v1/workbench-spaces/{spaceId}/updates','post','UpdateWorkbenchSpace','InputOperation',[parameter('spaceId',opaqueKey),key],'WorkbenchSpaceUpdate','202');
+  add('/api/v1/workbench-spaces/{spaceId}/deletions','post','DeleteWorkbenchSpace','InputOperation',[parameter('spaceId',opaqueKey),key],'WorkbenchSpaceDelete','202');
+  add('/api/v1/conversations/{conversationId}/space-moves','post','MoveConversationSpace','InputOperation',[parameter('conversationId',opaqueKey),key],'WorkbenchSpaceMove','202');
+  add('/api/v1/workbench-space-operations/{key}','get','LookupWorkbenchSpaceOperation','InputOperationLookup',[parameter('key',idempotencyKey),parameter('scope',opaqueKey,'query')]);
+  add('/api/v1/workbench-directories','get','ReadWorkbenchDirectories','WorkbenchDirectoryPage',[parameter('path',z.string().max(2048),'query',false)]);
+  add('/api/v1/workbench-directories/inspection','get','InspectWorkbenchDirectory','WorkbenchDirectoryBinding',[parameter('path',z.string().min(1).max(2048),'query')]);
+  add('/api/v1/conversations','get','ListConversations','ConversationList',[parameter('spaceId',opaqueKey,'query',false),parameter('query',z.string().max(80),'query',false),parameter('before',z.string().max(200),'query',false),parameter('limit',z.number().int().min(1).max(100),'query',false)]);
+  add('/api/v1/conversations','post','CreateConversation','InputOperation',[key],'ConversationCreate','201');
+  add('/api/v1/conversations/{conversationId}','get','ReadConversation','Conversation',[parameter('conversationId',opaqueKey),parameter('afterSeq',z.number().int().nonnegative(),'query',false),parameter('limit',z.number().int().min(1).max(100),'query',false)]);
+  add('/api/v1/conversations/{conversationId}/messages','post','AppendConversationMessage','InputOperation',[parameter('conversationId',opaqueKey),key],'ConversationInput','202');
+  add('/api/v1/conversations/{conversationId}/control','post','ControlConversation','InputOperation',[parameter('conversationId',opaqueKey),key],'ConversationControl','202');
+  add('/api/v1/conversations/{conversationId}/deletion-state','get','ReadConversationDeletionState','ConversationDeletionState',[parameter('conversationId',opaqueKey)]);
+  add('/api/v1/conversations/{conversationId}/deletions','post','DeleteConversation','InputOperation',[parameter('conversationId',opaqueKey),key],'ConversationDelete','202');
+  add('/api/v1/conversations/{conversationId}/rename','post','RenameConversation','InputOperation',[parameter('conversationId',opaqueKey),key],'ConversationRename','202');
+  add('/api/v1/conversations/{conversationId}/plan-confirmations','post','ConfirmConversationPlan','InputOperation',[parameter('conversationId',opaqueKey),key],'ConversationConfirm','202');
+  add('/api/v1/conversations/{conversationId}/work-context','get','ReadConversationWorkContext','ConversationWorkContext',[parameter('conversationId',opaqueKey)]);
+  add('/api/v1/conversation-operations/{key}','get','LookupConversationOperation','InputOperation',[parameter('key',idempotencyKey),parameter('scope',opaqueKey,'query')]);
   const page=[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:200,default:50}}];
   for(const [suffix,operationId,mime] of [['view','ReadWorkbenchPage','text/html'],['client.js','ReadWorkbenchClient','application/javascript'],['return-client.js','ReadWorkbenchReturnClient','application/javascript']] as const){
-    const path='/api/v1/workbench/'+suffix;add(path,'get',operationId,undefined,suffix==='view'?[parameter('projectId',ids.project,'query',false),parameter('runId',ids.run,'query',false)]:[]);
+    const path='/api/v1/workbench/'+suffix;add(path,'get',operationId,undefined,suffix==='view'?[parameter('spaceId',opaqueKey,'query',false),parameter('projectId',ids.project,'query',false),parameter('runId',ids.run,'query',false),parameter('conversationId',opaqueKey,'query',false),parameter('legacy',z.literal('1'),'query',false)]:[]);
     (paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:'受保护工作台；runId须同时指定projectId，选中上下文按当前成员检查；GET无写入副作用',content:{[mime]:{schema:{type:'string'}}}};
   }
   add('/api/v1/projects','get','ListProjects',undefined,[{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:100,default:20}},{name:'cursor',in:'query',schema:{type:'string',maxLength:1024}}]);
   add('/api/v1/projects/{projectId}/tasks','post','CreateTask','OperationReceipt',[parameter('projectId',ids.project),key,parameter('If-Match',strongETag,'header')],'CreateTask');
+  add('/api/v1/projects/{projectId}/name','put','RenameProject','InputOperation',[parameter('projectId',ids.project),key],'RenameProject');
   add('/api/v1/projects/{projectId}/workspace','get','ReadWorkspace','Workspace',[parameter('projectId',ids.project),parameter('runId',ids.run,'query',false),{name:'afterMessageId',in:'query',schema:{type:'string',maxLength:256}},...page]);
   add('/api/v1/projects/{projectId}/runs/{runId}/delivery','get','ReadWorkbenchDelivery','WorkbenchDelivery',[parameter('projectId',ids.project),parameter('runId',ids.run),{name:'afterRevision',in:'query',schema:{type:'integer',minimum:0,maximum:Number.MAX_SAFE_INTEGER,default:0}},parameter('selectedCandidateId',ids.candidate,'query',false),{name:'limit',in:'query',schema:{type:'integer',minimum:1,maximum:20,default:20}}]);
   add('/api/v1/runs/{runId}/sources','get','ReadWorkbenchSource','WorkbenchSource',[parameter('runId',ids.run),{name:'ref',in:'query',required:true,description:'严格sourceRef的JSON；消息属于准确Run，材料为已保存依据中的同ID/hash引用，需求按准确版本。最多2 MiB纯文本，无下载或写入副作用。',schema:{type:'string',minLength:1,maxLength:4096}}]);

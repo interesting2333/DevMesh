@@ -67,3 +67,38 @@ Trusted acceptance preparation consumption is opt in through the platform host's
 逐项审查链接到同级 `preview-management/view`；受保护 `client.js` 为第四个独立 React IIFE。页面分别确认数据准备、启动和停止，展示固定数据来源、原数据／服务详情及各10项独立历史；GET不派发、签票据或接受。REPLACE接受方案在预览时仍使用来源隔离快照，数据替换确认留在接受入口。启动有效期在页面选择2～1440分钟，服务端首次60秒～24小时边界保持。
 
 会话存储键 `devmesh.preview.pending:<runId>` 在POST前保留严格原UUID／候选／完整正文及创建Run If-Match或停止原preview版本／impact hash。重进不重发，仅显式核实原提交；损坏／不可用存储、未知结果或未刷新关闭新动作，条件拒绝须刷新成功后明确放弃。刷新／切换／错误清空确认，发现成员撤销后移除受保护内容。原预览访问使用既有受保护view，不在管理页创建访问票据。
+
+
+项目显示名称支持 `PUT /projects/:projectId/name`，正文为 `{name, previousName}`，使用 UUID Idempotency-Key。owner/operator可写，事务比较旧名称且重放重新授权，返回InputOperation；名称冲突409／PROJECT_NAME_CHANGED。仅修改名称和更新时间，不更改任务／Run依据版本。工作台创建前使用默认名称，创建后在项目标题旁重命名。
+
+## 持续对话工作台
+
+配置ConversationAccess后新首页进入持续对话，legacy=1及projectId/runId保持旧工作台。会话创建／列表、按seq读取、messages、control及原键lookup位于conversations.ts；模型／准备／执行能力分别反馈。inputApi.conversationAdmission=false关闭新输入，准确会话读取、原请求核实和控制仍保留。
+
+新本机库devmesh.conversations保存草稿CAS、原文件／上传身份、消息与控制原命令，不删除旧库。消息只读轮询恢复，正文采用安全React文本格式；候选和版本入口来自准确Run的delivery事实。模型API根或完整chat/completions均兼容，读取旧配置不改写原密钥。
+
+## 2026-11-18 桌面对话工作台优化增量
+
+新增会话POST rename（name／previousName CAS）和plan-confirmations（inputRevision及所见basis，另含可选carryForwardHash），使用会话scope、UUID Idempotency-Key，返回202 InputOperation。GET work-context返回准确Run的薄上下文，前后重读核对会话输入／Run／项目版本和当前权限；无绑定返回null，版本不稳409 BASIS_SUPERSEDED。
+
+新确认受conversationAdmission约束；改名及原请求核实仍可用。确认／改名与旧control共用原生controls日记但按kind分离，刷新不POST，显式恢复先查原键。确认复用严格确认检查并与会话消息／调度记录单事务。任务标题从已有goal提炼，人工名称优先，迁移56保存来源。
+
+桌面conversation-shell独立限定样式，旧页面兼容保持。新回复定位、稳定键盘提示、紧凑输入、按需上下文及能力状态均依据实际事实；本轮不实施移动端专项。
+
+### 模式选择器补充（2026-11-18）
+
+模式入口由ConversationMode渲染，使用ARIA combobox／listbox、带解释的深色浮层，支持键盘与外部关闭。选择沿用edit({mode})事务草稿，下一次消息发送前不POST；不改变现有执行授权、默认模式或暂停边界。真实执行能力缺失时说明环境未连接。
+
+### 执行详情页签恢复（2026-11-18）
+
+ConversationDetails恢复五个执行信息页签，任务使用已有薄上下文，其余按需读取准确Run的workspace、协作、交付和事件；取消旧上下文的展示并忽略迟到请求结果。成果／预览复用WorkbenchDelivery及候选选择／分页，专用页面在新标签打开并保留草稿守卫。记录显示已保存对话和最近50条执行事件；所有切换仅GET。
+
+## 任务删除补充（2026-11-18）
+
+GET /conversations/:id/deletion-state提供当前删除资格；POST /conversations/:id/deletions以{revision}和UUID保存删除，202 InputOperation。owner及当前成员写权限、非活动／无未知主轮次、Run暂停或结束和效果收尾必须同时满足。删除是对话移除，关联项目／成果／记录保留；不依赖新输入准入开启。
+
+删除后普通会话读写404，原操作lookup在当前权限下仍能查到旧回执；受保护原书签渲染恢复入口而不读出已删内容。controls的DELETE日记独立恢复，不自动POST，不与控制、改名及方案确认混淆。
+
+## 工作空间管理补充（2026-11-18）
+
+空间管理 API：GET／POST /workbench-spaces，GET /workbench-spaces/:spaceId，POST /:spaceId/updates、/:spaceId/deletions（body带revision），POST /conversations/:conversationId/space-moves（revision、targetSpaceId）。变更返回202 InputOperation；UUID Idempotency-Key 与原正文绑定，GET /workbench-space-operations/:key?scope=...核实原结果。对话列表支持 spaceId／query，创建可选spaceId，省略保留默认空间兼容。目录 GET /workbench-directories?path=... 及 /inspection?path=... 仅在宿主配置受信任根内读取；inputApi.workspaceRoots 可配置最多20个绝对目录，默认 inputApi.repositoryRoot。目录必须是已有提交的受控 Git 根；不自动 git init。目录编辑只作用新任务，空间迁移不改变任务原代码基础。独立空间命令日记不与既有控制／删除混合；原设置、附件、项目审计入口保留。

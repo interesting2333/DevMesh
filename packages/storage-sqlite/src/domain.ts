@@ -1,3 +1,10 @@
+import {createWorkbenchSpaceDomain} from './workbench-spaces-domain.js';
+import {workbenchSpaceRequests} from './workbench-spaces-protocol.js';
+import type {WorkbenchSpaceMethod} from './workbench-spaces-protocol.js';
+import {planAdmissionTable} from './plan-admissions.js';
+import {createConversationDomain} from './conversation-domain.js';
+import {conversationRequests} from './conversation-protocol.js';
+import type {ConversationMethod} from './conversation-protocol.js';
 import {createReleaseExportDomain} from './release-export-domain.js';
 import {releaseExportRequests} from './release-export-protocol.js';
 import type {ReleaseExportMethod} from './release-export-protocol.js';
@@ -284,6 +291,8 @@ export function createDomain(db: DatabaseSync) {
     return {projectId,taskId,runId,artifactId,messageId,revision:1};
   }
   const inputs=createInputDomain(db,{operation,createInputFacts,event,outbox,runView});
+  const spaces=createWorkbenchSpaceDomain(db,operation,row=>conversations.deletionState(row));
+  const conversations=createConversationDomain(db,operation,event,outbox,(input,id)=>confirmFacts(input,true,id),spaces);
   function publishPlanFacts(current:Row,requirementRevision:number,planRevision:number,plan:Parsed<'publishPlan'>['plan'],planHash:string,operationId:string){
     const runId=String(current.run_id),time=now(),planContent=readyContent(planHash),artifactId=uid('artifact');
     insert('plan_revisions',{run_id:runId,revision:planRevision,requirement_revision:requirementRevision,content_hash:planHash,content_json:canonical(plan),created_at:time});
@@ -304,10 +313,8 @@ export function createDomain(db: DatabaseSync) {
   const dispatch=createDispatchDomain(db,(runId,operationId,workId,attemptId,state)=>{
     bump(runId);event(runId,operationId,'AttemptStateChanged',{attemptId,state},{workId,attemptId});
   });
-  function confirm(input:Parsed<'confirmPlan'>,strict:boolean){
-    const {meta,ifMatch:_ifMatch,...payload}=input;
-    if(meta.scopeId!==input.runId)throw new StorageError('OPERATION_SCOPE_INVALID',422,'Invalid Run scope');
-    return operation(meta,'ConfirmPlan',payload,operationId=>{
+  function confirmFacts(input:Parsed<'confirmPlan'>,strict:boolean,operationId:string){
+    const {meta}=input;
       const current=writable(input);
       if(!['OPEN','PAUSED'].includes(String(current.control_gate)))throw new StorageError('ADMISSION_CLOSED',409,'The Run is stopping');
       const plan=required(get('SELECT * FROM plan_revisions WHERE run_id=? AND revision=?',input.runId,input.planRevision));
@@ -332,7 +339,11 @@ export function createDomain(db: DatabaseSync) {
       event(input.runId,operationId,'PlanConfirmed',{planRevision:input.planRevision,decisionId});
       if(current.control_gate==='OPEN')outbox(operationId,'scheduler',{schemaVersion:1,runId:input.runId,planRevision:input.planRevision});
       return {projectId:current.project_id,runId:input.runId,planRevision:input.planRevision,revision:Number(run(input.runId).resource_revision)};
-    },()=>{plans.authorized(meta.principalId,input.runId,true);});
+  }
+  function confirm(input:Parsed<'confirmPlan'>,strict:boolean){
+    const {meta,ifMatch:_ifMatch,...payload}=input;
+    if(meta.scopeId!==input.runId)throw new StorageError('OPERATION_SCOPE_INVALID',422,'Invalid Run scope');
+    return operation(meta,'ConfirmPlan',payload,id=>confirmFacts(input,strict,id),()=>{plans.authorized(meta.principalId,input.runId,true);});
   }
   function knownEffects(attemptId: string) {
     return knownAttemptEffects(db,attemptId);
@@ -345,7 +356,7 @@ export function createDomain(db: DatabaseSync) {
     const {meta}=input;
     const current = writable(input);
     if (current.control_gate !== 'OPEN' || current.run_epoch !== input.runEpoch) throw new StorageError('ADMISSION_CLOSED', 409, 'Run gate or epoch changed');
-    if (current.current_plan_revision !== input.planRevision || !get('SELECT run_id FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?', input.runId, input.planRevision,current.current_requirement_revision??null)) throw new StorageError('PLAN_NOT_CONFIRMED', 409, 'Current plan and requirement basis must be explicitly confirmed');
+    if (current.current_plan_revision !== input.planRevision || !get(`SELECT run_id FROM ${planAdmissionTable(db)} WHERE run_id=? AND plan_revision=? AND requirement_revision=?`, input.runId, input.planRevision,current.current_requirement_revision??null)) throw new StorageError('PLAN_NOT_CONFIRMED', 409, 'Current plan and requirement basis must be explicitly confirmed');
     const attemptIds: string[] = [];
     for (const requested of input.works) {
       const work = required(get('SELECT w.work_epoch,w.blocked_reason,r.role,r.definition_json FROM plan_works p JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN work_revisions r ON r.run_id=p.run_id AND r.work_id=p.work_id AND r.revision=p.work_revision WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND p.work_revision=?', input.runId, input.planRevision, requested.workId, requested.workRevision));
@@ -437,7 +448,7 @@ export function createDomain(db: DatabaseSync) {
       return operation(meta,'AdmitScheduledWork',payload,operationId=>{
         const current=writable(input);
         if(current.run_epoch!==input.runEpoch||current.control_gate!=='OPEN'||current.current_plan_revision!==input.planRevision||
-          !get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=? AND requirement_revision=?',input.runId,input.planRevision,current.current_requirement_revision??null))
+          !get(`SELECT 1 FROM ${planAdmissionTable(db)} WHERE run_id=? AND plan_revision=? AND requirement_revision=?`,input.runId,input.planRevision,current.current_requirement_revision??null))
           throw new StorageError('ADMISSION_CLOSED',409,'Run or confirmed plan changed before scheduling');
         if(plans.pendingQuestions(input.runId)||plans.pendingInterpretation(input.runId,Number(current.current_requirement_revision))||
           plans.pendingSource(input.runId,Number(current.current_requirement_revision)))
@@ -529,7 +540,7 @@ export function createDomain(db: DatabaseSync) {
         controlProgress(input.runId, operationId);
         outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: 'pause' });
         return { ...runView(updated), revision: Number(updated.resource_revision), targets: controlTargets(input.runId) };
-      });
+      },()=>{inputs.execute('checkInputAccess',{principalId:meta.principalId,runId:input.runId,write:true});});
     },
     cancelRun(input: Parsed<'cancelRun'>) {
       const { meta, ...payload } = input;
@@ -545,7 +556,7 @@ export function createDomain(db: DatabaseSync) {
         controlProgress(input.runId, operationId);
         outbox(operationId, 'control-stop', { schemaVersion: 1, runId: input.runId, action: 'cancel' });
         return { ...runView(updated), revision: Number(updated.resource_revision), targets: controlTargets(input.runId) };
-      });
+      },()=>{inputs.execute('checkInputAccess',{principalId:meta.principalId,runId:input.runId,write:true});});
     },
     resumeRun(input: Parsed<'resumeRun'>) {
       const { meta, ...payload } = input;
@@ -562,7 +573,7 @@ export function createDomain(db: DatabaseSync) {
         const updated = run(input.runId);
         controlProgress(input.runId, operationId);
         return { ...runView(updated), revision: Number(updated.resource_revision) };
-      });
+      },()=>{inputs.execute('checkInputAccess',{principalId:meta.principalId,runId:input.runId,write:true});});
     },
     recordControlTarget(input: Parsed<'recordControlTarget'>) {
       const { meta, ...payload } = input;
@@ -1004,6 +1015,8 @@ export function createDomain(db: DatabaseSync) {
     },
   };
   return { execute(method: Method, input: unknown): unknown {
+    if(Object.hasOwn(workbenchSpaceRequests,method))return spaces.execute(method as WorkbenchSpaceMethod,input);
+    if(Object.hasOwn(conversationRequests,method))return conversations.execute(method as ConversationMethod,input);
     if(Object.hasOwn(acceptanceAbortRecoveryRequests,method))return acceptanceAbortRecovery.execute(method as AcceptanceAbortRecoveryMethod,input);
     if(Object.hasOwn(releasePublicationRequests,method))return releasePublications.execute(method as ReleasePublicationMethod,input);
     if(Object.hasOwn(acceptanceAbortRequests,method))return acceptanceAborts.execute(method as AcceptanceAbortMethod,input);

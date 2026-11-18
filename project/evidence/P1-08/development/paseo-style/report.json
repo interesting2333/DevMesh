@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-18",
+  "scope": "User-approved Paseo-inspired dark UI, P1-08 development increment 5.5",
+  "implementer": "Codex",
+  "reviewer": "Same Codex agent; development review only",
+  "node": "v24.22.1",
+  "browser": "Edge 157.0.4341.60",
+  "checks": {
+    "inputApiBuild": 0,
+    "typecheck": 0,
+    "scopedLint": {
+      "exitCode": 0,
+      "files": 7,
+      "rules": 96
+    },
+    "browser": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0
+    },
+    "intermediateScreenshotRerun": {
+      "passed": 2,
+      "failed": 0,
+      "additionalUniqueTests": 0
+    },
+    "finalBrowserSource": "Final full 25-test suite includes empty-project guidance next to list heading. Intermediate two-test rerun is not added to unique test count."
+  },
+  "visualReview": "Viewed desktop and 390px actual React screenshots. Found inherited reverse actions and opaque actions background; corrected direction/background and strengthened tests with real chooser click and opposing action bounds. Final screenshot fixture seeds three real test API projects; no example project is added to production.",
+  "limits": "Local trusted-identity fixture, real browser/IndexedDB/HTTP/SQLite. No external model call, OIDC, Linux, full check or complete T08/product/gate acceptance in this increment.",
+  "inputs": [
+    {
+      "file": "packages/input-api/src/workbench-styles.ts",
+      "sha256": "c2f8fe29a5b3e5f7df9dad56fac43e1db27709c4fbf85c587a55dc951a7a9010"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "472f9467e7c174ab8e91f8775104b36dd8e6a1202098c3cbd9048d91fbb09c48"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-icons.tsx",
+      "sha256": "1b529578d90a1e95bef7502b733b00983909faacd9f821d4c5d62c4528f03335"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-attachments.tsx",
+      "sha256": "0b5b3ea5a99b3511876b5ca7c8dc9e3e362a971e78dadea556e269b435fd4ddd"
+    },
+    {
+      "file": "tests/browser/workbench-paseo.test.mjs",
+      "sha256": "3d7b93f24397950a7f8c9f06e81dc97ace147bc5cefe75c06f7da03c35c052b9"
+    },
+    {
+      "file": "tests/browser/workbench-page.test.mjs",
+      "sha256": "faac877a2f14c1cc1c6745fdb2d43d9ed0ce0ef0945ea4fd78eaa891f4ec76fd"
+    },
+    {
+      "file": "tests/browser/workbench-attachment-ui.test.mjs",
+      "sha256": "b921573e00418a71ea6f84d595a3972eb34acf9651eb047db03337c8ece7244a"
+    },
+    {
+      "file": "packages/input-api/dist/index.mjs",
+      "sha256": "af9ee6da135d6978c55275fe7e216a1160675def547212c2a6f134e09d5d9361"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench/workbench-client.js",
+      "sha256": "0bcdf3585f5d89505bdb0280f1021a8126a9583c30be8a66d3ac99ab49c5a3b3"
+    }
+  ]
+}

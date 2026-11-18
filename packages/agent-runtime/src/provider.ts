@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { opaqueKey,parseContract } from '@devmesh/contracts';
+import { opaqueKey,parseContract,modelApiBase } from '@devmesh/contracts';
 import type { CredentialResolver } from '@devmesh/a2a-adapter';
 import {readDeepSeekStream} from './provider-stream.js';
 
@@ -33,7 +33,7 @@ const toolCallSchema=z.object({id:z.string().min(1).max(256),type:z.literal('fun
 const responseSchema=z.object({id:z.string().min(1).max(512),model:z.string().min(1),choices:z.array(z.object({index:z.number().int(),finish_reason:z.enum(['stop','tool_calls','length','content_filter','insufficient_system_resource']),message:z.object({role:z.literal('assistant'),content:z.string().nullable().optional(),tool_calls:z.array(toolCallSchema).max(128).nullable().optional()})})).length(1),usage:z.object({prompt_tokens:z.number().int().nonnegative(),completion_tokens:z.number().int().nonnegative()}).optional()});
 export class DeepSeekProvider implements ModelProvider {
  readonly config:z.output<typeof providerConfigSchema>;
- constructor(config:ProviderConfig,readonly credentials:CredentialResolver){const parsed=parseContract(providerConfigSchema,config);Object.freeze(parsed.capabilities);this.config=Object.freeze(parsed);}
+ constructor(config:ProviderConfig,readonly credentials:CredentialResolver){const parsed=parseContract(providerConfigSchema,config);parsed.endpoint=modelApiBase(parsed.endpoint);Object.freeze(parsed.capabilities);this.config=Object.freeze(parsed);}
  async complete(request:ModelRequest,signal?:AbortSignal,onDelta?:(text:string)=>void):Promise<ModelResponse>{
   checkModelRequest(this.config,request);
   let key:string|undefined;try{key=await this.credentials(this.config.credentialRef);}catch{throw new ModelError('MODEL_AUTH_UNAVAILABLE',false,'not-sent');}if(!key)throw new ModelError('MODEL_NOT_CONFIGURED',false,'not-sent');

@@ -1,3 +1,4 @@
+import {testOpenSsl} from './openssl.mjs';
 // Real HTTPS, HTTP, template SQLite and Runner/control Workers. Container,
 // candidate, image and upstream quality facts remain explicit fixture inputs.
 import {createServer} from 'node:http';
@@ -21,7 +22,7 @@ let certificate;
 async function tls(root) {
   if (certificate) return certificate;
   const key = join(root, 'preview-tls.key'), cert = join(root, 'preview-tls.crt');
-  const executable = process.platform === 'win32' ? 'D:\\Git\\usr\\bin\\openssl.exe' : 'openssl';
+  const executable = testOpenSsl();
   const result = spawnSync(executable, ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '1', '-subj', '/CN=*.apps.devmesh-app.test', '-addext', 'subjectAltName=DNS:*.apps.devmesh-app.test', '-keyout', key, '-out', cert], {encoding: 'utf8', windowsHide: true});
   if (result.status !== 0) throw Error('Test certificate generation failed: ' + (result.error?.message ?? result.stderr));
   certificate = {key: await readFile(key), cert: await readFile(cert)};

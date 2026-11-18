@@ -295,7 +295,7 @@ The system SHALL expose only content deltas from an explicitly enabled provider 
 - **THEN** the service SHALL reauthorize before each frame and close unauthorized observation without sending protected content
 
 ### Requirement: Workbench visual hierarchy remains readable across viewports
-The workbench SHALL distinguish project navigation, saved conversation and the fixed five-tab detail workspace with consistent surfaces, spacing and deep-blue primary actions. Inputs, saved-draft feedback, attachments and original recovery actions SHALL remain readable and reachable at a 390px viewport, without horizontal page overflow or changing business state through navigation.
+The workbench SHALL distinguish project navigation, saved conversation and the fixed five-tab detail workspace with the user-approved graphite surfaces, flat separators, spacing and off-white primary actions. Inputs, draft errors, attachments and original recovery actions SHALL remain readable and reachable at a 390px viewport, without horizontal page overflow or changing business state through navigation.
 
 #### Scenario: A user edits while viewing a narrow workspace
 - **WHEN** the workbench switches between desktop and a 390px viewport or the user opens a detail tab
@@ -303,4 +303,62 @@ The workbench SHALL distinguish project navigation, saved conversation and the f
 
 #### Scenario: Desktop content exceeds the available panel height
 - **WHEN** a desktop workspace has a long project list, draft or detail content, or its shared header changes height
-- **THEN** all three panels SHALL share the same top and bottom bounds within the remaining viewport, and overflowing content SHALL remain reachable through its own region without pushing a panel below the common baseline
+- **THEN** the sidebar SHALL span the viewport, the main toolbar SHALL occupy its own row, and the output, composer and optional execution details SHALL fit their allocated viewport space; overflowing content SHALL remain reachable through its own region without hiding the composer
+
+### Requirement: Task launch uses a persistent composer and optional execution details
+
+工作台 SHALL 将新建首页作为任务发起点，在主区域上方显示输出、底部固定输入；需求理解、澄清回答、计划确认及模型临时输出在主区域。执行详情默认收起，桌面展开约320px，窄屏采用覆盖式抽屉；开关不得卸载当前草稿或附件。
+
+#### Scenario: User launches with text, files or both
+- **WHEN** 用户明确点击“发起任务”并提供文字、附件或两者
+- **THEN** 系统按所选原附件身份查询／上传并核实全部READY后，按原草稿及全量附件快照登记并提交主请求；打开、选择、拖入或刷新不得自动POST
+
+#### Scenario: Upload response is lost during explicit launch
+- **WHEN** 附件已上传但回执丢失，用户刷新后再次明确发起
+- **THEN** 系统保留原字节和身份并先查询同一原上传；核实已成功时复用准确附件，不重复建立上传身份，不省略未核实附件，主请求按原幂等规则创建一次
+
+#### Scenario: Long output and collapsed execution details
+- **WHEN** 输出增长或用户展开、收起执行详情
+- **THEN** 输出独立滚动、输入持续可见；理解、澄清回答和计划确认在主区域保持可用，原草稿、附件、阅读偏好及只读边界保持
+
+### Requirement: Default composer keeps auxiliary information on demand
+
+系统 SHALL 默认仅展示任务正文、添加附件和发起操作，正常草稿保存静默；附件限制通过添加附件的提示可知，非法输入、保存失败和原操作恢复必须保持可达。上传记录 SHALL 经“更多 → 附件管理”打开，不改变原文件、主体隔离和幂等规则。
+
+#### Scenario: Draft silently persists and an attachment is invalid
+- **WHEN** 用户编辑需求或选择不符合要求的文件
+- **THEN** 正常正文持久后可刷新恢复，非法文件保留且明确报错，不因为隐藏正常提示而吞掉错误或自动提交
+
+### Requirement: Projects have default names and safe metadata renaming
+
+系统 SHALL 沿用服务端默认名称且不要求创建前命名；owner/operator可在创建后更名，viewer及历史页面无更名入口。更名 SHALL 比较原名称并在既有操作事务内幂等提交，重放重新授权，不改变项目／Run的任务依据。
+
+#### Scenario: Rename acknowledgement is lost
+- **WHEN** 更名已提交但回执丢失，用户重开页面
+- **THEN** 原更名UUID和正文保留，重开不自动发送，明确重试使用同一原请求；补充需求草稿保持不变
+
+#### Scenario: Concurrent or unauthorized rename
+- **WHEN** 两个编辑基于相同旧名称提交，或viewer／非成员提交更名
+- **THEN** 并发更名仅一方成功，其他修改被拒绝；不覆盖新的名称，不改变执行版本或绕过成员检查
+
+
+### Requirement: Approved dark workspace uses real project navigation
+
+工作台 SHALL 使用固定石墨黑背景、平面侧栏和简洁顶栏。侧栏包含品牌、新建、已加载真实项目的名称过滤及设置入口；主输入保持左侧附件与右侧发起操作。不得把确认稿的示例项目预置到真实列表。
+
+#### Scenario: User filters projects or uses the narrow composer
+- **WHEN** 用户输入项目名称过滤词，或在390px宽度点击添加附件
+- **THEN** 过滤只影响已加载项目的显示，不提交任务或丢失草稿；附件入口可实际触发文件选择且不与发起按钮重叠，输入和提交仍在视口内
+
+#### Scenario: Operating system prefers a light theme
+- **WHEN** 用户系统主题为浅色或切换深浅偏好
+- **THEN** 工作台保持已确认的深色稿，执行详情与设置仍可打开、关闭并返回原输入
+
+
+### Requirement: Empty task entry provides safe request examples
+
+工作台 SHALL 在新建页展示业务系统、数据看板和展示网站需求示例；示例仅在可编辑的空白正文上填入本机草稿，并聚焦输入。已有正文、待核实原提交、关闭依据或保存异常不得被示例覆盖；所选附件保持，任务必须明确发起。
+
+#### Scenario: User selects a request example with a file selected
+- **WHEN** 用户在空白新项目输入中点击或键盘选用需求示例
+- **THEN** 示例通过原草稿保存流程写入并可刷新恢复，所选文件保留，不发送业务命令或上传；已有正文时示例不可覆盖，390px宽度下示例及底部发起操作仍可达

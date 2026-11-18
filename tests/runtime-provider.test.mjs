@@ -20,6 +20,12 @@ test('real HTTP completion sends explicit model and thinking mode, returns publi
  let recorded;const f=await fixture(t,async(req,res)=>{let bytes='';for await(const chunk of req)bytes+=chunk;recorded={body:JSON.parse(bytes),auth:req.headers.authorization,path:req.url};res.setHeader('Content-Type','application/json');res.end(JSON.stringify(response({role:'assistant',content:'{"done":true}',reasoning_content:'private chain text',api_key:'never persist'})));});
  const result=await f.provider.complete(request);assert.equal(result.content,'{"done":true}');assert.equal(result.cost,null);assert.equal(result.usage.source,'provider');assert.equal(recorded.auth,'Bearer local-test-credential');assert.equal(recorded.path,'/chat/completions');assert.deepEqual(recorded.body.thinking,{type:'disabled'});assert.equal(recorded.body.model,'fixture-model');assert.equal(JSON.stringify(result).includes('private chain text'),false);assert.equal(JSON.stringify(result).includes('never persist'),false);
 });
+
+test('a full completion endpoint is normalized once without changing the API prefix or credentials',async t=>{
+ const paths=[],f=await fixture(t,(req,res)=>{paths.push(req.url);assert.equal(req.headers.authorization,'Bearer fixture-secret');res.end(JSON.stringify(response()));});
+ for(const suffix of ['/v1','/v1/','/v1/chat/completions','/v1/chat/completions/']){const provider=new DeepSeekProvider({...f.config,endpoint:f.config.endpoint+suffix},async()=>'fixture-secret');await provider.complete(request);assert.equal(provider.config.endpoint,f.config.endpoint+'/v1');}
+ assert.deepEqual(paths,Array(4).fill('/v1/chat/completions'));
+});
 test('complete tool arguments survive transport and truncation remains explicitly incomplete',async t=>{
  const f=await fixture(t,(_req,res)=>res.end(JSON.stringify(response({role:'assistant',content:null,tool_calls:[{id:'call_1',type:'function',function:{name:'repo_read',arguments:'{"path":"README.md"}'}}]},'tool_calls'))));
  const result=await f.provider.complete({...request,tools:[{name:'repo_read',description:'read repository',parameters:{type:'object'}}]});assert.equal(result.toolCalls[0].arguments,'{"path":"README.md"}');assert.equal(result.finishReason,'tool_calls');

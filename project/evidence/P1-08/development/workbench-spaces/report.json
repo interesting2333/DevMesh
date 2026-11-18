@@ -1,0 +1,173 @@
+{
+  "checkedAt": "2026-11-18T10:25:05.559Z",
+  "commit": "ef82d100bb9a3d4354a4939cc8e6b9013fe5264c",
+  "uncommittedWorkspace": true,
+  "scope": "用户确认的空间任务分组与本地代码目录绑定；同一 Codex 实施并开发复核，正式工作包和阶段／产品验收独立维护。",
+  "environment": {
+    "node": "v24.22.3",
+    "platform": "win32",
+    "sqliteSchema": 58,
+    "browser": "Edge 157.0.4341.60"
+  },
+  "domain": {
+    "tests": 83,
+    "pass": 83,
+    "fail": 0
+  },
+  "browser": {
+    "tests": 43,
+    "pass": 43,
+    "fail": 0
+  },
+  "links": {
+    "tests": 1,
+    "pass": 1,
+    "fail": 0
+  },
+  "preparationRecheck": {
+    "tests": 11,
+    "pass": 11,
+    "fail": 0
+  },
+  "uniqueTests": 127,
+  "checks": {
+    "fullBuild": "PASS",
+    "finalBrowserBuild": "PASS",
+    "typecheck": "PASS",
+    "changedScopeLint": "PASS",
+    "openApiDrift": "PASS",
+    "openSpecStrict": "PASS"
+  },
+  "earlierFailure": {
+    "log": "spaces-browser-final.log",
+    "failed": 4,
+    "explanation": "3项旧模型设置测试仍点击已移除的更多／设置，更新为唯一齿轮入口；1项本机日记故障提示误称结果待核实，修正为未提交并保留明确重试。最终全部浏览器矩阵重新执行通过。"
+  },
+  "additionalValidationHistory": [
+    {
+      "log": "spaces-browser-list-failure.log",
+      "explanation": "新增确认成功后列表503测试暴露重复提交入口，完成态阻止重复命令并通过最终整轮验证。"
+    },
+    {
+      "log": "spaces-browser-resource-build-failure.log",
+      "explanation": "中间后端构建清理了浏览器资产，主动停止失效测试并恢复资产；此轮不计入验证结果。最终固定资产上43项完整重跑通过。"
+    }
+  ],
+  "semantics": {
+    "taskGrouping": true,
+    "trustedGitDirectoryBinding": true,
+    "frozenTaskSource": true,
+    "mainModelSourceContext": true,
+    "preparationBootstrap": true,
+    "managedRepositoryImport": true,
+    "lastAndNonemptySpaceProtected": true,
+    "activeAndUnknownMoveBlocked": true,
+    "spaceDraftAndAttachmentIsolation": true,
+    "noAutomaticPostOnRefresh": true,
+    "originalKeyRecovery": true,
+    "duplicateSettingsRemoved": true
+  },
+  "live": {
+    "checkedAt": "2026-11-18T10:22:39.040Z",
+    "before": {
+      "schema": 57,
+      "integrity": "ok",
+      "foreignKeyFailures": 0,
+      "counts": {
+        "conversations": 2,
+        "conversation_messages": 6,
+        "projects": 3,
+        "runs": 3
+      },
+      "deleted": 0
+    },
+    "after": {
+      "schema": 58,
+      "integrity": "ok",
+      "foreignKeyFailures": 0,
+      "counts": {
+        "conversations": 2,
+        "conversation_messages": 6,
+        "projects": 3,
+        "runs": 3
+      },
+      "deleted": 0,
+      "spaces": 1,
+      "unassignedTasks": 0
+    },
+    "ui": {
+      "status": 200,
+      "browser": "157.0.4341.60",
+      "moreRemoved": true,
+      "singleSettings": true,
+      "spaceMenu": true,
+      "manager": true,
+      "directoryPicker": true,
+      "errors": [],
+      "posts": [],
+      "overflow": false
+    },
+    "backup": {
+      "file": ".devmesh-backups\\devmesh-1794996583472-16d898b9-f28d-4ae0-94d2-390cbdece75a.sqlite",
+      "sha256": "a02c6d1ec15361ad5445cde4ae7b7fa354605a8563b02845cf038ba690f396af",
+      "schema": 57,
+      "integrity": "ok",
+      "foreignKeyFailures": 0,
+      "counts": {
+        "conversations": 2,
+        "conversation_messages": 6,
+        "projects": 3,
+        "runs": 3
+      },
+      "deleted": 0
+    },
+    "actualUserTasksDeletedByCheck": 0,
+    "actualUserSpacesCreatedOrEditedByCheck": 0
+  },
+  "limitations": [
+    "当前本地服务仍没有配置研发执行 Runner；目录绑定可用于代码理解与准备，不虚构真实容器运行。",
+    "仅在隔离测试中创建／修改／迁移／删除空间和任务；真实服务校验只读。",
+    "全仓Lint此前已有5项既有未使用声明，未把范围Lint通过写成全仓通过。",
+    "旧版项目列表是明确标注的跨空间兼容入口，保留旧项目和原始请求。",
+    "尚未进行正式Linux执行、企业身份、阶段门槛或产品验收。"
+  ],
+  "sourceSha256": {
+    "packages/contracts/src/workbench-spaces.ts": "8696bf457f6a6a67c1373269a45995bb74dd8518fd5d8f93ad62c921d0eb4935",
+    "packages/contracts/src/conversation.ts": "7c8aac5db9d09d62fbc3d92e63240f94d2ba9e19fc54f298cf7dd126936dbcb0",
+    "packages/contracts/src/openapi.ts": "5777900918fb49ca73992c1c8333095f3c903fbb159e800debfeb6b1be3d0ec9",
+    "packages/contracts/openapi.json": "a7cfc3793360dcf60318bfca824fe219d7eac0aa7e2e49dd574718f3e7b9c4d7",
+    "packages/contracts/src/errors.ts": "c836a7dac27022a5c711d4b63531d84ce53585b77f2673107ddc872f08f87598",
+    "packages/storage-sqlite/migrations/0058-workbenchspaces.sql": "f4b40a0ef36c75bd56def61c179f3bd2c6f2f31085a7971667bf2e79dc33e179",
+    "packages/storage-sqlite/migrations/manifest.json": "2151f25916b476bdb9153d6485aff7804696f67257b4c2af83b1a5b14a475fa2",
+    "packages/storage-sqlite/src/workbench-spaces-domain.ts": "e9af30de80791745a217c2bde191282700a2d7df233cd64b52c05181503ea747",
+    "packages/storage-sqlite/src/workbench-spaces-protocol.ts": "28157826639485a4a6fe7d04474f04c6a3599b12a8ddb8f2ec2229e87924d98e",
+    "packages/storage-sqlite/src/conversation-domain.ts": "5908940978b13e5137bebf22bd6a6b5d40f57c6f1efd05830311bc1a204b53d6",
+    "packages/storage-sqlite/src/conversation-protocol.ts": "984953cf959a9e36cd01f6d98bf0195fa7ac67b8da0486577f82b543f755fa26",
+    "packages/storage-sqlite/src/domain.ts": "30d8e9b13001e09313f0f8f5192c06cbc71700574f4b1b0d11674f6503ce2db7",
+    "packages/storage-sqlite/src/input-domain.ts": "10c6b97f6db791f58a58c87be15e69b9464595e72930086bceb93c3f795af24f",
+    "packages/storage-sqlite/src/input-protocol.ts": "1b8ac1904d35bfddb959eb9c6be6b51eefee6b25cd606501a890d0e889d4a21b",
+    "packages/input-api/src/workbench-spaces.ts": "20b83b62cfed19d0652aacb5179aa9141d49be61f052a58575aac7cdb5144dd2",
+    "packages/input-api/src/conversations.ts": "c5ce63ddfda734b5dca2d4e70c016fedd96664667255c50f6009f5c6d360d04f",
+    "packages/input-api/src/workbench.ts": "184c5cef70d5e5cdc8200f514b7c8964eb7de7c5543c1fb412f1bc211a126c52",
+    "packages/input-api/src/web/conversation-local.ts": "b1b44c7604d27cf88e0cdec26cfa3bccdfbd742ccd313a039c0bd03fa45f9fb3",
+    "packages/input-api/src/web/conversation-workbench.tsx": "ad2ce022fa706b2e38524d91c2d58a08117c90d81b0613eb3d72dfa64c777a7c",
+    "packages/input-api/src/web/workbench-spaces.tsx": "68a24195da16e26e600e994b99e29046b12801ab26e3835334d8e6da236f6d05",
+    "packages/input-api/src/web/workbench-space-local.ts": "6e1b637da9ecc55050d6bb72a3f3d90810424b0bff2cc92c4f666176a3fa58d4",
+    "packages/input-api/src/web/workbench-client.tsx": "b700770539a4c8b3f67848c3182af45924f04875484fcd6d9e6c38a7e0fbc086",
+    "packages/input-api/src/web/workbench-context.ts": "1bbf4151a9899920ad6eaa0136a214378922997c108160336c90ab0ecedc160e",
+    "packages/input-api/src/web/conversation-task-actions.tsx": "5d298abb0e67f99659a0de5c7cc1d81ce3dd5304fdaf02c78ece8ae45680ccc0",
+    "packages/input-api/src/workbench-styles.ts": "9adc4adb0437850cca17badad38407e047653d42c2650982287fbd023ab0eaf1",
+    "packages/code-workspaces/src/workbench-directories.ts": "80c5d0d9eec7aeac6bc43a86b9351e3c35be86cbc4405df1676816fb1fa79d22",
+    "packages/code-workspaces/src/git.ts": "46278c7139a4864b305e04e60032e0e8191dea5ec050edb780e24c6be46b313f",
+    "packages/code-workspaces/src/allocation.ts": "a9d8e4d09595dec89ee705b7821afacaf35d67e578377981d8b5048859eeb6fd",
+    "packages/agent-runtime/src/conversation-runtime.ts": "6cfef7b5e6bd0016871035436a693bcdd15246af6de6c5cb6d23ed3ff42f57d3",
+    "packages/agent-runtime/src/preparation.ts": "ac0e6584469575ea8c53b29699928470e034aef3ea2ec9dc2753f5905f67a1d3",
+    "packages/platform-core/src/config.ts": "9422081f61df6d535beb638f2ea512ba1fdbaadaba4f49801e97c353f896fac7",
+    "packages/platform-core/src/index.ts": "9de8d05d8546ab33fefc102962a484f32896dd3b798a0b84ab0096b70250f030",
+    "tests/workbench-spaces.test.mjs": "9cf2867c036eb808497b1b56d78866bc905c33db61689e009dda3417d6631fde",
+    "tests/browser/workbench-spaces.test.mjs": "284f42fc6dc95ce1fafa2b1bd7f71bfe298f88edb0758ab688e90ed2fb8aa37a",
+    "tests/preparation.test.mjs": "bf447ab88b19d01d00e55523e3950cd5e0c59e6abf868c7acdb58e01664310c4",
+    "tests/workbench-space-links.test.mjs": "571106f2964f779c276fcd111b2026adc0c8a5caea387de8cab1c1cbfb22184b",
+    "tests/browser/model-settings-selection.test.mjs": "207ef8b087615504fc3c82f2aa4aba0354e2c4b6ac3fe4eee85fed3ba845f8c4"
+  }
+}

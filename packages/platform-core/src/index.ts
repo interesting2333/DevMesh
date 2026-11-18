@@ -1,3 +1,4 @@
+import {LocalWorkbenchDirectories} from '@devmesh/code-workspaces';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
 import type { AddressInfo, Socket } from 'node:net';
@@ -51,7 +52,7 @@ export type {PreviewLifecycleConsumerOptions,PreviewLifecycleBinding} from './pr
 export interface FoundationServer {
   readonly address: Readonly<AddressInfo>;
   stop(): Promise<void>;
-  services?: { local:LocalStorage; content:LocalContentStore; sessions:SessionStore } | undefined;
+  services?: { local:LocalStorage; content:LocalContentStore; sessions:SessionStore;directories?:LocalWorkbenchDirectories } | undefined;
   agents?:ReturnType<typeof mountInternalAgents>|undefined;
   consumer?:RuntimeConsumer|undefined;
   preparationConsumer?:PreparationConsumer|undefined;
@@ -124,6 +125,8 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   let agents: ReturnType<typeof mountInternalAgents>|undefined;
   let consumer:RuntimeConsumer|undefined;
   let preparationConsumer:PreparationConsumer|undefined;
+  let conversationConsumer:import('@devmesh/agent-runtime').ConversationRuntime|undefined;
+  let conversationProvider:import('@devmesh/agent-runtime').ModelProvider|undefined;
   let scheduler:WorkflowScheduler|undefined;
   let a2aModule:typeof import('@devmesh/a2a-adapter')|undefined;
   let inputApi:ReturnType<typeof mountInputApi>|undefined;
@@ -136,7 +139,9 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   let previewDatasets:PreviewDatasetConsumer|undefined;
   try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
   catch(error){await storageFiber?.dispose();throw error;}
-  try{if(inputModule&&inputBaseline&&services){const acceptor=acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,events:{...options.workbenchEvents,closeTimeoutMs:Math.min(options.workbenchEvents?.closeTimeoutMs??250,config.shutdownTimeoutMs)},previewGateway:options.previewGateway,previewPolicies,settingsRoot:join(services.local.dataRoot,'settings'),...(acceptor?{acceptance:{policies:acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
+  if(config.inputApi&&services)services.directories=new LocalWorkbenchDirectories(services.local.storage,config.inputApi.workspaceRoots??[config.inputApi.repositoryRoot]);
+  if(inputModule&&inputBaseline&&services){const {ConversationRuntime}=await import('@devmesh/agent-runtime');conversationConsumer=new ConversationRuntime(services.local.storage,services.content,{baseline:inputBaseline,repositoryContext:(principalId,conversationId)=>services!.directories!.conversationContext(principalId,conversationId),provider:()=>conversationProvider,preparation:()=>!!preparationConsumer,execution:()=>!!scheduler&&!!options.workspaceLifecycle,tokenLimit:runtimeConfig?.tokenLimit??100000});}
+  try{if(inputModule&&inputBaseline&&services){const acceptor=acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,events:{...options.workbenchEvents,closeTimeoutMs:Math.min(options.workbenchEvents?.closeTimeoutMs??250,config.shutdownTimeoutMs)},previewGateway:options.previewGateway,previewPolicies,settingsRoot:join(services.local.dataRoot,'settings'),directories:services.directories,conversations:conversationConsumer?{admission:()=>config.inputApi?.conversationAdmission!==false,capabilities:()=>conversationConsumer!.capabilities(),control:(principalId,conversationId,body,key)=>conversationConsumer!.control(principalId,conversationId,body,key)}:undefined,...(acceptor?{acceptance:{policies:acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
   catch(error){await agents?.stop();await storageFiber?.dispose();throw error;}
   app.use((_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
   const server = createServer({ headersTimeout: 5000, requestTimeout: config.inputApi?35000:10000 }, app);
@@ -189,7 +194,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     previewLifecycle?.stopAdmission();
     previewDatasets?.stopAdmission();
     mcp?.stopAdmission();const failures:unknown[]=[];
-    const actions=[()=>inputApi?.stop(),()=>previewLifecycle?.stop(),()=>previewDatasets?.stop(),()=>acceptancePreparation?.stop(),()=>releasePublication?.stop(),()=>acceptanceAbort?.stop(),()=>releaseExports?.stop(),()=>scheduler?.stop(),()=>preparationConsumer?.stop(),()=>consumer?.stop(),()=>mcp?.close(),()=>agents?.stop(),()=>fiber.dispose(),()=>storageFiber?.dispose()];
+    const actions=[()=>inputApi?.stop(),()=>conversationConsumer?.stop(),()=>previewLifecycle?.stop(),()=>previewDatasets?.stop(),()=>acceptancePreparation?.stop(),()=>releasePublication?.stop(),()=>acceptanceAbort?.stop(),()=>releaseExports?.stop(),()=>scheduler?.stop(),()=>preparationConsumer?.stop(),()=>consumer?.stop(),()=>mcp?.close(),()=>agents?.stop(),()=>fiber.dispose(),()=>storageFiber?.dispose()];
     for(const action of actions)try{await action();}catch(error){failures.push(error);}
     if(failures.length){server.closeAllConnections();for(const socket of sockets)socket.destroy();throw new AggregateError(failures,'Platform resource release failed');}
   }
@@ -217,6 +222,8 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
       const { DeepSeekProvider, AgentRuntime, RuntimeConsumer } = runtimeModule;
       const credentials=options.resolveCredential??a2aModule!.environmentCredentials();
       const providers=runtimeConfig.providers.map(p=>new DeepSeekProvider(p,credentials));
+      const mainProvider=providers.find(p=>p.config.providerId===runtimeConfig.preparation?.productProviderId)??providers[0];
+      if(mainProvider&&await credentials(mainProvider.config.credentialRef))conversationProvider=mainProvider;
       const progress=inputApi?.enabled?inputApi.publishModelProgress:undefined;
       const runtime=new AgentRuntime(services.local.storage,services.content,providers,[...(options.runtimeTools??[]),...(mcp?.tools??[])],runtimeConfig.tokenLimit,await options.workspaceLifecycle?.(services),progress);
       const localEndpoints=config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled);
@@ -236,6 +243,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
           providers:{product:providers.find(p=>p.config.providerId===prep.productProviderId)!,architect:providers.find(p=>p.config.providerId===prep.architectProviderId)!},
           available:async provider=>!!await credentials(provider.config.credentialRef),
            progress,
+          workspaceBootstrap:(principalId,runId,commit)=>services!.directories!.preparationBootstrap(principalId,runId,commit),
           ...(prep.bootstrapPaths.length?{bootstrap:{repositoryRoot:config.inputApi!.repositoryRoot,paths:prep.bootstrapPaths}}:{}),
         });
         preparationConsumer=new PreparationConsumer(preparation,localEndpoints.filter(e=>e.supportedSkills.includes('devmesh.prepare.'+e.role)).map(e=>e.endpointId));
@@ -246,6 +254,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     releasePublication?.start();
     previewDatasets?.start();
     previewLifecycle?.start();
+    await conversationConsumer?.start();
     ready = true;
   } catch (error) {
     await releaseServices().catch(()=>{});

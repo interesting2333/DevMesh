@@ -13,6 +13,7 @@ export const attachmentIds = z.array(ids.attachment).max(inputLimits.attachments
 // eslint-disable-next-line no-control-regex
 export const attachmentName = z.string().regex(/^[^\x00-\x1f\x7f/\\:]{1,80}$/u).refine(v => v.trim().length>0 && v!=='.' && v!=='..', 'Invalid display name');
 export const initialInput = z.strictObject({ text: z.union([inputText,z.literal('')]), attachmentIds });
+export const renameProjectInput=z.strictObject({name:projectName.refine(v=>v.trim().length>0,'Name cannot be blank'),previousName:projectName});
 export const createProjectInput = z.strictObject({ initialRequest: initialInput, clientDraftId: z.uuid(), name: projectName.optional() }).refine(v => v.initialRequest.text.trim().length>0 || v.initialRequest.attachmentIds.length>0, 'Input requires text or an attachment');
 export const createTaskInput = z.strictObject({ kind: z.enum(['ITERATION','FIX']), title: taskTitle, goal: initialInput, baseAcceptedReleaseId: ids.release, clientDraftId: z.uuid() }).refine(v => v.goal.text.trim().length>0 || v.goal.attachmentIds.length>0, 'Input requires text or an attachment');
 export const saveMessageInput = z.strictObject({ text: inputText.refine(v=>v.trim().length>0,'Message cannot be blank'), attachmentIds, clientMessageId: z.uuid(), intentHint: z.enum(['query','change','unsure']).optional() });

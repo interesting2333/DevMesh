@@ -438,6 +438,28 @@ Invocation 状态为 QUEUED／RUNNING／INPUT_REQUIRED／VERIFYING／STOPPING／
 
 准备派发状态与解决结论分离：SENT／UNKNOWN不会被撤销改写为FAILED。不可变撤销决定先投影ABORTING，完整恢复结论追加后投影ABORTED，解除本准备的项目占用；原错误、revision、prepared proof、决定及数据保留。ABORTED不复活原准备，不授权原T5、晚到观察或目标开门，也不创建Release或修改接受指针。
 
+### 10. 对话主助手与两类执行授权（2026-11-18）
+
+Conversation是稳定用户入口，可先无项目；明确研发动作才绑定项目和Run。ConversationMessage按会话seq排序，保留user／assistant／progress；Turn绑定inputRevision、claimToken、原模型请求、严格决策、不可变动作与原幂等键。新输入使未应用旧决策作废；APPLYING或未知副作用未核实前不接收替代动作。
+
+ConversationAuthorization表示用户在准确目标上的EXECUTE或PLAN约定；ConversationPlanAdmission是前者通过当前reviewHash与质量准入后的事实。PlanConfirmation仍只表示真实人工确认。统一plan_execution_admissions读视图供既有调度、工具和验证读取，不回填旧确认，不伪造用户决定。PLAN等待准确所见方案的明确确认；最终接受版本仍独立。
+
+UNKNOWN、PAUSING和CANCELLING分别保留原请求或实际收尾状态，不能按超时推导完成。已结束Run不复活；后续研发依原createTask准入建立新Run。
+
+### 10.2026-11-18 桌面对话工作台优化增量
+
+会话标题增加来源 INPUT／GOAL／MANUAL。绑定真实 Run 时从已保存的目标提炼短标题，不额外调用模型；人工改名采用旧名称CAS，后续目标绑定不得覆盖人工名称。
+
+直接方案确认同时核对 conversation inputRevision、准确Run与计划／需求／resourceRevision／reviewHash及修复承接hash。复用严格确认事实检查，用户决定、会话消息、PlanConfirmed与调度Outbox在单个操作事务内提交；保持暂停，不将保存确认视为代码已运行。
+
+### 10. 任务删除补充（2026-11-18）
+
+会话增加deleted_at删除标记，属于对话生命周期，不将Run或项目伪装成已取消／已删除。可见列表和常规读写排除标记记录，保留原消息／操作供授权核对。删除要求会话revision当前、owner与成员写权限、无活动或未知主轮次、Run暂停或结束、原执行与准备效果已收尾；不以隐去对话替代任务控制。
+
+### 10. 工作空间管理补充（2026-11-18）
+
+新增业务实体 workbench_spaces（owner、name、description、directory、revision、软删除），区别于物理代码分配 workspace_allocations。conversations.space_id 表达任务分组，directory_binding_json 冻结代码目录身份与创建提交；空间编辑和任务迁移均不能改写冻结绑定。空间只有无可见任务且并非最后一个时可删除，保留关联项目／执行／审计。新用户未持久化默认空间由 GET 返回 persisted:false 的确定性虚拟实体，实际写事务落库。
+
 ---
 
 ## 11. Agent与协议详细设计
@@ -1036,6 +1058,31 @@ Runtime 抽取 `ExecutionHost` 接口：提供读取输入、检查许可、保�
 - 计划结构补全：architect 输出在落库前经 \completeArchitectDraft\ 确定性补全（过滤非法 writeScope、补齐空 requirementIds、缺失时补集成 commit-resolved 工作与覆盖全部需求的 tester 工作）；只补计划结构，不生成测试结果。
 - 计划可确认条件仍由既有校验与问题回答共同决定；Prompt 调优后 \issues=[]\ 且确认返回 202。
 
+
+### 11. 主助手会话调度（2026-11-18）
+
+ConversationRuntime为唯一面向用户的协调入口。一次有界模型调用同时形成自然回复与严格意图／动作，咨询直接回答；DEVELOP、UPDATE、ANSWERS、CONFIRM和控制经宿主验证后调用既有领域命令。四角色A2A准备／执行及MCP工具循环继续处理实际研发，不因一条咨询固定运行全链。
+
+调用前保存请求、provider配置引用和保守token预留；两个会话最多同时进行两个主助手决策，同一会话输入版本串行。上下文包含已保存消息、资料、当前需求／计划和当前计划真实尝试状态。回复仅在决策有效且动作已记账后持久发布；结果未知先查原键，不能换键重发。模型或执行未接入时保留原输入并给出准确阻塞。
+
+范围更新先记录原change及采用键，撤销旧Grant并等待真实副作用及准备工作结束；采用后追加USER_INPUT、清空当前计划指针，产生新的需求与单调计划版本，保留旧快照与实际代码成果供新规划参考。自然语言限制只收窄授权；咨询不扩展范围。主助手启动恢复未知模型轮次，停止时先阻止新HTTP准入，再中止及等待当前模型工作，最后关闭存储。
+
+### 11.2026-11-18 桌面对话工作台优化增量
+
+方案卡确认不再经主模型解释一句预置文本。ConfirmConversationPlan使用原有严格确认事实函数，在事务中保存准确授权和对话回执，不创建额外主模型轮次。已有自然语言确认路径保留。计划模式在执行能力缺失时明确“保存决定并等待条件”，不承诺确认后立即实现。
+
+语义标题复用已保存ConversationDecision.goal，不增加LLM请求。刷新页面仅GET；改名／确认在显式恢复时先查询原键，明确不存在后才以原键、原体重试。
+
+### 11. 任务删除补充（2026-11-18）
+
+删除后的会话不进入主轮次claim、已绑定Run观察、自然语言控制、待采纳变更与重启恢复扫描；已获取的迟到操作在授权／删除标记检查后不能写回。任务删除不发起模型、自动取消或恢复Run。历史删除回执查询重新核实当前主体和项目成员，只恢复客户端确认状态。
+
+### 11. 工作空间管理补充（2026-11-18）
+
+ConversationRuntime 的仓库上下文由受信任宿主 LocalWorkbenchDirectories 解析，按当前会话权限读取冻结 commit 的有界源文件（最多6个、总24KB，检查前30个候选，排除敏感／无效路径）。模型输入中的空间说明和代码作为数据，不扩大工具授权。输入项目及迭代与 workbench_run_sources 原子登记，PreparationRuntime.workspaceBootstrap 优先读取该 Run 来源，再使用原全局模板回退；原始用户正文不改写。LocalManagedWorkspaces.resolveSource 可由宿主注入 directories.projectSource，将冻结提交导入隔离 bare 仓库；仍使用已有围栏、清单验证和执行许可，目录绑定不表示 Runner 已接入。
+
+准备任务仅在 WAITING 采集冻结提交材料；已派发原请求恢复使用已保存材料，不重新依赖本地源目录。
+
 ---
 
 ## 12. API与用户流程
@@ -1194,7 +1241,7 @@ occurredAt 是生产者提供的发生时间，observedAt 是平台接收并登�
 
 会话正文和附件的服务端索引／内容提交成功后才标“已保存”；本机 IndexedDB 中未提交草稿显示为草稿。重开页面从对应 run 的已提交消息和事件续读，不能读取服务器某个 JSONL 文件来猜当前状态。服务器文件、会话导出和 Runner 日志通过授权记录 ID 访问，API 不暴露任意宿主绝对路径；底层目录约定见 [D5 §7](#147-本地会话与文件存储布局)。
 
-右侧固定五页签：**任务、协作、成果、预览、记录**。理解、计划、变更、冲突、收尾位于“任务”；配置与工具连接信息位于“协作”。从计划到工作到来源使用同一面板的内部导航栈，不连续打开多层抽屉。新事件只增加提示和未读数量；用户已在底部且未选择文字时才跟随消息滚动。
+右侧固定五页签：**任务、协作、成果、预览、记录**。理解、计划、澄清回答与计划确认位于主输出区；右侧“任务”展示状态及主区域定位，变更、冲突、收尾保留详情入口；配置与工具连接信息位于“协作”。从计划到工作到来源使用主区域内部导航栈，不连续打开多层抽屉。新事件只增加提示和未读数量；用户已在底部且未选择文字时才跟随消息滚动。
 
 提交键处理：多行 Enter 换行，Ctrl+Enter（macOS 可映射 Cmd+Enter）或提交按钮发送；IME composition 期间 Enter/Ctrl+Enter 均不发送，并去除重复键事件。键盘可遍历关键待办与控制。关闭修改表单优先保存草稿；若 IndexedDB 保存失败，切项目／离开必须拦截并提供重试、继续编辑或明确放弃，不能静默丢失。非空输入应用示例先确认是否替换，示例只填文本不提交。
 
@@ -1591,6 +1638,81 @@ Provider可显式配置responseMode:sse；未配置仍用原JSON，冻结配置�
 后续5.2修正先前按单栏估算高度的问题：桌面#root使用100dvh纵向flex，顶部自然高度占位，工作区以minmax(0,1fr)和stretch统一三栏顶底。各栏取消独立min-height／sticky估算；中栏为完整白色面板，去掉输入嵌套外框并收紧新建引导。项目列表与对话／详情内部滚动，长内容不撑破外框，操作仍可达；980px以下仍用原自然页面滚动。
 
 2026-11-17：按用户截图修复5.2三栏底边不齐。桌面#root纵向flex按顶部真实高度分配剩余视口，三栏使用同一grid行和stretch，取消独立min-height／sticky估算；中栏合并为完整面板并去掉输入嵌套外框，导航列表与中／右栏内容独立滚动。实际Edge157复核1843×960、1440×900、1843×640、1024×768及390×844，共7张截图；所有桌面三栏顶底偏差小于1px且无文档纵／横向溢出，16项目列表可滚动且新建／更多可见，表单提交可滚动到达，切窄屏保留草稿。既有页面9/9通过，范围Lint与含类型声明的Input API构建通过；只有CSS变化，未重复全仓类型／Lint或外部验收。 证据：project/evidence/P1-08/panel-alignment-development-review.md。
+
+#### 12. 任务发起与对话布局增量（2026-11-17，P1-08）
+
+经用户确认，以任务发起替代首页创建表单：主区域上方输出、下方固定输入，输出独立滚动；文字、仅附件和组合输入均可点击“发起任务”。项目名称与上传历史按需展开，附件可选择或一次拖入一个（最多3个，沿用UTF-8 TXT／Markdown、2 MiB限制）。右侧默认收起，桌面展开320px，1200px以下改为覆盖式抽屉，开关不卸载输入或计划表单；执行阅读位置增加向后兼容的detailOpen偏好。
+
+用户点击发起任务同时授权上传本次所选原文件：原文件字节／上传信封先在本机事务保存；提交动作先按原键查询未知上传，未查到时用同一原键及字节上传，再核实全部READY元数据，最后按原草稿revision和完整附件快照CAS冻结主请求。上传失败或回执丢失保留字节、草稿及原身份；再次明确发起先核实原键。选择、拖入、打开、刷新和详情切换均不自动POST。主请求未知仍使用独立原请求恢复控件，不生成替代键。需求理解、问题回答、计划和原计划确认组件移到主区域，模型临时输出也在主区域；业务准入、权限、历史只读及计划明确同意规则沿用原实现。
+
+#### 12. 任务输入区精简（2026-11-17，P1-08，用户确认）
+
+移除常驻附件限制说明、上传记录折叠项、创建前项目名称和正常保存状态。限制说明使用添加附件的title／aria-describedby，不改变类型、容量、数量或拖拽校验；“更多 → 附件管理”加载原本机记录并以对话框核实／复用／释放已知结果的原文件，复用成功回到当前输入。保存失败、内存文件、未知上传和原提交恢复控件保留。
+
+新增PUT /api/v1/projects/{projectId}/name，body={name,previousName}，强制原Idempotency-Key、受信身份及owner/operator权限；使用既有事务操作表保存RenameInputProject，比较previousName避免覆盖并发更名，返回InputOperation。重放仍重新授权。仅更新projects.name／updated_at，不改变project.revision、Run、任务、接受版本或执行依据，不新增数据库迁移；PROJECT_NAME_CHANGED表示可核实的名称冲突。前端按主体／项目将原UUID／正文写入独立sessionStorage后才发送，更名丢ACK重开不自动PUT，明确重试使用同一信封；本机记录失败不发送。该临时记录不复用任务草稿／主请求身份，历史和viewer无更名入口。
+
+
+#### 12. 深色工作台确认稿落地（2026-11-18，P1-08）
+
+本次5.5按用户确认稿替代5.1／5.2历史配色和外层卡片：固定深色，不随系统浅色切换；侧栏260px（1440px起288px）贯穿全高，主区顶栏60px，余下区域上输出、下固定输入。主输入最大1024px，附件与发起分居操作行两侧。输出与详情内部滚动；右栏保持320px，1200px以下覆盖，980px以下保留区域导航。真实项目可按已加载名称过滤，不新增服务端搜索或示例项目。更多中的附件管理及直接设置齿轮沿用现有能力。无新增API、依赖或持久化格式；草稿、原键、权限及任务发起规则保持。
+
+2026-11-18：用户确认深色效果图后授权5.5。工作台改为石墨黑平面分区，左栏品牌／项目搜索／最近项目，简洁面包屑顶栏，底部圆角输入框、左侧附件／右侧发起；执行详情保持默认收起、桌面320px和窄屏覆盖。项目搜索仅过滤已加载的真实项目，更多项目仍按原分页读取。25项相关浏览器回归通过，最终新视觉用例2/2复验；Input API构建、全仓类型及7文件96规则Lint通过。同一Codex开发复核，不推进正式P1-08或阶段门槛，不代签完整产品验收。证据：project/evidence/P1-08/paseo-style-development-review.md。
+
+
+#### 12. 首页需求示例与空态构图（2026-11-18，P1-08）
+
+5.6将空态标题、说明及三个示例组成独立内容组，在可用输出高度内安全居中；空间不足时顶部可滚动，输入dock不移动。示例采用本地SVG、深色轻边框卡片，980px以下改为紧凑单列。Composer仅对新项目、初始化完成且无正文／原提交／关闭／保存异常／内存文件的情形发布填入动作；回调再次核对实时refs后调用原edit／IndexedDB保存并聚焦textarea，不触发提交、上传或改写附件。动作在状态改变和卸载时清除，消息／历史／只读不提供示例。
+
+2026-11-18：按用户标注优化首页空白区（5.6）。标题与三张需求示例卡片组成居中引导区；桌面横排、窄屏紧凑列表，底部输入和收起详情保持。业务系统／数据看板／展示网站示例仅填入空白本机草稿并聚焦输入，沿用原保存流程；已有正文、原提交、关闭依据或保存异常时不可使用，不覆盖附件、不自动提交。26项浏览器检查通过，最终新增用例单独复验1/1；构建、全仓类型和5文件96规则Lint通过。同一Codex开发复核，正式P1-08及阶段门槛保持。证据：project/evidence/P1-08/task-starters-development-review.md。
+
+### 12. 持续对话入口（2026-11-18，CW-01～09）
+
+新建工作台使用ConversationWorkbench：底部固定正文／附件／发送及EXECUTE／PLAN选择，上方持续显示持久消息，右侧详情默认收起。已配置运行时启用新首页；projectId／runId及legacy=1继续进入原工作台，保留历史、本机原命令和完整方案／DAG／来源。原首页5.3～5.6视觉保留，新交互以本节为准。
+
+| 路径 | 行为 |
+| --- | --- |
+| GET /api/v1/conversation-capabilities | 当前模型、准备和执行能力；不返回凭据 |
+| POST、GET /api/v1/conversations | 幂等创建和按更新时间分页读取本人可见会话 |
+| GET /api/v1/conversations/{id} | afterSeq有界读取有序消息、当前状态与写权限 |
+| POST /api/v1/conversations/{id}/messages | 持久接收正文／READY附件／模式／准确所见方案依据；202不等于已实施 |
+| POST /api/v1/conversations/{id}/control | 原键及revision控制；真实Run协议仍为唯一控制事实 |
+| GET /api/v1/conversation-operations/{key}?scope=... | 当前身份重新授权后核实原命令 |
+
+新的原生IndexedDB库devmesh.conversations与旧库并存；草稿CAS、原文件字节与上传身份、完整原消息及控制命令先事务提交再发HTTP。刷新只读，丢ACK先核实原键；新编辑保留，未知请求不重建UUID或正文。事务abort保留页面输入，双页冲突由用户明确选择；附件管理明确复制产生新上传身份，已知且未被草稿／未决请求引用的本机字节才可释放。
+
+消息正常回完整自然回复，暂不逐token展示主助手JSON。只读投影按序轮询与去重，保留草稿／焦点／手机输入；原Run的事件订阅及临时专业模型输出仍在原详情入口。候选、预览、检查和交付包链接来自准确Run的真实delivery接口，已接受版本标明是否来自本轮。
+
+inputApi.conversationAdmission=false关闭新对话及新消息准入，并令根入口回到旧工作台；准确conversationId仍可读取原记录、控制及原键核实，已经授权的后台工作按真实协议继续或收尾。不存在反向删除迁移的回滚。
+
+最终正文呈现增加React文本节点组成的段落、强调、列表、标题及代码，禁止模型HTML执行。位于底部且没有文字选择时布局阶段跟随新增消息，保留输入框焦点；历史滚动不抢位置。真实模型专项已发现并修正完整chat/completions地址重复拼接，模型设置读取、发现、连接测试与Runtime统一API根，旧文件和密钥不重写。
+
+### 12.2026-11-18 桌面对话工作台优化增量
+
+桌面对话使用760～840px阅读区、240／64px导航、56px页头与紧凑自适应输入。用户气泡、助手开放排版、可折叠进展按角色区分，空闲不显示持续状态行。阅读历史时保留位置并提供新回复／回到最新。快捷键提示预留位置，仅聚焦时显示，避免按钮在点击时移动。草稿与附件异常恢复继续可见。
+
+新增POST /conversations/:id/rename，正文{name,previousName}；POST /conversations/:id/plan-confirmations，正文{inputRevision,basis,carryForwardHash?}，均以UUID Idempotency-Key、会话scope返回202 InputOperation。新增GET /conversations/:id/work-context，返回受保护的薄上下文或null；读取前后核对会话输入、Run、项目版本与成员，版本变化拒绝旧快照。确认的新授权遵守conversationAdmission，改名属于元数据操作；读取、原请求核实继续保留。
+
+右侧336px详情默认收起，并排后正文空间不足640px则覆盖。目标、需求／约定、必答问题、完整工作方案与准确状态在当前面板查看；原始资料／依赖／技术记录沿用受保护专用入口。首页隐藏常规执行详情入口，能力说明按需打开。
+
+#### 12. 模式选择器补充（2026-11-18）
+
+右下角模式入口使用带图标的深色选择菜单，与发送按钮等高；选项分别说明执行与计划的授权边界。缺执行环境时标明真实条件，保留原选择。切换只更改下一条发送的本机草稿，不立即控制正在进行的任务；暂停仍需独立操作。浮层避免输入滚动区裁切，并支持方向／首尾键、确认、退出、Tab和当前项ARIA语义。
+
+#### 12. 执行详情页签恢复（2026-11-18）
+
+执行详情恢复任务／协作／成果／预览／记录五个页签。任务承接当前目标与完整方案，协作读取成员角色、真实分工和变更配置；成果与预览复用既有WorkbenchDelivery，保留准确候选选择、分页、审查／接受／预览管理和已接受版本／导出入口；记录展示保存的对话与准确Run最近50条事件，无绑定时保留页签和空态。切换不POST、不替换草稿；候选专用页面在新标签页打开，原对话保持，仍检查未保存正文／文件。完整方案入口选中任务页签。
+
+### 12. 任务删除补充（2026-11-18）
+
+新增GET /conversations/:id/deletion-state返回当前revision、能否删除及ACTIVE／UNRESOLVED／READ_ONLY原因；POST /conversations/:id/deletions使用会话scope、UUID Idempotency-Key与{revision}返回202 InputOperation。新输入准入关闭仍可清理有权限且安全的既有任务。删除后的原操作lookup可读取准确回执；普通会话GET／写入仍404。原会话页仅对当前有权限的主体提供新任务／原请求恢复入口，不能读取已删消息。
+
+侧栏更多菜单与页头删除按钮进入明确确认。新删除UUID和正文先写本机事务；未核实的消息／控制／改名／确认阻止新删除。结果未知时显示独立恢复入口，刷新不自动POST。删除成功后列表刷新失败不改报删除未知。
+
+### 12. 工作空间管理补充（2026-11-18）
+
+新增 GET／POST /workbench-spaces、GET /workbench-spaces/:id、POST /:id/updates、POST /:id/deletions、POST /conversations/:id/space-moves、GET /workbench-space-operations/:key、GET /workbench-directories 及 /inspection。修改／删除／迁移比较当前 revision，原请求重放重新鉴权。对话创建接受可选 spaceId，省略时保留旧客户端默认空间语义；对话列表接受 spaceId／query 并服务端搜索全部当前空间任务。工作台页支持 spaceId，直接任务链接根据实际任务恢复空间。新旧工作台均消除重复「更多／设置」，齿轮只进入应用设置。
+
+任务书签以会话实际空间为准；迁移后即使 URL 携带已删除的旧 spaceId，当前有权限的用户仍进入实际任务。已删会话保留原请求恢复页，不读取已删消息。空间保存结果已确认而列表读取失败时显示完成状态，不提供重复保存入口。
 
 ---
 
@@ -2410,6 +2532,28 @@ business_pending_writes 将 PREVIEW 和 RELEASE 的 DISPATCHED／UNKNOWN 写统�
 
 控制面新增私有 verifyReleasePublicationContinuation，只读取原 SENT／UNKNOWN 发布及当前准确 basis，不更改全局派发状态或接受事实。Runner v12 新增 release_profile_preparations 的 EXECUTE_ONCE／INSPECT_ONLY 原模式及 PROFILE_PREPARE 动作；升级复制既有阶段原行并把旧 profile 标为只查询，不填完成证明。旧迁移 SQL／历史行不改，v12 的 schema history／用户版本／DDL 同事务失败回滚。profile 创建与执行模式登记同事务；所有未派发阶段 actionBegin 均唯一，SENT／UNKNOWN 不重复物理操作。
 
+### 14. 会话迁移55（2026-11-18）
+
+新增conversations、conversation_messages、conversation_turns、conversation_authorizations、conversation_plan_admissions及conversation_changes。消息seq与用户input_revision分别单调增长，客户端消息ID及轮次触发键唯一；APPLYING动作JSON与action_key不可变，SENT模型发送在恢复时转UNKNOWN而不是重发。
+
+自动准入只写conversation_plan_admissions；plan_execution_admissions合并两类真实授权，同一计划已有人工确认时去重。旧plan_confirmations及历史行不改写，人工确认仍保存原reviewHash、actor和operation。版本／权限检查和领域副作用在SQLite Worker事务中完成；新的输入、操作、Outbox和GoalUpdated同事务，失败完整回滚。
+
+恢复意图resume_requested／resume_waiting_input／resume_key持久化；暂停中新输入先决策，再采用新目标或按原Run恢复review开门。manual_pause区分用户暂停和自动范围切换；未结束attempt、准备调用或未核实工具／Runner／Git／归档阻止采用。升级遵守既有强制备份及迁移摘要检查，旧本机IndexedDB和项目记录不删除。
+
+### 14.2026-11-18 桌面对话工作台优化增量
+
+新增迁移0056-conversationtitles.sql，为conversations增加title_kind且默认INPUT；不修改已部署55的迁移摘要。升级前自动备份，失败回滚。原有标题、会话、消息、操作与计划决定保持。
+
+改名按旧名称CAS、人工来源标记与版本更新时间单事务；幂等重放重新核对当前写权限。方案确认提取原严格确认事实函数，在会话操作事务内写入计划决定、对话消息和调度意图，任何会话写入失败均回滚全部效果。新本机确认／改名原命令复用devmesh.conversations v1的controls存储，以kind区分，旧控制查找排除新kind；不清除旧日记或升级破坏原记录。
+
+### 14. 任务删除补充（2026-11-18）
+
+新增0057-conversationdeletions.sql，conversations增加可空deleted_at并建立可见列表索引；保留已部署55／56摘要。删除标记和操作回执同事务写入，异常全回滚；不级联删除项目、Run、消息、成果、原操作、原文件或本机草稿。controls日记增加DELETE类别并独立查找，其他原请求查找不得误取删除。
+
+### 14. 工作空间管理补充（2026-11-18）
+
+迁移58按既有对话、项目和附件 owner 建立默认空间，原对话归入对应默认空间；既有项目、Run、消息、操作均保留，不修改迁移55～57摘要。创建／修改／删除空间和迁移任务与原操作回执同事务；迁移审计单独保存，Run 来源随输入项目／迭代同事务登记。新草稿键 new:<spaceId>；原 new 草稿非冲突时迁入默认空间，未决旧请求保持旧 scope／原正文，原字节和上传标识不重写。文件增加可选空间归属，任务迁移后其本机引用跟随归属。空间命令使用独立 devmesh.workbench-spaces IndexedDB 日记，事务落盘后才 HTTP；刷新不自动 POST，原回执 lookup 后才明确继续。
+
 ---
 
 ## 15. 验证与验收追踪
@@ -2788,5 +2932,33 @@ P1-07开发复核须单独覆盖：正式首轮T5与Runner稳定proof／原服�
 
 
 2026-11-16：P1-08准确交付导航开发增量完成本机验证，2.4勾选，implement-workbench-first-path累计7/13；正式工作包与G0仍等待前置。准确Run候选有界分页／明确选择／旧依据标识，项目接受版本单独携带来源Run。审查／预览管理／接受／已发布版本／交付包均以受保护GET进入，返回恢复原工作台Run、页签／小屏面板／选择及原生草稿；未保存File或session保存失败阻止离开。最终新HTTP4／浏览器5与完整受影响回归共86项独立通过，零失败／取消／跳过；构建／类型／Lint／契约、644条源码映射关联及740输入产物绑定，18份实际契约／服务端／浏览器产物前后当前一致。OpenAPI补齐65路径及原接受页面入口，两个独立浏览器模块因嵌入契约变化重建。完整页面回归旧文案断言已按实际新提示修正，权限／无输入框／撤权断言未弱化；接受丢ACK检查补充实际HTTP202提交检查点，原SQL／恢复断言保持；补充检查首次误写HTTP200的测试错误及修正记录保留；既有非输入清单差异按准确hash另记，未将其伪装为全清单零漂移。先前6次失败与诊断保留，修复严格scope键、类型入参及缺原文件夹具，未放宽质量停止规则／超时／断言；首次受控质量任务stopRequested及后续接受回归SQL计数失败的原始原因均未确定，不将后续通过当成根因解释。SQL1～45／存储协议／Runner／原生日记／依赖不变。同一Agent开发复核；上游来源准入、模型／人工观察／OCI／物理Runner事实仍为明确夹具，真实模型／OIDC／Linux、WebSocket及完整产品／门槛验收继续。
+
+### 15. 对话工作流开发验证（2026-11-18）
+
+implement-conversation-agent-workflow关联P1-08及受影响契约、存储、Runtime、输入／调度、控制。验证自然咨询不建项目、真实准备链和两种授权、所见方案准确版本、迟到结果作废、执行中范围重排、真实未收尾阻止采用、暂停中新输入先处理、未知模型不自动重发、权限降级、终态投影和后续咨询。
+
+浏览器验证原生IndexedDB草稿、丢消息／上传／控制ACK、事务abort、双页冲突、文件仅发送、可收起详情和390px。升级验证旧版本数据／确认不改写和完整失败回滚；相关领域、旧工作台和构建／类型／契约检查分别留证。证据入口：project/evidence/P1-08/conversation-workflow-development-review.md。受控模型与实际本地HTTP／SQLite／Edge结果不替代真实模型效果、Linux隔离或完整T08／阶段验收。
+
+### 15.2026-11-18 桌面对话工作台优化增量
+
+关联变更refine-desktop-conversation-ui，父P1-08。桌面验证覆盖1600／1440／1280／1024px、正文输入对齐、初始高度与自动增长、折叠恢复、历史新回复定位、草稿保留、所见方案直接确认、丢回执查原键、改名CAS／人工优先、撤权重放、事务故障全回滚和55→56迁移保留。原有对话消息／附件／控制恢复与旧入口回归继续检查。
+
+开发证据见project/evidence/P1-08/desktop-refinement-development-review.md及development/desktop-refinement/report.json。同一Codex实施与开发复核，不代签独立人工、Linux Runner、完整T08或阶段门槛。截图使用隔离夹具，服务能力依据实际配置。
+
+#### 15. 模式选择器补充（2026-11-18）
+
+DU-06补充模式选择器交互检查：鼠标与键盘、环境提示、草稿模式刷新恢复、发送前零POST和活动任务不受切换影响；连同已有对话恢复17项通过。见project/evidence/P1-08/mode-selector-development-review.md。
+
+#### 15. 执行详情页签恢复（2026-11-18）
+
+DU-07执行详情恢复：21项浏览器矩阵与撤权补测1项通过，共22项。包含真实冻结候选和预览管理入口、成员权限、Run事件、迟到协作响应、撤权清理、四桌面宽度、正文／附件和原请求恢复；详见project/evidence/P1-08/detail-tabs-development-review.md。
+
+### 15. 任务删除补充（2026-11-18）
+
+add-conversation-task-deletion开发证据：53项核心专项、27项浏览器矩阵、最终删除5项复验及确认后列表503专项1项，共81项不重复检查。包含权限／版本／暂停／未知结果、两种事务故障、ACK丢失刷新、原回执、历史迁移和数据保留。真实用户删除不参与服务验证；服务升级后只读检查入口、数据库及56备份。见project/evidence/P1-08/task-deletion-development-review.md。
+
+### 15. 工作空间管理补充（2026-11-18）
+
+implement-workbench-space-management 的开发证据见 project/evidence/P1-08/workbench-spaces-development-review.md 和 development/workbench-spaces/report.json。覆盖57→58真实迁移及故障回滚、GET无副作用、所有者权限、CAS、非空／最后空间保护、活动／未知任务迁移保护、有界 Git 材料、主模型与准备来源、隔离 Git 导入、桌面创建／编辑／删除／迁移、草稿附件隔离、本机事务失败及 ACK 丢失恢复，并回归原会话、五页签、模式、任务删除、附件及设置。Windows 夹具验证不替代正式 Linux 执行、G0～G4门槛或产品验收。
 
 <!-- END: DevMesh V1.1 详细设计整合区 -->

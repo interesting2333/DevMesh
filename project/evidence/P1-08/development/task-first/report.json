@@ -1,0 +1,307 @@
+{
+  "scope": "P1-08 task-first workbench; local development verification, explicit fixture identity/model/acceptance metadata, no external model/OIDC/Linux acceptance",
+  "reviewer": "Codex, same implementation agent",
+  "platform": "win32",
+  "arch": "x64",
+  "node": "v24.22.1",
+  "browser": "Edge 157.0.4341.60",
+  "gitHead": "ef82d100bb9a3d4354a4939cc8e6b9013fe5264c",
+  "tests": {
+    "distinct": 67,
+    "passed": 67,
+    "browser": 64,
+    "http": 3,
+    "outcomes": {
+      "question choices have no default; exact answer draft survives reload and navigation without a POST": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "answer journal commits before real POST; lost ACK reopens answered questions and closure verification observes the successful immutable submission": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "changed Run refuses the old answer and lookup miss retains original versions, identity and lock": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "failed native answer save retains the choice and blocks internal back, tabs and project navigation until retry": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "native answer journal abort produces zero POST and preserves the saved answer for explicit retry": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "viewer receives current questions without answer storage or a writable form": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "two pages retain conflicting answers until explicit discard reloads the committed draft": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "same-basis absence cannot close an original; every attempt needs fresh explicit consent": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "membership revoked between newer Run read and original lookup cannot masquerade as original absence": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-layout-answers.log"
+      },
+      "real chooser persists exact bytes before upload; lost ACK lookup creates attachment-only project and explicit library copy creates a distinct bound upload": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "lookup miss never rekeys upload; explicit retry sends identical bytes and unlink keeps original journal and server material": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "invalid File and actual native abort retain memory, block navigation and HTTP, then explicit save retry commits the exact file": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "selected metadata must be exact protected200 before main enqueue; wrong identity, non200 and actual removal cannot omit the file": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "two actual page file admissions compare the same draft revision; the loser retains unsaved File until explicit reread and retry": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "unknown bytes cannot be released or copied; known-result release preserves journal, narrow panels preserve selection, account change refuses upload": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "exact candidate review, preview and acceptance GETs return to saved tab, selection and native draft without business effects": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "failed reading-position save retains page and exact native draft; explicit retry can leave": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "an unsaved File blocks dedicated navigation until its actual local transaction succeeds": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "an accepted release from an older Run returns to its launching current Run and preserved target draft": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "foreign, damaged and expired launch preferences keep the server exact-Run fallback; damaged selection resets only reading state": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "native browser receives the snapshot-subscribe gap; progress and explicit refresh retain draft identity and selection": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "actual TCP disconnect triggers protected resnapshot and reconnect without resetting tab, draft or posting a command": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "reordered and duplicated real server frames fill the HTTP gap and apply each persisted event once": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "actual server buffer overflow resynchronizes from a fresh snapshot while preserving editing": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "idle server-side revocation clears protected UI without refresh and never submits local drafts": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "repeated successful resnapshots with corrupt frames stop after a bounded budget and explicit retry recovers": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "workbench shows real control state after an actual disconnect and resnapshot": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "workbench collaboration tab shows change and config summaries": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "workbench more menu opens model settings and saves configuration": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "workbench pause and resume controls call the real API and keep the state across reconnect": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "actual page journals before project POST; lost ACK reload never posts and original lookup recovers one project": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "lookup miss retains original; only explicit retry uses exact message key, body and condition": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "project navigation saves exact drafts, tabs restore, refresh keeps focus and basis until explicit change": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "failed native local save keeps memory, prevents navigation and sends zero POST until storage recovers": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "changing trusted account rejects old page original before effects; reentry isolates subject drafts": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "viewer and revoked contexts expose no composer; stale membership refresh clears protected messages": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "rapid project switch aborts an old workspace response and never applies its context": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "historical Run is read only and explicitly returns to the current Run": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "IME and repeated shortcuts do not submit; keyboard tabs and 390px panels retain inputs": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "actual planning sources and DAG share one internal stack, escape raw text and preserve the input draft": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "plan confirmation commits its journal before POST, lost ACK reload stays inert and exact lookup restores one decision": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "stale plan confirmation preserves exact rejected original and reload never replaces its identity or basis": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "necessary unanswered questions and read-only members receive no default answer or usable plan confirmation": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "aborted native plan-journal transaction sends zero POST and retry requires a fresh explicit confirmation": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "removed proof close and explicit blank start use full native CAS, roll back aborts and retain every original field": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "actual protected project closes only after ordered removal and positive absence; explicit blank success preserves history": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "removed original message can explicitly start blank at the unchanged Run basis and later exposes old-basis history": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "inconclusive protected reads never close originals; observed unknown operation keeps the lock": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "bounded closed history preserves all originals and rejects cross-page rank cycles, missing and foreign links": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "bound successful original uses normal receipt recovery and cannot supply a removal proof": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "actual platform SSE remains transient until response commit and never changes durable seq or editing": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "disconnect marks unsaved fragments interrupted; final persisted understanding survives reload without replaying tokens": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "truncated actual SSE interrupts display and retains unknown preparation without automatic model retry": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "task entry keeps input dock visible; details expand, collapse and use a narrow overlay without losing a draft": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-composer-final.log"
+      },
+      "one explicit launch accepts text, attachment alone and combined input; selecting or refreshing never uploads": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-composer-final.log"
+      },
+      "lost upload acknowledgement keeps original bytes; explicit retry looks up the same upload and creates one task": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-composer-final.log"
+      },
+      "long task output scrolls independently; planning stays in main and detail preferences survive refresh": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-composer-final.log"
+      },
+      "active first Run saves a separate null-release next target; real accepted basis requires explicit review and copying": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "protected task chooser freezes exact material; ACK loss reload recovers one task after fresh admission disappears": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "obsolete task original closes with project proof and keeps complete old target readable at the current project": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "removed task material retains immutable history through explicit blank and mobile; viewer and history mount no task client": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "fresh task preflight refuses a newer actual project before any native command or task POST": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "native task draft abort retains edited goal and task fields, blocks switching and retries before any POST": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-final-regression.log"
+      },
+      "workbench page and bundled client require configured trusted identity; GET creates no input facts": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "selected workbench rejects malformed or foreign scopes and rechecks membership after asynchronous read": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "expected page principal is a guard before JSON parsing and side effects, never an identity credential": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-recovery-http.log"
+      },
+      "dragging files only saves local selection; three compact attachments and dark mobile layout remain usable": {
+        "passed": true,
+        "log": "project/evidence/P1-08/development/task-first/task-first-composer-final.log"
+      }
+    }
+  },
+  "files": {
+    "packages/input-api/src/web/workbench-client.tsx": "4e287dcf449911313a7b463c9557a1f6918d2bbb348b058bdb442deaf8c39168",
+    "packages/input-api/src/web/workbench-attachments.tsx": "b3e4fa3c1513529da6b9ec06b6b98e910c416856d4345d35f901b3d79a5cdce5",
+    "packages/input-api/src/web/workbench-reading.ts": "fcd62ad846720426e5d06193f087134ca77680bbd7a38737a898b60f42330ed8",
+    "packages/input-api/src/workbench-styles.ts": "427a38c9ef93e733d7df791d3f986710b2dc27425c6537babb2d33719a5d2f55",
+    "tests/browser/workbench-task-first.test.mjs": "45768e72172f6a078536c487d787757d636c75b4fc63c769d4c764fafa007f49",
+    "tests/browser/workbench-answers.test.mjs": "a1d175f17b2aa87c658166f61ff90652bc8debd8542059d4b911e81bb3a5615c",
+    "packages/input-api/dist/index.mjs": "ec693bd1d547f9339e34d219dddf2efda9719daf6b59e76c3d673ac407cdad58",
+    "packages/input-api/dist/index.mjs.map": "c56f09d20242ea522cc2adbf2cfb9f7365ad79171c79dae8884a1940883d91e3",
+    "packages/input-api/dist/web/workbench/workbench-client.js": "f23238278bcecdcca599bba14484d24d4cfada747c9b747812fee13acf9a313c",
+    "packages/input-api/dist/web/workbench/workbench-client.js.map": "c80504b51ee55c277e7ccda71fdb67f744a55ba74d848c05932aefe4c3f53fb2"
+  },
+  "screenshots": [
+    "attachments-dark-390.png",
+    "details-1440.png",
+    "homepage-1024.png",
+    "homepage-1366.png",
+    "homepage-1440.png",
+    "homepage-390.png",
+    "task-output-1440.png"
+  ],
+  "finalLayoutVerification": "5/5, including viewport coordinates proving textarea and launch button both visible with three attachments at 390x844"
+}

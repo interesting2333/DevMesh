@@ -11,19 +11,19 @@
   "baselines": [
     {
       "file": "DevMesh_PRD_V10.0.md",
-      "sha256": "4683f2e77f7ec6c2605a63de27ca96a0bff3655f20477e50c10a00dcf249f4c5"
+      "sha256": "b482543ebda76d17b4c16823d152271d4962f91b25e003daa88f7fbc78d7a5d4"
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "a30bc923cc7c3d3bc4e5b5867392f3aff4aa979b1c29ece0ec1229ca0d44732b"
+      "sha256": "04666d7f573aff5af058ae3fee85510ac4a083c81aa98ac707c80e3af2864ba7"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "0fb09d785681f5859e2e3f69c5d9ac3430c992f16181f99fdb87f2b31b340ca4"
+      "sha256": "83bbc09e2de6dc493072627d30775d31323cf73d982f7e2ab4de414a89bd99a3"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "650cad74fa034dfbbc32307508f73dc4516e40b2bbd128656cefc4b1efeb670c"
+      "sha256": "4f8fd292ad216c0e6119b5f92902bb4b2d70e8a30f57627e2242fd5e82cfb9e4"
     }
   ],
   "gates": [
@@ -148,23 +148,34 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "establish-core-contracts"
+        "establish-core-contracts",
+        "implement-conversation-agent-workflow",
+        "refine-desktop-conversation-ui",
+        "add-conversation-task-deletion",
+        "implement-workbench-space-management"
       ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": "2026-11-10T07:13:46.023Z",
       "completedAt": "2026-11-10T07:30:52.971Z",
       "codeReferences": [
-        "commit:ced28e775eb7467744cad5fd7391d0804b15cd08"
+        "commit:ced28e775eb7467744cad5fd7391d0804b15cd08",
+        "packages/contracts/src/conversation.ts",
+        "packages/contracts/src/model-endpoint.ts"
       ],
       "evidence": [
         "project/evidence/P0-02/验收记录.md",
         "project/evidence/P0-02/windows/report.json",
-        "project/evidence/P0-02/linux/report.json"
+        "project/evidence/P0-02/linux/report.json",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": "契约、OpenAPI、正反样例及模块接口表齐全；两平台同提交／锁文件／87 个源码文件一致，22 份检查日志哈希匹配，11 项检查各自全通过，契约测试各18通过。为同一 Agent 技术复核，无独立人员或人工签认；T08/T12 仅基础，G0 未通过。",
       "notes": [
-        "按 establish-core-contracts 完成；精确固定 Zod 4.4.3，业务路由仍标 planned；无生产数据迁移或基线变更。"
+        "按 establish-core-contracts 完成；精确固定 Zod 4.4.3，业务路由仍标 planned；无生产数据迁移或基线变更。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。",
+        "2026-11-18：按用户确认实施桌面UE/UI两阶段增量。新增准确上下文、直接确认、标题及原命令恢复；开发检查见desktop-refinement-development-review，移动端暂缓，正式工作包与阶段门槛保持。",
+        "2026-11-18：按用户反馈补齐任务删除，包含明确确认、当前权限／版本／暂停边界、删除后原回执与本机恢复；开发证据见task-deletion-development-review，正式工作包及阶段门槛保持。",
+        "2026-11-18：按用户确认实施空间任务分组和本地 Git 目录绑定、统一底部入口、安全迁移与原请求恢复；开发证据见workbench-spaces-development-review，正式工作包／门槛未据此提升。"
       ]
     },
     {
@@ -226,21 +237,33 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-local-content-sessions"
+        "implement-local-content-sessions",
+        "implement-conversation-agent-workflow",
+        "refine-desktop-conversation-ui",
+        "add-conversation-task-deletion",
+        "implement-workbench-space-management"
       ],
       "blockedReason": null,
       "nextCheck": null,
       "startedAt": "2026-11-10T08:24:11.818Z",
       "completedAt": "2026-11-10T08:57:25.915Z",
       "codeReferences": [
-        "6b75d18e9c8a88b1a8d706b9fa178a4878856740"
+        "6b75d18e9c8a88b1a8d706b9fa178a4878856740",
+        "packages/storage-sqlite/migrations/0055-conversations.sql",
+        "packages/storage-sqlite/src/conversation-domain.ts"
       ],
       "evidence": [
         "project/evidence/P0-04/验收记录.md",
-        "project/evidence/P0-04/cross-platform-summary.json"
+        "project/evidence/P0-04/cross-platform-summary.json",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": "双平台同提交干净安装，13 项检查、内容 20／SQLite 28／契约 18 项测试通过；真实崩溃切点和原操作恢复复核。Windows 目录刷新与真实联调边界见证据。",
-      "notes": []
+      "notes": [
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。",
+        "2026-11-18：按用户确认实施桌面UE/UI两阶段增量。新增准确上下文、直接确认、标题及原命令恢复；开发检查见desktop-refinement-development-review，移动端暂缓，正式工作包与阶段门槛保持。",
+        "2026-11-18：按用户反馈补齐任务删除，包含明确确认、当前权限／版本／暂停边界、删除后原回执与本机恢复；开发证据见task-deletion-development-review，正式工作包及阶段门槛保持。",
+        "2026-11-18：按用户确认实施空间任务分组和本地 Git 目录绑定、统一底部入口、安全迁移与原请求恢复；开发证据见workbench-spaces-development-review，正式工作包／门槛未据此提升。"
+      ]
     },
     {
       "id": "P0-05",
@@ -302,7 +325,8 @@
         "implement-agent-runtime-provider",
         "implement-workbench-first-path",
         "implement-model-settings",
-        "implement-preparation-wiring"
+        "implement-preparation-wiring",
+        "implement-conversation-agent-workflow"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -311,7 +335,8 @@
       "codeReferences": [
         "e4d89efe5e7e997fa3f29b8a9e1fc498f921257a",
         "e010b2934a1eadf62e363d19b57a21199534c226",
-        "d385c67e40ea7f30997b0ed77bee383fb051b5e6"
+        "d385c67e40ea7f30997b0ed77bee383fb051b5e6",
+        "packages/agent-runtime/src/conversation-runtime.ts"
       ],
       "evidence": [
         "project/evidence/P0-06/离线实施进展.md",
@@ -323,7 +348,8 @@
         "project/evidence/P0-06/model-real-call.md",
         "project/evidence/P0-06/model-real-call.txt",
         "project/evidence/P0-06/runtime-attach.txt",
-        "project/evidence/P0-06/model-selection-development-review.md"
+        "project/evidence/P0-06/model-selection-development-review.md",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -335,7 +361,8 @@
         "2026-11-16：新增工作台“更多→设置”模型接入配置；本机0600密钥文件与GET/PUT/test API，HTTP 2/2、浏览器1/1通过；未用真实Key调用，正式P0-06仍IN_PROGRESS，G0～G4不变。",
         "2026-11-17：用户保存真实Endpoint/Key后，Runtime以MiniMax-M2.7接入（model-runtime-attached），同一Provider代码路径真实调用成功（content「2+2等于4。」，usage 40/63，requestId已记录）；发现代理禁止deepseek-chat、版本化模型名触发MODEL_ID_MISMATCH。产品UNDERSTANDING仍因缺preparation Agent未触发模型；三组样本未执行，正式P0-06仍IN_PROGRESS。",
         "2026-11-17：Preparation 接线复用本包 Provider／Runtime；connectTimeout 上限从 30s 放宽到 120s 以适配企业代理缓冲。真实 understanding/plan 已生成，三组模型样本仍未执行，正式 P0-06 仍 IN_PROGRESS。",
-        "2026-11-17：按用户要求在模型设置中增加实际服务商模型发现、下拉选择、刷新和手动输入；发现支持未保存接入，已保存Key限原Provider/Endpoint复用，限制超时/大小/重定向，选择后仍需保存并重启。复用Runtime模型ID校验，不扩大模型能力；验证记录见model-selection-development-review.md。正式P0-06与G0～G4状态不变。"
+        "2026-11-17：按用户要求在模型设置中增加实际服务商模型发现、下拉选择、刷新和手动输入；发现支持未保存接入，已保存Key限原Provider/Endpoint复用，限制超时/大小/重定向，选择后仍需保存并重启。复用Runtime模型ID校验，不扩大模型能力；验证记录见model-selection-development-review.md。正式P0-06与G0～G4状态不变。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。"
       ]
     },
     {
@@ -525,7 +552,11 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-project-input-api"
+        "implement-project-input-api",
+        "implement-conversation-agent-workflow",
+        "refine-desktop-conversation-ui",
+        "add-conversation-task-deletion",
+        "implement-workbench-space-management"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -534,17 +565,23 @@
       "codeReferences": [
         "packages/input-api/src/index.ts",
         "packages/storage-sqlite/migrations/0007-input.sql",
-        "tests/input-composition.test.mjs"
+        "tests/input-composition.test.mjs",
+        "packages/input-api/src/conversations.ts"
       ],
       "evidence": [
         "project/evidence/P1-01/离线实施进展.md",
         "project/evidence/P1-01/SHA256-local.json",
-        "project/evidence/P1-01/windows-e071539/report.json"
+        "project/evidence/P1-01/windows-e071539/report.json",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
         "按用户连续目标授权，在 G0 和真实模型前置未验收时推进独立输入 API 代码与离线验证；企业身份接入默认未配置，正式工作包状态和阶段前置保留。",
-        "已实现默认关闭的可信身份扩展点、成员权限、流式附件与持久恢复、原子 T1、消息／原键查询／一致 workspace。固定 e071539 干净 Windows 冻结回归 18/18（输入 20/20）；首轮版本断言失败的报告也保留。企业身份和真实模型未配置，正式前置与 G0 保留。"
+        "已实现默认关闭的可信身份扩展点、成员权限、流式附件与持久恢复、原子 T1、消息／原键查询／一致 workspace。固定 e071539 干净 Windows 冻结回归 18/18（输入 20/20）；首轮版本断言失败的报告也保留。企业身份和真实模型未配置，正式前置与 G0 保留。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。",
+        "2026-11-18：按用户确认实施桌面UE/UI两阶段增量。新增准确上下文、直接确认、标题及原命令恢复；开发检查见desktop-refinement-development-review，移动端暂缓，正式工作包与阶段门槛保持。",
+        "2026-11-18：按用户反馈补齐任务删除，包含明确确认、当前权限／版本／暂停边界、删除后原回执与本机恢复；开发证据见task-deletion-development-review，正式工作包及阶段门槛保持。",
+        "2026-11-18：按用户确认实施空间任务分组和本地 Git 目录绑定、统一底部入口、安全迁移与原请求恢复；开发证据见workbench-spaces-development-review，正式工作包／门槛未据此提升。"
       ]
     },
     {
@@ -567,7 +604,8 @@
       ],
       "changes": [
         "implement-understanding-and-readonly-planning",
-        "implement-preparation-wiring"
+        "implement-preparation-wiring",
+        "implement-conversation-agent-workflow"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -589,7 +627,8 @@
         "project/evidence/P1-02/understanding.json",
         "project/evidence/P1-02/plan.json",
         "project/evidence/P1-02/plan-confirmed.json",
-        "project/evidence/P1-02/preparation-plan-tuning.log"
+        "project/evidence/P1-02/preparation-plan-tuning.log",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -597,7 +636,8 @@
         "固定 44d925f Windows 冻结回归 19/19，准备测试 10/10；含本地官方 A2A、HTTP、SQLite Worker 和两次实际进程终止。",
         "2026-11-16：勾选1.2／2.1，变更累计9/10。0008迁移已包含准备作业／步骤／A2A Task／共享容量及问题／答案／解释表与不可变触发器；只读bootstrap固定可信提交并拒绝HEAD、路径越界和超限。定向执行准备与迁移测试16项通过、0失败，覆盖逐个历史版本升级／回滚、真实FK、跨角色容量与缺Provider等待。3.3真实模型／企业环境验收保持未执行，正式P1-02／G0不变。",
         "2026-11-17：Preparation 接线完成。product／architect 增加 devmesh.prepare.*（endpoint rev2、manifest builtin.v2、cardHash 重算）；Runtime preparation 接入后，真实输入经 deepseek-v4-pro 生成 requirement revision 1（3 条需求）与 plan revision 1，t=15s／33s。计划确认仍被 REQUIRED_TEST_MISSING／INTEGRATION_OUTPUT_MISSING 阻止，未放宽校验。正式 P1-02 仍 NOT_STARTED。",
-        "2026-11-17：计划可确认性调优完成。architect Prompt 增加 requirementIds、commit-resolved 集成工作、tester 覆盖全部需求等硬规则；新增 completeArchitectDraft 过滤非法 writeScope、补齐空 requirementIds、缺失时补集成与 tester 工作。真实运行 issues=[]、canConfirm=true，计划确认返回 202。未执行接受后的实现/验证/交付，正式 P1-02 仍 NOT_STARTED。"
+        "2026-11-17：计划可确认性调优完成。architect Prompt 增加 requirementIds、commit-resolved 集成工作、tester 覆盖全部需求等硬规则；新增 completeArchitectDraft 过滤非法 writeScope、补齐空 requirementIds、缺失时补集成与 tester 工作。真实运行 issues=[]、canConfirm=true，计划确认返回 202。未执行接受后的实现/验证/交付，正式 P1-02 仍 NOT_STARTED。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。"
       ]
     },
     {
@@ -619,7 +659,10 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-plan-scheduler"
+        "implement-plan-scheduler",
+        "implement-conversation-agent-workflow",
+        "refine-desktop-conversation-ui",
+        "implement-workbench-space-management"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -636,11 +679,15 @@
       ],
       "evidence": [
         "project/evidence/P1-03/离线实施进展.md",
-        "project/evidence/P1-03/windows-037d2bf/report.json"
+        "project/evidence/P1-03/windows-037d2bf/report.json",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
-        "固定提交 037d2bf：Windows 干净检出、冻结安装、完整回归 20/20，调度 10/10；实现计划详情／确认、DAG 复核与显式 A2A 持久调度。正式前置、真实模型与 Linux Runner 集成及 G0 仍待实际验收，未据离线结果关闭父包。"
+        "固定提交 037d2bf：Windows 干净检出、冻结安装、完整回归 20/20，调度 10/10；实现计划详情／确认、DAG 复核与显式 A2A 持久调度。正式前置、真实模型与 Linux Runner 集成及 G0 仍待实际验收，未据离线结果关闭父包。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。",
+        "2026-11-18：按用户确认实施桌面UE/UI两阶段增量。新增准确上下文、直接确认、标题及原命令恢复；开发检查见desktop-refinement-development-review，移动端暂缓，正式工作包与阶段门槛保持。",
+        "2026-11-18：按用户确认实施空间任务分组和本地 Git 目录绑定、统一底部入口、安全迁移与原请求恢复；开发证据见workbench-spaces-development-review，正式工作包／门槛未据此提升。"
       ]
     },
     {
@@ -1118,7 +1165,8 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-preview-review-and-acceptance"
+        "implement-preview-review-and-acceptance",
+        "implement-conversation-agent-workflow"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -1620,7 +1668,8 @@
         "project/evidence/P1-07/clean-checkout-9ab99fe/acceptance.log",
         "project/evidence/P1-07/clean-checkout-9ab99fe/preview-browser-rerun2.log",
         "project/evidence/P1-07/clean-checkout-9ab99fe/review-browser.log",
-        "project/evidence/P1-07/d01-d08-t5-coverage.md"
+        "project/evidence/P1-07/d01-d08-t5-coverage.md",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -1696,7 +1745,8 @@
         "2026-11-14：4.1／5.1替换再次确认：固定decisionId保留首次决定，45版前向迁移新增acceptance_data_confirmations追加历史并逐字段复制旧行；当前review完整依据匹配准备准入。再次明确确认使用新原UUID／当前Run条件；并发旧条件另一请求412，刷新条件下重复当前审查409，原键恢复原回执且复核当前owner。多owner在原冻结依据仍有效时逐人明确确认，decisionId／reviewHash／actorId去重，不借用其他actor批准；原冻结主体撤权继续使候选陈旧，不宣称完整owner交接。确认／operation原子回滚、旧决定和历史不可改；44→45在复制前后失败完整回滚。真实同库后继替换／只读HTTP健康／第二轮T5、新review绑定、旧字节保留、重开原键与撤权验证。reconfirmation 3通过，regression 13通过，storage 47通过，合计63项次通过、0跳过；完整应用构建、类型／Lint／契约及449映射通过，旧SQL1～44／Runner实现格式／依赖保持，新增45校验和匹配；最终各组顺序且全部输入无漂移。旧构建两次唯一键失败及首次新构建2通过／1失败保留：成功确认推进Run导致并发旧If-Match正确412，测试改为准确412并另加最新条件下409，产品未因此改动、未放宽版本检查。追加owner用例前三次因原冻结主体撤权而正确陈旧，诊断后保留原资格规则；第四次在冻结依据有效时复现首actor锚点拒绝，再修正actor历史绑定，全部原日志／输入保留。历史升级为明确旧行夹具，源／模型／Runtime准入／OCI与物理围栏／容器／网络／路由仍为明确夹具；第二轮发布、完整D01～D08／干净checkout／真实身份和Linux／产品验收继续。正式P1-07／OpenSpec8/13／门槛保持。",
         "2026-11-14：4.3／5.1同库第二次发布组合：同一文件控制库两轮真实候选／审查／T5后，复用ReleasePublisher与Runner原后端完成第二次发布；保留策略复制首轮HTTP业务行，明确替换新目标为空，发布后实际HTTP写入新目标、原源行保留。核实两份Release／acceptance commit／promotion Outbox、唯一当前路由generation 2、源CLOSED／RETIRED与目标OPEN／READY、原源容量按容器消失证明释放、新服务唯一占用，原T5回执和首轮发布证明不改。SOURCE_STOP／SOURCE_CONTAINER_REMOVE／SOURCE_NETWORK_REMOVE／ROUTE_BIND四处丢ACK后控制与Runner重开只查原journal／reservation，不重派已完成物理变更、不重做数据准备或T5；最终PUBLISHED控制ACK丢失恢复原事实，路由事务注入失败保留T5／旧路由／双门关闭，恢复采纳原证明。共享HTTP夹具按当前挂载dataset查门，路由夹具区分历史与项目当前绑定，源夹具沿实际首轮围栏ID严格递增。integration 10通过，regression 12通过，continuation 27通过，service 13通过，合计62项次通过、0跳过；完整构建、类型／Lint／契约、449映射和输入／产物SHA绑定通过，最终输入无漂移，全部生产源码／API／SQL1～45／Runner格式／依赖不改。首次正向探针3项通过单列并保存加容量断言前源码，不计最终总数。源／模型／Runtime准入／OCI／迁移artifact来源及物理custody／fence／guard／容器／网络／路由为明确夹具，本地HTTP不证明后台／直接文件物理隔离。独立Release网关、完整工作台／D01～D08、干净checkout、真实身份／Linux和产品验收继续；正式P1-07、OpenSpec8/13及门槛保持。",
         "2026-11-16：完成5.2，变更9/13。固定提交9ab99fe干净克隆（tree f0d011d、lock e70b0d3、Node 24.13.1）完成冻结安装、根构建、模板安装与构建、typecheck、lint 0/0、contracts、test:acceptance 321/321、test:review-browser 4/4、test:preview-browser 6/6；preview前两次失败（模板依赖缺失、冷启动标题超时）原样保留。部署与恢复说明引用RELEASE／EXPORTS／ACCEPTANCE／PREVIEWS／RELEASE-PUBLICATION文档；企业OIDC、真实Linux／容器／迁移未执行。2.3／4.1／4.3／5.1与正式P1-07／G0不变。",
-        "2026-11-16：勾选5.1，变更10/13。以固定提交9ab99fe干净checkout的test:acceptance 321/321、test:preview-browser 6/6、test:review-browser 4/4为组合依据，逐项记录D01～D08与T5的实际覆盖及未覆盖项（企业OIDC、真实Linux／容器／迁移、物理健康、可注册域、人工产品验收）。受控组合不代替真实构建／健康或产品验收；2.3／4.1／4.3与正式P1-07／G0不变。"
+        "2026-11-16：勾选5.1，变更10/13。以固定提交9ab99fe干净checkout的test:acceptance 321/321、test:preview-browser 6/6、test:review-browser 4/4为组合依据，逐项记录D01～D08与T5的实际覆盖及未覆盖项（企业OIDC、真实Linux／容器／迁移、物理健康、可注册域、人工产品验收）。受控组合不代替真实构建／健康或产品验收；2.3／4.1／4.3与正式P1-07／G0不变。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。"
       ]
     },
     {
@@ -1712,7 +1762,7 @@
         "P1-03",
         "P1-07"
       ],
-      "description": "完成三栏与五页签、计划/DAG/来源导航、IndexedDB 草稿、命令日记和事件补发",
+      "description": "完成任务对话主区与可收起五页签详情、计划/DAG/来源导航、IndexedDB 草稿、命令日记和事件补发",
       "deliverables": "工作台完整首次路径、窄屏／键盘行为、只读上下文骨架",
       "acceptance": "从空项目真实走完产品路径一；刷新不丢已提交内容，事件不抢焦点；T08 基础",
       "designReferences": [
@@ -1720,7 +1770,11 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-workbench-first-path"
+        "implement-workbench-first-path",
+        "implement-conversation-agent-workflow",
+        "refine-desktop-conversation-ui",
+        "add-conversation-task-deletion",
+        "implement-workbench-space-management"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -1782,7 +1836,37 @@
         "tests/browser/workbench-stream.test.mjs",
         "tests/fixtures/workbench-model.mjs",
         "packages/input-api/src/workbench-styles.ts",
-        "packages/input-api/src/web/workbench-icons.tsx"
+        "packages/input-api/src/web/workbench-icons.tsx",
+        "tests/browser/workbench-task-first.test.mjs",
+        "packages/input-api/src/web/workbench-project-name.tsx",
+        "tests/browser/workbench-composer-clean.test.mjs",
+        "tests/browser/workbench-draft-assertions.mjs",
+        "tests/input-project-name.test.mjs",
+        "tests/browser/workbench-paseo.test.mjs",
+        "packages/input-api/src/web/workbench-welcome.tsx",
+        "tests/browser/workbench-starters.test.mjs",
+        "packages/input-api/src/web/conversation-workbench.tsx",
+        "packages/input-api/src/web/conversation-local.ts",
+        "tests/conversation-workflow.test.mjs",
+        "tests/browser/conversation-workbench.test.mjs",
+        "packages/input-api/src/web/conversation-work-context.tsx",
+        "packages/input-api/src/web/conversation-message.tsx",
+        "packages/input-api/src/web/conversation-rename.tsx",
+        "packages/storage-sqlite/migrations/0056-conversationtitles.sql",
+        "packages/input-api/src/web/conversation-mode.tsx",
+        "tests/browser/conversation-mode.test.mjs",
+        "packages/input-api/src/web/conversation-details.tsx",
+        "tests/browser/conversation-details.test.mjs",
+        "packages/input-api/src/web/conversation-delete.tsx",
+        "packages/input-api/src/web/conversation-task-actions.tsx",
+        "packages/storage-sqlite/migrations/0057-conversationdeletions.sql",
+        "tests/conversation-deletion.test.mjs",
+        "tests/browser/conversation-deletion.test.mjs",
+        "packages/input-api/src/web/workbench-spaces.tsx",
+        "packages/code-workspaces/src/workbench-directories.ts",
+        "packages/storage-sqlite/migrations/0058-workbenchspaces.sql",
+        "tests/workbench-spaces.test.mjs",
+        "tests/browser/workbench-spaces.test.mjs"
       ],
       "evidence": [
         "project/evidence/P1-08/local-input-development-review.md",
@@ -1857,7 +1941,21 @@
         "project/evidence/P1-08/development/visual-refresh/visual-review.json",
         "project/evidence/P1-08/panel-alignment-development-review.md",
         "project/evidence/P1-08/development/panel-alignment/evidence.json",
-        "project/evidence/P1-08/development/panel-alignment/layout-measurements.json"
+        "project/evidence/P1-08/development/panel-alignment/layout-measurements.json",
+        "project/evidence/P1-08/task-first-development-review.md",
+        "project/evidence/P1-08/development/task-first/report.json",
+        "project/evidence/P1-08/clean-composer-development-review.md",
+        "project/evidence/P1-08/development/clean-composer/report.json",
+        "project/evidence/P1-08/paseo-style-development-review.md",
+        "project/evidence/P1-08/development/paseo-style/report.json",
+        "project/evidence/P1-08/task-starters-development-review.md",
+        "project/evidence/P1-08/development/task-starters/report.json",
+        "project/evidence/P1-08/conversation-workflow-development-review.md",
+        "project/evidence/P1-08/desktop-refinement-development-review.md",
+        "project/evidence/P1-08/mode-selector-development-review.md",
+        "project/evidence/P1-08/detail-tabs-development-review.md",
+        "project/evidence/P1-08/task-deletion-development-review.md",
+        "project/evidence/P1-08/workbench-spaces-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -1881,7 +1979,17 @@
         "2026-11-16：完成3.3键盘／窄屏／事件期间交互验证，变更累计10/13。实际Edge157页面1通过：Enter换行、IME及repeat期间Ctrl/Cmd+Enter零POST、页签ArrowRight／End／Home、390×844无横向溢出、截图及单次提交；实时事件6通过：快照缺口、真实TCP断线重连、乱序／重复帧、缓冲溢出、空闲撤权均保持草稿／页签／焦点／选区且零额外POST。无生产代码改动。4.1～4.3与真实资源验收继续，正式P1-08／G0不变。",
         "2026-11-16：完成4.1集成回归与4.2文档／基线／台账同步，变更累计12/13。全量check执行到acceptance组，终止前顶层TAP 224通过、0失败，覆盖构建／类型／Lint及input／events等适用套件；构建与contracts:check另跑通过；浏览器补跑空项目输入1、实时事件6、交付导航1。单个验收场景在宿主100%负载下耗时5～6分钟，故终止，未宣称全量全绿；完整验收组与完整13文件浏览器矩阵留待5.2。设计03、验收、实施文档、生成的技术设计、OpenSpec、基线与P1-08台账已同步；同一Agent开发复核完成。4.3真实模型／OIDC／Linux及正式P1-08／G0不变。",
         "2026-11-17：按用户请求完成工作台视觉排版优化5.1。依据PRD三栏／五页签与灰白／深蓝规范，紧凑顶部状态，左224px导航／弹性对话／至少380px详情，统一图标、输入、附件、主按钮、草稿反馈和新建引导；下一目标降为紧凑次级入口。实际Edge157宽屏1440、1024、390px与暗色8张截图无页面横向溢出；相关独立用例36项通过（页面9、详情／附件11、实时／流式13、HTTP3），最终键盘／390px另复验1项，不重复计数。构建、类型、本次input-api范围Lint通过；全仓Lint被既有其他文件5处未使用声明阻断，原日志及HEAD同字节证明保留。首次恢复状态文案误改引发1项失败，已还原原文案，不改测试，实时整组复跑通过；最后仅调整详情导航间距／侧栏脚注，最终截图、HTTP、键盘及实时复验分别留证。业务API、本机日记、权限和执行规则未改；本次不代签完整T08或真实模型／OIDC／Linux验收，不推进工作包或阶段状态。",
-        "2026-11-17：按用户截图修复5.2三栏底边不齐。桌面#root纵向flex按顶部真实高度分配剩余视口，三栏使用同一grid行和stretch，取消独立min-height／sticky估算；中栏合并为完整面板并去掉输入嵌套外框，导航列表与中／右栏内容独立滚动。实际Edge157复核1843×960、1440×900、1843×640、1024×768及390×844，共7张截图；所有桌面三栏顶底偏差小于1px且无文档纵／横向溢出，16项目列表可滚动且新建／更多可见，表单提交可滚动到达，切窄屏保留草稿。既有页面9/9通过，范围Lint与含类型声明的Input API构建通过；只有CSS变化，未重复全仓类型／Lint或外部验收。"
+        "2026-11-17：按用户截图修复5.2三栏底边不齐。桌面#root纵向flex按顶部真实高度分配剩余视口，三栏使用同一grid行和stretch，取消独立min-height／sticky估算；中栏合并为完整面板并去掉输入嵌套外框，导航列表与中／右栏内容独立滚动。实际Edge157复核1843×960、1440×900、1843×640、1024×768及390×844，共7张截图；所有桌面三栏顶底偏差小于1px且无文档纵／横向溢出，16项目列表可滚动且新建／更多可见，表单提交可滚动到达，切窄屏保留草稿。既有页面9/9通过，范围Lint与含类型声明的Input API构建通过；只有CSS变化，未重复全仓类型／Lint或外部验收。",
+        "2026-11-17：用户确认任务发起首页方案后实施5.3，上输出／下固定输入，文字或附件一次发起，右栏320px可收起／窄屏抽屉；理解、回答、计划确认在主区。67个不重复本机用例取得通过记录；构建／类型／范围Lint及基线同步。同一Codex开发复核，正式P1-08和前置／阶段门槛保持，完整T08与真实模型／OIDC／Linux未执行。详见task-first-development-review。",
+        "2026-11-17：用户确认5.4输入区精简，辅助说明按需、附件管理移至更多、正常草稿保存静默，名称默认生成且创建后幂等更名。52个不重复本机检查有通过记录；同一Codex开发复核，正式P1-08及门槛不变。见clean-composer-development-review。",
+        "2026-11-18：用户确认深色效果图后授权5.5。工作台改为石墨黑平面分区，左栏品牌／项目搜索／最近项目，简洁面包屑顶栏，底部圆角输入框、左侧附件／右侧发起；执行详情保持默认收起、桌面320px和窄屏覆盖。项目搜索仅过滤已加载的真实项目，更多项目仍按原分页读取。25项相关浏览器回归通过，最终新视觉用例2/2复验；Input API构建、全仓类型及7文件96规则Lint通过。同一Codex开发复核，不推进正式P1-08或阶段门槛，不代签完整产品验收。证据：project/evidence/P1-08/paseo-style-development-review.md。",
+        "2026-11-18：按用户标注优化首页空白区（5.6）。标题与三张需求示例卡片组成居中引导区；桌面横排、窄屏紧凑列表，底部输入和收起详情保持。业务系统／数据看板／展示网站示例仅填入空白本机草稿并聚焦输入，沿用原保存流程；已有正文、原提交、关闭依据或保存异常时不可使用，不覆盖附件、不自动提交。26项浏览器检查通过，最终新增用例单独复验1/1；构建、全仓类型和5文件96规则Lint通过。同一Codex开发复核，正式P1-08及阶段门槛保持。证据：project/evidence/P1-08/task-starters-development-review.md。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。",
+        "2026-11-18：按用户确认实施桌面UE/UI两阶段增量。新增准确上下文、直接确认、标题及原命令恢复；开发检查见desktop-refinement-development-review，移动端暂缓，正式工作包与阶段门槛保持。",
+        "2026-11-18：用户明确右下角模式选择器样式问题，DU-06完成深色菜单、两种模式解释、执行条件提示、键盘路径与草稿保留；17项相关浏览器通过，模式授权及正式工作包状态保持。",
+        "2026-11-18：按用户反馈恢复执行详情五页签及真实协作／交付／预览／记录，DU-07；22项浏览器开发检查通过，正式工作包与阶段门槛保持。",
+        "2026-11-18：按用户反馈补齐任务删除，包含明确确认、当前权限／版本／暂停边界、删除后原回执与本机恢复；开发证据见task-deletion-development-review，正式工作包及阶段门槛保持。",
+        "2026-11-18：按用户确认实施空间任务分组和本地 Git 目录绑定、统一底部入口、安全迁移与原请求恢复；开发证据见workbench-spaces-development-review，正式工作包／门槛未据此提升。"
       ]
     },
     {
@@ -1904,7 +2012,8 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-run-control-lifecycle"
+        "implement-run-control-lifecycle",
+        "implement-conversation-agent-workflow"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -1912,7 +2021,8 @@
       "completedAt": null,
       "codeReferences": [],
       "evidence": [
-        "project/evidence/P2-01/run-control-storage-development-review.md"
+        "project/evidence/P2-01/run-control-storage-development-review.md",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -1922,7 +2032,8 @@
         "2026-11-16：完成3.1，变更5/8。新增受保护pause／cancel／resume与控制状态查询路由，If-Match控制revision、成员权限、幂等键；契约控制错误码与OpenAPI重新生成（66路径），contracts 18/18、control HTTP 1/1通过。事件／UI投影留3.2；正式P2-01／G1不变。",
         "2026-11-16：3.2部分完成，变更仍5/8。ControlProgress新增unresolvedTargets／lastCheckedAt并在全部控制命令与目标记录中投影；按pause前cursor断点续读取得真实PAUSING事件。工作台UI与浏览器重连验证未完成，3.2不勾选；正式P2-01／G1不变。",
         "2026-11-16：完成3.2，变更6/8。工作台新增执行控制状态区域，导航读取/control、ControlProgress事件更新未解决目标、WS重快照后重读权威状态；真实Edge断线重连测试通过，pause后重连仍显示正在暂停。workbench-live 7/7通过；正式P2-01／G1不变。",
-        "2026-11-16：完成4.1／4.2，变更8/8。受控后端覆盖pause／resume／cancel、崩溃重启、未知目标、保存重试、30秒提示与丢finish ACK；断线重连工作台测试通过。设计04、验收、实施文档追加记录，技术设计重建、三份基线更新，OpenSpec与台账同步。正式P2-01仍NOT_STARTED，G0～G4未变。"
+        "2026-11-16：完成4.1／4.2，变更8/8。受控后端覆盖pause／resume／cancel、崩溃重启、未知目标、保存重试、30秒提示与丢finish ACK；断线重连工作台测试通过。设计04、验收、实施文档追加记录，技术设计重建、三份基线更新，OpenSpec与台账同步。正式P2-01仍NOT_STARTED，G0～G4未变。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。"
       ]
     },
     {
@@ -2172,7 +2283,8 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-control-interaction"
+        "implement-control-interaction",
+        "implement-conversation-agent-workflow"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -2181,13 +2293,15 @@
       "codeReferences": [],
       "evidence": [
         "project/evidence/P2-08/control-interaction-development-review.md",
-        "project/evidence/P2-08/control-interaction.txt"
+        "project/evidence/P2-08/control-interaction.txt",
+        "project/evidence/P1-08/conversation-workflow-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
         "2026-11-16：完成1.1，变更1/3。工作台暂停／恢复按钮接入真实控制API，失败不乐观，断线重连保持PAUSED并可恢复；取消需impactReviewHash故不提供；配置调整、变更队列、多页面与完整E2E未实现。正式P2-08／G1不变。",
         "2026-11-16：完成1.2／2.1，变更3/3。取消/配置/变更队列/多页面审计确认未实现；文档/基线同步，manage/openspec通过。正式P2-08仍NOT_STARTED，G0～G4未变。",
-        "2026-11-16：追加1.3，协作页只读展示配置代际/变更提案/配置调整，读取失败清空面板；workbench-live 9/9通过。取消/编辑/决定仍不提供，正式P2-08与门槛不变。"
+        "2026-11-16：追加1.3，协作页只读展示配置代际/变更提案/配置调整，读取失败清空面板；workbench-live 9/9通过。取消/编辑/决定仍不提供，正式P2-08与门槛不变。",
+        "2026-11-18：按用户授权实施对话式主助手增量，增加正式会话／回复、两种模式、独立执行授权、准确确认、范围重排与原控制恢复；保持旧记录及准入。开发验证和真实模型／执行资源结果分别见conversation-workflow-development-review.md，不推进正式工作包或阶段门槛。"
       ]
     },
     {

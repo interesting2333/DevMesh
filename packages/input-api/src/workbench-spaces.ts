@@ -1,0 +1,22 @@
+import {z} from 'zod';
+import {parseContract,opaqueKey,idempotencyKey,workbenchSpaceCreate,workbenchSpaceUpdate,workbenchSpaceDelete,workbenchSpaceMove,workbenchDirectoryBinding,workbenchDirectoryPage} from '@devmesh/contracts';
+import type {WorkbenchDirectoryBinding} from '@devmesh/contracts';
+import type {Router,Request,Response,RequestHandler} from 'express';
+import type {LocalContentStore} from '@devmesh/blob-store';
+import {StorageError} from '@devmesh/storage-sqlite';
+import type {Identity} from './index.js';
+export interface WorkbenchDirectoryAccess{browse(path?:string):Promise<z.output<typeof workbenchDirectoryPage>>;inspect(path:string):Promise<WorkbenchDirectoryBinding>}
+type Route=(handler:(request:Request,response:Response,identity:Identity)=>Promise<void>)=>RequestHandler;
+export function mountWorkbenchSpaceRoutes(router:Router,content:LocalContentStore,route:Route,directories?:WorkbenchDirectoryAccess){
+ const key=(req:Request)=>parseContract(idempotencyKey,req.headers['idempotency-key']),id=(req:Request)=>parseContract(opaqueKey,req.params.spaceId),json=(req:Request)=>{if(!req.is('application/json'))throw new StorageError('CONTENT_TYPE_INVALID',415,'JSON required');return req.body;};
+ const inspect=async(path:string|null)=>{if(path===null)return null;if(!directories)throw new StorageError('WORKBENCH_DIRECTORY_UNAVAILABLE',409,'Directory access is not configured');return directories.inspect(path);};
+ router.get('/workbench-spaces',route(async(_req,res,identity)=>{res.json(await content.storage.request('listWorkbenchSpaces',{principalId:identity.principalId}));}));
+ router.get('/workbench-spaces/:spaceId',route(async(req,res,identity)=>{res.json(await content.storage.request('getWorkbenchSpace',{principalId:identity.principalId,spaceId:id(req)}));}));
+ router.post('/workbench-spaces',route(async(req,res,identity)=>{const body=parseContract(workbenchSpaceCreate,json(req)),meta={principalId:identity.principalId,scopeId:'workbench-spaces.create',idempotencyKey:key(req)},original=await content.storage.request('lookupWorkbenchSpaceOperation',meta);res.status(202).json(await content.storage.request('createWorkbenchSpace',{meta,body,binding:original?null:await inspect(body.directory)}));}));
+ router.post('/workbench-spaces/:spaceId/updates',route(async(req,res,identity)=>{const spaceId=id(req),body=parseContract(workbenchSpaceUpdate,json(req)),meta={principalId:identity.principalId,scopeId:spaceId,idempotencyKey:key(req)},original=await content.storage.request('lookupWorkbenchSpaceOperation',meta);if(!original)await content.storage.request('getWorkbenchSpace',{principalId:identity.principalId,spaceId});res.status(202).json(await content.storage.request('updateWorkbenchSpace',{meta,spaceId,body,binding:original?null:await inspect(body.directory)}));}));
+ router.post('/workbench-spaces/:spaceId/deletions',route(async(req,res,identity)=>{const spaceId=id(req);res.status(202).json(await content.storage.request('deleteWorkbenchSpace',{meta:{principalId:identity.principalId,scopeId:spaceId,idempotencyKey:key(req)},spaceId,body:parseContract(workbenchSpaceDelete,json(req))}));}));
+ router.post('/conversations/:conversationId/space-moves',route(async(req,res,identity)=>{const conversationId=parseContract(opaqueKey,req.params.conversationId);res.status(202).json(await content.storage.request('moveConversationSpace',{meta:{principalId:identity.principalId,scopeId:conversationId,idempotencyKey:key(req)},conversationId,body:parseContract(workbenchSpaceMove,json(req))}));}));
+ router.get('/workbench-space-operations/:key',route(async(req,res,identity)=>{const query=parseContract(z.strictObject({scope:opaqueKey}),req.query),result=await content.storage.request('lookupWorkbenchSpaceOperation',{principalId:identity.principalId,scopeId:query.scope,idempotencyKey:parseContract(idempotencyKey,req.params.key)});if(!result)throw new StorageError('RESOURCE_NOT_FOUND',404,'Original workspace command not found');res.json(result);}));
+ router.get('/workbench-directories',route(async(req,res)=>{const query=parseContract(z.strictObject({path:z.string().max(2048).optional()}),req.query);res.json(parseContract(workbenchDirectoryPage,directories?await directories.browse(query.path):{roots:[],path:null,parent:null,directories:[]}));}));
+ router.get('/workbench-directories/inspection',route(async(req,res)=>{const query=parseContract(z.strictObject({path:z.string().min(1).max(2048)}),req.query);res.json(parseContract(workbenchDirectoryBinding,await inspect(query.path)));}));
+}

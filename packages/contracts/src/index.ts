@@ -1,4 +1,5 @@
 export * from './primitives.js';
+export * from './model-endpoint.js';
 export * from './errors.js';
 export * from './permits.js';
 export * from './versions.js';
@@ -22,3 +23,6 @@ export * from './release-acceptance.js';
 
 export {workbenchEventSubscription,workbenchEventFrame,modelProgressFrame} from './workbench-events.js';
 export type {WorkbenchEventSubscription,WorkbenchEventFrame,ModelProgressFrame} from './workbench-events.js';
+
+export * from './conversation.js';
+export * from './workbench-spaces.js';

@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-18",
+  "increment": "P1-08 / 5.6",
+  "implementer": "Codex",
+  "reviewer": "Same Codex agent; development review",
+  "node": "v24.22.1",
+  "browser": "Edge 157.0.4341.60",
+  "checks": {
+    "build": 0,
+    "typecheck": 0,
+    "lint": {
+      "diagnostics": [],
+      "number_of_files": 5,
+      "number_of_rules": 96,
+      "threads_count": 16,
+      "start_time": 0.0177024
+    },
+    "browser": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0
+    },
+    "finalTestRerun": {
+      "passed": 1,
+      "additionalUniqueTests": 0
+    }
+  },
+  "visualReview": "Viewed actual 1600x1000 and 390x844 protected React screenshots; grouped introduction and examples, fixed bottom composer, compact mobile list. 1440 and 1024 screenshots retained.",
+  "limits": "Trusted local fixture with actual React/CSP/IndexedDB/HTTP/SQLite. No external model, OIDC, Linux, full check or complete product/gate acceptance in this increment.",
+  "inputs": [
+    {
+      "file": "packages/input-api/src/web/workbench-welcome.tsx",
+      "sha256": "b8e84385729b6d71c52562133cfbd5f7542aa0800501db2c770ad62548036ea7"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-client.tsx",
+      "sha256": "ef28096266c253a907796ee03b70789f85bba2deaeb47f1894b9f3e955b1bc31"
+    },
+    {
+      "file": "packages/input-api/src/web/workbench-icons.tsx",
+      "sha256": "38956a6d150b21fb0d830d4f0b37fd9bcb9d24ea1ea92b0d884a064757671582"
+    },
+    {
+      "file": "packages/input-api/src/workbench-styles.ts",
+      "sha256": "1f4e5bf449ee2438c94c51816e27dd21fd4947ce59ba3a6aa7c22f1b3fd0f10e"
+    },
+    {
+      "file": "tests/browser/workbench-starters.test.mjs",
+      "sha256": "d8531c7924c7b9b74c740b93dec2c1eef3b64f44d598c073600ea5f261ad6b4c"
+    },
+    {
+      "file": "packages/input-api/dist/index.mjs",
+      "sha256": "00ea603ceff621c45a9727110c703b7e922c9fd0e6baa33fde132240fa6cfe1f"
+    },
+    {
+      "file": "packages/input-api/dist/web/workbench/workbench-client.js",
+      "sha256": "9dee34eff7867b418d568f4af8c810eb44798869b2ac8d166c124b7d8ceffa47"
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import { chmodSync, existsSync, mkdirSync, readFileSync, renameSync, statSync, u
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { StorageError } from '@devmesh/storage-sqlite';
-import { opaqueKey } from '@devmesh/contracts';
+import { opaqueKey,modelApiBase } from '@devmesh/contracts';
 
 export type ModelSettingsInput = { providerId: string; endpoint: string; model: string; apiKey?: string | undefined };
 export type ModelSettingsView = {
@@ -40,7 +40,7 @@ function normalizeEndpoint(raw: string): string {
   const loopback = ['127.0.0.1', 'localhost', '::1', '[::1]'].includes(url.hostname);
   if (url.protocol !== 'https:' && !(url.protocol === 'http:' && loopback)) throw new StorageError('MODEL_ENDPOINT_INVALID', 422, 'Endpoint must use https (http is allowed only on loopback)');
   if (url.pathname === '/') url.pathname = '';
-  return url.toString().replace(/\/$/, '');
+  return modelApiBase(url.toString());
 }
 
 export function createModelSettingsStore(root: string) {
@@ -66,7 +66,7 @@ export function createModelSettingsStore(root: string) {
     const stored = readJson<{ apiKey?: unknown }>(secretPath);
     return stored && typeof stored.apiKey === 'string' && stored.apiKey.length > 0 ? stored.apiKey : null;
   };
-  const readSettings = (): StoredSettings | null => readJson<StoredSettings>(settingsPath);
+  const readSettings = (): StoredSettings | null => {const stored=readJson<StoredSettings>(settingsPath);return stored?{...stored,endpoint:normalizeEndpoint(stored.endpoint)}:null;};
 
   const view = (settings: StoredSettings | null, hasApiKey: boolean): ModelSettingsView => ({
     configured: settings !== null && hasApiKey,

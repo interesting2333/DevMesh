@@ -24,3 +24,20 @@ vendor/*/lib/
 .devmesh-secrets/
 .DS_Store
 Thumbs.db
+
+# Reproducible local validation output (keep compact reports and manifests)
+/project/evidence/**/development/**/*.log
+/project/evidence/**/development/**/*.txt
+/project/evidence/**/development/**/*.png
+/project/evidence/**/development/**/*.jpg
+/project/evidence/**/development/**/*.jpeg
+/project/evidence/**/development/**/*.webp
+/project/evidence/**/development/**/*.webm
+/project/evidence/**/development/**/*.mp4
+/project/evidence/**/development/**/*.zip
+/project/evidence/**/development/**/*.json
+!/project/evidence/**/development/**/report.json
+!/project/evidence/**/development/**/manifest.json
+/project/evidence/**/development/**/logs/
+/project/evidence/**/development/**/screenshots/
+/project/evidence/**/development/**/failed-source/

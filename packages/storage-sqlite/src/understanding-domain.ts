@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import {randomUUID} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {assertResourceVersion,parseContract,understandingOutput,understandingView} from '@devmesh/contracts';
@@ -55,6 +56,7 @@ export function createUnderstandingDomain(db:DatabaseSync,h:PreparationHelpers){
       exec("INSERT OR IGNORE INTO artifacts(artifact_id,project_id,run_id,attempt_id,kind,content_hash,byte_size,storage_key,state,created_at) VALUES(?,?,?,NULL,'INPUT_ATTACHMENT',?,?,?,'READY',?)",artifactId,run.project_id!,run.run_id!,a.content_hash!,a.byte_size!,content.storage_key!,now());
       sources.push({ref:{kind:'artifact',artifactId,sha256:a.content_hash},contentHash:String(a.content_hash),byteSize:Number(a.byte_size),label:String(a.name)});
     }
+    if(planAdmissionTable(db)==='plan_execution_admissions'&&get('SELECT 1 FROM conversation_changes x JOIN change_proposals p ON p.change_id=x.change_id WHERE p.run_id=? AND x.applied_operation_id IS NOT NULL',run.run_id!))for(const a of all("SELECT a.artifact_id,a.content_hash,a.byte_size FROM runtime_results r JOIN artifacts a ON a.artifact_id=r.artifact_id WHERE a.run_id=? AND a.state='READY' ORDER BY a.created_at DESC LIMIT 20",run.run_id!))sources.push({ref:{kind:'artifact',artifactId:a.artifact_id,sha256:a.content_hash},contentHash:String(a.content_hash),byteSize:Number(a.byte_size),label:'previous-work:'+String(a.artifact_id)});
     if(sources.length>256)preparationFail('PREPARATION_INPUT_LIMIT',422,'Too many preparation sources');
     const answerRows=row.purpose==='INTERPRET'?all('SELECT a.* FROM interpretation_answers x JOIN clarification_answers a ON a.answer_id=x.answer_id WHERE x.job_id=? ORDER BY x.position',row.job_id!):all('SELECT a.* FROM clarification_current c JOIN clarification_answers a ON a.answer_id=c.answer_id WHERE c.run_id=? ORDER BY c.question_id',run.run_id!);
     const answers=answerRows.map(a=>({answerId:String(a.answer_id),questionId:String(a.question_id),questionRevision:Number(a.question_revision),value:JSON.parse(String(a.value_json)) as unknown}));
@@ -71,7 +73,7 @@ export function createUnderstandingDomain(db:DatabaseSync,h:PreparationHelpers){
   function scope(meta:Meta,runId:string){if(meta.scopeId!==runId)preparationFail('OPERATION_SCOPE_INVALID',422,'Invalid Run scope');}
   function assertPreparationPhase(run:PreparationRow){
     if(!['PREPARING','UNDERSTANDING','PLANNING'].includes(String(run.phase))||run.terminal_outcome!==null||
-      get('SELECT 1 FROM plan_confirmations WHERE run_id=? AND plan_revision=?',run.run_id!,run.current_plan_revision??null))
+      get(`SELECT 1 FROM ${planAdmissionTable(db)} WHERE run_id=? AND plan_revision=?`,run.run_id!,run.current_plan_revision??null))
       preparationFail('PREPARATION_ADMISSION_CLOSED',409,'Run has passed preparation');
   }
   const handlers={

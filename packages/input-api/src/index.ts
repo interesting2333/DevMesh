@@ -1,4 +1,8 @@
+import {mountWorkbenchSpaceRoutes} from './workbench-spaces.js';
+import type {WorkbenchDirectoryAccess} from './workbench-spaces.js';
 import express from 'express';
+import {mountConversationRoutes} from './conversations.js';
+import type {ConversationAccess} from './conversations.js';
 import {mountExportRoutes} from './export.js';
 import {mountReviewRoutes} from './review.js';
 import {mountAcceptanceRoutes} from './acceptance.js';
@@ -9,7 +13,7 @@ import { randomUUID, createHash } from 'node:crypto';
 import { z } from 'zod';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { createProjectInput,createTaskInput,saveMessageInput,answerQuestionsInput,retryUnderstandingInput,commandBodies,idempotencyKey,ids,opaqueKey,parseContract,gitCommit,ContractError,errorCode,revision,sha256 } from '@devmesh/contracts';
+import { createProjectInput,createTaskInput,renameProjectInput,saveMessageInput,answerQuestionsInput,retryUnderstandingInput,commandBodies,idempotencyKey,ids,opaqueKey,parseContract,gitCommit,ContractError,errorCode,revision,sha256 } from '@devmesh/contracts';
 import { canonical, StorageError } from '@devmesh/storage-sqlite';
 import type { OperationResult } from '@devmesh/storage-sqlite';
 import type { LocalContentStore } from '@devmesh/blob-store';
@@ -40,6 +44,8 @@ export type InputApiOptions={enabled?:false}|{
   acceptance?:AcceptanceAccess|undefined;
   events?:WorkbenchEventLimits|undefined;
   settingsRoot?:string|undefined;
+  conversations?:ConversationAccess|undefined;
+  directories?:WorkbenchDirectoryAccess|undefined;
   maximumUploads?:number;diagnostic?:(detail:{requestId:string;error:unknown})=>void;
 };
 const runFile=promisify(execFile);
@@ -155,6 +161,10 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const bodyHash=await putBody(identity.principalId,'projects.create',meta.idempotencyKey,body.initialRequest.text);
     const operation=await content.storage.request('createInputProject',{meta,name,baseCommit:baseline.baseCommit,bodyHash,attachmentIds:body.initialRequest.attachmentIds,clientDraftId:body.clientDraftId});
     response.status(201).json(receipt(operation));
+  }));
+  router.put('/projects/:projectId/name',route(async(request,response,identity)=>{
+    const projectId=parseContract(ids.project,request.params.projectId),meta=bodyMeta(request,projectId,identity),body=parseContract(renameProjectInput,json(request));
+    response.json(await content.storage.request('renameInputProject',{meta,projectId,body}));
   }));
   router.post('/projects/:projectId/tasks',route(async(request,response,identity)=>{
     const body=parseContract(createTaskInput,json(request)),projectId=parseContract(ids.project,request.params.projectId),meta=bodyMeta(request,projectId,identity);
@@ -433,7 +443,9 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     const after=request.query.afterSeq===undefined?'0':scalar(request.query.afterSeq,'afterSeq');if(!/^\d+$/.test(after)||!Number.isSafeInteger(Number(after)))fail('SCHEMA_INVALID',422,'Invalid event cursor');
     response.json(await content.storage.request('listInputEvents',{principalId:identity.principalId,projectId:parseContract(ids.project,request.params.projectId),runId:parseContract(ids.run,request.params.runId),afterSeq:Number(after),limit:positive(request.query.limit,50,200)}));
   }));
-  mountWorkbenchRoutes(router,content,route);
+  mountWorkbenchSpaceRoutes(router,content,route,options.directories);
+  mountConversationRoutes(router,content,route,options.conversations,options.directories);
+  mountWorkbenchRoutes(router,content,route,!!options.conversations,options.conversations?.admission?.()!==false);
   mountPreviewRoutes(router,content,options.previewGateway,route);
   mountPreviewManagementRoutes(router,content,options.previewPolicies,route);
   mountExportRoutes(router,content,route);

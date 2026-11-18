@@ -1,3 +1,4 @@
+import {waitForWorkbenchDraft} from './workbench-draft-assertions.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
@@ -5,7 +6,7 @@ import {createRequire} from 'node:module';
 import {eventFixture} from '../fixtures/workbench-events.mjs';
 import {RunControlCoordinator} from '../../packages/platform-core/dist/index.mjs';
 const {chromium,expect:baseExpect}=createRequire(new URL('../../templates/web-crud-v1/package.json',import.meta.url))('@playwright/test'),expect=baseExpect.configure({timeout:35000}),settings={timeout:120000};
-const input=page=>page.getByLabel('输入正文',{exact:true}),connection=page=>page.getByRole('status',{name:'执行进展连接',exact:true}),saved=page=>expect(page.getByRole('status').filter({hasText:'草稿已保存在本机'})).toBeVisible();
+const input=page=>page.getByLabel('输入正文',{exact:true}),connection=page=>page.getByRole('status',{name:'执行进展连接',exact:true}),saved=page=>waitForWorkbenchDraft(page);
 async function harness(t,limits={}){
  const f=await eventFixture(t,{limits}),browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHROMIUM_CHANNEL??'msedge',headless:true}),context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[],csp=[],posts=[];
  f.state.resolver=()=>({principalId:f.state.principalId});page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(message.type()==='error'&&message.text().includes('Content Security Policy'))csp.push(message.text());});page.on('request',r=>{if(r.method()==='POST')posts.push(r.url());});
@@ -27,7 +28,7 @@ test('native browser receives the snapshot-subscribe gap; progress and explicit 
 });
 
 test('actual TCP disconnect triggers protected resnapshot and reconnect without resetting tab, draft or posting a command',settings,async t=>{
- const h=await harness(t),{f,page}=h,scope=await f.create();await h.open(scope);await expect(connection(page)).toContainText('进展已连接');await input(page).fill('重连保留的原草稿');await saved(page);await page.getByRole('tab',{name:'记录',exact:true}).click();await focusSelection(page);const before=await journal(page),reached=Promise.withResolvers(),release=Promise.withResolvers();t.after(()=>release.resolve());let snapshots=0;
+ const h=await harness(t),{f,page}=h,scope=await f.create();await h.open(scope);await expect(connection(page)).toContainText('进展已连接');await input(page).fill('重连保留的原草稿');await saved(page);await openDetails(page);await page.getByRole('tab',{name:'记录',exact:true}).click();await focusSelection(page);const before=await journal(page),reached=Promise.withResolvers(),release=Promise.withResolvers();t.after(()=>release.resolve());let snapshots=0;
  await page.route('**/api/v1/projects/*/workspace?*',async route=>{if(new URL(route.request().url()).searchParams.get('limit')!=='1')return route.continue();snapshots++;reached.resolve();await release.promise;await route.continue();},{times:1});
  f.state.upgradeSockets.at(-1).destroy();await reached.promise;await append(f,scope,'断线期间的消息');release.resolve();await expect(connection(page)).toContainText('收到 1 条新进展');await append(f,scope,'重连之后的消息');await expect(connection(page)).toContainText('收到 2 条新进展');assert.equal(snapshots,1);await expect(page.getByRole('tab',{name:'记录',exact:true})).toHaveAttribute('aria-selected','true');await expect(input(page)).toHaveValue('重连保留的原草稿');assert.deepEqual(await selection(page),{focus:true,start:1,end:4});assert.deepEqual(await journal(page),before);assert.equal(h.posts.length,0);
  await page.evaluate(()=>[...document.querySelectorAll('button')].find(button=>button.textContent==='查看更新').click());const messages=page.getByRole('region',{name:'已提交输入'});await expect(messages).toContainText('重连之后的消息');assert.equal(await messages.locator('article').count(),3);assert.equal(f.sql('SELECT count(*) n FROM input_messages')[0].n,3);
@@ -36,7 +37,7 @@ test('actual TCP disconnect triggers protected resnapshot and reconnect without 
 test('reordered and duplicated real server frames fill the HTTP gap and apply each persisted event once',settings,async t=>{
  const h=await harness(t),{f,page}=h,scope=await f.create();let held=null,injected=0,gapReads=0,enabled=true;
  await page.routeWebSocket(url=>url.pathname==='/events',route=>{const upstream=route.connectToServer();upstream.onMessage(raw=>{const frame=JSON.parse(raw.toString());if(enabled&&frame.kind==='domain-event'){if(held===null){held=raw;return;}route.send(raw);route.send(held);route.send(raw);held=null;enabled=false;injected++;return;}if(held!==null&&frame.kind==='caught-up')return;route.send(raw);});});
- await page.route('**/api/v1/projects/*/runs/*/events?*',route=>{gapReads++;return route.continue();});await h.open(scope);await expect(connection(page)).toContainText('进展已连接');await input(page).fill('乱序期间仍编辑');await saved(page);await page.getByRole('tab',{name:'记录',exact:true}).click();await focusSelection(page);await append(f,scope,'第一条实际提交');await append(f,scope,'第二条实际提交');await expect(connection(page)).toContainText('收到 2 条新进展');await expect(page.getByRole('region',{name:'最近执行进展'}).getByRole('listitem')).toHaveCount(2);assert.equal(injected,1);assert(gapReads>0);assert.deepEqual(await selection(page),{focus:true,start:1,end:4});assert.equal(h.posts.length,0);assert.equal((await journal(page)).commands.length,0);assert.equal(f.sql('SELECT count(*) n FROM events WHERE run_id=?',scope.runId)[0].n,3);
+ await page.route('**/api/v1/projects/*/runs/*/events?*',route=>{gapReads++;return route.continue();});await h.open(scope);await expect(connection(page)).toContainText('进展已连接');await input(page).fill('乱序期间仍编辑');await saved(page);await openDetails(page);await page.getByRole('tab',{name:'记录',exact:true}).click();await focusSelection(page);await append(f,scope,'第一条实际提交');await append(f,scope,'第二条实际提交');await expect(connection(page)).toContainText('收到 2 条新进展');await expect(page.getByRole('region',{name:'最近执行进展'}).getByRole('listitem')).toHaveCount(2);assert.equal(injected,1);assert(gapReads>0);assert.deepEqual(await selection(page),{focus:true,start:1,end:4});assert.equal(h.posts.length,0);assert.equal((await journal(page)).commands.length,0);assert.equal(f.sql('SELECT count(*) n FROM events WHERE run_id=?',scope.runId)[0].n,3);
 });
 
 test('actual server buffer overflow resynchronizes from a fresh snapshot while preserving editing',settings,async t=>{
@@ -71,7 +72,7 @@ test('workbench collaboration tab shows change and config summaries',settings,as
   const run=await f.storage.request('getRun',{runId:scope.runId});
   await f.storage.request('proposeChange',{meta:{principalId:'user_1',scopeId:scope.runId,idempotencyKey:randomUUID()},runId:scope.runId,ifMatch:'"r'+run.resourceRevision+'"',sourceMessageId:'message_collab',proposedText:'扩展协作范围'});
   await h.open(scope);
-  await page.getByRole('tab',{name:'协作'}).click();
+  await openDetails(page);await page.getByRole('tab',{name:'协作'}).click();
   const summary=page.getByLabel('变更与配置');
   await expect(summary).toContainText('变更提案 1 条');
   await expect(summary).toContainText('扩展协作范围');
@@ -80,7 +81,7 @@ test('workbench collaboration tab shows change and config summaries',settings,as
 
 test('workbench more menu opens model settings and saves configuration',settings,async t=>{
   const h=await harness(t),{f,page}=h,scope=await f.create();await h.open(scope);
-  await page.getByRole('button',{name:'更多'}).click();
+  await page.getByRole('button',{name:/^工作空间：/}).click();
   await page.getByRole('menuitem',{name:'设置'}).click();
   const dialog=page.getByRole('dialog',{name:'设置'});
   await expect(dialog).toBeVisible();
@@ -106,3 +107,5 @@ test('workbench pause and resume controls call the real API and keep the state a
   await controlStatus.getByRole('button',{name:'恢复执行',exact:true}).click();
   await expect(controlStatus).toContainText('执行已恢复');
 });
+
+async function openDetails(page){const toggle=page.getByRole('button',{name:'执行详情',exact:true});if(await toggle.count())await toggle.click();}

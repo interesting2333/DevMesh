@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-11-18T08:13:22.440Z",
+  "commit": "ef82d100bb9a3d4354a4939cc8e6b9013fe5264c",
+  "uncommittedWorkspace": true,
+  "scope": "用户授权的任务删除功能；同一Codex开发实施和复核，正式工作包、阶段门槛与产品验收独立维护。",
+  "environment": {
+    "node": "v24.22.3",
+    "platform": "win32",
+    "sqliteSchema": 57,
+    "browser": "Edge 157.0.4341.60"
+  },
+  "core": {
+    "tests": 53,
+    "pass": 53,
+    "fail": 0
+  },
+  "browser": {
+    "tests": 27,
+    "pass": 27,
+    "fail": 0
+  },
+  "finalBrowser": {
+    "tests": 5,
+    "pass": 5,
+    "fail": 0
+  },
+  "refresh": {
+    "tests": 1,
+    "pass": 1,
+    "fail": 0
+  },
+  "uniqueTests": 81,
+  "duplicateNote": "最终5项为原浏览器矩阵中删除子集复验，不重复累计；列表503专项1项额外计入。",
+  "checks": {
+    "fullBuild": "PASS",
+    "finalInputApiBuild": "PASS",
+    "typecheck": "PASS",
+    "changedScopeLint": "PASS",
+    "openSpecStrict": "PASS"
+  },
+  "semantics": {
+    "conversationTombstone": true,
+    "projectAndDeliveryRetained": true,
+    "activeOrUnknownBlocked": true,
+    "originalCommandsRetained": true,
+    "noAutomaticPostOnReload": true,
+    "deletedPageRecoveryWithoutMessages": true
+  },
+  "limitations": [
+    "没有删除任何真实用户任务；删除均在隔离SQLite／HTTP／Edge夹具内验证。",
+    "没有新增模型请求、执行资源或物理项目清理。",
+    "全仓Lint已有5项警告沿用desktop-refinement/report.json，本次范围检查独立通过。"
+  ],
+  "sourceSha256": {
+    "packages/contracts/src/conversation.ts": "ae4b68feccac86aa439e0b325f9452cbe963a6d3b1f62a60f93b32f499267a36",
+    "packages/contracts/src/openapi.ts": "7ec5d6239d41ad2e35c25aaa478b025c89f22cfe6e8f5a6afab3d5bf7878e3f9",
+    "packages/contracts/openapi.json": "1ac9a792600dbbecce7001f12b602ddb1844261c5fb079aecb264e643bfa047c",
+    "packages/storage-sqlite/src/conversation-domain.ts": "7d285f71910836794dcec77327a1d4840f94fe0c97ce1ab8c3a18157e2136f4e",
+    "packages/storage-sqlite/src/conversation-protocol.ts": "9552a2bafb67001fef055d3e0d95670ee4de7eddb187e66b53c8c38f52173676",
+    "packages/storage-sqlite/migrations/0057-conversationdeletions.sql": "9c2a18f589e52a57cd8e4e55bed137249fcc27c93cc7c87a2e2d64ecab79685f",
+    "packages/storage-sqlite/migrations/manifest.json": "8ff436151ded0b605999ff7c0a59b355b2201d505abbf5ccb39526acf5e51078",
+    "packages/input-api/src/conversations.ts": "22cea9822204d8a239657b5799724ea6f6ba29ce0931028521bb97d9ccde8060",
+    "packages/input-api/src/workbench.ts": "60fc4cb47b9fa08d2701f3b2352df842bab243309a170ee7ce883b9189bc3220",
+    "packages/input-api/src/web/conversation-delete.tsx": "665461c6478f78cb61627e2672bdb8948f44f46587bd76e6d9d8379455f1c76c",
+    "packages/input-api/src/web/conversation-task-actions.tsx": "a2880b3408c8136076d49062b8cc374202ce5876789c23fb8a770f61ec11960b",
+    "packages/input-api/src/web/conversation-local.ts": "c9b9089e53695ad75235714ea99427a61ef7b7cfc2a73aedc03f9f6d55417423",
+    "packages/input-api/src/web/conversation-workbench.tsx": "6ff03c3534a63c7a85b830d2d43a9659966102513c1d9a9d3785c1b34b9a126c",
+    "packages/input-api/src/workbench-styles.ts": "aa88e94f67d405d963695d02311c15a4902a2b879d2306c3c4ea6b8fcd998031",
+    "packages/input-api/src/web/workbench-icons.tsx": "99b92c38fdab047fa0625d3df9724debc36673da487ef029d2d23492de752e59",
+    "tests/conversation-deletion.test.mjs": "aa633366be3067c1f19b58b7a63a8007f60c91fe94237471b8723fde12f7b53b",
+    "tests/browser/conversation-deletion.test.mjs": "31d752158fc63f7d1a82e0b851a290ce5aec65e2b7a12bdd73129ecaef93b29f"
+  },
+  "live": {
+    "checkedAt": "2026-11-18T08:20:35.889Z",
+    "before": {
+      "schema": 56,
+      "integrity": "ok",
+      "foreignKeyFailures": 0,
+      "counts": {
+        "conversations": 2,
+        "conversation_messages": 6,
+        "projects": 3,
+        "runs": 3
+      },
+      "deleted": 0
+    },
+    "after": {
+      "schema": 57,
+      "integrity": "ok",
+      "foreignKeyFailures": 0,
+      "counts": {
+        "conversations": 2,
+        "conversation_messages": 6,
+        "projects": 3,
+        "runs": 3
+      },
+      "deleted": 0
+    },
+    "ui": {
+      "status": 200,
+      "browser": "157.0.4341.60",
+      "dialogChecked": true,
+      "errors": [],
+      "posts": [],
+      "overflow": false
+    },
+    "upgradeBackup": {
+      "file": ".devmesh-backups\\devmesh-1794990031740-b9129b61-b318-47c0-bc89-a5eaf9a30543.sqlite",
+      "sha256": "00c612dc0aa01abf12e762403168f7898bcddd59789b8ab198479b6e4eb99033",
+      "schema": 56,
+      "integrity": "ok",
+      "foreignKeyFailures": 0,
+      "counts": {
+        "conversations": 2,
+        "conversation_messages": 6,
+        "projects": 3,
+        "runs": 3
+      },
+      "deleted": 0
+    },
+    "actualUserTasksDeletedByCheck": 0
+  }
+}

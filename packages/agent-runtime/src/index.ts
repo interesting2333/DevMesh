@@ -11,3 +11,6 @@ export { PreparationRuntime, PreparationConsumer, readPreparationGitSource } fro
 export type { PreparationOptions } from './preparation.js';
 export {ExecutionGrantLease} from './lease.js';
 export type {ModelProgressSink} from './progress.js';
+
+export {ConversationRuntime} from './conversation-runtime.js';
+export type {ConversationRuntimeOptions} from './conversation-runtime.js';

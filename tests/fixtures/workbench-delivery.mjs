@@ -11,13 +11,13 @@ import {acceptanceFixture} from './acceptance.mjs';
 import {committedPublicationFixture} from './release-publication.mjs';
 import {meta,canonical} from './storage-data.mjs';
 const express=createRequire(new URL('../../packages/input-api/package.json',import.meta.url))('express');
-export async function workbenchDeliveryFixture(t,{accepted=false}={}){
+export async function workbenchDeliveryFixture(t,{accepted=false,conversations}={}){
  const f=accepted?await committedPublicationFixture(t):await acceptanceFixture(t,{register:false,reviewed:false,human:true,humanWork:true});
  const fault={after:null,action:null},storage={async request(method,input){const value=await f.storage.request(method,input);if(fault.after===method){fault.after=null;await fault.action?.(value);}return value;}},content=new LocalContentStore(storage,f.content.dataRoot,0,f.provider),app=express();
  // The upstream storage fixture registered this known input without writing its
  // original bytes. Workbench HTTP resolves the actual message artifact.
  await content.putBytes(meta(),{kind:'content'},Buffer.from('用户需求原文'),'text/plain; charset=utf-8');
- const api=mountInputApi(app,content,{enabled:true,baseline:{version:'workbench.delivery.fixture',baseCommit:'b'.repeat(40)},identityResolver:req=>{const principalId={fixture_owner:'user_1',fixture_viewer:'delivery.viewer',fixture_other:'delivery.other'}[req.headers.authorization?.replace(/^Bearer /,'')];return principalId?{principalId}:null;}}),server=app.listen(0,'127.0.0.1');await once(server,'listening');
+ const api=mountInputApi(app,content,{enabled:true,...(conversations?{conversations}:{}),baseline:{version:'workbench.delivery.fixture',baseCommit:'b'.repeat(40)},identityResolver:req=>{const principalId={fixture_owner:'user_1',fixture_viewer:'delivery.viewer',fixture_other:'delivery.other'}[req.headers.authorization?.replace(/^Bearer /,'')];return principalId?{principalId}:null;}}),server=app.listen(0,'127.0.0.1');await once(server,'listening');
  t.after(async()=>{await api.stop();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));});
  const origin='http://127.0.0.1:'+server.address().port,headers={authorization:'Bearer fixture_owner'},path='/api/v1/projects/'+f.p.projectId+'/runs/'+f.p.runId+'/delivery';
  async function get(target=path,extra={}){return fetch(origin+target,{headers:{...headers,...extra},signal:AbortSignal.timeout(120000)});}

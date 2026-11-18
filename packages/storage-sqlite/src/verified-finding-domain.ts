@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import {randomUUID} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {parseContract,qualityPolicy,inputManifest,workRevision,productOutput} from '@devmesh/contracts';
@@ -48,7 +49,7 @@ export function createVerifiedFindingDomain(db:DatabaseSync,quality:Pick<ReturnT
   return result;
  }
  function active(run:Row){if(run.control_gate!=='OPEN'||run.terminal_outcome!==null)fail('VERIFIED_FINDING_ADMISSION_CLOSED');}
- function confirmedWork(run:Row,workId:string){const row=get(`SELECT v.definition_json FROM plan_works p JOIN work_revisions v ON v.run_id=p.run_id AND v.work_id=p.work_id AND v.revision=p.work_revision JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN plan_confirmations c ON c.run_id=p.run_id AND c.plan_revision=p.plan_revision AND c.requirement_revision=? WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND w.blocked_reason IS NULL`,run.current_requirement_revision!,run.run_id!,run.current_plan_revision!,workId)??fail('VERIFIED_FINDING_FIX_WORK_INVALID',422);return workRevision.parse(json(row.definition_json));}
+ function confirmedWork(run:Row,workId:string){const row=get(`SELECT v.definition_json FROM plan_works p JOIN work_revisions v ON v.run_id=p.run_id AND v.work_id=p.work_id AND v.revision=p.work_revision JOIN works w ON w.run_id=p.run_id AND w.work_id=p.work_id JOIN ${planAdmissionTable(db)} c ON c.run_id=p.run_id AND c.plan_revision=p.plan_revision AND c.requirement_revision=? WHERE p.run_id=? AND p.plan_revision=? AND p.work_id=? AND w.blocked_reason IS NULL`,run.current_requirement_revision!,run.run_id!,run.current_plan_revision!,workId)??fail('VERIFIED_FINDING_FIX_WORK_INVALID',422);return workRevision.parse(json(row.definition_json));}
   function findingDependency(run:Row,work:ReturnType<typeof confirmedWork>,originalWorkId:string){
    if(work.role!=='developer')return false;const results=createPlanResults(db);
    for(const edge of work.dependencies){if(edge.requiredOutcome!=='completed-with-findings')continue;const result=results.resolve(String(run.run_id),Number(run.current_plan_revision),edge.workId);if(!result||result.row.role!=='tester'||result.row.outcome!=='completed-with-findings'||!get('SELECT 1 FROM verified_findings f JOIN issues i ON i.issue_id=f.issue_id WHERE i.run_id=? AND i.source_attempt_id=?',run.run_id!,result.row.attempt_id!))continue;

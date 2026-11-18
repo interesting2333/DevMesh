@@ -1,0 +1,2 @@
+ALTER TABLE conversations ADD COLUMN title_kind TEXT NOT NULL DEFAULT 'INPUT'
+ CHECK(title_kind IN ('INPUT','GOAL','MANUAL'));

@@ -1,3 +1,4 @@
+import {planAdmissionTable} from './plan-admissions.js';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import { inspectPlan, parseContract, planDraft, planReviewView, productOutput } from '@devmesh/contracts';
 import type { Draft } from '@devmesh/contracts';
@@ -50,16 +51,17 @@ export function createPlanDomain(db:DatabaseSync){
     const plan=parseContract(planDraft,JSON.parse(String(published.content_json)));
     const saved=get('SELECT actor,operation_id,created_at FROM plan_confirmations WHERE run_id=? AND plan_revision=?',input.runId,revision??null);
     const confirmation=saved?{actor:saved.actor,operationId:saved.operation_id,confirmedAt:saved.created_at}:null;
+    const automatic=planAdmissionTable(db)==='plan_confirmations'?undefined:get('SELECT authorization_id,created_at FROM conversation_plan_admissions WHERE run_id=? AND plan_revision=?',input.runId,revision??null);
     const current=revision===row.current_plan_revision&&published.requirement_revision===row.current_requirement_revision;
     const graph=inspect(row,plan);
     const repair=get("SELECT basis_json,carry_json FROM verified_repairs WHERE run_id=? AND published_plan_revision=? AND state='PUBLISHED'",input.runId,revision??null),carried=repair?JSON.parse(String(repair.carry_json)) as CarriedResult[]:undefined,repairBasis=repair?JSON.parse(String(repair.basis_json)) as {round:number;planRevision:number;issues:{issueId:string;revision:number;state:string;failureSha256:string}[]}:undefined;
     const carryCurrent=!carried||carried.every(fact=>!!createPlanResults(db).resolve(input.runId,Number(revision),fact.workId,false))&&(confirmation!==null||repairBasis!.issues.every(issue=>{const actual=get('SELECT i.revision,i.state,f.failure_sha256 FROM issues i JOIN verified_findings f ON f.issue_id=i.issue_id WHERE i.issue_id=? AND i.run_id=?',issue.issueId,input.runId);return actual?.revision===issue.revision&&actual.state===issue.state&&actual.failure_sha256===issue.failureSha256;}));
     const effectsReady=!!confirmation||!repair||completedRunEffects(db,input.runId);
-    const canConfirm=current&&!confirmation&&carryCurrent&&effectsReady&&row.membership!=='viewer'&&row.terminal_outcome===null&&['OPEN','PAUSED'].includes(String(row.control_gate))&&graph.issues.length===0&&
+    const canConfirm=current&&!confirmation&&!automatic&&carryCurrent&&effectsReady&&row.membership!=='viewer'&&row.terminal_outcome===null&&['OPEN','PAUSED'].includes(String(row.control_gate))&&graph.issues.length===0&&
       !pendingQuestions(input.runId)&&!pendingInterpretation(input.runId,plan.requirementRevision)&&!pendingSource(input.runId,plan.requirementRevision);
     return parseContract(planReviewView,{projectId:row.project_id,runId:input.runId,resourceRevision:row.resource_revision,planRevision:revision,
       requirementRevision:published.requirement_revision,reviewHash:published.content_hash,baseCommit:row.base_commit,
-      plan,mode:current?'current':'history',canConfirm,confirmation,topology:graph.topology,issues:[...graph.issues,...(!carryCurrent?[{code:'PLAN_CARRY_CHANGED',path:'carryForward'}]:[]),...(!effectsReady?[{code:'REPAIR_EFFECT_UNKNOWN',path:'carryForward'}]:[])].slice(0,100),
+      plan,mode:current?'current':'history',canConfirm,confirmation,...(automatic?{executionAuthorization:{authorizationId:automatic.authorization_id,authorizedAt:automatic.created_at}}:{}),topology:graph.topology,issues:[...graph.issues,...(!carryCurrent?[{code:'PLAN_CARRY_CHANGED',path:'carryForward'}]:[]),...(!effectsReady?[{code:'REPAIR_EFFECT_UNKNOWN',path:'carryForward'}]:[])].slice(0,100),
       ...(carried?{carryForward:{sha256:digest(canonical(carried)),round:repairBasis!.round,sourcePlanRevision:repairBasis!.planRevision,results:carried.map(fact=>({workId:fact.workId,workRevision:fact.workRevision,attemptId:fact.attemptId,sourcePlanRevision:fact.sourcePlanRevision,outcome:fact.outcome,codeCommit:fact.codeCommit,evidence:fact.evidence,checkConfigHash:fact.checkConfigHash,templateVersion:fact.templateVersion,inputManifestSha256:fact.inputManifestSha256,snapshotSha256:digest(canonical(fact)),origin:fact.workVerification?'FORMAL':'HISTORICAL'}))}}:{})});
   }
   return {authorized,inspect,pendingQuestions,pendingInterpretation,pendingSource,getPlanReview};

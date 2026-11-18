@@ -16,7 +16,7 @@ export interface ServerConfig {
   storageSources?: Readonly<Record<string,string>> | undefined;
   a2a?:Readonly<InternalA2AConfig>|undefined;
   runtime?:Readonly<RuntimeConfig>|undefined;
-  inputApi?:Readonly<{repositoryRoot:string;commit:string;templatePath:string}>|undefined;
+  inputApi?:Readonly<{repositoryRoot:string;commit:string;templatePath:string;conversationAdmission?:boolean;workspaceRoots?:readonly string[]}>|undefined;
   releaseExports?:Readonly<ReleaseExportSchedulerOptions>|undefined;
 }
 
@@ -65,13 +65,15 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
   }
   if(file.inputApi!==undefined){
     const item=file.inputApi as Record<string,unknown>;
-    if(!item||typeof item!=='object'||Array.isArray(item)||Object.keys(item).some(k=>!['enabled','repositoryRoot','commit','templatePath'].includes(k)))throw new ConfigError('Invalid inputApi configuration');
+    if(!item||typeof item!=='object'||Array.isArray(item)||Object.keys(item).some(k=>!['enabled','repositoryRoot','commit','templatePath','conversationAdmission','workspaceRoots'].includes(k)))throw new ConfigError('Invalid inputApi configuration');
+    if(item.conversationAdmission!==undefined&&typeof item.conversationAdmission!=='boolean')throw new ConfigError('inputApi.conversationAdmission must be boolean');
     if(typeof item.enabled!=='boolean')throw new ConfigError('inputApi.enabled must be explicit');
     if(item.enabled){
       if(typeof item.repositoryRoot!=='string'||!isAbsolute(item.repositoryRoot)||typeof item.commit!=='string'||!/^[a-f0-9]{40}$/.test(item.commit))throw new ConfigError('inputApi requires an absolute trusted repositoryRoot and fixed commit');
       const templatePath=item.templatePath??'templates/web-crud-v1';
       if(typeof templatePath!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_/-]*$/.test(templatePath)||templatePath.split('/').includes('..'))throw new ConfigError('Invalid inputApi templatePath');
-      inputApi=Object.freeze({repositoryRoot:item.repositoryRoot,commit:item.commit,templatePath});
+      if(item.workspaceRoots!==undefined&&(!Array.isArray(item.workspaceRoots)||item.workspaceRoots.length>20||item.workspaceRoots.some(root=>typeof root!=='string'||!isAbsolute(root))))throw new ConfigError('workspaceRoots must contain trusted absolute directories');
+      inputApi=Object.freeze({...(item.workspaceRoots?{workspaceRoots:Object.freeze([...(item.workspaceRoots as string[])])}:{}),repositoryRoot:item.repositoryRoot,commit:item.commit,templatePath,...(item.conversationAdmission===undefined?{}:{conversationAdmission:item.conversationAdmission})});
     }
   }
   if(file.storage!==undefined || env.DEVMESH_DATA_ROOT!==undefined){

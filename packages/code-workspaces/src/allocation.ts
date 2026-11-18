@@ -15,6 +15,7 @@ export interface AllocationFencer {
 export interface LocalWorkspaceOptions {
   mode:'local-development';storage:SqliteStorage;controlDataRoot:string;runnerDataRoot:string;backupRoot:string;
   runnerId:string;templates:ReadonlyMap<string,ControlledGit>;fencer:AllocationFencer;
+  resolveSource?:(principalId:string,projectId:string,commit:string)=>Promise<ControlledGit|undefined>;
 }
 const fail=(code:string):never=>{throw new WorkspaceError(code);};
 async function exists(path:string){try{await lstat(path);return true;}catch(e){if((e as NodeJS.ErrnoException).code==='ENOENT')return false;throw e;}}
@@ -44,7 +45,7 @@ export class LocalManagedWorkspaces {
     const actual=await destination.manifest(commit,signal);if(actual.sha256!==expected.sha256)fail('WORKSPACE_SOURCE_CHANGED');return actual;
   }
   async ensureRepository(input:Request<'beginManagedRepository'>,signal=new AbortController().signal):Promise<{record:ManagedRepository;provider:ControlledGit}>{
-    const pending=await this.options.storage.request('beginManagedRepository',input),source=this.#templates.get(pending.templateCommit);if(!source)fail('WORKSPACE_TEMPLATE_NOT_CONFIGURED');
+    const pending=await this.options.storage.request('beginManagedRepository',input),source=await this.options.resolveSource?.(input.principalId,pending.projectId,pending.templateCommit)??this.#templates.get(pending.templateCommit);if(!source)fail('WORKSPACE_TEMPLATE_NOT_CONFIGURED');
     const fence=await this.options.fencer.acquire({kind:'project',directoryRoot:this.controlDataRoot,resourceId:pending.resourceId,operationId:pending.operationId},signal);
     try{
       const parent=await this.parent(this.controlDataRoot,'repositories',pending.projectId,pending,pending.state!=='READY'),path=join(parent,'repo.git');if(pending.state==='READY'&&!await exists(path))fail('WORKSPACE_DIRECTORY_MISSING');const provider=await exists(path)?await ControlledGit.open(path,'bare'):await ControlledGit.initialize(path,'bare');

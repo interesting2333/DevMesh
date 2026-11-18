@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import {workbenchSpaceRequests} from './workbench-spaces-protocol.js';
+import type {WorkbenchSpaceResults} from './workbench-spaces-protocol.js';
+import {conversationRequests} from './conversation-protocol.js';
+import type {ConversationResults} from './conversation-protocol.js';
 import {releaseExportRequests} from './release-export-protocol.js';
 import type {ReleaseExportResults} from './release-export-protocol.js';
 import type { planReviewView } from '@devmesh/contracts';
@@ -84,6 +88,7 @@ const resources=z.array(z.strictObject({kind:z.enum(['snapshot','workspace','pro
 const admissionWork=z.strictObject({workId:ids.work,workRevision:revision,workEpoch:epoch,inputManifest,roleSnapshot,endpoint:endpointTarget,resources});
 const verificationOutputs=z.array(z.strictObject({slot:opaqueKey,ref:artifactRef})).max(64);
 export const requests = {
+  ...conversationRequests,...workbenchSpaceRequests,
   ...releaseExportRequests,
   ...releaseAccessRequests,
   ...releaseSessionRequests,
@@ -221,7 +226,7 @@ export type HistoryExportView = { projectId: string; cutoffAt: string; complete:
 export type ExposureView = { exposureId: string; projectId: string; agentKey: string; revision: number; state: string; card: { name: string; description: string; version: string; skills: string[] }; cardHash: string; createdAt: string; updatedAt: string; publishedAt: string | null };
 export type AttemptView = { attemptId: string; runId: string; workId: string; role: string; state: string; attemptNo: number; dispatchOperationId: string; endedAt: string | null };
 export type OutboxView = { outboxId: string; operationId: string; destination: string; payload: Record<string, unknown>; status: string; deliveryAttempt: number; leaseOwner: string | null; leaseUntil: string | null };
-export interface Results extends ReleaseExportResults, SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceMaintenanceResults, WorkspaceReclamationResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults, AcceptanceAbortResults, AcceptanceAbortRecoveryResults, ReleasePublicationResults, ReleaseAccessResults, ReleaseSessionResults {
+export interface Results extends WorkbenchSpaceResults, ConversationResults, ReleaseExportResults, SessionResults, RegistryResults, RuntimeResults, InputResults, PreparationResults, ToolResults, PipelineResults, RepoResults, WorkspaceResults, RepoFileResults, SourceArchiveResults, CandidateIntegrationResults, CandidateMaterialResults, WorkspacePreservationResults, WorkspaceMaintenanceResults, WorkspaceReclamationResults, CandidateResults, QualityResults, WorkVerificationResults, VerifiedFindingResults, VerifiedRepairResults, ReleaseDeliveryResults, ReleaseFreezeResults, CandidateReviewResults, PreviewResults, PreviewAccessResults, PreviewSessionResults, AcceptanceResults, AcceptanceReadinessResults, AcceptanceCommitResults, AcceptanceAbortResults, AcceptanceAbortRecoveryResults, ReleasePublicationResults, ReleaseAccessResults, ReleaseSessionResults {
   registerContent: { contentHash: string; storageKey: string };
   createProjectWithRun: OperationResult;
   publishPlan: OperationResult;
