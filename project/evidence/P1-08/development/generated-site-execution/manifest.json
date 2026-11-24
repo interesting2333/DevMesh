@@ -1,0 +1,176 @@
+{
+  "files": [
+    {
+      "path": "packages/contracts/src/assistant-task.ts",
+      "sha256": "69b12f45fd6d90f07d8f31096243e0ad2112512a25fe344f43cce69a47515d1f"
+    },
+    {
+      "path": "packages/contracts/src/errors.ts",
+      "sha256": "0e662ad2296b2773dda50648833d45f0fca0dd1f067e531ba00aa4e974a1cb26"
+    },
+    {
+      "path": "packages/contracts/src/openapi.ts",
+      "sha256": "184c03da8500bf31eff63d144b5a5243ef05642e161b27e01b0e93acfe1a1983"
+    },
+    {
+      "path": "packages/agent-runtime/src/assistant-loop.ts",
+      "sha256": "b25c152e028b213e180732cee73feca1f9f72461bcbacc829bcdad805454063b"
+    },
+    {
+      "path": "packages/agent-runtime/src/assistant-context.ts",
+      "sha256": "45b4a87f4098f2e9b438c47e297e7f93387b15657496b19e149bf2908c63673b"
+    },
+    {
+      "path": "packages/agent-runtime/src/conversation-runtime.ts",
+      "sha256": "f228bf46ddfef21f32f27b2a488f27ed746d6dc5136e5a5e9a92ac5d16488952"
+    },
+    {
+      "path": "packages/agent-runtime/src/conversation-progress.ts",
+      "sha256": "7e3966f92402dfe27d5548d722f801c8f73434f21905306f5a615689e4b0ac73"
+    },
+    {
+      "path": "packages/agent-runtime/src/provider-stream.ts",
+      "sha256": "ef8d378c92c0176234999d671dc743214467ee0d188ea109f17589fb6cdf903e"
+    },
+    {
+      "path": "packages/agent-runtime/src/provider.ts",
+      "sha256": "b1c145d8776a72fb6e1a9f69ee5a36315280fdd32c83b12465096b9d3977b257"
+    },
+    {
+      "path": "packages/code-workspaces/src/assistant-workspace.ts",
+      "sha256": "5d572136f0aa3fd82431b81734d49314032db9c4c7070a011f1a9c84b268adad"
+    },
+    {
+      "path": "packages/code-workspaces/src/assistant-html.ts",
+      "sha256": "d0725fd13d105ab800fd0243f5b03c055929c8464fb39916f530a6ecb5570391"
+    },
+    {
+      "path": "packages/input-api/src/assistant-artifacts.ts",
+      "sha256": "cea9b247031ec55a18fb406624db9847c7c19abb8d51469ec9e17f83903fa325"
+    },
+    {
+      "path": "packages/input-api/src/assistant-tasks.ts",
+      "sha256": "438e4294947526fc15355ed7bd71093cd22cbf088d3b275b0bb497d8fc416f5e"
+    },
+    {
+      "path": "packages/input-api/src/conversation-live.ts",
+      "sha256": "53a0ca1e2d8ecf8313917da1d8c62e7fbf86212bfb5856d552627c8baf30a0f5"
+    },
+    {
+      "path": "packages/input-api/src/web/conversation-live.tsx",
+      "sha256": "6b0a439e7da70cbd9b12b2e209cf9df783567bbce79df1a802ccf93e060a0015"
+    },
+    {
+      "path": "packages/input-api/src/web/assistant-download.tsx",
+      "sha256": "e5667702eda315371c371d70bb3eb97379bceb3b04e30285ac70c005a03d026b"
+    },
+    {
+      "path": "packages/input-api/src/web/conversation-project-tasks.tsx",
+      "sha256": "9d5db14f5591aa6b0bbb1cf33588ef2d9b55053f817cac245e5eddaf34e2e631"
+    },
+    {
+      "path": "packages/input-api/src/web/conversation-workbench.tsx",
+      "sha256": "dffe13091bf76433de3f777e5f3b76ecd6c8f727e685c26f27a6a98d4493375a"
+    },
+    {
+      "path": "packages/input-api/src/workbench-page.ts",
+      "sha256": "21652fec43224e6828db817d19b2c7e7b0c26eae3132e0e33e4487e3f1a84153"
+    },
+    {
+      "path": "packages/input-api/src/workbench-styles.ts",
+      "sha256": "1d85469cb1eb1ee52758668ae4c10be2da2aafe7db9490b92049d1be62e51471"
+    },
+    {
+      "path": "packages/storage-sqlite/src/assistant-domain.ts",
+      "sha256": "1e961815dde6014c6207cd51e13806f61241f3debe83c2141ed689d255fa1ca4"
+    },
+    {
+      "path": "packages/storage-sqlite/src/assistant-protocol.ts",
+      "sha256": "3b7ac2230985811ef30a854ec9a5ef30b5374d7a1a9b8caed00edf46775d60a9"
+    },
+    {
+      "path": "packages/storage-sqlite/src/conversation-domain.ts",
+      "sha256": "bd80d09c599a0f5f1cc54aaab26d72dcfecc258eecd45e74c8e4960878a7b4da"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0060-generationadoptions.sql",
+      "sha256": "45ce2d340eb95f0d9a90a1023ad8b4bad1a6c93c8a8c490d26f3f18d41ee3563"
+    },
+    {
+      "path": "packages/platform-core/src/index.ts",
+      "sha256": "f5ccf730e1c9aec32345ef662f9ee249d43e6e2d387141a651099fa768976ee2"
+    },
+    {
+      "path": "scripts/dev-preview.mjs",
+      "sha256": "8837a6032d675c3d2fee09fb653a658f9a7b86c1a80f4fd777f08ba7b1dd2925"
+    },
+    {
+      "path": "tests/generated-site.test.mjs",
+      "sha256": "781add2c8d6f7382e2b61eff8d5fe1bb4951795a84660d58174de9b8475ab74c"
+    },
+    {
+      "path": "tests/storage-generation-upgrade.test.mjs",
+      "sha256": "c86f1d1c6cc50a2170c9894df533d5e70a9053aa33330520d92550c62949fb6a"
+    },
+    {
+      "path": "tests/browser/generated-site.test.mjs",
+      "sha256": "24d8727bbf76150deecdb059dedaad6ebba6811c9082268cec0095be79420b87"
+    },
+    {
+      "path": "tests/fixtures/generated-conversation.mjs",
+      "sha256": "22e95949292505000e3125261de1532164d6509414e4c6d74e4dec74f8bb912e"
+    },
+    {
+      "path": "tests/contracts.test.mjs",
+      "sha256": "27b0817ba0e9322e796accd8b5f850a828fe4e2ada7a27a02c8faf53ee3c19a8"
+    },
+    {
+      "path": "tests/storage-assistant-upgrade.test.mjs",
+      "sha256": "d3535ef63ab64893d1223f0090ef4281688b81f5599b90bc2f2d3343b269bde1"
+    },
+    {
+      "path": "docs/assistant-project-execution.md",
+      "sha256": "e7b43b77176b816583dfc291ba19d82bade0b921ce3483457711f04b43a42d9c"
+    },
+    {
+      "path": "openspec/changes/fix-generated-site-execution/proposal.md",
+      "sha256": "ed68631efdcd058b76407ea51dc6e180b86d01699e54c0401c643b4885b1f158"
+    },
+    {
+      "path": "openspec/changes/fix-generated-site-execution/design.md",
+      "sha256": "2518c25736867d8708bad572f2dfe4982d9141b02cdc08d05e4ea59db3a82da5"
+    },
+    {
+      "path": "openspec/changes/fix-generated-site-execution/tasks.md",
+      "sha256": "142c73d50976af642b99efa0388392b238573cda210d2f060e487db1f7c793be"
+    },
+    {
+      "path": "openspec/changes/fix-generated-site-execution/specs/generated-site-execution/spec.md",
+      "sha256": "722aa1b2745191634eb522466d029fdfe4105d0cf7bcbdb2c355fd119c5f22bf"
+    },
+    {
+      "path": "DevMesh_PRD_V10.0.md",
+      "sha256": "2bfb81df94d3daa780e025aafb0050c8cfdf6a3488ebe5b7cba8436fa9769960"
+    },
+    {
+      "path": "DevMesh_技术设计方案_V1.1.md",
+      "sha256": "1154dcb663e20655b5f8f5d27f72b27c0044b6a58feba47ddde45142be2ffdd7"
+    },
+    {
+      "path": "DevMesh_产品验收场景_V10.0.md",
+      "sha256": "a94839ea670935d73375e8443782be98646b0d2114b8caed1b95561a36422282"
+    },
+    {
+      "path": "DevMesh_实施文档_V1.0.md",
+      "sha256": "3e0498bd0d0eb9af76e80519b6878967277ed8520d70d57b4a6cc80a69f7bffa"
+    },
+    {
+      "path": "project/evidence/P1-08/generated-site-execution-development-review.md",
+      "sha256": "9f8594c1bef4f1ce20212b302d8aec3887c25d9b28e9d2dc8826f62b28022127"
+    },
+    {
+      "path": "project/evidence/P1-08/development/generated-site-execution/report.json",
+      "sha256": "9e87345183e4d9ff96e4b8e6134999c92652f00c3d9902d431b48ad3e50e4127"
+    }
+  ]
+}

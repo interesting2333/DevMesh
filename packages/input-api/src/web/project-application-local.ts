@@ -1,0 +1,10 @@
+import type {z} from 'zod';
+import type {assistantApplyInput} from '@devmesh/contracts';
+export interface ProjectApplicationOriginal {scope:string;key:string;body:z.output<typeof assistantApplyInput>;state:'PENDING'|'SUCCEEDED'|'FAILED'}
+export async function projectApplicationStore(owner:string,conversationId:string){
+ const opening=indexedDB.open('devmesh.project-applications',1);opening.onupgradeneeded=()=>opening.result.createObjectStore('originals',{keyPath:'scope'});
+ const db=await new Promise<IDBDatabase>((resolve,reject)=>{opening.onsuccess=()=>resolve(opening.result);opening.onerror=()=>reject(opening.error);}),scope=owner+'|'+conversationId;
+ async function transaction<T>(mode:IDBTransactionMode,fn:(store:IDBObjectStore)=>Promise<T>){const tx=db.transaction('originals',mode),done=new Promise<void>((resolve,reject)=>{tx.oncomplete=()=>resolve();tx.onabort=()=>reject(tx.error??Error('Local journal aborted'));tx.onerror=()=>{};});try{const value=await fn(tx.objectStore('originals'));await done;return value;}catch(e){try{tx.abort();}catch{}await done.catch(()=>{});throw e;}}
+ const request=<T>(r:IDBRequest<T>)=>new Promise<T>((resolve,reject)=>{r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
+ return {close:()=>db.close(),load:()=>transaction('readonly',async s=>await request(s.get(scope)) as ProjectApplicationOriginal|undefined),begin:(body:ProjectApplicationOriginal['body'])=>transaction('readwrite',async s=>{const prior=await request(s.get(scope)) as ProjectApplicationOriginal|undefined;if(prior?.state==='PENDING')return prior;const original:ProjectApplicationOriginal={scope,key:crypto.randomUUID(),body,state:'PENDING'};await request(s.put(original));return original;}),finish:(key:string,state:'SUCCEEDED'|'FAILED')=>transaction('readwrite',async s=>{const prior=await request(s.get(scope)) as ProjectApplicationOriginal|undefined;if(!prior||prior.key!==key)throw Error('Original application changed');await request(s.put({...prior,state}));})};
+}

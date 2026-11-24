@@ -1,5 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {WorkbenchApiError} from './workbench-api.js';
+import {WorkbenchMcpSettings} from './workbench-mcp-settings.js';
 
 type ModelSettings={configured:boolean;providerId:string|null;endpoint:string|null;model:string|null;hasApiKey:boolean;updatedAt:string|null};
 type SettingsForm={providerId:string;endpoint:string;model:string;apiKey:string};
@@ -14,6 +15,7 @@ function failure(error:unknown,fallback:string){
 }
 
 export function WorkbenchSettings({api,onClose}:{api:Api;onClose:()=>void}){
+  const [section,setSection]=useState<'model'|'mcp'>('model');
   const [saved,setSaved]=useState<ModelSettings|null>(null),[form,setForm]=useState<SettingsForm>(defaultForm),[busy,setBusy]=useState(true),[message,setMessage]=useState('');
   const [models,setModels]=useState<string[]>([]),[modelsBusy,setModelsBusy]=useState(false),[modelsMessage,setModelsMessage]=useState(''),[manual,setManual]=useState(false);
   const alive=useRef(true),modelGeneration=useRef(0),modelAbort=useRef<AbortController|null>(null),operationAbort=useRef<AbortController|null>(null);
@@ -74,6 +76,11 @@ export function WorkbenchSettings({api,onClose}:{api:Api;onClose:()=>void}){
 
   return <div className="modal-backdrop" onClick={onClose}><section className="modal" role="dialog" aria-modal="true" aria-label="设置" onClick={event=>event.stopPropagation()}>
     <div className="modal-head"><h2>设置</h2><button onClick={onClose} aria-label="关闭设置">关闭</button></div>
+    <nav className="settings-nav" aria-label="设置分类">
+      <button type="button" aria-pressed={section==='model'} onClick={()=>setSection('model')}>模型设置</button>
+      <button type="button" aria-pressed={section==='mcp'} onClick={()=>setSection('mcp')}>MCP 服务</button>
+    </nav>
+    {section==='mcp'?<WorkbenchMcpSettings api={api}/>:<>
     <h3>模型接入</h3><p className="muted">选择接入服务和模型。保存后需重启服务生效。</p>
     <label>Provider<input value={form.providerId} disabled={busy} onChange={event=>editConnection({providerId:event.target.value})} autoComplete="off" maxLength={64}/></label>
     <label>Endpoint<input value={form.endpoint} disabled={busy} onChange={event=>editConnection({endpoint:event.target.value})} autoComplete="off" inputMode="url" maxLength={500}/></label>
@@ -93,5 +100,6 @@ export function WorkbenchSettings({api,onClose}:{api:Api;onClose:()=>void}){
     <div className="actions"><button disabled={busy||!saved?.configured} onClick={()=>void testConnection()} title="测试已保存的模型接入">测试连接</button><button className="primary" disabled={busy||!form.model.trim()} onClick={()=>void save()}>保存设置</button></div>
     {message&&<p role="status" aria-label="设置操作状态" className="settings-message">{message}</p>}
     <div className="settings-current"><span className={saved?.configured?'badge settings-connected':'badge'}>{saved?.configured?'已配置':'未配置'}</span><span>{saved?.model??'保存配置后即可使用'}{saved?.hasApiKey?' · 密钥已保存':''}</span></div>
+    </>}
   </section></div>;
 }

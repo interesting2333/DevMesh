@@ -18,3 +18,5 @@ export {repoGitTools} from './repo-git.js';
 export type {RepoWorkspaceBinding,RepoWorkspaceLease,RepoGitOptions,RepoWorkspaceAccess} from './repo-git.js';
 export {startWorkflowMcpServices} from './composition.js';
 export type {WorkflowMcpOptions,WorkflowMcpServices,WorkflowMcpIdentity,McpServiceKind} from './composition.js';
+export {createMcpSettings} from './settings.js';
+export type {McpSettings,McpEndpointPolicy} from './settings.js';

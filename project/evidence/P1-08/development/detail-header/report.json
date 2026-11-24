@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-20",
+  "scope": "DU-12 detail header refinement",
+  "checks": {
+    "build": "PASSED",
+    "typecheck": "PASSED",
+    "lint": "PASSED",
+    "browser": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "durationMs": 17013.9516
+    }
+  },
+  "sha256": {
+    "packages/input-api/src/web/conversation-workbench.tsx": "bd61b68e707fd1d09765401ca418610cacfb2c6dffc8684eb9bf36744a18d853",
+    "packages/input-api/src/workbench-styles.ts": "3908acf59a54cd54da6eece3008cc3f0eea7182674386f66b911c2a4f4b8d7fd",
+    "tests/browser/conversation-details.test.mjs": "5aefb377f19fe80dbf483c0b74cb689a1539ddad3f9fdfbcc074bdf8e383c2fc",
+    "tests/browser/conversation-workbench.test.mjs": "8bd7ea5b0281090d50dcabef1c1b0914abe13942593c3825ec740aa262401e10",
+    "packages/input-api/dist/index.mjs": "38b6a46b0548e5870cc875486fed632bfe03b6de0779665e6669fe3090a7df44",
+    "packages/input-api/dist/web/workbench/workbench-client.js": "789076b1fff4fc9f574f1179e8700524027068ab79a42233e392357514955be0"
+  },
+  "service": {
+    "event": "updated-workbench-verified",
+    "status": 200,
+    "scriptStatus": 200,
+    "newDetailLayout": true,
+    "newPreviewSummary": true,
+    "newOverview": true
+  }
+}

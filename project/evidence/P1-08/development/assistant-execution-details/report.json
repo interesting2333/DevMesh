@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-23",
+  "scope": "connect-assistant-execution-details / P1-08 development increment; formal work-package and stage gates unchanged",
+  "reviewer": "Codex development self-review (same agent)",
+  "node": "v24.22.3",
+  "tests": {
+    "total": 55,
+    "passed": 55,
+    "failed": 0,
+    "skipped": 0,
+    "newApi": 4,
+    "newBrowser": 2,
+    "existingDetailsBrowser": 9,
+    "existingDesktopBrowser": 4,
+    "existingProjectExecutionBrowser": 4,
+    "existingGeneratedBrowser": 1,
+    "existingGeneratedApi": 13,
+    "contracts": 18,
+    "exitCode": 0,
+    "finalBrowserRecheck": {
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "overlapWithUniqueTotal": 3
+    }
+  },
+  "checks": {
+    "fullBuild": "passed",
+    "finalInputApiBuild": "passed",
+    "typecheck": "passed",
+    "scopedLint": "passed",
+    "openApi": "passed"
+  },
+  "actualTask": {
+    "panels": {
+      "overview": "passed",
+      "collaboration": "passed",
+      "artifacts": "passed",
+      "preview": "passed",
+      "records": "passed"
+    },
+    "state": "READY",
+    "inputRevision": 3,
+    "artifactBytes": 24485,
+    "persistedModelSteps": 5,
+    "persistedToolCalls": 4,
+    "totalActivities": 10,
+    "downloadSha": "matched",
+    "opaqueOrigin": true,
+    "extraPosts": 0,
+    "pageErrors": [],
+    "readiness": 200
+  },
+  "storage": {
+    "schema": 60,
+    "beforeCounts": {
+      "conversations": 6,
+      "conversation_messages": 36,
+      "projects": 6,
+      "runs": 6,
+      "workbench_spaces": 2,
+      "operations": 50,
+      "assistant_sessions": 2,
+      "assistant_steps": 10,
+      "assistant_tool_calls": 8,
+      "assistant_applications": 0,
+      "conversation_generation_adoptions": 1
+    },
+    "afterCounts": {
+      "conversations": 6,
+      "conversation_messages": 36,
+      "projects": 6,
+      "runs": 6,
+      "workbench_spaces": 2,
+      "operations": 50,
+      "assistant_sessions": 2,
+      "assistant_steps": 10,
+      "assistant_tool_calls": 8,
+      "assistant_applications": 0,
+      "conversation_generation_adoptions": 1
+    },
+    "preservedMessages": 36,
+    "integrity": "ok",
+    "foreignKeys": 0,
+    "migration": "none",
+    "newExecutionSteps": 0,
+    "newToolCalls": 0
+  },
+  "initialValidation": {
+    "tests": 33,
+    "passed": 32,
+    "failed": 1,
+    "resolved": "Retained the established empty-conversation record message; existing data and tab behavior were correct.",
+    "interruptedRun": "One final run was interrupted by the tool session. The complete final run has a saved exit code and all 55 results.",
+    "previewIssue": "Captured native events stopped at the parent iframe element after draft/tab interactions. Disabling backdrop-filter on the preview overlay forwarded native clicks into the child document. Sandbox and network policy unchanged; final three browser checks passed.",
+    "startupRecovery": "A stopped preview process left its writer lock. Verified the owner PID was dead, recovered with the exact original token through openLocalStorage, and verified the restarted service and all five panels again."
+  },
+  "limits": [
+    "Execution selection lists the most recent 20 assistant sessions; returned activity facts are bounded at 200 with an explicit total.",
+    "Assistant collaboration reflects the actual single assistant; no synthetic Agent roles or professional Runs.",
+    "Strict production Runner, quota acceptance and formal product gates are unchanged."
+  ],
+  "privateEvidence": "User messages, task IDs, original generated HTML, raw screenshots, databases and credentials remain outside Git."
+}

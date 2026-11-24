@@ -1,6 +1,7 @@
-import {LocalWorkbenchDirectories} from '@devmesh/code-workspaces';
+import {LocalWorkbenchDirectories,AssistantWorkspaces,DockerAssistantCommands} from '@devmesh/code-workspaces';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
+import type {AssistantBackend} from '@devmesh/contracts';
 import type { AddressInfo, Socket } from 'node:net';
 import express from 'express';
 import { Context } from '@deepseek-ai/cordis';
@@ -8,9 +9,9 @@ import type { ServerConfig } from './config.js';
 import type { LocalStorage, LocalContentStore, SessionStore } from '@devmesh/blob-store';
 import type { mountInternalAgents, CredentialResolver } from '@devmesh/a2a-adapter';
 import type { PreparationConsumer, RuntimeConsumer, RuntimeTool,RuntimeWorkspaceLifecycle } from '@devmesh/agent-runtime';
-import type { IdentityResolver, mountInputApi,PreviewAccessGateway,WorkbenchEventLimits } from '@devmesh/input-api';
+import type { IdentityResolver, LocalPlaywrightAccess, mountInputApi,PreviewAccessGateway,WorkbenchEventLimits } from '@devmesh/input-api';
 import type { WorkflowScheduler, WorkflowSchedulerOptions } from './scheduler.js';
-import type {WorkflowMcpOptions,WorkflowMcpServices} from '@devmesh/mcp-tools';
+import type {McpSettings,WorkflowMcpOptions,WorkflowMcpServices} from '@devmesh/mcp-tools';
 import {ReleaseExportScheduler} from './release-exports.js';
 import {ReleaseAcceptor} from './release-acceptor.js';
 import {AcceptancePreparationConsumer} from './acceptance-consumer.js';
@@ -52,7 +53,7 @@ export type {PreviewLifecycleConsumerOptions,PreviewLifecycleBinding} from './pr
 export interface FoundationServer {
   readonly address: Readonly<AddressInfo>;
   stop(): Promise<void>;
-  services?: { local:LocalStorage; content:LocalContentStore; sessions:SessionStore;directories?:LocalWorkbenchDirectories } | undefined;
+  services?: { local:LocalStorage; content:LocalContentStore; sessions:SessionStore;directories?:LocalWorkbenchDirectories;assistant?:AssistantBackend } | undefined;
   agents?:ReturnType<typeof mountInternalAgents>|undefined;
   consumer?:RuntimeConsumer|undefined;
   preparationConsumer?:PreparationConsumer|undefined;
@@ -67,7 +68,7 @@ export interface FoundationServer {
   previewDatasets?:PreviewDatasetConsumer|undefined;
 }
 
-export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;workbenchEvents?:WorkbenchEventLimits;previewGateway?:PreviewAccessGateway;previewPolicies?:Readonly<Record<string,string>>;previewDatasets?:(services:NonNullable<FoundationServer['services']>)=>Promise<PreviewDatasetConsumerOptions>|PreviewDatasetConsumerOptions;previewLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<PreviewLifecycleConsumerOptions>|PreviewLifecycleConsumerOptions;acceptancePolicies?:Readonly<Record<string,string>>;acceptancePreparation?:(services:NonNullable<FoundationServer['services']>)=>Promise<AcceptancePreparationConsumerOptions>|AcceptancePreparationConsumerOptions;acceptanceAbort?:(services:NonNullable<FoundationServer['services']>)=>Promise<AcceptanceAbortConsumerOptions>|AcceptanceAbortConsumerOptions;releasePublication?:(services:NonNullable<FoundationServer['services']>)=>Promise<ReleasePublicationConsumerOptions>|ReleasePublicationConsumerOptions;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
+export async function startPlatform(config: Readonly<ServerConfig>,options:{resolveCredential?:CredentialResolver;runtimeTools?:RuntimeTool[];workspaceLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<RuntimeWorkspaceLifecycle>|RuntimeWorkspaceLifecycle;identityResolver?:IdentityResolver;playwrightPreviewResultsDir?:string;localPlaywright?:LocalPlaywrightAccess;workbenchEvents?:WorkbenchEventLimits;previewGateway?:PreviewAccessGateway;previewPolicies?:Readonly<Record<string,string>>;previewDatasets?:(services:NonNullable<FoundationServer['services']>)=>Promise<PreviewDatasetConsumerOptions>|PreviewDatasetConsumerOptions;previewLifecycle?:(services:NonNullable<FoundationServer['services']>)=>Promise<PreviewLifecycleConsumerOptions>|PreviewLifecycleConsumerOptions;acceptancePolicies?:Readonly<Record<string,string>>;acceptancePreparation?:(services:NonNullable<FoundationServer['services']>)=>Promise<AcceptancePreparationConsumerOptions>|AcceptancePreparationConsumerOptions;acceptanceAbort?:(services:NonNullable<FoundationServer['services']>)=>Promise<AcceptanceAbortConsumerOptions>|AcceptanceAbortConsumerOptions;releasePublication?:(services:NonNullable<FoundationServer['services']>)=>Promise<ReleasePublicationConsumerOptions>|ReleasePublicationConsumerOptions;scheduler?:WorkflowSchedulerOptions;mcp?:(services:NonNullable<FoundationServer['services']>)=>Promise<WorkflowMcpOptions>|WorkflowMcpOptions}={}): Promise<FoundationServer> {
   const previewPolicies=options.previewPolicies?Object.freeze({...options.previewPolicies}):undefined;
   const acceptancePolicies=options.acceptancePolicies?Object.freeze({...options.acceptancePolicies}):undefined;
   if(config.a2a&&!config.storage)throw new Error('A2A requires explicitly initialized durable storage');
@@ -84,6 +85,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   if(options.previewDatasets&&!config.storage)throw new Error('Preview datasets require durable storage');
   if(options.previewLifecycle&&!config.storage)throw new Error('Preview lifecycle requires durable storage');
   if(options.mcp&&!config.storage)throw new Error('MCP services require durable storage');
+  if(config.mcp&&(!config.storage||!config.inputApi))throw new Error('External MCP settings require storage and Input API');
   if(options.workspaceLifecycle&&!config.runtime)throw new Error('Managed workspaces require an explicitly configured Runtime');
   if(options.scheduler&&(!config.runtime||!config.a2a?.identities.some(identity=>identity.principalId===options.scheduler?.callerId)))
     throw new Error('Scheduler requires configured Runtime and an internal service identity');
@@ -124,6 +126,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   });
   let agents: ReturnType<typeof mountInternalAgents>|undefined;
   let consumer:RuntimeConsumer|undefined;
+  let preparationAvailable=false;
   let preparationConsumer:PreparationConsumer|undefined;
   let conversationConsumer:import('@devmesh/agent-runtime').ConversationRuntime|undefined;
   let conversationProvider:import('@devmesh/agent-runtime').ModelProvider|undefined;
@@ -131,6 +134,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   let a2aModule:typeof import('@devmesh/a2a-adapter')|undefined;
   let inputApi:ReturnType<typeof mountInputApi>|undefined;
   let mcp:WorkflowMcpServices|undefined;
+  let externalMcp:McpSettings|undefined;
   let releaseExports:ReleaseExportScheduler|undefined;
   let acceptancePreparation:AcceptancePreparationConsumer|undefined;
   let releasePublication:ReleasePublicationConsumer|undefined;
@@ -140,8 +144,15 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
   try{if(config.a2a&&services){a2aModule=await import('@devmesh/a2a-adapter');agents=a2aModule.mountInternalAgents(app,services.local.storage,{...config.a2a,resolveCredential:options.resolveCredential??a2aModule.environmentCredentials()});}}
   catch(error){await storageFiber?.dispose();throw error;}
   if(config.inputApi&&services)services.directories=new LocalWorkbenchDirectories(services.local.storage,config.inputApi.workspaceRoots??[config.inputApi.repositoryRoot]);
-  if(inputModule&&inputBaseline&&services){const {ConversationRuntime}=await import('@devmesh/agent-runtime');conversationConsumer=new ConversationRuntime(services.local.storage,services.content,{baseline:inputBaseline,repositoryContext:(principalId,conversationId)=>services!.directories!.conversationContext(principalId,conversationId),provider:()=>conversationProvider,preparation:()=>!!preparationConsumer,execution:()=>!!scheduler&&!!options.workspaceLifecycle,tokenLimit:runtimeConfig?.tokenLimit??100000});}
-  try{if(inputModule&&inputBaseline&&services){const acceptor=acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,events:{...options.workbenchEvents,closeTimeoutMs:Math.min(options.workbenchEvents?.closeTimeoutMs??250,config.shutdownTimeoutMs)},previewGateway:options.previewGateway,previewPolicies,settingsRoot:join(services.local.dataRoot,'settings'),directories:services.directories,conversations:conversationConsumer?{admission:()=>config.inputApi?.conversationAdmission!==false,capabilities:()=>conversationConsumer!.capabilities(),control:(principalId,conversationId,body,key)=>conversationConsumer!.control(principalId,conversationId,body,key)}:undefined,...(acceptor?{acceptance:{policies:acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
+  if(config.assistant?.enabled&&services?.directories){const commands=config.assistant.backend==='docker-development'?new DockerAssistantCommands(join(services.local.dataRoot,'assistant-workspaces'),config.assistant.imageDigest!,config.assistant.timeoutMs):undefined;await commands?.probe();services.assistant=new AssistantWorkspaces(join(services.local.dataRoot,'assistant-workspaces'),services.directories,commands);}
+  if(inputModule&&inputBaseline&&services){const {ConversationRuntime}=await import('@devmesh/agent-runtime');conversationConsumer=new ConversationRuntime(services.local.storage,services.content,{baseline:inputBaseline,assistant:services.assistant,progress:update=>{if(inputApi?.enabled)inputApi.publishConversationProgress(update);},repositoryContext:async(principalId,conversationId)=>services!.assistant?{binding:(await services!.local.storage.request('getConversationSpaceContext',{principalId,conversationId})).binding}:services!.directories!.conversationContext(principalId,conversationId),provider:()=>conversationProvider,preparation:()=>!!preparationConsumer&&preparationAvailable,execution:()=>!!scheduler&&!!options.workspaceLifecycle,tokenLimit:runtimeConfig?.tokenLimit??100000});}
+  try{
+    if(config.mcp&&services){
+      const {createMcpSettings}=await import('@devmesh/mcp-tools');
+      externalMcp=createMcpSettings(join(services.local.dataRoot,'settings'),services.local.storage,config.mcp.endpoints,undefined,
+        ()=>config.runtime?mcp?.playwrightMcpCheckIds??[]:[]);
+    }
+    if(inputModule&&inputBaseline&&services){const acceptor=acceptancePolicies?new ReleaseAcceptor(services.local.storage,services.content):undefined;inputApi=inputModule.mountInputApi(app,services.content,{enabled:true,baseline:inputBaseline,identityResolver:options.identityResolver,events:{...options.workbenchEvents,closeTimeoutMs:Math.min(options.workbenchEvents?.closeTimeoutMs??250,config.shutdownTimeoutMs)},previewGateway:options.previewGateway,previewPolicies,settingsRoot:join(services.local.dataRoot,'settings'),mcpSettings:externalMcp&&config.mcp?{...externalMcp,administrator:config.mcp.administrator,playwrightPreviewResultsDir:options.playwrightPreviewResultsDir,localPlaywright:options.localPlaywright}:undefined,directories:services.directories,assistant:services.assistant,conversations:conversationConsumer?{admission:()=>config.inputApi?.conversationAdmission!==false,capabilities:()=>conversationConsumer!.capabilities(),control:(principalId,conversationId,body,key)=>conversationConsumer!.control(principalId,conversationId,body,key)}:undefined,...(acceptor?{acceptance:{policies:acceptancePolicies!,commit:input=>acceptor.accept(input)}}:{})});}}
   catch(error){await agents?.stop();await storageFiber?.dispose();throw error;}
   app.use((_request, response) => { response.status(404).json({ error: 'NOT_FOUND' }); });
   const server = createServer({ headersTimeout: 5000, requestTimeout: config.inputApi?35000:10000 }, app);
@@ -193,8 +204,10 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     acceptanceAbort?.stopAdmission();
     previewLifecycle?.stopAdmission();
     previewDatasets?.stopAdmission();
-    mcp?.stopAdmission();const failures:unknown[]=[];
-    const actions=[()=>inputApi?.stop(),()=>conversationConsumer?.stop(),()=>previewLifecycle?.stop(),()=>previewDatasets?.stop(),()=>acceptancePreparation?.stop(),()=>releasePublication?.stop(),()=>acceptanceAbort?.stop(),()=>releaseExports?.stop(),()=>scheduler?.stop(),()=>preparationConsumer?.stop(),()=>consumer?.stop(),()=>mcp?.close(),()=>agents?.stop(),()=>fiber.dispose(),()=>storageFiber?.dispose()];
+    mcp?.stopAdmission();
+    externalMcp?.stopAdmission();
+    const failures:unknown[]=[];
+    const actions=[()=>inputApi?.stop(),()=>conversationConsumer?.stop(),()=>previewLifecycle?.stop(),()=>previewDatasets?.stop(),()=>acceptancePreparation?.stop(),()=>releasePublication?.stop(),()=>acceptanceAbort?.stop(),()=>releaseExports?.stop(),()=>scheduler?.stop(),()=>preparationConsumer?.stop(),()=>consumer?.stop(),()=>mcp?.close(),()=>externalMcp?.close(),()=>agents?.stop(),()=>fiber.dispose(),()=>storageFiber?.dispose()];
     for(const action of actions)try{await action();}catch(error){failures.push(error);}
     if(failures.length){server.closeAllConnections();for(const socket of sockets)socket.destroy();throw new AggregateError(failures,'Platform resource release failed');}
   }
@@ -213,6 +226,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
     if(options.previewDatasets&&services)previewDatasets=await PreviewDatasetConsumer.create(services.local.storage,await options.previewDatasets(services));
     if(options.previewLifecycle&&services)previewLifecycle=await PreviewLifecycleConsumer.create(services.local.storage,await options.previewLifecycle(services));
     if(options.mcp&&services){const {startWorkflowMcpServices}=await import('@devmesh/mcp-tools');mcp=await startWorkflowMcpServices(services.local.storage,services.content,await options.mcp(services));}
+    const externalTools=await externalMcp?.start(Boolean(runtimeConfig));
     if(config.releaseExports&&services){
       const {LocalReleaseExportSources}=await import('@devmesh/code-workspaces');
       releaseExports=new ReleaseExportScheduler(services.content,new LocalReleaseExportSources(services.local.dataRoot),config.releaseExports);
@@ -225,7 +239,7 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
       const mainProvider=providers.find(p=>p.config.providerId===runtimeConfig.preparation?.productProviderId)??providers[0];
       if(mainProvider&&await credentials(mainProvider.config.credentialRef))conversationProvider=mainProvider;
       const progress=inputApi?.enabled?inputApi.publishModelProgress:undefined;
-      const runtime=new AgentRuntime(services.local.storage,services.content,providers,[...(options.runtimeTools??[]),...(mcp?.tools??[])],runtimeConfig.tokenLimit,await options.workspaceLifecycle?.(services),progress);
+      const runtime=new AgentRuntime(services.local.storage,services.content,providers,[...(options.runtimeTools??[]),...(mcp?.tools??[]),...(externalTools??[])],runtimeConfig.tokenLimit,await options.workspaceLifecycle?.(services),progress);
       const localEndpoints=config.a2a!.manifest.endpoints.filter(e=>e.hosting==='local'&&e.enabled);
       consumer=new RuntimeConsumer(services.local.storage,runtime,localEndpoints.map(e=>e.endpointId),'runtime.local');
       await consumer.start();
@@ -246,8 +260,9 @@ export async function startPlatform(config: Readonly<ServerConfig>,options:{reso
           workspaceBootstrap:(principalId,runId,commit)=>services!.directories!.preparationBootstrap(principalId,runId,commit),
           ...(prep.bootstrapPaths.length?{bootstrap:{repositoryRoot:config.inputApi!.repositoryRoot,paths:prep.bootstrapPaths}}:{}),
         });
+        preparationAvailable=(await Promise.all((['product','architect'] as const).map(async role=>{const e=localEndpoints.find(e=>e.role===role&&e.supportedSkills.includes('devmesh.prepare.'+role));return !!e&&!!await credentials(e.credentialRef);}))).every(Boolean);
         preparationConsumer=new PreparationConsumer(preparation,localEndpoints.filter(e=>e.supportedSkills.includes('devmesh.prepare.'+e.role)).map(e=>e.endpointId));
-        await preparationConsumer.start();
+        if(preparationAvailable)await preparationConsumer.start();
       }
     }
     acceptanceAbort?.start();

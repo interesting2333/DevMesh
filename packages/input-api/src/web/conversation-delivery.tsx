@@ -3,7 +3,7 @@ import {workbenchDeliveryView} from '@devmesh/contracts';
 import type {z} from 'zod';
 
 /** Only saved delivery facts are shown. Target pages recheck current permissions. */
-export function ConversationDelivery({projectId,runId,read}:{projectId:string;runId:string;read:(path:string)=>Promise<unknown>}){
+export function ConversationDelivery({projectId,runId,read,onInspect,onRelease}:{projectId:string;runId:string;read:(path:string)=>Promise<unknown>;onInspect?:(candidateId:string,tab:'成果'|'预览')=>void;onRelease?:()=>void}){
  const [value,setValue]=useState<z.output<typeof workbenchDeliveryView>|null>(null);
  useEffect(()=>{
   let stopped=false;setValue(null);
@@ -17,7 +17,7 @@ export function ConversationDelivery({projectId,runId,read}:{projectId:string;ru
  if(!value||!value.candidates.length&&!value.acceptedRelease)return null;
  const release=value.acceptedRelease;
  return <section className="chat-message chat-progress" aria-label="已保存成果"><div className="chat-author">已保存成果</div>
-  {value.candidates.slice(-3).map(c=>{const path='/api/v1/runs/'+encodeURIComponent(runId)+'/candidates/'+encodeURIComponent(c.candidateId);return <article className="card" key={c.candidateId}><strong>候选版本 {c.revision}</strong><p className="muted">{c.qualification==='CURRENT'?'自动检查已通过，可继续审阅。':'对应先前依据，可查看历史记录。'}</p><div className="actions"><a href={path+'/preview-management/view'} target="_blank" rel="noreferrer">预览与数据</a><a href={path+'/review/view'} target="_blank" rel="noreferrer">审阅检查结果</a></div></article>;})}
-  {release&&<article className="card"><strong>项目已接受版本</strong><p className="muted">{release.runId===runId?'来自本轮执行。':'来自之前的执行。'}</p><div className="actions"><a href={'/api/v1/runs/'+encodeURIComponent(release.runId)+'/releases/'+encodeURIComponent(release.releaseId)+'/view'} target="_blank" rel="noreferrer">查看版本</a><a href={'/api/v1/releases/'+encodeURIComponent(release.releaseId)+'/exports/view'} target="_blank" rel="noreferrer">交付包</a></div></article>}
+  {value.candidates.slice(-3).map(c=>{const path='/api/v1/runs/'+encodeURIComponent(runId)+'/candidates/'+encodeURIComponent(c.candidateId);return <article className="card" key={c.candidateId}><strong>候选版本 {c.revision}</strong><p className="muted">{c.qualification==='CURRENT'?'自动检查已通过，可继续审阅。':'对应先前依据，可查看历史记录。'}</p><div className="actions">{onInspect?<><button onClick={()=>onInspect(c.candidateId,'预览')}>查看效果</button><button onClick={()=>onInspect(c.candidateId,'成果')}>审阅检查结果</button></>:<><a href={path+'/preview-management/view'} target="_blank" rel="noreferrer">预览与数据</a><a href={path+'/review/view'} target="_blank" rel="noreferrer">审阅检查结果</a></>}</div></article>;})}
+  {release&&<article className="card"><strong>项目已接受版本</strong><p className="muted">{release.runId===runId?'来自本轮执行。':'来自之前的执行。'}</p><div className="actions">{onRelease?<button onClick={onRelease}>查看版本与交付包</button>:<><a href={'/api/v1/runs/'+encodeURIComponent(release.runId)+'/releases/'+encodeURIComponent(release.releaseId)+'/view'} target="_blank" rel="noreferrer">查看版本</a><a href={'/api/v1/releases/'+encodeURIComponent(release.releaseId)+'/exports/view'} target="_blank" rel="noreferrer">交付包</a></>}</div></article>}
  </section>;
 }

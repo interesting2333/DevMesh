@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-23",
+  "owner": "Codex",
+  "review": "Same-agent development review; formal P1-08 and gates unchanged",
+  "node": "v24.22.3",
+  "build": "input-api build passed",
+  "typecheck": "passed",
+  "scopedLint": "passed",
+  "tests": {
+    "unique": 4,
+    "passed": 4,
+    "initialRun": {
+      "passed": 3,
+      "failed": 1,
+      "reason": "Hint is shown on focus; test expected visibility before focusing."
+    },
+    "focusedRerun": {
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "scenarios": [
+    "Desktop hint/layout",
+    "Enter send; native Shift+Enter multiline; empty/IME/isComposing/229/repeat do not submit",
+    "Pending send retains edited draft without another request; Ctrl/Cmd compatibility",
+    "Legacy composer keyboard/IME and existing panel navigation"
+  ],
+  "environment": "Edge headless + fixture HTTP/SQLite/IndexedDB; no live-user messages submitted"
+}

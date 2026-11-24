@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-20",
+  "scope": "Execution details first-stage development review; same Codex implementer and reviewer",
+  "runtime": {
+    "node": "24.22.3",
+    "edge": "157.0.4341.60",
+    "os": "Windows"
+  },
+  "checks": {
+    "inputApiBuild": "PASSED",
+    "typecheck": "PASSED",
+    "changedFilesLint": "PASSED",
+    "browser": {
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "files": {
+        "conversation-details": 9,
+        "conversation-desktop": 4,
+        "workbench-delivery": 5
+      },
+      "durationMs": 119177.3829
+    }
+  },
+  "limits": [
+    "Fixture source/model/OCI/container facts are explicit, not production execution evidence.",
+    "Agent handoff/tool projections, full event paging and execution summaries remain phase two.",
+    "No formal P1-08 completion or G0-G4/product acceptance claimed."
+  ],
+  "sha256": {
+    "packages/input-api/src/web/conversation-details.tsx": "95842af67ec9bae69644aab08b2876f0e5d2995d9728bc6e5cadd7ba2e7b3147",
+    "packages/input-api/src/web/conversation-detail-reading.ts": "a03c6a63ef0fa55ea011f6357f4e4406862cba91c64c5373aead784a31289b37",
+    "packages/input-api/src/web/conversation-work-context.tsx": "b525bee669568c4520b6b8e93b58b0888b92335d6c08b1ea14db8e80e8af6667",
+    "packages/input-api/src/web/conversation-workbench.tsx": "96263cddf1be7da8db4e4889ab29f7ccd244298e7796c81d20c583d67e46ea69",
+    "packages/input-api/src/web/conversation-delivery.tsx": "7d362d9473bd7d63003d8bbfefdc15b6c00e796584e601193fdfb6a2bea37e49",
+    "packages/input-api/src/web/workbench-delivery.tsx": "97fc5c02407c020ef779b474e3b6866a5517b5e79ec14e91edac40c9839dcaee",
+    "packages/input-api/src/web/workbench-candidate-preview.tsx": "4462c0d63cbb6ba820c734b97b85c260a8c26a171477d22741078a13e375482f",
+    "packages/input-api/src/workbench-styles.ts": "5fa41c7295e153e9c936bcec5fca2c47350fee8a2087ee53bbf3c267cc007944",
+    "tests/browser/conversation-details.test.mjs": "d974f99d177d68408ce0b83ca79e90b5a069d6bcbe6a877582ebd801098689e7",
+    "tests/browser/conversation-desktop.test.mjs": "9a6d9397c26494ce389a1ea6cce66cdff13574bec1dbbfa789d54a96869a3a62",
+    "tests/browser/workbench-delivery.test.mjs": "aa81393f628ba809ae42b6585bb0d2953ae09a6bd0e673cf9cc8c7af0cac6b1d",
+    "tests/fixtures/preview-management.mjs": "e89d16ce337620efb082658cb02f14cd527e15cf773c4f4ad18259886be3c889",
+    "packages/input-api/dist/index.mjs": "507e77c52c9ff24a8fc6494abab13c54d84dcf7f1a653c8600d23e7e74aed0fc",
+    "packages/input-api/dist/web/workbench/workbench-client.js": "bde046f3e2e0b3e68b142881f0296bcf6d5a3ab6ee4261c8dd54217ac40f2b97"
+  },
+  "service": {
+    "event": "updated-workbench-verified",
+    "status": 200,
+    "scriptStatus": 200,
+    "newDetailLayout": true,
+    "newPreviewSummary": true,
+    "newOverview": true
+  }
+}

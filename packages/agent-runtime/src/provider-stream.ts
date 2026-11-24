@@ -6,7 +6,7 @@ const chunk=z.object({id:z.string().min(1).max(512),model:z.string().min(1),choi
 type Tool={id:string;type:'function';function:{name:string;arguments:string}};
 
 /** Collect the complete provider response; callbacks are display-only, never tool admission. */
-export async function readDeepSeekStream(body:ReadableStream<Uint8Array>,maximumBytes:number,expectedModel:string,onDelta:((text:string)=>void)|undefined,invalid:(code:string)=>never){
+export async function readDeepSeekStream(body:ReadableStream<Uint8Array>,maximumBytes:number,expectedModel:string,onDelta:((text:string)=>void)|undefined,invalid:(code:string)=>never,onToolProgress?:((value:{name:string;argumentChars:number})=>void)|undefined){
  const reader=body.getReader(),decoder=new TextDecoder('utf-8',{fatal:true}),tools=new Map<number,Tool>();
  let pending='',data:string[]=[],bytes=0,id:string|undefined,model:string|undefined,content='',finished:z.output<typeof finish>|undefined,done=false,usage:z.output<typeof chunk>['usage'];
  function dispatch(){
@@ -26,6 +26,7 @@ export async function readDeepSeekStream(body:ReadableStream<Uint8Array>,maximum
    if(!tool){if(piece.index!==tools.size||!piece.id||piece.type!=='function')invalid('MODEL_TOOL_CALLS_INVALID');tool={id:piece.id,type:'function',function:{name:'',arguments:''}};tools.set(piece.index,tool);}
    else if(piece.id!==undefined&&piece.id!==tool.id)invalid('MODEL_TOOL_CALLS_INVALID');
    tool.function.name+=piece.function?.name??'';tool.function.arguments+=piece.function?.arguments??'';
+   try{onToolProgress?.({name:tool.function.name,argumentChars:tool.function.arguments.length});}catch{/* Display-only activity. */}
    if(tool.function.name.length>128||tool.function.arguments.length>1024*1024)invalid('MODEL_RESPONSE_TOO_LARGE');
   }
   if(choice.finish_reason!==null)finished=choice.finish_reason;

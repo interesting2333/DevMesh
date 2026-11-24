@@ -3,12 +3,13 @@ import type {z} from 'zod';
 import {workbenchDeliveryView} from '@devmesh/contracts';
 import type {workspaceView} from '@devmesh/contracts';
 import type {WorkbenchRead} from './workbench-api.js';
+import {WorkbenchCandidatePreview} from './workbench-candidate-preview.js';
 
 type Workspace=z.output<typeof workspaceView>;
 type Delivery=z.output<typeof workbenchDeliveryView>;
 export type DeliveryReading={candidateId:string|null;candidateAfterRevision:number};
 const time=(value:string)=>new Intl.DateTimeFormat('zh-CN',{dateStyle:'medium',timeStyle:'short'}).format(new Date(value));
-export function WorkbenchDelivery({workspace,read,reading,onReading,before,onOpen,focus}:{workspace:Workspace;read:WorkbenchRead;reading:DeliveryReading;onReading:(value:DeliveryReading)=>void;before:()=>Promise<boolean>;onOpen:(path:string,targetRunId:string)=>Promise<boolean>;focus:'成果'|'预览'}){
+export function WorkbenchDelivery({workspace,read,reading,onReading,before,onOpen,focus,onPreview}:{workspace:Workspace;read:WorkbenchRead;reading:DeliveryReading;onReading:(value:DeliveryReading)=>void;before:()=>Promise<boolean>;onOpen:(path:string,targetRunId:string)=>Promise<boolean>;focus:'成果'|'预览';onPreview?:()=>void}){
  const [value,setValue]=useState<Delivery|null>(null),[problem,setProblem]=useState(''),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[reload,setReload]=useState(0);
  const generation=useRef(0),disposed=useRef(false),working=useRef(false);
  const {projectId}=workspace.project,{runId}=workspace.run;
@@ -35,23 +36,25 @@ export function WorkbenchDelivery({workspace,read,reading,onReading,before,onOpe
  }
  const selected=value?.selectedCandidate,base=selected?'/api/v1/runs/'+encodeURIComponent(runId)+'/candidates/'+encodeURIComponent(selected.candidateId):null,disabled=busy||loading;
  return <section aria-label={focus==='成果'?'候选与已接受成果':'候选预览入口'}>
-  <h2>{focus==='成果'?'候选与交付成果':'查看候选预览'}</h2>
-  <p className="muted">候选属于当前查看的执行。打开审查或管理页面后，可返回继续查看。</p>
+  <h2>{focus==='成果'?'成果与验收':'应用预览'}</h2>
+  <p className="muted">{focus==='成果'?'核对本轮版本的检查结果，审查后再决定是否接受交付。':'查看所选版本的运行状态与效果。启动、停止和数据操作在专用管理页完成。'}</p>
   {problem&&<div className="notice"><p role="alert">{problem}</p><button disabled={disabled} onClick={()=>void change({candidateId:null,candidateAfterRevision:0})}>重新选择当前执行候选</button></div>}
   <button disabled={disabled} onClick={()=>setReload(value=>value+1)}>重新读取交付状态</button>
   {loading&&<p role="status">正在读取已保存候选…</p>}
   {value&&<>
-   <section aria-label="已冻结候选"><h3>已冻结候选</h3>
+   <section aria-label="已冻结候选"><details className="detail-candidate-picker" open={!selected}><summary>选择候选版本{selected?' · 当前 '+selected.revision:''}</summary>
     {!value.candidates.length&&<p>此执行尚无已冻结候选。</p>}
-    {value.candidates.map(candidate=><article className="card" key={candidate.candidateId}>
+    {value.candidates.map(candidate=><article className="detail-candidate" key={candidate.candidateId}>
      <h4>候选 {candidate.revision} · {candidate.qualification==='CURRENT'?'当前依据':'旧依据，只读核对'}</h4>
-     <p className="hash">{candidate.codeCommit}</p><p className="muted">冻结于 {time(candidate.createdAt)}</p>
+     <p className="muted">保存于 {time(candidate.createdAt)}</p>
      <button disabled={disabled} aria-pressed={reading.candidateId===candidate.candidateId} onClick={()=>void change({...reading,candidateId:candidate.candidateId})}>选择候选 {candidate.revision}</button>
     </article>)}
     <div className="actions"><button disabled={disabled||reading.candidateAfterRevision===0} onClick={()=>void change({...reading,candidateAfterRevision:0})}>查看最初候选</button><button disabled={disabled||value.nextRevision===null} onClick={()=>void change({...reading,candidateAfterRevision:value.nextRevision!})}>查看后续候选</button></div>
-   </section>
-   {!selected?<p>请先选择一份已冻结候选。</p>:<section className="notice" aria-label="已选候选"><h3>已选候选 {selected.revision}</h3><p>{selected.qualification==='CURRENT'?'候选仍对应当前依据。':'此候选依据已变化，只供核对；可用操作由目标页面重新核实。'}</p><p className="hash">{selected.codeCommit}</p><p>自动检查已通过，逐项审查结论请进入审查页核对。</p><div className="actions"><button disabled={disabled} onClick={()=>void open(base+'/review/view')}>逐项审查此候选</button><button disabled={disabled} onClick={()=>void open(base+'/preview-management/view')}>查看此候选预览与数据</button><button disabled={disabled} onClick={()=>void open(base+'/acceptance/view')}>核对此候选接受依据</button></div></section>}
-   <section aria-label="项目已接受版本"><h3>项目当前已接受版本</h3>{!value.acceptedRelease?<p>项目尚无已接受版本。</p>:<><p className="hash">{value.acceptedRelease.codeCommit}</p><p className="muted">接受于 {time(value.acceptedRelease.acceptedAt)}{value.acceptedRelease.runId!==runId?' · 来自另一执行':''}</p><p>打开版本页可核对当前发布状态。</p><div className="actions"><button disabled={disabled} onClick={()=>void open('/api/v1/runs/'+encodeURIComponent(value.acceptedRelease!.runId)+'/releases/'+encodeURIComponent(value.acceptedRelease!.releaseId)+'/view',value.acceptedRelease!.runId)}>查看已接受版本</button><button disabled={disabled} onClick={()=>void open('/api/v1/releases/'+encodeURIComponent(value.acceptedRelease!.releaseId)+'/exports/view',value.acceptedRelease!.runId)}>查看此版本交付包</button></div></>}</section>
+   </details></section>
+   {!selected?<p>{value.candidates.length?'请先选择一份已冻结候选。':focus==='预览'?'形成候选版本后，可在这里查看预览状态。':'执行并保存候选后，可在这里审查与交付。'}</p>:<section className="detail-section" aria-label="已选候选"><h3>已选候选 {selected.revision}</h3><p className="muted">{selected.qualification==='CURRENT'?'对应当前需求与计划。':'此候选依据已变化，只供核对；可用操作由目标页面重新核实。'}</p>
+    {focus==='成果'?<><p>自动检查已通过 · {selected.reviewStatus==='PENDING'?'人工审查待核对':'无需人工检查'}</p><p className="muted">审查结果和接受条件以专用页面重新核实的状态为准。</p><div className="actions"><button className="primary" disabled={disabled} onClick={()=>void open(base+'/review/view')}>逐项审查此候选</button><button disabled={disabled} onClick={()=>onPreview?onPreview():void open(base+'/preview-management/view')}>{onPreview?'查看效果':'查看此候选预览与数据'}</button><button disabled={disabled} onClick={()=>void open(base+'/acceptance/view')}>核对此候选接受依据</button></div><details><summary>代码版本</summary><p className="hash">{selected.codeCommit}</p></details></>:<WorkbenchCandidatePreview key={selected.candidateId} projectId={projectId} runId={runId} candidateId={selected.candidateId} read={read} onOpen={open}/>}
+   </section>}
+   {focus==='成果'&&<section className="detail-section" aria-label="项目已接受版本"><h3>项目当前已接受版本</h3>{!value.acceptedRelease?<p className="muted">项目尚无已接受版本。</p>:<><p className="muted">接受于 {time(value.acceptedRelease.acceptedAt)}{value.acceptedRelease.runId!==runId?' · 来自另一执行':' · 来自本轮执行'}</p><p>打开版本页可核对当前发布状态。</p><div className="actions"><button disabled={disabled} onClick={()=>void open('/api/v1/runs/'+encodeURIComponent(value.acceptedRelease!.runId)+'/releases/'+encodeURIComponent(value.acceptedRelease!.releaseId)+'/view',value.acceptedRelease!.runId)}>查看已接受版本</button><button disabled={disabled} onClick={()=>void open('/api/v1/releases/'+encodeURIComponent(value.acceptedRelease!.releaseId)+'/exports/view',value.acceptedRelease!.runId)}>查看此版本交付包</button></div><details><summary>代码版本与来源</summary><p className="hash">{value.acceptedRelease.codeCommit}</p><p className="hash">来源执行 {value.acceptedRelease.runId}</p></details></>}</section>}
   </>}
  </section>;
 }

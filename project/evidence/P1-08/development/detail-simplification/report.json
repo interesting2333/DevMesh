@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-20",
+  "scope": "DU-13 to DU-15 three-tab detail simplification; same Codex developer and reviewer",
+  "runtime": {
+    "node": "24.22.3",
+    "edge": "157.0.4341.60",
+    "os": "Windows"
+  },
+  "checks": {
+    "inputApiBuild": "PASSED",
+    "typecheck": "PASSED",
+    "changedFilesLint": "PASSED",
+    "browser": {
+      "total": 27,
+      "passed": 27,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "files": {
+        "conversation-details": 17,
+        "conversation-desktop": 4,
+        "workbench-delivery": 5,
+        "conversation-workbench-pause-recovery": 1
+      },
+      "mainDurationMs": 163442.0957,
+      "pauseDurationMs": 4969.286
+    }
+  },
+  "limits": [
+    "Existing project technical workbench remains a compatibility entry; the conversation workbench has three tabs.",
+    "Recent events are limited to 50; generic failure-capable updates stay visible and unknown types remain in detailed logs.",
+    "No new database migration, business command API, production model/Runner validation or formal product acceptance."
+  ],
+  "sha256": {
+    "packages/input-api/src/web/conversation-details.tsx": "cf52abaf02ce8fc3546ff6766118724075880ae2bd7cf831bada14a0813cfa17",
+    "packages/input-api/src/web/conversation-detail-reading.ts": "38507f84edeb267bfdb76de968e97c438270a501188e2e54d3999dbf1a4b1d77",
+    "packages/input-api/src/web/conversation-work-context.tsx": "c9b81ae620b03c2b867930f9eadb8ad1f0386731fdf39d832a0d03b901c32d5f",
+    "packages/input-api/src/web/conversation-workbench.tsx": "59869c35f885f678f9ac3a8028cc07b8ee0108db9fd7b615bcc507b048040d3e",
+    "packages/input-api/src/web/workbench-delivery.tsx": "a64b14bd303566636cf1720cea9ccda74d26dbb4cd725a9cc342d614a638ced8",
+    "packages/input-api/src/web/workbench-candidate-preview.tsx": "7336d716ed935598f480dc67653deb24fe6abb800ed71bb5090a96dcc5ca4f27",
+    "packages/input-api/src/web/conversation-delivery.tsx": "7ed1e4e44793cc947cc02a50d453dfeee71499860f06bf8ca1dce438d45edd0b",
+    "packages/input-api/src/workbench-styles.ts": "ce7ebc50e1a491dac39f8d22f679bc2ab083cbcc3b69a2880b9cf28fcb42a8df",
+    "tests/browser/conversation-details.test.mjs": "346042ac74c97515aba54bd4a4107f55c6cec87b83f9a87d0ad7b846b2bf8d6e",
+    "tests/browser/conversation-workbench.test.mjs": "47a713308ca718f7a4268100f82e06b4206a689dff45deb942d7170221a99745",
+    "tests/browser/conversation-desktop.test.mjs": "9a6d9397c26494ce389a1ea6cce66cdff13574bec1dbbfa789d54a96869a3a62",
+    "tests/browser/workbench-delivery.test.mjs": "aa81393f628ba809ae42b6585bb0d2953ae09a6bd0e673cf9cc8c7af0cac6b1d",
+    "packages/input-api/dist/index.mjs": "4bf36b0b9b8bf132cc0ca510eafcfa02272093f4d1542db96b8c412af92b5b2f",
+    "packages/input-api/dist/web/workbench/workbench-client.js": "21d8ffeeedc38d6ed5e0e76f24c7143f554f476f4910e50eb6c3ada860ab80cd"
+  },
+  "service": {
+    "event": "updated-workbench-verified",
+    "status": 200,
+    "scriptStatus": 200,
+    "newDetailLayout": true,
+    "threeTabContent": true,
+    "artifactMatches": true
+  }
+}

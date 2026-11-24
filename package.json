@@ -27,7 +27,7 @@
     "project:status": "node project/manage.mjs status",
     "project:check": "node project/manage.mjs check",
     "spec": "node project/openspec.mjs",
-    "check": "pnpm toolchain:check && pnpm vendor:verify && pnpm build && pnpm typecheck && pnpm lint && pnpm test:smoke && pnpm test:contracts && pnpm test:storage && pnpm test:content && pnpm test:a2a && pnpm test:runtime && pnpm test:runner && pnpm test:mcp && pnpm test:workspaces && pnpm test:input && pnpm test:events && pnpm test:preparation && pnpm test:scheduler && pnpm test:verification && pnpm test:acceptance && pnpm contracts:check && pnpm project:check",
+    "check": "pnpm toolchain:check && pnpm vendor:verify && pnpm build && pnpm typecheck && pnpm lint && pnpm test:smoke && pnpm test:contracts && pnpm test:storage && pnpm test:content && pnpm test:a2a && pnpm test:runtime && pnpm test:assistant && pnpm test:generated && pnpm test:runner && pnpm test:mcp && pnpm test:workspaces && pnpm test:input && pnpm test:events && pnpm test:preparation && pnpm test:scheduler && pnpm test:verification && pnpm test:acceptance && pnpm contracts:check && pnpm project:check",
     "test:content": "node --test --test-reporter=tap tests/content*.test.mjs",
     "storage:init": "node scripts/storage.mjs init",
     "storage:verify": "node scripts/storage.mjs verify",
@@ -47,7 +47,9 @@
     "test:acceptance": "node --test --test-concurrency=1 --test-reporter=tap tests/acceptance*.test.mjs tests/release-publication.test.mjs tests/release-access.test.mjs tests/release-http.test.mjs tests/release-continuation.test.mjs tests/release-export.test.mjs tests/release-export-scheduler.test.mjs tests/release-export-entry.test.mjs tests/review-entry.test.mjs tests/acceptance-entry.test.mjs",
     "test:release-browser": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/release*.test.mjs",
     "test:release-continuation": "node --test --test-concurrency=1 tests/release-continuation.test.mjs",
-    "test:review-browser": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/review-entry.test.mjs"
+    "test:review-browser": "node --test --test-concurrency=1 --test-reporter=tap tests/browser/review-entry.test.mjs",
+    "test:assistant": "node --test --test-concurrency=1 tests/assistant-config.test.mjs tests/assistant-project-execution.test.mjs tests/assistant-execution-details.test.mjs tests/storage-assistant-upgrade.test.mjs",
+    "test:generated": "node --test --test-concurrency=1 tests/generated-site.test.mjs tests/storage-generation-upgrade.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:*",

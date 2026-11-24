@@ -1,0 +1,112 @@
+{
+  "files": [
+    {
+      "path": "packages/contracts/src/assistant-task.ts",
+      "sha256": "98b90d62bfec22778afe030dbf9c6804c7716f4d7911fb74836e5900595ba284"
+    },
+    {
+      "path": "packages/contracts/src/openapi.ts",
+      "sha256": "551d8e50a578f4968fc48bda7858b1bb8bd4fd0be98c301e2740a516130758d2"
+    },
+    {
+      "path": "packages/storage-sqlite/migrations/0059-assistanttasks.sql",
+      "sha256": "49dfb165e723e491ea15af90d9fbc9cd2b57a42bf02851ff5229b37377d38bd2"
+    },
+    {
+      "path": "packages/storage-sqlite/src/assistant-domain.ts",
+      "sha256": "f7e8193d35017b3695e7d7611ac57850689165b598442c887365b9aa4d4ab0ba"
+    },
+    {
+      "path": "packages/storage-sqlite/src/assistant-protocol.ts",
+      "sha256": "07784b1abaa9901056a367486d8336fed93d18551d5be6adba97f0bea8d2e609"
+    },
+    {
+      "path": "packages/agent-runtime/src/assistant-loop.ts",
+      "sha256": "280b1a7a86f28833a459399d080b9ed1f2e15efc6cff7e7aea983d0cc0a848d6"
+    },
+    {
+      "path": "packages/agent-runtime/src/conversation-runtime.ts",
+      "sha256": "728397c0bb2cbbed312793931591f3a22da0d22f55cb5b1b6ad0437afdad207f"
+    },
+    {
+      "path": "packages/code-workspaces/src/assistant-workspace.ts",
+      "sha256": "beb88aff8d8ca23d6f83580e2f7e9e1ba1963cc2d4df6ca0cb4bbca78eee07ae"
+    },
+    {
+      "path": "packages/code-workspaces/src/assistant-docker.ts",
+      "sha256": "19dd44d54262011e2a6da637c4f2508c1bcae078b49c0af9713fc9767e0b96cf"
+    },
+    {
+      "path": "packages/input-api/src/assistant-tasks.ts",
+      "sha256": "0562bf2d1667ea07e98c0cfa24bc6c6ae80f3e966fb96d349ee3013b25e05d7a"
+    },
+    {
+      "path": "packages/input-api/src/web/conversation-project-tasks.tsx",
+      "sha256": "57aead7c6d19aba509c9c4b654494c2f10f5aab63402c03597c6456337ea50cb"
+    },
+    {
+      "path": "packages/input-api/src/web/project-application-local.ts",
+      "sha256": "58e425cc14efa2e0204beedc9cb600afffba794c3fd4714d4bacc2bb537e8a4a"
+    },
+    {
+      "path": "packages/platform-core/src/config.ts",
+      "sha256": "e1dd460c7691dd38242e2438b38dc53cf8ddad81f289a4fb68b6dc4f49533032"
+    },
+    {
+      "path": "tests/assistant-config.test.mjs",
+      "sha256": "d0f39d228ed533973aafb48e00ee6618e2d09beca72cf0d24398e34ecfbe8385"
+    },
+    {
+      "path": "tests/assistant-project-execution.test.mjs",
+      "sha256": "49f64c1cc38566c71755820ec786fa6743a97e7f5d94f8e6cea5fc9af0aefaec"
+    },
+    {
+      "path": "tests/browser/assistant-project-execution.test.mjs",
+      "sha256": "0b0b618c92408a50300fc253cfeac584119129cceed6d8d2527a7debcd6e8bc4"
+    },
+    {
+      "path": "tests/storage-assistant-upgrade.test.mjs",
+      "sha256": "40a9794bd6003b669beb90219ec6c0e2d41718ab960ccf34e93b435b1b9766a9"
+    },
+    {
+      "path": "packages/input-api/src/web/conversation-workbench.tsx",
+      "sha256": "f36c59aafa808d8151becdb1b4219112a783c2aab154c05b35aa1177ebd55d02"
+    },
+    {
+      "path": "packages/input-api/src/index.ts",
+      "sha256": "c59414653d80898609407adabfff97bbc0b38055341b11f9e7b8ec8b8b717081"
+    },
+    {
+      "path": "packages/input-api/src/workbench-styles.ts",
+      "sha256": "21245d78d46da0c76195940efee74ce8c2595e3f1f327639de63cf944e1bf4b4"
+    },
+    {
+      "path": "packages/platform-core/src/index.ts",
+      "sha256": "65c09cb2ca00aa701ad41016c1c345c2f58b6143430f792031f9f0c08de14051"
+    },
+    {
+      "path": "packages/storage-sqlite/src/conversation-domain.ts",
+      "sha256": "79211a97124c19c4c0e435bccf8b14dcd55cf15e38c879e89aff67b8401fdeec"
+    },
+    {
+      "path": "packages/storage-sqlite/src/conversation-protocol.ts",
+      "sha256": "f6fbb13e397ac26b786909f4359b1e0219bec04622c66b88472470f43072dc90"
+    },
+    {
+      "path": "packages/contracts/src/conversation.ts",
+      "sha256": "e39a17e0f0be5ee831a100c6024cd259351ead697829e744e73ecde0533ab7dd"
+    },
+    {
+      "path": "packages/contracts/src/errors.ts",
+      "sha256": "fd9141572679a88b98be76a2e4f36c3fc8be908cfb5b5659e0f5b1700e5f93f1"
+    },
+    {
+      "path": "packages/code-workspaces/src/git.ts",
+      "sha256": "4a2051251fffbf4bdb60f4d5f22e8def7402c8a90d0ac07897c1fa0c2c58a7c9"
+    },
+    {
+      "path": "packages/code-workspaces/src/workbench-directories.ts",
+      "sha256": "139a318febe094486aa8f24f6acf42ee79e496825db35e9dc1147217d30464e3"
+    }
+  ]
+}

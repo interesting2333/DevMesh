@@ -14,7 +14,7 @@ export interface ToolCall {id:string;name:string;arguments:string}
 export interface ToolDefinition {name:string;description:string;parameters:Record<string,unknown>}
 export interface ModelRequest {messages:ChatMessage[];tools:ToolDefinition[];maxOutputTokens:number;jsonOutput:boolean}
 export interface ModelResponse {content:string;toolCalls:ToolCall[];finishReason:'stop'|'tool_calls'|'length'|'content_filter'|'insufficient_system_resource';requestId:string;usage:{inputTokens:number;outputTokens:number;source:'provider'|'estimated'};model:string;cost:null}
-export interface ModelProvider {readonly config:z.output<typeof providerConfigSchema>;complete(request:ModelRequest,signal?:AbortSignal,onDelta?:(text:string)=>void):Promise<ModelResponse>}
+export interface ModelProvider {readonly config:z.output<typeof providerConfigSchema>;complete(request:ModelRequest,signal?:AbortSignal,onDelta?:(text:string)=>void,onToolProgress?:(value:{name:string;argumentChars:number})=>void):Promise<ModelResponse>}
 
 export function estimateTokens(value:unknown):number{
  const r=value as {messages?:ChatMessage[];tools?:ToolDefinition[]}|null;
@@ -34,7 +34,7 @@ const responseSchema=z.object({id:z.string().min(1).max(512),model:z.string().mi
 export class DeepSeekProvider implements ModelProvider {
  readonly config:z.output<typeof providerConfigSchema>;
  constructor(config:ProviderConfig,readonly credentials:CredentialResolver){const parsed=parseContract(providerConfigSchema,config);parsed.endpoint=modelApiBase(parsed.endpoint);Object.freeze(parsed.capabilities);this.config=Object.freeze(parsed);}
- async complete(request:ModelRequest,signal?:AbortSignal,onDelta?:(text:string)=>void):Promise<ModelResponse>{
+ async complete(request:ModelRequest,signal?:AbortSignal,onDelta?:(text:string)=>void,onToolProgress?:(value:{name:string;argumentChars:number})=>void):Promise<ModelResponse>{
   checkModelRequest(this.config,request);
   let key:string|undefined;try{key=await this.credentials(this.config.credentialRef);}catch{throw new ModelError('MODEL_AUTH_UNAVAILABLE',false,'not-sent');}if(!key)throw new ModelError('MODEL_NOT_CONFIGURED',false,'not-sent');
   if(signal?.aborted)throw new ModelError('MODEL_ABORTED',false,'not-sent');
@@ -48,7 +48,7 @@ export class DeepSeekProvider implements ModelProvider {
    let raw:unknown;
    if(c.responseMode==='sse'){
     if(!/^text\/event-stream(?:;|$)/i.test(response.headers.get('content-type')??'')){await response.body.cancel();throw new ModelError('MODEL_RESPONSE_INVALID',false,'unknown');}
-    raw=await readDeepSeekStream(response.body,c.maximumResponseBytes,c.model,onDelta,code=>{throw new ModelError(code,false,'unknown');});
+    raw=await readDeepSeekStream(response.body,c.maximumResponseBytes,c.model,onDelta,code=>{throw new ModelError(code,false,'unknown');},onToolProgress);
    }else{
     const chunks:Uint8Array[]=[];let bytes=0;const reader=response.body.getReader();
     try{for(;;){const r=await reader.read();if(r.done)break;bytes+=r.value.byteLength;if(bytes>c.maximumResponseBytes)throw new ModelError('MODEL_RESPONSE_TOO_LARGE',false,'unknown');chunks.push(r.value);}}finally{await reader.cancel();}

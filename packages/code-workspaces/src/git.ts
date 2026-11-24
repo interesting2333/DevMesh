@@ -75,9 +75,10 @@ export class ControlledGit {
     if(!body.startsWith('tree ')||!tree)deny('GIT_COMMIT_INVALID');return {commit,tree:sha(tree!),parents:headers.filter(v=>v.startsWith('parent ')).map(v=>sha(v.slice(7))),body};
   }
   async readBlob(objectId:string,signal?:AbortSignal){sha(objectId);await this.validate(signal);return (await this.call(['cat-file','blob',objectId],signal,undefined,2*1024*1024)).out;}
+  async workingFiles(signal?:AbortSignal){await this.validate(signal);if(this.identity.kind!=='checkout')deny('GIT_CONFIGURATION_INVALID');const paths=decode((await this.call(['ls-files','--cached','--others','--exclude-standard','-z'],signal)).out).split('\0').filter(Boolean);if(paths.length>50000)deny('GIT_SOURCE_TOO_LARGE');return [...new Set(paths)];}
   async treeEntries(commit:string,signal?:AbortSignal,contextOnly=false){
     const info=await this.commit(commit,signal),rows=decode((await this.call(['ls-tree','-r','-t','-z',info.tree],signal)).out).split('\0').filter(Boolean);
-    if(rows.length>8000)deny('GIT_SOURCE_TOO_LARGE');
+    if(rows.length>(contextOnly?50000:8000))deny('GIT_SOURCE_TOO_LARGE');
     // Read-only context may omit disallowed names; execution manifests remain strict.
     const entries=rows.filter(row=>{const m=/^(100644|100755|040000) (blob|tree) ([a-f0-9]{40})\t(.+)$/.exec(row),valid=m&&safePath(m[4]!)&&(m[1]==='040000')===(m[2]==='tree');if(!valid&&!contextOnly)deny('GIT_SOURCE_PATH_DENIED');return valid;}).map(row=>{const m=/^(100644|100755|040000) (blob|tree) ([a-f0-9]{40})\t(.+)$/.exec(row)!;return m[1]==='040000'?{path:m[4]!,kind:'DIRECTORY' as const,mode:'040000' as const,objectId:m[3]!}:{path:m[4]!,kind:'FILE' as const,mode:m[1] as '100644'|'100755',objectId:m[3]!};});
     if(new Set(entries.map(entry=>entry.path.toLowerCase())).size!==entries.length)deny('GIT_SOURCE_PATH_COLLISION');return entries;

@@ -7,6 +7,7 @@ import { parseRuntimeConfig } from '@devmesh/agent-runtime/config';
 import type { RuntimeConfig } from '@devmesh/agent-runtime';
 import { isAbsolute } from 'node:path';
 import type {ReleaseExportSchedulerOptions} from './release-exports.js';
+import type {McpEndpointPolicy} from '@devmesh/mcp-tools';
 
 export interface ServerConfig {
   host: '127.0.0.1' | '::1';
@@ -16,8 +17,10 @@ export interface ServerConfig {
   storageSources?: Readonly<Record<string,string>> | undefined;
   a2a?:Readonly<InternalA2AConfig>|undefined;
   runtime?:Readonly<RuntimeConfig>|undefined;
+  assistant?:Readonly<{enabled:boolean;backend:'disabled'|'docker-development';imageDigest?:string;timeoutMs:number}>|undefined;
   inputApi?:Readonly<{repositoryRoot:string;commit:string;templatePath:string;conversationAdmission?:boolean;workspaceRoots?:readonly string[]}>|undefined;
   releaseExports?:Readonly<ReleaseExportSchedulerOptions>|undefined;
+  mcp?:Readonly<{ administrator: string; endpoints?: readonly McpEndpointPolicy[] }>|undefined;
 }
 
 export class ConfigError extends Error {
@@ -46,7 +49,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
       throw new ConfigError('Server configuration must be a JSON object');
     }
     for (const key of Object.keys(parsed)) {
-      if (!['host', 'port', 'shutdownTimeoutMs', 'storage','a2a','runtime','inputApi','releaseExports'].includes(key)) throw new ConfigError(`Unknown server configuration field: ${key}`);
+      if (!['host', 'port', 'shutdownTimeoutMs', 'storage','a2a','runtime','inputApi','releaseExports','assistant','mcp'].includes(key)) throw new ConfigError(`Unknown server configuration field: ${key}`);
     }
     file = parsed as Record<string, unknown>;
   }
@@ -56,6 +59,17 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
   let storageSources: Record<string,string> | undefined;
   let inputApi:ServerConfig['inputApi'];
   let releaseExports:ServerConfig['releaseExports'];
+  let mcp: ServerConfig['mcp'];
+  if (file.mcp !== undefined) {
+    const item = file.mcp as Record<string, unknown>;
+    if (!item || typeof item !== 'object' || Array.isArray(item) ||
+      Object.keys(item).some(key => !['administrator', 'endpoints'].includes(key)) ||
+      typeof item.administrator !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$/.test(item.administrator) ||
+      (item.endpoints !== undefined && (!Array.isArray(item.endpoints) || item.endpoints.length > 12))) {
+      throw new ConfigError('Invalid MCP administrator or endpoint policies');
+    }
+    mcp = Object.freeze({ administrator: item.administrator, ...(item.endpoints ? { endpoints: item.endpoints as McpEndpointPolicy[] } : {}) });
+  }
   if(file.releaseExports!==undefined){
     const item=file.releaseExports as Record<string,unknown>;
     if(!item||typeof item!=='object'||Array.isArray(item)||Object.keys(item).some(k=>!['enabled','pollIntervalMs','maxConcurrentJobs','maxJobsPerPass'].includes(k)))throw new ConfigError('Invalid releaseExports configuration');
@@ -81,6 +95,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
     const fields=file.storage as Record<string,unknown>|undefined;
     storageSources=Object.fromEntries([['dataRoot','DEVMESH_DATA_ROOT'],['backupRoot','DEVMESH_BACKUP_ROOT'],['runnerDataRoot','DEVMESH_RUNNER_DATA_ROOT']].map(([field,key])=>[field,env[key!]!==undefined?'environment':fields?.[field!]!==undefined?'file':field==='runnerDataRoot'?'unset':'local-default']));
   }
+  let assistant:ServerConfig['assistant'];if(file.assistant!==undefined){const a=file.assistant as Record<string,unknown>;if(!a||typeof a!=='object'||Array.isArray(a)||Object.keys(a).some(k=>!['enabled','backend','imageDigest','timeoutMs'].includes(k))||typeof a.enabled!=='boolean'||!['disabled','docker-development'].includes(String(a.backend))||a.imageDigest!==undefined&&(typeof a.imageDigest!=='string'||!/^sha256:[a-f0-9]{64}$/.test(a.imageDigest))||a.backend==='docker-development'&&!a.imageDigest)throw new ConfigError('Invalid assistant execution configuration');assistant=Object.freeze({enabled:a.enabled,backend:a.backend as 'disabled'|'docker-development',...(a.imageDigest?{imageDigest:a.imageDigest as string}:{}),timeoutMs:integer(a.timeoutMs??120000,'assistant.timeoutMs',1000,300000)});}
   return Object.freeze({
     host,
     port: integer(env.DEVMESH_PORT ?? file.port ?? 3210, 'port', 0, 65535),
@@ -89,6 +104,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, configPath?: st
     ...(file.a2a!==undefined?{a2a:Object.freeze(loadInternalA2AConfig(file.a2a,path))}:{}),
     ...(file.runtime!==undefined?{runtime:Object.freeze(parseRuntimeConfig(file.runtime))}:{}),
     ...(inputApi?{inputApi}:{}),
+    ...(assistant?{assistant}:{}),
+    ...(mcp?{mcp}:{}),
     ...(releaseExports?{releaseExports}:{}),
   });
 }

@@ -11,19 +11,19 @@
   "baselines": [
     {
       "file": "DevMesh_PRD_V10.0.md",
-      "sha256": "b482543ebda76d17b4c16823d152271d4962f91b25e003daa88f7fbc78d7a5d4"
+      "sha256": "f8b9e9ddf6c0dd57979b5cd3d48f3fbcf86d582391774aaf9be1e24a382859e0"
     },
     {
       "file": "DevMesh_技术设计方案_V1.1.md",
-      "sha256": "04666d7f573aff5af058ae3fee85510ac4a083c81aa98ac707c80e3af2864ba7"
+      "sha256": "8ecc04e45291bb7e11854f35ebed80d5ecad996d4c227e4f5e1be949f956c2ac"
     },
     {
       "file": "DevMesh_产品验收场景_V10.0.md",
-      "sha256": "83bbc09e2de6dc493072627d30775d31323cf73d982f7e2ab4de414a89bd99a3"
+      "sha256": "be7b37760c8616981b2d49d071279daf9a2c55692e8536ea2bb4dc6ab3aea966"
     },
     {
       "file": "DevMesh_实施文档_V1.0.md",
-      "sha256": "4f8fd292ad216c0e6119b5f92902bb4b2d70e8a30f57627e2242fd5e82cfb9e4"
+      "sha256": "11fa5b3ca03012a9e3465d9cc0ccca00ee15808982b47125f5b855ef2a83eef3"
     }
   ],
   "gates": [
@@ -403,7 +403,8 @@
       "notes": [
         "按用户持续实施及资源暂缺的指令，提前实现接口／登记与离线验证；正式状态保持 NOT_STARTED，不把 P0-06、真实 runsc 专项或 G0 视为已通过。",
         "独立 Runner 代码提前实施：固定快照 Windows/Linux 均 16/16 检查通过，Runner 13/13；实际 authority 组合、硬配额、镜像和 runsc 隔离未验收。P0-06 尚未完成，正式状态保持 NOT_STARTED。",
-        "2026-11-16：勾选3.1，变更7/8。WSL2 Linux kernel 6.18、Node 24.22.3（偏离冻结24.13.1但仍在engines范围）执行tests/runner.test.mjs 12/12通过、0失败，覆盖参数边界、未配置拒绝、原标签校验与停止后容器事实映射；Provider／启动入口／Dockerfile均在且不填虚构digest。真实Docker/runsc、硬配额、网络／密钥隔离仍属3.2保持未执行；正式P0-07／G0不变。"
+        "2026-11-16：勾选3.1，变更7/8。WSL2 Linux kernel 6.18、Node 24.22.3（偏离冻结24.13.1但仍在engines范围）执行tests/runner.test.mjs 12/12通过、0失败，覆盖参数边界、未配置拒绝、原标签校验与停止后容器事实映射；Provider／启动入口／Dockerfile均在且不填虚构digest。真实Docker/runsc、硬配额、网络／密钥隔离仍属3.2保持未执行；正式P0-07／G0不变。",
+        "2026-11-23：Docker Desktop Linux daemon 已可用，按用户选择完成单独 DOCKER_DEVELOPMENT 容器真实构建、退出码、超时及停止开发检查。当前运行时仍为 runc；未据此通过严格 Linux/gVisor、生产硬配额及P0-07/G0。"
       ]
     },
     {
@@ -710,7 +711,8 @@
         "DevMesh_技术设计方案_V1.1.md"
       ],
       "changes": [
-        "implement-five-mcp-services"
+        "implement-five-mcp-services",
+        "add-mcp-connection-settings"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -1774,7 +1776,11 @@
         "implement-conversation-agent-workflow",
         "refine-desktop-conversation-ui",
         "add-conversation-task-deletion",
-        "implement-workbench-space-management"
+        "implement-workbench-space-management",
+        "enable-assistant-project-execution",
+        "fix-generated-site-execution",
+        "connect-assistant-execution-details",
+        "simplify-assistant-result-history"
       ],
       "blockedReason": null,
       "nextCheck": null,
@@ -1866,7 +1872,53 @@
         "packages/code-workspaces/src/workbench-directories.ts",
         "packages/storage-sqlite/migrations/0058-workbenchspaces.sql",
         "tests/workbench-spaces.test.mjs",
-        "tests/browser/workbench-spaces.test.mjs"
+        "tests/browser/workbench-spaces.test.mjs",
+        "packages/input-api/src/web/conversation-detail-reading.ts",
+        "packages/input-api/src/web/workbench-candidate-preview.tsx",
+        "packages/contracts/src/assistant-task.ts",
+        "packages/contracts/src/openapi.ts",
+        "packages/storage-sqlite/migrations/0059-assistanttasks.sql",
+        "packages/storage-sqlite/src/assistant-domain.ts",
+        "packages/storage-sqlite/src/assistant-protocol.ts",
+        "packages/agent-runtime/src/assistant-loop.ts",
+        "packages/agent-runtime/src/conversation-runtime.ts",
+        "packages/code-workspaces/src/assistant-workspace.ts",
+        "packages/code-workspaces/src/assistant-docker.ts",
+        "packages/input-api/src/assistant-tasks.ts",
+        "packages/input-api/src/web/conversation-project-tasks.tsx",
+        "packages/input-api/src/web/project-application-local.ts",
+        "packages/platform-core/src/config.ts",
+        "tests/assistant-config.test.mjs",
+        "tests/assistant-project-execution.test.mjs",
+        "tests/browser/assistant-project-execution.test.mjs",
+        "tests/storage-assistant-upgrade.test.mjs",
+        "packages/input-api/src/web/composer-keyboard.ts",
+        "tests/browser/conversation-desktop.test.mjs",
+        "packages/contracts/src/errors.ts",
+        "packages/agent-runtime/src/assistant-context.ts",
+        "packages/agent-runtime/src/conversation-progress.ts",
+        "packages/agent-runtime/src/provider.ts",
+        "packages/code-workspaces/src/assistant-html.ts",
+        "packages/input-api/src/assistant-artifacts.ts",
+        "packages/input-api/src/conversation-live.ts",
+        "packages/input-api/src/web/conversation-live.tsx",
+        "packages/input-api/src/web/assistant-download.tsx",
+        "packages/storage-sqlite/src/conversation-domain.ts",
+        "packages/storage-sqlite/migrations/0060-generationadoptions.sql",
+        "packages/platform-core/src/index.ts",
+        "scripts/dev-preview.mjs",
+        "tests/generated-site.test.mjs",
+        "tests/storage-generation-upgrade.test.mjs",
+        "tests/browser/generated-site.test.mjs",
+        "tests/fixtures/generated-conversation.mjs",
+        "docs/assistant-project-execution.md",
+        "packages/contracts/openapi.json",
+        "packages/storage-sqlite/src/assistant-execution.ts",
+        "packages/input-api/src/web/assistant-execution-details.tsx",
+        "packages/input-api/src/web/assistant-preview.tsx",
+        "tests/assistant-execution-details.test.mjs",
+        "tests/browser/assistant-execution-details.test.mjs",
+        "package.json"
       ],
       "evidence": [
         "project/evidence/P1-08/local-input-development-review.md",
@@ -1955,7 +2007,15 @@
         "project/evidence/P1-08/mode-selector-development-review.md",
         "project/evidence/P1-08/detail-tabs-development-review.md",
         "project/evidence/P1-08/task-deletion-development-review.md",
-        "project/evidence/P1-08/workbench-spaces-development-review.md"
+        "project/evidence/P1-08/workbench-spaces-development-review.md",
+        "project/evidence/P1-08/detail-remediation-development-review.md",
+        "project/evidence/P1-08/detail-simplification-development-review.md",
+        "project/evidence/P1-08/development/detail-rollback/report.json",
+        "project/evidence/P1-08/assistant-execution-development-review.md",
+        "project/evidence/P1-08/composer-shortcuts-development-review.md",
+        "project/evidence/P1-08/generated-site-execution-development-review.md",
+        "project/evidence/P1-08/assistant-execution-details-development-review.md",
+        "project/evidence/P1-08/assistant-result-history-development-review.md"
       ],
       "reviewNote": null,
       "notes": [
@@ -1989,7 +2049,16 @@
         "2026-11-18：用户明确右下角模式选择器样式问题，DU-06完成深色菜单、两种模式解释、执行条件提示、键盘路径与草稿保留；17项相关浏览器通过，模式授权及正式工作包状态保持。",
         "2026-11-18：按用户反馈恢复执行详情五页签及真实协作／交付／预览／记录，DU-07；22项浏览器开发检查通过，正式工作包与阶段门槛保持。",
         "2026-11-18：按用户反馈补齐任务删除，包含明确确认、当前权限／版本／暂停边界、删除后原回执与本机恢复；开发证据见task-deletion-development-review，正式工作包及阶段门槛保持。",
-        "2026-11-18：按用户确认实施空间任务分组和本地 Git 目录绑定、统一底部入口、安全迁移与原请求恢复；开发证据见workbench-spaces-development-review，正式工作包／门槛未据此提升。"
+        "2026-11-18：按用户确认实施空间任务分组和本地 Git 目录绑定、统一底部入口、安全迁移与原请求恢复；开发证据见workbench-spaces-development-review，正式工作包／门槛未据此提升。",
+        "2026-11-20：用户授权执行详情整改第一阶段，Codex负责本轮开发子项DU-08～11：概览、成果／预览拆分、协作归属、事件列表与阅读恢复。正式工作包仍受前置及G0约束；第二阶段数据投影不在本项完成范围。",
+        "2026-11-20：DU-08～11第一阶段开发复核：最终构建／类型／Lint及18项浏览器（详情9、桌面4、交付5）通过，含真实预览观察与访问条件区别、草稿和候选恢复、局部失败、权限和零额外POST。同步受影响PRD/D3/验收/实施及基线哈希。证据见detail-remediation-development-review；同一Codex开发复核，未推进正式P1-08或阶段门槛。",
+        "2026-11-20：DU-12按反馈精简执行详情顶部，移除重复标题／普通状态／常驻模式，仅保留必要提示与动作；底部保留原任务控制。构建／类型／Lint及针对性浏览器3项通过，不推进正式工作包及门槛。",
+        "2026-11-20：按用户“回滚到上一版”撤回DU-13～15三页签精简，恢复概览／协作／成果／预览／记录五页签及DU-12顶部精简。保留既有业务数据与更早修改；三页签记录标注为历史，当前回滚验证见development/detail-rollback/report.json。正式工作包和阶段门槛不变。",
+        "2026-11-23：用户确认启用 Docker 开发容器，Codex 完成会话项目执行开发子项及同人自查：动态工具循环、任务副本、真实检查修复、差异／幂等应用和桌面恢复。113 个不同开发检查与真实模型三文件／Docker／应用闭环通过；服务升级59并保留58备份、17条原消息一致。原专业执行与严格Runner门槛保持，详见assistant-execution-development-review。",
+        "2026-11-23：用户要求常规输入快捷键，Codex完成DU-16开发子项：新旧对话Enter发送／Shift+Enter换行，保留Ctrl/Cmd兼容；按钮有效性、IME／229／repeat及发送中保护。构建／类型／相关Lint与4项浏览器开发检查通过，详见composer-shortcuts-development-review；正式工作包和阶段门槛不变。",
+        "2026-11-23：用户授权修复新建HTML卡住／无流式输出，Codex完成空来源生成、HTML检查与预览下载、真实SSE、上下文控制、准确准备就绪和原任务逐条恢复。同人开发复核118项通过；真实模型及原英语任务均完成，原24条消息一致，59备份／60升级健康，其他历史任务未启动。详见generated-site-execution-development-review；正式工作包与门槛保持。",
+        "2026-11-23：用户授权补齐助手执行的五页签，Codex完成只读鉴权投影、单助手协作说明、成果／预览与日记、历史轮次隔离及原专业路径兼容。同人开发自查55项通过；真实英语任务五页签／下载预览通过，36条原消息及所有记录数量保持，无新迁移或任务重跑。证据见assistant-execution-details-development-review；正式工作包及阶段门槛保持。",
+        "2026-11-23：Codex 完成助手执行历史入口调整并自查。五页签共用历史选择，默认当前输入，等待新成果时可查看上次已保存结果。33 项相关回归通过，真实英语任务仅只读验证。"
       ]
     },
     {

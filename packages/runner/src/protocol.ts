@@ -4,7 +4,7 @@ export class RunnerError extends Error {
  constructor(readonly code:string,readonly status:number,readonly outcome:'not-sent'|'known'|'unknown'='known'){super(code);}
 }
 export const imageDigest=z.string().regex(/^[a-z0-9][a-z0-9._/:~-]*@sha256:[a-f0-9]{64}$/);
-export const commandSpec=z.strictObject({kind:z.enum(['install','build','unit','e2e','preview'])});
+export const commandSpec=z.strictObject({kind:z.enum(['install','build','unit','e2e','preview','playwright-mcp'])});
 export const resourceLimits=z.strictObject({cpu:z.number().positive().max(64),memoryMiB:z.number().int().min(64).max(131072),pids:z.number().int().min(16).max(256),temporaryMiB:z.number().int().min(16).max(10240),timeoutMs:z.number().int().min(100).max(600000)});
 export const startJob=z.strictObject({schemaVersion:z.literal('devmesh.runner-job.v1'),operationId:ids.operation,permit:executionPermit,imageDigest,workspaceRef:opaqueKey,commandSpec,resourceLimits,networkPolicyRef:opaqueKey,outputSpec:z.array(relativeFile).max(32)});
 export const renewJob=z.strictObject({permit:executionPermit,sequence:z.number().int().positive()});

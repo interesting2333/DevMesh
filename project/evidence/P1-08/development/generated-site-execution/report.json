@@ -1,0 +1,114 @@
+{
+  "date": "2026-11-23",
+  "reviewer": "Codex development self-review (same agent)",
+  "scope": "fix-generated-site-execution / P1-08 development increment; formal work-package and stage gates unchanged",
+  "node": "v24.22.3",
+  "tests": {
+    "generatedApiMigrationBrowser": {
+      "tests": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0
+    },
+    "existingRegressionIncludingDocker": {
+      "tests": 103,
+      "passed": 103,
+      "failed": 0,
+      "skipped": 0
+    },
+    "uniqueTotal": 118
+  },
+  "checks": {
+    "fullBuild": "passed",
+    "finalRuntimeBuild": "passed",
+    "typecheck": "passed",
+    "scopedLint": "passed",
+    "openApi": "passed"
+  },
+  "liveModel": {
+    "model": "gpt-6-sol",
+    "responseMode": "sse",
+    "state": "COMPLETED",
+    "verified": true,
+    "files": [
+      {
+        "path": "index.html",
+        "size": 22010
+      }
+    ],
+    "checks": [
+      {
+        "check": "html",
+        "state": "SUCCEEDED",
+        "exitCode": 0
+      }
+    ],
+    "modelCalls": 6,
+    "reservedTokens": 77092,
+    "textDeltaEvents": 237,
+    "toolActivityEvents": 6970,
+    "browserPreview": "passed"
+  },
+  "currentTask": {
+    "state": "COMPLETED",
+    "verified": true,
+    "artifact": {
+      "path": "index.html",
+      "bytes": 24485
+    },
+    "streamEvents": 263,
+    "preview": "passed",
+    "download": "passed",
+    "opaqueOrigin": true,
+    "pageErrors": [],
+    "recovery": {
+      "originalRun": {
+        "phase": "UNDERSTANDING",
+        "control_gate": "PAUSED",
+        "terminal_outcome": null
+      },
+      "adoptions": 1,
+      "otherHistoricalAssistantSessions": 0,
+      "newPreparationAttempts": 0,
+      "inputRevision": 3,
+      "mode": "EXECUTE",
+      "state": "COMPLETED"
+    }
+  },
+  "storage": {
+    "schema": 60,
+    "backupSchema": 59,
+    "preservedOriginalMessages": 24,
+    "beforeCounts": {
+      "conversations": 5,
+      "conversation_messages": 24,
+      "projects": 6,
+      "runs": 6,
+      "workbench_spaces": 2,
+      "operations": 45
+    },
+    "afterCounts": {
+      "conversations": 5,
+      "conversation_messages": 30,
+      "projects": 6,
+      "runs": 6,
+      "workbench_spaces": 2,
+      "operations": 48
+    },
+    "integrity": "ok",
+    "foreignKeys": 0
+  },
+  "observedAndFixedFailures": [
+    "Large write arguments replay exhausted model context; compact durable write replay.",
+    "Accumulated read pages exhausted model context; bound history and use 8 KiB read pages plus SHA-checked patch.",
+    "Full diff replay exhausted model context; bound latest model-facing tool results while preserving full UI/durable output.",
+    "Native browser download did not retain fixture authentication; authenticated fetch, SHA verification, explicit Blob filename."
+  ],
+  "limitations": [
+    "HTML validation covers structure and inline JavaScript syntax; real browser preview separately verified.",
+    "Static preview restricts network and parent access; downloaded HTML is the original file.",
+    "Existing Node project checks remain in Docker development backend; strict Linux/gVisor and production quota acceptance remain pending.",
+    "Historical tasks are not batch restarted; original user messages and old Run audit retained."
+  ],
+  "privateEvidence": "Raw local logs, live conversation IDs, user-generated HTML, screenshots, provider credentials and databases remain outside Git."
+}

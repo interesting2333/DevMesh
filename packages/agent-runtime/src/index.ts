@@ -14,3 +14,5 @@ export type {ModelProgressSink} from './progress.js';
 
 export {ConversationRuntime} from './conversation-runtime.js';
 export type {ConversationRuntimeOptions} from './conversation-runtime.js';
+
+export {AssistantLoop} from './assistant-loop.js';

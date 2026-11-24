@@ -1,3 +1,6 @@
+import {mountConversationLive} from './conversation-live.js';
+import {mountAssistantRoutes} from './assistant-tasks.js';
+import type {AssistantBackend} from '@devmesh/contracts';
 import {mountWorkbenchSpaceRoutes} from './workbench-spaces.js';
 import type {WorkbenchDirectoryAccess} from './workbench-spaces.js';
 import express from 'express';
@@ -31,6 +34,9 @@ export type {Identity,IdentityResolver} from './input-auth.js';
 import {createWorkbenchEventServer} from './workbench-events-server.js';
 import type {WorkbenchEventLimits} from './workbench-events-server.js';
 import {createModelSettingsStore} from './model-settings.js';
+import {mountMcpSettingsRoutes} from './mcp-settings.js';
+import type {McpSettingsAccess} from './mcp-settings.js';
+export type {McpSettingsAccess,LocalPlaywrightAccess} from './mcp-settings.js';
 export {createModelSettingsStore} from './model-settings.js';
 export type {WorkbenchEventLimits} from './workbench-events-server.js';
 export type {PreviewAccessGateway} from './preview.js';
@@ -44,8 +50,10 @@ export type InputApiOptions={enabled?:false}|{
   acceptance?:AcceptanceAccess|undefined;
   events?:WorkbenchEventLimits|undefined;
   settingsRoot?:string|undefined;
+  mcpSettings?:McpSettingsAccess|undefined;
   conversations?:ConversationAccess|undefined;
   directories?:WorkbenchDirectoryAccess|undefined;
+  assistant?:AssistantBackend|undefined;
   maximumUploads?:number;diagnostic?:(detail:{requestId:string;error:unknown})=>void;
 };
 const runFile=promisify(execFile);
@@ -94,8 +102,10 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     pending.set(work,request);void work.finally(()=>{pending.delete(work);});
   });
   router.use(express.json({limit:256*1024,strict:true,type:'application/json'}));
+  const conversationLive=mountConversationLive(router,content,route,auth);
   const bodyMeta=(request:Request,scope:string,identity:Identity)=>scopeMeta(identity.principalId,scope,request);
   const json=(request:Request)=>{if(!request.is('application/json'))fail('CONTENT_TYPE_INVALID',415,'Expected application/json');return request.body as unknown;};
+  if(options.mcpSettings)mountMcpSettingsRoutes(router,options.mcpSettings,route,json);
   const modelSettings=options.settingsRoot?createModelSettingsStore(options.settingsRoot):undefined;
   const modelSettingsInput=z.strictObject({providerId:z.string().min(1).max(64),endpoint:z.string().min(1).max(500),model:z.string().min(1).max(128),apiKey:z.string().min(1).max(500).optional()});
   if(modelSettings){
@@ -445,6 +455,7 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
   }));
   mountWorkbenchSpaceRoutes(router,content,route,options.directories);
   mountConversationRoutes(router,content,route,options.conversations,options.directories);
+  mountAssistantRoutes(router,content,route,options.assistant);
   mountWorkbenchRoutes(router,content,route,!!options.conversations,options.conversations?.admission?.()!==false);
   mountPreviewRoutes(router,content,options.previewGateway,route);
   mountPreviewManagementRoutes(router,content,options.previewPolicies,route);
@@ -465,8 +476,8 @@ export function mountInputApi(app:Express,content:LocalContentStore,options:Inpu
     if(!response.headersSent&&!response.destroyed)response.status(status).json({error:{code,message:status>=500?'Service is unavailable; query the original operation before retrying':'Request could not be accepted',requestId,retryable:status>=500||status===429,details}});
   });
   app.use('/api/v1',router);
-  function stopAdmission(){accepting=false;auth.stop();events.stopAdmission();}
-  return {enabled:true as const,attachEvents:events.attach,publishModelProgress:events.publishModelProgress,stopAdmission,async stop(){
+  function stopAdmission(){accepting=false;auth.stop();events.stopAdmission();conversationLive.stop();}
+  return {enabled:true as const,attachEvents:events.attach,publishConversationProgress:conversationLive.publish,publishModelProgress:events.publishModelProgress,stopAdmission,async stop(){
     stopAdmission();
     const timer=setTimeout(()=>{for(const request of pending.values())request.destroy();},10000);timer.unref();
     try{await Promise.all([events.stop(),Promise.allSettled(pending.keys())]);}finally{clearTimeout(timer);}

@@ -176,3 +176,5 @@ export type {ReleaseExportJob,ReleaseExportSnapshot,ReleaseExportContext,Release
 export {redactExportRecord} from './export-redaction.js';
 
 export type {ConversationTurn} from './conversation-protocol.js';
+
+export type {AssistantSession,AssistantToolRecord,AssistantApplication} from './assistant-protocol.js';

@@ -7,7 +7,7 @@ import type {WorkbenchDirectoryBinding} from '@devmesh/contracts';
 import {ControlledGit} from './git.js';
 const hidden=new Set(['.git','.codex','.agents','.cache','.devmesh-data','.devmesh-backups','node_modules','dist','build','.next']);
 const inside=(root:string,path:string)=>{const p=relative(root,path);return p===''||!isAbsolute(p)&&p!=='..'&&!p.startsWith('..'+sep);};
-const publicSource=(path:string)=>!path.split('/').some(p=>hidden.has(p)||/^\.env(?:\.|$)|(?:secret|credential|private[-_]?key)|^(?:id_rsa|id_ed25519)$/i.test(p))&&!/\.(?:pem|key|p12|pfx|lock|map|png|jpg|jpeg|gif|zip|sqlite)$/i.test(path)&&/^[A-Za-z0-9_./-]+$/.test(path);
+const publicSource=(path:string)=>!path.startsWith('project/evidence/')&&!path.split('/').some(p=>hidden.has(p)||/^\.env(?:\.|$)|(?:secret|credential|private[-_]?key)|^(?:id_rsa|id_ed25519)$/i.test(p))&&!/\.(?:pem|key|p12|pfx|lock|map|png|jpg|jpeg|gif|zip|sqlite)$/i.test(path)&&/^[A-Za-z0-9_./-]+$/.test(path);
 function fail(code='WORKBENCH_DIRECTORY_UNAVAILABLE'):never{throw new StorageError(code,409,'Workspace directory cannot be used');}
 export class LocalWorkbenchDirectories{
  constructor(readonly storage:SqliteStorage,readonly trustedRoots:readonly string[]){}

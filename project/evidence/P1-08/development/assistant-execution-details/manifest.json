@@ -1,0 +1,112 @@
+{
+  "files": [
+    {
+      "path": "packages/contracts/src/assistant-task.ts",
+      "sha256": "9691bc81bd138fa47c6e8e8963280eeb0c938fc2e3ec34e3285ae8474c0bbb8c"
+    },
+    {
+      "path": "packages/contracts/src/openapi.ts",
+      "sha256": "2c3bdccd7ad0fda6735b676ee9b092ed633a0d567f3fe7cc96ad931558bb8856"
+    },
+    {
+      "path": "packages/contracts/openapi.json",
+      "sha256": "bd0660d222a090a3c04c1b1e9e6e16f947de755f5aff4e3349af149f7384ee87"
+    },
+    {
+      "path": "packages/storage-sqlite/src/assistant-protocol.ts",
+      "sha256": "6f15afbb4b835519affc7e455a90d9b93d840f9909fe894bffa8f8a332854d4b"
+    },
+    {
+      "path": "packages/storage-sqlite/src/assistant-domain.ts",
+      "sha256": "e80086e6b4a5a58b3907ba5c88056da9fabc640db82cb9ac62dd9a21f4288ad7"
+    },
+    {
+      "path": "packages/storage-sqlite/src/assistant-execution.ts",
+      "sha256": "f0cb44b9704a0dd1dd6e7f34a844bd4eab7538035986d67c38ca535b1dc2c072"
+    },
+    {
+      "path": "packages/input-api/src/assistant-tasks.ts",
+      "sha256": "4b4854dd7954a2ca58cc6a57747f3d774b40fd98e12d972413072d00b8dc48fa"
+    },
+    {
+      "path": "packages/input-api/src/web/assistant-execution-details.tsx",
+      "sha256": "716939f900b937c258408277b5ea8f027c2d33424b29f73d7c15003166f50d86"
+    },
+    {
+      "path": "packages/input-api/src/web/assistant-preview.tsx",
+      "sha256": "72f5e00acaf07a012f6194a15e6cc8276a06f64a2cbd988cd67804f1f6a24118"
+    },
+    {
+      "path": "packages/input-api/src/web/conversation-details.tsx",
+      "sha256": "7d949dc975897bd55b865137bae4f01efe506ec326eef2abe2f8b7dcb877029e"
+    },
+    {
+      "path": "packages/input-api/src/web/conversation-project-tasks.tsx",
+      "sha256": "670de5fcb8486420ee34a291d7f4d7df3c8b91cee1954ce4d719561268a4b8fe"
+    },
+    {
+      "path": "packages/input-api/src/workbench-styles.ts",
+      "sha256": "2e89fe8769ce1b9002edf98c2e83dee6abf569fb3a9033dd350a20e3f85eed94"
+    },
+    {
+      "path": "tests/assistant-execution-details.test.mjs",
+      "sha256": "8fabad711f9b602e1c8bd1f44ddda78e68a13a71a8d97294d53f8ac8b043a2d0"
+    },
+    {
+      "path": "tests/browser/assistant-execution-details.test.mjs",
+      "sha256": "ff37f0c10c4859b083eb254a2d033f643f1fb37dae664d192aa87516b87add92"
+    },
+    {
+      "path": "tests/contracts.test.mjs",
+      "sha256": "1b7fcf9787bfecbd77324e78aade4a47f82a922c401aa3c69a69c726c4aa4553"
+    },
+    {
+      "path": "package.json",
+      "sha256": "17cae4d9367610074d13b4ccc4be63f1c0c7a2763950062f1f5baf753f96e4b3"
+    },
+    {
+      "path": "docs/assistant-project-execution.md",
+      "sha256": "02149360a8dfbb3f3139013534570f948115f1f50e7bc2b343dac496f9688cb9"
+    },
+    {
+      "path": "openspec/changes/connect-assistant-execution-details/proposal.md",
+      "sha256": "bdaa7a364c47c44fea70f3ca42599d8568459b0dcecdc43cbb1e385a807e75f0"
+    },
+    {
+      "path": "openspec/changes/connect-assistant-execution-details/design.md",
+      "sha256": "fd98e2fccf099aae54439ceca95afe84078b51321e6ca970b7b5cb0516cabffd"
+    },
+    {
+      "path": "openspec/changes/connect-assistant-execution-details/tasks.md",
+      "sha256": "aae9608cc9011ce5aad5996b0701be86a138af96136346d33c83f254bd73d288"
+    },
+    {
+      "path": "openspec/changes/connect-assistant-execution-details/specs/assistant-execution-details/spec.md",
+      "sha256": "adabffcb8a8566e31a0f9ce05dcbdd32adee7a0451258d097514527ef21489c5"
+    },
+    {
+      "path": "DevMesh_PRD_V10.0.md",
+      "sha256": "63b54257b1731e28bed5fa4355c7bc263652ab4b1283062aa6ed8ccc813452d6"
+    },
+    {
+      "path": "DevMesh_技术设计方案_V1.1.md",
+      "sha256": "c97d26228817b6c082f9c4f9f42da1bd5dca576a07413daa6b2aa51e6c3f4a08"
+    },
+    {
+      "path": "DevMesh_产品验收场景_V10.0.md",
+      "sha256": "419524edf676a41e795236102299a97381e7d1978c18e7ec7192406073464c2a"
+    },
+    {
+      "path": "DevMesh_实施文档_V1.0.md",
+      "sha256": "809d00c10433da9d1becd21d4e96284e28b9d06bcda92c6cb5d151a660d3fb0b"
+    },
+    {
+      "path": "project/evidence/P1-08/assistant-execution-details-development-review.md",
+      "sha256": "492d458b1b18cbb21da0b811eaa24eaa0d45f1c7fb03449e88c63f27d80817b0"
+    },
+    {
+      "path": "project/evidence/P1-08/development/assistant-execution-details/report.json",
+      "sha256": "3a5a12290140205585d9f1349ea4c747dfe905282b612085aea43af8952548fd"
+    }
+  ]
+}

@@ -61,7 +61,9 @@ export async function startWorkflowMcpServices(storage:SqliteStorage,content:Loc
       const client=new McpToolClient({endpointId:identity.serviceId,endpoint:server.endpoint,credentialRef:identity.credentialRef,credentials:options.credentials,...(identity.timeoutMs!==undefined?{timeoutMs:identity.timeoutMs}:{})});clients.push(client);await client.connect();tools.push(...runtimeMcpTools(client,defs));
     }
     coordinator?.start();
-    return {tools:Object.freeze(tools),connections:Object.freeze(clients.map(c=>c.snapshot)),stopAdmission,close,coordinator};
+    const playwrightMcpCheckIds = Object.freeze((options.tests?.checks ?? [])
+      .filter(check => check.commandSpec.kind === 'playwright-mcp').map(check => check.checkId));
+    return {tools:Object.freeze(tools),connections:Object.freeze(clients.map(c=>c.snapshot)),playwrightMcpCheckIds,stopAdmission,close,coordinator};
   }catch(error){await close().catch(()=>{});throw error;}
 }
 export type WorkflowMcpServices=Awaited<ReturnType<typeof startWorkflowMcpServices>>;

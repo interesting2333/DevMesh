@@ -1,5 +1,38 @@
 # DevMesh 本机部署指南（源码模式）
 
+## 外部 MCP 设置
+
+本机开发预览默认使用 `user_1` 管理 MCP。其他部署需在现有服务端配置加入 [MCP 配置示例](../config/server.mcp.example.json) 的 `mcp` 字段，并由本机身份解析器识别管理员。已保存的设置位于控制数据目录 `settings/mcp.json`。
+
+1. 在 DevMesh 启动进程的环境中设置下表对应的凭据变量。
+2. 打开工作台「设置 → MCP 服务 → 新增服务」，手工填写服务 ID、名称、Endpoint 和凭据引用。
+3. GitHub 需填实际工作流项目 ID 和 `owner/repository`。Context7 可以绑定一个项目，也可留空以供已授权的工作流角色查询公开文档。
+4. 点击「测试连接并发现工具」，勾选只读工具并保存。回到列表打开服务开关，然后重新启动 DevMesh。
+5. 在为任务生成的角色快照 `allowedTools` 中列入页面显示的工具名，例如 `mcp_github__get_file_contents` 或 `mcp_context7__query-docs`。连接测试、运行时可用和任务实际调用各自独立。
+
+| 服务 | Endpoint | 凭据引用 | 启动环境变量 |
+| --- | --- | --- | --- |
+| GitHub | `https://api.githubcopilot.com/mcp/` | `mcp.github` | `DEVMESH_CREDENTIAL_MCP_GITHUB` |
+| Context7 | `https://mcp.context7.com/mcp` | `mcp.context7` | `DEVMESH_CREDENTIAL_MCP_CONTEXT7` |
+| Atlassian（Jira） | `https://mcp.atlassian.com/v2/mcp?tools=all` | `mcp.atlassian` | `DEVMESH_CREDENTIAL_MCP_ATLASSIAN` |
+| Linear | `https://mcp.linear.app/mcp/readonly` | `mcp.linear` | `DEVMESH_CREDENTIAL_MCP_LINEAR` |
+| Exa | `https://mcp.exa.ai/mcp` | `mcp.exa` | `DEVMESH_CREDENTIAL_MCP_EXA` |
+
+GitHub 使用仅覆盖目标仓库和读取权限的 PAT。Context7 使用服务签发的 API Key。部署可通过 `mcp.endpoints` 添加受信任的连接策略，每项包含 `endpoint`、`credentialRef` 和明确批准的 `readTools`。每个凭据引用绑定一个地址。当前支持远程 HTTPS 或已明确配置的本机回环 HTTP。
+
+Atlassian 需要组织允许 MCP API Token 认证，并使用有目标 Jira 项目读取权限的服务账号 API Key。Linear 使用限制在所需团队的只读 API Key。Exa 使用 API Key 检索公开网页。三项连接启用前均需填写 DevMesh 项目 ID。
+
+设置页中的停用与删除立即拦截新调用。新建、启用和授权范围修改需要重启加载。服务工具目录变化后，需重新测试、勾选并重启。具备预览环境的部署也需要配置工作流派发和角色授权，才能实际执行已接入工具。
+
+### Playwright MCP
+
+本机源码预览支持通过 stdio 启停 Playwright MCP。首次准备时在仓库根目录运行 `npm ci --prefix tools/playwright-mcp --ignore-scripts`，并按模板脚本构建 `templates/web-crud-v1`。浏览器选择需要对应的本机安装。
+
+1. 在「设置 → MCP 服务」点击「添加 Playwright MCP」，填写服务名称，选择浏览器及无头模式。
+2. 保存后打开列表开关。DevMesh 完成 MCP 握手、工具发现和浏览器启动后显示「运行中」。
+
+开发时可在构建后的 `templates/web-crud-v1` 目录执行 `node ../../tools/playwright-mcp/task-board.mjs msedge` 验证任务看板。截图、页面快照和报告保存在模板目录下的 `playwright-mcp-results`。
+
 本文说明如何把 DevMesh 部署到另一台机器上，供单人本地使用。
 
 > 当前版本是开发预览版：**只适用于本机单用户**，不要直接暴露到公网。正式工作包与 G0～G4 仍未完成，详见 [项目任务台账](../project/任务台账.md)。

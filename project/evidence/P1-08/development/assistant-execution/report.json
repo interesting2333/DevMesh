@@ -1,0 +1,159 @@
+{
+  "date": "2026-11-23",
+  "scope": "Development validation only; formal P1-08/P0-07/G0 unchanged",
+  "node": "v24.22.3",
+  "backend": "DOCKER_DEVELOPMENT",
+  "imageId": "sha256:4f696fbf39f383c1e486030ba6b289a5d9af541642fc78ab197e584a113b9c03",
+  "tests": {
+    "assistantBrowserMigrationContracts": {
+      "tests": 34,
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0
+    },
+    "startupConfig": {
+      "tests": 2,
+      "passed": 2
+    },
+    "existingNonContractRegression": {
+      "tests": 76,
+      "passed": 76
+    },
+    "uniqueTotal": 113,
+    "finalBrowser": {
+      "tests": 4,
+      "passed": 4,
+      "overlapWithMain": 3,
+      "additionalMissingModelCase": 1
+    }
+  },
+  "checks": {
+    "fullBuild": "passed",
+    "finalAffectedPackageBuilds": "passed",
+    "typecheck": "passed",
+    "scopedLint": "passed",
+    "openApi": "passed"
+  },
+  "liveModel": {
+    "date": "2026-11-23T05:09:56.888Z",
+    "backend": "DOCKER_DEVELOPMENT",
+    "model": "gpt-6-sol",
+    "state": "COMPLETED",
+    "verified": true,
+    "paths": [
+      "check.cjs",
+      "page.txt",
+      "style.txt"
+    ],
+    "checks": [
+      {
+        "check": "build",
+        "exitCode": 0,
+        "state": "SUCCEEDED"
+      }
+    ],
+    "application": "SUCCEEDED",
+    "calls": [
+      {
+        "number": 1,
+        "finish": "stop",
+        "tools": [],
+        "durationMs": 7657,
+        "usage": {
+          "inputTokens": 4100,
+          "outputTokens": 444,
+          "source": "provider"
+        }
+      },
+      {
+        "number": 2,
+        "finish": "tool_calls",
+        "tools": [
+          "project_list",
+          "project_read",
+          "project_read",
+          "project_read"
+        ],
+        "durationMs": 3985,
+        "usage": {
+          "inputTokens": 1334,
+          "outputTokens": 154,
+          "source": "provider"
+        }
+      },
+      {
+        "number": 3,
+        "finish": "tool_calls",
+        "tools": [
+          "project_write",
+          "project_write",
+          "project_write"
+        ],
+        "durationMs": 8628,
+        "usage": {
+          "inputTokens": 2574,
+          "outputTokens": 630,
+          "source": "provider"
+        }
+      },
+      {
+        "number": 4,
+        "finish": "tool_calls",
+        "tools": [
+          "project_diff",
+          "project_check"
+        ],
+        "durationMs": 3457,
+        "usage": {
+          "inputTokens": 3506,
+          "outputTokens": 90,
+          "source": "provider"
+        }
+      },
+      {
+        "number": 5,
+        "finish": "stop",
+        "tools": [],
+        "durationMs": 3939,
+        "usage": {
+          "inputTokens": 4862,
+          "outputTokens": 184,
+          "source": "provider"
+        }
+      }
+    ]
+  },
+  "localService": {
+    "schema": 59,
+    "backupSchema": 58,
+    "counts": {
+      "conversations": 4,
+      "conversation_messages": 17,
+      "projects": 5,
+      "runs": 5,
+      "workbench_spaces": 2,
+      "operations": 37
+    },
+    "originalMessagesPreserved": 17,
+    "integrity": "ok",
+    "capabilities": {
+      "model": true,
+      "preparation": true,
+      "execution": false,
+      "assistant": {
+        "analysis": true,
+        "editing": true,
+        "commands": true,
+        "backend": "DOCKER_DEVELOPMENT",
+        "reason": null
+      },
+      "reason": null
+    }
+  },
+  "limitations": [
+    "Node build/test/lint scripts frozen from initial snapshot; no dependency installation or network",
+    "Bound local Git project required for direct project tools",
+    "Strict Linux/gVisor Runner and production quota acceptance remain pending"
+  ],
+  "reviewer": "Codex development self-review"
+}

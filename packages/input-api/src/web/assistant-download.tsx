@@ -1,0 +1,6 @@
+import {useState} from 'react';
+export function AssistantDownload({principalId,url,path,sha256}:{principalId:string;url:string;path:string;sha256:string}){
+ const [busy,setBusy]=useState(false),[error,setError]=useState('');
+ async function download(){if(busy)return;setBusy(true);setError('');try{const response=await fetch(url,{credentials:'same-origin',redirect:'error',cache:'no-store',headers:{'x-devmesh-principal':principalId}});if(!response.ok)throw Error('Artifact unavailable');const data=await response.arrayBuffer();if(data.byteLength>2*1024*1024)throw Error('Artifact limit');const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data))).map(n=>n.toString(16).padStart(2,'0')).join('');if(hash!==sha256)throw Error('Artifact changed');const objectUrl=URL.createObjectURL(new Blob([data],{type:/\.html?$/i.test(path)?'text/html':'application/octet-stream'})),anchor=document.createElement('a');anchor.href=objectUrl;anchor.download=path.split('/').at(-1)!;anchor.style.display='none';document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),60000);}catch{setError('当前文件无法下载，请刷新并核对访问权限和文件版本。');}finally{setBusy(false);}}
+ return <><button type="button" disabled={busy} onClick={()=>void download()}>{busy?'正在下载…':'下载文件'}</button>{error&&<span role="alert">{error}</span>}</>;
+}

@@ -26,3 +26,5 @@ export type {WorkbenchEventSubscription,WorkbenchEventFrame,ModelProgressFrame} 
 
 export * from './conversation.js';
 export * from './workbench-spaces.js';
+
+export * from './assistant-task.js';

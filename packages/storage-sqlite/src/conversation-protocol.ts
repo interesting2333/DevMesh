@@ -1,3 +1,5 @@
+import {assistantRequests} from './assistant-protocol.js';
+import type {AssistantResults} from './assistant-protocol.js';
 import {z} from 'zod';
 import {opaqueKey,ids,epoch,revision,conversationCreate,conversationInput,conversationControl,conversationDecision,conversationState,conversationPlanBasis,conversationRename,conversationConfirm,conversationDelete,conversationDeletionState,workbenchDirectoryBinding} from '@devmesh/contracts';
 import type {ConversationSummary,ConversationView,ConversationDecision} from '@devmesh/contracts';
@@ -6,6 +8,7 @@ const principal={principalId:opaqueKey},meta=z.strictObject({...principal,scopeI
 const selected={...principal,conversationId:opaqueKey};
 const claim={turnId:opaqueKey,claimToken:z.uuid()};
 export const conversationRequests={
+ ...assistantRequests,
  createConversation:z.strictObject({meta,body:conversationCreate,binding:workbenchDirectoryBinding.nullable().optional(),spaceRevision:revision.optional()}),
  appendConversationMessage:z.strictObject({meta,conversationId:opaqueKey,body:conversationInput}),
  getConversation:z.strictObject({...selected,afterSeq:epoch.default(0),limit:z.number().int().min(1).max(100).default(50)}),
@@ -46,7 +49,7 @@ export interface ConversationTurn {
  request:Record<string,unknown>|null;response:ConversationDecision|null;action:Record<string,unknown>|null;
  conversation:ConversationSummary;messages:ConversationView['messages'];principalId:string;
 }
-export interface ConversationResults {
+export interface ConversationResults extends AssistantResults {
  createConversation:OperationResult;appendConversationMessage:OperationResult;controlConversation:OperationResult;
  renameConversation:OperationResult;confirmConversationPlan:OperationResult;
  deleteConversation:OperationResult;getConversationDeletionState:z.output<typeof conversationDeletionState>;lookupConversationOperation:OperationResult|null;

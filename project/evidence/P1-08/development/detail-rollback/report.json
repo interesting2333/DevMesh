@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-20",
+  "scope": "User-requested rollback of DU-13 to DU-15; restore five detail tabs and retain DU-12 header",
+  "checks": {
+    "inputApiBuild": "PASSED",
+    "typecheck": "PASSED",
+    "changedFilesLint": "PASSED",
+    "browser": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "files": {
+    "packages/input-api/src/web/conversation-details.tsx": {
+      "sha256": "95842af67ec9bae69644aab08b2876f0e5d2995d9728bc6e5cadd7ba2e7b3147",
+      "matchesPrevious": true
+    },
+    "packages/input-api/src/web/conversation-detail-reading.ts": {
+      "sha256": "a03c6a63ef0fa55ea011f6357f4e4406862cba91c64c5373aead784a31289b37",
+      "matchesPrevious": true
+    },
+    "packages/input-api/src/web/conversation-work-context.tsx": {
+      "sha256": "b525bee669568c4520b6b8e93b58b0888b92335d6c08b1ea14db8e80e8af6667",
+      "matchesPrevious": true
+    },
+    "packages/input-api/src/web/conversation-workbench.tsx": {
+      "sha256": "bd61b68e707fd1d09765401ca418610cacfb2c6dffc8684eb9bf36744a18d853",
+      "matchesPrevious": true
+    },
+    "packages/input-api/src/web/conversation-delivery.tsx": {
+      "sha256": "7d362d9473bd7d63003d8bbfefdc15b6c00e796584e601193fdfb6a2bea37e49",
+      "matchesPrevious": true
+    },
+    "packages/input-api/src/web/workbench-delivery.tsx": {
+      "sha256": "97fc5c02407c020ef779b474e3b6866a5517b5e79ec14e91edac40c9839dcaee",
+      "matchesPrevious": true
+    },
+    "packages/input-api/src/web/workbench-candidate-preview.tsx": {
+      "sha256": "4462c0d63cbb6ba820c734b97b85c260a8c26a171477d22741078a13e375482f",
+      "matchesPrevious": true
+    },
+    "packages/input-api/src/workbench-styles.ts": {
+      "sha256": "3908acf59a54cd54da6eece3008cc3f0eea7182674386f66b911c2a4f4b8d7fd",
+      "matchesPrevious": true
+    },
+    "tests/browser/conversation-details.test.mjs": {
+      "sha256": "5aefb377f19fe80dbf483c0b74cb689a1539ddad3f9fdfbcc074bdf8e383c2fc",
+      "matchesPrevious": true
+    },
+    "tests/browser/conversation-desktop.test.mjs": {
+      "sha256": "9a6d9397c26494ce389a1ea6cce66cdff13574bec1dbbfa789d54a96869a3a62",
+      "matchesPrevious": true
+    },
+    "tests/browser/workbench-delivery.test.mjs": {
+      "sha256": "aa81393f628ba809ae42b6585bb0d2953ae09a6bd0e673cf9cc8c7af0cac6b1d",
+      "matchesPrevious": true
+    },
+    "tests/fixtures/preview-management.mjs": {
+      "sha256": "e89d16ce337620efb082658cb02f14cd527e15cf773c4f4ad18259886be3c889",
+      "matchesPrevious": true
+    },
+    "packages/input-api/dist/index.mjs": {
+      "sha256": "38b6a46b0548e5870cc875486fed632bfe03b6de0779665e6669fe3090a7df44",
+      "matchesPrevious": true
+    },
+    "packages/input-api/dist/web/workbench/workbench-client.js": {
+      "sha256": "789076b1fff4fc9f574f1179e8700524027068ab79a42233e392357514955be0",
+      "matchesPrevious": true
+    },
+    "tests/browser/conversation-workbench.test.mjs": {
+      "sha256": "8bd7ea5b0281090d50dcabef1c1b0914abe13942593c3825ec740aa262401e10",
+      "matchesPrevious": true
+    }
+  },
+  "service": {
+    "event": "restored-workbench-verified",
+    "status": 200,
+    "scriptStatus": 200,
+    "retainedHeader": true,
+    "fiveTabContent": true,
+    "artifactMatches": true
+  },
+  "priorAttempt": "browser-before-source-recovery.log retains the first attempt with two stale test assertions; all UI sources, tests and built artifacts now exactly match the preserved previous version.",
+  "limits": [
+    "Browser evidence uses explicit source/model/container fixtures.",
+    "P1-08 completion and stage gates unchanged."
+  ]
+}

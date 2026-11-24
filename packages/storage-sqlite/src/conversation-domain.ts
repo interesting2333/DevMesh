@@ -1,3 +1,6 @@
+import {createAssistantDomain} from './assistant-domain.js';
+import {assistantRequests} from './assistant-protocol.js';
+import type {AssistantMethod} from './assistant-protocol.js';
 import {randomUUID} from 'node:crypto';
 import type {DatabaseSync,SQLInputValue} from 'node:sqlite';
 import {conversationSummary,conversationView,parseContract,ids} from '@devmesh/contracts';
@@ -45,11 +48,13 @@ export function createConversationDomain(db:DatabaseSync,operation:Operation,eve
   const {t,c}=checked(input);const first=Math.max(0,Number(c.last_seq)-100);
   return {turnId:String(t.turn_id),claimToken:String(t.claim_token),actionKey:String(t.action_key),inputRevision:Number(t.input_revision),state:String(t.state),request:json(t.request_json),response:json(t.response_json),action:json(t.action_json),conversation:summary(c),messages:messages(String(c.conversation_id),first),principalId:String(c.owner_id)};
  }
+ const assistant=createAssistantDomain(db,{authorize,checked,add,operation});
  let workingAfter='';
  function deletionState(c:Row){
   const id=String(c.conversation_id),principal=String(c.owner_id);
   let reason:'READ_ONLY'|'UNRESOLVED'|'ACTIVE'|null=null;
-  if(c.project_id&&get('SELECT role FROM project_members WHERE project_id=? AND principal_id=?',c.project_id,principal)?.role==='viewer')reason='READ_ONLY';
+  if(get("SELECT 1 FROM assistant_applications WHERE conversation_id=? AND state='ACCEPTED'",id)||get("SELECT 1 FROM assistant_tool_calls t JOIN assistant_sessions s USING(session_id) WHERE s.conversation_id=? AND t.state IN ('RUNNING','UNKNOWN')",id))reason='UNRESOLVED';
+  else if(c.project_id&&get('SELECT role FROM project_members WHERE project_id=? AND principal_id=?',c.project_id,principal)?.role==='viewer')reason='READ_ONLY';
   else if(c.state==='UNKNOWN'||get("SELECT 1 FROM conversation_turns WHERE conversation_id=? AND state IN ('SENT','APPLYING','UNKNOWN')",id))reason='UNRESOLVED';
   else if(['QUEUED','THINKING','WORKING','PAUSING','CANCELLING'].includes(String(c.state))||get("SELECT 1 FROM conversation_turns WHERE conversation_id=? AND state IN ('READY','ACTIVE','RESPONDED')",id))reason='ACTIVE';
   else if(c.run_id){const run=get('SELECT terminal_outcome,control_gate FROM runs WHERE run_id=?',c.run_id);
@@ -97,9 +102,9 @@ export function createConversationDomain(db:DatabaseSync,operation:Operation,eve
   },
   appendConversationMessage(input:ConversationParsed<'appendConversationMessage'>){const {meta,conversationId:id,body}=input;
    return operation(meta,'AppendConversationMessage',{conversationId:id,body},()=>{
-    const c=authorize(meta.principalId,id,true);owned(meta.principalId,body.attachmentIds);
-    if(get("SELECT 1 FROM conversation_turns WHERE conversation_id=? AND state='APPLYING'",id))fail('CONVERSATION_ACTION_BUSY');
-    if(get("SELECT 1 FROM conversation_turns WHERE conversation_id=? AND state='UNKNOWN' AND action_json IS NOT NULL",id))fail('CONVERSATION_RESULT_UNKNOWN');
+    const c=authorize(meta.principalId,id,true);if(get("SELECT 1 FROM assistant_applications WHERE conversation_id=? AND state='ACCEPTED'",id))fail('ASSISTANT_APPLICATION_PENDING');owned(meta.principalId,body.attachmentIds);
+    if(get("SELECT 1 FROM conversation_turns WHERE conversation_id=? AND state='APPLYING' AND json_extract(action_json,'$.kind') IS NOT 'ASSISTANT'",id))fail('CONVERSATION_ACTION_BUSY');
+    if(get("SELECT 1 FROM conversation_turns WHERE conversation_id=? AND state='UNKNOWN' AND action_json IS NOT NULL AND json_extract(action_json,'$.kind') IS NOT 'ASSISTANT'",id))fail('CONVERSATION_RESULT_UNKNOWN');
     if(get('SELECT 1 FROM conversation_messages WHERE conversation_id=? AND client_id=?',id,body.clientMessageId))fail('MESSAGE_KEY_REUSED');
     if(Number(c.input_revision)>=1000)fail('CONVERSATION_LIMIT');
     const m=add(id,'user',body.text,body.attachmentIds,body.clientMessageId,null,body.observedPlan??null),inputRevision=Number(c.input_revision)+1,time=now();
@@ -162,7 +167,7 @@ export function createConversationDomain(db:DatabaseSync,operation:Operation,eve
   saveConversationInvalidResponse(input:ConversationParsed<'saveConversationInvalidResponse'>){return transaction(db,()=>{const {t,c}=checked(input);if(t.state!=='SENT')fail('CONVERSATION_TURN_CHANGED');exec("UPDATE conversation_turns SET state='FAILED',raw_response_json=?,error_code=?,updated_at=? WHERE turn_id=?",canonical(input.response),input.errorCode,now(),input.turnId);return summary(c);});},
   prepareConversationAction(input:ConversationParsed<'prepareConversationAction'>){return transaction(db,()=>{const {t}=checked(input);if(t.action_json!==null&&t.action_json!==canonical(input.action))fail('IDEMPOTENCY_KEY_REUSED');if(!['RESPONDED','APPLYING'].includes(String(t.state)))fail('CONVERSATION_TURN_CHANGED');exec("UPDATE conversation_turns SET state='APPLYING',action_json=?,updated_at=? WHERE turn_id=?",canonical(input.action),now(),input.turnId);return context(input);});},
   completeConversationTurn(input:ConversationParsed<'completeConversationTurn'>){return transaction(db,()=>{const {t,c}=checked(input);if(t.state==='DONE')return summary(c);if(!['RESPONDED','APPLYING'].includes(String(t.state)))fail('CONVERSATION_TURN_CHANGED');
-   const response=json(t.response_json);add(String(c.conversation_id),'assistant',response.reply,[],null,input.turnId);exec("UPDATE conversation_turns SET state='DONE',result_json=?,updated_at=? WHERE turn_id=?",canonical(input.result),now(),input.turnId);exec('UPDATE conversations SET state=?,block_reason=NULL WHERE conversation_id=?',input.state,c.conversation_id!);exec('UPDATE conversations SET resume_waiting_input=0 WHERE conversation_id=?',c.conversation_id!);if(response.action==='PAUSE')exec('UPDATE conversations SET resume_requested=0,manual_pause=1 WHERE conversation_id=?',c.conversation_id!);if(response.action==='RESUME')exec('UPDATE conversations SET manual_pause=0 WHERE conversation_id=?',c.conversation_id!);return summary(row(String(c.conversation_id)));});},
+   const response=json(t.response_json);if(typeof input.result.assistantText==='string')add(String(c.conversation_id),'assistant',input.result.assistantText,[],null,input.turnId);else if(!input.result.assistantReplied)add(String(c.conversation_id),'assistant',response.reply,[],null,input.turnId);exec("UPDATE conversation_turns SET state='DONE',result_json=?,updated_at=? WHERE turn_id=?",canonical(input.result),now(),input.turnId);exec('UPDATE conversations SET state=?,block_reason=? WHERE conversation_id=?',input.state,typeof input.result.assistantBlockReason==='string'?input.result.assistantBlockReason:null,c.conversation_id!);exec('UPDATE conversations SET resume_waiting_input=0 WHERE conversation_id=?',c.conversation_id!);if(response.action==='PAUSE')exec('UPDATE conversations SET resume_requested=0,manual_pause=1 WHERE conversation_id=?',c.conversation_id!);if(response.action==='RESUME')exec('UPDATE conversations SET manual_pause=0 WHERE conversation_id=?',c.conversation_id!);return summary(row(String(c.conversation_id)));});},
   failConversationTurn(input:ConversationParsed<'failConversationTurn'>){return transaction(db,()=>{const {t,c}=checked(input,false);if(c.deleted_at!=null||['DONE','SUPERSEDED'].includes(String(t.state)))return summary(c);exec('UPDATE conversation_turns SET state=?,error_code=?,updated_at=? WHERE turn_id=?',input.unknown?'UNKNOWN':'FAILED',input.errorCode,now(),input.turnId);if(c.input_revision===t.input_revision&&!['PAUSED','PAUSING','CANCELLED','CANCELLING'].includes(String(c.state))){exec('UPDATE conversations SET state=?,block_reason=? WHERE conversation_id=?',input.unknown?'UNKNOWN':'BLOCKED',input.errorCode,c.conversation_id!);}return summary(row(String(c.conversation_id)));});},
   bindConversationRun(input:ConversationParsed<'bindConversationRun'>){return transaction(db,()=>{const {c}=checked(input);const r=get('SELECT project_id FROM runs WHERE run_id=?',input.runId);if(r?.project_id!==input.projectId||!get("SELECT 1 FROM project_members WHERE project_id=? AND principal_id=? AND role<>'viewer'",input.projectId,c.owner_id!))fail('FORBIDDEN',403);const decision=get('SELECT response_json FROM conversation_turns WHERE turn_id=?',input.turnId),goal=String(json(decision?.response_json??null)?.goal??'').trim().replace(/\s+/g,' ').replace(/^(请|帮我|我想要?|希望|需要)(开发|创建|搭建|制作)?/,'');
    const title=Array.from(goal.split(/[。！？\n]/)[0]??'').slice(0,24).join('');
@@ -192,6 +197,7 @@ export function createConversationDomain(db:DatabaseSync,operation:Operation,eve
   controlConversation(input:ConversationParsed<'controlConversation'>){const {meta,conversationId:id,body}=input;
    return operation(meta,'ControlConversation',{conversationId:id,body},()=>{
     const c=authorize(meta.principalId,id,true),time=now();
+    if(get("SELECT 1 FROM assistant_applications WHERE conversation_id=? AND state='ACCEPTED'",id))fail('ASSISTANT_APPLICATION_PENDING');
     const raw=c.run_id?get('SELECT kind FROM operations WHERE principal_id=? AND scope_id=? AND idempotency_key=?',meta.principalId,c.run_id,meta.idempotencyKey):null;
     const expected={PAUSE:'PauseRun',RESUME:'ResumeRun',CANCEL:'CancelRun',RECONCILE:''}[body.action];
     if(c.revision!==body.revision&&raw?.kind!==expected)fail('CONVERSATION_REVISION_CHANGED');
@@ -221,5 +227,5 @@ export function createConversationDomain(db:DatabaseSync,operation:Operation,eve
   },
   recoverConversationTurns(_input:ConversationParsed<'recoverConversationTurns'>){return transaction(db,()=>{const unknown=exec("UPDATE conversation_turns SET state='UNKNOWN',error_code='CONVERSATION_RESULT_UNKNOWN',claim_token=NULL WHERE state='SENT' AND conversation_id IN (SELECT conversation_id FROM conversations WHERE deleted_at IS NULL)").changes;const ready=exec("UPDATE conversation_turns SET state=CASE WHEN state='ACTIVE' THEN 'READY' ELSE state END,claim_token=NULL WHERE state IN ('ACTIVE','RESPONDED','APPLYING') AND conversation_id IN (SELECT conversation_id FROM conversations WHERE deleted_at IS NULL)").changes;exec("UPDATE conversations SET state='UNKNOWN',block_reason='CONVERSATION_RESULT_UNKNOWN' WHERE deleted_at IS NULL AND EXISTS(SELECT 1 FROM conversation_turns t WHERE t.conversation_id=conversations.conversation_id AND t.input_revision=conversations.input_revision AND t.state='UNKNOWN')");return {unknown:Number(unknown),ready:Number(ready)};});},
  };
- return {deletionState,execute<M extends ConversationMethod>(method:M,input:unknown){const parsed=parseContract(conversationRequests[method],input);return (handlers[method] as (value:never)=>unknown)(parsed as never);}};
+ return {deletionState,execute<M extends ConversationMethod>(method:M,input:unknown){if(Object.hasOwn(assistantRequests,method))return assistant.execute(method as AssistantMethod,input);const parsed=parseContract(conversationRequests[method],input);return (handlers[method as keyof typeof handlers] as (value:never)=>unknown)(parsed as never);}};
 }

@@ -19,6 +19,7 @@ export type ToolResult={state:'SUCCEEDED'|'FAILED';value:unknown}|{state:'OUTCOM
 export interface RuntimeTool {
  name:string;description:string;schema:z.ZodType;effectClass:'READ'|'IDEMPOTENT_WRITE'|'NONIDEMPOTENT_WRITE';
  connection?:Record<string,unknown>;
+ inputSchema?:Record<string,unknown>;
  execute(operationId:string,args:unknown,host:Readonly<ExecutionHostView>,signal:AbortSignal):Promise<ToolResult>;
  query(operationId:string,host:Readonly<ExecutionHostView>,originalArgs?:unknown):Promise<ToolResult>;
 }
@@ -48,7 +49,7 @@ export class AgentRuntime {
    lease=new ExecutionGrantLease(this.storage,claim,permit=>{host!.permit=permit;});await lease.start();signal=AbortSignal.any([signal,lease.signal]);
    const {role,provider}=this.roles.resolve(host.roleSnapshot);
    const tools=role.allowedTools.map(name=>this.#tools.get(name)??fail('TOOL_NOT_CONFIGURED'));
-   const definitions=tools.map(t=>({name:t.name,description:t.description,parameters:z.toJSONSchema(t.schema) as Record<string,unknown>}));
+   const definitions=tools.map(t=>({name:t.name,description:t.description,parameters:t.inputSchema??z.toJSONSchema(t.schema) as Record<string,unknown>}));
    const prompt=await this.content.readText(host.principalId,{kind:'artifact',artifactId:role.promptArtifactId});
    const session=await this.sessions.ensure(host.principalId,host.runId,host.attemptId);sessionId=session.sessionId;
    // An existing request may have reached the provider. Reconciliation owns resumption.

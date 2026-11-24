@@ -1,3 +1,4 @@
+import {assistantTaskList,assistantApplyInput,assistantApplicationView,assistantPath,assistantLiveFrame,assistantExecutionDetails} from './assistant-task.js';
 import {workbenchSpaceCreate,workbenchSpaceUpdate,workbenchSpaceDelete,workbenchSpaceView,workbenchSpaceList,workbenchSpaceMove,workbenchDirectoryPage,workbenchDirectoryBinding} from './workbench-spaces.js';
 import {beginAcceptanceInput,confirmAcceptanceReplacementInput,closeUnsentAcceptanceInput,abortAcceptanceInput,acceptanceBasisView,acceptancePreparationView,acceptancePreparationList,acceptanceReplacementReceipt,acceptanceAbortReceipt,acceptanceCommitReceipt} from './release-acceptance.js';
 import { z } from 'zod';
@@ -21,6 +22,7 @@ import {workbenchEventSubscription,workbenchEventFrame,modelProgressFrame} from 
 import {runControlStatus} from './control.js';
 
 export const schemas = {
+  AssistantExecutionDetails:assistantExecutionDetails,AssistantLiveFrame:assistantLiveFrame,AssistantTaskList:assistantTaskList,AssistantApply:assistantApplyInput,AssistantApplication:assistantApplicationView,
   ConversationDelete:conversationDelete,ConversationDeletionState:conversationDeletionState,
   ConversationRename:conversationRename,ConversationConfirm:conversationConfirm,ConversationWorkContext:conversationWorkContext,
   WorkbenchSpaceCreate:workbenchSpaceCreate,WorkbenchSpaceUpdate:workbenchSpaceUpdate,WorkbenchSpaceDelete:workbenchSpaceDelete,WorkbenchSpace:workbenchSpaceView,WorkbenchSpaceList:workbenchSpaceList,WorkbenchSpaceMove:workbenchSpaceMove,WorkbenchDirectoryPage:workbenchDirectoryPage,WorkbenchDirectoryBinding:workbenchDirectoryBinding,
@@ -108,6 +110,13 @@ export function createOpenApiDocument() {
   };
   const parameter=(name:string,schema:z.ZodType,location='path',required=true)=>({name,in:location,required,schema:jsonSchema(schema)});
   const key=parameter('Idempotency-Key',idempotencyKey,'header');
+  add('/api/v1/conversations/{conversationId}/live','get','ReadConversationLive',undefined,[parameter('conversationId',opaqueKey)]);
+  (paths['/api/v1/conversations/{conversationId}/live']!.get as {responses:Record<string,unknown>}).responses['200']={description:'Authenticated cumulative conversation progress via SSE; final messages remain durable',content:{'text/event-stream':{schema:{type:'string'}}}};
+  for(const kind of ['file','preview']){const path='/api/v1/conversations/{conversationId}/project-tasks/{sessionId}/'+kind;add(path,'get',kind==='file'?'DownloadAssistantArtifact':'PreviewAssistantHtml',undefined,[parameter('conversationId',opaqueKey),parameter('sessionId',opaqueKey),parameter('path',assistantPath,'query'),parameter('sha256',sha256,'query')]);(paths[path]!.get as {responses:Record<string,unknown>}).responses['200']={description:kind==='file'?'Published exact-hash file attachment':'HTML preview with network restrictions and sandbox',content:{[kind==='file'?'application/octet-stream':'text/html']:{schema:{type:'string',...(kind==='file'?{format:'binary'}:{})}},...(kind==='file'?{'text/html':{schema:{type:'string',format:'binary'}}}:{})}};}
+  add('/api/v1/conversations/{conversationId}/project-tasks','get','ListAssistantProjectTasks','AssistantTaskList',[parameter('conversationId',opaqueKey)]);
+  add('/api/v1/conversations/{conversationId}/execution-details','get','ReadAssistantExecutionDetails','AssistantExecutionDetails',[parameter('conversationId',opaqueKey),parameter('sessionId',opaqueKey.optional(),'query',false)]);
+  add('/api/v1/conversations/{conversationId}/project-applications','post','ApplyAssistantProjectChanges','AssistantApplication',[parameter('conversationId',opaqueKey),key],'AssistantApply','202');
+  add('/api/v1/assistant-applications/{key}','get','LookupAssistantApplication','AssistantApplication',[parameter('key',idempotencyKey),parameter('conversationId',opaqueKey,'query')]);
   add('/api/v1/conversation-capabilities','get','ConversationCapabilities','ConversationCapabilities',[]);
   add('/api/v1/workbench-spaces','get','ListWorkbenchSpaces','WorkbenchSpaceList',[]);
   add('/api/v1/workbench-spaces','post','CreateWorkbenchSpace','InputOperation',[key],'WorkbenchSpaceCreate','202');

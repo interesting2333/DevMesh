@@ -859,3 +859,34 @@ P1-08按用户反馈补齐任务删除，关联add-conversation-task-deletion及
 ## 工作空间管理补充（2026-11-18）
 
 用户已确认工作空间同时支持任务分组和本地目录绑定并授权实施，本增量关联 implement-workbench-space-management 和 P1-08／P0-02／P0-04／P1-01／P1-03。实施迁移58、空间 API 和统一侧栏、本机隔离与恢复、目录 allowlist／Git身份、Run来源和模型／准备上下文。执行副本继续由既有管理链隔离；当前本地服务没有研发 Runner，不将目录绑定当作已运行代码。构建、隔离验证并保留57升级备份后优雅重启；正式工作包与阶段门槛维持既有事实。
+
+
+## 执行详情整改第一阶段（2026-11-20）
+
+P1-08 / DU-08～11 按用户授权实施概览精简、成果与预览分离、协作归属、事件记录、主体／会话／Run 阅读恢复。主区成果定位准确候选，专用页沿用原命令和恢复路径。协作投影及完整追溯能力为第二阶段，不在此项声称完成。受影响实现、构建与浏览器原始记录见 project/evidence/P1-08/detail-remediation-development-review.md；正式工作包及门槛独立评审。
+
+
+### 执行详情顶部精简（2026-11-20）
+
+P1-08 / DU-12：正常状态标题后直接进入页签，不重复任务名、等待新输入和常驻模式说明；必要提示有准确动作，方案审阅定位主区，暂停后保留恢复入口，原控制回执与草稿不变。证据见 project/evidence/P1-08/detail-remediation-development-review.md 的顶部精简补充。
+
+
+## 会话项目执行开发增量（2026-11-23）
+
+P1-08 开发子项新增 assistant 执行会话、Provider 工具循环、受控 Git 快照读写与差异、独立幂等应用、Docker 开发适配与桌面结果卡。先使用用户确认的 Docker 开发容器；不降低 P0-07 Linux/gVisor 与配额要求。实施及验证见 enable-assistant-project-execution 与 docs/assistant-project-execution.md；正式工作包及阶段门槛不因开发检查通过而提升。
+
+
+## 输入快捷键调整（2026-11-23，P1-08 DU-16）
+
+新旧对话输入统一为 Enter 发送、Shift+Enter 换行，兼容 Ctrl／Cmd+Enter。回车发送复用真实提交按钮的可用性检查；中文输入法组字、确认候选词（含 keyCode 229）、长按回车、空输入和发送中不触发新请求。历史开发记录中的旧快捷键属于当时行为；本次开发验证见 project/evidence/P1-08/composer-shortcuts-development-review.md，正式工作包与阶段门槛保持。
+
+
+## 新建HTML与实时执行修复（2026-11-23）
+
+P1-08 修复子项 fix-generated-site-execution：空来源生成工作区、HTML可信基础检查、受保护预览／下载、SSE增量链路、大文件上下文控制／局部替换、实际准备就绪检测与旧任务恢复。关联SQLite60、contracts／runtime／workspaces／input-api／platform。由Codex按用户授权实施并同人开发复核，不推进正式工作包及阶段门槛。
+
+## 助手执行详情接入（2026-11-23）
+
+P1-08 子项 connect-assistant-execution-details：以已保存助手日记构建只读执行详情接口，接入概览／协作／成果／预览／记录，支持明确历史轮次和原专业执行兼容，复用准确版本预览下载。无存储迁移、无任务重跑；Codex负责本轮开发与同人自查，正式工作包及门槛不据此提升。
+
+P1-08 子项 simplify-assistant-result-history 将历史选择集中到五个页签上方。读取接口从原始输入和已保存成果生成需求摘要及上次成果入口。开发复核与实际验收依据记录在项目台账。
